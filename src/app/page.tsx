@@ -10,7 +10,6 @@ function Swatch({
   name: string;
   hex: string;
   cssVar: string;
-  dark?: boolean;
 }) {
   return (
     <div className="flex flex-col">
@@ -40,7 +39,7 @@ export default function FoundationPage() {
         </h1>
         <p className="text-body-lg text-text-secondary max-w-2xl mt-6">
           Typography, color palette, and foundational tokens for the new
-          medinachamber.com — built on Next.js 15, BN Bergen, and a four-color
+          medinachamber.com — built on Next.js 16, BN Bergen, and a four-color
           brand palette rooted in Oxford Blue.
         </p>
       </section>
@@ -141,7 +140,6 @@ export default function FoundationPage() {
             name="Oxford Blue"
             hex="#0C1B33"
             cssVar="--oxford-blue"
-            dark
           />
           <Swatch
             name="Cambridge"
@@ -157,7 +155,6 @@ export default function FoundationPage() {
             name="Emerald"
             hex="#005450"
             cssVar="--emerald"
-            dark
           />
         </div>
       </section>
@@ -417,7 +414,7 @@ export default function FoundationPage() {
           <div>
             <h3 className="text-h4 mb-3">Tech</h3>
             <ul className="text-body-sm text-text-secondary space-y-2">
-              <li>Next.js 15 &mdash; App Router</li>
+              <li>Next.js 16 &mdash; App Router</li>
               <li>Tailwind CSS v4 &mdash; CSS-first config</li>
               <li>Vercel deployment</li>
               <li>GrowthZone for member portal</li>

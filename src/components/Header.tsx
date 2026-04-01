@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { navigation, ctaLink, type NavItem } from "@/lib/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 import { useTheme } from "./ThemeProvider";
@@ -13,12 +14,15 @@ function Dropdown({
   item,
   isOpen,
   onToggle,
+  pathname,
 }: {
   item: NavItem;
   isOpen: boolean;
   onToggle: () => void;
+  pathname: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const isActive = pathname.startsWith(item.href);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -34,12 +38,13 @@ function Dropdown({
     <div ref={ref} className="relative">
       <button
         onClick={onToggle}
-        className="
+        className={`
           flex items-center gap-1 px-3 py-2
-          text-body-sm font-bold text-text-secondary
+          text-body-sm font-bold
           hover:text-text-primary transition-colors
           cursor-pointer
-        "
+          ${isActive ? "text-text-primary" : "text-text-secondary"}
+        `}
         aria-expanded={isOpen}
       >
         {item.label}
@@ -79,12 +84,14 @@ function Dropdown({
                 key={child.href}
                 href={child.href}
                 {...(extraProps as Record<string, string>)}
-                className="
+                aria-current={pathname === child.href ? "page" : undefined}
+                className={`
                   flex items-center gap-2 px-4 py-2.5
-                  text-body-sm text-text-secondary
+                  text-body-sm
                   hover:text-text-primary hover:bg-bg-secondary
                   transition-colors
-                "
+                  ${pathname === child.href ? "text-text-accent font-bold" : "text-text-secondary"}
+                `}
                 onClick={onToggle}
               >
                 {child.label}
@@ -119,9 +126,11 @@ function Dropdown({
 function MobileMenu({
   isOpen,
   onClose,
+  pathname,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  pathname: string;
 }) {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
@@ -202,11 +211,13 @@ function MobileMenu({
                         key={child.href}
                         href={child.href}
                         {...(extraProps as Record<string, string>)}
-                        className="
+                        aria-current={pathname === child.href ? "page" : undefined}
+                        className={`
                           flex items-center gap-2 py-2
-                          text-body-sm text-text-secondary hover:text-text-primary
+                          text-body-sm hover:text-text-primary
                           transition-colors
-                        "
+                          ${pathname === child.href ? "text-text-accent font-bold" : "text-text-secondary"}
+                        `}
                         onClick={onClose}
                       >
                         {child.label}
@@ -251,6 +262,7 @@ function MobileMenu({
 
 export function Header() {
   const { theme } = useTheme();
+  const pathname = usePathname();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -270,7 +282,7 @@ export function Header() {
         "
       >
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="flex items-center justify-between h-18">
+          <div className="flex items-center justify-between h-[4.5rem]">
             {/* Logo */}
             <Link href="/" className="flex-shrink-0">
               <Image
@@ -295,6 +307,7 @@ export function Header() {
                       openDropdown === item.label ? null : item.label
                     )
                   }
+                  pathname={pathname}
                 />
               ))}
             </nav>
@@ -342,6 +355,7 @@ export function Header() {
       <MobileMenu
         isOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}
+        pathname={pathname}
       />
     </>
   );

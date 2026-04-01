@@ -1,5 +1,12 @@
 export interface NavItem {
   label: string;
+  /**
+   * For leaf items: rendered as the link destination.
+   * For parent items with children: serves as the section landing page href.
+   * Currently, parent hrefs are used by the Header as dropdown-only triggers
+   * (the href itself is not rendered as a link). When section landing pages
+   * are built, the Header Dropdown should render parent labels as links.
+   */
   href: string;
   external?: boolean;
   children?: NavItem[];
@@ -60,7 +67,7 @@ export const navigation: NavItem[] = [
       },
       {
         label: "Medina Means Business Magazine",
-        href: "https://medinachamber.com/magazine",
+        href: "https://medinachamber.com/magazine", // TODO: update after DNS cutover — build /news/magazine or point to new host
         external: true,
       },
     ],

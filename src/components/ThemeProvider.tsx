@@ -59,9 +59,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setTheme = useCallback((newTheme: Theme) => {
+    // Suppress transitions during theme swap to prevent color flash
+    document.documentElement.setAttribute("data-theme-transitioning", "");
     setThemeState(newTheme);
     document.documentElement.setAttribute("data-theme", newTheme);
     localStorage.setItem("mc-theme", newTheme);
+    // Re-enable transitions on next frame
+    requestAnimationFrame(() => {
+      document.documentElement.removeAttribute("data-theme-transitioning");
+    });
   }, []);
 
   const toggleTheme = useCallback(() => {

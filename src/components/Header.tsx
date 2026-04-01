@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -13,57 +13,35 @@ import { useTheme } from "./ThemeProvider";
 function Dropdown({
   item,
   isOpen,
-  onOpen,
-  onClose,
+  onIntent,
+  onAbandon,
   pathname,
 }: {
   item: NavItem;
   isOpen: boolean;
-  onOpen: () => void;
-  onClose: () => void;
+  onIntent: () => void;
+  onAbandon: () => void;
   pathname: string;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isActive = pathname.startsWith(item.href);
-
-  function handleMouseEnter() {
-    if (closeTimeout.current) {
-      clearTimeout(closeTimeout.current);
-      closeTimeout.current = null;
-    }
-    onOpen();
-  }
-
-  function handleMouseLeave() {
-    closeTimeout.current = setTimeout(() => {
-      onClose();
-    }, 150);
-  }
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (closeTimeout.current) clearTimeout(closeTimeout.current);
-    };
-  }, []);
 
   return (
     <div
-      ref={ref}
       className="relative"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onPointerEnter={onIntent}
+      onPointerLeave={onAbandon}
     >
+      {/* Trigger */}
       <button
         className={`
           flex items-center gap-1 px-3 py-2
           text-body-sm font-bold
           hover:text-text-primary transition-colors
           cursor-pointer
-          ${isActive ? "text-text-primary" : "text-text-secondary"}
+          ${isActive || isOpen ? "text-text-primary" : "text-text-secondary"}
         `}
         aria-expanded={isOpen}
+        aria-haspopup="true"
       >
         {item.label}
         <svg
@@ -83,37 +61,59 @@ function Dropdown({
         </svg>
       </button>
 
-      {isOpen && (
+      {/*
+        Hover bridge — invisible zone that connects the trigger to the panel.
+        Prevents mouseLeave from firing when crossing the gap.
+      */}
+      <div
+        className={`absolute left-0 right-0 top-full h-3 ${isOpen ? "block" : "hidden"}`}
+        aria-hidden="true"
+      />
+
+      {/* Panel — always mounted, visibility controlled by CSS for smooth transitions */}
+      <div
+        className={`
+          absolute top-full left-0 pt-3 z-50
+          transition-all duration-200 ease-out
+          ${isOpen
+            ? "opacity-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 -translate-y-1 pointer-events-none"
+          }
+        `}
+      >
         <div
           className="
-            absolute top-full left-0 mt-1 py-2 min-w-[220px]
+            py-2 min-w-[220px]
             bg-bg-primary border border-border-primary
             rounded-[var(--radius-md)] shadow-[var(--shadow-lg)]
-            z-50
           "
+          role="menu"
         >
           {item.children?.map((child) => {
-            const Component = child.external ? "a" : Link;
-            const extraProps = child.external
-              ? { target: "_blank", rel: "noopener noreferrer" }
+            const isExternal = child.external;
+            const Component = isExternal ? "a" : Link;
+            const extraProps = isExternal
+              ? { target: "_blank" as const, rel: "noopener noreferrer" }
               : {};
+            const isCurrent = pathname === child.href;
+
             return (
               <Component
                 key={child.href}
                 href={child.href}
                 {...(extraProps as Record<string, string>)}
-                aria-current={pathname === child.href ? "page" : undefined}
+                role="menuitem"
+                aria-current={isCurrent ? "page" : undefined}
                 className={`
                   flex items-center gap-2 px-4 py-2.5
                   text-body-sm
                   hover:text-text-primary hover:bg-bg-secondary
                   transition-colors
-                  ${pathname === child.href ? "text-text-accent font-bold" : "text-text-secondary"}
+                  ${isCurrent ? "text-text-accent font-bold" : "text-text-secondary"}
                 `}
-                onClick={onClose}
               >
                 {child.label}
-                {child.external && (
+                {isExternal && (
                   <svg
                     width="12"
                     height="12"
@@ -134,7 +134,7 @@ function Dropdown({
             );
           })}
         </div>
-      )}
+      </div>
     </div>
   );
 }
@@ -284,7 +284,53 @@ export function Header() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // Determine which logo to show based on theme
+  /*
+    Single shared intent timer at the Header level.
+    When the pointer leaves a dropdown, we wait before closing.
+    If the pointer enters ANY dropdown during that window, we cancel
+    the close and open the new one. This eliminates the race condition
+    where independent per-dropdown timeouts fight each other.
+  */
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const cancelClose = useCallback(() => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  }, []);
+
+  const scheduleClose = useCallback(() => {
+    cancelClose();
+    closeTimer.current = setTimeout(() => {
+      setOpenDropdown(null);
+    }, 280);
+  }, [cancelClose]);
+
+  const handleIntent = useCallback(
+    (label: string) => {
+      cancelClose();
+      setOpenDropdown(label);
+    },
+    [cancelClose]
+  );
+
+  // Close on Escape key
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape" && openDropdown) {
+        setOpenDropdown(null);
+      }
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [openDropdown]);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => cancelClose();
+  }, [cancelClose]);
+
   const logoSrc =
     theme === "dark"
       ? "/images/logos/logo-horizontal-white.png"
@@ -314,14 +360,17 @@ export function Header() {
             </Link>
 
             {/* Desktop nav */}
-            <nav className="hidden lg:flex items-center gap-1">
+            <nav
+              className="hidden lg:flex items-center gap-1"
+              onPointerLeave={scheduleClose}
+            >
               {navigation.map((item) => (
                 <Dropdown
                   key={item.label}
                   item={item}
                   isOpen={openDropdown === item.label}
-                  onOpen={() => setOpenDropdown(item.label)}
-                  onClose={() => setOpenDropdown(null)}
+                  onIntent={() => handleIntent(item.label)}
+                  onAbandon={scheduleClose}
                   pathname={pathname}
                 />
               ))}

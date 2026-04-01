@@ -13,31 +13,49 @@ import { useTheme } from "./ThemeProvider";
 function Dropdown({
   item,
   isOpen,
-  onToggle,
+  onOpen,
+  onClose,
   pathname,
 }: {
   item: NavItem;
   isOpen: boolean;
-  onToggle: () => void;
+  onOpen: () => void;
+  onClose: () => void;
   pathname: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isActive = pathname.startsWith(item.href);
 
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        if (isOpen) onToggle();
-      }
+  function handleMouseEnter() {
+    if (closeTimeout.current) {
+      clearTimeout(closeTimeout.current);
+      closeTimeout.current = null;
     }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isOpen, onToggle]);
+    onOpen();
+  }
+
+  function handleMouseLeave() {
+    closeTimeout.current = setTimeout(() => {
+      onClose();
+    }, 150);
+  }
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (closeTimeout.current) clearTimeout(closeTimeout.current);
+    };
+  }, []);
 
   return (
-    <div ref={ref} className="relative">
+    <div
+      ref={ref}
+      className="relative"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <button
-        onClick={onToggle}
         className={`
           flex items-center gap-1 px-3 py-2
           text-body-sm font-bold
@@ -92,7 +110,7 @@ function Dropdown({
                   transition-colors
                   ${pathname === child.href ? "text-text-accent font-bold" : "text-text-secondary"}
                 `}
-                onClick={onToggle}
+                onClick={onClose}
               >
                 {child.label}
                 {child.external && (
@@ -302,11 +320,8 @@ export function Header() {
                   key={item.label}
                   item={item}
                   isOpen={openDropdown === item.label}
-                  onToggle={() =>
-                    setOpenDropdown(
-                      openDropdown === item.label ? null : item.label
-                    )
-                  }
+                  onOpen={() => setOpenDropdown(item.label)}
+                  onClose={() => setOpenDropdown(null)}
                   pathname={pathname}
                 />
               ))}

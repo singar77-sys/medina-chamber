@@ -8,7 +8,7 @@ import { navigation, ctaLink, type NavItem } from "@/lib/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 import { useTheme } from "./ThemeProvider";
 
-/* ─── Dropdown ─────────────────────────────────────────── */
+/* ─── Dropdown (hover-driven, with descriptions) ──────── */
 
 function Dropdown({
   item,
@@ -24,6 +24,27 @@ function Dropdown({
   pathname: string;
 }) {
   const isActive = pathname.startsWith(item.href);
+
+  // If item has no children or only one child that matches itself, render as a direct link
+  const isSingleLink =
+    !item.children || (item.children.length === 1 && item.children[0].href === item.href);
+
+  if (isSingleLink) {
+    return (
+      <Link
+        href={item.href}
+        className={`
+          flex items-center px-3 py-2
+          text-body-sm font-bold
+          hover:text-text-primary transition-colors
+          ${isActive ? "text-text-primary" : "text-text-secondary"}
+        `}
+        aria-current={pathname === item.href ? "page" : undefined}
+      >
+        {item.label}
+      </Link>
+    );
+  }
 
   return (
     <div
@@ -61,16 +82,13 @@ function Dropdown({
         </svg>
       </button>
 
-      {/*
-        Hover bridge — invisible zone that connects the trigger to the panel.
-        Prevents mouseLeave from firing when crossing the gap.
-      */}
+      {/* Hover bridge */}
       <div
         className={`absolute left-0 right-0 top-full h-3 ${isOpen ? "block" : "hidden"}`}
         aria-hidden="true"
       />
 
-      {/* Panel — always mounted, visibility controlled by CSS for smooth transitions */}
+      {/* Panel */}
       <div
         className={`
           absolute top-full left-0 pt-3 z-50
@@ -83,7 +101,7 @@ function Dropdown({
       >
         <div
           className="
-            py-2 min-w-[220px]
+            py-2 min-w-[280px]
             bg-bg-primary border border-border-primary
             rounded-[var(--radius-md)] shadow-[var(--shadow-lg)]
           "
@@ -105,30 +123,41 @@ function Dropdown({
                 role="menuitem"
                 aria-current={isCurrent ? "page" : undefined}
                 className={`
-                  flex items-center gap-2 px-4 py-2.5
-                  text-body-sm
-                  hover:text-text-primary hover:bg-bg-secondary
+                  flex flex-col px-4 py-3
+                  hover:bg-bg-secondary
                   transition-colors
-                  ${isCurrent ? "text-text-accent font-bold" : "text-text-secondary"}
+                  ${isCurrent ? "bg-bg-secondary" : ""}
                 `}
               >
-                {child.label}
-                {isExternal && (
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 12 12"
-                    fill="none"
-                    className="opacity-40"
-                  >
-                    <path
-                      d="M9 6.5V9.5C9 10.05 8.55 10.5 8 10.5H2.5C1.95 10.5 1.5 10.05 1.5 9.5V4C1.5 3.45 1.95 3 2.5 3H5.5M7.5 1.5H10.5V4.5M5 7L10.25 1.75"
-                      stroke="currentColor"
-                      strokeWidth="1.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                <span
+                  className={`
+                    text-body-sm font-bold
+                    ${isCurrent ? "text-text-accent" : "text-text-primary"}
+                  `}
+                >
+                  {child.label}
+                  {isExternal && (
+                    <svg
+                      width="10"
+                      height="10"
+                      viewBox="0 0 12 12"
+                      fill="none"
+                      className="inline-block ml-1.5 opacity-40"
+                    >
+                      <path
+                        d="M9 6.5V9.5C9 10.05 8.55 10.5 8 10.5H2.5C1.95 10.5 1.5 10.05 1.5 9.5V4C1.5 3.45 1.95 3 2.5 3H5.5M7.5 1.5H10.5V4.5M5 7L10.25 1.75"
+                        stroke="currentColor"
+                        strokeWidth="1.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  )}
+                </span>
+                {child.description && (
+                  <span className="text-caption mt-0.5 leading-snug">
+                    {child.description}
+                  </span>
                 )}
               </Component>
             );
@@ -183,82 +212,120 @@ function MobileMenu({
         </div>
 
         <div className="p-6 space-y-1">
-          {navigation.map((item) => (
-            <div key={item.label}>
-              <button
-                onClick={() =>
-                  setExpandedSection(
-                    expandedSection === item.label ? null : item.label
-                  )
-                }
-                className="
-                  w-full flex items-center justify-between py-3
-                  text-body-lg font-bold text-text-primary
-                  cursor-pointer
-                "
-              >
-                {item.label}
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  className={`transition-transform duration-200 ${
-                    expandedSection === item.label ? "rotate-180" : ""
-                  }`}
-                >
-                  <path
-                    d="M4 6L8 10L12 6"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
+          {navigation.map((item) => {
+            const isSingleLink =
+              !item.children ||
+              (item.children.length === 1 && item.children[0].href === item.href);
 
-              {expandedSection === item.label && item.children && (
-                <div className="pb-3 pl-4 space-y-1">
-                  {item.children.map((child) => {
-                    const Component = child.external ? "a" : Link;
-                    const extraProps = child.external
-                      ? { target: "_blank", rel: "noopener noreferrer" }
-                      : {};
-                    return (
-                      <Component
-                        key={child.href}
-                        href={child.href}
-                        {...(extraProps as Record<string, string>)}
-                        aria-current={pathname === child.href ? "page" : undefined}
-                        className={`
-                          flex items-center gap-2 py-2
-                          text-body-sm hover:text-text-primary
-                          transition-colors
-                          ${pathname === child.href ? "text-text-accent font-bold" : "text-text-secondary"}
-                        `}
-                        onClick={onClose}
-                      >
-                        {child.label}
-                        {child.external && (
-                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="opacity-40">
-                            <path d="M9 6.5V9.5C9 10.05 8.55 10.5 8 10.5H2.5C1.95 10.5 1.5 10.05 1.5 9.5V4C1.5 3.45 1.95 3 2.5 3H5.5M7.5 1.5H10.5V4.5M5 7L10.25 1.75" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                        )}
-                      </Component>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          ))}
+            if (isSingleLink) {
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="
+                    block py-3
+                    text-body-lg font-bold text-text-primary
+                  "
+                  onClick={onClose}
+                >
+                  {item.label}
+                </Link>
+              );
+            }
+
+            return (
+              <div key={item.label}>
+                <button
+                  onClick={() =>
+                    setExpandedSection(
+                      expandedSection === item.label ? null : item.label
+                    )
+                  }
+                  className="
+                    w-full flex items-center justify-between py-3
+                    text-body-lg font-bold text-text-primary
+                    cursor-pointer
+                  "
+                >
+                  {item.label}
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    className={`transition-transform duration-200 ${
+                      expandedSection === item.label ? "rotate-180" : ""
+                    }`}
+                  >
+                    <path
+                      d="M4 6L8 10L12 6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+
+                {expandedSection === item.label && item.children && (
+                  <div className="pb-3 pl-4 space-y-1">
+                    {item.children.map((child) => {
+                      const Component = child.external ? "a" : Link;
+                      const extraProps = child.external
+                        ? { target: "_blank", rel: "noopener noreferrer" }
+                        : {};
+                      return (
+                        <Component
+                          key={child.href}
+                          href={child.href}
+                          {...(extraProps as Record<string, string>)}
+                          aria-current={
+                            pathname === child.href ? "page" : undefined
+                          }
+                          className={`
+                            flex flex-col py-2
+                            hover:text-text-primary
+                            transition-colors
+                            ${pathname === child.href ? "text-text-accent" : "text-text-secondary"}
+                          `}
+                          onClick={onClose}
+                        >
+                          <span className="text-body-sm font-bold">
+                            {child.label}
+                          </span>
+                          {child.description && (
+                            <span className="text-caption mt-0.5">
+                              {child.description}
+                            </span>
+                          )}
+                        </Component>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Mobile utility links */}
+        <div className="px-6 pb-3">
+          <Link
+            href="/about/contact"
+            className="
+              block py-3
+              text-body-lg font-bold text-text-primary
+            "
+            onClick={onClose}
+          >
+            Contact
+          </Link>
         </div>
 
         {/* Mobile CTA */}
         <div className="p-6 pt-0">
-          <a
+          <Link
             href={ctaLink.href}
-            target="_blank"
-            rel="noopener noreferrer"
             className="
               flex items-center justify-center w-full py-3.5 px-6
               bg-accent hover:bg-accent-hover
@@ -269,7 +336,7 @@ function MobileMenu({
             onClick={onClose}
           >
             {ctaLink.label} →
-          </a>
+          </Link>
         </div>
       </nav>
     </div>
@@ -284,13 +351,6 @@ export function Header() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  /*
-    Single shared intent timer at the Header level.
-    When the pointer leaves a dropdown, we wait before closing.
-    If the pointer enters ANY dropdown during that window, we cancel
-    the close and open the new one. This eliminates the race condition
-    where independent per-dropdown timeouts fight each other.
-  */
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const cancelClose = useCallback(() => {
@@ -315,7 +375,6 @@ export function Header() {
     [cancelClose]
   );
 
-  // Close on Escape key
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape" && openDropdown) {
@@ -326,7 +385,6 @@ export function Header() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [openDropdown]);
 
-  // Cleanup timer on unmount
   useEffect(() => {
     return () => cancelClose();
   }, [cancelClose]);
@@ -376,15 +434,25 @@ export function Header() {
               ))}
             </nav>
 
-            {/* Right side */}
+            {/* Right side: Contact + Theme + CTA */}
             <div className="flex items-center gap-3">
+              {/* Contact — elevated from About graveyard */}
+              <Link
+                href="/about/contact"
+                className="
+                  hidden lg:flex items-center px-3 py-2
+                  text-body-sm font-bold text-text-secondary
+                  hover:text-text-primary transition-colors
+                "
+              >
+                Contact
+              </Link>
+
               <ThemeToggle />
 
               {/* Desktop CTA */}
-              <a
+              <Link
                 href={ctaLink.href}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="
                   hidden lg:flex items-center px-5 py-2.5
                   bg-accent hover:bg-accent-hover
@@ -394,7 +462,7 @@ export function Header() {
                 "
               >
                 {ctaLink.label} →
-              </a>
+              </Link>
 
               {/* Mobile hamburger */}
               <button

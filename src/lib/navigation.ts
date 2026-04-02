@@ -1,21 +1,15 @@
 export interface NavItem {
   label: string;
-  /**
-   * For leaf items: rendered as the link destination.
-   * For parent items with children: serves as the section landing page href.
-   * Currently, parent hrefs are used by the Header as dropdown-only triggers
-   * (the href itself is not rendered as a link). When section landing pages
-   * are built, the Header Dropdown should render parent labels as links.
-   */
   href: string;
+  /** One-line descriptor shown in dropdown — helps outsiders understand opaque names */
+  description?: string;
   external?: boolean;
   children?: NavItem[];
 }
 
 /**
- * GrowthZone external URLs — kept here as a single source of truth.
- * Gateway pages on medinachamber.com link OUT to these for transactional actions
- * (login, registration, full directory search, etc.).
+ * GrowthZone external URLs — single source of truth.
+ * Gateway pages on medinachamber.com link OUT to these for transactional actions.
  */
 export const growthZone = {
   directory: "https://business.medinachamber.com/list",
@@ -24,28 +18,77 @@ export const growthZone = {
   joinApplication: "https://business.medinachamber.com/applicationtojoin2",
 } as const;
 
+/**
+ * Navigation structured around VISITOR INTENT, not org chart.
+ *
+ * Visitor decision sequence:
+ * 1. "What can this do for me?"  → Membership
+ * 2. "Who's in it?"              → Directory (elevated)
+ * 3. "What's happening?"         → Events
+ * 4. "Tell me more"              → About / News
+ * 5. "How do I join?"            → Join CTA (persistent)
+ */
 export const navigation: NavItem[] = [
   {
-    label: "Membership",
+    label: "Why Join",
     href: "/membership",
     children: [
-      { label: "Member Benefits", href: "/membership/benefits" },
-      { label: "Pricing & Tiers", href: "/membership/pricing" },
-      { label: "Savings Programs", href: "/membership/savings" },
-      { label: "Member Directory", href: "/membership/directory" },
-      { label: "Committees & Councils", href: "/membership/committees" },
+      {
+        label: "Member Benefits",
+        href: "/membership/benefits",
+        description: "What you get as a Chamber member",
+      },
+      {
+        label: "Pricing & Tiers",
+        href: "/membership/pricing",
+        description: "Investment levels based on company size",
+      },
+      {
+        label: "Savings Programs",
+        href: "/membership/savings",
+        description: "Member-exclusive discounts and deals",
+      },
+      {
+        label: "Committees & Councils",
+        href: "/membership/committees",
+        description: "Get involved in Chamber leadership",
+      },
+    ],
+  },
+  {
+    label: "Directory",
+    href: "/membership/directory",
+    children: [
+      {
+        label: "Find a Business",
+        href: "/membership/directory",
+        description: "Search Medina County member businesses",
+      },
     ],
   },
   {
     label: "Events",
     href: "/events",
     children: [
-      { label: "Upcoming Events", href: "/events" },
-      { label: "Athena Awards", href: "/events/athena-awards" },
-      { label: "Golf Outing", href: "/events/golf-outing" },
+      {
+        label: "Upcoming Events",
+        href: "/events",
+        description: "Mixers, workshops, and networking",
+      },
+      {
+        label: "Athena Awards",
+        href: "/events/athena-awards",
+        description: "Honoring women leaders in Medina County",
+      },
+      {
+        label: "Golf Outing",
+        href: "/events/golf-outing",
+        description: "Annual scramble and networking day",
+      },
       {
         label: "Sponsorships & Ribbon Cuttings",
         href: "/events/sponsorships",
+        description: "Celebrate milestones with the Chamber",
       },
     ],
   },
@@ -53,21 +96,46 @@ export const navigation: NavItem[] = [
     label: "Programs",
     href: "/programs",
     children: [
-      { label: "Social Connect", href: "/programs/social-connect" },
-      { label: "Compass Program", href: "/programs/compass" },
-      { label: "Safety Council", href: "/programs/safety-council" },
-      { label: "Rental Space", href: "/programs/rental-space" },
+      {
+        label: "Compass Mentorship",
+        href: "/programs/compass",
+        description: "Emerging leaders paired with business owners",
+      },
+      {
+        label: "Social Connect",
+        href: "/programs/social-connect",
+        description: "Casual networking for members and guests",
+      },
+      {
+        label: "Safety Council",
+        href: "/programs/safety-council",
+        description: "OSHA compliance and workplace safety",
+      },
+      {
+        label: "Rental Space",
+        href: "/programs/rental-space",
+        description: "Book the Chamber building for your event",
+      },
     ],
   },
   {
     label: "News",
     href: "/news",
     children: [
-      { label: "Chamber News", href: "/news" },
-      { label: "Member News", href: "/news/member-news" },
       {
-        label: "Medina Means Business Magazine",
+        label: "Chamber News",
+        href: "/news",
+        description: "Updates from the Chamber",
+      },
+      {
+        label: "Member Announcements",
+        href: "/news/member-news",
+        description: "Jobs, promotions, and milestones",
+      },
+      {
+        label: "Magazine",
         href: "/news/magazine",
+        description: "Medina Means Business publication",
       },
     ],
   },
@@ -75,11 +143,26 @@ export const navigation: NavItem[] = [
     label: "About",
     href: "/about",
     children: [
-      { label: "About Us", href: "/about" },
-      { label: "Advocacy", href: "/about/advocacy" },
-      { label: "Hall of Fame", href: "/about/hall-of-fame" },
-      { label: "Chamber Ambassadors", href: "/about/ambassadors" },
-      { label: "Contact", href: "/about/contact" },
+      {
+        label: "About the Chamber",
+        href: "/about",
+        description: "Connecting businesses since 1938",
+      },
+      {
+        label: "Advocacy",
+        href: "/about/advocacy",
+        description: "How we fight for your business",
+      },
+      {
+        label: "Hall of Fame",
+        href: "/about/hall-of-fame",
+        description: "Medina's business legends",
+      },
+      {
+        label: "Ambassadors",
+        href: "/about/ambassadors",
+        description: "Our volunteer welcome team",
+      },
     ],
   },
 ];

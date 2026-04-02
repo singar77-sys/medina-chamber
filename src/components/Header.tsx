@@ -9,22 +9,93 @@ import { ThemeToggle } from "./ThemeToggle";
 import { useTheme } from "./ThemeProvider";
 import { SearchOverlay } from "./SearchOverlay";
 
-/* ─── Dropdown (hover, with descriptions) ─────────────── */
+/* ─── Scroll Lock Hook ───────────────────────────────────── */
+
+function useScrollLock(locked: boolean) {
+  useEffect(() => {
+    if (!locked) return;
+    const scrollY = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.overflow = "";
+      window.scrollTo(0, scrollY);
+    };
+  }, [locked]);
+}
+
+/* ─── Dropdown (hover + keyboard, with descriptions) ─────── */
 
 function Dropdown({
   item,
   isOpen,
   onIntent,
   onAbandon,
+  onClose,
   pathname,
 }: {
   item: NavItem;
   isOpen: boolean;
   onIntent: () => void;
   onAbandon: () => void;
+  onClose: () => void;
   pathname: string;
 }) {
   const isActive = pathname.startsWith(item.href);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Keyboard navigation for the dropdown menu
+  useEffect(() => {
+    if (!isOpen || !menuRef.current) return;
+
+    const menu = menuRef.current;
+    const items = menu.querySelectorAll<HTMLElement>('[role="menuitem"]');
+    let focusIndex = -1;
+
+    function handleKeyDown(e: KeyboardEvent) {
+      switch (e.key) {
+        case "ArrowDown":
+          e.preventDefault();
+          focusIndex = Math.min(focusIndex + 1, items.length - 1);
+          items[focusIndex]?.focus();
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          focusIndex = Math.max(focusIndex - 1, 0);
+          items[focusIndex]?.focus();
+          break;
+        case "Home":
+          e.preventDefault();
+          focusIndex = 0;
+          items[focusIndex]?.focus();
+          break;
+        case "End":
+          e.preventDefault();
+          focusIndex = items.length - 1;
+          items[focusIndex]?.focus();
+          break;
+        case "Escape":
+          e.preventDefault();
+          onClose();
+          triggerRef.current?.focus();
+          break;
+        case "Tab":
+          onClose();
+          break;
+      }
+    }
+
+    menu.addEventListener("keydown", handleKeyDown);
+    return () => menu.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
 
   // Single-destination items render as a direct link (no dropdown)
   if (!item.children || item.children.length === 0) {
@@ -51,6 +122,7 @@ function Dropdown({
       onPointerLeave={onAbandon}
     >
       <button
+        ref={triggerRef}
         className={`
           flex items-center gap-1 px-3 py-2
           text-body-sm font-bold
@@ -60,6 +132,19 @@ function Dropdown({
         `}
         aria-expanded={isOpen}
         aria-haspopup="true"
+        onClick={() => (isOpen ? onClose() : onIntent())}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onIntent();
+            // Focus first menu item after panel opens
+            requestAnimationFrame(() => {
+              menuRef.current
+                ?.querySelector<HTMLElement>('[role="menuitem"]')
+                ?.focus();
+            });
+          }
+        }}
       >
         {item.label}
         <svg
@@ -97,6 +182,7 @@ function Dropdown({
         `}
       >
         <div
+          ref={menuRef}
           className="
             py-2 min-w-[280px]
             bg-bg-primary border border-border-primary
@@ -118,10 +204,11 @@ function Dropdown({
                 href={child.href}
                 {...(extraProps as Record<string, string>)}
                 role="menuitem"
+                tabIndex={isOpen ? 0 : -1}
                 aria-current={isCurrent ? "page" : undefined}
                 className={`
-                  flex flex-col px-4 py-3
-                  hover:bg-bg-secondary transition-colors
+                  flex flex-col px-4 py-3 outline-none
+                  hover:bg-bg-secondary focus-visible:bg-bg-secondary transition-colors
                   ${isCurrent ? "bg-bg-secondary" : ""}
                 `}
               >
@@ -147,7 +234,7 @@ function Dropdown({
   );
 }
 
-/* ─── Mobile Menu ──────────────────────────────────────── */
+/* ─── Mobile Menu (slide-in animation) ────────────────────── */
 
 function MobileMenu({
   isOpen,
@@ -161,17 +248,46 @@ function MobileMenu({
   pathname: string;
 }) {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [visible, setVisible] = useState(false);
+  const [animating, setAnimating] = useState(false);
 
-  if (!isOpen) return null;
+  // Animate in/out instead of instant mount/unmount
+  useEffect(() => {
+    if (isOpen) {
+      setVisible(true);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => setAnimating(true));
+      });
+    } else {
+      setAnimating(false);
+      const timer = setTimeout(() => setVisible(false), 250);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
+  if (!visible) return null;
 
   return (
     <div className="fixed inset-0 z-50 lg:hidden">
+      {/* Backdrop — fade */}
       <div
-        className="absolute inset-0 bg-oxford/60 backdrop-blur-sm"
+        className={`
+          absolute inset-0 bg-oxford/60 backdrop-blur-sm
+          transition-opacity duration-250 ease-out
+          ${animating ? "opacity-100" : "opacity-0"}
+        `}
         onClick={onClose}
       />
 
-      <nav className="absolute top-0 right-0 w-full max-w-sm h-full bg-bg-primary shadow-[var(--shadow-lg)] overflow-y-auto">
+      {/* Drawer — slide from right */}
+      <nav
+        className={`
+          absolute top-0 right-0 w-full max-w-sm h-full
+          bg-bg-primary shadow-[var(--shadow-lg)] overflow-y-auto
+          transition-transform duration-250 ease-[cubic-bezier(0.16,1,0.3,1)]
+          ${animating ? "translate-x-0" : "translate-x-full"}
+        `}
+      >
         <div className="flex items-center justify-between p-6 border-b border-border-primary">
           <span className="text-h4 font-bold">Menu</span>
           <button
@@ -195,8 +311,7 @@ function MobileMenu({
           <button
             onClick={() => {
               onClose();
-              // Small delay so close animation doesn't clash with search open
-              setTimeout(onSearch, 150);
+              setTimeout(onSearch, 250);
             }}
             className="
               w-full flex items-center gap-3 px-4 py-3
@@ -340,6 +455,9 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
+  // Lock body scroll when mobile menu or search is open
+  useScrollLock(mobileOpen || searchOpen);
+
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const cancelClose = useCallback(() => {
@@ -363,6 +481,10 @@ export function Header() {
     },
     [cancelClose]
   );
+
+  const closeDropdown = useCallback(() => {
+    setOpenDropdown(null);
+  }, []);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -424,6 +546,7 @@ export function Header() {
                   isOpen={openDropdown === item.label}
                   onIntent={() => handleIntent(item.label)}
                   onAbandon={scheduleClose}
+                  onClose={closeDropdown}
                   pathname={pathname}
                 />
               ))}

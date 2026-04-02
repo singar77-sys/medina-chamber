@@ -1,15 +1,11 @@
-"use client";
-
 import Link from "next/link";
-import Image from "next/image";
 import { ctaLink } from "@/lib/navigation";
-import { useTheme } from "./ThemeProvider";
+import { FooterStamp } from "./FooterStamp";
 
 /**
- * Footer is the full sitemap.
- * Since the header nav is intentionally lean (4 items + search),
- * the footer carries the comprehensive link structure for SEO
- * and discoverability.
+ * Footer is the full sitemap — now a Server Component.
+ * Only the stamp logo needs client JS (theme-aware swap).
+ * Everything else renders on the server: zero JS shipped.
  */
 const footerColumns = [
   {
@@ -57,13 +53,7 @@ const footerColumns = [
 ];
 
 export function Footer() {
-  const { theme } = useTheme();
   const year = new Date().getFullYear();
-
-  const stampSrc =
-    theme === "dark"
-      ? "/images/logos/stamp-white.png"
-      : "/images/logos/stamp-blue.png";
 
   return (
     <footer className="bg-bg-secondary border-t border-border-primary">
@@ -72,13 +62,7 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 lg:gap-8">
           {/* Stamp logo column */}
           <div className="col-span-2 md:col-span-3 lg:col-span-1">
-            <Image
-              src={stampSrc}
-              alt="Medina Chamber seal"
-              width={80}
-              height={80}
-              className="mb-4 opacity-80"
-            />
+            <FooterStamp />
             <p className="text-caption max-w-xs">
               Greater Medina Chamber of Commerce. Connecting businesses
               since 1938.

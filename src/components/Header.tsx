@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { navigation, ctaLink, type NavItem } from "@/lib/navigation";
+import { navigation, ctaLink, memberLogin, type NavItem } from "@/lib/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 import { useTheme } from "./ThemeProvider";
 import { SearchOverlay } from "./SearchOverlay";
@@ -306,8 +306,27 @@ function MobileMenu({
           </button>
         </div>
 
+        {/* Mobile Member Login */}
+        <div className="px-6 pt-6">
+          <a
+            href={memberLogin.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="
+              flex items-center justify-center w-full py-3 px-6
+              bg-emerald hover:bg-emerald/90
+              text-white font-bold text-body-sm
+              rounded-[var(--radius-md)]
+              transition-colors
+            "
+            onClick={onClose}
+          >
+            {memberLogin.label}
+          </a>
+        </div>
+
         {/* Mobile search trigger */}
-        <div className="px-6 pt-6 pb-2">
+        <div className="px-6 pt-3 pb-2">
           <button
             onClick={() => {
               onClose();
@@ -583,6 +602,22 @@ export function Header() {
               </button>
 
               <ThemeToggle />
+
+              {/* Desktop Member Login */}
+              <a
+                href={memberLogin.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+                  hidden lg:flex items-center px-4 py-2.5
+                  bg-emerald hover:bg-emerald/90
+                  text-white font-bold text-body-sm
+                  rounded-[var(--radius-md)]
+                  transition-colors
+                "
+              >
+                {memberLogin.label}
+              </a>
 
               {/* Desktop CTA */}
               <Link

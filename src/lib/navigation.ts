@@ -157,3 +157,8 @@ export const ctaLink = {
   label: "Join Now",
   href: "/membership/join",
 };
+
+export const memberLogin = {
+  label: "Member Login",
+  href: "https://greatermedinachamberofcommerce.growthzoneapp.com/a/MIC/Login",
+};

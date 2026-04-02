@@ -2,13 +2,59 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { navigation, ctaLink } from "@/lib/navigation";
+import { ctaLink } from "@/lib/navigation";
 import { useTheme } from "./ThemeProvider";
 
-/** Footer shows nav columns only for sections with 2+ children */
-const footerSections = navigation.filter(
-  (s) => s.children && s.children.length > 1
-);
+/**
+ * Footer is the full sitemap.
+ * Since the header nav is intentionally lean (4 items + search),
+ * the footer carries the comprehensive link structure for SEO
+ * and discoverability.
+ */
+const footerColumns = [
+  {
+    label: "Membership",
+    links: [
+      { label: "Member Benefits", href: "/membership/benefits" },
+      { label: "Pricing & Tiers", href: "/membership/pricing" },
+      { label: "Member Directory", href: "/membership/directory" },
+      { label: "Savings Programs", href: "/membership/savings" },
+      { label: "Committees", href: "/membership/committees" },
+      { label: "Join the Chamber", href: "/membership/join" },
+    ],
+  },
+  {
+    label: "Events",
+    links: [
+      { label: "Upcoming Events", href: "/events" },
+      { label: "Athena Awards", href: "/events/athena-awards" },
+      { label: "Golf Outing", href: "/events/golf-outing" },
+      { label: "Sponsorships", href: "/events/sponsorships" },
+    ],
+  },
+  {
+    label: "Programs",
+    links: [
+      { label: "Compass Mentorship", href: "/programs/compass" },
+      { label: "Social Connect", href: "/programs/social-connect" },
+      { label: "Safety Council", href: "/programs/safety-council" },
+      { label: "Rental Space", href: "/programs/rental-space" },
+    ],
+  },
+  {
+    label: "About & News",
+    links: [
+      { label: "About the Chamber", href: "/about" },
+      { label: "Advocacy", href: "/about/advocacy" },
+      { label: "Chamber News", href: "/news" },
+      { label: "Member Announcements", href: "/news/member-news" },
+      { label: "Magazine", href: "/news/magazine" },
+      { label: "Hall of Fame", href: "/about/hall-of-fame" },
+      { label: "Ambassadors", href: "/about/ambassadors" },
+      { label: "Contact", href: "/about/contact" },
+    ],
+  },
+];
 
 export function Footer() {
   const { theme } = useTheme();
@@ -19,20 +65,11 @@ export function Footer() {
       ? "/images/logos/stamp-white.png"
       : "/images/logos/stamp-blue.png";
 
-  // +1 for the stamp column
-  const colCount = footerSections.length + 1;
-
   return (
     <footer className="bg-bg-secondary border-t border-border-primary">
       <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-20">
         {/* Top: Logo + Nav columns */}
-        <div
-          className="grid grid-cols-2 md:grid-cols-3 gap-10 lg:gap-8"
-          style={{
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ["--footer-cols" as any]: colCount,
-          }}
-        >
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 lg:gap-8">
           {/* Stamp logo column */}
           <div className="col-span-2 md:col-span-3 lg:col-span-1">
             <Image
@@ -46,37 +83,23 @@ export function Footer() {
               Greater Medina Chamber of Commerce. Connecting businesses
               since 1938.
             </p>
-            {/* Directory link in stamp column */}
-            <Link
-              href="/membership/directory"
-              className="inline-block mt-4 text-body-sm text-accent hover:text-accent-hover font-bold transition-colors"
-            >
-              Find a Business →
-            </Link>
           </div>
 
           {/* Nav columns */}
-          {footerSections.map((section) => (
-            <div key={section.label}>
-              <h4 className="text-overline mb-4">{section.label}</h4>
+          {footerColumns.map((col) => (
+            <div key={col.label}>
+              <h4 className="text-overline mb-4">{col.label}</h4>
               <ul className="space-y-2.5">
-                {section.children?.map((item) => {
-                  const Component = item.external ? "a" : Link;
-                  const extraProps = item.external
-                    ? { target: "_blank", rel: "noopener noreferrer" }
-                    : {};
-                  return (
-                    <li key={item.href}>
-                      <Component
-                        href={item.href}
-                        {...(extraProps as Record<string, string>)}
-                        className="text-body-sm text-text-secondary hover:text-text-primary transition-colors"
-                      >
-                        {item.label}
-                      </Component>
-                    </li>
-                  );
-                })}
+                {col.links.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-body-sm text-text-secondary hover:text-text-primary transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
           ))}

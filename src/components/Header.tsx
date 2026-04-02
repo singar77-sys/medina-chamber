@@ -7,8 +7,9 @@ import { usePathname } from "next/navigation";
 import { navigation, ctaLink, type NavItem } from "@/lib/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 import { useTheme } from "./ThemeProvider";
+import { SearchOverlay } from "./SearchOverlay";
 
-/* ─── Dropdown (hover-driven, with descriptions) ──────── */
+/* ─── Dropdown (hover, with descriptions) ─────────────── */
 
 function Dropdown({
   item,
@@ -25,11 +26,8 @@ function Dropdown({
 }) {
   const isActive = pathname.startsWith(item.href);
 
-  // If item has no children or only one child that matches itself, render as a direct link
-  const isSingleLink =
-    !item.children || (item.children.length === 1 && item.children[0].href === item.href);
-
-  if (isSingleLink) {
+  // Single-destination items render as a direct link (no dropdown)
+  if (!item.children || item.children.length === 0) {
     return (
       <Link
         href={item.href}
@@ -52,7 +50,6 @@ function Dropdown({
       onPointerEnter={onIntent}
       onPointerLeave={onAbandon}
     >
-      {/* Trigger */}
       <button
         className={`
           flex items-center gap-1 px-3 py-2
@@ -107,7 +104,7 @@ function Dropdown({
           "
           role="menu"
         >
-          {item.children?.map((child) => {
+          {item.children.map((child) => {
             const isExternal = child.external;
             const Component = isExternal ? "a" : Link;
             const extraProps = isExternal
@@ -124,8 +121,7 @@ function Dropdown({
                 aria-current={isCurrent ? "page" : undefined}
                 className={`
                   flex flex-col px-4 py-3
-                  hover:bg-bg-secondary
-                  transition-colors
+                  hover:bg-bg-secondary transition-colors
                   ${isCurrent ? "bg-bg-secondary" : ""}
                 `}
               >
@@ -136,23 +132,6 @@ function Dropdown({
                   `}
                 >
                   {child.label}
-                  {isExternal && (
-                    <svg
-                      width="10"
-                      height="10"
-                      viewBox="0 0 12 12"
-                      fill="none"
-                      className="inline-block ml-1.5 opacity-40"
-                    >
-                      <path
-                        d="M9 6.5V9.5C9 10.05 8.55 10.5 8 10.5H2.5C1.95 10.5 1.5 10.05 1.5 9.5V4C1.5 3.45 1.95 3 2.5 3H5.5M7.5 1.5H10.5V4.5M5 7L10.25 1.75"
-                        stroke="currentColor"
-                        strokeWidth="1.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  )}
                 </span>
                 {child.description && (
                   <span className="text-caption mt-0.5 leading-snug">
@@ -173,10 +152,12 @@ function Dropdown({
 function MobileMenu({
   isOpen,
   onClose,
+  onSearch,
   pathname,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  onSearch: () => void;
   pathname: string;
 }) {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
@@ -185,13 +166,11 @@ function MobileMenu({
 
   return (
     <div className="fixed inset-0 z-50 lg:hidden">
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-oxford/60 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      {/* Panel */}
       <nav className="absolute top-0 right-0 w-full max-w-sm h-full bg-bg-primary shadow-[var(--shadow-lg)] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-border-primary">
           <span className="text-h4 font-bold">Menu</span>
@@ -211,13 +190,39 @@ function MobileMenu({
           </button>
         </div>
 
+        {/* Mobile search trigger */}
+        <div className="px-6 pt-6 pb-2">
+          <button
+            onClick={() => {
+              onClose();
+              // Small delay so close animation doesn't clash with search open
+              setTimeout(onSearch, 150);
+            }}
+            className="
+              w-full flex items-center gap-3 px-4 py-3
+              bg-bg-secondary border border-border-secondary
+              rounded-[var(--radius-md)]
+              text-body-sm text-text-tertiary
+              cursor-pointer
+            "
+          >
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" className="flex-shrink-0">
+              <path
+                d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16ZM19 19l-4.35-4.35"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            Search pages...
+          </button>
+        </div>
+
         <div className="p-6 space-y-1">
           {navigation.map((item) => {
-            const isSingleLink =
-              !item.children ||
-              (item.children.length === 1 && item.children[0].href === item.href);
-
-            if (isSingleLink) {
+            // Direct link items
+            if (!item.children || item.children.length === 0) {
               return (
                 <Link
                   key={item.label}
@@ -279,13 +284,10 @@ function MobileMenu({
                           key={child.href}
                           href={child.href}
                           {...(extraProps as Record<string, string>)}
-                          aria-current={
-                            pathname === child.href ? "page" : undefined
-                          }
+                          aria-current={pathname === child.href ? "page" : undefined}
                           className={`
                             flex flex-col py-2
-                            hover:text-text-primary
-                            transition-colors
+                            hover:text-text-primary transition-colors
                             ${pathname === child.href ? "text-text-accent" : "text-text-secondary"}
                           `}
                           onClick={onClose}
@@ -306,20 +308,6 @@ function MobileMenu({
               </div>
             );
           })}
-        </div>
-
-        {/* Mobile utility links */}
-        <div className="px-6 pb-3">
-          <Link
-            href="/about/contact"
-            className="
-              block py-3
-              text-body-lg font-bold text-text-primary
-            "
-            onClick={onClose}
-          >
-            Contact
-          </Link>
         </div>
 
         {/* Mobile CTA */}
@@ -350,6 +338,7 @@ export function Header() {
   const pathname = usePathname();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -375,10 +364,16 @@ export function Header() {
     [cancelClose]
   );
 
+  // Keyboard shortcuts
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape" && openDropdown) {
         setOpenDropdown(null);
+      }
+      // Cmd/Ctrl+K to open search
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen((prev) => !prev);
       }
     }
     document.addEventListener("keydown", handleKeyDown);
@@ -417,7 +412,7 @@ export function Header() {
               />
             </Link>
 
-            {/* Desktop nav */}
+            {/* Desktop nav — 4 items */}
             <nav
               className="hidden lg:flex items-center gap-1"
               onPointerLeave={scheduleClose}
@@ -434,19 +429,35 @@ export function Header() {
               ))}
             </nav>
 
-            {/* Right side: Contact + Theme + CTA */}
-            <div className="flex items-center gap-3">
-              {/* Contact — elevated from About graveyard */}
-              <Link
-                href="/about/contact"
+            {/* Right side: Search + Theme + CTA + Mobile */}
+            <div className="flex items-center gap-2">
+              {/* Search button */}
+              <button
+                onClick={() => setSearchOpen(true)}
                 className="
-                  hidden lg:flex items-center px-3 py-2
-                  text-body-sm font-bold text-text-secondary
-                  hover:text-text-primary transition-colors
+                  w-10 h-10 flex items-center justify-center
+                  rounded-full
+                  hover:bg-bg-tertiary
+                  transition-colors cursor-pointer
                 "
+                aria-label="Search"
               >
-                Contact
-              </Link>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  className="text-text-secondary"
+                >
+                  <path
+                    d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16ZM19 19l-4.35-4.35"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
 
               <ThemeToggle />
 
@@ -487,7 +498,13 @@ export function Header() {
       <MobileMenu
         isOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}
+        onSearch={() => setSearchOpen(true)}
         pathname={pathname}
+      />
+
+      <SearchOverlay
+        isOpen={searchOpen}
+        onClose={() => setSearchOpen(false)}
       />
     </>
   );

@@ -12,6 +12,18 @@ export interface NavItem {
   children?: NavItem[];
 }
 
+/**
+ * GrowthZone external URLs — kept here as a single source of truth.
+ * Gateway pages on medinachamber.com link OUT to these for transactional actions
+ * (login, registration, full directory search, etc.).
+ */
+export const growthZone = {
+  directory: "https://business.medinachamber.com/list",
+  events: "https://business.medinachamber.com/member-events",
+  memberNews: "https://business.medinachamber.com/news",
+  joinApplication: "https://business.medinachamber.com/applicationtojoin2",
+} as const;
+
 export const navigation: NavItem[] = [
   {
     label: "Membership",
@@ -20,11 +32,7 @@ export const navigation: NavItem[] = [
       { label: "Member Benefits", href: "/membership/benefits" },
       { label: "Pricing & Tiers", href: "/membership/pricing" },
       { label: "Savings Programs", href: "/membership/savings" },
-      {
-        label: "Member Directory",
-        href: "https://business.medinachamber.com/list",
-        external: true,
-      },
+      { label: "Member Directory", href: "/membership/directory" },
       { label: "Committees & Councils", href: "/membership/committees" },
     ],
   },
@@ -32,11 +40,7 @@ export const navigation: NavItem[] = [
     label: "Events",
     href: "/events",
     children: [
-      {
-        label: "Upcoming Events",
-        href: "https://business.medinachamber.com/member-events",
-        external: true,
-      },
+      { label: "Upcoming Events", href: "/events" },
       { label: "Athena Awards", href: "/events/athena-awards" },
       { label: "Golf Outing", href: "/events/golf-outing" },
       {
@@ -60,15 +64,10 @@ export const navigation: NavItem[] = [
     href: "/news",
     children: [
       { label: "Chamber News", href: "/news" },
-      {
-        label: "Member News",
-        href: "https://business.medinachamber.com/news",
-        external: true,
-      },
+      { label: "Member News", href: "/news/member-news" },
       {
         label: "Medina Means Business Magazine",
-        href: "https://medinachamber.com/magazine", // TODO: update after DNS cutover — build /news/magazine or point to new host
-        external: true,
+        href: "/news/magazine",
       },
     ],
   },
@@ -87,6 +86,5 @@ export const navigation: NavItem[] = [
 
 export const ctaLink = {
   label: "Join Now",
-  href: "https://business.medinachamber.com/applicationtojoin2",
-  external: true,
+  href: "/membership/join",
 };

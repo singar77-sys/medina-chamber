@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { IceCube } from "@/components/IceCube";
 
 /* ─── Swatch Component ─────────────────────────────────── */
 
@@ -30,7 +31,7 @@ export default function FoundationPage() {
   return (
     <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24 space-y-24">
       {/* ─── Hero / Intro ─────────────────────────────── */}
-      <section>
+      <section className="relative">
         <p className="text-overline text-cambridge mb-4">Foundation Specimen</p>
         <h1 className="text-display max-w-3xl">
           Medina Chamber
@@ -42,6 +43,11 @@ export default function FoundationPage() {
           medinachamber.com — built on Next.js 16, BN Bergen, and a four-color
           brand palette rooted in Oxford Blue.
         </p>
+
+        {/* Easter egg — mysterious floating cube */}
+        <div className="absolute -bottom-4 right-0 animate-[cube-float_3s_ease-in-out_infinite]">
+          <IceCube />
+        </div>
       </section>
 
       {/* ─── Typography Scale ─────────────────────────── */}

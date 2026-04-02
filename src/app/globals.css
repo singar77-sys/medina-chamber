@@ -300,3 +300,31 @@ h4, .text-h4 {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-tertiary);
 }
+
+/* --- Ice Cube Animation ---------------------------------- */
+
+@keyframes cube-spin {
+  from { transform: rotateX(-20deg) rotateY(0deg); }
+  to   { transform: rotateX(-20deg) rotateY(360deg); }
+}
+
+@keyframes cube-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+@keyframes shard-fly {
+  0%   { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); }
+  100% { opacity: 0; transform: translate(var(--tx), var(--ty)) rotate(var(--tr)) scale(0.3); }
+}
+
+@keyframes character-enter {
+  0%   { opacity: 0; transform: scale(0.3) translateY(40px); }
+  50%  { opacity: 1; transform: scale(1.15) translateY(-10px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes card-deal {
+  0%   { opacity: 0; transform: scale(0.8) rotateX(15deg) translateY(30px); }
+  100% { opacity: 1; transform: scale(1) rotateX(0deg) translateY(0); }
+}

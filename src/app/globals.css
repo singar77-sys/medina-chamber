@@ -1,5 +1,20 @@
 @import "tailwindcss";
 
+/* --- Cat Paw Cursor -------------------------------------- */
+a,
+button,
+[role="button"],
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+label[for],
+select,
+summary,
+[onclick],
+.cursor-pointer {
+  cursor: url("/images/cat-paw.png") 16 16, pointer;
+}
+
 /* ============================================================
    MEDINA CHAMBER — DESIGN TOKENS
    Oxford Blue / Cambridge / Coquelicot / Emerald

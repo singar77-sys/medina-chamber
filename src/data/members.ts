@@ -19,6 +19,26 @@ export interface Member {
     youtube?: string;
     pinterest?: string;
   };
+  /** GrowthZone Rank class number — 2 = Visibility Plus, 10 = Enhanced, 20 = Standard */
+  membershipTier: number;
+}
+
+/** Human-readable tier label */
+export function getTierLabel(tier: number): "Visibility Plus" | "Featured" | "Enhanced" | "Standard" {
+  if (tier === 2) return "Visibility Plus";
+  if (tier === 5) return "Featured";
+  if (tier === 10) return "Enhanced";
+  return "Standard";
+}
+
+/** True for members with any premium tier (rank < 20) */
+export function isPremiumMember(member: Member): boolean {
+  return (member.membershipTier ?? 20) < 20;
+}
+
+/** True for members with Visibility Plus membership (rank 2) */
+export function isVisibilityPlus(member: Member): boolean {
+  return (member.membershipTier ?? 20) === 2;
 }
 
 export interface MembersData {

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { type Member, extractCity, getInitials } from "@/data/members";
+import { type Member, extractCity, getInitials, isVisibilityPlus } from "@/data/members";
 
 interface MemberCardProps {
   member: Member;
@@ -10,19 +10,33 @@ export function MemberCard({ member }: MemberCardProps) {
   const city = extractCity(member.address);
   const initials = getInitials(member.name);
   const primaryCategory = member.categories[0] ?? "";
+  const visPlus = isVisibilityPlus(member);
 
   return (
     <Link
       href={`/membership/directory/${member.chamberSlug}`}
-      className="
+      className={`
         group flex flex-col
-        bg-bg-primary border border-border-secondary
+        bg-bg-primary border
         rounded-[var(--radius-lg)]
-        hover:border-border-primary hover:shadow-[var(--shadow-md)]
+        hover:shadow-[var(--shadow-md)]
         transition-all duration-[250ms]
         overflow-hidden
-      "
+        ${visPlus
+          ? "border-amber-300 hover:border-amber-400"
+          : "border-border-secondary hover:border-border-primary"}
+      `}
     >
+      {/* Visibility Plus banner */}
+      {visPlus && (
+        <div className="flex items-center gap-1.5 px-4 py-1.5 bg-amber-50 border-b border-amber-200">
+          <svg className="w-3 h-3 text-amber-500 shrink-0" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+          </svg>
+          <span className="text-[11px] font-bold tracking-wide text-amber-700 uppercase">Visibility Plus</span>
+        </div>
+      )}
+
       {/* Logo / Initials */}
       <div className="
         relative h-28 flex items-center justify-center

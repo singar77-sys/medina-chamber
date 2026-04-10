@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { members, getMemberBySlug, extractCity, getInitials } from "@/data/members";
+import { members, getMemberBySlug, extractCity, getInitials, isVisibilityPlus } from "@/data/members";
 
 // ── Static generation ──────────────────────────────────────────
 export function generateStaticParams() {
@@ -46,6 +46,7 @@ export default async function MemberPage(
 
   const city = extractCity(member.address);
   const initials = getInitials(member.name);
+  const visPlus = isVisibilityPlus(member);
 
   // JSON-LD LocalBusiness schema
   const jsonLd = {
@@ -125,6 +126,16 @@ export default async function MemberPage(
 
           {/* Info */}
           <div className="flex-1 min-w-0">
+            {/* Visibility Plus badge */}
+            {visPlus && (
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 mb-3 bg-amber-50 border border-amber-200 rounded-full">
+                <svg className="w-3 h-3 text-amber-500 shrink-0" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                </svg>
+                <span className="text-[11px] font-bold tracking-wide text-amber-700 uppercase">Visibility Plus Member</span>
+              </div>
+            )}
+
             {/* Categories */}
             {member.categories.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-3">

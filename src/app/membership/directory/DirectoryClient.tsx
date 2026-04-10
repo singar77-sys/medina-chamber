@@ -48,7 +48,8 @@ function DirectoryClientInner({ members, categories }: DirectoryClientProps) {
       );
     }
 
-    return result;
+    // Visibility Plus members always sort to the top
+    return [...result].sort((a, b) => a.membershipTier - b.membershipTier);
   }, [members, search, activeCategory]);
 
   const isFiltered = !!search.trim() || !!activeCategory;

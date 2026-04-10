@@ -64,6 +64,11 @@ function parseListingPage(html) {
   const cards = root.querySelectorAll('.gz-directory-card');
 
   for (const card of cards) {
+    // ── Membership tier (Rank class on the card itself) ──
+    const cardClasses = (card.getAttribute('class') || '').split(/\s+/);
+    const rankClass = cardClasses.find(c => c.startsWith('Rank'));
+    const membershipTier = rankClass ? parseInt(rankClass.replace('Rank', ''), 10) : 20;
+
     // ── Name + GZ slug ──
     const titleLink = card.querySelector('h5.gz-card-title a, .gz-card-title a');
     if (!titleLink) continue;
@@ -96,7 +101,7 @@ function parseListingPage(html) {
     const catSpans = card.querySelectorAll('.gz-card-cat .gz-cat');
     const categories = catSpans.map(s => s.textContent.trim()).filter(Boolean);
 
-    members.push({ name, slug, logoUrl, address, phone, website, categories });
+    members.push({ name, slug, logoUrl, address, phone, website, categories, membershipTier });
   }
 
   return members;
@@ -265,6 +270,7 @@ async function main() {
       description: m.description || '',
       categories: m.categories,
       social: m.social || {},
+      membershipTier: m.membershipTier ?? 20,
     })),
   };
 

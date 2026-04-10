@@ -11,7 +11,11 @@
     "scrape:fast": "node scripts/scrape-members.mjs --no-details"
   },
   "dependencies": {
-    "next": "16.2.1",
+    "@ai-sdk/anthropic": "^3.0.68",
+    "@ai-sdk/openai": "^3.0.52",
+    "@ai-sdk/react": "^3.0.160",
+    "ai": "^6.0.158",
+    "next": "^16.2.3",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },

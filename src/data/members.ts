@@ -53,17 +53,11 @@ export const members: Member[] = data.members;
 export const generatedAt: string = data.generatedAt;
 export const totalCount: number = data.totalCount;
 
-/** All unique categories, sorted by frequency */
+/** All unique categories, sorted alphabetically */
 export function getAllCategories(): string[] {
-  const counts: Record<string, number> = {};
-  members.forEach((m) =>
-    m.categories.forEach((c) => {
-      counts[c] = (counts[c] || 0) + 1;
-    })
-  );
-  return Object.entries(counts)
-    .sort((a, b) => b[1] - a[1])
-    .map(([name]) => name);
+  const seen = new Set<string>();
+  members.forEach((m) => m.categories.forEach((c) => seen.add(c)));
+  return [...seen].sort((a, b) => a.localeCompare(b));
 }
 
 /** Lookup by chamberSlug — O(n) but called once per static page */

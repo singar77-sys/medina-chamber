@@ -10,10 +10,13 @@ export interface NavItem {
  * GrowthZone external URLs — single source of truth.
  */
 export const growthZone = {
+  /** @deprecated - Member directory now lives at /membership/directory */
   directory: "https://business.medinachamber.com/list",
   events: "https://business.medinachamber.com/member-events",
   memberNews: "https://business.medinachamber.com/news",
   joinApplication: "https://business.medinachamber.com/applicationtojoin2",
+  /** Individual member portal — append GZ slug */
+  memberProfile: "https://business.medinachamber.com/list/Details/",
 } as const;
 
 /**

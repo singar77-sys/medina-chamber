@@ -36,8 +36,8 @@ export function formatEventsForPrompt(): string {
     const price = e.pricing
       ? e.pricing.split("\n")[0].replace(/\s+/g, " ").trim()
       : "";
-    const url = `medinachamber.com/events/${e.slug}`;
-    return `- ${day} ${date}: ${e.title} | ${time}${price ? ` | ${price}` : ""} | ${url}`;
+    const url = `https://medinachamber.com/events/${e.slug}`;
+    return `- ${day} ${date}: ${e.title} | ${time}${price ? ` | ${price}` : ""} | [Details & Registration](${url})`;
   });
 
   return `UPCOMING CHAMBER EVENTS (live from calendar — ${upcoming.length} scheduled):\n${lines.join("\n")}`;

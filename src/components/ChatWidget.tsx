@@ -2,6 +2,37 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 
+/** Lightweight markdown → HTML for assistant messages.
+ *  Handles: **bold**, [text](url), bare https:// URLs, newlines.
+ *  HTML-escapes all raw text first so no injection is possible. */
+function renderMarkdown(text: string): string {
+  // 1. Escape raw HTML so the model can't inject tags
+  let html = text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+  // 2. Bold
+  html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+
+  // 3. Markdown links [label](url)
+  html = html.replace(
+    /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g,
+    '<a href="$2" target="_blank" rel="noopener noreferrer" class="underline decoration-cambridge/60 text-cambridge hover:text-cambridge/80 transition-colors">$1</a>'
+  );
+
+  // 4. Bare https:// URLs not already inside an <a>
+  html = html.replace(
+    /(?<!href=")(https?:\/\/[^\s<"]+)/g,
+    '<a href="$1" target="_blank" rel="noopener noreferrer" class="underline decoration-cambridge/60 text-cambridge hover:text-cambridge/80 transition-colors break-all">$1</a>'
+  );
+
+  // 5. Newlines → <br>
+  html = html.replace(/\n/g, "<br>");
+
+  return html;
+}
+
 interface Message {
   id: string;
   role: "user" | "assistant";
@@ -181,19 +212,23 @@ export function ChatWidget() {
               <div key={m.id} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div className={`
                   max-w-[85%] px-4 py-2.5 rounded-[var(--radius-md)]
-                  text-body-sm leading-relaxed whitespace-pre-wrap
+                  text-body-sm leading-relaxed
                   ${m.role === "user"
-                    ? "bg-oxford text-white rounded-br-sm"
+                    ? "bg-oxford text-white rounded-br-sm whitespace-pre-wrap"
                     : "bg-bg-secondary text-text-primary border border-border-secondary rounded-bl-sm"
                   }
                 `}>
-                  {m.content || (m.role === "assistant" && isLoading ? (
+                  {m.role === "user" ? (
+                    m.content
+                  ) : m.content ? (
+                    <span dangerouslySetInnerHTML={{ __html: renderMarkdown(m.content) }} />
+                  ) : isLoading ? (
                     <span className="flex gap-1 items-center py-0.5">
                       <span className="w-1.5 h-1.5 bg-text-tertiary rounded-full animate-bounce [animation-delay:0ms]" />
                       <span className="w-1.5 h-1.5 bg-text-tertiary rounded-full animate-bounce [animation-delay:150ms]" />
                       <span className="w-1.5 h-1.5 bg-text-tertiary rounded-full animate-bounce [animation-delay:300ms]" />
                     </span>
-                  ) : "")}
+                  ) : ""}
                 </div>
               </div>
             ))}

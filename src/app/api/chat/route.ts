@@ -2,6 +2,7 @@ import { streamText, createTextStreamResponse } from "ai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createOpenAI } from "@ai-sdk/openai";
 import { searchMembersForContext, formatMembersForPrompt } from "@/lib/chat-search";
+import { formatEventsForPrompt } from "@/lib/events-context";
 import { totalCount } from "@/data/members";
 
 export const runtime = "edge";
@@ -67,16 +68,12 @@ CHAMBER TEAM:
 - Membership & Events Coordinator: Stephanie Mueller — the primary contact for joining, membership questions, and events; handles new member sales, networking events, newsletter, social media, and sponsorships; 6+ years at the chamber and widely known as the "not-so-secret weapon" who knows everyone in Medina County; if someone wants to join or has membership/event questions, direct them to Stephanie
 - Board Chair: Steve Allison (Fire-Dex)
 
-CHAMBER CURRENT ACTIVITY (sourced from LinkedIn, as of April 2025):
-- Executive Director: Jaclyn Ringstmeier, IOM | Board Chair: Steve Allison (Fire-Dex)
+CHAMBER RECENT NEWS (sourced from LinkedIn, April 2026):
 - New member recently welcomed: Prism Wealth Management (Robert Dodaro & Joe Reynolds)
 - New 98" TV installed at the Chamber office — available for meetings, events, and rentals
 - Hosted April Member Meeting featuring Congressman Max Miller; Medina County Commissioner Aaron Harrison led the fireside chat
-- UPCOMING: Chamber Chat — April 24, 9:00–10:00 AM at Chamber office (member networking, sharing wins and goals)
-- UPCOMING: Get to Know the Chamber — April 30, 9:00–10:30 AM at Chamber office (for prospective and new members — no pressure, no pitch)
-- UPCOMING: May Member Meeting — "Game Plan for Growth: Inside the Cleveland Browns Stadium Development Project" with Ted Tywang & Peter John-Baptiste from the Cleveland Browns/Haslam Sports Group; exploring economic impact for Medina-area businesses
-- RECURRING: Networking WOW — every 3rd Wednesday, 8:30–10:00 AM at Chamber office; open networking + structured introductions + group discussion
-- When someone asks what the chamber is up to or about upcoming events, reference these details confidently
+- Upcoming May Member Meeting: "Game Plan for Growth: Inside the Cleveland Browns Stadium Development Project" with Cleveland Browns/Haslam Sports Group
+- When someone asks about upcoming events, use the UPCOMING CHAMBER EVENTS section below — it is always current
 
 GOOGLE RATINGS RULES:
 - When a member's context includes a "Google rating" line, that business has 4.0+ stars — mention it confidently and with enthusiasm ("They're rated 4.8 on Google with 200+ reviews!")
@@ -116,8 +113,18 @@ export async function POST(req: Request) {
   const relevantMembers = searchMembersForContext(lastUserMessage, 8);
   const memberContext = formatMembersForPrompt(relevantMembers);
 
-  const systemPrompt = memberContext
-    ? `${CHAMBER_SYSTEM_PROMPT}\n\nRELEVANT MEMBER BUSINESSES FOR THIS QUERY:\n${memberContext}`
+  // Always inject live upcoming events
+  const eventsContext = formatEventsForPrompt();
+
+  const appendix = [
+    eventsContext,
+    memberContext ? `RELEVANT MEMBER BUSINESSES FOR THIS QUERY:\n${memberContext}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n\n");
+
+  const systemPrompt = appendix
+    ? `${CHAMBER_SYSTEM_PROMPT}\n\n${appendix}`
     : CHAMBER_SYSTEM_PROMPT;
 
   const { model } = getAIProvider();

@@ -25,7 +25,7 @@ summary,
 
 @font-face {
   font-family: "BN Bergen";
-  src: url("/fonts/bn-bergen-light.woff2") format("woff2");
+  src: url("/fonts/BNBergen-Light.otf") format("opentype");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -33,7 +33,7 @@ summary,
 
 @font-face {
   font-family: "BN Bergen";
-  src: url("/fonts/bn-bergen-regular.woff2") format("woff2");
+  src: url("/fonts/BNBergen.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -41,7 +41,7 @@ summary,
 
 @font-face {
   font-family: "BN Bergen";
-  src: url("/fonts/bn-bergen-bold.woff2") format("woff2");
+  src: url("/fonts/BNBergen-Bold.otf") format("opentype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;

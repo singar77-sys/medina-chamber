@@ -67,7 +67,10 @@ ABOUT THIS WEBSITE:
 CHAMBER TEAM:
 - Executive Director: Jaclyn Ringstmeier, IOM — 14+ years at the chamber (VP 2012–2015, ED since 2015); holds IOM designation (Institute for Organization Management, U.S. Chamber of Commerce Foundation's professional certification for chamber executives); Baldwin Wallace College alum; known for strategic planning, fundraising, and deep community relationships; leads overall chamber direction and board relations
 - Membership & Events Coordinator: Stephanie Mueller — the primary contact for joining, membership questions, and events; handles new member sales, networking events, newsletter, social media, and sponsorships; 6+ years at the chamber and widely known as the "not-so-secret weapon" who knows everyone in Medina County; if someone wants to join or has membership/event questions, direct them to Stephanie
-- Board Chair: Steve Allison (Fire-Dex)
+- Board President: Julie McNabb
+- Past Board President: Dan Calvin
+- Board of Directors: Steve Allison, Malorie Kormos, Steve Ferris, Terry Blascak, David Ferrell, Kathy Elseser, Randy Fuerst, Brian Harr, Nick Howell
+- Chamber Ambassadors: Danielle Litton, Matt Strehle, Kimberly Valco, Claus Meyer, Cindy Farnham, Cindy Phillips, Sam Pietrangelo (ambassadors are volunteer members who welcome new businesses and represent the chamber at events)
 
 CHAMBER RECENT NEWS (sourced from LinkedIn, April 2026):
 - New member recently welcomed: Prism Wealth Management (Robert Dodaro & Joe Reynolds)

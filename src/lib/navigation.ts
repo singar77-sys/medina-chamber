@@ -41,12 +41,12 @@ export const navigation: NavItem[] = [
       },
       {
         label: "Athena Awards",
-        href: "/events/athena-awards",
+        href: "/programs/athena-awards",
         description: "Honoring women leaders in Medina County",
       },
       {
         label: "Golf Outing",
-        href: "/events/golf-outing",
+        href: "/programs/golf-outing",
         description: "Annual scramble and networking day",
       },
       {
@@ -130,8 +130,8 @@ export const searchablePages: { label: string; href: string; keywords: string }[
   { label: "Member Directory", href: "/membership/directory", keywords: "find business search company local medina" },
   // Events
   { label: "Upcoming Events", href: "/events", keywords: "calendar networking mixer workshop" },
-  { label: "Athena Awards", href: "/events/athena-awards", keywords: "women leadership award ceremony" },
-  { label: "Golf Outing", href: "/events/golf-outing", keywords: "golf scramble tournament summer" },
+  { label: "Athena Awards", href: "/programs/athena-awards", keywords: "women leadership award ceremony" },
+  { label: "Golf Outing", href: "/programs/golf-outing", keywords: "golf scramble tournament summer" },
   { label: "Sponsorships & Ribbon Cuttings", href: "/events/sponsorships", keywords: "sponsor ribbon cutting grand opening" },
   // Membership
   { label: "Member Benefits", href: "/membership/benefits", keywords: "why join perks advantage" },

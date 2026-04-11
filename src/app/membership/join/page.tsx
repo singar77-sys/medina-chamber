@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { growthZone } from "@/lib/navigation";
+import { ApplicationForm } from "./ApplicationForm";
 
 export const metadata: Metadata = {
   title: "Join the Chamber",
@@ -85,9 +85,7 @@ export default function JoinPage() {
 
         <div className="mt-10 flex flex-wrap gap-4">
           <a
-            href={growthZone.joinApplication}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#apply"
             className="
               inline-flex items-center px-8 py-4
               bg-accent hover:bg-accent-hover
@@ -152,28 +150,12 @@ export default function JoinPage() {
         </div>
       </section>
 
-      {/* Bottom CTA */}
-      <section className="mt-24 p-10 lg:p-16 bg-bg-secondary rounded-[var(--radius-lg)] border border-border-secondary text-center">
-        <h2 className="text-h2">Ready?</h2>
-        <p className="text-body-lg text-text-secondary mt-4 max-w-xl mx-auto">
-          The application takes about five minutes. You&apos;ll hear from our
-          team within two business days.
-        </p>
-        <div className="mt-8">
-          <a
-            href={growthZone.joinApplication}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="
-              inline-flex items-center px-8 py-4
-              bg-accent hover:bg-accent-hover
-              text-white font-bold text-body
-              rounded-[var(--radius-md)]
-              transition-colors
-            "
-          >
-            Start Your Application →
-          </a>
+      {/* Application form */}
+      <section id="apply" className="mt-24 scroll-mt-24">
+        <h2 className="text-overline text-cambridge mb-2">Apply</h2>
+        <h3 className="text-h2 mb-8">Membership Application</h3>
+        <div className="max-w-3xl">
+          <ApplicationForm />
         </div>
       </section>
     </div>

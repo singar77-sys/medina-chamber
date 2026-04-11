@@ -16,7 +16,9 @@
     "scrape:events": "node scripts/scrape-events.mjs",
     "scrape:events:test": "node scripts/scrape-events.mjs --test",
     "scrape:news": "node scripts/scrape-news.mjs",
-    "scrape:news:test": "node scripts/scrape-news.mjs --test"
+    "scrape:news:test": "node scripts/scrape-news.mjs --test",
+    "scrape:blog": "node scripts/scrape-blog.mjs",
+    "scrape:blog:test": "node scripts/scrape-blog.mjs --test"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.68",

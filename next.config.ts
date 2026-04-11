@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         hostname: "res.cloudinary.com",
         pathname: "/micronetonline/**",
       },
+      {
+        // Squarespace blog post images
+        protocol: "https",
+        hostname: "images.squarespace-cdn.com",
+      },
     ],
   },
 };

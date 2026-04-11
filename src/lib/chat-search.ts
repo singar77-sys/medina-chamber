@@ -1,20 +1,11 @@
 /**
- * Member search for chatbot context.
- * Finds the most relevant members for a given query
- * without sending all 511 records to the AI every time.
+ * Member search + formatting for ChamberBot context.
+ * Finds the most relevant members and builds enriched prompts
+ * using both GrowthZone data and scraped website content.
  */
 
 import { members, type Member } from "@/data/members";
-
-export interface MemberSnippet {
-  name: string;
-  categories: string[];
-  address: string;
-  phone: string;
-  website: string;
-  description: string;
-  url: string;
-}
+import { getWebData, formatEnrichedMember } from "@/lib/website-search";
 
 function scoreMatch(member: Member, terms: string[]): number {
   let score = 0;
@@ -23,9 +14,19 @@ function scoreMatch(member: Member, terms: string[]): number {
   const cats = member.categories.map((c) => c.toLowerCase()).join(" ");
   const addr = member.address.toLowerCase();
 
+  // Enrich scoring with scraped website content
+  const web = getWebData(member.chamberSlug);
+  const webText = [
+    web?.metaDescription ?? "",
+    web?.services?.join(" ") ?? "",
+    web?.aboutText ?? "",
+    web?.homeText?.substring(0, 500) ?? "",
+  ].join(" ").toLowerCase();
+
   for (const term of terms) {
     if (name.includes(term)) score += 10;
     if (cats.includes(term)) score += 6;
+    if (webText.includes(term)) score += 4; // website content is high signal
     if (desc.includes(term)) score += 3;
     if (addr.includes(term)) score += 2;
   }
@@ -38,11 +39,9 @@ function scoreMatch(member: Member, terms: string[]): number {
 
 /**
  * Return up to `limit` members most relevant to the query.
+ * Website content boosts scoring separately inside formatEnrichedMember.
  */
-export function searchMembersForContext(
-  query: string,
-  limit = 8
-): MemberSnippet[] {
+export function searchMembersForContext(query: string, limit = 8): Member[] {
   const terms = query
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, " ")
@@ -56,30 +55,14 @@ export function searchMembersForContext(
     .filter(({ score }) => score > 0)
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)
-    .map(({ member: m }) => ({
-      name: m.name,
-      categories: m.categories,
-      address: m.address,
-      phone: m.phone,
-      website: m.website,
-      description: m.description,
-      url: `https://medinachamber.com/membership/directory/${m.chamberSlug}`,
-    }));
+    .map(({ member }) => member);
 }
 
-/** Format member snippets as a compact string for the system prompt */
-export function formatMembersForPrompt(snippets: MemberSnippet[]): string {
-  if (snippets.length === 0) return "";
-  return snippets
-    .map((m) => {
-      const lines = [`**${m.name}**`];
-      if (m.categories.length) lines.push(`  Categories: ${m.categories.join(", ")}`);
-      if (m.address) lines.push(`  Address: ${m.address}`);
-      if (m.phone) lines.push(`  Phone: ${m.phone}`);
-      if (m.website) lines.push(`  Website: ${m.website}`);
-      if (m.description) lines.push(`  About: ${m.description}`);
-      lines.push(`  Profile: ${m.url}`);
-      return lines.join("\n");
-    })
-    .join("\n\n");
+/**
+ * Format matched members into a prompt-ready string.
+ * Pulls in website-scraped data automatically when available.
+ */
+export function formatMembersForPrompt(matched: Member[]): string {
+  if (matched.length === 0) return "";
+  return matched.map(formatEnrichedMember).join("\n\n");
 }

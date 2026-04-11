@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "scrape": "node scripts/scrape-members.mjs",
-    "scrape:fast": "node scripts/scrape-members.mjs --no-details"
+    "scrape:fast": "node scripts/scrape-members.mjs --no-details",
+    "scrape:websites": "node scripts/scrape-websites.mjs",
+    "scrape:websites:test": "node scripts/scrape-websites.mjs --limit=5"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.68",

@@ -147,6 +147,70 @@ CHAMBER RECENT NEWS (sourced from LinkedIn, April 2026):
 - Upcoming May Member Meeting: "Game Plan for Growth: Inside the Cleveland Browns Stadium Development Project" with Cleveland Browns/Haslam Sports Group
 - When someone asks about upcoming events, use the UPCOMING CHAMBER EVENTS section below — it is always current
 
+MEMBERSHIP BENEFITS (medinachamber.com/membership/benefits):
+- Directory listing with full business profile
+- Networking events: member meetings, mixers, Social Connect, Golf Outing, Athena Awards
+- Business advocacy at local, state, and federal levels
+- Education & programming including the Compass leadership program
+- Access to 5 member savings programs (health insurance, workers' comp, energy, HR, MCRC)
+- Marketing & visibility: directory, sponsorships, social media promotion, magazine
+- Committee participation across 9 committees
+- Safety Council at no additional charge
+- Member pricing on all events and programs
+- Free notary services at the chamber office (estates, deeds, powers of attorney)
+- Certificates of Origin for international trade (pricing on request)
+- Ribbon cutting ceremonies for milestones
+- Contact for membership info: memberservices@medinaohchamber.com
+
+MEMBERSHIP PRICING (medinachamber.com/membership/pricing):
+- Tiered by number of employees — the larger the organization, the higher the investment
+- Most small businesses invest between $250–$400/year
+- Tiers: 1 employee, 2–5, 6–10, 11–25, 26–50, 51–100, 100+
+- Two membership levels: Standard (core) and Visibility Plus (premium — featured badge, priority directory placement)
+- Exact pricing: contact Stephanie Mueller at stephanie@medinaohchamber.com
+- Safety Council note: non-members can join Safety Council for $100/year OR join chamber (starting ~$295) and get Safety Council included free — the $295 entry level is the most cost-effective path to BWC rebate eligibility
+
+MEMBER SAVINGS PROGRAMS (medinachamber.com/membership/savings):
+1. Group Health Insurance (via Anthem/Blue Access PPO): designed for Medina businesses with 2–49 employees; includes Cleveland Clinic, Summa Health, University Hospitals; HSA and 80/20 options; contact chamber for broker list
+2. Workers' Compensation Discount (via Hunter Consulting): two discount levels through Ohio BWC group experience/retrospective rating; contact Jeff Price at jprice@hunterconsulting.com or (513) 372-8718
+3. Energy & Sustainability (via CEA): energy supply and efficiency solutions; federal/state/local rebates; free bill review at billreview@ceateam.com or (330) 208-2082; enroll at chamberenergyprogram.com
+4. HR Solutions (via VensureHR): payroll, benefits, risk management, HR compliance; contact Don Hicks at don.hicks@vensure.com or (216) 303-6756
+5. Recreation Center Membership (Medina Community Recreation Center): 20% discount on resident-rate memberships for all employees of member businesses; mention employer at MCRC Front Desk
+
+COMMITTEES & COUNCILS (medinachamber.com/membership/committees):
+Nine committees — most open to any chamber member:
+1. Business Advocacy Committee (by invitation) — voice of local business with elected officials; express interest to chamber
+2. Member Services Committee — membership recruitment, retention, events, affinity programs
+3. Programming Committee — creates networking and educational events
+4. Golf Committee — plans the annual golf outing
+5. Athena Leadership Awards Committee — organizes annual Athena ceremony (speakers, sponsors, logistics)
+6. Safety Council — BWC discounts, monthly expert speakers
+7. Marketing Committee — strategic marketing, sales materials, promotional communications
+8. Ambassador Committee — welcomes new members, attends ribbon cuttings
+9. Hall of Fame Committee (non-annual) — inductee selection and Hall of Fame dinner planning
+- To get involved: medinachamber.com/about/contact
+
+SPONSORSHIPS & RIBBON CUTTINGS (medinachamber.com/events/sponsorships):
+Sponsorship contact: Stephanie Mueller — stephanie@medinaohchamber.com / (330) 723-8773
+
+Golf Outing sponsorships (largest fundraiser):
+- Hole/Tee Sponsor, Par 3 "spend the day" sponsor, comfort station sponsor, raffle prize donations
+
+Athena Awards sponsorships:
+- Presenting, event, reception, and supporting sponsor tiers; contact jaclyn@medinaohchamber.com
+
+Member Meeting sponsorships ($100 + lunch fees per attendee, max 3 per meeting):
+- Display table, 30-second podium commercial, logo on registration page and all promotional emails/social media
+
+Safety Council monthly meeting sponsorships:
+- Display table, podium time, logo on website and promotional materials
+
+Ribbon Cuttings (members only):
+- Eligible milestones: grand openings (within first year), new locations, ownership/management changes, renovations/expansions
+- Included: chamber staff + ambassadors, ceremonial scissors + ribbon, promo graphics in weekly email, Facebook post with photos
+- Book 2+ weeks in advance; Mon–Fri only; latest start 4:00 PM
+- Schedule with Stephanie at stephanie@medinaohchamber.com
+
 CONTACT DIRECTORY:
 - General: office@medinaohchamber.com / (330) 723-8773 / medinachamber.com/about/contact
 - Joining / membership questions: stephanie@medinaohchamber.com

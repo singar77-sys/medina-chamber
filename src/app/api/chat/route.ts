@@ -3,6 +3,7 @@ import { createAnthropic } from "@ai-sdk/anthropic";
 import { createOpenAI } from "@ai-sdk/openai";
 import { searchMembersForContext, formatMembersForPrompt } from "@/lib/chat-search";
 import { formatEventsForPrompt } from "@/lib/events-context";
+import { formatNewsForPrompt } from "@/lib/news-context";
 import { totalCount } from "@/data/members";
 
 export const runtime = "edge";
@@ -114,11 +115,13 @@ export async function POST(req: Request) {
   const relevantMembers = searchMembersForContext(lastUserMessage, 8);
   const memberContext = formatMembersForPrompt(relevantMembers);
 
-  // Always inject live upcoming events
+  // Always inject live upcoming events and recent news
   const eventsContext = formatEventsForPrompt();
+  const newsContext = formatNewsForPrompt();
 
   const appendix = [
     eventsContext,
+    newsContext,
     memberContext ? `RELEVANT MEMBER BUSINESSES FOR THIS QUERY:\n${memberContext}` : "",
   ]
     .filter(Boolean)

@@ -12,7 +12,9 @@
     "scrape:websites": "node scripts/scrape-websites.mjs",
     "scrape:websites:test": "node scripts/scrape-websites.mjs --limit=5",
     "scrape:ratings": "node scripts/scrape-ratings.mjs",
-    "scrape:ratings:test": "node scripts/scrape-ratings.mjs --limit=10"
+    "scrape:ratings:test": "node scripts/scrape-ratings.mjs --limit=10",
+    "scrape:events": "node scripts/scrape-events.mjs",
+    "scrape:events:test": "node scripts/scrape-events.mjs --test"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.68",

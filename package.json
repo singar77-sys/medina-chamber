@@ -10,7 +10,9 @@
     "scrape": "node scripts/scrape-members.mjs",
     "scrape:fast": "node scripts/scrape-members.mjs --no-details",
     "scrape:websites": "node scripts/scrape-websites.mjs",
-    "scrape:websites:test": "node scripts/scrape-websites.mjs --limit=5"
+    "scrape:websites:test": "node scripts/scrape-websites.mjs --limit=5",
+    "scrape:ratings": "node scripts/scrape-ratings.mjs",
+    "scrape:ratings:test": "node scripts/scrape-ratings.mjs --limit=10"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.68",

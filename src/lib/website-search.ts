@@ -5,6 +5,7 @@
  */
 
 import type { Member } from "@/data/members";
+import { formatRatingLine } from "@/lib/ratings";
 
 export interface MemberWebData {
   chamberSlug: string;
@@ -68,6 +69,10 @@ export function formatEnrichedMember(member: Member): string {
       lines.push(`  About (from website): ${web.aboutText.substring(0, 400)}`);
     }
   }
+
+  // Only include Google rating if 4.0+ (sub-4 ratings are silently omitted)
+  const ratingLine = formatRatingLine(member.chamberSlug);
+  if (ratingLine) lines.push(ratingLine);
 
   lines.push(`  Profile: https://medinachamber.com/membership/directory/${member.chamberSlug}`);
   return lines.join("\n");

@@ -307,16 +307,29 @@ export async function POST(req: Request) {
     .filter(Boolean)
     .join("\n\n");
 
-  const systemPrompt = appendix
-    ? `${CHAMBER_SYSTEM_PROMPT}\n\n${appendix}`
-    : CHAMBER_SYSTEM_PROMPT;
-
   const { model } = getAIProvider();
+
+  // Static system prompt is marked ephemeral so Anthropic caches it after the
+  // first request (~10x cheaper on that block: $0.08/MTok vs $0.80/MTok).
+  // The dynamic appendix (live events, member context) is a separate system
+  // block without cache_control — it changes per request so caching it would
+  // never hit anyway.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const allMessages: any[] = [
+    {
+      role: "system",
+      content: CHAMBER_SYSTEM_PROMPT,
+      providerOptions: {
+        anthropic: { cacheControl: { type: "ephemeral" } },
+      },
+    },
+    ...(appendix ? [{ role: "system", content: appendix }] : []),
+    ...messages,
+  ];
 
   const result = streamText({
     model,
-    system: systemPrompt,
-    messages,
+    messages: allMessages,
     maxOutputTokens: 600,
     temperature: 0.3,
   });

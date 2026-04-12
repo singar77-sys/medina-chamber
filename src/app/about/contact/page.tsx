@@ -31,7 +31,7 @@ const info = [
   },
   {
     label: "Hours",
-    value: "Monday–Friday\n8:30 AM – 4:30 PM",
+    value: "Monday–Friday\n10:00 AM – 4:00 PM",
     href: null,
   },
 ];
@@ -55,8 +55,8 @@ const contactJsonLd = {
   openingHoursSpecification: {
     "@type": "OpeningHoursSpecification",
     dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-    opens: "08:30",
-    closes: "16:30",
+    opens: "10:00",
+    closes: "16:00",
   },
 };
 

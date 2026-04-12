@@ -28,7 +28,7 @@ ABOUT THE CHAMBER:
 - Phone: (330) 723-8773
 - Email: office@medinaohchamber.com
 - Website: medinachamber.com
-- Office hours: Monday–Friday, 8:30 AM – 4:30 PM
+- Office hours: Monday–Friday, 10:00 AM – 4:00 PM
 - Location: One block from Historic Medina Square; free on-site lot + City Hall garage
 - Mission: Champion and empower greater Medina's business community through advocacy, connection, and leadership
 - Vision: A prosperous regional business ecosystem defined by collaboration, innovation, and sustainable development

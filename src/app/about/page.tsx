@@ -158,7 +158,7 @@ export default function AboutPage() {
               <p>139 N. Court Street, Suite A</p>
               <p>Medina, OH 44256</p>
               <p className="mt-4 text-text-tertiary text-body-sm">
-                Monday – Friday &nbsp;·&nbsp; 8:30 AM – 4:30 PM
+                Monday – Friday &nbsp;·&nbsp; 10:00 AM – 4:00 PM
               </p>
             </div>
             <div className="mt-6 flex flex-wrap gap-3">

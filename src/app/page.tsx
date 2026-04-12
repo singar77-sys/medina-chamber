@@ -118,8 +118,8 @@ const organizationJsonLd = {
   openingHoursSpecification: {
     "@type": "OpeningHoursSpecification",
     dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-    opens: "08:30",
-    closes: "16:30",
+    opens: "10:00",
+    closes: "16:00",
   },
   sameAs: [
     "https://www.facebook.com/MedinaChamber",

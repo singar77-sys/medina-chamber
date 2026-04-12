@@ -25,7 +25,7 @@ const allEvents = (eventsData as { events: RawEvent[] }).events;
 /** Returns a formatted string of upcoming events for the system prompt. */
 export function formatEventsForPrompt(): string {
   const today = new Date().toISOString().split("T")[0];
-  const upcoming = allEvents.filter((e) => e.dateISO >= today);
+  const upcoming = allEvents.filter((e) => e.dateISO >= today).slice(0, 10);
 
   if (upcoming.length === 0) return "";
 

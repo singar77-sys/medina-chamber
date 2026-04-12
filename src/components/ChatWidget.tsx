@@ -63,8 +63,10 @@ function useStreamChat() {
     setIsLoading(true);
     setError(null);
 
-    // Build messages array for API (exclude the empty assistant placeholder)
-    const apiMessages = [...messages, userMsg].map(({ role, content }) => ({ role, content }));
+    // Build messages array for API — cap at last 16 messages (8 turns) to bound token cost
+    const apiMessages = [...messages, userMsg]
+      .slice(-16)
+      .map(({ role, content }) => ({ role, content }));
 
     abortRef.current = new AbortController();
 

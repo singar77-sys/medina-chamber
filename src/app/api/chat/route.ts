@@ -5,6 +5,7 @@ import { searchMembersForContext, formatMembersForPrompt } from "@/lib/chat-sear
 import { formatEventsForPrompt } from "@/lib/events-context";
 import { formatNewsForPrompt } from "@/lib/news-context";
 import { totalCount } from "@/data/members";
+import { chatLimiter, applyRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "edge";
 
@@ -39,7 +40,7 @@ CHAMBER TEAM:
 - Board President: Julie McNabb
 - Past Board President: Dan Calvin
 - Board of Directors: Steve Allison, Malorie Kormos, Steve Ferris, Terry Blascak, David Ferrell, Kathy Elseser, Randy Fuerst, Brian Harr, Nick Howell
-- Chamber Ambassadors: Danielle Litton, Matt Strehle, Kimberly Valco, Claus Meyer, Cindy Farnham, Cindy Phillips, Sam Pietrangelo (volunteer members who welcome new businesses and represent the chamber at events)
+- Chamber Ambassadors: Kari Deeks, Brittney Esser, Tania Grant, Don Hicks, Laurin Jeffers, Danielle Litton, Claus Meyer, Cindy Phillips, Sam Pietrangelo, Tori Toth, Kimberly Valco (volunteer members who welcome new businesses and represent the chamber at events)
 - Board & staff page: medinachamber.com/about/board
 - Ambassadors page: medinachamber.com/about/ambassadors
 
@@ -144,7 +145,7 @@ HALL OF FAME (medinachamber.com/about/hall-of-fame):
 - Honors individuals and organizations who shaped Medina County's business community
 - Eligibility (since 1981): anyone who has strengthened the socioeconomic foundation of the Medina area
 - Three award categories: Posthumous Individual, Living Individual, Outstanding Organization
-- 38 inductees to date including: A.I. Root, Barbara Dzur, Tad Coleman, George Paidas, Lloyd Vaughn, Gary Hallman, Jim Gerspacher, Pam Miller, and others
+- 39 inductees to date including: A.I. Root, Barbara Dzur, Tad Coleman, George Paidas, Lloyd Vaughn, Gary Hallman, Jim Gerspacher, Pam Miller, and others
 - Nominations welcomed; contact the chamber for information
 
 JOB BOARD (medinachamber.com/jobs):
@@ -280,19 +281,35 @@ function getAIProvider() {
 }
 
 export async function POST(req: Request) {
+  const limited = await applyRateLimit(req, chatLimiter);
+  if (limited) return limited;
+
   const body = await req.json();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const messages: any[] = body?.messages;
-  if (!Array.isArray(messages) || messages.length === 0) {
+  const raw: any[] = body?.messages;
+  if (!Array.isArray(raw) || raw.length === 0) {
     return new Response("Invalid request", { status: 400 });
   }
 
-  // Pull the latest user message for member search
-  const lastUserMessage: string =
-    messages.findLast((m: { role: string }) => m.role === "user")?.content ?? "";
+  // Sanitize: cap history depth and truncate oversized content (prevents token injection)
+  const MAX_CONTENT = 2000;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const messages: any[] = raw
+    .slice(-32) // keep last 16 turns max
+    .map((m) => ({
+      role: m.role,
+      content: typeof m.content === "string" ? m.content.slice(0, MAX_CONTENT) : m.content,
+    }));
+
+  // Search over last 3 user turns for better context continuity
+  const searchContext = messages
+    .filter((m: { role: string }) => m.role === "user")
+    .slice(-3)
+    .map((m: { content: string }) => m.content)
+    .join(" ");
 
   // Find relevant members and inject into the system prompt
-  const relevantMembers = searchMembersForContext(lastUserMessage, 8);
+  const relevantMembers = searchMembersForContext(searchContext, 8);
   const memberContext = formatMembersForPrompt(relevantMembers);
 
   // Always inject live upcoming events and recent news

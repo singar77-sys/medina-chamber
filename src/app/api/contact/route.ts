@@ -1,21 +1,30 @@
 import { Resend } from "resend";
+import { formLimiter, applyRateLimit } from "@/lib/rate-limit";
 
 const CHAMBER_EMAIL = "office@medinaohchamber.com";
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+function escHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
 
 export async function POST(req: Request) {
+  const limited = await applyRateLimit(req, formLimiter);
+  if (limited) return limited;
+
   const { name, email, phone, message } = await req.json();
 
-  // Basic validation
   if (!name?.trim() || !email?.trim() || !message?.trim()) {
     return Response.json({ error: "Name, email, and message are required." }, { status: 400 });
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
+  if (!process.env.RESEND_API_KEY) {
     return Response.json({ error: "Mail service not configured." }, { status: 500 });
   }
-
-  const resend = new Resend(apiKey);
 
   try {
     await resend.emails.send({
@@ -46,12 +55,4 @@ export async function POST(req: Request) {
     console.error("Resend error:", err);
     return Response.json({ error: "Failed to send message. Please try again." }, { status: 500 });
   }
-}
-
-function escHtml(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
 }

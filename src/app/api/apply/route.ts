@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import { formLimiter, applyRateLimit } from "@/lib/rate-limit";
 
 function escHtml(s: string): string {
   return String(s)
@@ -13,6 +14,9 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const CHAMBER_EMAIL = "office@medinaohchamber.com";
 
 export async function POST(req: NextRequest) {
+  const limited = await applyRateLimit(req, formLimiter);
+  if (limited) return limited;
+
   try {
     const body = await req.json();
     const {

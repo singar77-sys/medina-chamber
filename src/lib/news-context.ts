@@ -19,8 +19,10 @@ interface RawArticle {
 const allArticles = (newsData as { articles: RawArticle[] }).articles;
 
 /** Returns a formatted string of recent member news for the system prompt. */
-export function formatNewsForPrompt(count = 12): string {
-  const recent = allArticles.slice(0, count);
+export function formatNewsForPrompt(count = 6): string {
+  const recent = [...allArticles]
+    .sort((a, b) => b.dateISO.localeCompare(a.dateISO))
+    .slice(0, count);
   if (recent.length === 0) return "";
 
   const lines = recent.map((a) => {

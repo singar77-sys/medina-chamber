@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { members } from "@/data/members";
+import { communities } from "@/data/communities";
 
 const BASE_URL = "https://medinachamber.com";
 
@@ -39,6 +40,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/news/blog`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.5 },
     // Jobs
     { url: `${BASE_URL}/jobs`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
+    // Communities
+    { url: `${BASE_URL}/community`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
   ];
 
   const memberPages: MetadataRoute.Sitemap = members.map((m) => ({
@@ -48,5 +51,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...memberPages];
+  const communityPages: MetadataRoute.Sitemap = communities.map((c) => ({
+    url: `${BASE_URL}/community/${c.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  return [...staticPages, ...communityPages, ...memberPages];
 }

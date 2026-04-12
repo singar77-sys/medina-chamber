@@ -160,6 +160,15 @@ export const searchablePages: { label: string; href: string; keywords: string }[
   { label: "Hall of Fame", href: "/about/hall-of-fame", keywords: "hall fame honor legacy" },
   { label: "Ambassadors", href: "/about/ambassadors", keywords: "ambassador volunteer welcome" },
   { label: "Contact", href: "/about/contact", keywords: "contact phone email address location" },
+  // Communities
+  { label: "Medina County Communities", href: "/community", keywords: "community area city township county medina" },
+  { label: "Medina Businesses", href: "/community/medina", keywords: "medina ohio business downtown square" },
+  { label: "Brunswick Businesses", href: "/community/brunswick", keywords: "brunswick ohio business chamber" },
+  { label: "Wadsworth Businesses", href: "/community/wadsworth", keywords: "wadsworth ohio business chamber" },
+  { label: "Lodi Businesses", href: "/community/lodi", keywords: "lodi ohio business village" },
+  { label: "Seville Businesses", href: "/community/seville", keywords: "seville ohio business" },
+  { label: "Valley City Businesses", href: "/community/valley-city", keywords: "valley city ohio business" },
+  { label: "Hinckley Businesses", href: "/community/hinckley", keywords: "hinckley ohio business buzzard" },
 ];
 
 export const ctaLink = {

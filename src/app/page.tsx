@@ -88,9 +88,62 @@ const programs = [
   },
 ];
 
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": ["Organization", "LocalBusiness"],
+  "@id": "https://medinachamber.com/#organization",
+  name: "Greater Medina Chamber of Commerce",
+  alternateName: "Medina Chamber",
+  url: "https://medinachamber.com",
+  logo: "https://medinachamber.com/images/logos/logo-full-blue.png",
+  image: "https://medinachamber.com/images/photos/chamber-building-exterior.jpg",
+  description:
+    "The Greater Medina Chamber of Commerce connects and champions businesses across Medina County, Ohio. 511+ member businesses, networking events, advocacy, and programs since 1938.",
+  foundingDate: "1938",
+  telephone: "+1-330-723-8773",
+  email: "office@medinaohchamber.com",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "139 N. Court Street, Suite A",
+    addressLocality: "Medina",
+    addressRegion: "OH",
+    postalCode: "44256",
+    addressCountry: "US",
+  },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 41.1382,
+    longitude: -81.8637,
+  },
+  openingHoursSpecification: {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    opens: "08:30",
+    closes: "16:30",
+  },
+  sameAs: [
+    "https://www.facebook.com/MedinaChamber",
+    "https://www.linkedin.com/company/greater-medina-chamber-of-commerce",
+  ],
+  areaServed: {
+    "@type": "AdministrativeArea",
+    name: "Medina County, Ohio",
+  },
+  numberOfEmployees: { "@type": "QuantitativeValue", value: 2 },
+  member: {
+    "@type": "QuantitativeValue",
+    value: 511,
+    unitText: "member businesses",
+  },
+};
+
 export default function HomePage() {
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
       {/* ─── Hero ─────────────────────────────────────────── */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-16 pb-20 lg:pt-24 lg:pb-28">
         <div className="max-w-3xl">
@@ -223,7 +276,7 @@ export default function HomePage() {
                 >
                   <Image
                     src={p.logo}
-                    alt={p.name}
+                    alt={`${p.name} logo — Medina Chamber partner`}
                     width={120}
                     height={120}
                     className="w-full h-full object-contain"

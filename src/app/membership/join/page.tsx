@@ -66,8 +66,23 @@ const faqs = [
   },
 ];
 
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
 export default function JoinPage() {
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
     <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
       {/* Hero */}
       <section className="max-w-3xl">
@@ -160,5 +175,6 @@ export default function JoinPage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

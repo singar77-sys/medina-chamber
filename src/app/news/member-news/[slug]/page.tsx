@@ -77,11 +77,25 @@ export default async function MemberNewsArticlePage(
     ...(article.image && { image: article.image }),
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://medinachamber.com" },
+      { "@type": "ListItem", position: 2, name: "Member News", item: "https://medinachamber.com/news/member-news" },
+      { "@type": "ListItem", position: 3, name: article.title },
+    ],
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
       <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">

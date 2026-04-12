@@ -75,12 +75,25 @@ export default async function MemberPage(
 
   const hasSocial = Object.keys(member.social).length > 0;
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://medinachamber.com" },
+      { "@type": "ListItem", position: 2, name: "Member Directory", item: "https://medinachamber.com/membership/directory" },
+      { "@type": "ListItem", position: 3, name: member.name },
+    ],
+  };
+
   return (
     <>
-      {/* JSON-LD */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
       <div className="mx-auto max-w-5xl px-6 lg:px-8 py-12 lg:py-20">

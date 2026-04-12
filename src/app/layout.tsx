@@ -18,6 +18,9 @@ export const metadata: Metadata = {
     locale: "en_US",
     siteName: "Medina Chamber of Commerce",
   },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({

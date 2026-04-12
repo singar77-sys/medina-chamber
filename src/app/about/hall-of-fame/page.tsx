@@ -142,7 +142,7 @@ export default function HallOfFamePage() {
               <div className="relative w-full aspect-square overflow-hidden rounded-[var(--radius-lg)] bg-bg-secondary border border-border-secondary">
                 <Image
                   src={inductee.photo}
-                  alt={inductee.name}
+                  alt={`${inductee.name}, Greater Medina Chamber of Commerce Hall of Fame inductee`}
                   fill
                   className="object-cover object-top"
                   sizes="(max-width: 640px) 33vw, (max-width: 768px) 25vw, (max-width: 1024px) 20vw, 16vw"

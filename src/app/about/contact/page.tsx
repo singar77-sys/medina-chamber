@@ -36,8 +36,37 @@ const info = [
   },
 ];
 
+const contactJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "https://medinachamber.com/#organization",
+  name: "Greater Medina Chamber of Commerce",
+  telephone: "+1-330-723-8773",
+  email: "office@medinaohchamber.com",
+  url: "https://medinachamber.com",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "139 N. Court Street, Suite A",
+    addressLocality: "Medina",
+    addressRegion: "OH",
+    postalCode: "44256",
+    addressCountry: "US",
+  },
+  openingHoursSpecification: {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    opens: "08:30",
+    closes: "16:30",
+  },
+};
+
 export default function ContactPage() {
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactJsonLd) }}
+      />
     <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
       {/* Hero */}
       <section className="max-w-3xl">
@@ -95,5 +124,6 @@ export default function ContactPage() {
         </aside>
       </div>
     </div>
+    </>
   );
 }

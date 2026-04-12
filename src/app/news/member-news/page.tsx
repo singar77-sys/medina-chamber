@@ -12,6 +12,7 @@ export const metadata: Metadata = {
     description:
       "News and announcements from Medina County businesses.",
   },
+  alternates: { canonical: "/news/member-news" },
 };
 
 export default function MemberNewsPage() {

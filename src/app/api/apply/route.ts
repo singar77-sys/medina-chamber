@@ -10,7 +10,7 @@ function escHtml(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY || "re_placeholder");
 const CHAMBER_EMAIL = "office@medinaohchamber.com";
 
 export async function POST(req: NextRequest) {

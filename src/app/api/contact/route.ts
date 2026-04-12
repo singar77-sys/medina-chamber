@@ -2,7 +2,7 @@ import { Resend } from "resend";
 import { formLimiter, applyRateLimit } from "@/lib/rate-limit";
 
 const CHAMBER_EMAIL = "office@medinaohchamber.com";
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY || "re_placeholder");
 
 function escHtml(s: string): string {
   return s

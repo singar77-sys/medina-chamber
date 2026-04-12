@@ -177,7 +177,7 @@ export default function AmbassadorsPage() {
               <div className="relative w-full aspect-[4/3]">
                 <Image
                   src={a.photo}
-                  alt={a.name}
+                  alt={`${a.name}, Chamber Ambassador${a.company ? ` from ${a.company}` : ""}`}
                   fill
                   className="object-cover object-top"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

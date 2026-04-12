@@ -43,6 +43,7 @@ const inductees = [
   { name: "DeLorre Haddad",        photo: "/images/people/hall-of-fame/delorre-haddad-medina-chamber.jpg" },
   { name: "Harold Simmons",        photo: "/images/people/hall-of-fame/harold-simmons-medina-chamber.jpg" },
   { name: "Steve Stephenson",      photo: "/images/people/hall-of-fame/steve-stephenson-medina-chamber.jpg" },
+  { name: "Jones",                 photo: "/images/people/hall-of-fame/jones-medina-chamber.jpg" },
   { name: "Pam Miller",            photo: "/images/people/hall-of-fame/pam-miller-medina-chamber.jpg" },
   { name: "Macy Hallock Sr.",      photo: "/images/people/hall-of-fame/macy-hallock-sr-medina-chamber.jpg" },
   { name: "Elbridge Gibbs",        photo: "/images/people/hall-of-fame/elbridge-gibbs-medina-chamber.jpg" },

@@ -76,7 +76,7 @@ export default function GolfOutingPage() {
             Register Now →
           </a>
           <Link
-            href="/events/annual-chamber-golf-outing"
+            href="/events"
             className="
               inline-flex items-center px-6 py-4
               border border-border-primary hover:border-text-tertiary
@@ -85,7 +85,7 @@ export default function GolfOutingPage() {
               transition-colors
             "
           >
-            Event Details
+            All Events
           </Link>
         </div>
       </section>

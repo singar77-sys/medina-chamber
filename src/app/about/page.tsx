@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
+import { totalCount } from "@/data/members";
 
 export const metadata: Metadata = {
   title: "About the Chamber",
@@ -15,14 +17,16 @@ export const metadata: Metadata = {
 
 const staff = [
   {
-    name: "Jaclyn Ringstmeier",
+    name: "Jaclyn Ringstmeier, IOM",
     title: "Executive Director",
     email: "jaclyn@medinaohchamber.com",
+    photo: "/images/people/staff/jaclyn-ringstmeier-executive-director-greater-medina-chamber.jpg",
   },
   {
     name: "Stephanie Mueller",
     title: "Membership & Events Coordinator",
     email: "stephanie@medinaohchamber.com",
+    photo: "/images/people/staff/stephanie-mueller-membership-events-coordinator-greater-medina-chamber.jpg",
   },
 ];
 
@@ -97,7 +101,7 @@ export default function AboutPage() {
         <div className="grid grid-cols-2 gap-4">
           {[
             { stat: "1938", label: "Founded" },
-            { stat: "511+", label: "Member businesses" },
+            { stat: `${totalCount}+`, label: "Member businesses" },
             { stat: "30+", label: "Events per year" },
             { stat: "Medina County", label: "Our community" },
           ].map((item) => (
@@ -119,21 +123,27 @@ export default function AboutPage() {
           {staff.map((s) => (
             <div
               key={s.name}
-              className="p-8 bg-oxford text-white rounded-[var(--radius-lg)]"
+              className="overflow-hidden bg-oxford text-white rounded-[var(--radius-lg)]"
             >
-              <div className="w-14 h-14 rounded-full bg-cambridge flex items-center justify-center mb-4">
-                <span className="text-h4 font-bold text-white">
-                  {s.name.split(" ").map((n) => n[0]).join("")}
-                </span>
+              <div className="relative w-full aspect-[4/3]">
+                <Image
+                  src={s.photo}
+                  alt={s.name}
+                  fill
+                  className="object-cover object-top"
+                  sizes="(max-width: 640px) 100vw, 50vw"
+                />
               </div>
-              <h3 className="text-h4 text-white">{s.name}</h3>
-              <p className="text-body-sm text-cambridge mt-1">{s.title}</p>
-              <a
-                href={`mailto:${s.email}`}
-                className="inline-block mt-3 text-caption text-white/60 hover:text-white transition-colors"
-              >
-                {s.email}
-              </a>
+              <div className="p-8">
+                <h3 className="text-h4 text-white">{s.name}</h3>
+                <p className="text-body-sm text-cambridge mt-1">{s.title}</p>
+                <a
+                  href={`mailto:${s.email}`}
+                  className="inline-block mt-3 text-caption text-white/60 hover:text-white transition-colors"
+                >
+                  {s.email}
+                </a>
+              </div>
             </div>
           ))}
         </div>
@@ -148,7 +158,7 @@ export default function AboutPage() {
               <p>139 N. Court Street, Suite A</p>
               <p>Medina, OH 44256</p>
               <p className="mt-4 text-text-tertiary text-body-sm">
-                Monday – Friday &nbsp;·&nbsp; 10:00 AM – 4:00 PM
+                Monday – Friday &nbsp;·&nbsp; 8:30 AM – 4:30 PM
               </p>
             </div>
             <div className="mt-6 flex flex-wrap gap-3">
@@ -226,7 +236,7 @@ export default function AboutPage() {
           <div>
             <h2 className="text-h2 text-white">Ready to join the chamber?</h2>
             <p className="text-body-lg text-white/70 mt-4">
-              With 511+ member businesses, the Greater Medina Chamber connects
+              With {totalCount}+ member businesses, the Greater Medina Chamber connects
               you to the people, programs, and resources that move your
               business forward.
             </p>

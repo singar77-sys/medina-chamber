@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -14,44 +15,44 @@ export const metadata: Metadata = {
 };
 
 const inductees = [
-  "Elbridge Moxley",
-  "Elijah Boardman",
-  "Fred Greenwood",
-  "Letha House",
-  "Ralph Waite",
-  "H.G. Blake",
-  "John W. Brown",
-  "Howard E. Clagget",
-  "Freda Snyder",
-  "Windsor Kellogg",
-  "A.I. Root",
-  "Sydney Fenn",
-  "William C. Henschel",
-  "Andrew Karson",
-  "Elmer Zarney",
-  "Bert Humpal",
-  "Donald Simmons",
-  "William Batchelder Jr.",
-  "Charles E. Hawley",
-  "William Kelly",
-  "Jim Gerspacher",
-  "Carl Abell",
-  "Harold Thoburn",
-  "William Batchelder III",
-  "Charles F. Clark",
-  "DeLorre Haddad",
-  "Harold Simmons",
-  "Steve Stephenson",
-  "Pam Miller",
-  "Macy Hallock Sr.",
-  "Elbridge Gibbs",
-  "Bill Bittner",
-  "Barbara Dzur",
-  "Tad Coleman",
-  "George Paidas",
-  "Lloyd Vaughn",
-  "Gary Hallman",
-  "Friends of the Cemetery",
+  { name: "Elbridge Moxley",       photo: "/images/people/hall-of-fame/elbridge-moxley-medina-chamber.jpg" },
+  { name: "Elijah Boardman",       photo: "/images/people/hall-of-fame/elijah-boardman-medina-chamber.jpg" },
+  { name: "Fred Greenwood",        photo: "/images/people/hall-of-fame/fred-greenwood-medina-chamber.jpg" },
+  { name: "Letha House",           photo: "/images/people/hall-of-fame/letha-house-medina-chamber.jpg" },
+  { name: "Ralph Waite",           photo: "/images/people/hall-of-fame/ralph-waite-medina-chamber.jpg" },
+  { name: "H.G. Blake",            photo: "/images/people/hall-of-fame/h-g-blake-medina-chamber.jpg" },
+  { name: "John W. Brown",         photo: "/images/people/hall-of-fame/john-w-brown-medina-chamber.jpeg" },
+  { name: "Howard E. Clagget",     photo: "/images/people/hall-of-fame/howard-e-clagget-medina-chamber.jpg" },
+  { name: "Freda Snyder",          photo: "/images/people/hall-of-fame/freda-snyder-medina-chamber.jpg" },
+  { name: "Windsor Kellogg",       photo: "/images/people/hall-of-fame/windsor-kellog-medina-chamber.jpg" },
+  { name: "A.I. Root",             photo: "/images/people/hall-of-fame/a-i-root-medina-chamber.jpg" },
+  { name: "Sydney Fenn",           photo: "/images/people/hall-of-fame/syndey-fenn-medina-chamber.jpg" },
+  { name: "William C. Henschel",   photo: "/images/people/hall-of-fame/william-c-henschel-medina-chamber.gif" },
+  { name: "Andrew Karson",         photo: "/images/people/hall-of-fame/andrew-karson-medina-chamber.jpg" },
+  { name: "Elmer Zarney",          photo: "/images/people/hall-of-fame/elmer-zarney-medina-chamber.jpg" },
+  { name: "Bert Humpal",           photo: "/images/people/hall-of-fame/bert-humpal-medina-chamber.jpg" },
+  { name: "Donald Simmons",        photo: "/images/people/hall-of-fame/donald-simmons-medina-chamber.jpg" },
+  { name: "William Batchelder Jr.", photo: "/images/people/hall-of-fame/william-batchelder-jr-medina-chamber.jpg" },
+  { name: "Charles E. Hawley",     photo: "/images/people/hall-of-fame/charles-e-hawley-medina-chamber.jpg" },
+  { name: "William Kelly",         photo: "/images/people/hall-of-fame/william-kelly-medina-chamber.jpg" },
+  { name: "Jim Gerspacher",        photo: "/images/people/hall-of-fame/jim-gerspacher-medina-chamber.jpg" },
+  { name: "Carl Abell",            photo: "/images/people/hall-of-fame/carl-abell-medina-chamber.jpg" },
+  { name: "Harold Thoburn",        photo: "/images/people/hall-of-fame/harold-thoburn-medina-chamber.jpg" },
+  { name: "William Batchelder III", photo: "/images/people/hall-of-fame/william-batchelder-iii-medina-chamber.jpg" },
+  { name: "Charles F. Clark",      photo: "/images/people/hall-of-fame/charles-f-clark-medina-chamber.jpg" },
+  { name: "DeLorre Haddad",        photo: "/images/people/hall-of-fame/delorre-haddad-medina-chamber.jpg" },
+  { name: "Harold Simmons",        photo: "/images/people/hall-of-fame/harold-simmons-medina-chamber.jpg" },
+  { name: "Steve Stephenson",      photo: "/images/people/hall-of-fame/steve-stephenson-medina-chamber.jpg" },
+  { name: "Pam Miller",            photo: "/images/people/hall-of-fame/pam-miller-medina-chamber.jpg" },
+  { name: "Macy Hallock Sr.",      photo: "/images/people/hall-of-fame/macy-hallock-sr-medina-chamber.jpg" },
+  { name: "Elbridge Gibbs",        photo: "/images/people/hall-of-fame/elbridge-gibbs-medina-chamber.jpg" },
+  { name: "Bill Bittner",          photo: "/images/people/hall-of-fame/bill-bittner-medina-chamber.jpg" },
+  { name: "Barbara Dzur",          photo: "/images/people/hall-of-fame/barbara-dzur-medina-chamber.jpg" },
+  { name: "Tad Coleman",           photo: "/images/people/hall-of-fame/tad-coleman-medina-chamber.jpg" },
+  { name: "George Paidas",         photo: "/images/people/hall-of-fame/george-paidas-medina-chamber.jpg" },
+  { name: "Lloyd Vaughn",          photo: "/images/people/hall-of-fame/lloyd-vaughn-medina-chamber.jpg" },
+  { name: "Gary Hallman",          photo: "/images/people/hall-of-fame/gary-hallman-medina-chamber.jpg" },
+  { name: "Friends of the Cemetery", photo: "/images/people/hall-of-fame/friends-of-the-cemetery-medina-chamber.jpg" },
 ];
 
 const categories = [
@@ -134,28 +135,23 @@ export default function HallOfFamePage() {
         <h2 className="text-overline text-cambridge mb-8">
           Inductees — {inductees.length} Honorees
         </h2>
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-          {inductees.map((name) => {
-            const initials = name
-              .split(" ")
-              .filter((w) => /^[A-Z]/.test(w))
-              .map((w) => w[0])
-              .slice(0, 2)
-              .join("");
-            return (
-              <div
-                key={name}
-                className="flex items-center gap-3 p-4 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
-              >
-                <div className="w-10 h-10 rounded-full bg-oxford/10 flex items-center justify-center shrink-0">
-                  <span className="text-caption font-bold text-oxford">{initials}</span>
-                </div>
-                <p className="text-body-sm font-semibold text-text-primary leading-snug">
-                  {name}
-                </p>
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 lg:gap-6">
+          {inductees.map((inductee) => (
+            <div key={inductee.name} className="flex flex-col items-center gap-3">
+              <div className="relative w-full aspect-square overflow-hidden rounded-[var(--radius-lg)] bg-bg-secondary border border-border-secondary">
+                <Image
+                  src={inductee.photo}
+                  alt={inductee.name}
+                  fill
+                  className="object-cover object-top"
+                  sizes="(max-width: 640px) 33vw, (max-width: 768px) 25vw, (max-width: 1024px) 20vw, 16vw"
+                />
               </div>
-            );
-          })}
+              <p className="text-caption font-semibold text-text-primary text-center leading-snug">
+                {inductee.name}
+              </p>
+            </div>
+          ))}
         </div>
       </section>
 

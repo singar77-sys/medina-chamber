@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 const board = [
   { name: "Julie McNabb", title: "Board President" },
-  { name: "Steve Allison", title: "Board of Directors" },
+  { name: "Steve Allison", title: "Board Chair" },
   { name: "Malorie Kormos", title: "Board of Directors" },
   { name: "Steve Ferris", title: "Board of Directors" },
   { name: "Terry Blascak", title: "Board of Directors" },

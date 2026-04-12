@@ -33,7 +33,7 @@ const sponsorships = [
     tag: "Annual Ceremony",
     href: "/programs/athena-awards",
     description:
-      "Professional development conference and awards ceremony co-hosted with the Medina County Women's Journal. Various sponsorship tiers available to put your brand in front of Medina County's most influential business and community leaders.",
+      "Annual awards ceremony co-hosted with the Medina County Women's Journal. Various sponsorship tiers available to put your brand in front of Medina County's most influential business and community leaders.",
     contact: "jaclyn@medinaohchamber.com",
     options: [
       "Presenting Sponsor",

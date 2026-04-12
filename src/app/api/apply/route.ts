@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 
+function escHtml(s: string): string {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 const resend = new Resend(process.env.RESEND_API_KEY);
 const CHAMBER_EMAIL = "office@medinaohchamber.com";
 
@@ -48,6 +56,7 @@ export async function POST(req: NextRequest) {
     };
 
     const fullAddress = [address, city, state, zip].filter(Boolean).join(", ");
+    const safeWebsite = /^https?:\/\//i.test(website ?? "") ? website : "";
 
     await resend.emails.send({
       from: "Chamber Membership <onboarding@resend.dev>",
@@ -62,49 +71,49 @@ export async function POST(req: NextRequest) {
           <table style="width: 100%; border-collapse: collapse; margin-top: 24px;">
             <tr>
               <td style="padding: 10px 0; border-bottom: 1px solid #eee; width: 40%; color: #666; font-size: 14px;">Business / Organization</td>
-              <td style="padding: 10px 0; border-bottom: 1px solid #eee; font-weight: 600;">${businessName}</td>
+              <td style="padding: 10px 0; border-bottom: 1px solid #eee; font-weight: 600;">${escHtml(businessName)}</td>
             </tr>
             <tr>
               <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666; font-size: 14px;">Primary Contact</td>
-              <td style="padding: 10px 0; border-bottom: 1px solid #eee; font-weight: 600;">${contactName}${title ? `, ${title}` : ""}</td>
+              <td style="padding: 10px 0; border-bottom: 1px solid #eee; font-weight: 600;">${escHtml(contactName)}${title ? `, ${escHtml(title)}` : ""}</td>
             </tr>
             <tr>
               <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666; font-size: 14px;">Email</td>
-              <td style="padding: 10px 0; border-bottom: 1px solid #eee;"><a href="mailto:${email}">${email}</a></td>
+              <td style="padding: 10px 0; border-bottom: 1px solid #eee;"><a href="mailto:${escHtml(email)}">${escHtml(email)}</a></td>
             </tr>
             <tr>
               <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666; font-size: 14px;">Phone</td>
-              <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${phone}</td>
+              <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${escHtml(phone)}</td>
             </tr>
-            ${website ? `<tr>
+            ${safeWebsite ? `<tr>
               <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666; font-size: 14px;">Website</td>
-              <td style="padding: 10px 0; border-bottom: 1px solid #eee;"><a href="${website}">${website}</a></td>
+              <td style="padding: 10px 0; border-bottom: 1px solid #eee;"><a href="${escHtml(safeWebsite)}">${escHtml(safeWebsite)}</a></td>
             </tr>` : ""}
             ${fullAddress ? `<tr>
               <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666; font-size: 14px;">Address</td>
-              <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${fullAddress}</td>
+              <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${escHtml(fullAddress)}</td>
             </tr>` : ""}
             <tr>
               <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666; font-size: 14px;">Employees</td>
-              <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${employeeLabel[employees] ?? employees}</td>
+              <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${escHtml(employeeLabel[employees] ?? employees)}</td>
             </tr>
             ${category ? `<tr>
               <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666; font-size: 14px;">Business Category</td>
-              <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${category}</td>
+              <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${escHtml(category)}</td>
             </tr>` : ""}
             ${referral ? `<tr>
               <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666; font-size: 14px;">How they heard about us</td>
-              <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${referral}</td>
+              <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${escHtml(referral)}</td>
             </tr>` : ""}
             ${notes ? `<tr>
               <td style="padding: 10px 0; color: #666; font-size: 14px; vertical-align: top;">Additional notes</td>
-              <td style="padding: 10px 0;">${notes}</td>
+              <td style="padding: 10px 0;">${escHtml(notes)}</td>
             </tr>` : ""}
           </table>
 
           <div style="margin-top: 32px; padding: 16px; background: #f0f4f8; border-radius: 8px;">
             <p style="margin: 0; font-size: 14px; color: #555;">
-              Reply directly to this email to respond to ${contactName} at ${businessName}.
+              Reply directly to this email to respond to ${escHtml(contactName)} at ${escHtml(businessName)}.
             </p>
           </div>
         </div>

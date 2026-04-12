@@ -1,439 +1,306 @@
+import type { Metadata } from "next";
 import Image from "next/image";
-import { IceCube } from "@/components/IceCube";
+import Link from "next/link";
+import { totalCount } from "@/data/members";
 
-/* ─── Swatch Component ─────────────────────────────────── */
+export const metadata: Metadata = {
+  title: "Greater Medina Chamber of Commerce — Medina County, Ohio",
+  description:
+    "The Greater Medina Chamber of Commerce connects and champions businesses across Medina County, Ohio. 511+ member businesses, networking events, advocacy, and programs since 1938.",
+  openGraph: {
+    title: "Greater Medina Chamber of Commerce",
+    description:
+      "Connecting and championing Medina County's business community since 1938.",
+  },
+  alternates: { canonical: "/" },
+};
 
-function Swatch({
-  name,
-  hex,
-  cssVar,
-}: {
-  name: string;
-  hex: string;
-  cssVar: string;
-}) {
+const stats = [
+  { value: "1938", label: "Founded" },
+  { value: `${totalCount}+`, label: "Member Businesses" },
+  { value: "9", label: "Committees" },
+  { value: "30+", label: "Events Per Year" },
+];
+
+const partners = [
+  {
+    name: "Medina County Safety Council",
+    logo: "/images/partners/medina-county-safety-council.png",
+    href: "/programs/safety-council",
+  },
+  {
+    name: "Medina County Young Professionals Association",
+    logo: "/images/partners/medina-county-young-professionals-association.jpg",
+    href: "https://www.ypamedina.com",
+    external: true,
+  },
+  {
+    name: "Community Energy Advisors",
+    logo: "/images/partners/community-energy-advisors.jpg",
+    href: "/membership/savings",
+  },
+  {
+    name: "Anthem Insurance",
+    logo: "/images/partners/anthem-insurance.jpg",
+    href: "/membership/savings",
+  },
+  {
+    name: "Hunter Consulting",
+    logo: "/images/partners/hunter-consulting.png",
+    href: "/membership/savings",
+  },
+  {
+    name: "Medina City Schools",
+    logo: "/images/partners/medina-city-schools.png",
+    href: "https://www.medinaschools.org",
+    external: true,
+  },
+];
+
+const programs = [
+  {
+    tag: "Leadership",
+    title: "Compass Program",
+    desc: "Five sessions. Twenty leaders. A shared commitment to growth. Our flagship leadership development program meets February through May.",
+    href: "/programs/compass",
+    cta: "Learn More →",
+  },
+  {
+    tag: "Annual Event",
+    title: "Golf Outing",
+    desc: "Monday, July 20, 2026 at Westfield Country Club. 18-hole shotgun scramble — the Chamber's biggest fundraiser of the year.",
+    href: "/programs/golf-outing",
+    cta: "Register →",
+  },
+  {
+    tag: "Networking",
+    title: "Social Connect",
+    desc: "Corporate competitions, an expo, and early-access networking — all at Foundry Social. Where Medina's business community unwinds together.",
+    href: "/programs/social-connect",
+    cta: "Get Tickets →",
+  },
+  {
+    tag: "Recognition",
+    title: "Athena Awards",
+    desc: "Honoring exceptional women leaders in Medina County, co-hosted with the Medina County Women's Journal.",
+    href: "/programs/athena-awards",
+    cta: "Learn More →",
+  },
+];
+
+export default function HomePage() {
   return (
-    <div className="flex flex-col">
-      <div
-        className="w-full aspect-[3/2] rounded-[var(--radius-md)] border border-border-primary"
-        style={{ backgroundColor: hex }}
-      />
-      <p className="mt-2 font-bold text-body-sm">{name}</p>
-      <p className="text-caption font-regular">{hex}</p>
-      <p className="text-caption font-regular opacity-60">{cssVar}</p>
-    </div>
-  );
-}
-
-/* ─── Page ─────────────────────────────────────────────── */
-
-export default function FoundationPage() {
-  return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24 space-y-24">
-      {/* ─── Hero / Intro ─────────────────────────────── */}
-      <section className="relative">
-        <p className="text-overline text-cambridge mb-4">Foundation Specimen</p>
-        <h1 className="text-display max-w-3xl">
-          Medina Chamber
-          <br />
-          <span className="text-accent">Design System</span>
-        </h1>
-        <p className="text-body-lg text-text-secondary max-w-2xl mt-6">
-          Typography, color palette, and foundational tokens for the new
-          medinachamber.com — built on Next.js 16, BN Bergen, and a four-color
-          brand palette rooted in Oxford Blue.
-        </p>
-
-        {/* Easter egg — mysterious floating cube */}
-        <div className="absolute -bottom-4 right-0 animate-[cube-float_3s_ease-in-out_infinite]">
-          <IceCube />
-        </div>
-      </section>
-
-      {/* ─── Typography Scale ─────────────────────────── */}
-      <section>
-        <h2 className="text-overline text-cambridge mb-8">Typography Scale</h2>
-
-        <div className="space-y-8">
-          <div>
-            <p className="text-caption mb-2">Display — Hero headlines</p>
-            <p className="text-display">The Square</p>
-          </div>
-
-          <div>
-            <p className="text-caption mb-2">H1 — Page titles</p>
-            <h1>Connecting Medina Since 1938</h1>
-          </div>
-
-          <div>
-            <p className="text-caption mb-2">H2 — Section headers</p>
-            <h2>Membership Benefits</h2>
-          </div>
-
-          <div>
-            <p className="text-caption mb-2">H3 — Subsection</p>
-            <h3>Chamber Programs &amp; Events</h3>
-          </div>
-
-          <div>
-            <p className="text-caption mb-2">H4 — Card titles</p>
-            <h4>Annual Golf Outing</h4>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 pt-4 border-t border-border-secondary">
-            <div>
-              <p className="text-caption mb-2">Body Large (18px)</p>
-              <p className="text-body-lg text-text-secondary">
-                The Greater Medina Chamber of Commerce is the heartbeat of
-                business in Medina County. We connect entrepreneurs, established
-                businesses, and community leaders around a shared vision for growth.
-              </p>
-            </div>
-            <div>
-              <p className="text-caption mb-2">Body (16px)</p>
-              <p className="text-body text-text-secondary">
-                Whether you&apos;re a sole proprietor or a company of five hundred,
-                the Chamber provides the introductions, resources, and advocacy
-                you need to thrive in Northeast Ohio.
-              </p>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 pt-4 border-t border-border-secondary">
-            <div>
-              <p className="text-caption mb-2">Body Small (14px)</p>
-              <p className="text-body-sm text-text-secondary">
-                Events are held at the Chamber building on North Court Street,
-                right on the historic Medina Square.
-              </p>
-            </div>
-            <div>
-              <p className="text-caption mb-2">Caption (13px)</p>
-              <p className="text-caption">
-                Last updated March 2026 &bull; Greater Medina Chamber of Commerce
-              </p>
-            </div>
-            <div>
-              <p className="text-caption mb-2">Overline (12px)</p>
-              <p className="text-overline">Upcoming Events</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── Font Weights ─────────────────────────────── */}
-      <section>
-        <h2 className="text-overline text-cambridge mb-8">BN Bergen Weights</h2>
-        <div className="space-y-4">
-          <p className="text-h2 font-light">
-            Light 300 — Medina Means Business
+    <div>
+      {/* ─── Hero ─────────────────────────────────────────── */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-16 pb-20 lg:pt-24 lg:pb-28">
+        <div className="max-w-3xl">
+          <p className="text-overline text-cambridge mb-4">
+            Medina County, Ohio · Est. 1938
           </p>
-          <p className="text-h2 font-regular">
-            Regular 400 — Medina Means Business
+          <h1 className="text-display">
+            Where Medina
+            <br />
+            <span className="text-accent">Does Business</span>
+          </h1>
+          <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
+            The Greater Medina Chamber of Commerce connects and champions
+            businesses across Medina County. From sole proprietors to
+            manufacturers — we&apos;re the room where deals get made, leaders
+            get built, and Medina gets stronger.
           </p>
-          <p className="text-h2 font-bold">
-            Bold 700 — Medina Means Business
-          </p>
+          <div className="mt-10 flex flex-wrap gap-4">
+            <Link
+              href="/membership/join"
+              className="
+                inline-flex items-center px-8 py-4
+                bg-accent hover:bg-accent-hover
+                text-white font-bold text-body
+                rounded-[var(--radius-md)]
+                transition-colors
+              "
+            >
+              Join the Chamber →
+            </Link>
+            <Link
+              href="/membership/directory"
+              className="
+                inline-flex items-center px-6 py-4
+                border border-border-primary hover:border-text-tertiary
+                text-text-primary font-bold text-body-sm
+                rounded-[var(--radius-md)]
+                transition-colors
+              "
+            >
+              Browse the Directory
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* ─── Color Palette ────────────────────────────── */}
-      <section>
-        <h2 className="text-overline text-cambridge mb-8">Brand Palette</h2>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          <Swatch
-            name="Oxford Blue"
-            hex="#0C1B33"
-            cssVar="--oxford-blue"
-          />
-          <Swatch
-            name="Cambridge"
-            hex="#83BCA9"
-            cssVar="--cambridge"
-          />
-          <Swatch
-            name="Coquelicot"
-            hex="#FF4000"
-            cssVar="--coquelicot"
-          />
-          <Swatch
-            name="Emerald"
-            hex="#005450"
-            cssVar="--emerald"
-          />
+      {/* ─── Stats Strip ──────────────────────────────────── */}
+      <section className="bg-oxford">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {stats.map((s) => (
+              <div key={s.label} className="text-center">
+                <p className="text-display text-cambridge leading-none">{s.value}</p>
+                <p className="text-caption text-white/60 mt-2 uppercase tracking-wider">{s.label}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ─── Semantic Colors ──────────────────────────── */}
-      <section>
-        <h2 className="text-overline text-cambridge mb-8">
-          Semantic Tokens (theme-aware)
-        </h2>
-        <p className="text-body text-text-secondary mb-8">
-          Toggle light/dark mode to see these adapt.
-        </p>
-
-        <div className="grid md:grid-cols-2 gap-12">
-          {/* Backgrounds */}
+      {/* ─── Programs Grid ────────────────────────────────── */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
+        <div className="flex items-end justify-between mb-10">
           <div>
-            <h3 className="text-h4 mb-4">Backgrounds</h3>
-            <div className="space-y-3">
-              {[
-                { label: "bg-primary", cls: "bg-bg-primary" },
-                { label: "bg-secondary", cls: "bg-bg-secondary" },
-                { label: "bg-tertiary", cls: "bg-bg-tertiary" },
-                { label: "bg-inverse", cls: "bg-bg-inverse" },
-                { label: "accent-subtle", cls: "bg-accent-subtle" },
-                { label: "surface-cambridge", cls: "bg-surface-cambridge" },
-                { label: "surface-emerald", cls: "bg-surface-emerald" },
-              ].map(({ label, cls }) => (
-                <div key={label} className="flex items-center gap-4">
-                  <div
-                    className={`w-16 h-10 rounded-[var(--radius-sm)] border border-border-primary ${cls}`}
+            <p className="text-overline text-cambridge mb-2">Get Involved</p>
+            <h2 className="text-h2">Programs &amp; Events</h2>
+          </div>
+          <Link
+            href="/programs"
+            className="hidden sm:inline-flex text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
+          >
+            All programs →
+          </Link>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          {programs.map((p) => (
+            <Link
+              key={p.title}
+              href={p.href}
+              className="
+                group p-8
+                bg-bg-secondary border border-border-secondary
+                rounded-[var(--radius-lg)]
+                hover:border-border-primary transition-colors
+              "
+            >
+              <span className="text-caption text-cambridge font-bold uppercase tracking-wider">
+                {p.tag}
+              </span>
+              <h3 className="text-h3 mt-2 mb-3 group-hover:text-cambridge transition-colors">
+                {p.title}
+              </h3>
+              <p className="text-body-sm text-text-secondary leading-relaxed">
+                {p.desc}
+              </p>
+              <p className="mt-5 text-body-sm font-bold text-cambridge group-hover:translate-x-0.5 transition-transform inline-block">
+                {p.cta}
+              </p>
+            </Link>
+          ))}
+        </div>
+
+        <div className="mt-6 sm:hidden text-center">
+          <Link
+            href="/programs"
+            className="text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
+          >
+            View all programs →
+          </Link>
+        </div>
+      </section>
+
+      {/* ─── Partners & Sponsors ──────────────────────────── */}
+      <section className="bg-oxford py-16 lg:py-20">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <p className="text-caption text-white/50 uppercase tracking-widest text-center mb-10 font-bold">
+            Partners &amp; Sponsors
+          </p>
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-4 lg:gap-6">
+            {partners.map((p) => {
+              const inner = (
+                <div
+                  className="
+                    flex items-center justify-center
+                    bg-white rounded-[var(--radius-md)]
+                    p-4 aspect-square
+                    hover:opacity-90 transition-opacity
+                  "
+                >
+                  <Image
+                    src={p.logo}
+                    alt={p.name}
+                    width={120}
+                    height={120}
+                    className="w-full h-full object-contain"
                   />
-                  <code className="text-body-sm text-text-secondary">
-                    {label}
-                  </code>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Text colors */}
-          <div>
-            <h3 className="text-h4 mb-4">Text</h3>
-            <div className="space-y-3">
-              <p className="text-body text-text-primary font-bold">
-                text-primary — Headlines and body
-              </p>
-              <p className="text-body text-text-secondary">
-                text-secondary — Supporting copy
-              </p>
-              <p className="text-body text-text-tertiary">
-                text-tertiary — Captions and meta
-              </p>
-              <p className="text-body text-text-accent font-bold">
-                text-accent — Links and emphasis
-              </p>
-            </div>
+              );
+              return p.external ? (
+                <a
+                  key={p.name}
+                  href={p.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={p.name}
+                >
+                  {inner}
+                </a>
+              ) : (
+                <Link key={p.name} href={p.href} title={p.name}>
+                  {inner}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* ─── Component Samples ────────────────────────── */}
-      <section>
-        <h2 className="text-overline text-cambridge mb-8">Component Tokens</h2>
-
-        <div className="space-y-8">
-          {/* Buttons */}
-          <div>
-            <h3 className="text-h4 mb-4">Buttons</h3>
-            <div className="flex flex-wrap gap-4">
-              <a
-                href="#"
+      {/* ─── Join CTA ─────────────────────────────────────── */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
+        <div className="p-10 lg:p-16 bg-oxford text-white rounded-[var(--radius-lg)]">
+          <div className="grid lg:grid-cols-2 gap-10 items-center">
+            <div>
+              <p className="text-overline text-cambridge mb-4">Membership</p>
+              <h2 className="text-h2 text-white">
+                Ready to be part of what&apos;s building Medina?
+              </h2>
+              <p className="text-body-lg text-white/70 mt-4">
+                Most small businesses invest $250–$400 a year. The savings
+                programs alone typically cover that in the first month.
+                Stephanie will walk you through everything — no pressure.
+              </p>
+            </div>
+            <div className="space-y-4">
+              <Link
+                href="/membership/join"
                 className="
-                  inline-flex items-center px-6 py-3
+                  block w-full text-center py-4 px-6
                   bg-accent hover:bg-accent-hover
+                  text-white font-bold text-body
+                  rounded-[var(--radius-md)]
+                  transition-colors
+                "
+              >
+                Apply for Membership →
+              </Link>
+              <Link
+                href="/membership/benefits"
+                className="
+                  block w-full text-center py-3 px-6
+                  border border-white/30 hover:border-white/60
                   text-white font-bold text-body-sm
                   rounded-[var(--radius-md)]
                   transition-colors
                 "
               >
-                Join Now &rarr;
-              </a>
+                See All Benefits
+              </Link>
               <a
-                href="#"
+                href="mailto:stephanie@medinaohchamber.com"
                 className="
-                  inline-flex items-center px-6 py-3
-                  bg-bg-tertiary hover:bg-border-primary
-                  text-text-primary font-bold text-body-sm
-                  rounded-[var(--radius-md)]
-                  transition-colors
+                  block w-full text-center py-3 px-6
+                  text-cambridge font-bold text-body-sm
+                  transition-colors hover:text-cambridge/80
                 "
               >
-                Learn More
-              </a>
-              <a
-                href="#"
-                className="
-                  inline-flex items-center px-6 py-3
-                  border border-border-primary hover:border-text-tertiary
-                  text-text-primary font-bold text-body-sm
-                  rounded-[var(--radius-md)]
-                  transition-colors
-                "
-              >
-                View Events
+                Email Stephanie with Questions
               </a>
             </div>
-          </div>
-
-          {/* Cards */}
-          <div>
-            <h3 className="text-h4 mb-4">Card</h3>
-            <div className="grid md:grid-cols-3 gap-6">
-              {[
-                {
-                  title: "Networking Events",
-                  desc: "Monthly mixers, Chamber Chats, and Networking WOW bring business owners together.",
-                  tag: "Events",
-                },
-                {
-                  title: "Compass Program",
-                  desc: "Mentorship for emerging leaders paired with established Medina business owners.",
-                  tag: "Programs",
-                },
-                {
-                  title: "Athena Awards",
-                  desc: "Honoring women who demonstrate excellence in leadership and community service.",
-                  tag: "Awards",
-                },
-              ].map((card) => (
-                <div
-                  key={card.title}
-                  className="
-                    p-6 rounded-[var(--radius-lg)]
-                    bg-bg-secondary border border-border-secondary
-                    hover:border-border-primary hover:shadow-[var(--shadow-md)]
-                    transition-all
-                  "
-                >
-                  <span className="text-overline text-cambridge">
-                    {card.tag}
-                  </span>
-                  <h4 className="text-h4 mt-2 mb-3">{card.title}</h4>
-                  <p className="text-body-sm text-text-secondary">
-                    {card.desc}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Shadows + Radius */}
-          <div>
-            <h3 className="text-h4 mb-4">Elevation &amp; Radius</h3>
-            <div className="flex flex-wrap gap-6">
-              {[
-                { label: "shadow-sm", shadow: "var(--shadow-sm)" },
-                { label: "shadow-md", shadow: "var(--shadow-md)" },
-                { label: "shadow-lg", shadow: "var(--shadow-lg)" },
-              ].map(({ label, shadow }) => (
-                <div
-                  key={label}
-                  className="
-                    w-32 h-24 flex items-center justify-center
-                    bg-bg-primary border border-border-secondary
-                    rounded-[var(--radius-md)]
-                  "
-                  style={{ boxShadow: shadow }}
-                >
-                  <code className="text-caption">{label}</code>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── Photo Grid ───────────────────────────────── */}
-      <section>
-        <h2 className="text-overline text-cambridge mb-8">Photography</h2>
-        <p className="text-body text-text-secondary mb-8 max-w-2xl">
-          Real Medina. No stock photos. The town square, the gazebo, downtown
-          storefronts — this is the brand&apos;s visual bedrock.
-        </p>
-
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {[
-            { src: "/images/photos/medina-square-aerial-spring.png", alt: "Medina Square aerial in spring" },
-            { src: "/images/photos/gazebo-night-flag.png", alt: "Gazebo at night with American flag" },
-            { src: "/images/photos/downtown-medina.jpg", alt: "Downtown Medina storefronts" },
-            { src: "/images/photos/courthouse-medina.jpg", alt: "Medina courthouse" },
-            { src: "/images/photos/downtown-medina-2.jpg", alt: "Downtown Medina" },
-            { src: "/images/photos/gazebo-daytime-trees.png", alt: "Gazebo in daytime" },
-          ].map((photo) => (
-            <div
-              key={photo.src}
-              className="relative aspect-[4/3] rounded-[var(--radius-md)] overflow-hidden"
-            >
-              <Image
-                src={photo.src}
-                alt={photo.alt}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 50vw, 33vw"
-              />
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ─── Logo Marks ───────────────────────────────── */}
-      <section>
-        <h2 className="text-overline text-cambridge mb-8">Logo System</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          <div className="flex items-center justify-center p-8 bg-bg-secondary rounded-[var(--radius-lg)] border border-border-secondary">
-            <Image
-              src="/images/logos/logo-full-blue.png"
-              alt="Full logo blue"
-              width={140}
-              height={140}
-              className="h-28 w-auto"
-            />
-          </div>
-          <div className="flex items-center justify-center p-8 bg-oxford rounded-[var(--radius-lg)]">
-            <Image
-              src="/images/logos/logo-full-white.png"
-              alt="Full logo white"
-              width={140}
-              height={140}
-              className="h-28 w-auto"
-            />
-          </div>
-          <div className="flex items-center justify-center p-8 bg-bg-secondary rounded-[var(--radius-lg)] border border-border-secondary">
-            <Image
-              src="/images/logos/icon-blue.png"
-              alt="Icon mark blue"
-              width={80}
-              height={80}
-              className="h-20 w-auto"
-            />
-          </div>
-          <div className="flex items-center justify-center p-8 bg-cambridge rounded-[var(--radius-lg)]">
-            <Image
-              src="/images/logos/stamp-teal.png"
-              alt="Stamp seal teal"
-              width={80}
-              height={80}
-              className="h-20 w-auto"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ─── Architecture Summary ─────────────────────── */}
-      <section className="pb-8">
-        <h2 className="text-overline text-cambridge mb-8">Stack</h2>
-        <div className="grid md:grid-cols-2 gap-8">
-          <div>
-            <h3 className="text-h4 mb-3">Tech</h3>
-            <ul className="text-body-sm text-text-secondary space-y-2">
-              <li>Next.js 16 &mdash; App Router</li>
-              <li>Tailwind CSS v4 &mdash; CSS-first config</li>
-              <li>Vercel deployment</li>
-              <li>GrowthZone for member portal</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-h4 mb-3">Design Decisions</h3>
-            <ul className="text-body-sm text-text-secondary space-y-2">
-              <li>BN Bergen &mdash; geometric sans, matches the logo type</li>
-              <li>Oxford Blue dark mode &mdash; the brand IS the dark</li>
-              <li>Coquelicot accent &mdash; pops against both themes</li>
-              <li>Real photography over stock &mdash; Medina sells itself</li>
-            </ul>
           </div>
         </div>
       </section>

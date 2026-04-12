@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     description:
       "Networking, directory listing, advocacy, savings programs, and community visibility for Medina County businesses.",
   },
+  alternates: { canonical: "/membership/join" },
 };
 
 const benefits = [

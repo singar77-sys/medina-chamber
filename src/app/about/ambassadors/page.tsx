@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -14,13 +15,94 @@ export const metadata: Metadata = {
 };
 
 const ambassadors = [
-  "Danielle Litton",
-  "Matt Strehle",
-  "Kimberly Valco",
-  "Claus Meyer",
-  "Cindy Farnham",
-  "Cindy Phillips",
-  "Sam Pietrangelo",
+  {
+    name: "Kari Deeks",
+    title: "Treasury Management Officer",
+    company: "First Federal of Lakewood",
+    email: "kdeeks@ffl.net",
+    website: "https://www.ffl.bank/",
+    photo: "/images/people/ambassadors/ambassadors-image-03-medina-chamber.jpg",
+  },
+  {
+    name: "Brittney Esser",
+    title: "Escrow Processor",
+    company: "Title Select",
+    email: "brittney@titleselect.net",
+    website: "https://www.titleselect.net",
+    photo: "/images/people/ambassadors/a-woman-with-curly-shoulder-length-gray-hair-wearing-clear-glasses-and-a-sleeveless-light-purple-top-medina-chamber.jpg",
+  },
+  {
+    name: "Tania Grant",
+    title: "Owner",
+    company: "TAG Studio",
+    email: "taniagrantstudio@gmail.com",
+    website: "https://www.tagvoiceover.com/",
+    photo: "/images/people/ambassadors/tania-grant-jpg-medina-chamber.jpg",
+  },
+  {
+    name: "Don Hicks",
+    title: "Area Vice President – Midwest Region",
+    company: "Vensure",
+    email: "don.hicks@vensure.com",
+    website: null,
+    photo: "/images/people/ambassadors/don-hicks-jpg-medina-chamber.jpg",
+  },
+  {
+    name: "Laurin Jeffers",
+    title: "Events and Community Manager",
+    company: "Foundry Social / High Voltage Karting",
+    email: "laurinj@highvoltagekarting.com",
+    website: "https://thefoundrysocial.com/",
+    photo: "/images/people/ambassadors/a-smiling-woman-with-dark-brown-hair-and-a-beige-button-up-shirt-indoors-with-blurred-background-medina-chamber.jpg",
+  },
+  {
+    name: "Danielle Litton",
+    title: "MRO Midwest Sales Manager",
+    company: "National Process Systems",
+    email: "Danielle.Litton@National-Process.com",
+    website: null,
+    photo: "/images/people/ambassadors/ambassadors-image-08-medina-chamber.jpg",
+  },
+  {
+    name: "Claus Meyer",
+    title: "Certified Financial Planner",
+    company: "Raymond James",
+    email: "claus.meyer@raymondjames.com",
+    website: "https://www.raymondjames.com/clausmeyer",
+    photo: "/images/people/ambassadors/portrait-of-a-smiling-man-in-a-business-suit-outdoors-with-trees-in-the-background-medina-chamber.jpg",
+  },
+  {
+    name: "Cindy Phillips",
+    title: "Vice President, Wealth Advisor",
+    company: "Huntington Bank",
+    email: "cindy.k.phillips@huntington.com",
+    website: "https://www.huntington.com/",
+    photo: "/images/people/ambassadors/a-woman-with-long-gray-hair-smiling-wearing-a-black-blazer-and-patterned-blouse-standing-in-front-of-a-brick-wall-medina-chamber.jpg",
+  },
+  {
+    name: "Sam Pietrangelo",
+    title: "Community Marketing Manager",
+    company: "Armstrong",
+    email: "spietrangelo@agoc.com",
+    website: "https://armstrongonewire.com",
+    photo: "/images/people/ambassadors/smiling-man-with-short-dark-hair-wearing-a-light-gray-collared-shirt-face-close-up-against-a-dark-cloudy-background-medina-chamber.jpg",
+  },
+  {
+    name: "Tori Toth",
+    title: "Walk Manager",
+    company: "Alzheimer's Association",
+    email: "tjtoth@alz.org",
+    website: "https://www.alz.org",
+    photo: "/images/people/ambassadors/tori-toth-jpeg-medina-chamber.jpeg",
+  },
+  {
+    name: "Kimberly Valco",
+    title: "Community Relations",
+    company: "Western Reserve Masonic Community",
+    email: "kvalco@ohiomasonichome.org",
+    website: "https://wrmcoh.org",
+    photo: "/images/people/ambassadors/ambassadors-image-13-medina-chamber.jpg",
+  },
 ];
 
 const roles = [
@@ -81,21 +163,48 @@ export default function AmbassadorsPage() {
         </div>
       </section>
 
-      {/* Ambassador list */}
+      {/* Ambassador grid */}
       <section className="mt-20">
-        <h2 className="text-overline text-cambridge mb-8">Meet the Ambassadors</h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {ambassadors.map((name) => (
+        <h2 className="text-overline text-cambridge mb-8">
+          Meet the Ambassadors — {ambassadors.length} Members
+        </h2>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {ambassadors.map((a) => (
             <div
-              key={name}
-              className="flex items-center gap-4 p-5 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
+              key={a.name}
+              className="overflow-hidden bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
             >
-              <div className="w-10 h-10 rounded-full bg-cambridge/20 flex items-center justify-center shrink-0 text-body-sm font-bold text-cambridge">
-                {name.split(" ").map((n) => n[0]).join("").substring(0, 2)}
+              <div className="relative w-full aspect-[4/3]">
+                <Image
+                  src={a.photo}
+                  alt={a.name}
+                  fill
+                  className="object-cover object-top"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                />
               </div>
-              <div>
-                <p className="text-body font-semibold text-text-primary">{name}</p>
-                <p className="text-caption text-cambridge font-bold mt-0.5">Ambassador</p>
+              <div className="p-5">
+                <h3 className="text-body font-bold text-text-primary">{a.name}</h3>
+                <p className="text-body-sm text-text-secondary mt-0.5">{a.title}</p>
+                <p className="text-caption font-semibold text-cambridge mt-0.5">{a.company}</p>
+                <div className="mt-3 flex flex-col gap-1">
+                  <a
+                    href={`mailto:${a.email}`}
+                    className="text-caption text-text-tertiary hover:text-cambridge transition-colors truncate"
+                  >
+                    {a.email}
+                  </a>
+                  {a.website && (
+                    <a
+                      href={a.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-caption text-text-tertiary hover:text-cambridge transition-colors truncate"
+                    >
+                      {a.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
           ))}

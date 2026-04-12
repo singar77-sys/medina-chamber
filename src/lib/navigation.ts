@@ -107,6 +107,11 @@ export const navigation: NavItem[] = [
         description: "Chamber and member announcements",
       },
       {
+        label: "Job Board",
+        href: "/jobs",
+        description: "Local openings from member businesses",
+      },
+      {
         label: "Hall of Fame",
         href: "/about/hall-of-fame",
         description: "Medina's business legends",
@@ -140,13 +145,14 @@ export const searchablePages: { label: string; href: string; keywords: string }[
   { label: "Savings Programs", href: "/membership/savings", keywords: "discount deal savings insurance" },
   { label: "Committees & Councils", href: "/membership/committees", keywords: "committee council volunteer leadership board" },
   // Programs
-  { label: "Compass Mentorship", href: "/programs/compass", keywords: "mentor mentorship emerging leaders" },
+  { label: "Compass Program", href: "/programs/compass", keywords: "leadership development professional program compass" },
   { label: "Social Connect", href: "/programs/social-connect", keywords: "social networking casual meetup" },
   { label: "Safety Council", href: "/programs/safety-council", keywords: "osha safety compliance workplace" },
   { label: "Rental Space", href: "/programs/rental-space", keywords: "rent room venue space building event" },
   // News
   { label: "Chamber News", href: "/news", keywords: "news update announcement" },
   { label: "Member Announcements", href: "/news/member-news", keywords: "member news jobs hiring milestone" },
+  { label: "Job Board", href: "/jobs", keywords: "jobs hiring employment career work position opening" },
   { label: "Magazine", href: "/news/magazine", keywords: "medina means business magazine publication" },
   // About
   { label: "About the Chamber", href: "/about", keywords: "about history mission" },

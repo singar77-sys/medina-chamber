@@ -47,7 +47,7 @@ const programs = [
     category: "Workplace Safety",
     href: "/programs/safety-council",
     description:
-      "Monthly safety education meetings in partnership with the Ohio BWC — free for chamber members, with BWC rebate eligibility for participating employers.",
+      "Monthly safety education meetings in partnership with the Ohio BWC — enrollment free for chamber members, with BWC group rebate eligibility for participating employers.",
   },
   {
     name: "Rental Space",

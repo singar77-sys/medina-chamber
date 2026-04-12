@@ -83,7 +83,7 @@ const extraBenefits = [
   {
     title: "Member Rate on Events",
     description:
-      "Discounted registration for chamber events including the Golf Outing, Athena Awards, and Safety Council meetings.",
+      "Discounted registration for chamber events including the Golf Outing and Athena Awards. Safety Council membership is included at no additional charge.",
   },
 ];
 

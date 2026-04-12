@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 
   try {
     await resend.emails.send({
-      from: "ChamberBot <onboarding@resend.dev>",
+      from: "Chamber Website <onboarding@resend.dev>",
       to: CHAMBER_EMAIL,
       replyTo: email.trim(),
       subject: `Contact form: ${name.trim()}`,
@@ -30,7 +30,7 @@ export async function POST(req: Request) {
         "",
         message.trim(),
       ]
-        .filter((l) => l !== undefined)
+        .filter(Boolean)
         .join("\n"),
       html: `
         <p><strong>Name:</strong> ${escHtml(name)}</p>

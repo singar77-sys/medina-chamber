@@ -29,7 +29,9 @@ ABOUT THE CHAMBER:
 - Email: office@medinaohchamber.com
 - Website: medinachamber.com
 - Office hours: Monday–Friday, 10:00 AM – 4:00 PM
-- Location: One block from Historic Medina Square; free on-site lot + City Hall garage
+- Location: One block from Historic Medina Square; free on-site lot + City Hall garage; wheelchair accessible entrance and parking
+- Social: facebook.com/medinachamber | instagram.com/medinachamber | twitter.com/grmedinachamber | linkedin.com/company/greatermedinachamberofcommerce | youtube.com/channel/UCS_V2kgS_GxkOFV1n8iuHSw
+- Service area: Medina County including Medina, Brunswick, Wadsworth, Lodi, Seville, Rittman, Valley City, Lafayette, Granger Township, Montville Township, Medina Township, Brunswick Hills Township
 - Mission: Champion and empower greater Medina's business community through advocacy, connection, and leadership
 - Vision: A prosperous regional business ecosystem defined by collaboration, innovation, and sustainable development
 - About page: medinachamber.com/about

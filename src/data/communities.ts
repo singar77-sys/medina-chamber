@@ -3,6 +3,8 @@ import { members, extractCity, type Member } from "./members";
 export interface Community {
   slug: string;
   name: string;
+  /** City name used to match member addresses (may differ from display name) */
+  cityMatch: string;
   county: string;
   zip: string[];
   tagline: string;
@@ -11,10 +13,16 @@ export interface Community {
   chamberPitch: string;
 }
 
-export const communities: Community[] = [
+/**
+ * All potential community pages.
+ * Only communities with ≥1 chamber member are published.
+ * Use `activeCommunities` for rendering and static generation.
+ */
+const allCommunities: Community[] = [
   {
     slug: "medina",
     name: "Medina",
+    cityMatch: "Medina",
     county: "Medina County",
     zip: ["44256"],
     tagline: "The heart of Medina County's business community",
@@ -26,6 +34,7 @@ export const communities: Community[] = [
   {
     slug: "brunswick",
     name: "Brunswick",
+    cityMatch: "Brunswick",
     county: "Medina County",
     zip: ["44212"],
     tagline: "Northern Medina County's commercial center",
@@ -37,6 +46,7 @@ export const communities: Community[] = [
   {
     slug: "wadsworth",
     name: "Wadsworth",
+    cityMatch: "Wadsworth",
     county: "Medina County",
     zip: ["44281"],
     tagline: "Where industry and community meet",
@@ -48,6 +58,7 @@ export const communities: Community[] = [
   {
     slug: "lodi",
     name: "Lodi",
+    cityMatch: "Lodi",
     county: "Medina County",
     zip: ["44254"],
     tagline: "Small-town character, county-wide connections",
@@ -59,6 +70,7 @@ export const communities: Community[] = [
   {
     slug: "seville",
     name: "Seville",
+    cityMatch: "Seville",
     county: "Medina County",
     zip: ["44273"],
     tagline: "Gateway to southern Medina County",
@@ -70,6 +82,7 @@ export const communities: Community[] = [
   {
     slug: "valley-city",
     name: "Valley City",
+    cityMatch: "Valley City",
     county: "Medina County",
     zip: ["44280"],
     tagline: "Rural roots, regional reach",
@@ -81,6 +94,7 @@ export const communities: Community[] = [
   {
     slug: "hinckley",
     name: "Hinckley",
+    cityMatch: "Hinckley",
     county: "Medina County",
     zip: ["44233"],
     tagline: "Where the buzzards come home — and businesses thrive",
@@ -90,8 +104,21 @@ export const communities: Community[] = [
       "Hinckley businesses gain visibility across Medina County through the chamber's directory, events, and advocacy — connecting you beyond the township line.",
   },
   {
+    slug: "fairlawn",
+    name: "Fairlawn",
+    cityMatch: "Fairlawn",
+    county: "Summit County",
+    zip: ["44333"],
+    tagline: "Where Medina County meets the Akron metro",
+    description:
+      "Fairlawn sits at the crossroads of Summit and Medina counties along West Market Street and Route 18, with a dense concentration of retail, financial, and professional services. Its strategic position connects the Akron metro to the Medina County business corridor.",
+    chamberPitch:
+      "Fairlawn businesses on the Medina–Summit county line get the best of both worlds through chamber membership — a 511+ member Medina County network plus the advocacy and programs that serve businesses across the region.",
+  },
+  {
     slug: "rittman",
     name: "Rittman",
+    cityMatch: "Rittman",
     county: "Wayne/Medina County",
     zip: ["44270"],
     tagline: "A hardworking community with deep roots",
@@ -103,6 +130,7 @@ export const communities: Community[] = [
   {
     slug: "lafayette",
     name: "Lafayette Township",
+    cityMatch: "Lafayette",
     county: "Medina County",
     zip: ["44256"],
     tagline: "Growing community, growing business",
@@ -113,11 +141,6 @@ export const communities: Community[] = [
   },
 ];
 
-/** Get a community by its slug */
-export function getCommunityBySlug(slug: string): Community | undefined {
-  return communities.find((c) => c.slug === slug);
-}
-
 /** Get all members whose address city matches (case-insensitive) */
 export function getMembersByCity(cityName: string): Member[] {
   const lower = cityName.toLowerCase();
@@ -125,4 +148,20 @@ export function getMembersByCity(cityName: string): Member[] {
     const city = extractCity(m.address).toLowerCase();
     return city === lower;
   });
+}
+
+/**
+ * Only communities that have at least one chamber member.
+ * When a new member joins from Rittman or Lafayette, the page auto-populates.
+ */
+export const activeCommunities: Community[] = allCommunities.filter(
+  (c) => getMembersByCity(c.cityMatch).length > 0
+);
+
+/** Full list including empty communities (for future reference) */
+export const communities = allCommunities;
+
+/** Get a community by its slug (active only) */
+export function getCommunityBySlug(slug: string): Community | undefined {
+  return activeCommunities.find((c) => c.slug === slug);
 }

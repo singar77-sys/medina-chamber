@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  communities,
+  activeCommunities,
   getCommunityBySlug,
   getMembersByCity,
 } from "@/data/communities";
@@ -11,7 +11,7 @@ import { isVisibilityPlus } from "@/data/members";
 
 // ── Static generation ─────────────────────────────────────────────
 export function generateStaticParams() {
-  return communities.map((c) => ({ slug: c.slug }));
+  return activeCommunities.map((c) => ({ slug: c.slug }));
 }
 
 // ── Per-page metadata ─────────────────────────────────────────────
@@ -44,8 +44,7 @@ export default async function CommunityPage(
   const community = getCommunityBySlug(slug);
   if (!community) notFound();
 
-  const citySearch = community.name.replace(" Township", "");
-  const cityMembers = getMembersByCity(citySearch);
+  const cityMembers = getMembersByCity(community.cityMatch);
 
   // Sort: Visibility Plus first, then alphabetical
   const sortedMembers = [...cityMembers].sort((a, b) => {

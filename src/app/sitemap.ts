@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { members } from "@/data/members";
-import { communities } from "@/data/communities";
+import { activeCommunities } from "@/data/communities";
 
 const BASE_URL = "https://medinachamber.com";
 
@@ -51,7 +51,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  const communityPages: MetadataRoute.Sitemap = communities.map((c) => ({
+  const communityPages: MetadataRoute.Sitemap = activeCommunities.map((c) => ({
     url: `${BASE_URL}/community/${c.slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly",

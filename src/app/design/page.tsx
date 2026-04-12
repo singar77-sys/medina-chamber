@@ -347,12 +347,12 @@ export default function FoundationPage() {
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {[
-            { src: "/images/photos/medina-square-aerial-spring.png", alt: "Medina Square aerial in spring" },
-            { src: "/images/photos/gazebo-night-flag.png", alt: "Gazebo at night with American flag" },
+            { src: "/images/photos/medina-square-aerial-spring.jpg", alt: "Medina Square aerial in spring" },
+            { src: "/images/photos/gazebo-night-flag.jpg", alt: "Gazebo at night with American flag" },
             { src: "/images/photos/downtown-medina.jpg", alt: "Downtown Medina storefronts" },
             { src: "/images/photos/courthouse-medina.jpg", alt: "Medina courthouse" },
             { src: "/images/photos/downtown-medina-2.jpg", alt: "Downtown Medina" },
-            { src: "/images/photos/gazebo-daytime-trees.png", alt: "Gazebo in daytime" },
+            { src: "/images/photos/gazebo-daytime-trees.jpg", alt: "Gazebo in daytime" },
           ].map((photo) => (
             <div
               key={photo.src}

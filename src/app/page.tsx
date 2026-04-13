@@ -245,7 +245,13 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-20">
           <FadeIn>
             <div className="max-w-2xl mx-auto text-center mb-8">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-cambridge/10 border border-cambridge/20 rounded-full mb-6">
+              {/* Mascot */}
+              <img
+                src="/images/chamberbot-mascot.svg"
+                alt="ChamberBot mascot"
+                className="w-28 h-28 mx-auto mb-4"
+              />
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-cambridge/10 border border-cambridge/20 rounded-full mb-4">
                 <div className="w-2 h-2 bg-cambridge rounded-full animate-pulse" />
                 <span className="text-caption font-bold text-cambridge">
                   AI-Powered

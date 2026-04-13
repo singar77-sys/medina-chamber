@@ -104,18 +104,6 @@ const allCommunities: Community[] = [
       "Hinckley businesses gain visibility across Medina County through the chamber's directory, events, and advocacy — connecting you beyond the township line.",
   },
   {
-    slug: "fairlawn",
-    name: "Fairlawn",
-    cityMatch: "Fairlawn",
-    county: "Summit County",
-    zip: ["44333"],
-    tagline: "Where Medina County meets the Akron metro",
-    description:
-      "Fairlawn sits at the crossroads of Summit and Medina counties along West Market Street and Route 18, with a dense concentration of retail, financial, and professional services. Its strategic position connects the Akron metro to the Medina County business corridor.",
-    chamberPitch:
-      "Fairlawn businesses on the Medina–Summit county line get the best of both worlds through chamber membership — a 511+ member Medina County network plus the advocacy and programs that serve businesses across the region.",
-  },
-  {
     slug: "rittman",
     name: "Rittman",
     cityMatch: "Rittman",

@@ -1,0 +1,179 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="900" viewBox="0 0 700 900" fill="none">
+  <title>MCC Chibi Mascot</title>
+  <desc>Animated chibi mascot with blonde hair, glasses, mint shirt, jeans, and MCC building logo on chest.</desc>
+
+  <style>
+    :root {
+      --skin: #F6D9C8;
+      --skin-shadow: #EABCA6;
+      --hair: #F2D369;
+      --hair-shadow: #DEBB4D;
+      --hair-line: #C79E2F;
+      --ink: #1E2B3F;
+      --eye: #263243;
+      --glasses: #3D4A5B;
+      --shirt: #BEEFE8;
+      --shirt-shadow: #A7E2DA;
+      --jeans: #5879B8;
+      --jeans-shadow: #3C5E99;
+      --shoe: #E9EEF5;
+      --logo: #041D49;
+      --blush: #F3B4B7;
+    }
+
+    .float {
+      animation: floaty 4.2s ease-in-out infinite;
+      transform-origin: 350px 520px;
+    }
+
+    .blink-eyes {
+      animation: blink 5.4s infinite;
+      transform-origin: 350px 275px;
+    }
+
+    .glint {
+      animation: lensShine 4.5s ease-in-out infinite;
+    }
+
+    .sway-left { animation: swayL 4.2s ease-in-out infinite; transform-origin: 210px 490px; }
+    .sway-right { animation: swayR 4.2s ease-in-out infinite; transform-origin: 490px 490px; }
+
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes blink {
+      0%, 45%, 48%, 100% { transform: scaleY(1); }
+      46%, 47% { transform: scaleY(0.08); }
+    }
+
+    @keyframes lensShine {
+      0%, 15% { opacity: 0; transform: translateX(-38px); }
+      25% { opacity: 0.7; }
+      40% { opacity: 0; transform: translateX(48px); }
+      100% { opacity: 0; transform: translateX(48px); }
+    }
+
+    @keyframes swayL {
+      0%,100% { transform: rotate(4deg); }
+      50% { transform: rotate(7deg); }
+    }
+
+    @keyframes swayR {
+      0%,100% { transform: rotate(-4deg); }
+      50% { transform: rotate(-7deg); }
+    }
+  </style>
+
+  <defs>
+    <clipPath id="shirtLogoClip">
+      <rect x="283" y="438" width="136" height="112" rx="22"/>
+    </clipPath>
+    <clipPath id="leftLensClip">
+      <rect x="250" y="245" width="83" height="47" rx="18"/>
+    </clipPath>
+    <clipPath id="rightLensClip">
+      <rect x="368" y="245" width="83" height="47" rx="18"/>
+    </clipPath>
+    <linearGradient id="shineGrad" x1="0" x2="1">
+      <stop offset="0" stop-color="white" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="white" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <g class="float">
+    <!-- shadow -->
+    <ellipse cx="350" cy="842" rx="136" ry="24" fill="#C8D4E2" opacity="0.35"/>
+
+    <!-- hair back -->
+    <g>
+      <path d="M180 290C180 175 254 105 350 105C446 105 520 177 520 290V434C520 495 487 550 445 593L414 625C402 639 379 639 367 625L350 606L333 625C321 639 298 639 286 625L255 593C213 550 180 496 180 434V290Z" fill="var(--hair)" stroke="var(--hair-line)" stroke-width="10"/>
+      <path d="M224 279C236 188 284 147 350 147C416 147 464 188 476 279" stroke="var(--hair-shadow)" stroke-width="18" stroke-linecap="round" opacity="0.65"/>
+    </g>
+
+    <!-- arms behind torso -->
+    <g>
+      <path class="sway-left" d="M225 466C176 490 144 546 150 604C153 634 168 652 189 649C209 646 220 628 222 603L229 521C230 503 235 488 241 478" fill="var(--skin)" stroke="var(--ink)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+      <path class="sway-right" d="M475 466C524 490 556 546 550 604C547 634 532 652 511 649C491 646 480 628 478 603L471 521C470 503 465 488 459 478" fill="var(--skin)" stroke="var(--ink)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <!-- head -->
+    <g>
+      <circle cx="350" cy="282" r="132" fill="var(--skin)" stroke="var(--ink)" stroke-width="10"/>
+
+      <!-- bangs -->
+      <path d="M215 263C218 171 279 121 349 121C430 121 481 177 485 255C452 229 425 225 399 233C376 240 362 256 350 279C337 252 314 236 285 231C259 226 237 234 215 263Z" fill="var(--hair)" stroke="var(--hair-line)" stroke-width="10" stroke-linejoin="round"/>
+      <path d="M263 152C234 167 219 193 213 227" stroke="#FFF1B3" stroke-width="12" stroke-linecap="round" opacity="0.75"/>
+      <path d="M441 166C458 184 471 210 476 233" stroke="#FFF1B3" stroke-width="12" stroke-linecap="round" opacity="0.65"/>
+
+      <!-- side locks -->
+      <path d="M210 257C184 283 177 326 187 368C198 411 228 443 258 455C245 416 245 375 251 337C255 311 248 286 210 257Z" fill="var(--hair)" stroke="var(--hair-line)" stroke-width="10" stroke-linejoin="round"/>
+      <path d="M490 257C516 283 523 326 513 368C502 411 472 443 442 455C455 416 455 375 449 337C445 311 452 286 490 257Z" fill="var(--hair)" stroke="var(--hair-line)" stroke-width="10" stroke-linejoin="round"/>
+
+      <!-- ears -->
+      <circle cx="222" cy="292" r="22" fill="var(--skin)" stroke="var(--ink)" stroke-width="8"/>
+      <circle cx="478" cy="292" r="22" fill="var(--skin)" stroke="var(--ink)" stroke-width="8"/>
+
+      <!-- face -->
+      <g class="blink-eyes">
+        <ellipse cx="296" cy="277" rx="25" ry="31" fill="white" stroke="var(--ink)" stroke-width="8"/>
+        <ellipse cx="404" cy="277" rx="25" ry="31" fill="white" stroke="var(--ink)" stroke-width="8"/>
+        <circle cx="296" cy="284" r="12" fill="var(--eye)"/>
+        <circle cx="404" cy="284" r="12" fill="var(--eye)"/>
+        <circle cx="290" cy="278" r="4" fill="white"/>
+        <circle cx="398" cy="278" r="4" fill="white"/>
+      </g>
+
+      <ellipse cx="266" cy="319" rx="14" ry="8" fill="var(--blush)" opacity="0.55"/>
+      <ellipse cx="434" cy="319" rx="14" ry="8" fill="var(--blush)" opacity="0.55"/>
+      <path d="M347 286C344 300 343 311 347 321" stroke="#A36F5E" stroke-width="6" stroke-linecap="round"/>
+      <path d="M329 336C340 346 360 346 371 336" stroke="#A34E62" stroke-width="8" stroke-linecap="round"/>
+
+      <!-- glasses -->
+      <g>
+        <rect x="250" y="245" width="83" height="47" rx="18" fill="none" stroke="var(--glasses)" stroke-width="8"/>
+        <rect x="368" y="245" width="83" height="47" rx="18" fill="none" stroke="var(--glasses)" stroke-width="8"/>
+        <path d="M333 268H368" stroke="var(--glasses)" stroke-width="8" stroke-linecap="round"/>
+        <path d="M250 262H232" stroke="var(--glasses)" stroke-width="8" stroke-linecap="round"/>
+        <path d="M451 262H469" stroke="var(--glasses)" stroke-width="8" stroke-linecap="round"/>
+
+        <g class="glint" clip-path="url(#leftLensClip)">
+          <rect x="230" y="238" width="28" height="70" transform="rotate(18 230 238)" fill="url(#shineGrad)" opacity="0.0"/>
+        </g>
+        <g class="glint" clip-path="url(#rightLensClip)">
+          <rect x="348" y="238" width="28" height="70" transform="rotate(18 348 238)" fill="url(#shineGrad)" opacity="0.0"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- body -->
+    <g>
+      <path d="M244 398C267 384 305 372 350 372C395 372 433 384 456 398C495 421 522 467 522 524V581C522 597 509 610 493 610H207C191 610 178 597 178 581V524C178 467 205 421 244 398Z" fill="var(--shirt)" stroke="var(--ink)" stroke-width="10"/>
+      <path d="M212 533C253 521 301 514 350 514C399 514 447 521 488 533V581C488 597 475 610 459 610H241C225 610 212 597 212 581V533Z" fill="var(--shirt-shadow)" opacity="0.7"/>
+
+      <!-- shirt logo -->
+      <g clip-path="url(#shirtLogoClip)">
+        <g transform="translate(287 443) scale(0.112)">
+          <path d="M286 0h53l7 35c53 11 97 49 116 100h86l122 122-66 66v173l302 152-69 69v287h-47V729l46-46-243-122v77L381 542v462h-59V542L210 638v-77L-33 683l46 46v275h-47V717l-69-69 302-152V323l-66-66 122-122h86c19-51 63-89 116-100l7-35zm11 53c-49 10-89 47-102 95l-5 18H78L-4 248l47 47v188L-180 594l30 30 206-104 91 45 61-76v515h165V489l61 76 91-45 206 104 30-30-223-111V295l47-47-82-82H510l-5-18c-13-48-53-85-102-95l-19-4V53h-68v-4l-19 4z" fill="var(--logo)" opacity="0.95"/>
+          <path d="M280 161c-38 0-69 31-69 69v163l59-29v-134c0-6 4-10 10-10s10 4 10 10v105c18-5 38-7 59-7 21 0 41 2 59 7V230c0-6 4-10 10-10s10 4 10 10v134l59 29V230c0-38-31-69-69-69H280z" fill="var(--logo)"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- legs -->
+    <g>
+      <path d="M250 610H333V799C333 813 321 825 307 825H276C262 825 250 813 250 799V610Z" fill="var(--jeans)" stroke="var(--ink)" stroke-width="10"/>
+      <path d="M367 610H450V799C450 813 438 825 424 825H393C379 825 367 813 367 799V610Z" fill="var(--jeans)" stroke="var(--ink)" stroke-width="10"/>
+      <path d="M250 610H333V644H250z" fill="var(--jeans-shadow)" opacity="0.55"/>
+      <path d="M367 610H450V644H367z" fill="var(--jeans-shadow)" opacity="0.55"/>
+    </g>
+
+    <!-- shoes -->
+    <g>
+      <path d="M229 809H341C357 809 370 822 370 838V842H215V829C215 818 218 809 229 809Z" fill="var(--shoe)" stroke="var(--ink)" stroke-width="10" stroke-linejoin="round"/>
+      <path d="M359 809H471C482 809 485 818 485 829V842H330V838C330 822 343 809 359 809Z" fill="var(--shoe)" stroke="var(--ink)" stroke-width="10" stroke-linejoin="round"/>
+    </g>
+  </g>
+</svg>

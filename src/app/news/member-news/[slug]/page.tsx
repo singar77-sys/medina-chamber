@@ -146,17 +146,6 @@ export default async function MemberNewsArticlePage(
               </div>
             )}
 
-            {/* Original source link */}
-            <div className="mt-12 pt-8 border-t border-border-secondary">
-              <a
-                href={article.detailUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-body-sm text-text-tertiary hover:text-text-secondary transition-colors"
-              >
-                View original post on GrowthZone ↗
-              </a>
-            </div>
           </div>
 
           {/* ── Sidebar ── */}

@@ -247,21 +247,6 @@ export default async function EventPage(
               ← All Events
             </Link>
 
-            {/* View on GrowthZone */}
-            <a
-              href={event.detailUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="
-                flex items-center justify-center gap-2 w-full py-3 px-6
-                border border-border-secondary hover:border-border-primary
-                text-text-tertiary text-body-sm
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
-            >
-              View on GrowthZone ↗
-            </a>
           </aside>
         </div>
       </div>

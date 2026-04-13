@@ -217,30 +217,25 @@ export default async function MemberPage(
 
             {/* CTA buttons */}
             <div className="mt-6 flex flex-wrap gap-3">
-              <a
-                href={member.gzUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="
-                  inline-flex items-center gap-2 px-5 py-2.5
-                  bg-accent hover:bg-accent-hover
-                  text-white font-bold text-body-sm
-                  rounded-[var(--radius-md)]
-                  transition-colors
-                "
-              >
-                Member Portal
-                <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="currentColor">
-                  <path fillRule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
-                  <path fillRule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
-                </svg>
-              </a>
-
               {member.website && (
                 <a
                   href={member.website}
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="
+                    inline-flex items-center gap-2 px-5 py-2.5
+                    bg-accent hover:bg-accent-hover
+                    text-white font-bold text-body-sm
+                    rounded-[var(--radius-md)]
+                    transition-colors
+                  "
+                >
+                  Visit Website
+                </a>
+              )}
+              {member.phone && (
+                <a
+                  href={`tel:${member.phone.replace(/\D/g, "")}`}
                   className="
                     inline-flex items-center gap-2 px-5 py-2.5
                     border border-border-primary hover:border-text-tertiary
@@ -249,7 +244,7 @@ export default async function MemberPage(
                     transition-colors
                   "
                 >
-                  Visit Website
+                  Call {member.phone}
                 </a>
               )}
             </div>

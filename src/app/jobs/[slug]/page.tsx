@@ -47,13 +47,7 @@ export default async function JobDetailPage(
 
   // Parse body into paragraphs
   const bodyParagraphs = job.body
-    ? job.body
-        .replace(/&rsquo;/g, "\u2019")
-        .replace(/&mdash;/g, "\u2014")
-        .replace(/&bull;/g, "\u2022")
-        .replace(/&amp;/g, "&")
-        .split("\n")
-        .filter(Boolean)
+    ? job.body.split("\n").filter(Boolean)
     : [];
 
   // JSON-LD JobPosting schema

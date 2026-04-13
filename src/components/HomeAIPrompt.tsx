@@ -12,7 +12,7 @@ const suggestions = [
 /**
  * Inline AI prompt for the homepage — not a chatbot widget,
  * a first-class content section. Sends one question and shows
- * the streamed response inline.
+ * the streamed response inline. Styled for light backgrounds.
  */
 export function HomeAIPrompt() {
   const [query, setQuery] = useState("");
@@ -75,13 +75,12 @@ export function HomeAIPrompt() {
           placeholder="Ask ChamberBot anything…"
           className="
             w-full px-6 py-4 pr-14
-            bg-white/10 border border-white/20
-            backdrop-blur-sm
+            bg-bg-primary border border-border-primary
             rounded-[var(--radius-lg)]
-            text-white placeholder:text-white/40
+            text-text-primary placeholder:text-text-tertiary
             text-body focus:outline-none
-            focus:ring-2 focus:ring-cambridge/50 focus:border-cambridge/50
-            transition-all
+            focus:ring-2 focus:ring-cambridge/40 focus:border-cambridge
+            shadow-sm transition-all
           "
         />
         <button
@@ -90,7 +89,7 @@ export function HomeAIPrompt() {
           className="
             absolute right-3 top-1/2 -translate-y-1/2
             w-9 h-9 flex items-center justify-center
-            bg-cambridge hover:bg-cambridge/80
+            bg-oxford hover:bg-oxford/80
             text-white rounded-[var(--radius-md)]
             transition-colors
           "
@@ -110,8 +109,8 @@ export function HomeAIPrompt() {
               onClick={() => handleSubmit(s)}
               className="
                 px-3 py-1.5 text-caption font-bold
-                bg-white/5 border border-white/10
-                text-white/60 hover:text-white hover:border-white/30
+                bg-bg-primary border border-border-secondary
+                text-text-tertiary hover:text-text-primary hover:border-border-primary
                 rounded-full transition-colors
               "
             >
@@ -123,14 +122,14 @@ export function HomeAIPrompt() {
 
       {/* Answer */}
       {(answer || isLoading) && (
-        <div className="mt-4 p-5 bg-white/5 border border-white/10 backdrop-blur-sm rounded-[var(--radius-lg)]">
+        <div className="mt-4 p-5 bg-bg-primary border border-border-primary rounded-[var(--radius-lg)] shadow-sm">
           {query && (
             <p className="text-caption text-cambridge font-bold mb-2">
               &ldquo;{query}&rdquo;
             </p>
           )}
           {answer ? (
-            <p className="text-body-sm text-white/80 leading-relaxed whitespace-pre-wrap">
+            <p className="text-body-sm text-text-primary leading-relaxed whitespace-pre-wrap">
               {answer}
             </p>
           ) : (

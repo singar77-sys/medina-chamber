@@ -241,8 +241,8 @@ export default function HomePage() {
       </section>
 
       {/* ─── AI Section ───────────────────────────────────── */}
-      <section className="bg-oxford">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-20">
+      <section className="bg-bg-secondary border-t border-border-secondary">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-20">
           <FadeIn>
             <div className="max-w-2xl mx-auto text-center mb-8">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-cambridge/10 border border-cambridge/20 rounded-full mb-6">
@@ -251,10 +251,10 @@ export default function HomePage() {
                   AI-Powered
                 </span>
               </div>
-              <h2 className="text-h2 text-white">
+              <h2 className="text-h2">
                 Ask the Chamber anything
               </h2>
-              <p className="text-body-sm text-white/50 mt-3">
+              <p className="text-body-sm text-text-tertiary mt-3">
                 ChamberBot knows every member, event, and program.
                 Try it.
               </p>

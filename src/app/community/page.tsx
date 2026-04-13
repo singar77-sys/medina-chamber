@@ -81,9 +81,9 @@ export default function CommunityHubPage() {
               Your community. Your chamber.
             </h2>
             <p className="text-body-lg text-white/70 mt-4">
-              No matter where in Medina County your business is located, the
-              chamber works for you — advocacy, networking, directory visibility,
-              and savings programs that serve the whole county.
+              From the Square to the southern townships — same advocacy,
+              same directory, same networking events, same savings programs.
+              The chamber works for every zip code in the county.
             </p>
           </div>
           <div className="space-y-4">

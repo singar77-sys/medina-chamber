@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "About — Greater Medina Chamber of Commerce",
     description:
-      "Connecting and empowering Medina County's business community since 1938.",
+      "Connecting businesses and fighting for Medina County since 1938.",
   },
   alternates: { canonical: "/about" },
 };
@@ -75,8 +75,8 @@ export default function AboutPage() {
           <span className="text-accent">Chamber</span>
         </h1>
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-          We champion and empower greater Medina&apos;s business community —
-          driving growth through advocacy, connection, and leadership since 1938.
+          The Greater Medina Chamber connects businesses, fights for
+          pro-business policy, and puts Medina County on the map — since 1938.
         </p>
       </section>
 
@@ -92,9 +92,9 @@ export default function AboutPage() {
             build a stronger, more prosperous community for everyone.
           </p>
           <p className="text-body text-text-secondary mt-4 leading-relaxed">
-            Our vision is a regional business ecosystem defined by
-            collaboration, innovation, and sustainable growth — where every
-            business has the tools and relationships it needs to succeed.
+            Our vision is a county where businesses know each other, back
+            each other, and grow together — where the tools, relationships,
+            and advocacy are already in place when you need them.
           </p>
         </div>
 

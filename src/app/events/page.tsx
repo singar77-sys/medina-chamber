@@ -173,7 +173,7 @@ export default function EventsPage() {
             {
               name: "EmpowHER",
               date: "Annual",
-              description: "The Chamber's women-focused fundraising event, bringing the community together to celebrate and empower.",
+              description: "Annual awards honoring women leaders in Medina County, co-hosted with the Medina County Women's Journal.",
               slug: null,
             },
           ].map((event) => (

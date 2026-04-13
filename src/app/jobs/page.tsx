@@ -61,11 +61,9 @@ export default function JobsPage() {
         ) : (
           <div className="space-y-4">
             {jobs.map((job) => (
-              <a
+              <Link
                 key={`${job.slug}-${job.jobId}`}
-                href={job.detailUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={`/jobs/${job.slug}`}
                 className="
                   group flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4
                   p-6 bg-bg-secondary border border-border-secondary
@@ -110,7 +108,7 @@ export default function JobsPage() {
                     View →
                   </span>
                 </div>
-              </a>
+              </Link>
             ))}
           </div>
         )}

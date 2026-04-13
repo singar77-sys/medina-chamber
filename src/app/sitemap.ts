@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { members } from "@/data/members";
 import { activeCommunities } from "@/data/communities";
+import { jobs } from "@/data/jobs";
 
 const BASE_URL = "https://medinachamber.com";
 
@@ -58,5 +59,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...communityPages, ...memberPages];
+  const jobPages: MetadataRoute.Sitemap = jobs.map((j) => ({
+    url: `${BASE_URL}/jobs/${j.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly",
+    priority: 0.6,
+  }));
+
+  return [...staticPages, ...communityPages, ...jobPages, ...memberPages];
 }

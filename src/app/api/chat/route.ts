@@ -23,6 +23,7 @@ VOICE & TONE:
 
 ABOUT THE CHAMBER:
 - Name: Greater Medina Chamber of Commerce
+- Slogan: "Medina Means Business"
 - Founded: 1938
 - Address: 139 N. Court Street, Suite A, Medina, OH 44256
 - Phone: (330) 723-8773

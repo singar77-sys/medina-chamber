@@ -89,9 +89,9 @@ export default function EventsPage() {
       <section className="max-w-3xl">
         <p className="text-overline text-cambridge mb-4">Events</p>
         <h1 className="text-display">
-          Where Medina
+          Medina Means
           <br />
-          <span className="text-accent">Does Business</span>
+          <span className="text-accent">Business</span>
         </h1>
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
           From monthly mixers to signature award ceremonies, Chamber events are

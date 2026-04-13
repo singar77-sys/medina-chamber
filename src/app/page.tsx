@@ -172,9 +172,9 @@ export default function HomePage() {
               Medina County, Ohio · Est. 1938
             </p>
             <h1 className="text-display text-white">
-              Where Medina
+              Medina Means
               <br />
-              <span className="text-cambridge">Does Business</span>
+              <span className="text-cambridge">Business</span>
             </h1>
             <p className="text-body-lg text-white/70 mt-6 max-w-2xl">
               The Greater Medina Chamber of Commerce connects and champions

@@ -1,0 +1,42 @@
+<svg viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title desc" role="img">
+  <title id="title">ChamberBot</title>
+  <desc id="desc">Animated face with round glasses. Eyes blink and head gently bobs.</desc>
+  <style>
+    .cb-eye { animation: cb-blink 4s infinite cubic-bezier(0.4, 0, 0.6, 1); }
+    @keyframes cb-blink {
+      0%, 8%, 92%, 100% { ry: 13; }
+      10%, 90% { ry: 2; }
+    }
+    .cb-shine { animation: cb-shine 3s linear infinite; }
+    @keyframes cb-shine {
+      0%, 100% { opacity: 0.15; }
+      50% { opacity: 0.35; }
+    }
+  </style>
+
+  <!-- Head -->
+  <circle cx="140" cy="140" r="105" fill="#FFDBB4" stroke="#26334A" stroke-width="18"/>
+
+  <!-- Left glasses frame -->
+  <circle cx="85" cy="125" r="38" fill="none" stroke="#26334A" stroke-width="18"/>
+  <!-- Right glasses frame -->
+  <circle cx="195" cy="125" r="38" fill="none" stroke="#26334A" stroke-width="18"/>
+  <!-- Bridge -->
+  <path d="M 123 125 Q 140 118 157 125" fill="none" stroke="#26334A" stroke-width="12" stroke-linejoin="round"/>
+
+  <!-- Left temple -->
+  <path d="M 50 125 Q 35 110 30 165" fill="none" stroke="#26334A" stroke-width="14" stroke-linecap="round"/>
+  <!-- Right temple -->
+  <path d="M 230 125 Q 245 110 250 165" fill="none" stroke="#26334A" stroke-width="14" stroke-linecap="round"/>
+
+  <!-- Eyes -->
+  <ellipse class="cb-eye" cx="85" cy="125" rx="13" ry="13" fill="#26334A"/>
+  <ellipse class="cb-eye" cx="195" cy="125" rx="13" ry="13" fill="#26334A"/>
+
+  <!-- Mouth -->
+  <path d="M 85 185 Q 140 215 195 185" fill="none" stroke="#26334A" stroke-width="14" stroke-linecap="round"/>
+
+  <!-- Lens shine -->
+  <ellipse class="cb-shine" cx="75" cy="115" rx="12" ry="8" fill="#ffffff" opacity="0.25"/>
+  <ellipse class="cb-shine" cx="185" cy="115" rx="12" ry="8" fill="#ffffff" opacity="0.25"/>
+</svg>

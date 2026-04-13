@@ -156,7 +156,7 @@ export function ChatWidget() {
           ">
             <div className="flex items-center gap-3">
               <img
-                src="/images/chamberbot-mascot.svg"
+                src="/images/chamberbot-face.svg"
                 alt=""
                 className="w-10 h-10 shrink-0"
               />
@@ -303,7 +303,7 @@ export function ChatWidget() {
           </svg>
         ) : (
           <img
-            src="/images/chamberbot-mascot.svg"
+            src="/images/chamberbot-face.svg"
             alt="ChamberBot"
             className="w-11 h-11"
           />

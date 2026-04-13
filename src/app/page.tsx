@@ -246,7 +246,7 @@ export default function HomePage() {
           <FadeIn>
             <div className="max-w-2xl mx-auto text-center mb-8">
               <img
-                src="/images/chamberbot-mascot.svg"
+                src="/images/chamberbot-face.svg"
                 alt="ChamberBot mascot"
                 className="w-24 h-24 mx-auto mb-4"
               />

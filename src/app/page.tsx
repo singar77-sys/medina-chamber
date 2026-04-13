@@ -171,7 +171,7 @@ export default function HomePage() {
           quality={85}
         />
         {/* Gradient overlay — stronger for daytime, lighter for night */}
-        <div className="absolute inset-0 bg-gradient-to-t from-oxford via-oxford/80 to-oxford/50 [[data-theme=dark]_&]:via-oxford/60 [[data-theme=dark]_&]:to-oxford/15" />
+        <div className="absolute inset-0 bg-gradient-to-t from-oxford via-oxford/85 to-oxford/60 [[data-theme=dark]_&]:via-oxford/60 [[data-theme=dark]_&]:to-oxford/15" />
 
         {/* Content */}
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-24 pt-40 w-full">
@@ -231,7 +231,7 @@ export default function HomePage() {
               { end: 30, label: "Events Per Year", suffix: "+" },
             ].map((s) => (
               <div key={s.label} className="text-center">
-                <p className="text-display text-oxford leading-none">
+                <p className="text-display text-oxford [[data-theme=dark]_&]:text-cambridge leading-none">
                   <CountUp
                     end={s.end}
                     prefix={s.prefix}

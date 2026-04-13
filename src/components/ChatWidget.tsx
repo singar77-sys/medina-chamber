@@ -155,11 +155,11 @@ export function ChatWidget() {
             bg-oxford border-b border-border-secondary
           ">
             <div className="flex items-center gap-3">
-              <img
-                src="/images/chamberbot-mascot.svg"
-                alt=""
-                className="w-9 h-9 shrink-0 -mb-1"
-              />
+              <div className="w-8 h-8 rounded-full bg-cambridge/20 flex items-center justify-center shrink-0">
+                <svg className="w-4 h-4 text-cambridge" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+                </svg>
+              </div>
               <div>
                 <p className="text-body-sm font-bold text-white leading-none">ChamberBot</p>
                 <p className="text-[11px] text-cambridge mt-0.5">Medina Chamber Assistant</p>
@@ -286,26 +286,23 @@ export function ChatWidget() {
         aria-label={open ? "Close chat" : "Open chamber assistant"}
         className="
           fixed bottom-5 right-4 sm:right-6 z-50
-          w-16 h-16
-          bg-bg-secondary border border-border-secondary
-          rounded-full
-          shadow-[0_4px_20px_rgba(0,0,0,0.15)]
+          w-14 h-14
+          bg-oxford hover:bg-oxford/90
+          text-white rounded-full
+          shadow-[0_4px_20px_rgba(0,0,0,0.25)]
           flex items-center justify-center
           transition-all duration-200
-          hover:scale-110 active:scale-95
-          hover:shadow-[0_6px_28px_rgba(0,0,0,0.2)]
+          hover:scale-105 active:scale-95
         "
       >
         {open ? (
-          <svg className="w-5 h-5 text-text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M18 6L6 18M6 6l12 12"/>
           </svg>
         ) : (
-          <img
-            src="/images/chamberbot-mascot.svg"
-            alt="ChamberBot"
-            className="w-12 h-12 -mt-1"
-          />
+          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+          </svg>
         )}
       </button>
     </>

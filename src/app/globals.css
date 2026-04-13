@@ -345,3 +345,45 @@ h4, .text-h4 {
   0%   { opacity: 0; transform: scale(0.8) rotateX(15deg) translateY(30px); }
   100% { opacity: 1; transform: scale(1) rotateX(0deg) translateY(0); }
 }
+
+/* --- Scroll-triggered fade-in animations ------------------- */
+
+.fade-in,
+.fade-in-up,
+.fade-in-down,
+.fade-in-left,
+.fade-in-right {
+  opacity: 0;
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.fade-in-up    { transform: translateY(28px); }
+.fade-in-down  { transform: translateY(-28px); }
+.fade-in-left  { transform: translateX(-28px); }
+.fade-in-right { transform: translateX(28px); }
+.fade-in       { transform: none; }
+
+.fade-in.is-visible,
+.fade-in-up.is-visible,
+.fade-in-down.is-visible,
+.fade-in-left.is-visible,
+.fade-in-right.is-visible {
+  opacity: 1;
+  transform: translateY(0) translateX(0);
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .fade-in,
+  .fade-in-up,
+  .fade-in-down,
+  .fade-in-left,
+  .fade-in-right {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

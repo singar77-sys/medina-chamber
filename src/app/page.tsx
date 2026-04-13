@@ -153,12 +153,20 @@ export default function HomePage() {
 
       {/* ─── Hero ─────────────────────────────────────────── */}
       <section className="relative min-h-[85vh] flex items-end overflow-hidden">
-        {/* Background photo */}
+        {/* Background photos — light/dark theme aware */}
+        <Image
+          src="/images/photos/chamber-building-exterior.jpg"
+          alt="Greater Medina Chamber of Commerce building"
+          fill
+          className="object-cover object-center [[data-theme=dark]_&]:hidden"
+          priority
+          quality={85}
+        />
         <Image
           src="/images/photos/gazebo-night-flag.jpg"
           alt="Historic Medina gazebo at night"
           fill
-          className="object-cover object-center"
+          className="object-cover object-center hidden [[data-theme=dark]_&]:block"
           priority
           quality={85}
         />

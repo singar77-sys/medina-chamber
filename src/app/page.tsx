@@ -213,8 +213,8 @@ export default function HomePage() {
       </section>
 
       {/* ─── Stats Strip ──────────────────────────────────── */}
-      <section className="bg-oxford border-t border-white/10">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 py-12">
+      <section className="bg-bg-secondary border-y border-border-secondary">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 py-14">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
               { end: 1938, label: "Founded", prefix: "", suffix: "" },
@@ -223,7 +223,7 @@ export default function HomePage() {
               { end: 30, label: "Events Per Year", suffix: "+" },
             ].map((s) => (
               <div key={s.label} className="text-center">
-                <p className="text-display text-cambridge leading-none">
+                <p className="text-display text-oxford leading-none">
                   <CountUp
                     end={s.end}
                     prefix={s.prefix}
@@ -231,7 +231,7 @@ export default function HomePage() {
                     duration={s.end > 100 ? 2400 : 1600}
                   />
                 </p>
-                <p className="text-caption text-white/60 mt-2 uppercase tracking-wider">
+                <p className="text-caption text-text-tertiary mt-2 uppercase tracking-wider">
                   {s.label}
                 </p>
               </div>
@@ -324,10 +324,10 @@ export default function HomePage() {
       </section>
 
       {/* ─── Partners & Sponsors ──────────────────────────── */}
-      <section className="bg-oxford py-16 lg:py-20">
+      <section className="bg-bg-secondary border-y border-border-secondary py-16 lg:py-20">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
-            <p className="text-caption text-white/50 uppercase tracking-widest text-center mb-10 font-bold">
+            <p className="text-caption text-text-tertiary uppercase tracking-widest text-center mb-10 font-bold">
               Partners &amp; Sponsors
             </p>
           </FadeIn>
@@ -338,9 +338,10 @@ export default function HomePage() {
                   <div
                     className="
                       flex items-center justify-center
-                      bg-white rounded-[var(--radius-md)]
+                      bg-bg-primary border border-border-secondary
+                      rounded-[var(--radius-md)]
                       p-4 aspect-square
-                      hover:opacity-90 transition-opacity
+                      hover:border-border-primary transition-colors
                     "
                   >
                     <Image
@@ -376,18 +377,14 @@ export default function HomePage() {
       {/* ─── Join CTA ─────────────────────────────────────── */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
         <FadeIn>
-          <div className="p-10 lg:p-16 bg-oxford text-white rounded-[var(--radius-lg)] overflow-hidden relative">
-            {/* Subtle corner glow */}
-            <div className="absolute -top-32 -right-32 w-64 h-64 bg-cambridge/10 rounded-full blur-3xl" />
-            <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-accent/5 rounded-full blur-3xl" />
-
-            <div className="relative grid lg:grid-cols-2 gap-10 items-center">
+          <div className="p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+            <div className="grid lg:grid-cols-2 gap-10 items-center">
               <div>
                 <p className="text-overline text-cambridge mb-4">Membership</p>
-                <h2 className="text-h2 text-white">
+                <h2 className="text-h2">
                   Ready to be part of what&apos;s building Medina?
                 </h2>
-                <p className="text-body-lg text-white/70 mt-4">
+                <p className="text-body-lg text-text-secondary mt-4">
                   Most small businesses invest $250–$400 a year. The savings
                   programs alone typically cover that in the first month.
                   Stephanie will walk you through everything — no pressure.
@@ -410,8 +407,8 @@ export default function HomePage() {
                   href="/membership/benefits"
                   className="
                     block w-full text-center py-3 px-6
-                    border border-white/30 hover:border-white/60
-                    text-white font-bold text-body-sm
+                    border border-border-primary hover:border-text-tertiary
+                    text-text-primary font-bold text-body-sm
                     rounded-[var(--radius-md)]
                     transition-colors
                   "

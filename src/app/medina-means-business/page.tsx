@@ -89,22 +89,22 @@ export default function MedinaMeansBusinessPage() {
           priority
           quality={85}
         />
-        {/* Gradient overlay — stronger for daytime, lighter for night */}
-        <div className="absolute inset-0 bg-gradient-to-t from-oxford via-oxford/85 to-oxford/60 [[data-theme=dark]_&]:via-oxford/60 [[data-theme=dark]_&]:to-oxford/15" />
+        {/* Gradient overlay — white wash in light, dark wash in dark mode */}
+        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/85 to-white/50 [[data-theme=dark]_&]:from-oxford [[data-theme=dark]_&]:via-oxford/60 [[data-theme=dark]_&]:to-oxford/15" />
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-24 pt-32 w-full">
           <div className="max-w-4xl">
-            <p className="text-overline text-cambridge mb-4 tracking-widest">
+            <p className="text-overline text-emerald [[data-theme=dark]_&]:text-cambridge mb-4 tracking-widest">
               The Tagline. The Magazine. The Reality.
             </p>
-            <h1 className="text-display text-white leading-[0.95]">
+            <h1 className="text-display text-oxford [[data-theme=dark]_&]:text-white leading-[0.95]">
               Medina
               <br />
               Means
               <br />
-              <span className="text-cambridge">Business.</span>
+              <span className="text-emerald [[data-theme=dark]_&]:text-cambridge">Business.</span>
             </h1>
-            <p className="text-body-lg text-white/80 mt-8 max-w-2xl">
+            <p className="text-body-lg text-text-secondary [[data-theme=dark]_&]:text-white/80 mt-8 max-w-2xl">
               Three words the Greater Medina Chamber of Commerce has been
               earning since 1938. A tagline, yes — but also a statement of
               fact about what Medina County actually is.

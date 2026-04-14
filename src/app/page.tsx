@@ -170,21 +170,21 @@ export default function HomePage() {
           priority
           quality={85}
         />
-        {/* Gradient overlay — stronger for daytime, lighter for night */}
-        <div className="absolute inset-0 bg-gradient-to-t from-oxford via-oxford/85 to-oxford/60 [[data-theme=dark]_&]:via-oxford/60 [[data-theme=dark]_&]:to-oxford/15" />
+        {/* Gradient overlay — white wash in light, dark wash in dark mode */}
+        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/85 to-white/50 [[data-theme=dark]_&]:from-oxford [[data-theme=dark]_&]:via-oxford/60 [[data-theme=dark]_&]:to-oxford/15" />
 
         {/* Content */}
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-24 pt-40 w-full">
           <div className="max-w-3xl">
-            <p className="text-overline text-cambridge mb-4 tracking-widest">
+            <p className="text-overline text-emerald [[data-theme=dark]_&]:text-cambridge mb-4 tracking-widest">
               Medina County, Ohio · Est. 1938
             </p>
-            <h1 className="text-display text-white">
+            <h1 className="text-display text-oxford [[data-theme=dark]_&]:text-white">
               Medina Means
               <br />
-              <span className="text-cambridge">Business</span>
+              <span className="text-emerald [[data-theme=dark]_&]:text-cambridge">Business</span>
             </h1>
-            <p className="text-body-lg text-white/80 mt-6 max-w-2xl">
+            <p className="text-body-lg text-text-secondary [[data-theme=dark]_&]:text-white/80 mt-6 max-w-2xl">
               Championing Medina&apos;s business community since 1938. Advocacy
               that moves policy. Connections that open doors. Resources that
               drive growth.
@@ -206,8 +206,10 @@ export default function HomePage() {
                 href="/membership/directory"
                 className="
                   inline-flex items-center px-6 py-4
-                  border border-white/30 hover:border-white/60
-                  text-white font-bold text-body-sm
+                  border border-oxford/30 hover:border-oxford/60
+                  text-oxford
+                  [[data-theme=dark]_&]:border-white/30 [[data-theme=dark]_&]:hover:border-white/60 [[data-theme=dark]_&]:text-white
+                  font-bold text-body-sm
                   rounded-[var(--radius-md)]
                   transition-colors
                 "

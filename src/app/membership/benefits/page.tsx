@@ -183,8 +183,9 @@ export default function BenefitsPage() {
               Ready to put these to work?
             </h2>
             <p className="text-body-lg text-white/70 mt-4">
-              Most small businesses start between $250–$400 per year. Membership
-              pays for itself with one good referral, one saved contract, or one
+              Three tiers: Business Essentials at $345/year, Visibility Plus at
+              $575/year, or Community Investor at $1,145/year. Membership pays
+              for itself with one good referral, one saved contract, or one
               connection made at a mixer.
             </p>
           </div>

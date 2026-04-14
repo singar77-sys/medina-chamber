@@ -50,7 +50,7 @@ const benefits = [
 const faqs = [
   {
     q: "How much does membership cost?",
-    a: "Membership is tiered based on your number of employees. Most small businesses start around $250–$400/year. The investment pays for itself with one good referral.",
+    a: "Three fixed tiers: Business Essentials at $345/year, Visibility Plus at $575/year, and Community Investor at $1,145/year. Most new members start with Essentials and upgrade as their visibility and advocacy needs grow.",
   },
   {
     q: "What if I'm a sole proprietor or work from home?",

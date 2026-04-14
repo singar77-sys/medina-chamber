@@ -64,7 +64,7 @@ MEMBERSHIP:
 - Apply online (native form, no redirect): medinachamber.com/membership/join
 - View pricing tiers: medinachamber.com/membership/pricing
 - View all benefits: medinachamber.com/membership/benefits
-- Tiers: Visibility Plus (premium — featured badge, top directory placement) and Standard (core membership)
+- Three tiers: Business Essentials ($345/yr), Visibility Plus ($575/yr — logo listing + spotlights + 4 newsletter ads), Community Investor ($1,145/yr — VIP recognition + legislator access + monthly luncheon tickets)
 - Benefits: directory listing, networking events, ribbon cuttings, advocacy, savings programs, committee participation, member news
 - Questions about joining: contact Stephanie Mueller at stephanie@medinaohchamber.com or (330) 723-8773
 
@@ -192,12 +192,18 @@ MEMBERSHIP BENEFITS (medinachamber.com/membership/benefits):
 - Contact for membership info: memberservices@medinaohchamber.com
 
 MEMBERSHIP PRICING (medinachamber.com/membership/pricing):
-- Tiered by number of employees — the larger the organization, the higher the investment
-- Most small businesses invest between $250–$400/year
-- Tiers: 1 employee, 2–5, 6–10, 11–25, 26–50, 51–100, 100+
-- Two membership levels: Standard (core) and Visibility Plus (premium — featured badge, priority directory placement)
-- Exact pricing: contact Stephanie Mueller at stephanie@medinaohchamber.com
-- Safety Council note: non-members can join Safety Council for $100/year OR join chamber (starting ~$295) and get Safety Council included free — the $295 entry level is the most cost-effective path to BWC rebate eligibility
+Three fixed tiers:
+1. Business Essentials — $345/year
+   - For solopreneurs and small teams needing credibility, network access, and baseline marketing boosts
+   - Includes: online directory listing, ribbon cutting ceremony, Chamber social shares, advocacy support, coworking access, Member Portal account, digital membership badge, free job postings, referral network, personalized onboarding, free notary, group health insurance (2–50 employees), 20% Medina Recreation Center discount, workers' comp program, member-only event pricing
+2. Visibility Plus — $575/year
+   - Everything in Essentials PLUS: logo-enhanced directory listing, member spotlight (social & email), custom digital membership sticker video, 4 e-newsletter ad placements per year, free Certificate of Origin (non-freight forwarders)
+   - For growth-minded SMBs seeking more impressions and owned media slots
+3. Community Investor — $1,145/year
+   - Everything above PLUS: investor member spotlight (social, email, & website), 2 free monthly luncheon tickets, access to local & state legislator events & introductions, recognition at all events as Investor
+   - For established firms prioritizing policy access and VIP recognition
+- Questions: contact Stephanie Mueller at stephanie@medinaohchamber.com
+- Safety Council note: Medina County Safety Council is included free with any chamber membership — the most cost-effective path to BWC rebate eligibility
 
 MEMBER SAVINGS PROGRAMS (medinachamber.com/membership/savings):
 1. Group Health Insurance (via Anthem/Blue Access PPO): designed for Medina businesses with 2–49 employees; includes Cleveland Clinic, Summa Health, University Hospitals; HSA and 80/20 options; contact chamber for broker list

@@ -398,9 +398,9 @@ export default function HomePage() {
                   Ready to be part of what&apos;s building Medina?
                 </h2>
                 <p className="text-body-lg text-text-secondary mt-4">
-                  Most small businesses invest $250–$400 a year. The savings
-                  programs alone typically cover that in the first month.
-                  Stephanie will walk you through everything — no pressure.
+                  Three tiers starting at $345 a year. The savings programs
+                  alone typically cover that in the first month. Stephanie
+                  will walk you through everything — no pressure.
                 </p>
               </div>
               <div className="space-y-4">

@@ -4,267 +4,467 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Membership Pricing",
   description:
-    "Greater Medina Chamber of Commerce membership is priced by number of employees. Most small businesses invest between $250–$400 per year. Contact us for your exact tier.",
+    "Three Greater Medina Chamber of Commerce membership tiers: Business Essentials ($345/year), Visibility Plus ($575/year), and Community Investor ($1,145/year). Choose the level that fits your goals.",
   openGraph: {
     title: "Membership Pricing — Greater Medina Chamber of Commerce",
     description:
-      "Tiered membership pricing based on company size. Most small businesses start at $250–$400/year.",
+      "Three tiers: Business Essentials ($345), Visibility Plus ($575), Community Investor ($1,145). Pick the level that fits your business.",
   },
   alternates: { canonical: "/membership/pricing" },
 };
 
-const tiers = [
-  { employees: "1", label: "Sole Proprietor" },
-  { employees: "2–5", label: "Micro Business" },
-  { employees: "6–10", label: "Small Business" },
-  { employees: "11–25", label: "Growing Business" },
-  { employees: "26–50", label: "Mid-Size Business" },
-  { employees: "51–100", label: "Established Business" },
-  { employees: "100+", label: "Large Organization" },
+interface Tier {
+  key: "essentials" | "plus" | "investor";
+  name: string;
+  price: number;
+  tagline: string;
+  who: string;
+  benefits: string[];
+  /** Benefits added on top of the previous tier */
+  addedBenefits?: string[];
+  cta: string;
+}
+
+const essentialsBenefits = [
+  "Online directory listing",
+  "Ribbon cutting ceremony",
+  "Member mailing address list",
+  "Post sharing on Chamber socials",
+  "Business advocacy & economic development support",
+  "Access to coworking space",
+  "Member Portal account",
+  "Custom digital membership badge",
+  "Free job postings",
+  "Share company announcements in Member Portal",
+  "Referral network access",
+  "Personalized onboarding with Chamber staff",
+  "Free notary service",
+  "Group health insurance (2–50 employees)",
+  "20% discount at Medina Recreation Center",
+  "Workers' compensation program",
+  "Member-only event pricing",
 ];
 
-const included = [
-  "Searchable member directory listing",
-  "Business profile with contact info, website, and categories",
-  "Networking events and mixers",
-  "Ribbon cutting ceremonies",
-  "Chamber advocacy at local, state, and federal levels",
-  "Safety Council participation (no additional charge)",
-  "Access to all 5 member savings programs",
-  "Committee and council participation",
-  "Member rate on events and programs",
-  "Free notary services at the chamber office",
-  "Member news and announcement platform",
-  "Social media promotion by the chamber",
+const plusAdded = [
+  "Directory listing enhanced with logo",
+  "Member spotlight (social & email)",
+  "Custom digital membership sticker video",
+  "E-newsletter ad placement (4 per year)",
+  "Free certificate of origin (non-freight forwarders)",
 ];
 
-const visibilityPlus = [
-  "Everything in Standard",
-  "Featured badge on directory listing",
-  "Priority placement in search results",
-  "Enhanced directory profile visibility",
+const investorAdded = [
+  "Investor member spotlight (social, email, & website)",
+  "2 free tickets to monthly luncheons",
+  "Access to local & state legislator events & introductions",
+  "Recognition at all events as Investor",
 ];
+
+const tiers: Tier[] = [
+  {
+    key: "essentials",
+    name: "Business Essentials",
+    price: 345,
+    tagline:
+      "Everything you need to plug into the Medina business community — visibility, advocacy, and member pricing — at a starter-friendly rate.",
+    who: "Solopreneurs and small teams needing credibility, network access, and baseline marketing boosts.",
+    benefits: essentialsBenefits,
+    cta: "Join Essentials",
+  },
+  {
+    key: "plus",
+    name: "Visibility Plus",
+    price: 575,
+    tagline:
+      "Turn up your reach with logo-enhanced directory, member spotlights, and four newsletter ads per year — done-for-you visibility.",
+    who: "Growth-minded small and mid-sized businesses seeking more impressions and owned media slots.",
+    benefits: essentialsBenefits,
+    addedBenefits: plusAdded,
+    cta: "Upgrade to Plus",
+  },
+  {
+    key: "investor",
+    name: "Community Investor",
+    price: 1145,
+    tagline:
+      "Lead from the front: VIP spotlights, two luncheon tickets monthly, and direct access to legislator events — with recognition at every Chamber event.",
+    who: "Established firms prioritizing policy access, high-profile recognition, and year-round VIP presence.",
+    benefits: [...essentialsBenefits, ...plusAdded],
+    addedBenefits: investorAdded,
+    cta: "Become an Investor",
+  },
+];
+
+const faqs = [
+  {
+    q: "Do I qualify for group health insurance?",
+    a: "Available for employers with 2–50 employees. Details provided during onboarding.",
+  },
+  {
+    q: "What's included in member spotlights?",
+    a: "Visibility Plus spotlights run on social and email. Community Investor spotlights run on social, email, and the chamber website.",
+  },
+  {
+    q: "Do Investors get ongoing event perks?",
+    a: "Yes — two free luncheon tickets every month plus recognition at all events.",
+  },
+  {
+    q: "What's the Certificate of Origin benefit?",
+    a: "Free for non-freight forwarders on Visibility Plus and Community Investor tiers.",
+  },
+  {
+    q: "How do I upgrade later?",
+    a: "Contact Stephanie Mueller at any time. Upgrades are prorated based on where you are in your membership year.",
+  },
+];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
 
 export default function PricingPage() {
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
-      {/* Hero */}
-      <section className="max-w-3xl">
-        <p className="text-overline text-cambridge mb-4">Membership</p>
-        <h1 className="text-display">
-          Membership
-          <br />
-          <span className="text-accent">Pricing</span>
-        </h1>
-        <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-          Membership is priced by the number of people in your organization.
-          Most small businesses invest between $250–$400 per year — and the
-          savings programs alone often exceed that in the first year.
-        </p>
-        <div className="mt-10 flex flex-wrap gap-4">
-          <Link
-            href="/membership/join"
-            className="
-              inline-flex items-center px-8 py-4
-              bg-accent hover:bg-accent-hover
-              text-white font-bold text-body
-              rounded-[var(--radius-md)]
-              transition-colors
-            "
-          >
-            Apply for Membership →
-          </Link>
-          <a
-            href="mailto:stephanie@medinaohchamber.com"
-            className="
-              inline-flex items-center px-6 py-4
-              border border-border-primary hover:border-text-tertiary
-              text-text-primary font-bold text-body-sm
-              rounded-[var(--radius-md)]
-              transition-colors
-            "
-          >
-            Ask About Your Rate
-          </a>
-        </div>
-      </section>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
 
-      {/* How pricing works */}
-      <section className="mt-20 grid lg:grid-cols-2 gap-12 items-start">
-        <div>
-          <h2 className="text-h2">How It Works</h2>
-          <p className="text-body text-text-secondary mt-4 leading-relaxed">
-            The chamber uses an employee-count model — the larger your team,
-            the more your membership supports chamber operations. Every tier
-            gets the same core benefits; the investment scales with your size.
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+        {/* Hero */}
+        <section className="max-w-3xl">
+          <p className="text-overline text-cambridge mb-4">Membership</p>
+          <h1 className="text-display">
+            Three Tiers.
+            <br />
+            <span className="text-accent">One Community.</span>
+          </h1>
+          <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
+            Pick the tier that fits your goals — from first-year essentials to
+            investor-level access and recognition. Every membership includes
+            the full Chamber network and savings programs.
           </p>
-          <p className="text-body text-text-secondary mt-4 leading-relaxed">
-            Contact Stephanie Mueller for exact pricing on your employee count.
-            She&apos;ll walk you through the tiers and help you understand the
-            return on your investment before you commit.
-          </p>
-          <div className="mt-6 space-y-3">
-            <a
-              href="mailto:stephanie@medinaohchamber.com"
-              className="
-                inline-flex items-center px-6 py-3
-                bg-accent hover:bg-accent-hover
-                text-white font-bold text-body-sm
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
-            >
-              Email Stephanie →
-            </a>
-            <p className="text-body-sm text-text-tertiary">
-              Or call{" "}
-              <a href="tel:+13307238773" className="text-cambridge hover:text-cambridge/80 transition-colors">
-                (330) 723-8773
-              </a>
-            </p>
-          </div>
-        </div>
-
-        {/* Tier list */}
-        <div>
-          <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-4">
-            Pricing Tiers by Employee Count
-          </p>
-          <div className="space-y-2">
-            {tiers.map((t) => (
-              <div
-                key={t.employees}
-                className="flex items-center justify-between px-5 py-3.5 bg-bg-secondary border border-border-secondary rounded-[var(--radius-md)]"
-              >
-                <div>
-                  <span className="text-body font-bold text-text-primary">
-                    {t.employees} {t.employees === "1" ? "employee" : "employees"}
-                  </span>
-                  <span className="text-body-sm text-text-tertiary ml-2">
-                    · {t.label}
-                  </span>
-                </div>
-                <a
-                  href="mailto:stephanie@medinaohchamber.com"
-                  className="text-caption font-bold text-cambridge hover:text-cambridge/80 transition-colors"
-                >
-                  Get rate →
-                </a>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Membership tiers */}
-      <section className="mt-20">
-        <h2 className="text-overline text-cambridge mb-8">Membership Tiers</h2>
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Standard */}
-          <div className="p-8 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-            <p className="text-caption text-text-tertiary uppercase tracking-wider mb-2">
-              Standard
-            </p>
-            <h3 className="text-h3">Core Membership</h3>
-            <p className="text-body-sm text-text-secondary mt-3 leading-relaxed">
-              Full chamber membership with every benefit — directory listing,
-              events, advocacy, savings programs, committees, and more.
-            </p>
-            <ul className="mt-5 space-y-2">
-              {included.map((item) => (
-                <li key={item} className="flex items-start gap-2 text-body-sm text-text-secondary">
-                  <svg className="w-4 h-4 text-cambridge shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M20 6L9 17l-5-5" />
-                  </svg>
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Visibility Plus */}
-          <div className="p-8 bg-oxford text-white rounded-[var(--radius-lg)]">
-            <p className="text-caption text-cambridge uppercase tracking-wider mb-2 font-bold">
-              Visibility Plus
-            </p>
-            <h3 className="text-h3 text-white">Premium Membership</h3>
-            <p className="text-body-sm text-white/70 mt-3 leading-relaxed">
-              Everything in Standard, plus priority positioning in the directory
-              and featured placement that puts your business at the top of
-              relevant searches.
-            </p>
-            <ul className="mt-5 space-y-2">
-              {visibilityPlus.map((item) => (
-                <li key={item} className="flex items-start gap-2 text-body-sm text-white/80">
-                  <svg className="w-4 h-4 text-cambridge shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M20 6L9 17l-5-5" />
-                  </svg>
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <div className="mt-8 pt-6 border-t border-white/20">
-              <p className="text-body-sm text-white/60">
-                Ask Stephanie about Visibility Plus rates when you inquire about membership.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Special note: Safety Council */}
-      <section className="mt-8 p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-        <p className="text-body-sm text-text-secondary leading-relaxed">
-          <span className="font-bold text-text-primary">Safety Council note: </span>
-          Non-members can join the Medina County Safety Council for $100/year, or
-          join the chamber ($295+) and get Safety Council included at no charge.
-          The $295 entry level is the most cost-effective path for small businesses
-          that want BWC rebate eligibility.{" "}
-          <Link href="/programs/safety-council" className="text-cambridge hover:text-cambridge/80 transition-colors">
-            Learn about the Safety Council →
-          </Link>
-        </p>
-      </section>
-
-      {/* CTA */}
-      <section className="mt-20 p-10 lg:p-16 bg-oxford text-white rounded-[var(--radius-lg)]">
-        <div className="grid lg:grid-cols-2 gap-10 items-center">
-          <div>
-            <h2 className="text-h2 text-white">Questions before you commit?</h2>
-            <p className="text-body-lg text-white/70 mt-4">
-              Stephanie will walk you through what's included, what your rate
-              would be, and what similar businesses in your industry typically
-              get out of membership. No pressure — just a conversation.
-            </p>
-          </div>
-          <div className="space-y-4">
-            <a
-              href="mailto:stephanie@medinaohchamber.com"
-              className="
-                block w-full text-center py-3 px-6
-                bg-cambridge hover:bg-cambridge/90
-                text-white font-bold text-body-sm
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
-            >
-              Email Stephanie →
-            </a>
+          <div className="mt-10 flex flex-wrap gap-4">
             <Link
               href="/membership/join"
               className="
-                block w-full text-center py-3 px-6
-                border border-white/30 hover:border-white/60
-                text-white font-bold text-body-sm
+                inline-flex items-center px-8 py-4
+                bg-accent hover:bg-accent-hover
+                text-white font-bold text-body
                 rounded-[var(--radius-md)]
                 transition-colors
               "
             >
-              Apply Now
+              Apply for Membership →
             </Link>
+            <a
+              href="mailto:stephanie@medinaohchamber.com"
+              className="
+                inline-flex items-center px-6 py-4
+                border border-border-primary hover:border-text-tertiary
+                text-text-primary font-bold text-body-sm
+                rounded-[var(--radius-md)]
+                transition-colors
+              "
+            >
+              Talk to Stephanie
+            </a>
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
+
+        {/* Tier cards */}
+        <section className="mt-20 grid lg:grid-cols-3 gap-6">
+          {tiers.map((tier) => {
+            const isFeatured = tier.key === "plus";
+            return (
+              <div
+                key={tier.key}
+                className={`
+                  relative flex flex-col p-8 rounded-[var(--radius-lg)]
+                  ${isFeatured
+                    ? "bg-oxford text-white border-2 border-cambridge lg:scale-105 lg:shadow-[0_12px_40px_rgba(12,27,51,0.15)]"
+                    : "bg-bg-secondary border border-border-secondary"
+                  }
+                `}
+              >
+                {isFeatured && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-cambridge text-white text-caption font-bold uppercase tracking-wider rounded-full">
+                      Most Popular
+                    </span>
+                  </div>
+                )}
+
+                <p
+                  className={`text-caption font-bold uppercase tracking-wider ${
+                    isFeatured ? "text-cambridge" : "text-text-tertiary"
+                  }`}
+                >
+                  {tier.name}
+                </p>
+                <div className="mt-3 flex items-baseline gap-1">
+                  <span
+                    className={`text-display leading-none ${
+                      isFeatured ? "text-white" : "text-text-primary"
+                    }`}
+                  >
+                    ${tier.price.toLocaleString("en-US")}
+                  </span>
+                  <span
+                    className={`text-body-sm ${
+                      isFeatured ? "text-white/60" : "text-text-tertiary"
+                    }`}
+                  >
+                    /year
+                  </span>
+                </div>
+                <p
+                  className={`text-body-sm mt-4 leading-relaxed ${
+                    isFeatured ? "text-white/80" : "text-text-secondary"
+                  }`}
+                >
+                  {tier.tagline}
+                </p>
+
+                <div
+                  className={`mt-5 pt-5 border-t ${
+                    isFeatured ? "border-white/15" : "border-border-secondary"
+                  }`}
+                >
+                  <p
+                    className={`text-caption font-bold mb-3 ${
+                      isFeatured ? "text-cambridge" : "text-text-tertiary"
+                    }`}
+                  >
+                    Best for
+                  </p>
+                  <p
+                    className={`text-body-sm leading-relaxed ${
+                      isFeatured ? "text-white/70" : "text-text-secondary"
+                    }`}
+                  >
+                    {tier.who}
+                  </p>
+                </div>
+
+                {tier.addedBenefits && (
+                  <div
+                    className={`mt-5 pt-5 border-t ${
+                      isFeatured ? "border-white/15" : "border-border-secondary"
+                    }`}
+                  >
+                    <p
+                      className={`text-caption font-bold mb-3 ${
+                        isFeatured ? "text-cambridge" : "text-cambridge"
+                      }`}
+                    >
+                      {tier.key === "plus"
+                        ? "Everything in Essentials, plus"
+                        : "Everything in Visibility Plus, plus"}
+                    </p>
+                    <ul className="space-y-2">
+                      {tier.addedBenefits.map((item) => (
+                        <li
+                          key={item}
+                          className={`flex items-start gap-2 text-body-sm ${
+                            isFeatured ? "text-white/90" : "text-text-primary"
+                          }`}
+                        >
+                          <svg
+                            className={`w-4 h-4 shrink-0 mt-0.5 ${
+                              isFeatured ? "text-cambridge" : "text-cambridge"
+                            }`}
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.5"
+                          >
+                            <path d="M20 6L9 17l-5-5" />
+                          </svg>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {tier.key === "essentials" && (
+                  <div className="mt-5 pt-5 border-t border-border-secondary">
+                    <p className="text-caption font-bold text-cambridge mb-3">
+                      What&apos;s included
+                    </p>
+                    <ul className="space-y-2">
+                      {tier.benefits.slice(0, 8).map((item) => (
+                        <li
+                          key={item}
+                          className="flex items-start gap-2 text-body-sm text-text-secondary"
+                        >
+                          <svg
+                            className="w-4 h-4 shrink-0 mt-0.5 text-cambridge"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.5"
+                          >
+                            <path d="M20 6L9 17l-5-5" />
+                          </svg>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="text-caption text-text-tertiary mt-3">
+                      + {tier.benefits.length - 8} more benefits below
+                    </p>
+                  </div>
+                )}
+
+                <div className="mt-auto pt-6">
+                  <Link
+                    href="/membership/join"
+                    className={`
+                      block w-full text-center py-3 px-6 font-bold text-body-sm
+                      rounded-[var(--radius-md)] transition-colors
+                      ${isFeatured
+                        ? "bg-accent hover:bg-accent-hover text-white"
+                        : "border border-border-primary hover:border-text-tertiary text-text-primary"
+                      }
+                    `}
+                  >
+                    {tier.cta} →
+                  </Link>
+                </div>
+              </div>
+            );
+          })}
+        </section>
+
+        {/* Full benefits table — Essentials breakdown */}
+        <section className="mt-24">
+          <div className="max-w-2xl">
+            <p className="text-overline text-cambridge mb-3">What&apos;s Inside</p>
+            <h2 className="text-h2">Every Essentials benefit, in detail</h2>
+            <p className="text-body text-text-secondary mt-4 leading-relaxed">
+              Every tier starts with these 17 benefits. Visibility Plus and
+              Community Investor build on top — they don&apos;t replace them.
+            </p>
+          </div>
+
+          <div className="mt-10 grid sm:grid-cols-2 gap-x-8 gap-y-3">
+            {essentialsBenefits.map((item) => (
+              <div
+                key={item}
+                className="flex items-start gap-3 py-2 border-b border-border-secondary"
+              >
+                <svg
+                  className="w-5 h-5 shrink-0 mt-0.5 text-cambridge"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
+                  <path d="M20 6L9 17l-5-5" />
+                </svg>
+                <span className="text-body-sm text-text-primary">{item}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="mt-24">
+          <div className="max-w-2xl">
+            <p className="text-overline text-cambridge mb-3">
+              Frequently Asked
+            </p>
+            <h2 className="text-h2">Questions before you join</h2>
+          </div>
+          <div className="mt-10 grid md:grid-cols-2 gap-x-12 gap-y-8 max-w-5xl">
+            {faqs.map((faq) => (
+              <div key={faq.q}>
+                <h3 className="text-h4">{faq.q}</h3>
+                <p className="text-body-sm text-text-secondary mt-2 leading-relaxed">
+                  {faq.a}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Safety Council note */}
+        <section className="mt-16 p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+          <p className="text-body-sm text-text-secondary leading-relaxed">
+            <span className="font-bold text-text-primary">
+              Safety Council note:
+            </span>{" "}
+            Medina County Safety Council participation is available to chamber
+            members at no additional charge. If your business wants BWC rebate
+            eligibility, chamber membership is the most cost-effective path.{" "}
+            <Link
+              href="/programs/safety-council"
+              className="text-cambridge hover:text-cambridge/80 transition-colors"
+            >
+              Learn about the Safety Council →
+            </Link>
+          </p>
+        </section>
+
+        {/* Bottom CTA */}
+        <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+          <div className="grid lg:grid-cols-2 gap-10 items-center">
+            <div>
+              <h2 className="text-h2">Questions before you commit?</h2>
+              <p className="text-body-lg text-text-secondary mt-4">
+                Stephanie will walk you through what&apos;s included, which
+                tier fits your goals, and what similar businesses in your
+                industry typically get out of membership. No pressure — just a
+                conversation.
+              </p>
+            </div>
+            <div className="space-y-4">
+              <a
+                href="mailto:stephanie@medinaohchamber.com"
+                className="
+                  block w-full text-center py-4 px-6
+                  bg-accent hover:bg-accent-hover
+                  text-white font-bold text-body
+                  rounded-[var(--radius-md)]
+                  transition-colors
+                "
+              >
+                Email Stephanie →
+              </a>
+              <a
+                href="tel:+13307238773"
+                className="
+                  block w-full text-center py-3 px-6
+                  border border-border-primary hover:border-text-tertiary
+                  text-text-primary font-bold text-body-sm
+                  rounded-[var(--radius-md)]
+                  transition-colors
+                "
+              >
+                Call (330) 723-8773
+              </a>
+              <Link
+                href="/membership/join"
+                className="
+                  block w-full text-center py-3 px-6
+                  text-cambridge font-bold text-body-sm
+                  transition-colors hover:text-cambridge/80
+                "
+              >
+                Apply Online
+              </Link>
+            </div>
+          </div>
+        </section>
+      </div>
+    </>
   );
 }

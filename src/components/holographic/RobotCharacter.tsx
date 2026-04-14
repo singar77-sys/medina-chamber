@@ -21,7 +21,6 @@ interface RobotCharacterProps {
  * - Left arm waves every ~12s during idle
  * - Mouth opens/closes while "responding"
  * - Thinking dots appear above head during "thinking"
- * - Holds an "AI" chip in right hand (glowing outline)
  * - Floating hover disc with pulsing lights
  */
 export function RobotCharacter({
@@ -95,7 +94,7 @@ export function RobotCharacter({
 
   return (
     <div
-      className={`relative ${className}`}
+      className={`relative robot-fly-in ${className}`}
       style={{ ["--robot-pulse" as string]: pulseSpeed }}
     >
       <svg
@@ -351,14 +350,14 @@ export function RobotCharacter({
           <circle cx="98" cy="292" r="8" fill="#c5d0dc" stroke="#0C1B33" strokeWidth="3" />
         </g>
 
-        {/* ─── Right arm (holding AI chip) ─── */}
+        {/* ─── Right arm (mirror of left, no chip) ─── */}
         <g>
-          {/* Upper arm — short, wider */}
+          {/* Upper arm */}
           <rect
             x="274"
-            y="280"
+            y="290"
             width="56"
-            height="60"
+            height="70"
             rx="24"
             fill="url(#bodyGrad)"
             stroke="#0C1B33"
@@ -367,7 +366,7 @@ export function RobotCharacter({
           {/* Wrist cuff */}
           <rect
             x="272"
-            y="332"
+            y="352"
             width="60"
             height="10"
             rx="4"
@@ -375,10 +374,10 @@ export function RobotCharacter({
             stroke="#0C1B33"
             strokeWidth="3"
           />
-          {/* Mitten hand gripping chip */}
+          {/* Mitten hand */}
           <rect
             x="264"
-            y="340"
+            y="360"
             width="76"
             height="52"
             rx="24"
@@ -386,64 +385,16 @@ export function RobotCharacter({
             stroke="#0C1B33"
             strokeWidth="5"
           />
-          {/* Thumb notch on the outer side — grips the chip */}
+          {/* Thumb notch on the inner side */}
           <path
-            d="M 280 360 Q 272 368 280 376"
+            d="M 280 380 Q 272 388 280 396"
             fill="none"
             stroke="#0C1B33"
             strokeWidth="3"
             strokeLinecap="round"
           />
           {/* Shoulder joint */}
-          <circle cx="302" cy="282" r="8" fill="#c5d0dc" stroke="#0C1B33" strokeWidth="3" />
-
-          <g className="robot-chip">
-            <rect
-              x="285"
-              y="355"
-              width="52"
-              height="50"
-              rx="6"
-              fill="#0C1B33"
-              stroke="#83BCA9"
-              strokeWidth="2"
-            />
-            <rect x="290" y="352" width="4" height="4" fill="#0C1B33" />
-            <rect x="298" y="352" width="4" height="4" fill="#0C1B33" />
-            <rect x="306" y="352" width="4" height="4" fill="#0C1B33" />
-            <rect x="314" y="352" width="4" height="4" fill="#0C1B33" />
-            <rect x="322" y="352" width="4" height="4" fill="#0C1B33" />
-            <rect x="330" y="352" width="4" height="4" fill="#0C1B33" />
-            <rect x="290" y="404" width="4" height="4" fill="#0C1B33" />
-            <rect x="298" y="404" width="4" height="4" fill="#0C1B33" />
-            <rect x="306" y="404" width="4" height="4" fill="#0C1B33" />
-            <rect x="314" y="404" width="4" height="4" fill="#0C1B33" />
-            <rect x="322" y="404" width="4" height="4" fill="#0C1B33" />
-            <rect x="330" y="404" width="4" height="4" fill="#0C1B33" />
-            <text
-              x="311"
-              y="388"
-              textAnchor="middle"
-              fontFamily="ui-monospace, monospace"
-              fontWeight="900"
-              fontSize="18"
-              fill="#83BCA9"
-            >
-              AI
-            </text>
-            <rect
-              x="285"
-              y="355"
-              width="52"
-              height="50"
-              rx="6"
-              fill="none"
-              stroke="#83BCA9"
-              strokeWidth="3"
-              opacity="0.5"
-              className="robot-chip-glow"
-            />
-          </g>
+          <circle cx="302" cy="292" r="8" fill="#c5d0dc" stroke="#0C1B33" strokeWidth="3" />
         </g>
 
         {/* ─── Hover base ─── */}

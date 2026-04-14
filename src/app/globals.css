@@ -487,6 +487,17 @@ body {
   transform-origin: center;
 }
 
+@keyframes robot-fly-in {
+  0%   { transform: translateX(120%) rotate(8deg); opacity: 0; }
+  60%  { opacity: 1; }
+  80%  { transform: translateX(-8px) rotate(-2deg); }
+  100% { transform: translateX(0) rotate(0); opacity: 1; }
+}
+
+.robot-fly-in {
+  animation: robot-fly-in 1100ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 @keyframes robot-antenna-pulse {
   0%, 100% { opacity: 0.6; transform: scale(1); }
   50%      { opacity: 1;   transform: scale(1.15); }
@@ -639,6 +650,7 @@ body {
 .robot-think-dot-3 { transform-box: fill-box; animation: robot-think-dot 1.2s ease-in-out infinite 0.3s; }
 
 @media (prefers-reduced-motion: reduce) {
+  .robot-fly-in,
   .robot-float,
   .robot-antenna-pulse,
   .robot-antenna-wobble,

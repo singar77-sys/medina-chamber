@@ -235,7 +235,6 @@ export default function HomePage() {
                 <p className="text-display text-oxford [[data-theme=dark]_&]:text-cambridge leading-none">
                   <CountUp
                     end={s.end}
-                    prefix={s.prefix}
                     suffix={s.suffix || ""}
                     duration={s.end > 100 ? 2400 : 1600}
                   />

@@ -161,6 +161,8 @@ export const searchablePages: { label: string; href: string; keywords: string }[
   { label: "Hall of Fame", href: "/about/hall-of-fame", keywords: "hall fame honor legacy" },
   { label: "Ambassadors", href: "/about/ambassadors", keywords: "ambassador volunteer welcome" },
   { label: "Contact", href: "/about/contact", keywords: "contact phone email address location" },
+  // Brand
+  { label: "Medina Means Business", href: "/medina-means-business", keywords: "medina means business tagline brand magazine statement slogan" },
   // Communities
   { label: "Medina County Communities", href: "/community", keywords: "community area city township county medina" },
   { label: "Medina Businesses", href: "/community/medina", keywords: "medina ohio business downtown square" },

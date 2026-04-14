@@ -44,6 +44,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/jobs`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
     // Communities
     { url: `${BASE_URL}/community`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
+    // Brand landing page
+    { url: `${BASE_URL}/medina-means-business`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
   ];
 
   const memberPages: MetadataRoute.Sitemap = members.map((m) => ({

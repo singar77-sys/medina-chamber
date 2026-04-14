@@ -72,15 +72,25 @@ export default function MedinaMeansBusinessPage() {
 
       {/* ─── Hero ─────────────────────────────────────────── */}
       <section className="relative min-h-[80vh] flex items-end overflow-hidden">
+        {/* Background photos — theme-aware */}
         <Image
-          src="/images/photos/medina-square-aerial-spring.jpg"
-          alt="Aerial view of Medina Square in spring"
+          src="/images/photos/gazebo-daytime-flag.jpg"
+          alt="Historic Medina Square gazebo"
           fill
-          className="object-cover object-center"
+          className="object-cover object-center [[data-theme=dark]_&]:hidden"
           priority
           quality={85}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-oxford via-oxford/85 to-oxford/40" />
+        <Image
+          src="/images/photos/gazebo-night-flag.jpg"
+          alt="Historic Medina gazebo at night"
+          fill
+          className="object-cover object-center hidden [[data-theme=dark]_&]:block"
+          priority
+          quality={85}
+        />
+        {/* Gradient overlay — stronger for daytime, lighter for night */}
+        <div className="absolute inset-0 bg-gradient-to-t from-oxford via-oxford/85 to-oxford/60 [[data-theme=dark]_&]:via-oxford/60 [[data-theme=dark]_&]:to-oxford/15" />
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-24 pt-32 w-full">
           <div className="max-w-4xl">

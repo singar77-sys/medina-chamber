@@ -4,7 +4,7 @@ import Link from "next/link";
 import { totalCount } from "@/data/members";
 import { FadeIn } from "@/components/FadeIn";
 import { CountUp } from "@/components/CountUp";
-import { HomeAIPrompt } from "@/components/HomeAIPrompt";
+import { HolographicChamber } from "@/components/holographic/HolographicChamber";
 
 export const metadata: Metadata = {
   title: "Greater Medina Chamber of Commerce — Medina County, Ohio",
@@ -249,35 +249,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── AI Section ───────────────────────────────────── */}
+      {/* ─── Holographic Chamber (AI Section) ──────────────── */}
       <section className="bg-bg-secondary border-t border-border-secondary">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-20">
-          <FadeIn>
-            <div className="max-w-2xl mx-auto text-center mb-8">
-              <img
-                src="/images/chamberbot-face.svg"
-                alt="ChamberBot mascot"
-                className="w-24 h-24 mx-auto mb-4"
-              />
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-cambridge/10 border border-cambridge/20 rounded-full mb-6">
-                <div className="w-2 h-2 bg-cambridge rounded-full animate-pulse" />
-                <span className="text-caption font-bold text-cambridge">
-                  AI-Powered
-                </span>
-              </div>
-              <h2 className="text-h2">
-                Ask the Chamber anything
-              </h2>
-              <p className="text-body-sm text-text-tertiary mt-3">
-                ChamberBot knows every member, event, and program.
-                Try it.
-              </p>
-            </div>
-            <div className="max-w-xl mx-auto">
-              <HomeAIPrompt />
-            </div>
-          </FadeIn>
-        </div>
+        <FadeIn>
+          <HolographicChamber />
+        </FadeIn>
       </section>
 
       {/* ─── Three Pillars (Your Voice / Network / Growth) ── */}

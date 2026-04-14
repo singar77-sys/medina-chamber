@@ -304,36 +304,98 @@ export function RobotCharacter({
         {/* ─── Left arm (waving) ─── */}
         <g
           className="robot-arm-wave"
-          style={{ transformOrigin: "95px 290px", transformBox: "fill-box" }}
+          style={{ transformOrigin: "98px 295px", transformBox: "fill-box" }}
         >
+          {/* Upper arm — short, wider for better proportion */}
           <rect
-            x="75"
+            x="70"
             y="290"
-            width="40"
-            height="100"
-            rx="18"
+            width="56"
+            height="70"
+            rx="24"
             fill="url(#bodyGrad)"
             stroke="#0C1B33"
             strokeWidth="5"
           />
-          <circle cx="95" cy="400" r="22" fill="url(#bodyGrad)" stroke="#0C1B33" strokeWidth="5" />
-          <circle cx="95" cy="290" r="8" fill="#c5d0dc" stroke="#0C1B33" strokeWidth="3" />
+          {/* Wrist cuff detail — breaks up the silhouette */}
+          <rect
+            x="68"
+            y="352"
+            width="60"
+            height="10"
+            rx="4"
+            fill="#c5d0dc"
+            stroke="#0C1B33"
+            strokeWidth="3"
+          />
+          {/* Mitten hand — wider than the arm, rounded paddle */}
+          <rect
+            x="60"
+            y="360"
+            width="76"
+            height="52"
+            rx="24"
+            fill="url(#bodyGrad)"
+            stroke="#0C1B33"
+            strokeWidth="5"
+          />
+          {/* Thumb notch — small groove on the inner side */}
+          <path
+            d="M 120 380 Q 128 388 120 396"
+            fill="none"
+            stroke="#0C1B33"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+          {/* Shoulder joint */}
+          <circle cx="98" cy="292" r="8" fill="#c5d0dc" stroke="#0C1B33" strokeWidth="3" />
         </g>
 
         {/* ─── Right arm (holding AI chip) ─── */}
         <g>
+          {/* Upper arm — short, wider */}
           <rect
-            x="285"
+            x="274"
             y="280"
-            width="40"
-            height="90"
-            rx="18"
+            width="56"
+            height="60"
+            rx="24"
             fill="url(#bodyGrad)"
             stroke="#0C1B33"
             strokeWidth="5"
           />
-          <circle cx="305" cy="380" r="22" fill="url(#bodyGrad)" stroke="#0C1B33" strokeWidth="5" />
-          <circle cx="305" cy="280" r="8" fill="#c5d0dc" stroke="#0C1B33" strokeWidth="3" />
+          {/* Wrist cuff */}
+          <rect
+            x="272"
+            y="332"
+            width="60"
+            height="10"
+            rx="4"
+            fill="#c5d0dc"
+            stroke="#0C1B33"
+            strokeWidth="3"
+          />
+          {/* Mitten hand gripping chip */}
+          <rect
+            x="264"
+            y="340"
+            width="76"
+            height="52"
+            rx="24"
+            fill="url(#bodyGrad)"
+            stroke="#0C1B33"
+            strokeWidth="5"
+          />
+          {/* Thumb notch on the outer side — grips the chip */}
+          <path
+            d="M 280 360 Q 272 368 280 376"
+            fill="none"
+            stroke="#0C1B33"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+          {/* Shoulder joint */}
+          <circle cx="302" cy="282" r="8" fill="#c5d0dc" stroke="#0C1B33" strokeWidth="3" />
 
           <g className="robot-chip">
             <rect

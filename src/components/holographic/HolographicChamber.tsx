@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { ParticleField } from "./ParticleField";
 import { HudFrame } from "./HudFrame";
-import { AiEntity } from "./AiEntity";
+import { RobotCharacter } from "./RobotCharacter";
 
 type SceneState = "idle" | "listening" | "thinking" | "responding";
 
@@ -197,7 +197,7 @@ export function HolographicChamber() {
           <div className="scan-line absolute left-0 right-0 h-[2px] bg-gradient-to-b from-transparent via-cambridge/50 to-transparent" />
         </div>
 
-        {/* AI Entity — the star */}
+        {/* Robot Character — the star */}
         <div
           className="absolute inset-0 flex items-center justify-center"
           style={{
@@ -205,9 +205,9 @@ export function HolographicChamber() {
               "translate3d(calc(var(--mx) * -30px), calc(var(--my) * -30px), 0)",
           }}
         >
-          <AiEntity
+          <RobotCharacter
             state={sceneState}
-            className="w-48 h-48 sm:w-64 sm:h-64 lg:w-72 lg:h-72"
+            className="w-56 sm:w-72 lg:w-80"
           />
         </div>
 

@@ -474,3 +474,117 @@ body {
     stroke-dashoffset: 0;
   }
 }
+
+/* --- Robot Character animations --------------------------- */
+
+@keyframes robot-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+.robot-float {
+  animation: robot-float 4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes robot-antenna-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.15); }
+}
+
+.robot-antenna-pulse {
+  transform-origin: 200px 40px;
+  transform-box: fill-box;
+  animation: robot-antenna-pulse var(--robot-pulse, 3s) ease-in-out infinite;
+}
+
+@keyframes robot-eye-blink {
+  0%, 45%, 48%, 93%, 95%, 100% { transform: scaleY(1); }
+  46.5%, 94%                   { transform: scaleY(0.1); }
+}
+
+.robot-eye {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: robot-eye-blink 6s ease-in-out infinite;
+}
+
+@keyframes robot-chest-pulse {
+  0%, 100% { opacity: 0.75; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.08); }
+}
+
+.robot-chest-pulse {
+  transform-origin: 200px 340px;
+  transform-box: fill-box;
+  animation: robot-chest-pulse var(--robot-pulse, 3s) ease-in-out infinite;
+}
+
+@keyframes robot-led-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.3; }
+}
+
+.robot-led-left {
+  animation: robot-led-blink 1.2s ease-in-out infinite;
+}
+.robot-led-right {
+  animation: robot-led-blink 1.2s ease-in-out infinite 0.3s;
+}
+
+@keyframes robot-indicator {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 1; }
+}
+
+.robot-indicator-1 { animation: robot-indicator 1.5s ease-in-out infinite; }
+.robot-indicator-2 { animation: robot-indicator 1.5s ease-in-out infinite 0.3s; }
+.robot-indicator-3 { animation: robot-indicator 1.5s ease-in-out infinite 0.6s; }
+
+@keyframes robot-chip-glow {
+  0%, 100% { opacity: 0.3; }
+  50%      { opacity: 0.9; }
+}
+
+.robot-chip-glow {
+  animation: robot-chip-glow 2s ease-in-out infinite;
+}
+
+@keyframes robot-hover-light {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 1; }
+}
+
+.robot-hover-1 { animation: robot-hover-light 1s ease-in-out infinite; }
+.robot-hover-2 { animation: robot-hover-light 1s ease-in-out infinite 0.2s; }
+.robot-hover-3 { animation: robot-hover-light 1s ease-in-out infinite 0.4s; }
+
+@keyframes robot-shadow-pulse {
+  0%, 100% { opacity: 0.3; transform: scaleX(1); }
+  50%      { opacity: 0.2; transform: scaleX(0.9); }
+}
+
+.robot-shadow {
+  transform-origin: 200px 490px;
+  transform-box: fill-box;
+  animation: robot-shadow-pulse 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .robot-float,
+  .robot-antenna-pulse,
+  .robot-eye,
+  .robot-chest-pulse,
+  .robot-led-left,
+  .robot-led-right,
+  .robot-indicator-1,
+  .robot-indicator-2,
+  .robot-indicator-3,
+  .robot-chip-glow,
+  .robot-hover-1,
+  .robot-hover-2,
+  .robot-hover-3,
+  .robot-shadow {
+    animation: none;
+  }
+}

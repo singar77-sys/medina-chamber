@@ -145,7 +145,7 @@ export default function AboutPage() {
             key={item.label}
             className="p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] text-center"
           >
-            <p className="text-h2 text-oxford">{item.stat}</p>
+            <p className="text-h2 text-oxford [[data-theme=dark]_&]:text-cambridge">{item.stat}</p>
             <p className="text-caption text-text-tertiary mt-1 uppercase tracking-wider">
               {item.label}
             </p>

@@ -64,7 +64,8 @@ summary,
 
   --text-primary: var(--oxford-blue);
   --text-secondary: #3D4F6F;
-  --text-tertiary: #6B7A94;
+  /* Darkened from #6B7A94 for WCAG AA (4.5:1) on white backgrounds. */
+  --text-tertiary: #5A6A82;
   --text-inverse: #FFFFFF;
   --text-accent: var(--coquelicot);
 
@@ -106,7 +107,8 @@ summary,
 
   --text-primary: #F0F2F5;
   --text-secondary: #A8B4C8;
-  --text-tertiary: #6B7A94;
+  /* Lightened from #6B7A94 for WCAG AA (4.5:1) on oxford-blue backgrounds. */
+  --text-tertiary: #8999B0;
   --text-inverse: var(--oxford-blue);
   --text-accent: #FF6233;
 
@@ -673,5 +675,13 @@ body {
   .robot-think-dot-2,
   .robot-think-dot-3 {
     animation: none;
+  }
+
+  /* Tailwind animate-spin doesn't honor this by default — force it. */
+  .animate-spin,
+  .animate-pulse,
+  .animate-bounce,
+  .animate-ping {
+    animation: none !important;
   }
 }

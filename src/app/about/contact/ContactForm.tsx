@@ -77,10 +77,11 @@ export function ContactForm() {
     <form onSubmit={handleSubmit} className="space-y-5">
       <div className="grid sm:grid-cols-2 gap-5">
         <div>
-          <label className="block text-body-sm font-bold text-text-primary mb-2">
+          <label htmlFor="contact-name" className="block text-body-sm font-bold text-text-primary mb-2">
             Name <span className="text-accent">*</span>
           </label>
           <input
+            id="contact-name"
             type="text"
             required
             value={name}
@@ -91,10 +92,11 @@ export function ContactForm() {
           />
         </div>
         <div>
-          <label className="block text-body-sm font-bold text-text-primary mb-2">
+          <label htmlFor="contact-email" className="block text-body-sm font-bold text-text-primary mb-2">
             Email <span className="text-accent">*</span>
           </label>
           <input
+            id="contact-email"
             type="email"
             required
             value={email}
@@ -107,10 +109,11 @@ export function ContactForm() {
       </div>
 
       <div>
-        <label className="block text-body-sm font-bold text-text-primary mb-2">
+        <label htmlFor="contact-phone" className="block text-body-sm font-bold text-text-primary mb-2">
           Phone <span className="text-text-tertiary font-normal">(optional)</span>
         </label>
         <input
+          id="contact-phone"
           type="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
@@ -121,10 +124,11 @@ export function ContactForm() {
       </div>
 
       <div>
-        <label className="block text-body-sm font-bold text-text-primary mb-2">
+        <label htmlFor="contact-message" className="block text-body-sm font-bold text-text-primary mb-2">
           Message <span className="text-accent">*</span>
         </label>
         <textarea
+          id="contact-message"
           required
           rows={6}
           value={message}

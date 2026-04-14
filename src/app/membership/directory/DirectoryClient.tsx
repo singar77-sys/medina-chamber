@@ -90,6 +90,7 @@ function DirectoryClientInner({ members, categories }: DirectoryClientProps) {
         {/* Category Select */}
         <div className="relative sm:w-72">
           <select
+            aria-label="Filter by category"
             value={activeCategory ?? ""}
             onChange={(e) => setActiveCategory(e.target.value || null)}
             className="

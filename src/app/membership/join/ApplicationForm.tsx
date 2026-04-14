@@ -92,6 +92,7 @@ export function ApplicationForm() {
     text-body text-text-primary
     placeholder:text-text-tertiary
     focus:outline-none focus:border-cambridge
+    focus-visible:ring-2 focus-visible:ring-cambridge/40
     transition-colors
   `;
 

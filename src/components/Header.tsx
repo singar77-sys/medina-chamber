@@ -269,10 +269,12 @@ function MobileMenu({
 
   return (
     <div className="fixed inset-0 z-50 lg:hidden">
-      {/* Backdrop — fade */}
-      <div
+      {/* Backdrop — fade. Button for native keyboard support. */}
+      <button
+        type="button"
+        aria-label="Close menu"
         className={`
-          absolute inset-0 bg-oxford/60 backdrop-blur-sm
+          absolute inset-0 bg-oxford/60 backdrop-blur-sm cursor-default
           transition-opacity duration-250 ease-out
           ${animating ? "opacity-100" : "opacity-0"}
         `}

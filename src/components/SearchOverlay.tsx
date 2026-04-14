@@ -51,9 +51,11 @@ export function SearchOverlay({
         ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}
       `}
     >
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-oxford/60 backdrop-blur-sm"
+      {/* Backdrop — button for native keyboard support */}
+      <button
+        type="button"
+        aria-label="Close search"
+        className="absolute inset-0 bg-oxford/60 backdrop-blur-sm cursor-default"
         onClick={onClose}
       />
 
@@ -89,11 +91,14 @@ export function SearchOverlay({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search pages, programs, events..."
+              aria-label="Search"
               className="
                 w-full bg-transparent
                 text-body text-text-primary
                 placeholder:text-text-tertiary
                 outline-none
+                focus-visible:ring-2 focus-visible:ring-cambridge/60
+                focus-visible:rounded-sm
               "
             />
             {query && (

@@ -230,8 +230,8 @@ export default function FoundationPage() {
           <div>
             <h3 className="text-h4 mb-4">Buttons</h3>
             <div className="flex flex-wrap gap-4">
-              <a
-                href="#"
+              <button
+                type="button"
                 className="
                   inline-flex items-center px-6 py-3
                   bg-accent hover:bg-accent-hover
@@ -241,9 +241,9 @@ export default function FoundationPage() {
                 "
               >
                 Join Now &rarr;
-              </a>
-              <a
-                href="#"
+              </button>
+              <button
+                type="button"
                 className="
                   inline-flex items-center px-6 py-3
                   bg-bg-tertiary hover:bg-border-primary
@@ -253,9 +253,9 @@ export default function FoundationPage() {
                 "
               >
                 Learn More
-              </a>
-              <a
-                href="#"
+              </button>
+              <button
+                type="button"
                 className="
                   inline-flex items-center px-6 py-3
                   border border-border-primary hover:border-text-tertiary
@@ -265,7 +265,7 @@ export default function FoundationPage() {
                 "
               >
                 View Events
-              </a>
+              </button>
             </div>
           </div>
 

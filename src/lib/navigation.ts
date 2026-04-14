@@ -142,6 +142,7 @@ export const searchablePages: { label: string; href: string; keywords: string }[
   { label: "Member Benefits", href: "/membership/benefits", keywords: "why join perks advantage" },
   { label: "Pricing & Tiers", href: "/membership/pricing", keywords: "cost price tier level investment" },
   { label: "Join the Chamber", href: "/membership/join", keywords: "join apply sign up membership application" },
+  { label: "First 30 Days Onboarding", href: "/membership/first-30-days", keywords: "new member onboarding first 30 days checklist welcome orientation getting started" },
   { label: "Savings Programs", href: "/membership/savings", keywords: "discount deal savings insurance" },
   { label: "Committees & Councils", href: "/membership/committees", keywords: "committee council volunteer leadership board" },
   // Programs

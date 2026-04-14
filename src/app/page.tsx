@@ -184,11 +184,10 @@ export default function HomePage() {
               <br />
               <span className="text-cambridge">Business</span>
             </h1>
-            <p className="text-body-lg text-white/70 mt-6 max-w-2xl">
-              The Greater Medina Chamber of Commerce connects and champions
-              businesses across Medina County. From sole proprietors to
-              manufacturers — we&apos;re the room where deals get made, leaders
-              get built, and Medina gets stronger.
+            <p className="text-body-lg text-white/80 mt-6 max-w-2xl">
+              Championing Medina&apos;s business community since 1938. Advocacy
+              that moves policy. Connections that open doors. Resources that
+              drive growth.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
@@ -279,8 +278,69 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── Programs Grid ────────────────────────────────── */}
+      {/* ─── Three Pillars (Your Voice / Network / Growth) ── */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
+        <FadeIn>
+          <div className="max-w-2xl mb-14">
+            <p className="text-overline text-cambridge mb-3">Why Members Join</p>
+            <h2 className="text-h2">Three things the Chamber does for you.</h2>
+          </div>
+        </FadeIn>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {[
+            {
+              label: "Your Voice in Policy",
+              title: "Advocacy that moves the needle.",
+              desc: "Monthly legislator meetings, candidate forums, voter education, and direct engagement with decision-makers at city, county, and state levels.",
+              href: "/about/advocacy",
+              cta: "See Advocacy →",
+            },
+            {
+              label: "Your Network",
+              title: "Connections that open doors.",
+              desc: "Networking events, leadership awards, the Safety Council, the Annual Golf Outing, plus 511+ member businesses in a searchable directory.",
+              href: "/events",
+              cta: "Browse Events →",
+            },
+            {
+              label: "Your Growth",
+              title: "Resources that drive results.",
+              desc: "Compass leadership program, educational workshops, member-only event pricing, savings on health insurance and workers' comp, and visibility across Chamber channels.",
+              href: "/membership/benefits",
+              cta: "See Benefits →",
+            },
+          ].map((pillar, i) => (
+            <FadeIn key={pillar.label} delay={i * 100}>
+              <div
+                className="
+                  flex flex-col h-full p-8
+                  bg-bg-secondary border border-border-secondary
+                  rounded-[var(--radius-lg)]
+                  hover:border-cambridge/40 transition-colors
+                "
+              >
+                <p className="text-caption text-cambridge font-bold uppercase tracking-wider">
+                  {pillar.label}
+                </p>
+                <h3 className="text-h3 mt-2 mb-3">{pillar.title}</h3>
+                <p className="text-body-sm text-text-secondary leading-relaxed flex-1">
+                  {pillar.desc}
+                </p>
+                <Link
+                  href={pillar.href}
+                  className="mt-5 text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors inline-block"
+                >
+                  {pillar.cta}
+                </Link>
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── Programs Grid ────────────────────────────────── */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pb-20 lg:pb-28">
         <FadeIn>
           <div className="flex items-end justify-between mb-10">
             <div>

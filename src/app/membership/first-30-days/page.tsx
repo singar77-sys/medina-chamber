@@ -206,14 +206,14 @@ export default function First30DaysPage() {
 
         {/* Overview callout */}
         <FadeIn>
-          <section className="mt-12 p-8 lg:p-10 bg-oxford text-white rounded-[var(--radius-lg)] relative overflow-hidden">
+          <section className="mt-12 p-8 lg:p-10 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] relative overflow-hidden">
             <div className="absolute -top-32 -right-32 w-64 h-64 bg-cambridge/10 rounded-full blur-3xl" />
             <div className="relative grid md:grid-cols-3 gap-6 items-center">
               <div className="md:col-span-2">
                 <p className="text-overline text-cambridge mb-3">
                   Here&apos;s the promise
                 </p>
-                <p className="text-h3 text-white">
+                <p className="text-h3">
                   Follow this checklist in your first month and your
                   membership will pay for itself — often in one referral, one
                   saved contract, or one introduction at a mixer.
@@ -222,19 +222,19 @@ export default function First30DaysPage() {
               <div className="grid grid-cols-3 md:grid-cols-1 gap-4 text-center md:text-left">
                 <div>
                   <p className="text-h2 text-cambridge leading-none">7</p>
-                  <p className="text-caption text-white/60 uppercase tracking-wider mt-1">
+                  <p className="text-caption text-text-tertiary uppercase tracking-wider mt-1">
                     Steps
                   </p>
                 </div>
                 <div>
                   <p className="text-h2 text-cambridge leading-none">4</p>
-                  <p className="text-caption text-white/60 uppercase tracking-wider mt-1">
+                  <p className="text-caption text-text-tertiary uppercase tracking-wider mt-1">
                     Weeks
                   </p>
                 </div>
                 <div>
                   <p className="text-h2 text-cambridge leading-none">~3h</p>
-                  <p className="text-caption text-white/60 uppercase tracking-wider mt-1">
+                  <p className="text-caption text-text-tertiary uppercase tracking-wider mt-1">
                     Total time
                   </p>
                 </div>
@@ -462,7 +462,7 @@ export default function First30DaysPage() {
 
         {/* Not yet a member CTA */}
         <FadeIn>
-          <section className="mt-20 p-10 lg:p-16 bg-oxford text-white rounded-[var(--radius-lg)] relative overflow-hidden">
+          <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] relative overflow-hidden">
             <div className="absolute -top-32 -right-32 w-64 h-64 bg-cambridge/10 rounded-full blur-3xl" />
             <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-accent/5 rounded-full blur-3xl" />
             <div className="relative grid lg:grid-cols-2 gap-10 items-center">
@@ -470,10 +470,10 @@ export default function First30DaysPage() {
                 <p className="text-overline text-cambridge mb-4">
                   Not a member yet?
                 </p>
-                <h2 className="text-h2 text-white">
+                <h2 className="text-h2">
                   Start the clock on your first 30 days.
                 </h2>
-                <p className="text-body-lg text-white/70 mt-4">
+                <p className="text-body-lg text-text-secondary mt-4">
                   Apply for membership today and Stephanie will walk you
                   through this exact checklist as part of your welcome. Three
                   tiers starting at $345/year.
@@ -496,8 +496,8 @@ export default function First30DaysPage() {
                   href="/membership/pricing"
                   className="
                     block w-full text-center py-3 px-6
-                    border border-white/30 hover:border-white/60
-                    text-white font-bold text-body-sm
+                    border border-border-primary hover:border-text-tertiary
+                    text-text-primary font-bold text-body-sm
                     rounded-[var(--radius-md)]
                     transition-colors
                   "

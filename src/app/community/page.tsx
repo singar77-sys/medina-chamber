@@ -74,13 +74,13 @@ export default function CommunityHubPage() {
       </section>
 
       {/* CTA */}
-      <section className="mt-20 p-10 lg:p-16 bg-oxford text-white rounded-[var(--radius-lg)]">
+      <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
         <div className="grid lg:grid-cols-2 gap-10 items-center">
           <div>
-            <h2 className="text-h2 text-white">
+            <h2 className="text-h2">
               Your community. Your chamber.
             </h2>
-            <p className="text-body-lg text-white/70 mt-4">
+            <p className="text-body-lg text-text-secondary mt-4">
               From the Square to the southern townships — same advocacy,
               same directory, same networking events, same savings programs.
               The chamber works for every zip code in the county.
@@ -103,8 +103,8 @@ export default function CommunityHubPage() {
               href="/membership/directory"
               className="
                 block w-full text-center py-3 px-6
-                border border-white/30 hover:border-white/60
-                text-white font-bold text-body-sm
+                border border-border-primary hover:border-text-tertiary
+                text-text-primary font-bold text-body-sm
                 rounded-[var(--radius-md)]
                 transition-colors
               "

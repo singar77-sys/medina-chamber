@@ -188,7 +188,7 @@ export default function PricingPage() {
                 className={`
                   relative flex flex-col p-8 rounded-[var(--radius-lg)]
                   ${isFeatured
-                    ? "bg-oxford text-white border-2 border-cambridge lg:scale-105 lg:shadow-[0_12px_40px_rgba(12,27,51,0.15)]"
+                    ? "bg-oxford [[data-theme=dark]_&]:bg-bg-tertiary text-white border-2 border-cambridge lg:scale-105 lg:shadow-[0_12px_40px_rgba(12,27,51,0.15)]"
                     : "bg-bg-secondary border border-border-secondary"
                   }
                 `}

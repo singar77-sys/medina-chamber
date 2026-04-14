@@ -212,10 +212,10 @@ export default function AmbassadorsPage() {
       </section>
 
       {/* CTA */}
-      <section className="mt-24 p-10 lg:p-16 bg-oxford text-white rounded-[var(--radius-lg)]">
+      <section className="mt-24 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
         <div className="max-w-2xl">
-          <h2 className="text-h2 text-white">Become an Ambassador</h2>
-          <p className="text-body-lg text-white/70 mt-4">
+          <h2 className="text-h2">Become an Ambassador</h2>
+          <p className="text-body-lg text-text-secondary mt-4">
             Ambassadors are active chamber members who want to give back and
             expand their network. If you&apos;re a member and interested in
             volunteering, reach out to Stephanie Mueller.
@@ -225,7 +225,7 @@ export default function AmbassadorsPage() {
               href="/about/contact"
               className="
                 inline-flex items-center px-6 py-3
-                bg-cambridge hover:bg-cambridge/90
+                bg-accent hover:bg-accent-hover
                 text-white font-bold text-body-sm
                 rounded-[var(--radius-md)]
                 transition-colors

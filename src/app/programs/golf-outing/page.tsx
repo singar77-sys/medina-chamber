@@ -99,12 +99,12 @@ export default function GolfOutingPage() {
         ].map((item) => (
           <div
             key={item.label}
-            className="p-6 bg-oxford text-white rounded-[var(--radius-lg)] text-center"
+            className="p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] text-center"
           >
             <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-2">
               {item.label}
             </p>
-            <p className="text-body font-semibold whitespace-pre-line">{item.value}</p>
+            <p className="text-body font-semibold text-text-primary whitespace-pre-line">{item.value}</p>
           </div>
         ))}
       </section>
@@ -173,21 +173,21 @@ export default function GolfOutingPage() {
       </section>
 
       {/* Sponsorship */}
-      <section className="mt-20 p-10 lg:p-16 bg-oxford text-white rounded-[var(--radius-lg)]">
+      <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
         <div className="grid lg:grid-cols-2 gap-10 items-center">
           <div>
             <p className="text-overline text-cambridge mb-3">Sponsorship</p>
-            <h2 className="text-h2 text-white">Put Your Brand on the Course</h2>
-            <p className="text-body-lg text-white/70 mt-4">
+            <h2 className="text-h2">Put Your Brand on the Course</h2>
+            <p className="text-body-lg text-text-secondary mt-4">
               Sponsorship packages are available at a range of investment levels —
               from hole sponsorships to presenting sponsorship. Maximum visibility
               with Medina County&apos;s business community in one room.
             </p>
           </div>
           <div className="space-y-4">
-            <p className="text-body text-white/80">
+            <p className="text-body text-text-secondary">
               Contact{" "}
-              <span className="font-semibold text-white">Stephanie Mueller</span>{" "}
+              <span className="font-semibold text-text-primary">Stephanie Mueller</span>{" "}
               to learn about available packages.
             </p>
             <div className="flex flex-wrap gap-3">
@@ -195,7 +195,7 @@ export default function GolfOutingPage() {
                 href="mailto:stephanie@medinaohchamber.com"
                 className="
                   inline-flex items-center px-5 py-2.5
-                  bg-cambridge hover:bg-cambridge/90
+                  bg-accent hover:bg-accent-hover
                   text-white font-bold text-body-sm
                   rounded-[var(--radius-md)]
                   transition-colors
@@ -207,8 +207,8 @@ export default function GolfOutingPage() {
                 href="tel:+13307238773"
                 className="
                   inline-flex items-center px-5 py-2.5
-                  border border-white/30 hover:border-white/60
-                  text-white font-bold text-body-sm
+                  border border-border-primary hover:border-text-tertiary
+                  text-text-primary font-bold text-body-sm
                   rounded-[var(--radius-md)]
                   transition-colors
                 "

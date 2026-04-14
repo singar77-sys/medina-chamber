@@ -118,11 +118,11 @@ export default function AboutPage() {
 
       {/* ─── Core Purpose Callout ─────────────────────────── */}
       <FadeIn>
-        <section className="mt-20 p-10 lg:p-16 bg-oxford text-white rounded-[var(--radius-lg)] relative overflow-hidden">
+        <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] relative overflow-hidden">
           <div className="absolute -top-32 -right-32 w-64 h-64 bg-cambridge/10 rounded-full blur-3xl" />
           <div className="relative max-w-3xl">
             <p className="text-overline text-cambridge mb-4">Our Core Purpose</p>
-            <p className="text-h2 text-white leading-tight">
+            <p className="text-h2 leading-tight">
               To champion and empower Medina&apos;s business community —
               driving growth through{" "}
               <span className="text-cambridge">advocacy</span>,{" "}
@@ -270,7 +270,7 @@ export default function AboutPage() {
         <div className="grid sm:grid-cols-2 gap-6 max-w-3xl">
           {staff.map((s, i) => (
             <FadeIn key={s.name} delay={i * 100}>
-              <div className="overflow-hidden bg-oxford text-white rounded-[var(--radius-lg)] h-full">
+              <div className="overflow-hidden bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] h-full">
                 <div className="relative w-full aspect-[4/3]">
                   <Image
                     src={s.photo}
@@ -281,11 +281,11 @@ export default function AboutPage() {
                   />
                 </div>
                 <div className="p-8">
-                  <h3 className="text-h4 text-white">{s.name}</h3>
-                  <p className="text-body-sm text-cambridge mt-1">{s.title}</p>
+                  <h3 className="text-h4">{s.name}</h3>
+                  <p className="text-body-sm text-cambridge mt-1 font-bold">{s.title}</p>
                   <a
                     href={`mailto:${s.email}`}
-                    className="inline-block mt-3 text-caption text-white/60 hover:text-white transition-colors"
+                    className="inline-block mt-3 text-caption text-text-tertiary hover:text-text-primary transition-colors"
                   >
                     {s.email}
                   </a>
@@ -409,16 +409,16 @@ export default function AboutPage() {
 
       {/* ─── Join CTA ─────────────────────────────────────── */}
       <FadeIn>
-        <section className="mt-24 p-10 lg:p-16 bg-oxford text-white rounded-[var(--radius-lg)] relative overflow-hidden">
+        <section className="mt-24 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] relative overflow-hidden">
           <div className="absolute -top-32 -right-32 w-64 h-64 bg-cambridge/10 rounded-full blur-3xl" />
           <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-accent/5 rounded-full blur-3xl" />
           <div className="relative grid lg:grid-cols-2 gap-10 items-center">
             <div>
               <p className="text-overline text-cambridge mb-4">Membership</p>
-              <h2 className="text-h2 text-white">
+              <h2 className="text-h2">
                 Ready to be part of what&apos;s building Medina?
               </h2>
-              <p className="text-body-lg text-white/70 mt-4">
+              <p className="text-body-lg text-text-secondary mt-4">
                 Join {totalCount}+ businesses in the Chamber network. Three
                 tiers, one community, a shared commitment to making Medina
                 County the best place in Ohio to run a business.
@@ -441,8 +441,8 @@ export default function AboutPage() {
                 href="/membership/pricing"
                 className="
                   block w-full text-center py-3 px-6
-                  border border-white/30 hover:border-white/60
-                  text-white font-bold text-body-sm
+                  border border-border-primary hover:border-text-tertiary
+                  text-text-primary font-bold text-body-sm
                   rounded-[var(--radius-md)]
                   transition-colors
                 "

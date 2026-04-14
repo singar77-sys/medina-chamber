@@ -22,28 +22,24 @@ const sections = [
     href: "/news/blog",
     title: "Business Blog",
     description: "Weekly tips and strategy for small business owners in Medina County.",
-    dark: true,
   },
   {
     label: "Podcast",
     href: "/news/podcast",
     title: "Medina Matters Podcast",
     description: "Conversations with local business owners and community leaders.",
-    dark: false,
   },
   {
     label: "Member Announcements",
     href: "/news/member-news",
     title: "Member News",
     description: "Jobs, promotions, events, and milestones from member businesses.",
-    dark: false,
   },
   {
     label: "Publication",
     href: "/news/magazine",
     title: "Medina Means Business",
     description: "The official chamber magazine with local business profiles and updates.",
-    dark: false,
   },
 ];
 
@@ -73,21 +69,18 @@ export default function NewsPage() {
           <Link
             key={s.href}
             href={s.href}
-            className={`
+            className="
               group p-6 rounded-[var(--radius-lg)] transition-colors
-              ${s.dark
-                ? "bg-oxford text-white hover:bg-oxford/90"
-                : "bg-bg-secondary border border-border-secondary hover:border-border-primary"
-              }
-            `}
+              bg-bg-secondary border border-border-secondary hover:border-cambridge/40
+            "
           >
-            <p className={`text-caption font-bold uppercase tracking-wider mb-2 ${s.dark ? "text-cambridge" : "text-cambridge"}`}>
+            <p className="text-caption font-bold uppercase tracking-wider mb-2 text-cambridge">
               {s.label}
             </p>
-            <h2 className={`text-h4 leading-snug ${s.dark ? "text-white" : "text-text-primary"}`}>
+            <h2 className="text-h4 leading-snug text-text-primary">
               {s.title}
             </h2>
-            <p className={`text-body-sm mt-2 ${s.dark ? "text-white/70" : "text-text-secondary"}`}>
+            <p className="text-body-sm mt-2 text-text-secondary">
               {s.description}
             </p>
             <p className="text-cambridge font-bold text-body-sm mt-4">

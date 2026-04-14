@@ -30,8 +30,8 @@ function EventCard({ event }: { event: ReturnType<typeof getUpcomingEvents>[numb
     >
       {/* Date badge */}
       <div className="flex-shrink-0 w-16 text-center">
-        <div className="bg-oxford-blue text-white rounded-[var(--radius-md)] py-2 px-1">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-cambridge-blue leading-none">
+        <div className="bg-oxford [[data-theme=dark]_&]:bg-bg-tertiary text-white rounded-[var(--radius-md)] py-2 px-1">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-cambridge leading-none">
             {event.month.substring(0, 3)}
           </p>
           <p className="text-2xl font-bold leading-tight mt-0.5">{event.day}</p>

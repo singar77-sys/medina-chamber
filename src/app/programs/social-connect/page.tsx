@@ -82,13 +82,13 @@ export default function SocialConnectPage() {
       </section>
 
       {/* Venue callout */}
-      <section className="mt-16 p-8 bg-oxford text-white rounded-[var(--radius-lg)] flex flex-col sm:flex-row sm:items-center gap-6">
+      <section className="mt-16 p-8 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] flex flex-col sm:flex-row sm:items-center gap-6">
         <div className="flex-1">
           <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-1">
             Presenting Sponsor & Venue
           </p>
-          <p className="text-h3 text-white">Foundry Social</p>
-          <p className="text-white/70 text-body mt-1">
+          <p className="text-h3">Foundry Social</p>
+          <p className="text-text-secondary text-body mt-1">
             333 Foundry Street, Medina, OH 44256
           </p>
         </div>
@@ -98,8 +98,8 @@ export default function SocialConnectPage() {
           rel="noopener noreferrer"
           className="
             shrink-0 inline-flex items-center px-5 py-2.5
-            border border-white/30 hover:border-white/60
-            text-white font-bold text-body-sm
+            border border-border-primary hover:border-text-tertiary
+            text-text-primary font-bold text-body-sm
             rounded-[var(--radius-md)]
             transition-colors
           "

@@ -117,33 +117,33 @@ export default function AthenaAwardsPage() {
           </div>
 
           {/* Event details */}
-          <div className="p-8 bg-oxford text-white rounded-[var(--radius-lg)]">
+          <div className="p-8 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <p className="text-overline text-cambridge mb-4">Event Details</p>
             <div className="space-y-4">
               <div>
-                <p className="text-caption text-white/50 uppercase tracking-wider">Format</p>
-                <p className="text-body font-semibold mt-1">
+                <p className="text-caption text-text-tertiary uppercase tracking-wider">Format</p>
+                <p className="text-body font-semibold text-text-primary mt-1">
                   Annual ceremony — soft drinks, appetizers, program, and complimentary wine
                 </p>
               </div>
               <div>
-                <p className="text-caption text-white/50 uppercase tracking-wider">Registration</p>
-                <p className="text-body font-semibold mt-1">Required — walk-ins not permitted</p>
+                <p className="text-caption text-text-tertiary uppercase tracking-wider">Registration</p>
+                <p className="text-body font-semibold text-text-primary mt-1">Required — walk-ins not permitted</p>
               </div>
               <div>
-                <p className="text-caption text-white/50 uppercase tracking-wider">Pricing</p>
+                <p className="text-caption text-text-tertiary uppercase tracking-wider">Pricing</p>
                 <div className="mt-1 space-y-1">
                   {pricing.map((p) => (
                     <div key={p.tier} className="flex items-center justify-between">
-                      <span className="text-body text-white/80">{p.tier}</span>
+                      <span className="text-body text-text-secondary">{p.tier}</span>
                       <span className="text-body font-bold text-cambridge">{p.price}</span>
                     </div>
                   ))}
                 </div>
               </div>
               <div>
-                <p className="text-caption text-white/50 uppercase tracking-wider">Cancellations</p>
-                <p className="text-body-sm text-white/60 mt-1">
+                <p className="text-caption text-text-tertiary uppercase tracking-wider">Cancellations</p>
+                <p className="text-body-sm text-text-tertiary mt-1">
                   Must cancel by 5:00 PM on the Tuesday before the event for a credit.
                   No-shows will be billed.
                 </p>
@@ -154,7 +154,7 @@ export default function AthenaAwardsPage() {
               href="/events"
               className="
                 block mt-6 w-full text-center py-3 px-5
-                bg-cambridge hover:bg-cambridge/90
+                bg-accent hover:bg-accent-hover
                 text-white font-bold text-body-sm
                 rounded-[var(--radius-md)]
                 transition-colors

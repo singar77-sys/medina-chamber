@@ -185,10 +185,10 @@ export default function MagazinePage() {
       </section>
 
       {/* CTA */}
-      <section className="mt-20 p-10 lg:p-16 bg-oxford text-white rounded-[var(--radius-lg)]">
+      <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
         <div className="max-w-2xl">
-          <h2 className="text-h2 text-white">Want to be featured?</h2>
-          <p className="text-body-lg text-white/70 mt-4">
+          <h2 className="text-h2">Want to be featured?</h2>
+          <p className="text-body-lg text-text-secondary mt-4">
             Chamber members are eligible for business profiles and member-rate
             advertising. The magazine reaches thousands of readers across Medina
             County — business owners, residents, and community leaders.
@@ -198,7 +198,7 @@ export default function MagazinePage() {
               href="/about/contact"
               className="
                 inline-flex items-center px-6 py-3
-                bg-cambridge hover:bg-cambridge/90
+                bg-accent hover:bg-accent-hover
                 text-white font-bold text-body-sm
                 rounded-[var(--radius-md)]
                 transition-colors
@@ -210,8 +210,8 @@ export default function MagazinePage() {
               href="/membership/join"
               className="
                 inline-flex items-center px-6 py-3
-                border border-white/30 hover:border-white/60
-                text-white font-bold text-body-sm
+                border border-border-primary hover:border-text-tertiary
+                text-text-primary font-bold text-body-sm
                 rounded-[var(--radius-md)]
                 transition-colors
               "

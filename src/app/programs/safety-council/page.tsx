@@ -89,25 +89,25 @@ export default function SafetyCouncilPage() {
         </div>
 
         {/* Meeting details */}
-        <div className="p-8 bg-oxford text-white rounded-[var(--radius-lg)]">
+        <div className="p-8 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
           <p className="text-overline text-cambridge mb-4">Monthly Meetings</p>
           <div className="space-y-4">
             <div>
-              <p className="text-caption text-white/50 uppercase tracking-wider">Location</p>
-              <p className="text-body font-semibold mt-1">Williams on the Lake</p>
-              <p className="text-body-sm text-white/70">787 Lafayette Road, Medina</p>
+              <p className="text-caption text-text-tertiary uppercase tracking-wider">Location</p>
+              <p className="text-body font-semibold text-text-primary mt-1">Williams on the Lake</p>
+              <p className="text-body-sm text-text-secondary">787 Lafayette Road, Medina</p>
             </div>
             <div>
-              <p className="text-caption text-white/50 uppercase tracking-wider">Schedule</p>
-              <p className="text-body font-semibold mt-1">Third Tuesday of each month</p>
-              <p className="text-body-sm text-white/70">11:30 AM – 1:00 PM</p>
+              <p className="text-caption text-text-tertiary uppercase tracking-wider">Schedule</p>
+              <p className="text-body font-semibold text-text-primary mt-1">Third Tuesday of each month</p>
+              <p className="text-body-sm text-text-secondary">11:30 AM – 1:00 PM</p>
             </div>
             <div>
-              <p className="text-caption text-white/50 uppercase tracking-wider">Per-Meeting Cost</p>
-              <p className="text-body font-semibold mt-1">$20 per person</p>
+              <p className="text-caption text-text-tertiary uppercase tracking-wider">Per-Meeting Cost</p>
+              <p className="text-body font-semibold text-text-primary mt-1">$20 per person</p>
             </div>
-            <div className="pt-2 border-t border-white/20">
-              <p className="text-body-sm text-white/60">
+            <div className="pt-2 border-t border-border-secondary">
+              <p className="text-body-sm text-text-tertiary">
                 Pre-registration required by 5:00 PM on the Friday before
                 each meeting. Walk-in registrations are not available.
               </p>
@@ -125,7 +125,7 @@ export default function SafetyCouncilPage() {
               key={t.label}
               className={`p-6 rounded-[var(--radius-lg)] border ${
                 t.highlight
-                  ? "bg-oxford text-white border-oxford"
+                  ? "bg-oxford [[data-theme=dark]_&]:bg-bg-tertiary text-white border-oxford [[data-theme=dark]_&]:border-cambridge"
                   : "bg-bg-secondary border-border-secondary"
               }`}
             >
@@ -225,14 +225,15 @@ export default function SafetyCouncilPage() {
       </section>
 
       {/* Not a member nudge */}
-      <section className="mt-20 p-10 lg:p-16 bg-oxford text-white rounded-[var(--radius-lg)]">
+      <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
         <div className="grid lg:grid-cols-2 gap-10 items-center">
           <div>
-            <h2 className="text-h2 text-white">Chamber members enroll free.</h2>
-            <p className="text-body-lg text-white/70 mt-4">
-              If you&apos;re not already a Greater Medina Chamber member, joining
-              at $295 gets you Safety Council membership, plus access to
-              networking events, the member directory, advocacy, and much more.
+            <h2 className="text-h2">Chamber members enroll free.</h2>
+            <p className="text-body-lg text-text-secondary mt-4">
+              If you&apos;re not already a Greater Medina Chamber member,
+              joining at Business Essentials ($345/year) gets you Safety
+              Council membership, plus access to networking events, the
+              member directory, advocacy, and much more.
             </p>
           </div>
           <div className="space-y-4">
@@ -240,7 +241,7 @@ export default function SafetyCouncilPage() {
               href="/membership/join"
               className="
                 block w-full text-center py-3 px-6
-                bg-cambridge hover:bg-cambridge/90
+                bg-accent hover:bg-accent-hover
                 text-white font-bold text-body-sm
                 rounded-[var(--radius-md)]
                 transition-colors
@@ -252,8 +253,8 @@ export default function SafetyCouncilPage() {
               href="/membership/benefits"
               className="
                 block w-full text-center py-3 px-6
-                border border-white/30 hover:border-white/60
-                text-white font-bold text-body-sm
+                border border-border-primary hover:border-text-tertiary
+                text-text-primary font-bold text-body-sm
                 rounded-[var(--radius-md)]
                 transition-colors
               "

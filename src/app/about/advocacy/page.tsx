@@ -125,12 +125,12 @@ export default function AdvocacyPage() {
       </section>
 
       {/* Candidate interviews highlight */}
-      <section className="mt-20 p-10 lg:p-16 bg-oxford text-white rounded-[var(--radius-lg)]">
+      <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
         <div className="grid lg:grid-cols-2 gap-10 items-center">
           <div>
             <p className="text-overline text-cambridge mb-3">Election Season</p>
-            <h2 className="text-h2 text-white">Candidate Interview Program</h2>
-            <p className="text-body-lg text-white/70 mt-4">
+            <h2 className="text-h2">Candidate Interview Program</h2>
+            <p className="text-body-lg text-text-secondary mt-4">
               Every election cycle, the chamber conducts structured candidate
               interviews and shares the results with the business community.
               We&apos;ve hosted documented interviews in 2019, 2020, 2021, 2023,
@@ -139,7 +139,7 @@ export default function AdvocacyPage() {
             </p>
           </div>
           <div className="space-y-4">
-            <p className="text-body text-white/80">
+            <p className="text-body text-text-secondary">
               Interested in the chamber&apos;s positions on business-related
               legislation or upcoming candidate interviews? Contact us to get
               involved.
@@ -148,7 +148,7 @@ export default function AdvocacyPage() {
               href="/about/contact"
               className="
                 inline-flex items-center px-6 py-3
-                bg-cambridge hover:bg-cambridge/90
+                bg-accent hover:bg-accent-hover
                 text-white font-bold text-body-sm
                 rounded-[var(--radius-md)]
                 transition-colors

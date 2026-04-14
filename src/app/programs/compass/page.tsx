@@ -122,12 +122,12 @@ export default function CompassPage() {
         ].map((item) => (
           <div
             key={item.label}
-            className="p-6 bg-oxford text-white rounded-[var(--radius-lg)]"
+            className="p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
           >
             <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-2">
               {item.label}
             </p>
-            <p className="text-body font-semibold whitespace-pre-line">{item.value}</p>
+            <p className="text-body font-semibold text-text-primary whitespace-pre-line">{item.value}</p>
           </div>
         ))}
       </section>
@@ -181,11 +181,11 @@ export default function CompassPage() {
       </section>
 
       {/* CTA */}
-      <section className="mt-20 p-10 lg:p-16 bg-oxford text-white rounded-[var(--radius-lg)]">
+      <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
         <div className="grid lg:grid-cols-2 gap-10 items-center">
           <div>
-            <h2 className="text-h2 text-white">Ready to invest in your leadership?</h2>
-            <p className="text-body-lg text-white/70 mt-4">
+            <h2 className="text-h2">Ready to invest in your leadership?</h2>
+            <p className="text-body-lg text-text-secondary mt-4">
               Compass runs annually. Each cohort is limited in size to keep
               the experience intentional and the connections real. Contact the
               Chamber to learn about the next cohort.
@@ -196,7 +196,7 @@ export default function CompassPage() {
               href="/about/contact"
               className="
                 block w-full text-center py-3 px-6
-                bg-cambridge hover:bg-cambridge/90
+                bg-accent hover:bg-accent-hover
                 text-white font-bold text-body-sm
                 rounded-[var(--radius-md)]
                 transition-colors
@@ -208,8 +208,8 @@ export default function CompassPage() {
               href="tel:+13307238773"
               className="
                 block w-full text-center py-3 px-6
-                border border-white/30 hover:border-white/60
-                text-white font-bold text-body-sm
+                border border-border-primary hover:border-text-tertiary
+                text-text-primary font-bold text-body-sm
                 rounded-[var(--radius-md)]
                 transition-colors
               "

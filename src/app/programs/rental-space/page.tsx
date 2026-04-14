@@ -90,16 +90,16 @@ export default function RentalSpacePage() {
       </section>
 
       {/* Location banner */}
-      <section className="mt-16 p-8 bg-oxford text-white rounded-[var(--radius-lg)] flex flex-col sm:flex-row sm:items-center gap-6">
+      <section className="mt-16 p-8 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] flex flex-col sm:flex-row sm:items-center gap-6">
         <div className="flex-1">
           <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-1">
             Location
           </p>
-          <p className="text-h3 text-white">Greater Medina Chamber of Commerce</p>
-          <p className="text-white/70 text-body mt-1">
+          <p className="text-h3">Greater Medina Chamber of Commerce</p>
+          <p className="text-text-secondary text-body mt-1">
             139 N. Court Street, Suite A · Medina, OH 44256
           </p>
-          <p className="text-white/50 text-body-sm mt-1">
+          <p className="text-text-tertiary text-body-sm mt-1">
             One block from Historic Medina Square · First-floor access
           </p>
         </div>
@@ -109,8 +109,8 @@ export default function RentalSpacePage() {
           rel="noopener noreferrer"
           className="
             shrink-0 inline-flex items-center px-5 py-2.5
-            border border-white/30 hover:border-white/60
-            text-white font-bold text-body-sm
+            border border-border-primary hover:border-text-tertiary
+            text-text-primary font-bold text-body-sm
             rounded-[var(--radius-md)]
             transition-colors
           "
@@ -198,20 +198,20 @@ export default function RentalSpacePage() {
       </section>
 
       {/* Hours + booking */}
-      <section className="mt-20 p-10 lg:p-16 bg-oxford text-white rounded-[var(--radius-lg)]">
+      <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
         <div className="grid lg:grid-cols-2 gap-10 items-start">
           <div>
             <p className="text-overline text-cambridge mb-3">Availability</p>
-            <h2 className="text-h2 text-white">Monday – Friday</h2>
+            <h2 className="text-h2">Monday – Friday</h2>
             <p className="text-h3 text-cambridge mt-2">7:30 AM – 5:30 PM</p>
-            <p className="text-body text-white/70 mt-4">
+            <p className="text-body text-text-secondary mt-4">
               Bookings outside these hours may be available by special arrangement.
               Contact us to discuss your needs.
             </p>
           </div>
           <div>
-            <h3 className="text-h3 text-white">Book a Space</h3>
-            <p className="text-body text-white/70 mt-3">
+            <h3 className="text-h3">Book a Space</h3>
+            <p className="text-body text-text-secondary mt-3">
               Email or call to check availability and request a room rental
               agreement. Member pricing available for Greater Medina Chamber
               members.
@@ -221,7 +221,7 @@ export default function RentalSpacePage() {
                 href="mailto:memberservices@medinaohchamber.com"
                 className="
                   block w-full text-center py-3 px-6
-                  bg-cambridge hover:bg-cambridge/90
+                  bg-accent hover:bg-accent-hover
                   text-white font-bold text-body-sm
                   rounded-[var(--radius-md)]
                   transition-colors
@@ -233,8 +233,8 @@ export default function RentalSpacePage() {
                 href="tel:+13307238773"
                 className="
                   block w-full text-center py-3 px-6
-                  border border-white/30 hover:border-white/60
-                  text-white font-bold text-body-sm
+                  border border-border-primary hover:border-text-tertiary
+                  text-text-primary font-bold text-body-sm
                   rounded-[var(--radius-md)]
                   transition-colors
                 "
@@ -242,10 +242,10 @@ export default function RentalSpacePage() {
                 (330) 723-8773
               </a>
             </div>
-            <p className="text-caption text-white/40 mt-4">
+            <p className="text-caption text-text-tertiary mt-4">
               Not a member? Joining the chamber gives you access to member pricing on rentals plus
               a full suite of business benefits.{" "}
-              <Link href="/membership/join" className="text-cambridge hover:text-cambridge/80 transition-colors">
+              <Link href="/membership/join" className="text-cambridge hover:text-cambridge/80 transition-colors font-bold">
                 Learn more →
               </Link>
             </p>

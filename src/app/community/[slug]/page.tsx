@@ -301,12 +301,12 @@ export default async function CommunityPage(
         )}
 
         {/* Bottom CTA */}
-        <section className="mt-20 p-10 lg:p-16 bg-oxford text-white rounded-[var(--radius-lg)]">
+        <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
           <div className="max-w-2xl">
-            <h2 className="text-h2 text-white">
+            <h2 className="text-h2">
               Put your {community.name} business on the map
             </h2>
-            <p className="text-body-lg text-white/70 mt-4">
+            <p className="text-body-lg text-text-secondary mt-4">
               Join 511+ Medina County businesses in the chamber. Get listed in
               the directory, attend networking events, and access savings
               programs that more than pay for membership.
@@ -328,8 +328,8 @@ export default async function CommunityPage(
                 href="/about/contact"
                 className="
                   inline-flex items-center px-6 py-4
-                  border border-white/30 hover:border-white/60
-                  text-white font-bold text-body-sm
+                  border border-border-primary hover:border-text-tertiary
+                  text-text-primary font-bold text-body-sm
                   rounded-[var(--radius-md)]
                   transition-colors
                 "

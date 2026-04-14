@@ -50,9 +50,9 @@ export default function PodcastPage() {
 
       {/* CTA */}
       <section className="mt-16 grid md:grid-cols-2 gap-6">
-        <div className="p-8 bg-oxford text-white rounded-[var(--radius-lg)]">
-          <h2 className="text-h3 text-white">Want to be a guest?</h2>
-          <p className="text-white/70 text-body mt-3">
+        <div className="p-8 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+          <h2 className="text-h3">Want to be a guest?</h2>
+          <p className="text-text-secondary text-body mt-3">
             Chamber members and Medina County business owners are welcome to
             share their story on Medina Matters. Reach out to get started.
           </p>
@@ -60,7 +60,7 @@ export default function PodcastPage() {
             href="/about/contact"
             className="
               inline-flex items-center mt-6 px-5 py-2.5
-              bg-cambridge hover:bg-cambridge/90
+              bg-accent hover:bg-accent-hover
               text-white font-bold text-body-sm
               rounded-[var(--radius-md)]
               transition-colors

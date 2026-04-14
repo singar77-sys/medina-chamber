@@ -126,11 +126,11 @@ export default async function BlogPostPage(
           <aside className="space-y-6">
             <div className="sticky top-8 space-y-4">
               {/* Join CTA */}
-              <div className="p-6 bg-oxford text-white rounded-[var(--radius-lg)]">
-                <p className="text-body font-semibold leading-snug">
+              <div className="p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+                <p className="text-body font-semibold text-text-primary leading-snug">
                   Want resources like this for your business?
                 </p>
-                <p className="text-white/70 text-body-sm mt-2">
+                <p className="text-text-secondary text-body-sm mt-2">
                   Chamber members get access to networking, tools, and support
                   built for Medina County businesses.
                 </p>
@@ -138,7 +138,7 @@ export default async function BlogPostPage(
                   href="/membership/join"
                   className="
                     block mt-5 w-full text-center py-2.5 px-4
-                    bg-cambridge hover:bg-cambridge/90
+                    bg-accent hover:bg-accent-hover
                     text-white font-bold text-body-sm
                     rounded-[var(--radius-md)]
                     transition-colors

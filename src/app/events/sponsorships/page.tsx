@@ -223,11 +223,11 @@ export default function SponsorshipsPage() {
       </section>
 
       {/* CTA */}
-      <section className="mt-20 p-10 lg:p-16 bg-oxford text-white rounded-[var(--radius-lg)]">
+      <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
         <div className="grid lg:grid-cols-2 gap-10 items-center">
           <div>
-            <h2 className="text-h2 text-white">Ready to get in the room?</h2>
-            <p className="text-body-lg text-white/70 mt-4">
+            <h2 className="text-h2">Ready to get in the room?</h2>
+            <p className="text-body-lg text-text-secondary mt-4">
               Contact Stephanie Mueller to learn about available sponsorship
               packages, pricing, and how to schedule your ribbon cutting.
               She knows every event inside and out.
@@ -238,7 +238,7 @@ export default function SponsorshipsPage() {
               href="mailto:stephanie@medinaohchamber.com"
               className="
                 block w-full text-center py-3 px-6
-                bg-cambridge hover:bg-cambridge/90
+                bg-accent hover:bg-accent-hover
                 text-white font-bold text-body-sm
                 rounded-[var(--radius-md)]
                 transition-colors
@@ -250,8 +250,8 @@ export default function SponsorshipsPage() {
               href="tel:+13307238773"
               className="
                 block w-full text-center py-3 px-6
-                border border-white/30 hover:border-white/60
-                text-white font-bold text-body-sm
+                border border-border-primary hover:border-text-tertiary
+                text-text-primary font-bold text-body-sm
                 rounded-[var(--radius-md)]
                 transition-colors
               "

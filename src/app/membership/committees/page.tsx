@@ -113,11 +113,11 @@ export default function CommitteesPage() {
       </section>
 
       {/* Get involved CTA */}
-      <section className="mt-20 p-10 lg:p-16 bg-oxford text-white rounded-[var(--radius-lg)]">
+      <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
         <div className="grid lg:grid-cols-2 gap-10 items-center">
           <div>
-            <h2 className="text-h2 text-white">Ready to get involved?</h2>
-            <p className="text-body-lg text-white/70 mt-4">
+            <h2 className="text-h2">Ready to get involved?</h2>
+            <p className="text-body-lg text-text-secondary mt-4">
               Most committees are open to any chamber member. Reach out and
               let the team know where you&apos;d like to contribute — there&apos;s
               always room for people who want to show up.
@@ -128,7 +128,7 @@ export default function CommitteesPage() {
               href="/about/contact"
               className="
                 block w-full text-center py-3 px-6
-                bg-cambridge hover:bg-cambridge/90
+                bg-accent hover:bg-accent-hover
                 text-white font-bold text-body-sm
                 rounded-[var(--radius-md)]
                 transition-colors
@@ -140,8 +140,8 @@ export default function CommitteesPage() {
               href="/membership/join"
               className="
                 block w-full text-center py-3 px-6
-                border border-white/30 hover:border-white/60
-                text-white font-bold text-body-sm
+                border border-border-primary hover:border-text-tertiary
+                text-text-primary font-bold text-body-sm
                 rounded-[var(--radius-md)]
                 transition-colors
               "

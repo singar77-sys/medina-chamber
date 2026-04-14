@@ -178,7 +178,7 @@ export default function MedinaMeansBusinessPage() {
       </section>
 
       {/* ─── Anchor Companies ────────────────────────────── */}
-      <section className="bg-oxford text-white">
+      <section className="bg-bg-secondary border-y border-border-secondary">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28 relative overflow-hidden">
           <div className="absolute -top-32 -right-32 w-96 h-96 bg-cambridge/10 rounded-full blur-3xl" />
           <FadeIn>
@@ -186,10 +186,10 @@ export default function MedinaMeansBusinessPage() {
               <p className="text-overline text-cambridge mb-4">
                 Global reach, local roots
               </p>
-              <h2 className="text-h2 text-white">
+              <h2 className="text-h2">
                 Medina County is the headquarters address for real giants.
               </h2>
-              <p className="text-body-lg text-white/70 mt-6">
+              <p className="text-body-lg text-text-secondary mt-6">
                 When international manufacturers and insurance firms choose
                 where to put their HQ, they choose Medina. Here&apos;s some
                 of what that means in practice.
@@ -200,9 +200,9 @@ export default function MedinaMeansBusinessPage() {
           <div className="relative mt-12 grid md:grid-cols-3 gap-6">
             {anchorCompanies.map((company, i) => (
               <FadeIn key={company.name} delay={i * 100}>
-                <div className="p-8 bg-white/5 border border-white/10 rounded-[var(--radius-lg)] backdrop-blur-sm h-full">
-                  <p className="text-h3 text-white">{company.name}</p>
-                  <p className="text-body-sm text-cambridge mt-3">
+                <div className="p-8 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)] h-full">
+                  <p className="text-h3">{company.name}</p>
+                  <p className="text-body-sm text-cambridge mt-3 font-bold">
                     {company.industry}
                   </p>
                 </div>
@@ -211,7 +211,7 @@ export default function MedinaMeansBusinessPage() {
           </div>
 
           <FadeIn>
-            <p className="relative text-body-sm text-white/60 mt-10 max-w-2xl">
+            <p className="relative text-body-sm text-text-tertiary mt-10 max-w-2xl">
               And 511 more member businesses across every sector — retail,
               healthcare, professional services, construction, hospitality,
               food and beverage, technology, agriculture, and the trades.
@@ -391,7 +391,7 @@ export default function MedinaMeansBusinessPage() {
       {/* ─── Closing CTA ──────────────────────────────────── */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pb-20 lg:pb-28">
         <FadeIn>
-          <div className="p-10 lg:p-16 bg-oxford text-white rounded-[var(--radius-lg)] relative overflow-hidden">
+          <div className="p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] relative overflow-hidden">
             <div className="absolute -top-32 -right-32 w-64 h-64 bg-cambridge/10 rounded-full blur-3xl" />
             <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-accent/5 rounded-full blur-3xl" />
             <div className="relative grid lg:grid-cols-2 gap-10 items-center">
@@ -399,10 +399,10 @@ export default function MedinaMeansBusinessPage() {
                 <p className="text-overline text-cambridge mb-4">
                   Add your name to the list
                 </p>
-                <h2 className="text-h2 text-white">
+                <h2 className="text-h2">
                   Medina Means Business — including yours.
                 </h2>
-                <p className="text-body-lg text-white/70 mt-4">
+                <p className="text-body-lg text-text-secondary mt-4">
                   Join {totalCount}+ businesses across Medina County. Three
                   membership tiers starting at $345/year. Apply online in
                   under ten minutes, or talk to Stephanie and get the
@@ -426,8 +426,8 @@ export default function MedinaMeansBusinessPage() {
                   href="/membership/pricing"
                   className="
                     block w-full text-center py-3 px-6
-                    border border-white/30 hover:border-white/60
-                    text-white font-bold text-body-sm
+                    border border-border-primary hover:border-text-tertiary
+                    text-text-primary font-bold text-body-sm
                     rounded-[var(--radius-md)]
                     transition-colors
                   "

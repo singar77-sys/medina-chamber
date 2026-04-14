@@ -65,11 +65,11 @@ export default function BoardPage() {
           {staff.map((s) => (
             <div
               key={s.name}
-              className="p-6 bg-oxford text-white rounded-[var(--radius-lg)]"
+              className="p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
             >
               <p className="text-h4">{s.name}</p>
               <p className="text-cambridge text-body-sm font-bold mt-1">{s.title}</p>
-              <p className="text-white/70 text-body-sm mt-3 leading-relaxed">{s.bio}</p>
+              <p className="text-text-secondary text-body-sm mt-3 leading-relaxed">{s.bio}</p>
             </div>
           ))}
         </div>

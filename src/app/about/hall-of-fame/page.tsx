@@ -158,9 +158,9 @@ export default function HallOfFamePage() {
 
       {/* CTA */}
       <section className="mt-20 grid md:grid-cols-2 gap-6">
-        <div className="p-8 bg-oxford text-white rounded-[var(--radius-lg)]">
-          <h2 className="text-h3 text-white">Know a nominee?</h2>
-          <p className="text-body text-white/70 mt-3 leading-relaxed">
+        <div className="p-8 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+          <h2 className="text-h3">Know a nominee?</h2>
+          <p className="text-body text-text-secondary mt-3 leading-relaxed">
             The Hall of Fame convenes approximately every five years. If you
             know someone whose contributions to Medina County deserve
             recognition, reach out to the chamber to learn about the nomination
@@ -170,7 +170,7 @@ export default function HallOfFamePage() {
             href="/about/contact"
             className="
               inline-flex items-center mt-5 px-5 py-2.5
-              bg-cambridge hover:bg-cambridge/90
+              bg-accent hover:bg-accent-hover
               text-white font-bold text-body-sm
               rounded-[var(--radius-md)]
               transition-colors

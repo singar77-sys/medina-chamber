@@ -146,14 +146,14 @@ export default async function JobDetailPage(
           <aside className="space-y-6">
             {/* Company card */}
             <div className="sticky top-8 space-y-4">
-              <div className="p-6 bg-oxford text-white rounded-[var(--radius-lg)]">
+              <div className="p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
                 <p className="text-caption text-cambridge mb-2 font-bold uppercase tracking-wider">
                   Posted by
                 </p>
-                <p className="text-body font-semibold leading-snug">
+                <p className="text-body font-semibold text-text-primary leading-snug">
                   {job.companyName}
                 </p>
-                <p className="text-caption text-white/60 mt-1">{dateDisplay}</p>
+                <p className="text-caption text-text-tertiary mt-1">{dateDisplay}</p>
 
                 {job.applyUrl && (
                   <a

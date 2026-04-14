@@ -199,12 +199,12 @@ export default async function EventPage(
           {/* ── Sidebar ── */}
           <aside className="space-y-6">
             {/* Register CTA card */}
-            <div className="sticky top-8 p-6 bg-oxford-blue text-white rounded-[var(--radius-lg)]">
+            <div className="sticky top-8 p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
               <div className="text-center mb-5">
-                <div className="inline-block bg-cambridge-blue/20 px-3 py-1 rounded-full text-cambridge-blue text-caption font-bold mb-3">
+                <div className="inline-block bg-cambridge/20 px-3 py-1 rounded-full text-cambridge text-caption font-bold mb-3">
                   {event.month.substring(0, 3)} {event.day}
                 </div>
-                <p className="text-body font-semibold">{event.startTime} – {event.endTime}</p>
+                <p className="text-body font-semibold text-text-primary">{event.startTime} – {event.endTime}</p>
               </div>
 
               <a
@@ -227,7 +227,7 @@ export default async function EventPage(
               </p>
 
               {pricingLines[0] && (
-                <p className="text-caption text-cambridge-blue text-center mt-2">
+                <p className="text-caption text-cambridge text-center mt-2 font-bold">
                   {pricingLines[0]}
                 </p>
               )}

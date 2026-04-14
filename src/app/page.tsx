@@ -226,10 +226,10 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8 py-14">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { end: 1938, label: "Founded", prefix: "", suffix: "" },
               { end: totalCount, label: "Member Businesses", suffix: "+" },
-              { end: 9, label: "Committees" },
               { end: 30, label: "Events Per Year", suffix: "+" },
+              { end: 9, label: "Committees" },
+              { end: 92, label: "Years Serving", suffix: "+" },
             ].map((s) => (
               <div key={s.label} className="text-center">
                 <p className="text-display text-oxford [[data-theme=dark]_&]:text-cambridge leading-none">

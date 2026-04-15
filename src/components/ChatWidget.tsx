@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import { RobotHead } from "@/components/holographic/RobotHead";
 
 /** Lightweight markdown → HTML for assistant messages.
  *  Handles: **bold**, [text](url), bare https:// URLs, newlines.
@@ -155,11 +156,9 @@ export function ChatWidget() {
             bg-oxford border-b border-border-secondary
           ">
             <div className="flex items-center gap-3">
-              <img
-                src="/images/chamberbot-face.svg"
-                alt=""
-                className="w-10 h-10 shrink-0"
-              />
+              <div className="w-10 h-10 shrink-0 rounded-full bg-white/95 p-0.5 shadow-sm">
+                <RobotHead className="w-full h-full" ariaLabel="" />
+              </div>
               <div>
                 <p className="text-body-sm font-bold text-white leading-none">ChamberBot</p>
                 <p className="text-[11px] text-cambridge mt-0.5">Medina Chamber Assistant</p>
@@ -302,11 +301,7 @@ export function ChatWidget() {
             <path d="M18 6L6 18M6 6l12 12"/>
           </svg>
         ) : (
-          <img
-            src="/images/chamberbot-face.svg"
-            alt="ChamberBot"
-            className="w-11 h-11"
-          />
+          <RobotHead className="w-11 h-11" ariaLabel="Open ChamberBot" />
         )}
       </button>
     </>

@@ -27,7 +27,7 @@
       "address": "835 W. Smith Rd., Medina, OH, 44256",
       "phone": "(330) 725-4501",
       "website": "http://www.amcor-usa.com/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/american-metal-chemical-corp.jpg",
       "description": "",
       "categories": [
         "Manufacturing"
@@ -67,7 +67,7 @@
       "address": "623 West Liberty St., Medina, OH, 44256-2225",
       "phone": "(330) 725-6677",
       "website": "http://www.rootcandles.com/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/a-i-root-company-dba-root-candles.jpg",
       "description": "The Best Candle in America",
       "categories": [
         "Manufacturing"
@@ -762,8 +762,8 @@
       "gzUrl": "https://business.medinachamber.com/list/Details/bleachtech-llc-4175746",
       "address": "350 Ryan Rd, Seville, OH, 44273",
       "phone": "(330) 421-1489",
-      "website": "",
-      "logoUrl": "",
+      "website": "https://bleachtech.com/",
+      "logoUrl": "/images/members/logos/bleachtech-llc.svg",
       "description": "",
       "categories": [],
       "social": {},
@@ -777,7 +777,7 @@
       "address": "3337 Medina Road, Medina, OH, 44256",
       "phone": "(330) 722-7888",
       "website": "http://www.bil-jac.com/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/bil-jac-foods-inc.svg",
       "description": "",
       "categories": [
         "Manufacturing"
@@ -1377,7 +1377,7 @@
       "gzUrl": "https://business.medinachamber.com/list/Details/carecore-at-willowood-3359740",
       "address": "1186 Hadcock Road, Brunswick, OH, 44212",
       "phone": "(330) 225-3156",
-      "website": "http://www.willowoodcare.com/",
+      "website": "https://carecorewillowood.com/",
       "logoUrl": "",
       "description": "Long Term - Rehab to home nursing facility nursing home",
       "categories": [
@@ -1414,7 +1414,7 @@
       "address": "1000 East Washington Street, Medina, OH, 44256",
       "phone": "(330) 725-1000",
       "website": "http://www.medinahospital.org/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/cleveland-clinic-medina-hospital.svg",
       "description": "Medina Hospital offers the latest technology and the newest procedures in a modern facility. The not-for-profit hospital offers a full range of services and accepts most major heath care plans.",
       "categories": [
         "Hospitals"
@@ -1430,7 +1430,7 @@
       "address": "",
       "phone": "(216) 334-2901",
       "website": "http://www.ccdocle.org/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/catholic-charities-diocese-of-cleveland.svg",
       "description": "",
       "categories": [
         "Family, Community & Civic Organizations"
@@ -2846,8 +2846,8 @@
       "gzUrl": "https://business.medinachamber.com/list/Details/fechko-excavating-inc-3421741",
       "address": "865 W. Liberty St. Suite 120, Medina, OH, 44256",
       "phone": "(330) 722-2890",
-      "website": "http://facebook.com/pages/",
-      "logoUrl": "",
+      "website": "https://www.fechko.com/",
+      "logoUrl": "/images/members/logos/fechko-excavating-inc.png",
       "description": "Local, professional survey & commercial excavating company, specializing in site work & underground utilities for municipalities, schools, developers & general contractors.",
       "categories": [
         "Construction Company"
@@ -2864,8 +2864,8 @@
       "gzUrl": "https://business.medinachamber.com/list/Details/first-financial-bank-3359310",
       "address": "4015 Medina Road, Medina, OH, 44256",
       "phone": "(800) 368-8930",
-      "website": "http://www.westfield-bank.com/",
-      "logoUrl": "",
+      "website": "https://www.bankatfirst.com/",
+      "logoUrl": "/images/members/logos/first-financial-bank.svg",
       "description": "Westfield Bank offers high touch service with dedicated professionals who have served the small & mid-sized business community & private banking needs of individuals.",
       "categories": [
         "Banks & Banking Associations"
@@ -2883,8 +2883,8 @@
       "gzUrl": "https://business.medinachamber.com/list/Details/fire-dex-3421754",
       "address": "780 S. Progress Dr., Medina, OH, 44256",
       "phone": "(330) 723-0000",
-      "website": "https://www.instagram.com/firedexppe/",
-      "logoUrl": "",
+      "website": "https://firedex.com/",
+      "logoUrl": "/images/members/logos/fire-dex.png",
       "description": "We are the fastest-growing manufacturer of PPE for first responders and the world's largest Independent Service Provider (ISP) of PPE care and maintenance under its subsidiary, Gear Wash. Headquartered in Medina, Ohio, with three additional manufacturing locations in Georgia, North Carolina, and Mexico, we are a global company that prides itself on being a family-owned and operated business with a mission “to serve those who serve”. For over 40 years, our dedicated team of associates has helped pave the path of innovation for new products and services that focus on the health and safety of first responders by offering turnout gear, alternative PPE, boots, hoods, gloves, helmets, and PPE rentals.",
       "categories": [
         "Manufacturing"
@@ -3170,8 +3170,8 @@
       "gzUrl": "https://business.medinachamber.com/list/Details/great-lakes-construction-co-3421753",
       "address": "2608 Great Lakes Way, Hinckley, OH, 44233",
       "phone": "(330) 220-3900",
-      "website": "http://www.tglcc.com/",
-      "logoUrl": "",
+      "website": "https://www.greatlakesway.com/",
+      "logoUrl": "/images/members/logos/great-lakes-construction-co.png",
       "description": "Founded in 1948 - one of Ohio's largest highway-heavy contractors. Emphasis is placed on structures and site development",
       "categories": [
         "Construction Company"
@@ -3186,8 +3186,8 @@
       "gzUrl": "https://business.medinachamber.com/list/Details/gene-s-refrigeration-heating-ac-inc-and-gene-tolliver-inc-dba-all-american-heating-cooling-3421740",
       "address": "6222 Norwalk Road, Medina, OH, 44256",
       "phone": "(330) 723-4104",
-      "website": "http://www.instagram.com/",
-      "logoUrl": "",
+      "website": "https://www.genesrefrigeration.com/",
+      "logoUrl": "/images/members/logos/genes-refrigeration-heating-ac-inc-and-gene-tolliver-inc-dba-all-american-heating-cooling.svg",
       "description": "- Residential & Commercial - Heating & Air Conditioning - Plumbing - Electrical - Concrete & Masonry - Commercial Maintenance - Indoor Air Quality - Healthy Living - Maintenance Agreements",
       "categories": [
         "Heating & Air Conditioning Service & Sales"
@@ -3377,7 +3377,7 @@
       "address": "39 Public Square, Medina, OH, 44256",
       "phone": "(330) 764-7218",
       "website": "http://www.huntington.com/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/huntington-national-bank.svg",
       "description": "Personal service and excellence with local decision making. This community-focused bank provides contemporary financial solutions, personalized to help its customers reach their goals.",
       "categories": [
         "Banks & Banking Associations"
@@ -4110,7 +4110,7 @@
       "address": "",
       "phone": "(330) 461-0769",
       "website": "http://www.knotyourself.com/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/knot-yourself-medical-massage-studio.svg",
       "description": "",
       "categories": [
         "Health & Wellness",
@@ -4273,7 +4273,7 @@
       "address": "2400 Columbia Rd., Medina, OH, 44256",
       "phone": "(330) 483-3131",
       "website": "http://www.lcca.com/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/life-care-center-of-medina.svg",
       "description": "Premier skilled nursing facility, specializing in Orthopedic and Stroke Rehab. Secured Alzheimer's and Dementia Unit with unique Rhythm of the Day programming. Private Suites available, including a transition room. Physical, occupational and Speech Therapy available 7 days per week. Also large focus on wound care with patented CPI (Closed Pulse Irrigation) program. Respiratory care and high acuity.",
       "categories": [
         "Nursing Homes"
@@ -4566,7 +4566,7 @@
       "address": "210 S. Broadway, Medina, OH, 44256",
       "phone": "(330) 722-6235",
       "website": "http://www.mcdl.info/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/medina-county-district-library.png",
       "description": "The Library strives to enhance the quality of life in Medina County by providing resources and services necessary to satisfy the evolving informational and recreational pursuits of the community.",
       "categories": [
         "Library"
@@ -4581,8 +4581,8 @@
       "gzUrl": "https://business.medinachamber.com/list/Details/medina-county-career-center-3421734",
       "address": "1101 W. Liberty St., Medina, OH, 44256",
       "phone": "(330) 725-8461",
-      "website": "http://www.mcjvs.org/",
-      "logoUrl": "",
+      "website": "https://mcjvs.edu/",
+      "logoUrl": "/images/members/logos/medina-county-career-center.png",
       "description": "",
       "categories": [
         "Schools, Colleges & Education"
@@ -4598,7 +4598,7 @@
       "address": "3205 Medina Road, Medina, OH, 44256",
       "phone": "(330) 723-3291",
       "website": "http://www.medinaautomall.net/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/medina-auto-mall.png",
       "description": "Buick, Cadillac, GMC trucks, Dodge cars and trucks; largest used inventory in Medina. Award winning service, parts, body shop, rentals, leasing, quick lube.",
       "categories": [
         "Automobile Body Shop",
@@ -5980,7 +5980,7 @@
       "address": "300 Lake Rd., Medina, OH, 44256",
       "phone": "(330) 723-6000",
       "website": "http://www.packspec.com/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/packaging-specialties-inc.jpg",
       "description": "",
       "categories": [
         "Manufacturing"
@@ -6494,8 +6494,8 @@
       "gzUrl": "https://business.medinachamber.com/list/Details/rico-manufacturing-3421747",
       "address": "691 W. Liberty St., Medina, OH, 44256",
       "phone": "(330) 723-4050",
-      "website": "http://www.ricoequipment.com/",
-      "logoUrl": "",
+      "website": "https://ricoequipment.com/",
+      "logoUrl": "/images/members/logos/rico-manufacturing.png",
       "description": "Manufacturer of Industrial material handling equipment",
       "categories": [
         "Manufacturing, Production & Wholesale"
@@ -6514,7 +6514,7 @@
       "address": "694 E. Washington St., Medina, OH, 44256",
       "phone": "(330) 722-8222",
       "website": "http://www.reacpa.com/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/rea.webp",
       "description": "",
       "categories": [
         "Accountants-Certified-Public"
@@ -6918,7 +6918,7 @@
       "address": "2950 W. Market Street, Akron, OH, 44333",
       "phone": "(216) 903-9080",
       "website": "http://www.ip-sk.com/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/seibertkeck-insurance-partners.png",
       "description": "We are on a mission to change the insurance buying experience. That starts by doing the right thing, every time. Nationwide, we protect the hard work of our middle-market commercial, small business, and personal insurance clients, focusing on improving their risk profile and controlling cost. Behind every client stands our 100+ year history of expertise and the hard-working people of Insurance Partners & SeibertKeck.",
       "categories": [
         "Insurance"
@@ -6934,7 +6934,7 @@
       "address": "5201 Portside Drive, Medina, OH, 44256",
       "phone": "(330) 239-7100",
       "website": "http://www.sfsintec.biz/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/sfs-group-usa-inc.svg",
       "description": "Manufacturer of engineered cold formed parts Automotive & Industrial and commercial construction applications.",
       "categories": [
         "Manufacturing"
@@ -6950,7 +6950,7 @@
       "address": "133 Commerce Drive, Medina, OH, 44256",
       "phone": "(330) 725-2348",
       "website": "http://www.sandridge.com/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/sandridge-food-corp.webp",
       "description": "",
       "categories": [
         "Manufacturing"
@@ -6966,7 +6966,7 @@
       "address": "5250 E Market St, Akron, OH, 44304",
       "phone": "(330) 606-4592",
       "website": "https://www.summahealth.org/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/summa-health-system.svg",
       "description": "",
       "categories": [
         "Health & Wellness"
@@ -7664,7 +7664,7 @@
       "address": "333 Foundry Street, Medina, OH, 44256",
       "phone": "(330) 333-9000",
       "website": "http://www.highvoltagekarting.com/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/the-foundry-social-high-voltage-karting-mad-brewing.png",
       "description": "High Voltage is an indoor/outdoor, high-speed, all-electric go-karting facility in Medina, OH. Perfect for company events, parties and family outings!",
       "categories": [],
       "social": {
@@ -7683,7 +7683,7 @@
       "address": "5783 Wooster Pike, Medina, OH, 44256",
       "phone": "(330) 725-0569",
       "website": "http://www.trilliumcreekohio.com/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/trillium-creek-dermatology.svg",
       "description": "Few places in the country offer the quality care, innovation, and state-of-the-art procedures that are available at Trillium Creek Dermatology. Through our integrative medicine approach, Trillium Creek Dermatology offers world-class general dermatology, dermatologic surgery, laser surgery, cosmetic dermatology, skin cancer treatment, and Mohs surgery.",
       "categories": [
         "Health and Beauty",
@@ -7707,7 +7707,7 @@
       "address": "23 Public Square, Medina, OH, 44256",
       "phone": "(330) 763-2875",
       "website": "http://www.csb1.com/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/the-commercial-savings-bank.png",
       "description": "",
       "categories": [],
       "social": {},
@@ -8513,7 +8513,7 @@
       "address": "One Park Circle, Westfield Center, OH, 44251",
       "phone": "(330) 887-0101",
       "website": "http://www.westfieldinsurance.com/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/westfield-insurance.jpg",
       "description": "In business for over 160 years, Westfield Insurance provides auto/home and business insurance to customers in 18 states. Based in Medina Co. and locally represented by independent insurance agencies.",
       "categories": [
         "Insurance"

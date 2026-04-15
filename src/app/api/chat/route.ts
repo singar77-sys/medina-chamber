@@ -133,10 +133,10 @@ Safety Council (medinachamber.com/programs/safety-council):
 - Members can qualify for the Ohio BWC Group Rebate Program
 - Monthly meetings: third Tuesday of each month, 11:30 AM–1:00 PM at Williams on the Lake (787 Lafayette Road, Medina)
 - Meeting cost: $20 per person; pre-registration required by 5 PM Friday before the meeting
-- FY26 membership options:
-  * $0 — Greater Medina Chamber members (enrollment required)
-  * $100 — Non-chamber members (annual fee)
-  * $295 — Join the chamber and get Safety Council included
+- FY26 participation options:
+  * $0 — Greater Medina Chamber members (enrollment still required)
+  * $100 — Non-chamber members (annual Safety Council fee)
+  * Non-members can also join the chamber at Business Essentials ($345/year) — Safety Council enrollment is included with chamber membership
 - BWC rebate requirements: enroll by July 31, attend 10 meetings during the fiscal year (July 1–June 30), optional 4 additional credits via safety training or BWC consultation
 - Contact: safety@medinaohchamber.com or (330) 723-8773
 

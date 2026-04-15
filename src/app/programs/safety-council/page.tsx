@@ -27,13 +27,6 @@ const tiers = [
     description: "Annual membership fee for employers not currently in the chamber.",
     highlight: false,
   },
-  {
-    price: "$295",
-    label: "Join + Enroll",
-    description:
-      "Become a chamber member and receive your Safety Council enrollment at no additional charge.",
-    highlight: false,
-  },
 ];
 
 const requirements = [
@@ -118,8 +111,8 @@ export default function SafetyCouncilPage() {
 
       {/* Enrollment tiers */}
       <section className="mt-20">
-        <h2 className="text-overline text-cambridge mb-8">Membership Options — FY26</h2>
-        <div className="grid md:grid-cols-3 gap-6">
+        <h2 className="text-overline text-cambridge mb-8">Participation Options — FY26</h2>
+        <div className="grid sm:grid-cols-2 gap-6 max-w-3xl">
           {tiers.map((t) => (
             <div
               key={t.label}

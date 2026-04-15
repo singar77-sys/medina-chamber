@@ -27,7 +27,7 @@ const partners = [
   {
     name: "Medina County Young Professionals Association",
     logo: "/images/partners/medina-county-young-professionals-association.jpg",
-    href: "https://www.ypamedina.com",
+    href: "https://www.facebook.com/MedinaCountyYPA/",
     external: true,
   },
   {
@@ -48,7 +48,7 @@ const partners = [
   {
     name: "Medina City Schools",
     logo: "/images/partners/medina-city-schools.png",
-    href: "https://www.medinaschools.org",
+    href: "https://www.medinabees.org",
     external: true,
   },
 ];

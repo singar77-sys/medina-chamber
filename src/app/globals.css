@@ -67,13 +67,19 @@ summary,
   /* Darkened from #6B7A94 for WCAG AA (4.5:1) on white backgrounds. */
   --text-tertiary: #5A6A82;
   --text-inverse: #FFFFFF;
-  --text-accent: var(--coquelicot);
+  /* Darkened from --coquelicot (#FF4000, 3.48:1) to pass WCAG AA on white. */
+  --text-accent: #C84A1E;
 
   --border-primary: #D8DCE4;
   --border-secondary: #EEF0F4;
 
-  --accent: var(--coquelicot);
-  --accent-hover: #E03800;
+  /*
+   * Accent decoupled from --coquelicot for WCAG AA compliance.
+   * #FF4000 + white text = 3.48:1 (FAIL). #C84A1E + white = 4.61:1 (PASS).
+   * --coquelicot preserved as the archival brand color name.
+   */
+  --accent: #C84A1E;
+  --accent-hover: #AA3F19;
   --accent-subtle: #FFF0EB;
 
   --surface-cambridge: #EBF5F1;
@@ -110,14 +116,21 @@ summary,
   /* Lightened from #6B7A94 for WCAG AA (4.5:1) on oxford-blue backgrounds. */
   --text-tertiary: #8999B0;
   --text-inverse: var(--oxford-blue);
+  /* #FF6233 vs oxford-blue = 5.90:1, already passes AA on dark bg. */
   --text-accent: #FF6233;
 
   --border-primary: #1E2D4A;
   --border-secondary: #162444;
 
-  --accent: #FF6233;
-  --accent-hover: #FF4000;
-  --accent-subtle: rgba(255, 64, 0, 0.12);
+  /*
+   * Same accent as light mode — #FF6233 on white = 2.92:1 (FAIL).
+   * Using #C84A1E keeps the button readable with white text in both modes.
+   * Note: the `.text-accent` utility (inherited from --accent) is too dark
+   * to read as standalone text on dark backgrounds. Override below.
+   */
+  --accent: #C84A1E;
+  --accent-hover: #AA3F19;
+  --accent-subtle: rgba(200, 74, 30, 0.18);
 
   --surface-cambridge: rgba(131, 188, 169, 0.08);
   --surface-emerald: rgba(0, 84, 80, 0.15);
@@ -163,6 +176,25 @@ summary,
   --color-nav-border: var(--nav-border);
 
   --font-sans: "BN Bergen", system-ui, -apple-system, sans-serif;
+}
+
+/* --- Dark-mode accent text overrides ---------------------- */
+/*
+ * The Tailwind `text-accent` utility is generated from --color-accent, which
+ * maps to --accent (#C84A1E in both modes — dark enough for white text on
+ * button backgrounds to pass 4.5:1). But #C84A1E used as standalone TEXT on
+ * a dark background fails (3.74:1). In dark mode we flip text-accent and its
+ * hover variants to a lighter orange that reads on oxford-blue backgrounds.
+ *
+ * This is a pragmatic fix — a cleaner refactor would split the button-bg
+ * token from the accent-text token and rename the 62 text-accent call sites.
+ */
+[data-theme="dark"] .text-accent,
+[data-theme="dark"] .hover\:text-accent:hover {
+  color: #FF6233;
+}
+[data-theme="dark"] .hover\:text-accent-hover:hover {
+  color: #FF8855;
 }
 
 /* --- Theme Transition ------------------------------------- */

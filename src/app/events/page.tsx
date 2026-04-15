@@ -21,7 +21,7 @@ function EventCard({ event }: { event: ReturnType<typeof getUpcomingEvents>[numb
     <Link
       href={`/events/${event.slug}`}
       className="
-        group flex gap-5 p-5
+        group flex gap-5 p-5 min-w-0 overflow-hidden
         bg-bg-secondary border border-border-secondary
         rounded-[var(--radius-lg)]
         hover:border-border-primary hover:shadow-[var(--shadow-md)]

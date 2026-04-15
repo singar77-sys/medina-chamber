@@ -211,7 +211,7 @@ export default async function CommunityPage(
                   key={m.chamberSlug}
                   href={`/membership/directory/${m.chamberSlug}`}
                   className="
-                    group flex items-start gap-4 p-5
+                    group flex items-start gap-4 p-5 min-w-0 overflow-hidden
                     bg-bg-secondary border border-border-secondary
                     rounded-[var(--radius-lg)]
                     hover:border-border-primary transition-colors
@@ -274,7 +274,7 @@ export default async function CommunityPage(
                   key={e.slug}
                   href={`/events/${e.slug}`}
                   className="
-                    group flex gap-5 p-5
+                    group flex gap-5 p-5 min-w-0 overflow-hidden
                     bg-bg-secondary border border-border-secondary
                     rounded-[var(--radius-lg)]
                     hover:border-border-primary transition-colors

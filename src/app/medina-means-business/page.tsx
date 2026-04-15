@@ -165,7 +165,7 @@ export default function MedinaMeansBusinessPage() {
           ].map((s, i) => (
             <FadeIn key={s.label} delay={i * 80}>
               <div className="p-8 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] text-center">
-                <p className="text-display text-oxford leading-none">
+                <p className="text-display text-oxford [[data-theme=dark]_&]:text-cambridge leading-none">
                   <CountUp end={s.end} suffix={s.suffix} duration={s.end > 100 ? 2400 : 1600} />
                 </p>
                 <p className="text-caption text-text-tertiary mt-2 uppercase tracking-wider">

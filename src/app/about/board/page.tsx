@@ -84,7 +84,7 @@ export default function BoardPage() {
               key={m.name}
               className="flex items-start gap-4 p-5 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
             >
-              <div className="w-10 h-10 rounded-full bg-oxford/10 flex items-center justify-center shrink-0 text-body-sm font-bold text-oxford">
+              <div className="w-10 h-10 rounded-full bg-oxford/10 [[data-theme=dark]_&]:bg-cambridge/15 flex items-center justify-center shrink-0 text-body-sm font-bold text-oxford [[data-theme=dark]_&]:text-cambridge">
                 {m.name.split(" ").map((n) => n[0]).join("").substring(0, 2)}
               </div>
               <div>

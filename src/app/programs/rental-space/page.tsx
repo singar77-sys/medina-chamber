@@ -136,7 +136,7 @@ export default function RentalSpacePage() {
                   </p>
                 </div>
                 <div className="shrink-0 text-right">
-                  <p className="text-h3 text-oxford font-bold">{room.capacity}</p>
+                  <p className="text-h3 text-oxford [[data-theme=dark]_&]:text-cambridge font-bold">{room.capacity}</p>
                   <p className="text-caption text-text-tertiary">people</p>
                 </div>
               </div>
@@ -198,9 +198,9 @@ export default function RentalSpacePage() {
       </section>
 
       {/* Hours + booking */}
-      <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-        <div className="grid lg:grid-cols-2 gap-10 items-start">
-          <div>
+      <section className="mt-20 p-6 sm:p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] overflow-hidden">
+        <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-10 items-start">
+          <div className="min-w-0">
             <p className="text-overline text-cambridge mb-3">Availability</p>
             <h2 className="text-h2">Monday – Friday</h2>
             <p className="text-h3 text-cambridge mt-2">7:30 AM – 5:30 PM</p>

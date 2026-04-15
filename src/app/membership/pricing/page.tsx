@@ -195,7 +195,7 @@ export default function PricingPage() {
               >
                 {isFeatured && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-cambridge text-white text-caption font-bold uppercase tracking-wider rounded-full">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald text-white text-caption font-bold uppercase tracking-wider rounded-full">
                       Most Popular
                     </span>
                   </div>
@@ -407,7 +407,7 @@ export default function PricingPage() {
             eligibility, chamber membership is the most cost-effective path.{" "}
             <Link
               href="/programs/safety-council"
-              className="text-cambridge hover:text-cambridge/80 transition-colors"
+              className="text-cambridge hover:text-cambridge/80 underline underline-offset-2 transition-colors"
             >
               Learn about the Safety Council →
             </Link>

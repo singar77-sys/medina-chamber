@@ -250,8 +250,8 @@ export default function First30DaysPage() {
               <FadeIn key={step.number} delay={i * 60}>
                 <div
                   className="
-                    grid lg:grid-cols-[auto_1fr_auto] gap-6 lg:gap-10
-                    p-8 lg:p-10
+                    grid lg:grid-cols-[auto_minmax(0,1fr)_auto] gap-6 lg:gap-10
+                    p-6 sm:p-8 lg:p-10 overflow-hidden
                     bg-bg-secondary border border-border-secondary
                     rounded-[var(--radius-lg)]
                     hover:border-cambridge/40 transition-colors

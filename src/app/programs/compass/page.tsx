@@ -141,7 +141,7 @@ export default function CompassPage() {
               key={s.number}
               className="grid sm:grid-cols-[64px_1fr_1fr] gap-4 p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
             >
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-oxford/10 text-oxford font-bold text-h4 shrink-0">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-oxford/10 [[data-theme=dark]_&]:bg-cambridge/15 text-oxford [[data-theme=dark]_&]:text-cambridge font-bold text-h4 shrink-0">
                 {s.number}
               </div>
               <div>

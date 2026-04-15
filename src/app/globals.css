@@ -224,6 +224,8 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Pairs with body overflow-x: clip for full WCAG 1.4.10 reflow safety. */
+  overflow-x: clip;
 }
 
 body {
@@ -232,6 +234,12 @@ body {
   font-family: var(--font-sans);
   font-weight: 400;
   line-height: 1.6;
+  /* WCAG 1.4.10 reflow safety net — prevents any accidental horizontal
+     overflow (from animations, long words, grid min-widths, etc.) from
+     creating a page-wide horizontal scroll at small viewports. `clip`
+     (vs `hidden`) doesn't establish a new containing block, so sticky
+     positioning still works. */
+  overflow-x: clip;
 }
 
 /* --- Typography Scale ------------------------------------- */
@@ -250,10 +258,11 @@ body {
 
   /* Display — hero headlines */
   .text-display {
-    font-size: clamp(2.75rem, 5vw + 1rem, 5rem);
+    font-size: clamp(2rem, 5vw + 1rem, 5rem);
     font-weight: 700;
     line-height: 1.05;
     letter-spacing: -0.03em;
+    overflow-wrap: break-word;
   }
 
   /* H1 — page titles */

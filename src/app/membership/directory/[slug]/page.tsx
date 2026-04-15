@@ -159,6 +159,7 @@ export default async function MemberPage(
                     className="
                       inline-block px-3 py-1
                       bg-surface-cambridge text-emerald
+                      [[data-theme=dark]_&]:text-cambridge
                       text-caption font-bold
                       rounded-full
                       hover:bg-cambridge/20 transition-colors

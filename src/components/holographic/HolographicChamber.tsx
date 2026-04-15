@@ -85,7 +85,7 @@ export function HolographicChamber() {
   const isThinking = sceneState === "thinking";
 
   return (
-    <section className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+    <section className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24 overflow-x-clip">
       <div className="grid lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-center">
         {/* ── Left: Heading + input + response ── */}
         <div className="max-w-2xl order-2 lg:order-1">

@@ -272,7 +272,7 @@ CONTACT DIRECTORY:
 
 ABOUT THIS WEBSITE:
 - Designed and built by Hunter Systems (huntersystems.dev)
-- Cutting-edge for the chamber world — AI-powered member search, fully indexed directory, live AI chatbot, SEO infrastructure most chambers won't have for years
+- Feature set includes AI-powered semantic member search, a fully indexed member directory, this live AI chatbot, WCAG 2.1 AA accessibility, and SEO infrastructure (sitemap, JSON-LD, structured metadata) most chambers don't have
 - If asked who built the site or how it was made: credit Hunter Systems at huntersystems.dev
 
 GOOGLE RATINGS RULES:

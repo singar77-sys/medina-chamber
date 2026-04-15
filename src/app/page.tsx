@@ -373,6 +373,89 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ─── Rental Space Showcase ────────────────────────── */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pb-20 lg:pb-28">
+        <FadeIn>
+          <div className="p-8 lg:p-12 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+            <div className="grid lg:grid-cols-[1fr_1.3fr] gap-10 lg:gap-14 items-start">
+              <div>
+                <p className="text-overline text-cambridge mb-3">Meeting Space</p>
+                <h2 className="text-h2">
+                  Need a room for your next&nbsp;
+                  <span className="text-accent">meeting</span>?
+                </h2>
+                <p className="text-body-lg text-text-secondary mt-4 leading-relaxed">
+                  Two professional meeting rooms in the heart of downtown
+                  Medina. Free parking, Wi-Fi, and AV included. Member pricing
+                  available.
+                </p>
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Link
+                    href="/programs/rental-space"
+                    className="
+                      inline-flex items-center px-6 py-3
+                      bg-accent hover:bg-accent-hover
+                      text-white font-bold text-body-sm
+                      rounded-[var(--radius-md)]
+                      transition-colors
+                    "
+                  >
+                    See Availability →
+                  </Link>
+                  <a
+                    href="mailto:memberservices@medinaohchamber.com?subject=Meeting%20space%20inquiry"
+                    className="
+                      inline-flex items-center px-6 py-3
+                      border border-border-primary hover:border-text-tertiary
+                      text-text-primary font-bold text-body-sm
+                      rounded-[var(--radius-md)]
+                      transition-colors
+                    "
+                  >
+                    Email to book
+                  </a>
+                </div>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="p-6 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]">
+                  <p className="text-caption text-cambridge font-bold uppercase tracking-wider">
+                    The Vault
+                  </p>
+                  <p className="text-display text-oxford [[data-theme=dark]_&]:text-cambridge leading-none mt-2">
+                    16
+                  </p>
+                  <p className="text-caption text-text-tertiary uppercase tracking-wider mt-1">
+                    Seats
+                  </p>
+                  <p className="text-body-sm text-text-secondary mt-4 leading-relaxed">
+                    Private conference room with the chamber&apos;s distinctive
+                    vault door. Board meetings, client presentations, strategy
+                    sessions.
+                  </p>
+                </div>
+                <div className="p-6 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]">
+                  <p className="text-caption text-cambridge font-bold uppercase tracking-wider">
+                    Main Room
+                  </p>
+                  <p className="text-display text-oxford [[data-theme=dark]_&]:text-cambridge leading-none mt-2">
+                    50
+                  </p>
+                  <p className="text-caption text-text-tertiary uppercase tracking-wider mt-1">
+                    Seats
+                  </p>
+                  <p className="text-body-sm text-text-secondary mt-4 leading-relaxed">
+                    Flexible training and seminar space. Configurable tables,
+                    presentation-ready AV, works for workshops through
+                    all-hands meetings.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </FadeIn>
+      </section>
+
       {/* ─── Partners & Sponsors ──────────────────────────── */}
       <section className="bg-bg-secondary border-y border-border-secondary py-16 lg:py-20">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">

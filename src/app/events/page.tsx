@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { events, getUpcomingEvents, formatShortDate } from "@/data/events";
-import { growthZone } from "@/lib/navigation";
 
 export const metadata: Metadata = {
   title: "Events",
@@ -79,7 +78,8 @@ function EventCard({ event }: { event: ReturnType<typeof getUpcomingEvents>[numb
 }
 
 export default function EventsPage() {
-  const upcoming = getUpcomingEvents();
+  const allUpcoming = getUpcomingEvents();
+  const upcoming = allUpcoming.slice(0, 6);
   const hasEvents = upcoming.length > 0;
 
   return (
@@ -98,22 +98,6 @@ export default function EventsPage() {
           where relationships start and deals happen. Real connections between
           real Medina businesses.
         </p>
-        <div className="mt-10">
-          <a
-            href={growthZone.events}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="
-              inline-flex items-center px-6 py-3
-              bg-accent hover:bg-accent-hover
-              text-white font-bold text-body-sm
-              rounded-[var(--radius-md)]
-              transition-colors
-            "
-          >
-            View Full Calendar on GrowthZone →
-          </a>
-        </div>
       </section>
 
       {/* ── Upcoming Events ── */}
@@ -122,7 +106,7 @@ export default function EventsPage() {
           <h2 className="text-h2">Upcoming Events</h2>
           {hasEvents && (
             <p className="text-body-sm text-text-tertiary">
-              {upcoming.length} event{upcoming.length !== 1 ? "s" : ""} scheduled
+              Next {upcoming.length} of {allUpcoming.length}
             </p>
           )}
         </div>
@@ -136,17 +120,23 @@ export default function EventsPage() {
         ) : (
           <div className="p-10 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] text-center">
             <p className="text-body-lg text-text-secondary">
-              No upcoming events at the moment. Check back soon — or view the full calendar.
+              No upcoming events on the calendar right now. New events are added regularly — check back soon, or join the chamber newsletter for early notice.
             </p>
-            <a
-              href={growthZone.events}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/membership/join"
               className="inline-flex mt-6 items-center px-5 py-2.5 bg-accent hover:bg-accent-hover text-white font-bold text-body-sm rounded-[var(--radius-md)] transition-colors"
             >
-              View GrowthZone Calendar →
-            </a>
+              Join the Chamber →
+            </Link>
           </div>
+        )}
+
+        {allUpcoming.length > 6 && (
+          <p className="mt-8 text-caption text-text-tertiary text-center">
+            Plus {allUpcoming.length - 6} more upcoming events — new events roll
+            onto this list as they approach. Check back weekly or follow the
+            chamber for announcements.
+          </p>
         )}
       </section>
 
@@ -254,10 +244,8 @@ export default function EventsPage() {
             >
               Join the Chamber →
             </Link>
-            <a
-              href={growthZone.events}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/events/sponsorships"
               className="
                 inline-flex items-center px-6 py-3
                 border border-border-primary hover:border-text-tertiary
@@ -266,8 +254,8 @@ export default function EventsPage() {
                 transition-colors
               "
             >
-              Browse All Events
-            </a>
+              Sponsor an Event
+            </Link>
           </div>
         </div>
       </section>

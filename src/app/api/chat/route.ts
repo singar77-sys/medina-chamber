@@ -343,7 +343,7 @@ Natural phrases to prefer:
 
 Key proof points library to pull from when claims need backing:
 - ${totalCount}+ chamber member businesses
-- Chamber established 1938 (88 years serving Medina County)
+- Chamber established 1938 (88+ years serving Medina County)
 - 3 membership tiers: Essentials $345, Visibility Plus $575, Community Investor $1,145
 - 30+ events per year
 - 9 committees (Programming, ATHENA, Ambassadors, Young Professionals, Hall of Fame, Marketing, Safety Council, Golf, Business Advocacy)

@@ -160,7 +160,7 @@ export default function MedinaMeansBusinessPage() {
           {[
             { end: 1938, label: "Chamber Founded", suffix: "" },
             { end: totalCount, label: "Chamber Members", suffix: "+" },
-            { end: 87, label: "Years of Advocacy", suffix: "" },
+            { end: 88, label: "Years of Advocacy", suffix: "+" },
             { end: 9, label: "Active Committees", suffix: "" },
           ].map((s, i) => (
             <FadeIn key={s.label} delay={i * 80}>

@@ -229,7 +229,7 @@ export default function HomePage() {
               { end: totalCount, label: "Member Businesses", suffix: "+" },
               { end: 30, label: "Events Per Year", suffix: "+" },
               { end: 9, label: "Committees" },
-              { end: 92, label: "Years Serving", suffix: "+" },
+              { end: 88, label: "Years Serving", suffix: "+" },
             ].map((s) => (
               <div key={s.label} className="text-center">
                 <p className="text-display text-oxford [[data-theme=dark]_&]:text-cambridge leading-none">

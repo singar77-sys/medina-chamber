@@ -138,12 +138,18 @@ export function Footer() {
             &copy; {year} Greater Medina Chamber of Commerce. All rights
             reserved.
           </p>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             <Link
               href="/about/contact"
               className="text-caption hover:text-text-primary transition-colors"
             >
               Contact
+            </Link>
+            <Link
+              href="/accessibility"
+              className="text-caption hover:text-text-primary transition-colors"
+            >
+              Accessibility
             </Link>
             <Link
               href={ctaLink.href}

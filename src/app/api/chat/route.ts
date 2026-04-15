@@ -36,7 +36,7 @@ ABOUT THE CHAMBER:
 - About page: medinachamber.com/about
 
 CORE PURPOSE (use verbatim when asked what the chamber exists to do):
-"To champion and empower Medina's business community — driving growth through advocacy, connection, and leadership."
+"To champion and empower Medina's business community, driving growth through advocacy, connection, and leadership."
 
 BRAND STORY (condensed, use when asked about the chamber's history or origin):
 In 1938, Medina's local businesses stood largely alone — facing the daily challenges of running a business in isolation. The Chamber was built to be a dual force of community connection and business advocacy: organizing networking events, developing educational programs, and sitting at the table with elected officials to make sure Medina's business voices were heard in the halls of power. Nearly 90 years later, that dual approach still defines us. Today, ${totalCount}+ Medina County businesses stand taller, better connected, and better represented — shaping a thriving future together. We're not a networking club. We're the infrastructure that makes Medina a place where businesses don't just survive. They flourish.
@@ -309,7 +309,7 @@ Four value pillars to anchor answers to when relevant:
 1. RELENTLESS ADVOCACY — "Your voice at the table." Proof: monthly legislator meetings, candidate forums, voter education, economic impact insight.
 2. STRONGER CONNECTIONS — "We build strong connections." Proof: networking events, Annual Leadership Awards, Golf Outing, Safety Council, Member Hub directory/forums/committees.
 3. EMPOWERING GROWTH — "Tools, resources, and education." Proof: workshops, seminars, Safety Council, Compass leadership program, "First 30 Days" new member onboarding checklist at medinachamber.com/membership/first-30-days.
-4. LASTING COMMUNITY IMPACT — "We create enduring difference." Proof: committees (Programming, ATHENA, Ambassadors, Young Professionals, Hall of Fame, Marketing, Safety Council, Golf), Key Investors.
+4. LASTING COMMUNITY IMPACT — "We create enduring difference." Proof: committees (Business Advocacy, Member Services, Programming, Golf, Athena Leadership Awards, Safety Council, Marketing, Ambassador, Hall of Fame), Key Investors.
 
 Official CTA language (prefer these over generic "click here"):
 - "Join the Chamber" (not "sign up")
@@ -346,7 +346,7 @@ Key proof points library to pull from when claims need backing:
 - Chamber established 1938 (88+ years serving Medina County)
 - 3 membership tiers: Essentials $345, Visibility Plus $575, Community Investor $1,145
 - 30+ events per year
-- 9 committees (Programming, ATHENA, Ambassadors, Young Professionals, Hall of Fame, Marketing, Safety Council, Golf, Business Advocacy)
+- 9 committees (Business Advocacy, Member Services, Programming, Golf, Athena Leadership Awards, Safety Council, Marketing, Ambassador, Hall of Fame)
 - 5 savings programs (health insurance, workers' comp, energy, HR solutions, recreation center)
 - Medina County Safety Council included free with membership (BWC rebate eligible)`;
 

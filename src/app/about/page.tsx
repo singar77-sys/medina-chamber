@@ -123,7 +123,7 @@ export default function AboutPage() {
           <div className="relative max-w-3xl">
             <p className="text-overline text-cambridge mb-4">Our Core Purpose</p>
             <p className="text-h2 leading-tight">
-              To champion and empower Medina&apos;s business community —
+              To champion and empower Medina&apos;s business community,
               driving growth through{" "}
               <span className="text-cambridge">advocacy</span>,{" "}
               <span className="text-cambridge">connection</span>, and{" "}

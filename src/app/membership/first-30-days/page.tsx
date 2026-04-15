@@ -95,7 +95,7 @@ const steps: Step[] = [
     time: "15 minutes",
     title: "Review committees and join one",
     why:
-      "Committees are where relationships get built. An event is fun; a committee is family. Nine committees cover everything from golf and ATHENA awards to advocacy and young professionals — pick the one that aligns with your business goals.",
+      "Committees are where relationships get built. An event is fun; a committee is family. Nine committees cover everything from golf and ATHENA awards to business advocacy and marketing. Pick the one that aligns with your business goals.",
     actions: [
       "Review the committee list and descriptions",
       "Pick one (or two) that match your interests",

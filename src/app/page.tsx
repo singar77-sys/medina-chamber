@@ -171,7 +171,7 @@ export default function HomePage() {
           quality={85}
         />
         {/* Gradient overlay — white wash in light, dark wash in dark mode */}
-        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/85 to-white/50 [[data-theme=dark]_&]:from-oxford [[data-theme=dark]_&]:via-oxford/60 [[data-theme=dark]_&]:to-oxford/15" />
+        <div className="absolute inset-0 bg-gradient-to-t from-white/60 via-white/50 to-white/30 [[data-theme=dark]_&]:from-oxford [[data-theme=dark]_&]:via-oxford/60 [[data-theme=dark]_&]:to-oxford/15" />
 
         {/* Content */}
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-24 pt-40 w-full">

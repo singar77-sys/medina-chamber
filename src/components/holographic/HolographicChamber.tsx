@@ -95,11 +95,15 @@ export function HolographicChamber() {
               AI · Powered
             </span>
           </div>
-          <h2 className="text-h2">Meet ChamberBot.</h2>
+          <h2 className="text-h2">
+            Meet Jackie,
+            <br />
+            <span className="text-cambridge">the ChamberBot.</span>
+          </h2>
           <p className="text-body-lg text-text-secondary mt-4 leading-relaxed">
             Ask anything about Medina County businesses, chamber events,
-            membership, or programs. ChamberBot knows about every member
-            and can help answer questions.
+            membership, or programs. Jackie knows about every member and
+            can help answer questions.
           </p>
 
           {/* Input */}
@@ -108,7 +112,7 @@ export function HolographicChamber() {
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Ask ChamberBot anything…"
+              placeholder="Ask Jackie anything…"
               disabled={isThinking}
               className="
                 w-full px-6 py-4 pr-14
@@ -124,7 +128,7 @@ export function HolographicChamber() {
             <button
               type="submit"
               disabled={!inputValue.trim() || isThinking}
-              aria-label="Ask ChamberBot"
+              aria-label="Ask Jackie"
               className="
                 absolute right-3 top-1/2 -translate-y-1/2
                 w-10 h-10 flex items-center justify-center

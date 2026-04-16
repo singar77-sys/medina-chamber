@@ -164,8 +164,8 @@ export function ChatWidget() {
                 />
               </div>
               <div>
-                <p className="text-body-sm font-bold text-white leading-none">ChamberBot</p>
-                <p className="text-[11px] text-cambridge mt-0.5">Medina Chamber Assistant</p>
+                <p className="text-body-sm font-bold text-white leading-none">Jackie</p>
+                <p className="text-[11px] text-cambridge mt-0.5">ChamberBot · Medina Chamber</p>
               </div>
             </div>
             <button
@@ -184,7 +184,7 @@ export function ChatWidget() {
             {!hasMessages && (
               <div className="text-center py-6">
                 <p className="text-body-sm font-bold text-text-primary">
-                  Hi! I&apos;m ChamberBot.
+                  Hi! I&apos;m Jackie.
                 </p>
                 <p className="text-caption text-text-tertiary mt-1 max-w-xs mx-auto">
                   Ask me about member businesses, events, membership, or anything about the chamber.
@@ -308,7 +308,7 @@ export function ChatWidget() {
           <div className="w-11 h-11 rounded-full overflow-hidden">
             <AnimatedMascotHead
               className="w-full h-full"
-              ariaLabel="Open ChamberBot"
+              ariaLabel="Open Jackie the ChamberBot"
             />
           </div>
         )}

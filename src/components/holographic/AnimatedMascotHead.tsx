@@ -19,7 +19,7 @@ interface AnimatedMascotHeadProps {
 export function AnimatedMascotHead({
   speaking = false,
   className = "",
-  ariaLabel = "ChamberBot",
+  ariaLabel = "Jackie the ChamberBot",
 }: AnimatedMascotHeadProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(false);

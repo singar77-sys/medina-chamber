@@ -56,37 +56,6 @@ const partners = [
   },
 ];
 
-const programs = [
-  {
-    tag: "Leadership",
-    title: "Compass Program",
-    desc: "Five sessions. Twenty leaders. A shared commitment to growth. Our flagship leadership development program meets February through May.",
-    href: "/programs/compass",
-    cta: "Learn More →",
-  },
-  {
-    tag: "Annual Event",
-    title: "Golf Outing",
-    desc: "Monday, July 20, 2026 at Westfield Country Club. 18-hole shotgun scramble — the Chamber's biggest fundraiser of the year.",
-    href: "/programs/golf-outing",
-    cta: "Register →",
-  },
-  {
-    tag: "Networking",
-    title: "Social Connect",
-    desc: "Corporate competitions, an expo, and early-access networking — all at Foundry Social. Where Medina's business community unwinds together.",
-    href: "/programs/social-connect",
-    cta: "Get Tickets →",
-  },
-  {
-    tag: "Recognition",
-    title: "Athena Awards",
-    desc: "Annual awards honoring women leaders in Medina County, co-hosted with the Medina County Women's Journal.",
-    href: "/programs/athena-awards",
-    cta: "Learn More →",
-  },
-];
-
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": ["Organization", "LocalBusiness"],
@@ -355,128 +324,10 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* ─── Three Pillars (Your Voice / Network / Growth) ── */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
-        <FadeIn>
-          <div className="max-w-2xl mb-14">
-            <p className="text-overline text-cambridge mb-3">Why Members Join</p>
-            <h2 className="text-h2">Three things the Chamber does for you.</h2>
-          </div>
-        </FadeIn>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          {[
-            {
-              label: "Your Voice in Policy",
-              title: "Advocacy that moves the needle.",
-              desc: "Monthly legislator meetings, candidate forums, voter education, and direct engagement with decision-makers at city, county, and state levels.",
-              href: "/about/advocacy",
-              cta: "See Advocacy →",
-            },
-            {
-              label: "Your Network",
-              title: "Connections that open doors.",
-              desc: "Networking events, leadership awards, the Safety Council, the Annual Golf Outing, plus 511+ member businesses in a searchable directory.",
-              href: "/events",
-              cta: "Browse Events →",
-            },
-            {
-              label: "Your Growth",
-              title: "Resources that drive results.",
-              desc: "Compass leadership program, educational workshops, member-only event pricing, savings on health insurance and workers' comp, and visibility across Chamber channels.",
-              href: "/membership/benefits",
-              cta: "See Benefits →",
-            },
-          ].map((pillar, i) => (
-            <FadeIn key={pillar.label} delay={i * 100}>
-              <div
-                className="
-                  flex flex-col h-full p-8
-                  bg-bg-secondary border border-border-secondary
-                  rounded-[var(--radius-lg)]
-                  hover:border-cambridge/40 transition-colors
-                "
-              >
-                <p className="text-caption text-cambridge font-bold uppercase tracking-wider">
-                  {pillar.label}
-                </p>
-                <h3 className="text-h3 mt-2 mb-3">{pillar.title}</h3>
-                <p className="text-body-sm text-text-secondary leading-relaxed flex-1">
-                  {pillar.desc}
-                </p>
-                <Link
-                  href={pillar.href}
-                  className="mt-5 text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors inline-block"
-                >
-                  {pillar.cta}
-                </Link>
-              </div>
-            </FadeIn>
-          ))}
-        </div>
-      </section>
-
-      {/* ─── Programs Grid ────────────────────────────────── */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pb-20 lg:pb-28">
-        <FadeIn>
-          <div className="flex items-end justify-between mb-10">
-            <div>
-              <p className="text-overline text-cambridge mb-2">Get Involved</p>
-              <h2 className="text-h2">Programs &amp; Events</h2>
-            </div>
-            <Link
-              href="/programs"
-              className="hidden sm:inline-flex text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
-            >
-              All programs →
-            </Link>
-          </div>
-        </FadeIn>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          {programs.map((p, i) => (
-            <FadeIn key={p.title} delay={i * 100}>
-              <Link
-                href={p.href}
-                className="
-                  group flex flex-col h-full p-8
-                  bg-bg-secondary border border-border-secondary
-                  rounded-[var(--radius-lg)]
-                  hover:border-cambridge/40 hover:shadow-[0_8px_30px_rgba(131,188,169,0.08)]
-                  transition-all duration-300
-                "
-              >
-                <span className="text-caption text-cambridge font-bold uppercase tracking-wider">
-                  {p.tag}
-                </span>
-                <h3 className="text-h3 mt-2 mb-3 group-hover:text-cambridge transition-colors">
-                  {p.title}
-                </h3>
-                <p className="text-body-sm text-text-secondary leading-relaxed flex-1">
-                  {p.desc}
-                </p>
-                <p className="mt-5 text-body-sm font-bold text-cambridge group-hover:translate-x-1 transition-transform inline-block">
-                  {p.cta}
-                </p>
-              </Link>
-            </FadeIn>
-          ))}
-        </div>
-
-        <div className="mt-6 sm:hidden text-center">
-          <Link
-            href="/programs"
-            className="text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
-          >
-            View all programs →
-          </Link>
-        </div>
-      </section>
-
       {/* ─── Rental Space Showcase ────────────────────────── */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pb-20 lg:pb-28">
-        <FadeIn>
-          <div className="p-8 lg:p-12 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+      <section className="bg-bg-secondary border-y border-border-secondary py-20 lg:py-28">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <FadeIn>
             <div className="grid lg:grid-cols-[1fr_1.3fr] gap-10 lg:gap-14 items-start">
               <div>
                 <p className="text-overline text-cambridge mb-3">Meeting Space</p>
@@ -552,8 +403,69 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ─── Three Pillars (Your Voice / Network / Growth) ── */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
+        <FadeIn>
+          <div className="max-w-2xl mb-14">
+            <p className="text-overline text-cambridge mb-3">Why Members Join</p>
+            <h2 className="text-h2">Three things the Chamber does for you.</h2>
           </div>
         </FadeIn>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {[
+            {
+              label: "Your Voice in Policy",
+              title: "Advocacy that moves the needle.",
+              desc: "Monthly legislator meetings, candidate forums, voter education, and direct engagement with decision-makers at city, county, and state levels.",
+              href: "/about/advocacy",
+              cta: "See Advocacy →",
+            },
+            {
+              label: "Your Network",
+              title: "Connections that open doors.",
+              desc: "Networking events, leadership awards, the Safety Council, the Annual Golf Outing, plus 511+ member businesses in a searchable directory.",
+              href: "/events",
+              cta: "Browse Events →",
+            },
+            {
+              label: "Your Growth",
+              title: "Resources that drive results.",
+              desc: "Compass leadership program, educational workshops, member-only event pricing, savings on health insurance and workers' comp, and visibility across Chamber channels.",
+              href: "/membership/benefits",
+              cta: "See Benefits →",
+            },
+          ].map((pillar, i) => (
+            <FadeIn key={pillar.label} delay={i * 100}>
+              <div
+                className="
+                  flex flex-col h-full p-8
+                  bg-bg-secondary border border-border-secondary
+                  rounded-[var(--radius-lg)]
+                  hover:border-cambridge/40 transition-colors
+                "
+              >
+                <p className="text-caption text-cambridge font-bold uppercase tracking-wider">
+                  {pillar.label}
+                </p>
+                <h3 className="text-h3 mt-2 mb-3">{pillar.title}</h3>
+                <p className="text-body-sm text-text-secondary leading-relaxed flex-1">
+                  {pillar.desc}
+                </p>
+                <Link
+                  href={pillar.href}
+                  className="mt-5 text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors inline-block"
+                >
+                  {pillar.cta}
+                </Link>
+              </div>
+            </FadeIn>
+          ))}
+        </div>
       </section>
 
       {/* ─── Partners & Sponsors ──────────────────────────── */}

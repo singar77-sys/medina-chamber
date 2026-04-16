@@ -97,7 +97,7 @@ export function ChamberBotMascot({
     };
   }, []);
 
-  // ── Blink timer ────────────────────────────────────────────────
+  // ── Blink (with occasional double / rare triple) ──────────────
   useEffect(() => {
     if (!loaded) return;
     const el = containerRef.current;
@@ -117,22 +117,54 @@ export function ChamberBotMascot({
     eyesOpen.style.display = "";
     eyesClosed.style.display = "none";
 
-    let raf: ReturnType<typeof setTimeout>;
-
-    function blink() {
-      if (!eyesOpen || !eyesClosed) return;
+    const close = () => {
       eyesOpen.style.display = "none";
       eyesClosed.style.display = "";
-      setTimeout(() => {
-        eyesOpen!.style.display = "";
-        eyesClosed!.style.display = "none";
-      }, 150);
-      // Random interval between 3-6 seconds
-      raf = setTimeout(blink, 3000 + Math.random() * 3000);
-    }
+    };
+    const open = () => {
+      eyesOpen.style.display = "";
+      eyesClosed.style.display = "none";
+    };
 
-    raf = setTimeout(blink, 2000 + Math.random() * 2000);
-    return () => clearTimeout(raf);
+    let cancelled = false;
+    const timeouts: ReturnType<typeof setTimeout>[] = [];
+    const after = (ms: number, fn: () => void) => {
+      const t = setTimeout(() => {
+        if (!cancelled) fn();
+      }, ms);
+      timeouts.push(t);
+    };
+
+    const doBlinkSequence = (done: () => void) => {
+      // 5% triple, 22% double, 73% single
+      const roll = Math.random();
+      const count = roll < 0.05 ? 3 : roll < 0.27 ? 2 : 1;
+
+      let acc = 0;
+      for (let i = 0; i < count; i++) {
+        // close
+        after(acc, close);
+        acc += 120 + Math.random() * 70; // 120-190ms closed
+        // open
+        after(acc, open);
+        if (i < count - 1) {
+          acc += 80 + Math.random() * 40; // 80-120ms open between blinks
+        }
+      }
+      after(acc, done);
+    };
+
+    const schedule = () => {
+      const gap = 2800 + Math.random() * 3400; // 2.8-6.2s between sequences
+      after(gap, () => doBlinkSequence(schedule));
+    };
+
+    schedule();
+
+    return () => {
+      cancelled = true;
+      timeouts.forEach(clearTimeout);
+    };
   }, [loaded]);
 
   // ── Wave once on mount, after a beat so users see the idle pose ─
@@ -240,20 +272,48 @@ export function ChamberBotMascot({
     ];
 
     if (state === "responding") {
-      // Hide resting mouth, start speaking cycle
+      // Speaking: randomized frame order with variable timing and
+      // occasional closed-mouth beats (simulates gaps between syllables).
       if (mouthClosed) mouthClosed.style.display = "none";
 
-      let i = 0;
-      const cycle = setInterval(() => {
-        mouths.forEach((m, idx) => {
-          if (m) m.style.display = idx === i ? "" : "none";
+      const hideAll = () => {
+        if (mouthClosed) mouthClosed.style.display = "none";
+        mouths.forEach((m) => {
+          if (m) m.style.display = "none";
         });
-        i = (i + 1) % 3;
-      }, 180);
+      };
+
+      let lastFrame = -1;
+      let nextTimer: ReturnType<typeof setTimeout>;
+
+      const step = () => {
+        // 15% chance of a brief closed beat (syllable gap)
+        if (Math.random() < 0.15) {
+          hideAll();
+          if (mouthClosed) mouthClosed.style.display = "";
+          nextTimer = setTimeout(step, 90 + Math.random() * 70); // 90-160ms
+          return;
+        }
+
+        // Pick a speaking frame different from the previous one so the
+        // mouth never appears "stuck" on the same shape.
+        let next: number;
+        do {
+          next = Math.floor(Math.random() * 3);
+        } while (next === lastFrame);
+        lastFrame = next;
+
+        hideAll();
+        const pick = mouths[next];
+        if (pick) pick.style.display = "";
+
+        nextTimer = setTimeout(step, 110 + Math.random() * 130); // 110-240ms
+      };
+
+      step();
 
       return () => {
-        clearInterval(cycle);
-        // Reset to resting on cleanup
+        clearTimeout(nextTimer);
         if (mouthClosed) mouthClosed.style.display = "";
         mouths.forEach((m) => {
           if (m) m.style.display = "none";

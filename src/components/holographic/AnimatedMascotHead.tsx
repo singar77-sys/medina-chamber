@@ -48,7 +48,7 @@ export function AnimatedMascotHead({
     return () => { cancelled = true; };
   }, []);
 
-  // ── Blink ────────────────────────────────────────────────────
+  // ── Blink (with occasional double / rare triple) ───────────
   useEffect(() => {
     if (!loaded) return;
     const svg = containerRef.current?.querySelector("svg");
@@ -61,19 +61,50 @@ export function AnimatedMascotHead({
     eyesOpen.style.display = "";
     eyesClosed.style.display = "none";
 
-    let timer: ReturnType<typeof setTimeout>;
-    function blink() {
-      if (!eyesOpen || !eyesClosed) return;
+    const close = () => {
       eyesOpen.style.display = "none";
       eyesClosed.style.display = "";
-      setTimeout(() => {
-        eyesOpen!.style.display = "";
-        eyesClosed!.style.display = "none";
-      }, 150);
-      timer = setTimeout(blink, 3000 + Math.random() * 3000);
-    }
-    timer = setTimeout(blink, 1500 + Math.random() * 2000);
-    return () => clearTimeout(timer);
+    };
+    const open = () => {
+      eyesOpen.style.display = "";
+      eyesClosed.style.display = "none";
+    };
+
+    let cancelled = false;
+    const timeouts: ReturnType<typeof setTimeout>[] = [];
+    const after = (ms: number, fn: () => void) => {
+      const t = setTimeout(() => {
+        if (!cancelled) fn();
+      }, ms);
+      timeouts.push(t);
+    };
+
+    const doBlinkSequence = (done: () => void) => {
+      // 5% triple, 22% double, 73% single
+      const roll = Math.random();
+      const count = roll < 0.05 ? 3 : roll < 0.27 ? 2 : 1;
+
+      let acc = 0;
+      for (let i = 0; i < count; i++) {
+        after(acc, close);
+        acc += 120 + Math.random() * 70;
+        after(acc, open);
+        if (i < count - 1) {
+          acc += 80 + Math.random() * 40;
+        }
+      }
+      after(acc, done);
+    };
+
+    const schedule = () => {
+      after(2800 + Math.random() * 3400, () => doBlinkSequence(schedule));
+    };
+    schedule();
+
+    return () => {
+      cancelled = true;
+      timeouts.forEach(clearTimeout);
+    };
   }, [loaded]);
 
   // ── Mouth (speaking vs resting) ──────────────────────────────
@@ -90,16 +121,43 @@ export function AnimatedMascotHead({
     ];
 
     if (speaking) {
+      // Randomized frame order + variable timing + occasional closed
+      // beat — same "organic speech" pattern as the full-body mascot.
       if (mouthClosed) mouthClosed.style.display = "none";
-      let i = 0;
-      const cycle = setInterval(() => {
-        mouths.forEach((m, idx) => {
-          if (m) m.style.display = idx === i ? "" : "none";
-        });
-        i = (i + 1) % 3;
-      }, 180);
+
+      const hideAll = () => {
+        if (mouthClosed) mouthClosed.style.display = "none";
+        mouths.forEach((m) => { if (m) m.style.display = "none"; });
+      };
+
+      let lastFrame = -1;
+      let nextTimer: ReturnType<typeof setTimeout>;
+
+      const step = () => {
+        if (Math.random() < 0.15) {
+          hideAll();
+          if (mouthClosed) mouthClosed.style.display = "";
+          nextTimer = setTimeout(step, 90 + Math.random() * 70);
+          return;
+        }
+
+        let next: number;
+        do {
+          next = Math.floor(Math.random() * 3);
+        } while (next === lastFrame);
+        lastFrame = next;
+
+        hideAll();
+        const pick = mouths[next];
+        if (pick) pick.style.display = "";
+
+        nextTimer = setTimeout(step, 110 + Math.random() * 130);
+      };
+
+      step();
+
       return () => {
-        clearInterval(cycle);
+        clearTimeout(nextTimer);
         if (mouthClosed) mouthClosed.style.display = "";
         mouths.forEach((m) => { if (m) m.style.display = "none"; });
       };

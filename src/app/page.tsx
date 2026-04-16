@@ -6,6 +6,7 @@ import { FadeIn } from "@/components/FadeIn";
 import { CountUp } from "@/components/CountUp";
 import { HolographicChamber } from "@/components/holographic/HolographicChamber";
 import { MouseGradient } from "@/components/MouseGradient";
+import { NetworkBackdrop } from "@/components/holographic/NetworkBackdrop";
 
 export const metadata: Metadata = {
   title: "Greater Medina Chamber of Commerce — Medina County, Ohio",
@@ -252,10 +253,13 @@ export default function HomePage() {
       </MouseGradient>
 
       {/* ─── Holographic Chamber (AI Section) ──────────────── */}
-      <section className="bg-bg-secondary border-t border-border-secondary">
-        <FadeIn>
-          <HolographicChamber />
-        </FadeIn>
+      <section className="relative bg-bg-secondary border-t border-border-secondary overflow-hidden">
+        <NetworkBackdrop />
+        <div className="relative">
+          <FadeIn>
+            <HolographicChamber />
+          </FadeIn>
+        </div>
       </section>
 
       {/* ─── Three Pillars (Your Voice / Network / Growth) ── */}

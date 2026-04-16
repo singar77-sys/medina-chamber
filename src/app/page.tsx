@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { totalCount } from "@/data/members";
+import { getUpcomingEvents } from "@/data/events";
 import { FadeIn } from "@/components/FadeIn";
 import { CountUp } from "@/components/CountUp";
 import { HolographicChamber } from "@/components/holographic/HolographicChamber";
@@ -146,6 +147,8 @@ const organizationJsonLd = {
 };
 
 export default function HomePage() {
+  const upcomingEvents = getUpcomingEvents().slice(0, 3);
+
   return (
     <div>
       <script
@@ -261,6 +264,96 @@ export default function HomePage() {
           </FadeIn>
         </div>
       </section>
+
+      {/* ─── Upcoming Events ──────────────────────────────── */}
+      {upcomingEvents.length > 0 && (
+        <section className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
+          <FadeIn>
+            <div className="flex items-end justify-between mb-10 gap-4 flex-wrap">
+              <div>
+                <p className="text-overline text-cambridge mb-2">Upcoming Events</p>
+                <h2 className="text-h2">What&apos;s next in Medina business.</h2>
+              </div>
+              <Link
+                href="/events"
+                className="hidden sm:inline-flex text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
+              >
+                View all events →
+              </Link>
+            </div>
+          </FadeIn>
+
+          <div className="grid md:grid-cols-3 gap-4">
+            {upcomingEvents.map((event, i) => (
+              <FadeIn key={event.slug} delay={i * 100}>
+                <Link
+                  href={`/events/${event.slug}`}
+                  className="
+                    group flex flex-col h-full
+                    bg-bg-secondary border border-border-secondary
+                    rounded-[var(--radius-lg)]
+                    overflow-hidden
+                    hover:border-cambridge/40 hover:shadow-[0_8px_30px_rgba(131,188,169,0.08)]
+                    transition-all duration-300
+                  "
+                >
+                  {/* Date badge header */}
+                  <div className="flex items-center gap-3 p-5 border-b border-border-secondary">
+                    <div className="flex-shrink-0 w-14 text-center">
+                      <div className="bg-oxford [[data-theme=dark]_&]:bg-bg-tertiary text-white rounded-[var(--radius-md)] py-1.5 px-1">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-cambridge leading-none">
+                          {event.month.substring(0, 3)}
+                        </p>
+                        <p className="text-xl font-bold leading-tight mt-0.5">
+                          {event.day}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-caption text-cambridge font-bold uppercase tracking-wider">
+                        {event.dayOfWeek}
+                      </p>
+                      <p className="text-caption text-text-tertiary mt-0.5">
+                        {event.startTime}
+                        {event.endTime ? `–${event.endTime}` : ""}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Title + details */}
+                  <div className="flex flex-col flex-1 p-5">
+                    <h3 className="text-h4 leading-snug line-clamp-2 group-hover:text-accent transition-colors">
+                      {event.title}
+                    </h3>
+                    {event.location && (
+                      <p className="text-caption text-text-tertiary mt-2 truncate">
+                        {event.location}
+                      </p>
+                    )}
+                    {event.pricing && (
+                      <p className="text-body-sm text-cambridge mt-3 font-medium line-clamp-1">
+                        {event.pricing.split("\n")[0]}
+                      </p>
+                    )}
+                    <p className="mt-auto pt-4 text-body-sm font-bold text-cambridge group-hover:translate-x-1 transition-transform">
+                      Event details →
+                    </p>
+                  </div>
+                </Link>
+              </FadeIn>
+            ))}
+          </div>
+
+          <div className="mt-8 sm:hidden text-center">
+            <Link
+              href="/events"
+              className="text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
+            >
+              View all events →
+            </Link>
+          </div>
+        </section>
+      )}
 
       {/* ─── Three Pillars (Your Voice / Network / Growth) ── */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">

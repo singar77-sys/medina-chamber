@@ -98,8 +98,8 @@ export function HolographicChamber() {
           <h2 className="text-h2">Meet ChamberBot.</h2>
           <p className="text-body-lg text-text-secondary mt-4 leading-relaxed">
             Ask anything about Medina County businesses, chamber events,
-            membership, or programs. ChamberBot knows every member and every
-            answer.
+            membership, or programs. ChamberBot knows about every member
+            and can help answer questions.
           </p>
 
           {/* Input */}

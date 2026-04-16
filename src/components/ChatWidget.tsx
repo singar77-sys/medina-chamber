@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { RobotHead } from "@/components/holographic/RobotHead";
+/* eslint-disable @next/next/no-img-element */
 
 /** Lightweight markdown → HTML for assistant messages.
  *  Handles: **bold**, [text](url), bare https:// URLs, newlines.
@@ -156,8 +156,12 @@ export function ChatWidget() {
             bg-oxford border-b border-border-secondary
           ">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 shrink-0 rounded-full bg-white/95 p-0.5 shadow-sm">
-                <RobotHead className="w-full h-full" ariaLabel="" />
+              <div className="w-10 h-10 shrink-0 rounded-full bg-white/90 overflow-hidden shadow-sm">
+                <img
+                  src="/images/chamberbot-head.svg"
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div>
                 <p className="text-body-sm font-bold text-white leading-none">ChamberBot</p>
@@ -301,7 +305,11 @@ export function ChatWidget() {
             <path d="M18 6L6 18M6 6l12 12"/>
           </svg>
         ) : (
-          <RobotHead className="w-11 h-11" ariaLabel="Open ChamberBot" />
+          <img
+            src="/images/chamberbot-head.svg"
+            alt="Open ChamberBot"
+            className="w-11 h-11 object-cover rounded-full"
+          />
         )}
       </button>
     </>

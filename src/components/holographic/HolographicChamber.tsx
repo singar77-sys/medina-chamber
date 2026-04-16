@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
-import { RobotCharacter } from "./RobotCharacter";
+import { ChamberBotMascot } from "./ChamberBotMascot";
 
 type SceneState = "idle" | "listening" | "thinking" | "responding";
 
@@ -202,11 +202,11 @@ export function HolographicChamber() {
           )}
         </div>
 
-        {/* ── Right: Robot character ── */}
+        {/* ── Right: Mascot character ── */}
         <div className="order-1 lg:order-2 flex justify-center">
-          <RobotCharacter
+          <ChamberBotMascot
             state={sceneState}
-            className="w-56 sm:w-64 lg:w-80"
+            className="w-48 sm:w-56 lg:w-72"
           />
         </div>
       </div>

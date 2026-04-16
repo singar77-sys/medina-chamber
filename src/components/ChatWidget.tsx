@@ -156,11 +156,11 @@ export function ChatWidget() {
             bg-oxford border-b border-border-secondary
           ">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 shrink-0 rounded-full bg-white/90 overflow-hidden shadow-sm">
+              <div className="w-10 h-10 shrink-0 rounded-full bg-white/90 overflow-hidden shadow-sm flex items-center justify-center">
                 <img
                   src="/images/chamberbot-head.svg"
                   alt=""
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
               </div>
               <div>
@@ -308,7 +308,7 @@ export function ChatWidget() {
           <img
             src="/images/chamberbot-head.svg"
             alt="Open ChamberBot"
-            className="w-11 h-11 object-cover rounded-full"
+            className="w-11 h-11 object-contain"
           />
         )}
       </button>

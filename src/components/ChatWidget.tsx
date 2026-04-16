@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-/* eslint-disable @next/next/no-img-element */
+import { AnimatedMascotHead } from "@/components/holographic/AnimatedMascotHead";
 
 /** Lightweight markdown → HTML for assistant messages.
  *  Handles: **bold**, [text](url), bare https:// URLs, newlines.
@@ -157,10 +157,10 @@ export function ChatWidget() {
           ">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 shrink-0 rounded-full bg-white/90 overflow-hidden shadow-sm">
-                <img
-                  src="/images/chamberbot-head.svg"
-                  alt=""
-                  className="w-full h-full object-cover"
+                <AnimatedMascotHead
+                  speaking={isLoading}
+                  className="w-full h-full"
+                  ariaLabel=""
                 />
               </div>
               <div>
@@ -305,11 +305,12 @@ export function ChatWidget() {
             <path d="M18 6L6 18M6 6l12 12"/>
           </svg>
         ) : (
-          <img
-            src="/images/chamberbot-head.svg"
-            alt="Open ChamberBot"
-            className="w-11 h-11 rounded-full object-cover"
-          />
+          <div className="w-11 h-11 rounded-full overflow-hidden">
+            <AnimatedMascotHead
+              className="w-full h-full"
+              ariaLabel="Open ChamberBot"
+            />
+          </div>
         )}
       </button>
     </>

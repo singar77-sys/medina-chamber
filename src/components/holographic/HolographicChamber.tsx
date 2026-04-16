@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback } from "react";
 import { ChamberBotMascot } from "./ChamberBotMascot";
+import { renderMarkdown } from "@/lib/markdown";
 
 type SceneState = "idle" | "listening" | "thinking" | "responding";
 
@@ -178,9 +179,10 @@ export function HolographicChamber() {
                 </p>
               )}
               {answer ? (
-                <p className="text-body-sm text-text-primary leading-relaxed whitespace-pre-wrap">
-                  {answer}
-                </p>
+                <p
+                  className="text-body-sm text-text-primary leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: renderMarkdown(answer) }}
+                />
               ) : (
                 <span className="flex gap-1 items-center py-1">
                   <span className="w-1.5 h-1.5 bg-cambridge rounded-full animate-bounce [animation-delay:0ms]" />

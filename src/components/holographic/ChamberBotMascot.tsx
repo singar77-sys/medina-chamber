@@ -305,7 +305,10 @@ export function ChamberBotMascot({
 
         hideAll();
         const pick = mouths[next];
-        if (pick) pick.style.display = "";
+        // Must use "inline" (not "") — the Illustrator export gives the
+        // speaking frames class="st33" with display:none, so empty string
+        // removes the inline style but leaves the class rule winning.
+        if (pick) pick.style.display = "inline";
 
         nextTimer = setTimeout(step, 110 + Math.random() * 130); // 110-240ms
       };

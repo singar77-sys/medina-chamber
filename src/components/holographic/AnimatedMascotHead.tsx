@@ -149,7 +149,9 @@ export function AnimatedMascotHead({
 
         hideAll();
         const pick = mouths[next];
-        if (pick) pick.style.display = "";
+        // Speaking frames have class="st33" (display:none) baked into the
+        // SVG export — must use "inline" to beat the class rule.
+        if (pick) pick.style.display = "inline";
 
         nextTimer = setTimeout(step, 110 + Math.random() * 130);
       };

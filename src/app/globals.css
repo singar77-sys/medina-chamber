@@ -518,6 +518,75 @@ body {
   }
 }
 
+/* --- ChamberBot Mascot (illustrated character) animations - */
+
+/* Antenna — gentle pulse at rest, wobble when thinking */
+.cbm-antenna {
+  transform-origin: 50% 100%;
+  transform-box: fill-box;
+  animation: cbm-antenna-pulse 3.2s ease-in-out infinite;
+}
+.cbm-mascot[data-state="thinking"] .cbm-antenna {
+  animation: cbm-antenna-wobble 1.3s ease-in-out infinite;
+}
+@keyframes cbm-antenna-pulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.04); }
+}
+@keyframes cbm-antenna-wobble {
+  0%, 100% { transform: rotate(0deg); }
+  25%      { transform: rotate(-6deg); }
+  75%      { transform: rotate(6deg); }
+}
+
+/* Face group (head shape, hair, eyes, mouth, glasses) — tilts together
+   so nothing floats when the head tilts. Shared origin is the neck. */
+.cbm-face {
+  transform-origin: 225px 345px;
+  transform-box: view-box;
+  transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cbm-mascot[data-state="thinking"] .cbm-face {
+  transform: rotate(3deg);
+}
+
+/* Eyebrows — raise when bot is listening or thinking. When thinking,
+   they also inherit the head tilt so they stay aligned with the face. */
+.cbm-eyebrows {
+  transform-origin: 225px 345px;
+  transform-box: view-box;
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cbm-mascot[data-state="listening"] .cbm-eyebrows {
+  transform: translateY(-5px);
+}
+.cbm-mascot[data-state="thinking"] .cbm-eyebrows {
+  transform: rotate(3deg) translateY(-5px);
+}
+
+/* Body — slow idle breathe (scaleY from the neck/top) */
+.cbm-body {
+  transform-origin: 50% 0%;
+  transform-box: fill-box;
+  animation: cbm-body-breathe 4.2s ease-in-out infinite;
+}
+@keyframes cbm-body-breathe {
+  0%, 100% { transform: scaleY(1); }
+  50%      { transform: scaleY(1.014); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cbm-antenna,
+  .cbm-body {
+    animation: none;
+  }
+  .cbm-face,
+  .cbm-eyebrows {
+    transition: none;
+    transform: none !important;
+  }
+}
+
 /* --- Robot Character animations --------------------------- */
 
 @keyframes robot-float {

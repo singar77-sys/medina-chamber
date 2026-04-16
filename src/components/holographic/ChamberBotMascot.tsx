@@ -55,6 +55,33 @@ export function ChamberBotMascot({
           svgEl.style.display = "block";
         }
 
+        // Tag the named Illustrator groups with our CSS hooks so the
+        // state-driven animations in globals.css can target them.
+        const tag = (selector: string, cls: string) => {
+          const node = svgEl?.querySelector<SVGGElement>(selector);
+          if (node) node.classList.add(cls);
+        };
+        // Antenna — pulses at rest, wobbles when thinking
+        tag('[id*="Antenna"]', "cbm-antenna");
+        // Body — slow idle breathe
+        tag('[id*="Body"]', "cbm-body");
+        // Face groups — tilt together when thinking so nothing floats
+        const faceSelectors = [
+          '[id*="Head"]',
+          '[id*="Hair_Foreground"]',
+          '[id*="Hair_Background"]',
+          '[id*="Glasses"]',
+          '[id*="Eyes_Open"]',
+          '[id*="Eyes_Closed"]',
+          '[id*="Mouth_Closed"]',
+          '[id*="Mouth_Speaking_1"]',
+          '[id*="Mouth_Speaking_2"]',
+          '[id*="Mouth_Speaking_3"]',
+        ];
+        faceSelectors.forEach((sel) => tag(sel, "cbm-face"));
+        // Eyebrows — face tilt PLUS raise-up on listening/thinking
+        tag('[id*="Eyebrows"]', "cbm-eyebrows");
+
         setLoaded(true);
       })
       .catch(() => {});
@@ -151,7 +178,8 @@ export function ChamberBotMascot({
   return (
     <div
       ref={containerRef}
-      className={`robot-float robot-fly-in ${className}`}
+      data-state={state}
+      className={`cbm-mascot robot-float robot-fly-in ${className}`}
       aria-label="ChamberBot — friendly AI assistant"
       role="img"
     />

@@ -81,6 +81,12 @@ export function ChamberBotMascot({
         faceSelectors.forEach((sel) => tag(sel, "cbm-face"));
         // Eyebrows — face tilt PLUS raise-up on listening/thinking
         tag('[id*="Eyebrows"]', "cbm-eyebrows");
+        // Right arm (viewer's right) — one-shot wave on load
+        tag('[id*="Forearms_Right"]', "cbm-arm-right");
+        tag('[id*="Hand_Right"]', "cbm-arm-right");
+        // Left arm (viewer's left) — flourish when response ends
+        tag('[id*="Forearm_Left"]', "cbm-arm-left");
+        tag('[id*="Hand_Left"]', "cbm-arm-left");
 
         setLoaded(true);
       })
@@ -127,6 +133,93 @@ export function ChamberBotMascot({
 
     raf = setTimeout(blink, 2000 + Math.random() * 2000);
     return () => clearTimeout(raf);
+  }, [loaded]);
+
+  // ── Wave once on mount, after a beat so users see the idle pose ─
+  useEffect(() => {
+    if (!loaded) return;
+    const el = containerRef.current;
+    if (!el) return;
+
+    const start = setTimeout(() => {
+      el.classList.add("cbm-waving");
+      // Remove class after animation so the arm rests back at 0°
+      setTimeout(() => el.classList.remove("cbm-waving"), 2900);
+    }, 1200);
+
+    return () => clearTimeout(start);
+  }, [loaded]);
+
+  // ── Flourish left hand when bot finishes responding ────────────
+  const prevStateRef = useRef<SceneState>(state);
+  useEffect(() => {
+    if (!loaded) return;
+    const el = containerRef.current;
+    if (!el) return;
+
+    if (
+      prevStateRef.current === "responding" &&
+      state !== "responding"
+    ) {
+      el.classList.add("cbm-flourish");
+      setTimeout(() => el.classList.remove("cbm-flourish"), 1000);
+    }
+    prevStateRef.current = state;
+  }, [state, loaded]);
+
+  // ── Eye tracking — pupils follow the cursor ────────────────────
+  useEffect(() => {
+    if (!loaded) return;
+    const el = containerRef.current;
+    if (!el) return;
+    const svg = el.querySelector("svg");
+    if (!svg) return;
+
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    // The eye inner groups sit inside the clippath wrappers (st21 / st36).
+    // Translating them moves the iris + pupil together within the eye socket.
+    const leftInner = svg.querySelector<SVGGElement>("g.st21 > g");
+    const rightInner = svg.querySelector<SVGGElement>("g.st36 > g");
+    if (!leftInner || !rightInner) return;
+
+    let raf = 0;
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    const MAX_OFFSET = 3.5; // viewBox units
+
+    const onMove = (e: MouseEvent) => {
+      const rect = svg.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      // Bias toward where the eyes actually sit (~35% from top)
+      const cy = rect.top + rect.height * 0.35;
+      const dx = (e.clientX - cx) / (rect.width / 2);
+      const dy = (e.clientY - cy) / (rect.height / 2);
+      targetX = Math.max(-1, Math.min(1, dx)) * MAX_OFFSET;
+      targetY = Math.max(-1, Math.min(1, dy)) * MAX_OFFSET * 0.7;
+    };
+
+    const animate = () => {
+      currentX += (targetX - currentX) * 0.15;
+      currentY += (targetY - currentY) * 0.15;
+      const t = `translate(${currentX.toFixed(2)}px, ${currentY.toFixed(2)}px)`;
+      leftInner.style.transform = t;
+      rightInner.style.transform = t;
+      raf = requestAnimationFrame(animate);
+    };
+
+    window.addEventListener("mousemove", onMove);
+    animate();
+
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      cancelAnimationFrame(raf);
+    };
   }, [loaded]);
 
   // ── Mouth state (idle vs responding) ───────────────────────────

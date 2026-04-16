@@ -5,6 +5,7 @@ import { totalCount } from "@/data/members";
 import { FadeIn } from "@/components/FadeIn";
 import { CountUp } from "@/components/CountUp";
 import { HolographicChamber } from "@/components/holographic/HolographicChamber";
+import { MouseGradient } from "@/components/MouseGradient";
 
 export const metadata: Metadata = {
   title: "Greater Medina Chamber of Commerce — Medina County, Ohio",
@@ -222,7 +223,7 @@ export default function HomePage() {
       </section>
 
       {/* ─── Stats Strip ──────────────────────────────────── */}
-      <section className="bg-bg-secondary border-y border-border-secondary">
+      <MouseGradient className="bg-bg-secondary border-y border-border-secondary overflow-hidden">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 py-14">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
@@ -246,7 +247,7 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </MouseGradient>
 
       {/* ─── Holographic Chamber (AI Section) ──────────────── */}
       <section className="bg-bg-secondary border-t border-border-secondary">

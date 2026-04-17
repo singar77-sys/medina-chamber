@@ -372,6 +372,14 @@ export function CommandPalette() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  // External trigger — any component can dispatch `cmdk:open` to
+  // summon the palette (used by the header launcher button).
+  useEffect(() => {
+    const handler = () => setOpen(true);
+    window.addEventListener("cmdk:open", handler);
+    return () => window.removeEventListener("cmdk:open", handler);
+  }, []);
+
   // Focus input on open, reset state on close
   useEffect(() => {
     if (open) {
@@ -458,17 +466,6 @@ export function CommandPalette() {
 
   return (
     <>
-      {/* Launcher hint — fixed corner, faint, keyboard-only users notice it */}
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        aria-label="Open command palette"
-        className="cmdk-trigger"
-      >
-        <span className="cmdk-trigger__label">Search · Navigate</span>
-        <kbd className="cmdk-kbd">⌘K</kbd>
-      </button>
-
       {open && (
         <div
           className="cmdk-backdrop"

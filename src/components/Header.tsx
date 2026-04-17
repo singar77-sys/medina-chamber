@@ -6,6 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { navigation, ctaLink, memberLogin, type NavItem } from "@/lib/navigation";
 import { ThemeToggle } from "./ThemeToggle";
+import { CommandPaletteTrigger } from "./CommandPaletteTrigger";
 import { useTheme } from "./ThemeProvider";
 
 /* ─── Scroll Lock Hook ───────────────────────────────────── */
@@ -536,8 +537,9 @@ export function Header() {
               ))}
             </nav>
 
-            {/* Right side: Theme + CTA + Mobile */}
+            {/* Right side: Search + Theme + CTA + Mobile */}
             <div className="flex items-center gap-2">
+              <CommandPaletteTrigger />
               <ThemeToggle />
 
               {/* Desktop Member Login */}

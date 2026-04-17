@@ -1,8 +1,138 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { usePathname } from "next/navigation";
 import { AnimatedMascotHead } from "@/components/holographic/AnimatedMascotHead";
 import { renderMarkdown } from "@/lib/markdown";
+
+/**
+ * Page-context → quick-prompts mapping. Jackie reads the current
+ * pathname on mount and offers the most-useful 4 questions for that
+ * surface instead of the generic set.
+ */
+interface PageContext {
+  greeting: string;
+  subtitle: string;
+  prompts: string[];
+}
+
+function contextForPath(pathname: string): PageContext {
+  // Directory — member search
+  if (pathname.startsWith("/membership/directory")) {
+    return {
+      greeting: "Looking for something specific?",
+      subtitle:
+        "I can shortcut the directory — tell me a trade, a neighborhood, or a name.",
+      prompts: [
+        "Find a local plumber",
+        "Who does commercial printing?",
+        "Restaurants in Medina",
+        "Show me landscapers",
+      ],
+    };
+  }
+
+  // Events — list or detail
+  if (pathname.startsWith("/events")) {
+    return {
+      greeting: "Planning ahead?",
+      subtitle: "I can help you find the right event or explain what's involved.",
+      prompts: [
+        "What's the next networking event?",
+        "Tell me about the Golf Outing",
+        "How do I sponsor an event?",
+        "Are events members-only?",
+      ],
+    };
+  }
+
+  // Safety Council — savings estimator vibe
+  if (pathname.startsWith("/programs/safety-council")) {
+    return {
+      greeting: "Thinking about workers' comp savings?",
+      subtitle: "I can explain how the rebate works and what membership requires.",
+      prompts: [
+        "How much could my business save?",
+        "What's the BWC rebate?",
+        "How do I join Safety Council?",
+        "Meeting schedule?",
+      ],
+    };
+  }
+
+  // Compass
+  if (pathname.startsWith("/programs/compass")) {
+    return {
+      greeting: "Curious if Compass fits?",
+      subtitle: "I can explain the program and who it's built for.",
+      prompts: [
+        "What is Compass?",
+        "Who should apply?",
+        "When does the next cohort start?",
+        "What does Compass cost?",
+      ],
+    };
+  }
+
+  // Rental Space
+  if (pathname.startsWith("/programs/rental-space")) {
+    return {
+      greeting: "Need a room?",
+      subtitle: "I can walk you through the Vault and Main Room.",
+      prompts: [
+        "The Vault vs the Main Room?",
+        "What's included in a booking?",
+        "How do I book a room?",
+        "What's the cost?",
+      ],
+    };
+  }
+
+  // Join / Pricing / Benefits — active conversion paths
+  if (
+    pathname.startsWith("/membership/join") ||
+    pathname.startsWith("/membership/pricing") ||
+    pathname.startsWith("/membership/benefits")
+  ) {
+    return {
+      greeting: "Questions before you apply?",
+      subtitle: "I can explain the tiers and what fits your business.",
+      prompts: [
+        "What's included at each tier?",
+        "Who should I talk to first?",
+        "How long does membership take to pay off?",
+        "What are the savings programs?",
+      ],
+    };
+  }
+
+  // Advocacy
+  if (pathname.startsWith("/about/advocacy")) {
+    return {
+      greeting: "Want to plug in?",
+      subtitle: "I can explain the Chamber's advocacy work and how to get involved.",
+      prompts: [
+        "What policy priorities matter now?",
+        "Who do I meet with?",
+        "How do I attend a legislator meeting?",
+        "Tell me about candidate forums",
+      ],
+    };
+  }
+
+  // Default — homepage / everything else
+  return {
+    greeting: "Hi! I'm Jackie.",
+    subtitle:
+      "Ask me about member businesses, events, membership, or anything about the chamber.",
+    prompts: [
+      "Find a local dentist",
+      "How do I join?",
+      "Upcoming events",
+      "What is Visibility Plus?",
+    ],
+  };
+}
 
 interface Message {
   id: string;
@@ -82,8 +212,12 @@ export function ChatWidget() {
   const [open, setOpen] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const pathname = usePathname();
 
   const { messages, input, setInput, isLoading, error, sendMessage } = useStreamChat();
+
+  // Context-aware greeting + quick prompts based on current route
+  const ctx = useMemo(() => contextForPath(pathname || "/"), [pathname]);
 
   // Scroll to bottom on new messages
   useEffect(() => {
@@ -94,6 +228,22 @@ export function ChatWidget() {
   useEffect(() => {
     if (open) setTimeout(() => inputRef.current?.focus(), 50);
   }, [open]);
+
+  // Listen for `jackie:open` events from the Command Palette fallback.
+  // Payload: { query: string } — we open and auto-send the question.
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const ce = e as CustomEvent<{ query?: string }>;
+      setOpen(true);
+      const q = ce.detail?.query?.trim();
+      if (q) {
+        // Small delay so the panel mounts before firing the message
+        setTimeout(() => sendMessage(q), 80);
+      }
+    };
+    window.addEventListener("jackie:open", handler);
+    return () => window.removeEventListener("jackie:open", handler);
+  }, [sendMessage]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -154,18 +304,13 @@ export function ChatWidget() {
             {!hasMessages && (
               <div className="text-center py-6">
                 <p className="text-body-sm font-bold text-text-primary">
-                  Hi! I&apos;m Jackie.
+                  {ctx.greeting}
                 </p>
                 <p className="text-caption text-text-tertiary mt-1 max-w-xs mx-auto">
-                  Ask me about member businesses, events, membership, or anything about the chamber.
+                  {ctx.subtitle}
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2 justify-center">
-                  {[
-                    "Find a local dentist",
-                    "How do I join?",
-                    "Upcoming events",
-                    "What is Visibility Plus?",
-                  ].map((prompt) => (
+                  {ctx.prompts.map((prompt) => (
                     <button
                       key={prompt}
                       onClick={() => handleQuickPrompt(prompt)}

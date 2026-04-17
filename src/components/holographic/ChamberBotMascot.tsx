@@ -167,19 +167,48 @@ export function ChamberBotMascot({
     };
   }, [loaded]);
 
-  // ── Wave once on mount, after a beat so users see the idle pose ─
+  // ── Wave once when Jackie scrolls into view ───────────────────
+  // Fires on first real viewport intersection — not on mount —
+  // so users landing at the top of the page don't miss the gesture
+  // while Jackie is still below the fold.
   useEffect(() => {
     if (!loaded) return;
     const el = containerRef.current;
     if (!el) return;
 
-    const start = setTimeout(() => {
-      el.classList.add("cbm-waving");
-      // Remove class after animation so the arm rests back at 0°
-      setTimeout(() => el.classList.remove("cbm-waving"), 2900);
-    }, 1200);
+    let waved = false;
+    let removeTimer: ReturnType<typeof setTimeout> | null = null;
+    let startTimer: ReturnType<typeof setTimeout> | null = null;
 
-    return () => clearTimeout(start);
+    const wave = () => {
+      if (waved) return;
+      waved = true;
+      // Small beat so users register the idle pose first
+      startTimer = setTimeout(() => {
+        el.classList.add("cbm-waving");
+        removeTimer = setTimeout(
+          () => el.classList.remove("cbm-waving"),
+          2900,
+        );
+      }, 600);
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          wave();
+          observer.unobserve(el);
+        }
+      },
+      { threshold: 0.35 },
+    );
+    observer.observe(el);
+
+    return () => {
+      observer.disconnect();
+      if (startTimer) clearTimeout(startTimer);
+      if (removeTimer) clearTimeout(removeTimer);
+    };
   }, [loaded]);
 
   // ── Flourish left hand when bot finishes responding ────────────

@@ -8,6 +8,10 @@ import { CountUp } from "@/components/CountUp";
 import { HolographicChamber } from "@/components/holographic/HolographicChamber";
 import { MouseGradient } from "@/components/MouseGradient";
 import { NetworkBackdrop } from "@/components/holographic/NetworkBackdrop";
+import { ThreePillars } from "@/components/ThreePillars";
+import { PartnersMarquee } from "@/components/PartnersMarquee";
+import { RentalSpaceCards } from "@/components/RentalSpaceCards";
+import { MemberVoice } from "@/components/MemberVoice";
 
 export const metadata: Metadata = {
   title: "Greater Medina Chamber of Commerce — Medina County, Ohio",
@@ -20,41 +24,6 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: "/" },
 };
-
-const partners = [
-  {
-    name: "Medina County Safety Council",
-    logo: "/images/partners/medina-county-safety-council.png",
-    href: "/programs/safety-council",
-  },
-  {
-    name: "Medina County Young Professionals Association",
-    logo: "/images/partners/medina-county-young-professionals-association.jpg",
-    href: "https://www.facebook.com/MedinaCountyYPA/",
-    external: true,
-  },
-  {
-    name: "Community Energy Advisors",
-    logo: "/images/partners/community-energy-advisors.jpg",
-    href: "/membership/savings",
-  },
-  {
-    name: "Anthem Insurance",
-    logo: "/images/partners/anthem-insurance.jpg",
-    href: "/membership/savings",
-  },
-  {
-    name: "Hunter Consulting",
-    logo: "/images/partners/hunter-consulting.png",
-    href: "/membership/savings",
-  },
-  {
-    name: "Medina City Schools",
-    logo: "/images/partners/medina-city-schools.png",
-    href: "https://www.medinabees.org",
-    external: true,
-  },
-];
 
 const organizationJsonLd = {
   "@context": "https://schema.org",
@@ -151,7 +120,7 @@ export default function HomePage() {
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-24 pt-40 w-full">
           <div className="max-w-3xl">
             <p className="text-overline text-cambridge mb-4 tracking-widest">
-              Medina County, Ohio · Est. 1938
+              Greater Medina Chamber of Commerce
             </p>
             <h1 className="text-display text-white">
               Medina Means
@@ -252,6 +221,55 @@ export default function HomePage() {
             </div>
           </FadeIn>
 
+          {/* JSON-LD Event schema — Google rich results per event */}
+          {upcomingEvents.map((event) => (
+            <script
+              key={`ld-${event.slug}`}
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "Event",
+                  name: event.title,
+                  startDate: event.dateISO,
+                  eventStatus: "https://schema.org/EventScheduled",
+                  eventAttendanceMode:
+                    "https://schema.org/OfflineEventAttendanceMode",
+                  location: {
+                    "@type": "Place",
+                    name: event.location || "Greater Medina Chamber of Commerce",
+                    address: {
+                      "@type": "PostalAddress",
+                      streetAddress:
+                        event.street || "139 N. Court Street, Suite A",
+                      addressLocality: event.city || "Medina",
+                      addressRegion: event.state || "OH",
+                      postalCode: event.zip || "44256",
+                      addressCountry: "US",
+                    },
+                  },
+                  image: event.image
+                    ? [`https://medinachamber.com${event.image}`]
+                    : undefined,
+                  url: `https://medinachamber.com/events/${event.slug}`,
+                  organizer: {
+                    "@type": "Organization",
+                    name: "Greater Medina Chamber of Commerce",
+                    url: "https://medinachamber.com",
+                  },
+                  offers: event.registerUrl
+                    ? {
+                        "@type": "Offer",
+                        url: event.registerUrl,
+                        availability: "https://schema.org/InStock",
+                        validFrom: new Date().toISOString(),
+                      }
+                    : undefined,
+                }),
+              }}
+            />
+          ))}
+
           <div className="grid md:grid-cols-3 gap-4">
             {upcomingEvents.map((event, i) => (
               <FadeIn key={event.slug} delay={i * 100}>
@@ -325,8 +343,23 @@ export default function HomePage() {
       )}
 
       {/* ─── Rental Space Showcase ────────────────────────── */}
-      <section className="bg-bg-secondary border-y border-border-secondary py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <section className="relative bg-bg-secondary border-y border-border-secondary py-20 lg:py-28 overflow-hidden">
+        {/* Ghosted meeting-room photo backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/netowrking.png"
+            alt=""
+            fill
+            className="object-cover opacity-[0.05]"
+            sizes="100vw"
+            quality={60}
+          />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
             <div className="grid lg:grid-cols-[1fr_1.3fr] gap-10 lg:gap-14 items-start">
               <div>
@@ -368,156 +401,20 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div className="p-6 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]">
-                  <p className="text-caption text-cambridge font-bold uppercase tracking-wider">
-                    The Vault
-                  </p>
-                  <p className="text-display text-oxford [[data-theme=dark]_&]:text-cambridge leading-none mt-2">
-                    16
-                  </p>
-                  <p className="text-caption text-text-tertiary uppercase tracking-wider mt-1">
-                    Seats
-                  </p>
-                  <p className="text-body-sm text-text-secondary mt-4 leading-relaxed">
-                    Private conference room with the chamber&apos;s distinctive
-                    vault door. Board meetings, client presentations, strategy
-                    sessions.
-                  </p>
-                </div>
-                <div className="p-6 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]">
-                  <p className="text-caption text-cambridge font-bold uppercase tracking-wider">
-                    Main Room
-                  </p>
-                  <p className="text-display text-oxford [[data-theme=dark]_&]:text-cambridge leading-none mt-2">
-                    50
-                  </p>
-                  <p className="text-caption text-text-tertiary uppercase tracking-wider mt-1">
-                    Seats
-                  </p>
-                  <p className="text-body-sm text-text-secondary mt-4 leading-relaxed">
-                    Flexible training and seminar space. Configurable tables,
-                    presentation-ready AV, works for workshops through
-                    all-hands meetings.
-                  </p>
-                </div>
-              </div>
+              <RentalSpaceCards />
             </div>
           </FadeIn>
         </div>
       </section>
 
       {/* ─── Three Pillars (Your Voice / Network / Growth) ── */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
-        <FadeIn>
-          <div className="max-w-2xl mb-14">
-            <p className="text-overline text-cambridge mb-3">Why Members Join</p>
-            <h2 className="text-h2">Three things the Chamber does for you.</h2>
-          </div>
-        </FadeIn>
+      <ThreePillars />
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {[
-            {
-              label: "Your Voice in Policy",
-              title: "Advocacy that moves the needle.",
-              desc: "Monthly legislator meetings, candidate forums, voter education, and direct engagement with decision-makers at city, county, and state levels.",
-              href: "/about/advocacy",
-              cta: "See Advocacy →",
-            },
-            {
-              label: "Your Network",
-              title: "Connections that open doors.",
-              desc: "Networking events, leadership awards, the Safety Council, the Annual Golf Outing, plus 511+ member businesses in a searchable directory.",
-              href: "/events",
-              cta: "Browse Events →",
-            },
-            {
-              label: "Your Growth",
-              title: "Resources that drive results.",
-              desc: "Compass leadership program, educational workshops, member-only event pricing, savings on health insurance and workers' comp, and visibility across Chamber channels.",
-              href: "/membership/benefits",
-              cta: "See Benefits →",
-            },
-          ].map((pillar, i) => (
-            <FadeIn key={pillar.label} delay={i * 100}>
-              <div
-                className="
-                  flex flex-col h-full p-8
-                  bg-bg-secondary border border-border-secondary
-                  rounded-[var(--radius-lg)]
-                  hover:border-cambridge/40 transition-colors
-                "
-              >
-                <p className="text-caption text-cambridge font-bold uppercase tracking-wider">
-                  {pillar.label}
-                </p>
-                <h3 className="text-h3 mt-2 mb-3">{pillar.title}</h3>
-                <p className="text-body-sm text-text-secondary leading-relaxed flex-1">
-                  {pillar.desc}
-                </p>
-                <Link
-                  href={pillar.href}
-                  className="mt-5 text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors inline-block"
-                >
-                  {pillar.cta}
-                </Link>
-              </div>
-            </FadeIn>
-          ))}
-        </div>
-      </section>
+      {/* ─── Member Voice ──────────────────────────────────── */}
+      <MemberVoice />
 
       {/* ─── Partners & Sponsors ──────────────────────────── */}
-      <section className="bg-bg-secondary border-y border-border-secondary py-16 lg:py-20">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <FadeIn>
-            <p className="text-caption text-text-tertiary uppercase tracking-widest text-center mb-10 font-bold">
-              Partners &amp; Sponsors
-            </p>
-          </FadeIn>
-          <FadeIn delay={150}>
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-4 lg:gap-6">
-              {partners.map((p) => {
-                const inner = (
-                  <div
-                    className="
-                      flex items-center justify-center
-                      bg-bg-primary border border-border-secondary
-                      rounded-[var(--radius-md)]
-                      p-4 aspect-square
-                      hover:border-border-primary transition-colors
-                    "
-                  >
-                    <Image
-                      src={p.logo}
-                      alt={`${p.name} logo — Medina Chamber partner`}
-                      width={120}
-                      height={120}
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                );
-                return p.external ? (
-                  <a
-                    key={p.name}
-                    href={p.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title={p.name}
-                  >
-                    {inner}
-                  </a>
-                ) : (
-                  <Link key={p.name} href={p.href} title={p.name}>
-                    {inner}
-                  </Link>
-                );
-              })}
-            </div>
-          </FadeIn>
-        </div>
-      </section>
+      <PartnersMarquee />
 
       {/* ─── Join CTA ─────────────────────────────────────── */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">

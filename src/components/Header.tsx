@@ -7,7 +7,6 @@ import { usePathname } from "next/navigation";
 import { navigation, ctaLink, memberLogin, type NavItem } from "@/lib/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 import { useTheme } from "./ThemeProvider";
-import { SearchOverlay } from "./SearchOverlay";
 
 /* ─── Scroll Lock Hook ───────────────────────────────────── */
 
@@ -239,12 +238,10 @@ function Dropdown({
 function MobileMenu({
   isOpen,
   onClose,
-  onSearch,
   pathname,
 }: {
   isOpen: boolean;
   onClose: () => void;
-  onSearch: () => void;
   pathname: string;
 }) {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
@@ -325,34 +322,6 @@ function MobileMenu({
           >
             {memberLogin.label}
           </a>
-        </div>
-
-        {/* Mobile search trigger */}
-        <div className="px-6 pt-3 pb-2">
-          <button
-            onClick={() => {
-              onClose();
-              setTimeout(onSearch, 250);
-            }}
-            className="
-              w-full flex items-center gap-3 px-4 py-3
-              bg-bg-secondary border border-border-secondary
-              rounded-[var(--radius-md)]
-              text-body-sm text-text-tertiary
-              cursor-pointer
-            "
-          >
-            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" className="flex-shrink-0">
-              <path
-                d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16ZM19 19l-4.35-4.35"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            Search pages...
-          </button>
         </div>
 
         <div className="p-6 space-y-1">
@@ -474,10 +443,9 @@ export function Header() {
   const pathname = usePathname();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
 
-  // Lock body scroll when mobile menu or search is open
-  useScrollLock(mobileOpen || searchOpen);
+  // Lock body scroll when mobile menu is open
+  useScrollLock(mobileOpen);
 
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -507,16 +475,11 @@ export function Header() {
     setOpenDropdown(null);
   }, []);
 
-  // Keyboard shortcuts
+  // Esc closes any open dropdown (Cmd/Ctrl+K is handled by CommandPalette)
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape" && openDropdown) {
         setOpenDropdown(null);
-      }
-      // Cmd/Ctrl+K to open search
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        setSearchOpen((prev) => !prev);
       }
     }
     document.addEventListener("keydown", handleKeyDown);
@@ -573,36 +536,8 @@ export function Header() {
               ))}
             </nav>
 
-            {/* Right side: Search + Theme + CTA + Mobile */}
+            {/* Right side: Theme + CTA + Mobile */}
             <div className="flex items-center gap-2">
-              {/* Search button */}
-              <button
-                onClick={() => setSearchOpen(true)}
-                className="
-                  w-10 h-10 flex items-center justify-center
-                  rounded-full
-                  hover:bg-bg-tertiary
-                  transition-colors cursor-pointer
-                "
-                aria-label="Search"
-              >
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  className="text-text-secondary"
-                >
-                  <path
-                    d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16ZM19 19l-4.35-4.35"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-
               <ThemeToggle />
 
               {/* Desktop Member Login */}
@@ -658,13 +593,7 @@ export function Header() {
       <MobileMenu
         isOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}
-        onSearch={() => setSearchOpen(true)}
         pathname={pathname}
-      />
-
-      <SearchOverlay
-        isOpen={searchOpen}
-        onClose={() => setSearchOpen(false)}
       />
     </>
   );

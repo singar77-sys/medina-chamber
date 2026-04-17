@@ -81,12 +81,20 @@ const COMMANDS: Command[] = [
 
   // Membership
   {
-    id: "directory",
+    id: "directory-all",
     label: "Member Directory",
     group: "Membership",
+    href: "/membership/directory/all",
+    keywords: ["find", "search", "business", "company", "members", "all"],
+    hint: "Search all 511+ businesses",
+  },
+  {
+    id: "directory-featured",
+    label: "Featured Members",
+    group: "Membership",
     href: "/membership/directory",
-    keywords: ["find", "search", "business", "company", "members"],
-    hint: "Search 511+ member businesses",
+    keywords: ["visibility plus", "premium", "featured", "showcase"],
+    hint: "32 Visibility Plus businesses",
   },
   {
     id: "join",

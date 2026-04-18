@@ -7,6 +7,36 @@
 import { members, type Member } from "@/data/members";
 import { getWebData, formatEnrichedMember } from "@/lib/website-search";
 
+// Common English words that have no value as search terms. Lowercase.
+// Conservative list — only words that would create noise, not anything
+// that might be part of a real business name or category.
+const STOPWORDS = new Set([
+  "a","an","the","is","are","was","were","be","been","being",
+  "of","to","in","on","at","by","for","with","from","into","onto","over","under",
+  "and","or","but","not","no","yes","so","if","then","than","that","this","these","those",
+  "it","its","i","we","us","you","your","my","mine","our","ours","they","them","their",
+  "he","she","him","her","his","hers",
+  "what","when","where","why","how","who","which",
+  "do","does","did","done","have","has","had","having",
+  "can","could","should","would","may","might","must","will","shall",
+  "all","any","some","more","most","much","many","each","every",
+  "out","up","down","off","about","just","only","also","too","very",
+  "tell","find","show","need","want","like","get","give","know","help",
+  "me","please","thanks","thank",
+]);
+
+// For very short terms (likely acronyms or brand names like "3m", "ge",
+// "bp", "cms"), require word-boundary match — otherwise "ge" would
+// false-positive on "agency" or "manage". Longer terms use plain
+// substring match because they're descriptive enough to not need it.
+function termMatches(haystack: string, term: string): boolean {
+  if (term.length <= 3) {
+    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return new RegExp(`\\b${escaped}\\b`).test(haystack);
+  }
+  return haystack.includes(term);
+}
+
 function scoreMatch(member: Member, terms: string[]): number {
   let score = 0;
   const name = member.name.toLowerCase();
@@ -24,11 +54,11 @@ function scoreMatch(member: Member, terms: string[]): number {
   ].join(" ").toLowerCase();
 
   for (const term of terms) {
-    if (name.includes(term)) score += 10;
-    if (cats.includes(term)) score += 6;
-    if (webText.includes(term)) score += 4; // website content is high signal
-    if (desc.includes(term)) score += 3;
-    if (addr.includes(term)) score += 2;
+    if (termMatches(name, term)) score += 10;
+    if (termMatches(cats, term)) score += 6;
+    if (termMatches(webText, term)) score += 4; // website content is high signal
+    if (termMatches(desc, term)) score += 3;
+    if (termMatches(addr, term)) score += 2;
   }
 
   // Boost premium members slightly so they surface when relevant
@@ -46,7 +76,7 @@ export function searchMembersForContext(query: string, limit = 8): Member[] {
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, " ")
     .split(/\s+/)
-    .filter((t) => t.length > 2);
+    .filter((t) => t.length >= 2 && !STOPWORDS.has(t));
 
   if (terms.length === 0) return [];
 

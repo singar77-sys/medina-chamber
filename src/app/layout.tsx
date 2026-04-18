@@ -4,6 +4,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
 import { CommandPalette } from "@/components/CommandPalette";
+import { KeywordHotkey } from "@/components/KeywordHotkey";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -72,6 +73,7 @@ export default function RootLayout({
           <Footer />
           <ChatWidget />
           <CommandPalette />
+          <KeywordHotkey />
         </ThemeProvider>
       </body>
     </html>

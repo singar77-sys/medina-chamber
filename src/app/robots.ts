@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/api/", "/design"],
+      disallow: ["/api/", "/design", "/icebreaker"],
     },
     sitemap: "https://medinachamber.com/sitemap.xml",
   };

@@ -50,6 +50,11 @@ const FOLDERS = [
   { dir: "images/programs/compass",        maxLong: 1600, q: 78 },
   { dir: "images/programs/safety-council", maxLong: 1600, q: 78 },
   { dir: "images/membership",              maxLong: 1600, q: 78 },
+  // Named hero photos used across the site (homepage, About, Programs):
+  // higher max edge + slightly higher quality because they're often
+  // the LCP element on their pages.
+  { dir: "images/photos",                  maxLong: 2000, q: 80 },
+  { dir: "images/about/advocacy",          maxLong: 1600, q: 78 },
 ];
 
 const human = (n) => {

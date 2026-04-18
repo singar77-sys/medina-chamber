@@ -66,7 +66,7 @@ function EventCard({ event }: { event: ReturnType<typeof getUpcomingEvents>[numb
         <div className="flex-shrink-0 w-16 h-16 rounded-[var(--radius-md)] overflow-hidden hidden sm:block">
           <Image
             src={event.image}
-            alt={event.title}
+            alt={`${event.title} — Greater Medina Chamber of Commerce event in Medina, Ohio`}
             width={64}
             height={64}
             className="object-cover w-full h-full"

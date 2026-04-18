@@ -50,7 +50,7 @@ export default function BlogListingPage() {
               <div className="relative h-60 lg:h-auto bg-oxford/10">
                 <Image
                   src={featured.image}
-                  alt={featured.title}
+                  alt={`${featured.title} — featured Greater Medina Chamber of Commerce blog post`}
                   fill
                   className="object-cover"
                   priority
@@ -96,7 +96,7 @@ export default function BlogListingPage() {
                   <div className="relative h-44 bg-oxford/10 shrink-0">
                     <Image
                       src={post.image}
-                      alt={post.title}
+                      alt={`${post.title} — Greater Medina Chamber of Commerce blog post`}
                       fill
                       className="object-cover"
                     />

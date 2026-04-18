@@ -66,7 +66,15 @@ export default async function EventPage(
       url: "https://medinachamber.com",
     },
     url: `https://medinachamber.com/events/${slug}`,
-    ...(event.image && { image: event.image }),
+    ...(event.image && {
+      image: {
+        "@type": "ImageObject",
+        url: event.image.startsWith("http")
+          ? event.image
+          : `https://medinachamber.com${event.image}`,
+        caption: `${event.title} — Greater Medina Chamber of Commerce event in Medina, Ohio`,
+      },
+    }),
     ...(event.pricing && {
       offers: {
         "@type": "Offer",
@@ -130,15 +138,18 @@ export default async function EventPage(
 
             {/* Image */}
             {event.image && (
-              <div className="mt-8 rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary">
+              <figure className="mt-8 rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary m-0">
                 <Image
                   src={event.image}
-                  alt={event.title}
+                  alt={`${event.title} — ${event.dayOfWeek}, ${event.month} ${event.day}, ${event.year} at the Greater Medina Chamber of Commerce in Medina, Ohio`}
                   width={720}
                   height={360}
                   className="object-contain w-full max-h-72 bg-bg-secondary"
                 />
-              </div>
+                <figcaption className="sr-only">
+                  {event.title} — Greater Medina Chamber of Commerce event on {event.dayOfWeek}, {event.month} {event.day}, {event.year} in Medina, Ohio
+                </figcaption>
+              </figure>
             )}
 
             {/* Location */}

@@ -274,7 +274,7 @@ export default function AboutPage() {
                 <div className="relative w-full aspect-[4/3]">
                   <Image
                     src={s.photo}
-                    alt={s.name}
+                    alt={`${s.name}, ${s.title} at the Greater Medina Chamber of Commerce in Medina, Ohio`}
                     fill
                     className="object-cover object-top"
                     sizes="(max-width: 640px) 100vw, 50vw"

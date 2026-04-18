@@ -170,9 +170,9 @@ export default function AmbassadorsPage() {
         </h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {ambassadors.map((a) => (
-            <div
+            <figure
               key={a.name}
-              className="overflow-hidden bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
+              className="overflow-hidden bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] m-0"
             >
               <div className="relative w-full aspect-[4/3]">
                 <Image
@@ -183,6 +183,9 @@ export default function AmbassadorsPage() {
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
               </div>
+              <figcaption className="sr-only">
+                {a.name}{a.title ? `, ${a.title}` : ""}{a.company ? ` at ${a.company}` : ""} — Greater Medina Chamber of Commerce Ambassador, Medina, Ohio
+              </figcaption>
               <div className="p-5">
                 <h3 className="text-body font-bold text-text-primary">{a.name}</h3>
                 <p className="text-body-sm text-text-secondary mt-0.5">{a.title}</p>
@@ -206,7 +209,7 @@ export default function AmbassadorsPage() {
                   )}
                 </div>
               </div>
-            </div>
+            </figure>
           ))}
         </div>
       </section>

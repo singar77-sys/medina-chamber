@@ -46,7 +46,7 @@ export function MemberCard({ member }: MemberCardProps) {
         {member.logoUrl ? (
           <Image
             src={member.logoUrl}
-            alt={`${member.name} logo`}
+            alt={`${member.name} logo — Greater Medina Chamber of Commerce member business`}
             fill
             className="object-contain p-4"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"

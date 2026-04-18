@@ -113,7 +113,7 @@ export default function NewsPage() {
               >
                 {post.image && (
                   <div className="relative h-40 bg-oxford/10 shrink-0">
-                    <Image src={post.image} alt={post.title} fill className="object-cover" />
+                    <Image src={post.image} alt={`${post.title} — Greater Medina Chamber of Commerce blog post`} fill className="object-cover" />
                   </div>
                 )}
                 <div className="p-5 flex flex-col flex-1">

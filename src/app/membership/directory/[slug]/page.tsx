@@ -125,7 +125,7 @@ export default async function MemberPage(
             {member.logoUrl ? (
               <Image
                 src={member.logoUrl}
-                alt={`${member.name} logo`}
+                alt={`${member.name} logo — Greater Medina Chamber of Commerce member business in Medina, Ohio`}
                 fill
                 className="object-contain p-3"
                 unoptimized

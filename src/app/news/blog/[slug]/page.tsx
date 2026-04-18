@@ -57,7 +57,15 @@ export default async function BlogPostPage(
       url: "https://medinachamber.com",
     },
     url: `https://medinachamber.com/news/blog/${slug}`,
-    ...(post.image && { image: post.image }),
+    ...(post.image && {
+      image: {
+        "@type": "ImageObject",
+        url: post.image.startsWith("http")
+          ? post.image
+          : `https://medinachamber.com${post.image}`,
+        caption: `${post.title} — Greater Medina Chamber of Commerce blog post`,
+      },
+    }),
   };
 
   const breadcrumbJsonLd = {
@@ -102,7 +110,7 @@ export default async function BlogPostPage(
               <div className="mt-8 rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary">
                 <Image
                   src={post.image}
-                  alt={post.title}
+                  alt={`${post.title} — Greater Medina Chamber of Commerce blog post`}
                   width={800}
                   height={450}
                   className="object-cover w-full max-h-96"

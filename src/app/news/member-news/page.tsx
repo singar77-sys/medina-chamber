@@ -56,7 +56,7 @@ export default function MemberNewsPage() {
                   <div className="relative h-44 bg-bg-secondary shrink-0">
                     <Image
                       src={article.thumbnail}
-                      alt={article.title}
+                      alt={`${article.title} — Greater Medina Chamber of Commerce member news`}
                       fill
                       className="object-contain p-4"
                     />

@@ -138,7 +138,7 @@ export default function HallOfFamePage() {
         </h2>
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 lg:gap-6">
           {inductees.map((inductee) => (
-            <div key={inductee.name} className="flex flex-col items-center gap-3">
+            <figure key={inductee.name} className="flex flex-col items-center gap-3 m-0">
               <div className="relative w-full aspect-square overflow-hidden rounded-[var(--radius-lg)] bg-bg-secondary border border-border-secondary">
                 <Image
                   src={inductee.photo}
@@ -151,7 +151,10 @@ export default function HallOfFamePage() {
               <p className="text-caption font-semibold text-text-primary text-center leading-snug">
                 {inductee.name}
               </p>
-            </div>
+              <figcaption className="sr-only">
+                {inductee.name} — Greater Medina Chamber of Commerce Hall of Fame inductee, Medina County, Ohio business leader
+              </figcaption>
+            </figure>
           ))}
         </div>
       </section>

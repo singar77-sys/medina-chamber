@@ -1,37 +1,85 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
+} from "react";
 
 type SceneState = "idle" | "listening" | "thinking" | "responding";
+type Mood = "alert" | "sleeping";
 
 interface ChamberBotMascotProps {
   state?: SceneState;
   className?: string;
 }
 
+interface Spark {
+  id: string;
+  x: number; // px inside wrapper
+  y: number;
+  dx: number; // delta px
+  dy: number;
+  hue: "cambridge" | "accent";
+}
+
+interface Sparkle {
+  id: string;
+  left: number; // percent inside wrapper
+  top: number;
+  driftX: number; // px drift
+  delay: number; // ms
+  size: number; // px
+}
+
+let pId = 0;
+const uid = () => `p${++pId}`;
+
+const IDLE_SLEEP_MS = 30_000;
+const AMBIENT_SPARKLE_MS = 2200;
+
 /**
- * Animated ChamberBot mascot — professional illustrated character.
+ * Animated ChamberBot mascot.
  *
- * Loads the full SVG from /images/chamberbot.svg client-side and
- * manipulates named Illustrator layer groups via DOM refs:
+ * Loads /images/chamberbot.svg client-side and manipulates named
+ * Illustrator groups (eyes, mouth, antenna, arms, body, face) via
+ * DOM refs + CSS hook classes. Wrapper owns animation overlays
+ * (shadow, ambient sparkles, click sparks, sleep Z's) as siblings of
+ * the SVG container so innerHTML injection doesn't wipe them.
  *
- *   Eyes:  toggles Eyes_Open / Eyes_Closed for blinking
- *   Mouth: cycles Mouth_Speaking 1→2→3 when responding, shows
- *          Mouth_Closed at rest
- *
- * Idle float animation is handled by a CSS class on the wrapper
- * (reuses the existing robot-float keyframe from globals.css).
+ * Behaviors:
+ *   - Eye pupils track the cursor window-wide
+ *   - Head tilts gently toward the cursor (idle) or to a fixed
+ *     position during thinking / sleeping
+ *   - Antenna pulses + wiggles continuously
+ *   - Mouth lip-syncs when state="responding"
+ *   - Blinks on randomized cadence with triple / double / single
+ *   - Waves once on first scroll-into-view, flourishes when a reply
+ *     finishes
+ *   - Click / Enter / Space → surprised jump + radial spark burst
+ *   - Idle >30s → sleeping (eyes closed, head droops, Z particles
+ *     drift up). Mouse move / keydown / touchstart wakes it up.
+ *   - Ambient cambridge sparkles drift near the antenna tip
+ *   - Floor shadow scales with the jump
  */
 export function ChamberBotMascot({
   state = "idle",
   className = "",
 }: ChamberBotMascotProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const svgContainerRef = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(false);
+  const [mood, setMood] = useState<Mood>("alert");
+  const [sparks, setSparks] = useState<Spark[]>([]);
+  const [sparkles, setSparkles] = useState<Sparkle[]>([]);
 
   // ── Load SVG once ──────────────────────────────────────────────
   useEffect(() => {
-    const el = containerRef.current;
+    const el = svgContainerRef.current;
     if (!el) return;
 
     let cancelled = false;
@@ -39,15 +87,9 @@ export function ChamberBotMascot({
       .then((r) => r.text())
       .then((svg) => {
         if (cancelled) return;
-        // Remove the dark background rect so character floats on
-        // the page's own background.
-        const cleaned = svg.replace(
-          /<g id="BG">[\s\S]*?<\/g>/,
-          "",
-        );
+        const cleaned = svg.replace(/<g id="BG">[\s\S]*?<\/g>/, "");
         el.innerHTML = cleaned;
 
-        // Make the SVG scale responsively
         const svgEl = el.querySelector("svg");
         if (svgEl) {
           svgEl.setAttribute("width", "100%");
@@ -55,17 +97,13 @@ export function ChamberBotMascot({
           svgEl.style.display = "block";
         }
 
-        // Tag the named Illustrator groups with our CSS hooks so the
-        // state-driven animations in globals.css can target them.
         const tag = (selector: string, cls: string) => {
           const node = svgEl?.querySelector<SVGGElement>(selector);
           if (node) node.classList.add(cls);
         };
-        // Antenna — pulses at rest, wobbles when thinking
+
         tag('[id*="Antenna"]', "cbm-antenna");
-        // Body — slow idle breathe
         tag('[id*="Body"]', "cbm-body");
-        // Face groups — tilt together when thinking so nothing floats
         const faceSelectors = [
           '[id*="Head"]',
           '[id*="Hair_Foreground"]',
@@ -79,12 +117,9 @@ export function ChamberBotMascot({
           '[id*="Mouth_Speaking_3"]',
         ];
         faceSelectors.forEach((sel) => tag(sel, "cbm-face"));
-        // Eyebrows — face tilt PLUS raise-up on listening/thinking
         tag('[id*="Eyebrows"]', "cbm-eyebrows");
-        // Right arm (viewer's right) — one-shot wave on load
         tag('[id*="Forearms_Right"]', "cbm-arm-right");
         tag('[id*="Hand_Right"]', "cbm-arm-right");
-        // Left arm (viewer's left) — flourish when response ends
         tag('[id*="Forearm_Left"]', "cbm-arm-left");
         tag('[id*="Hand_Left"]', "cbm-arm-left");
 
@@ -97,23 +132,24 @@ export function ChamberBotMascot({
     };
   }, []);
 
-  // ── Blink (with occasional double / rare triple) ──────────────
+  // ── Blink (stops during sleep — eyes stay closed) ──────────────
   useEffect(() => {
     if (!loaded) return;
-    const el = containerRef.current;
-    if (!el) return;
-    const svg = el.querySelector("svg");
+    const svg = svgContainerRef.current?.querySelector("svg");
     if (!svg) return;
 
-    const eyesOpen = svg.querySelector<SVGGElement>(
-      '[id*="Eyes_Open"]',
-    );
-    const eyesClosed = svg.querySelector<SVGGElement>(
-      '[id*="Eyes_Closed"]',
-    );
+    const eyesOpen = svg.querySelector<SVGGElement>('[id*="Eyes_Open"]');
+    const eyesClosed = svg.querySelector<SVGGElement>('[id*="Eyes_Closed"]');
     if (!eyesOpen || !eyesClosed) return;
 
-    // Start with eyes open
+    // Sleeping: eyes closed, no scheduling
+    if (mood === "sleeping") {
+      eyesOpen.style.display = "none";
+      eyesClosed.style.display = "";
+      return;
+    }
+
+    // Awake: eyes open, schedule blinks
     eyesOpen.style.display = "";
     eyesClosed.style.display = "none";
 
@@ -136,26 +172,20 @@ export function ChamberBotMascot({
     };
 
     const doBlinkSequence = (done: () => void) => {
-      // 5% triple, 22% double, 73% single
       const roll = Math.random();
       const count = roll < 0.05 ? 3 : roll < 0.27 ? 2 : 1;
-
       let acc = 0;
       for (let i = 0; i < count; i++) {
-        // close
         after(acc, close);
-        acc += 120 + Math.random() * 70; // 120-190ms closed
-        // open
+        acc += 120 + Math.random() * 70;
         after(acc, open);
-        if (i < count - 1) {
-          acc += 80 + Math.random() * 40; // 80-120ms open between blinks
-        }
+        if (i < count - 1) acc += 80 + Math.random() * 40;
       }
       after(acc, done);
     };
 
     const schedule = () => {
-      const gap = 2800 + Math.random() * 3400; // 2.8-6.2s between sequences
+      const gap = 2800 + Math.random() * 3400;
       after(gap, () => doBlinkSequence(schedule));
     };
 
@@ -165,15 +195,12 @@ export function ChamberBotMascot({
       cancelled = true;
       timeouts.forEach(clearTimeout);
     };
-  }, [loaded]);
+  }, [loaded, mood]);
 
-  // ── Wave once when Jackie scrolls into view ───────────────────
-  // Fires on first real viewport intersection — not on mount —
-  // so users landing at the top of the page don't miss the gesture
-  // while Jackie is still below the fold.
+  // ── Wave once when scrolled into view ──────────────────────────
   useEffect(() => {
     if (!loaded) return;
-    const el = containerRef.current;
+    const el = wrapperRef.current;
     if (!el) return;
 
     let waved = false;
@@ -183,7 +210,6 @@ export function ChamberBotMascot({
     const wave = () => {
       if (waved) return;
       waved = true;
-      // Small beat so users register the idle pose first
       startTimer = setTimeout(() => {
         el.classList.add("cbm-waving");
         removeTimer = setTimeout(
@@ -211,66 +237,96 @@ export function ChamberBotMascot({
     };
   }, [loaded]);
 
-  // ── Flourish left hand when bot finishes responding ────────────
+  // ── Flourish left hand when a response ends ────────────────────
   const prevStateRef = useRef<SceneState>(state);
   useEffect(() => {
     if (!loaded) return;
-    const el = containerRef.current;
+    const el = wrapperRef.current;
     if (!el) return;
-
-    if (
-      prevStateRef.current === "responding" &&
-      state !== "responding"
-    ) {
+    if (prevStateRef.current === "responding" && state !== "responding") {
       el.classList.add("cbm-flourish");
       setTimeout(() => el.classList.remove("cbm-flourish"), 1000);
     }
     prevStateRef.current = state;
   }, [state, loaded]);
 
-  // ── Eye tracking — pupils follow the cursor ────────────────────
+  // ── Continuous cursor-tracking loop: eyes + head tilt ─────────
+  // Single rAF loop runs for the lifetime of the mascot. Each frame
+  // picks a target (cursor / thinking / sleeping) and lerps toward
+  // it — so state transitions are smooth without needing CSS
+  // transitions that would compound on frame-updated properties.
   useEffect(() => {
     if (!loaded) return;
-    const el = containerRef.current;
-    if (!el) return;
-    const svg = el.querySelector("svg");
-    if (!svg) return;
+    const el = wrapperRef.current;
+    const svg = svgContainerRef.current?.querySelector("svg");
+    if (!el || !svg) return;
 
-    const prefersReducedMotion =
+    const reduceMotion =
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) return;
 
-    // The eye inner groups sit inside the clippath wrappers (st21 / st36).
-    // Translating them moves the iris + pupil together within the eye socket.
     const leftInner = svg.querySelector<SVGGElement>("g.st21 > g");
     const rightInner = svg.querySelector<SVGGElement>("g.st36 > g");
-    if (!leftInner || !rightInner) return;
 
-    let raf = 0;
-    let targetX = 0;
-    let targetY = 0;
-    let currentX = 0;
-    let currentY = 0;
-    const MAX_OFFSET = 3.5; // viewBox units
+    const MAX_EYE = 3.5;
+    const MAX_HEAD = 5;
+
+    // Cursor-derived targets (updated by the mousemove handler).
+    let cursorEyeX = 0;
+    let cursorEyeY = 0;
+    let cursorHead = 0;
+
+    // Smoothed current values (what actually gets painted).
+    let curEyeX = 0;
+    let curEyeY = 0;
+    let curHead = 0;
 
     const onMove = (e: MouseEvent) => {
       const rect = svg.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
-      // Bias toward where the eyes actually sit (~35% from top)
       const cy = rect.top + rect.height * 0.35;
       const dx = (e.clientX - cx) / (rect.width / 2);
       const dy = (e.clientY - cy) / (rect.height / 2);
-      targetX = Math.max(-1, Math.min(1, dx)) * MAX_OFFSET;
-      targetY = Math.max(-1, Math.min(1, dy)) * MAX_OFFSET * 0.7;
+      const clampedX = Math.max(-1, Math.min(1, dx));
+      cursorEyeX = clampedX * MAX_EYE;
+      cursorEyeY = Math.max(-1, Math.min(1, dy)) * MAX_EYE * 0.7;
+      cursorHead = clampedX * MAX_HEAD;
     };
 
+    let raf = 0;
     const animate = () => {
-      currentX += (targetX - currentX) * 0.15;
-      currentY += (targetY - currentY) * 0.15;
-      const t = `translate(${currentX.toFixed(2)}px, ${currentY.toFixed(2)}px)`;
-      leftInner.style.transform = t;
-      rightInner.style.transform = t;
+      // Pick per-frame targets based on current mood/state.
+      let tEyeX = cursorEyeX;
+      let tEyeY = cursorEyeY;
+      let tHead = cursorHead;
+
+      if (reduceMotion) {
+        tEyeX = 0;
+        tEyeY = 0;
+        tHead = 0;
+      } else if (mood === "sleeping") {
+        tEyeX = 0;
+        tEyeY = 0;
+        tHead = -15;
+      } else if (state === "thinking") {
+        tEyeX = 0;
+        tEyeY = 0;
+        tHead = 3;
+      }
+
+      // Slower lerp when settling into sleep for a dreamier settle.
+      const lerpEye = 0.15;
+      const lerpHead = mood === "sleeping" ? 0.06 : 0.12;
+
+      curEyeX += (tEyeX - curEyeX) * lerpEye;
+      curEyeY += (tEyeY - curEyeY) * lerpEye;
+      curHead += (tHead - curHead) * lerpHead;
+
+      const t = `translate(${curEyeX.toFixed(2)}px, ${curEyeY.toFixed(2)}px)`;
+      if (leftInner) leftInner.style.transform = t;
+      if (rightInner) rightInner.style.transform = t;
+      el.style.setProperty("--cbm-head-tilt", curHead.toFixed(2) + "deg");
+
       raf = requestAnimationFrame(animate);
     };
 
@@ -281,19 +337,15 @@ export function ChamberBotMascot({
       window.removeEventListener("mousemove", onMove);
       cancelAnimationFrame(raf);
     };
-  }, [loaded]);
+  }, [loaded, mood, state]);
 
-  // ── Mouth state (idle vs responding) ───────────────────────────
+  // ── Mouth state ────────────────────────────────────────────────
   useEffect(() => {
     if (!loaded) return;
-    const el = containerRef.current;
-    if (!el) return;
-    const svg = el.querySelector("svg");
+    const svg = svgContainerRef.current?.querySelector("svg");
     if (!svg) return;
 
-    const mouthClosed = svg.querySelector<SVGGElement>(
-      '[id*="Mouth_Closed"]',
-    );
+    const mouthClosed = svg.querySelector<SVGGElement>('[id*="Mouth_Closed"]');
     const mouths = [
       svg.querySelector<SVGGElement>('[id*="Mouth_Speaking_1"]'),
       svg.querySelector<SVGGElement>('[id*="Mouth_Speaking_2"]'),
@@ -301,8 +353,6 @@ export function ChamberBotMascot({
     ];
 
     if (state === "responding") {
-      // Speaking: randomized frame order with variable timing and
-      // occasional closed-mouth beats (simulates gaps between syllables).
       if (mouthClosed) mouthClosed.style.display = "none";
 
       const hideAll = () => {
@@ -316,16 +366,13 @@ export function ChamberBotMascot({
       let nextTimer: ReturnType<typeof setTimeout>;
 
       const step = () => {
-        // 15% chance of a brief closed beat (syllable gap)
         if (Math.random() < 0.15) {
           hideAll();
           if (mouthClosed) mouthClosed.style.display = "";
-          nextTimer = setTimeout(step, 90 + Math.random() * 70); // 90-160ms
+          nextTimer = setTimeout(step, 90 + Math.random() * 70);
           return;
         }
 
-        // Pick a speaking frame different from the previous one so the
-        // mouth never appears "stuck" on the same shape.
         let next: number;
         do {
           next = Math.floor(Math.random() * 3);
@@ -334,12 +381,9 @@ export function ChamberBotMascot({
 
         hideAll();
         const pick = mouths[next];
-        // Must use "inline" (not "") — the Illustrator export gives the
-        // speaking frames class="st33" with display:none, so empty string
-        // removes the inline style but leaves the class rule winning.
         if (pick) pick.style.display = "inline";
 
-        nextTimer = setTimeout(step, 110 + Math.random() * 130); // 110-240ms
+        nextTimer = setTimeout(step, 110 + Math.random() * 130);
       };
 
       step();
@@ -352,7 +396,6 @@ export function ChamberBotMascot({
         });
       };
     } else {
-      // Resting: closed mouth, hide speaking frames
       if (mouthClosed) mouthClosed.style.display = "";
       mouths.forEach((m) => {
         if (m) m.style.display = "none";
@@ -360,13 +403,184 @@ export function ChamberBotMascot({
     }
   }, [loaded, state]);
 
+  // ── Idle sleep tracker ─────────────────────────────────────────
+  useEffect(() => {
+    if (!loaded) return;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+
+    const wake = () => {
+      setMood("alert");
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => setMood("sleeping"), IDLE_SLEEP_MS);
+    };
+
+    wake(); // start timer
+
+    const events: Array<keyof WindowEventMap> = [
+      "mousemove",
+      "keydown",
+      "touchstart",
+      "scroll",
+    ];
+    events.forEach((ev) => window.addEventListener(ev, wake, { passive: true }));
+
+    return () => {
+      events.forEach((ev) => window.removeEventListener(ev, wake));
+      if (timer) clearTimeout(timer);
+    };
+  }, [loaded]);
+
+  // ── Ambient sparkles near the antenna ──────────────────────────
+  useEffect(() => {
+    if (!loaded || mood === "sleeping") return;
+
+    const reduceMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
+
+    const spawn = () => {
+      const sparkle: Sparkle = {
+        id: uid(),
+        left: 40 + Math.random() * 22, // 40–62% horizontal (near antenna)
+        top: 2 + Math.random() * 14, // 2–16% vertical (top of mascot)
+        driftX: (Math.random() - 0.5) * 34,
+        delay: 0,
+        size: 4 + Math.random() * 5,
+      };
+      setSparkles((prev) => [...prev, sparkle]);
+      setTimeout(() => {
+        setSparkles((prev) => prev.filter((s) => s.id !== sparkle.id));
+      }, 3200);
+    };
+
+    // Fire one immediately, then on interval
+    spawn();
+    const interval = setInterval(spawn, AMBIENT_SPARKLE_MS);
+    return () => clearInterval(interval);
+  }, [loaded, mood]);
+
+  // ── Click / keyboard → surprised jump + spark burst ───────────
+  const triggerSurprise = useCallback((clickX: number, clickY: number) => {
+    const el = wrapperRef.current;
+    if (!el) return;
+
+    const N = 14;
+    const batch: Spark[] = Array.from({ length: N }, (_, i) => {
+      const baseAngle = (i / N) * Math.PI * 2;
+      const angle = baseAngle + (Math.random() - 0.5) * 0.6;
+      const distance = 42 + Math.random() * 48;
+      const hue: "cambridge" | "accent" = i % 4 === 0 ? "accent" : "cambridge";
+      return {
+        id: uid(),
+        x: clickX,
+        y: clickY,
+        dx: Math.cos(angle) * distance,
+        dy: Math.sin(angle) * distance,
+        hue,
+      };
+    });
+    setSparks((prev) => [...prev, ...batch]);
+
+    el.classList.add("cbm-surprised");
+    setTimeout(() => {
+      wrapperRef.current?.classList.remove("cbm-surprised");
+    }, 800);
+
+    setTimeout(() => {
+      const ids = new Set(batch.map((s) => s.id));
+      setSparks((prev) => prev.filter((s) => !ids.has(s.id)));
+    }, 900);
+  }, []);
+
+  const onClick = useCallback(
+    (e: ReactMouseEvent<HTMLDivElement>) => {
+      const rect = wrapperRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      triggerSurprise(e.clientX - rect.left, e.clientY - rect.top);
+    },
+    [triggerSurprise],
+  );
+
+  const onKeyDown = useCallback(
+    (e: ReactKeyboardEvent<HTMLDivElement>) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        const rect = wrapperRef.current?.getBoundingClientRect();
+        if (!rect) return;
+        triggerSurprise(rect.width / 2, rect.height * 0.4);
+      }
+    },
+    [triggerSurprise],
+  );
+
   return (
     <div
-      ref={containerRef}
+      ref={wrapperRef}
       data-state={state}
+      data-mood={mood}
+      onClick={onClick}
+      onKeyDown={onKeyDown}
+      tabIndex={0}
+      role="button"
+      aria-label={
+        mood === "sleeping"
+          ? "ChamberBot is asleep — click to wake and see a jump"
+          : "ChamberBot — click to make it jump"
+      }
       className={`cbm-mascot robot-float robot-fly-in ${className}`}
-      aria-label="ChamberBot — friendly AI assistant"
-      role="img"
-    />
+    >
+      {/* Floor shadow — scales during jumps */}
+      <div className="cbm-shadow" aria-hidden="true" />
+
+      {/* Ambient sparkles behind the mascot */}
+      <div className="cbm-fx cbm-fx--sparkles" aria-hidden="true">
+        {sparkles.map((s) => (
+          <span
+            key={s.id}
+            className="cbm-sparkle"
+            style={
+              {
+                left: `${s.left}%`,
+                top: `${s.top}%`,
+                width: `${s.size}px`,
+                height: `${s.size}px`,
+                "--cbm-drift-x": `${s.driftX}px`,
+              } as CSSProperties
+            }
+          />
+        ))}
+      </div>
+
+      {/* SVG mount point — innerHTML-injected. Must have no React children. */}
+      <div ref={svgContainerRef} className="cbm-svg" />
+
+      {/* Click spark burst in front of the mascot */}
+      <div className="cbm-fx cbm-fx--sparks" aria-hidden="true">
+        {sparks.map((s) => (
+          <span
+            key={s.id}
+            className={`cbm-spark cbm-spark--${s.hue}`}
+            style={
+              {
+                left: `${s.x}px`,
+                top: `${s.y}px`,
+                "--cbm-spark-dx": `${s.dx}px`,
+                "--cbm-spark-dy": `${s.dy}px`,
+              } as CSSProperties
+            }
+          />
+        ))}
+      </div>
+
+      {/* Sleep Z particles */}
+      {mood === "sleeping" && (
+        <div className="cbm-fx cbm-fx--zzz" aria-hidden="true">
+          <span className="cbm-zzz cbm-zzz--1">Z</span>
+          <span className="cbm-zzz cbm-zzz--2">Z</span>
+          <span className="cbm-zzz cbm-zzz--3">Z</span>
+        </div>
+      )}
+    </div>
   );
 }

@@ -122,7 +122,7 @@ function contextForPath(pathname: string): PageContext {
 
   // Default — homepage / everything else
   return {
-    greeting: "Hi! I'm Jackie.",
+    greeting: "Hi! I'm the ChamberBot.",
     subtitle:
       "Ask me about member businesses, events, membership, or anything about the chamber.",
     prompts: [
@@ -284,7 +284,7 @@ export function ChatWidget() {
                 />
               </div>
               <div>
-                <p className="text-body-sm font-bold text-white leading-none">Jackie</p>
+                <p className="text-body-sm font-bold text-white leading-none">ChamberBot</p>
                 <p className="text-[11px] text-cambridge mt-0.5">ChamberBot · Medina Chamber</p>
               </div>
             </div>
@@ -423,7 +423,7 @@ export function ChatWidget() {
           <div className="w-11 h-11 rounded-full overflow-hidden">
             <AnimatedMascotHead
               className="w-full h-full"
-              ariaLabel="Open Jackie the ChamberBot"
+              ariaLabel="Open the ChamberBot"
             />
           </div>
         )}

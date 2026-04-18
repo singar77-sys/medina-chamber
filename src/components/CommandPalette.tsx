@@ -551,7 +551,7 @@ export function CommandPalette() {
 
               {showJackieFallback && (
                 <div className="cmdk-group cmdk-group--jackie">
-                  <p className="cmdk-group__label">Ask Jackie</p>
+                  <p className="cmdk-group__label">Ask the ChamberBot</p>
                   <ul>
                     <li>
                       <button
@@ -563,7 +563,7 @@ export function CommandPalette() {
                         className="cmdk-row cmdk-row--jackie"
                       >
                         <span className="cmdk-row__label">
-                          Ask Jackie:{" "}
+                          Ask the ChamberBot:{" "}
                           <span className="cmdk-row__q">
                             &ldquo;{query}&rdquo;
                           </span>

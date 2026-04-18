@@ -144,7 +144,7 @@ function livingGreeting(
     return {
       badge: "Welcome back",
       subhead:
-        "Pick up where you left off — or ask Jackie something new. She remembers the chamber; she doesn't track you.",
+        "Pick up where you left off — or ask the ChamberBot something new. It remembers the chamber; it doesn't track you.",
     };
   }
 
@@ -153,7 +153,7 @@ function livingGreeting(
       return {
         badge: "Good morning",
         subhead:
-          "Start the day with the chamber. Ask Jackie about today's events, members, or programs.",
+          "Start the day with the chamber. Ask the ChamberBot about today's events, members, or programs.",
       };
     case "afternoon":
       return {
@@ -165,13 +165,13 @@ function livingGreeting(
       return {
         badge: "Good evening",
         subhead:
-          "The office is quieting down — Jackie's still up. Ask her anything about the chamber.",
+          "The office is quieting down — the ChamberBot is still up. Ask it anything about the chamber.",
       };
     case "night":
       return {
         badge: "Working late?",
         subhead:
-          "The office is closed, but Jackie's awake. Ask anything about the chamber.",
+          "The office is closed, but the ChamberBot is awake. Ask anything about the chamber.",
       };
     default:
       return {
@@ -266,9 +266,9 @@ export function HolographicChamber() {
             </span>
           </div>
           <h2 className="text-h2">
-            Meet Jackie,
+            Meet the
             <br />
-            <span className="text-cambridge">the ChamberBot.</span>
+            <span className="text-cambridge">ChamberBot.</span>
           </h2>
           <p className="text-body-lg text-text-secondary mt-4 leading-relaxed">
             {greeting.subhead}
@@ -280,7 +280,7 @@ export function HolographicChamber() {
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Ask Jackie anything…"
+              placeholder="Ask the ChamberBot anything…"
               disabled={isThinking}
               className="
                 w-full px-6 py-4 pr-14
@@ -296,7 +296,7 @@ export function HolographicChamber() {
             <button
               type="submit"
               disabled={!inputValue.trim() || isThinking}
-              aria-label="Ask Jackie"
+              aria-label="Ask the ChamberBot"
               className="
                 absolute right-3 top-1/2 -translate-y-1/2
                 w-10 h-10 flex items-center justify-center
@@ -365,14 +365,14 @@ export function HolographicChamber() {
                 </div>
               )}
 
-              {/* Jackie's reply */}
+              {/* ChamberBot's reply */}
               <div className="flex items-start gap-3 pt-4">
                 <div className="jkc-avatar jkc-avatar--jackie" aria-hidden="true">
-                  <span className="text-[11px] font-bold">J</span>
+                  <span className="text-[11px] font-bold">CB</span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-caption text-cambridge font-bold uppercase tracking-wider">
-                    Jackie
+                    ChamberBot
                   </p>
                   {hasAnswer ? (
                     <p
@@ -384,7 +384,7 @@ export function HolographicChamber() {
                   ) : (
                     <span
                       className="mt-2 inline-flex gap-1 items-center py-1"
-                      aria-label="Jackie is thinking"
+                      aria-label="ChamberBot is thinking"
                       role="status"
                     >
                       <span className="w-1.5 h-1.5 bg-cambridge rounded-full animate-bounce [animation-delay:0ms]" />

@@ -21,7 +21,7 @@ const ambassadors = [
     company: "First Federal of Lakewood",
     email: "kdeeks@ffl.net",
     website: "https://www.ffl.bank/",
-    photo: "/images/people/ambassadors/ambassadors-image-03-medina-chamber.jpg",
+    photo: "/images/people/ambassadors/medina-chamber-ambassador-03.jpg",
   },
   {
     name: "Brittney Esser",
@@ -37,7 +37,7 @@ const ambassadors = [
     company: "TAG Studio",
     email: "taniagrantstudio@gmail.com",
     website: "https://www.tagvoiceover.com/",
-    photo: "/images/people/ambassadors/tania-grant-jpg-medina-chamber.jpg",
+    photo: "/images/people/ambassadors/tania-grant-medina-chamber-ambassador.jpg",
   },
   {
     name: "Don Hicks",
@@ -45,7 +45,7 @@ const ambassadors = [
     company: "Vensure",
     email: "don.hicks@vensure.com",
     website: null,
-    photo: "/images/people/ambassadors/don-hicks-jpg-medina-chamber.jpg",
+    photo: "/images/people/ambassadors/don-hicks-medina-chamber-ambassador.jpg",
   },
   {
     name: "Laurin Jeffers",
@@ -61,7 +61,7 @@ const ambassadors = [
     company: "National Process Systems",
     email: "Danielle.Litton@National-Process.com",
     website: null,
-    photo: "/images/people/ambassadors/ambassadors-image-08-medina-chamber.jpg",
+    photo: "/images/people/ambassadors/medina-chamber-ambassador-08.jpg",
   },
   {
     name: "Claus Meyer",
@@ -93,7 +93,7 @@ const ambassadors = [
     company: "Alzheimer's Association",
     email: "tjtoth@alz.org",
     website: "https://www.alz.org",
-    photo: "/images/people/ambassadors/tori-toth-jpeg-medina-chamber.jpeg",
+    photo: "/images/people/ambassadors/tori-toth-medina-chamber-ambassador.jpeg",
   },
   {
     name: "Kimberly Valco",
@@ -101,7 +101,7 @@ const ambassadors = [
     company: "Western Reserve Masonic Community",
     email: "kvalco@ohiomasonichome.org",
     website: "https://wrmcoh.org",
-    photo: "/images/people/ambassadors/ambassadors-image-13-medina-chamber.jpg",
+    photo: "/images/people/ambassadors/medina-chamber-ambassador-13.jpg",
   },
 ];
 

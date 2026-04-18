@@ -194,7 +194,10 @@ export default function HomePage() {
       </MouseGradient>
 
       {/* ─── Holographic Chamber (AI Section) ──────────────── */}
-      <section className="relative bg-bg-secondary border-t border-border-secondary overflow-hidden">
+      {/* overflow-x-clip (not hidden) so position:sticky works on the
+          mascot inside — overflow:hidden on an ancestor would neuter
+          the sticky positioning. */}
+      <section className="relative bg-bg-secondary border-t border-border-secondary overflow-x-clip">
         <NetworkBackdrop />
         <div className="relative">
           <FadeIn>
@@ -417,7 +420,23 @@ export default function HomePage() {
       <PartnersMarquee />
 
       {/* ─── Join CTA ─────────────────────────────────────── */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
+      <section className="relative py-20 lg:py-28 overflow-hidden">
+        {/* Ghosted Medina industry backdrop across the whole band */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/industry-medina.jpg"
+            alt=""
+            fill
+            className="object-cover object-center opacity-[0.05]"
+            sizes="100vw"
+            quality={55}
+          />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <FadeIn>
           <div className="p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-10 items-center">
@@ -471,6 +490,7 @@ export default function HomePage() {
             </div>
           </div>
         </FadeIn>
+        </div>
       </section>
     </div>
   );

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ctaLink } from "@/lib/navigation";
 import { FooterStamp } from "./FooterStamp";
 import { BuildCredit } from "./BuildCredit";
 
@@ -58,9 +57,46 @@ export function Footer() {
 
   return (
     <footer className="ftr bg-bg-secondary border-t border-border-primary">
-      <div className="mx-auto max-w-5xl px-6 lg:px-8 py-14 lg:py-16">
+      <div className="mx-auto max-w-5xl px-6 lg:px-8 pt-16 lg:pt-20 pb-10 lg:pb-14">
+        {/* ─── Band 0: Closing statement — bookends the hero ──── */}
+        <div className="text-center mb-14 lg:mb-16">
+          <p className="text-overline text-cambridge mb-3 tracking-[0.2em]">
+            Since 1938
+          </p>
+          <p
+            className="
+              font-display font-bold uppercase
+              leading-[0.92] tracking-tight text-text-primary
+              text-[clamp(2rem,5.5vw,4.25rem)]
+            "
+          >
+            Medina Means{" "}
+            <span className="text-cambridge">Business.</span>
+          </p>
+          <p className="text-body-sm text-text-secondary mt-5 max-w-lg mx-auto">
+            A century of local advocacy, connection, and growth — and
+            we&apos;re just getting started.
+          </p>
+          <Link
+            href="/membership/join"
+            className="
+              mt-7 inline-flex items-center gap-2 px-7 py-3.5
+              bg-accent hover:bg-accent-hover
+              text-white font-bold text-body-sm
+              rounded-[var(--radius-md)]
+              transition-colors
+            "
+          >
+            Join the Chamber
+            <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+
+        {/* Accent stripe */}
+        <div className="ftr__rule" aria-hidden="true" />
+
         {/* ─── Band 1: Brand rail (centered) ──────────────────── */}
-        <div className="flex flex-col items-center text-center">
+        <div className="flex flex-col items-center text-center mt-10 lg:mt-12">
           <FooterStamp />
           <p className="text-body-sm text-text-secondary max-w-md leading-relaxed mt-1">
             Greater Medina Chamber of Commerce.
@@ -138,19 +174,13 @@ export function Footer() {
         {/* Accent stripe */}
         <div className="ftr__rule mt-10" aria-hidden="true" />
 
-        {/* ─── Band 2: Quick links row (centered, inline) ─────── */}
+        {/* ─── Band 2: Quick links — 2-col grid on mobile, 4-col on
+             desktop. Spans the same width as the bottom bar so the
+             whole composition aligns. ────────────────────────────── */}
         <nav aria-label="Footer quick links" className="mt-8">
-          <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-body-sm">
-            {quickLinks.map((link, i) => (
-              <li key={link.href} className="inline-flex items-center">
-                {i > 0 && (
-                  <span
-                    className="text-text-tertiary/50 mr-4 select-none"
-                    aria-hidden="true"
-                  >
-                    ·
-                  </span>
-                )}
+          <ul className="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-3 text-body-sm text-center">
+            {quickLinks.map((link) => (
+              <li key={link.href}>
                 <Link href={link.href} className="ftr-link">
                   {link.label}
                 </Link>
@@ -162,35 +192,26 @@ export function Footer() {
         {/* Accent stripe */}
         <div className="ftr__rule mt-10" aria-hidden="true" />
 
-        {/* ─── Band 3: Bottom bar — mirrored 2-row layout ─────── */}
-        <div className="mt-6 grid gap-6 lg:grid-cols-2 lg:items-center">
-          {/* Left column: copyright (top) + build credit (bottom) */}
-          <div className="flex flex-col items-center lg:items-start gap-3 text-center lg:text-left">
-            <p className="text-caption text-text-tertiary">
-              © {year} Greater Medina Chamber of Commerce.
-              <span className="mx-2 text-border-primary">·</span>
-              Est. 1938 · {chamberYears} years of service
-            </p>
-            <BuildCredit />
-          </div>
-
-          {/* Right column: utility links (top) + Join CTA (bottom) */}
-          <div className="flex flex-col items-center lg:items-end gap-3">
-            <div className="flex flex-wrap items-center justify-center lg:justify-end gap-x-6 gap-y-2">
-              <Link href="/about/contact" className="ftr-utility">
-                Contact
-              </Link>
-              <Link href="/accessibility" className="ftr-utility">
-                Accessibility
-              </Link>
-              <a href="#top" className="ftr-utility" aria-label="Back to top">
-                ↑ Top
-              </a>
-            </div>
-            <Link href={ctaLink.href} className="ftr-cta">
-              {ctaLink.label} →
+        {/* ─── Band 3: Bottom bar — fully centered stack to match
+             the rest of the footer's centered composition. ──────── */}
+        <div className="mt-6 flex flex-col items-center gap-4">
+          <p className="text-caption text-text-tertiary text-center">
+            © {year} Greater Medina Chamber of Commerce.
+            <span className="mx-2 text-border-primary">·</span>
+            Est. 1938 · {chamberYears} years
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+            <Link href="/about/contact" className="ftr-utility">
+              Contact
             </Link>
+            <Link href="/accessibility" className="ftr-utility">
+              Accessibility
+            </Link>
+            <a href="#top" className="ftr-utility" aria-label="Back to top">
+              ↑ Top
+            </a>
           </div>
+          <BuildCredit />
         </div>
       </div>
     </footer>

@@ -1377,6 +1377,41 @@ body {
   position: relative;
 }
 
+/* Mascot wrapper — two-mode sizing.
+   Idle: hero-centered, big, dominating the section.
+   Active (question asked): shrinks to companion size and becomes
+   position:sticky near the top of the viewport so the bot stays in
+   view while the user reads her response below. */
+.jkc-mascot-wrap {
+  position: relative;
+  align-self: center;
+  width: 100%;
+  max-width: 16rem;
+}
+
+@media (min-width: 768px) {
+  .jkc-mascot-wrap { max-width: 18rem; }
+}
+@media (min-width: 1024px) {
+  .jkc-mascot-wrap { max-width: 22rem; }
+}
+@media (min-width: 1280px) {
+  .jkc-mascot-wrap { max-width: 26rem; }
+}
+
+.jkc-mascot-wrap[data-active="true"] {
+  position: sticky;
+  top: 5.5rem; /* clear the site header */
+  z-index: 5;
+  max-width: 11rem;
+}
+@media (min-width: 768px) {
+  .jkc-mascot-wrap[data-active="true"] { max-width: 12rem; }
+}
+@media (min-width: 1024px) {
+  .jkc-mascot-wrap[data-active="true"] { max-width: 13rem; }
+}
+
 /* Conversation avatars — tiny pill markers for "who's talking" */
 .jkc-avatar {
   flex-shrink: 0;
@@ -1516,7 +1551,6 @@ body {
 /* ─── Hunter Systems build credit ─────────────────────────── */
 
 .hs-credit {
-  align-self: flex-start;
   transition: opacity 200ms ease;
 }
 

@@ -255,27 +255,50 @@ export function HolographicChamber() {
   const followUps = query ? getFollowUps(query) : [];
 
   return (
-    <section className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24 overflow-x-clip">
-      <div className="grid lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-center lg:items-start">
-        {/* ── Left: Heading + input + response ── */}
-        <div className="max-w-2xl order-2 lg:order-1">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-cambridge/10 border border-cambridge/20 rounded-full mb-5">
-            <span className="w-2 h-2 bg-cambridge rounded-full animate-pulse" />
-            <span className="text-caption font-bold text-cambridge uppercase tracking-wider">
-              {greeting.badge}
-            </span>
-          </div>
-          <h2 className="text-h2">
-            Meet the
-            <br />
-            <span className="text-cambridge">ChamberBot.</span>
-          </h2>
-          <p className="text-body-lg text-text-secondary mt-4 leading-relaxed">
-            {greeting.subhead}
-          </p>
+    // Hidden on phones — the floating ChatWidget in the bottom-right
+    // corner covers the mobile chat surface. This inline section is
+    // the tablet+ "meet the bot" hero moment.
+    <section className="hidden md:block mx-auto max-w-5xl px-6 lg:px-8 py-20 lg:py-28 overflow-x-clip">
+      <div className="flex flex-col items-center text-center">
+        {/* Badge */}
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-cambridge/10 border border-cambridge/20 rounded-full mb-6">
+          <span className="w-2 h-2 bg-cambridge rounded-full animate-pulse" />
+          <span className="text-caption font-bold text-cambridge uppercase tracking-wider">
+            {greeting.badge}
+          </span>
+        </div>
 
-          {/* Input */}
-          <form onSubmit={handleSubmit} className="relative mt-8">
+        {/* Headline — bigger than text-h2, clamps across breakpoints */}
+        <h2
+          className="
+            font-display font-bold
+            leading-[0.92] tracking-tight
+            text-[clamp(2.75rem,6.2vw,5.5rem)]
+          "
+        >
+          Meet the
+          <br />
+          <span className="text-cambridge">ChamberBot.</span>
+        </h2>
+
+        {/* Subhead */}
+        <p className="text-body-lg text-text-secondary mt-6 max-w-2xl leading-relaxed">
+          {greeting.subhead}
+        </p>
+
+        {/* Mascot — hero focal point at rest; shrinks + becomes a
+             sticky companion as soon as a conversation starts so she
+             stays in view while the user reads her response. */}
+        <div
+          className="jkc-mascot-wrap mt-10 lg:mt-12"
+          data-active={hasAnswer || isThinking}
+        >
+          <ChamberBotMascot state={sceneState} className="w-full" />
+        </div>
+
+        {/* Input + downstream UI — centered column, readable width */}
+        <div className="w-full max-w-2xl mt-10 lg:mt-12 text-left">
+          <form onSubmit={handleSubmit} className="relative">
             <input
               type="text"
               value={inputValue}
@@ -319,7 +342,7 @@ export function HolographicChamber() {
 
           {/* Initial prompt chips — only visible before first question */}
           {!hasAnswer && !isThinking && (
-            <div className="mt-4 flex flex-wrap gap-2">
+            <div className="mt-4 flex flex-wrap gap-2 justify-center">
               <span className="text-caption text-text-tertiary font-bold uppercase tracking-wider mr-1 self-center">
                 Try:
               </span>
@@ -430,16 +453,6 @@ export function HolographicChamber() {
               ← Start over
             </button>
           )}
-        </div>
-
-        {/* ── Right: Mascot character ── */}
-        <div className="jkc-jackie-col order-1 lg:order-2 flex justify-center">
-          <div className="jkc-stage">
-            <ChamberBotMascot
-              state={sceneState}
-              className="w-48 sm:w-56 lg:w-72"
-            />
-          </div>
         </div>
       </div>
     </section>

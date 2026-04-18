@@ -82,7 +82,7 @@ export function ThreePillars() {
           </div>
           <div className="relative rounded-[var(--radius-lg)] overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-64 border border-border-secondary shadow-[0_14px_36px_rgba(12,27,51,0.14)]">
             <Image
-              src="/images/photos/7f44d302-e587-4fc1-80c4-7e328329a6e1.png"
+              src="/images/photos/chamber-three-pillars-backdrop.webp"
               alt="Greater Medina Chamber of Commerce headquarters exterior at 139 N. Court Street in Medina, Ohio"
               fill
               className="object-cover"

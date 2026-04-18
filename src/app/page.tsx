@@ -353,7 +353,7 @@ export default function HomePage() {
           aria-hidden="true"
         >
           <Image
-            src="/images/photos/netowrking.png"
+            src="/images/photos/networking.webp"
             alt=""
             fill
             className="object-cover opacity-[0.05]"

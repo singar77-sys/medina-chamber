@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    qualities: [55, 60, 75, 85],
     remotePatterns: [
       {
         // GrowthZone member logos and event images

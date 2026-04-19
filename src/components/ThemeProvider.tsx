@@ -28,8 +28,11 @@ export function useTheme() {
 /**
  * Inline script to prevent flash of wrong theme.
  * Injected into <head> before any paint.
+ *
+ * Takes a CSP nonce as a prop because it's an inline <script> — the
+ * middleware-issued nonce makes it execute under our strict CSP.
  */
-export function ThemeScript() {
+export function ThemeScript({ nonce }: { nonce?: string }) {
   const script = `
     (function() {
       try {
@@ -40,7 +43,7 @@ export function ThemeScript() {
       } catch(e) {}
     })();
   `;
-  return <script dangerouslySetInnerHTML={{ __html: script }} />;
+  return <script nonce={nonce} dangerouslySetInnerHTML={{ __html: script }} />;
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {

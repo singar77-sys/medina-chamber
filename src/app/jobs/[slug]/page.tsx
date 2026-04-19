@@ -5,6 +5,7 @@ import { jobs, getJobBySlug, formatJobDate } from "@/data/jobs";
 import { members } from "@/data/members";
 
 import { safeJsonLd } from "@/lib/json-ld";
+import { headers } from "next/headers";
 // ── Static generation ─────────────────────────────────────────────
 export function generateStaticParams() {
   return jobs.map((j) => ({ slug: j.slug }));
@@ -35,6 +36,7 @@ export async function generateMetadata(
 export default async function JobDetailPage(
   { params }: { params: Promise<{ slug: string }> }
 ) {
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   const { slug } = await params;
   const job = getJobBySlug(slug);
   if (!job) notFound();
@@ -91,10 +93,12 @@ export default async function JobDetailPage(
     <>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
 

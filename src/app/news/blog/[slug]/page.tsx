@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { blogPosts, getBlogPostBySlug, formatBlogDate, blogMetaDescription } from "@/data/blog";
 
 import { safeJsonLd } from "@/lib/json-ld";
+import { headers } from "next/headers";
 export function generateStaticParams() {
   return blogPosts.map((p) => ({ slug: p.slug }));
 }
@@ -33,6 +34,7 @@ export async function generateMetadata(
 export default async function BlogPostPage(
   { params }: { params: Promise<{ slug: string }> }
 ) {
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   const { slug } = await params;
   const post = getBlogPostBySlug(slug);
   if (!post) notFound();
@@ -83,10 +85,12 @@ export default async function BlogPostPage(
     <>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
 

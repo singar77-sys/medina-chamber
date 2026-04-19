@@ -76,7 +76,10 @@ export async function POST(req: Request) {
 
   try {
     await resend.emails.send({
-      from: "Chamber Website <onboarding@resend.dev>",
+      // Sent from huntersystems.dev (verified Resend domain) instead of
+      // resend.dev sandbox — better deliverability, won't get spam-folder'd
+      // by chamber inboxes. Display name still reads as the chamber.
+      from: "Greater Medina Chamber Website <chamber@huntersystems.dev>",
       to: CHAMBER_EMAIL,
       replyTo: email,
       subject: `Contact form: ${name}`,

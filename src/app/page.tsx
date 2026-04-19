@@ -14,6 +14,7 @@ import { RentalSpaceCards } from "@/components/RentalSpaceCards";
 import { MemberVoice } from "@/components/MemberVoice";
 
 import { safeJsonLd } from "@/lib/json-ld";
+import { headers } from "next/headers";
 export const metadata: Metadata = {
   title: "Greater Medina Chamber of Commerce — Medina County, Ohio",
   description:
@@ -85,13 +86,15 @@ const organizationJsonLd = {
   },
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   const upcomingEvents = getUpcomingEvents().slice(0, 3);
 
   return (
     <div>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(organizationJsonLd) }}
       />
 

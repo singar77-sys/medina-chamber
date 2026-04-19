@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { safeJsonLd } from "@/lib/json-ld";
+import { headers } from "next/headers";
 export const metadata: Metadata = {
   title: "Membership Pricing",
   description:
@@ -129,11 +130,13 @@ const faqJsonLd = {
   })),
 };
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   return (
     <>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(faqJsonLd) }}
       />
 

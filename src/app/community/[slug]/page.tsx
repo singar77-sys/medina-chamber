@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { safeJsonLd } from "@/lib/json-ld";
+import { headers } from "next/headers";
 import {
   activeCommunities,
   getCommunityBySlug,
@@ -41,6 +42,7 @@ export async function generateMetadata(
 export default async function CommunityPage(
   { params }: { params: Promise<{ slug: string }> }
 ) {
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   const { slug } = await params;
   const community = getCommunityBySlug(slug);
   if (!community) notFound();
@@ -82,6 +84,7 @@ export default async function CommunityPage(
     <>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
 

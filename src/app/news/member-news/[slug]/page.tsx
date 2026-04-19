@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { safeJsonLd } from "@/lib/json-ld";
+import { headers } from "next/headers";
 import {
   memberNewsArticles,
   getArticleBySlug,
@@ -42,6 +43,7 @@ export async function generateMetadata(
 export default async function MemberNewsArticlePage(
   { params }: { params: Promise<{ slug: string }> }
 ) {
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   const { slug } = await params;
   const article = getArticleBySlug(slug);
   if (!article) notFound();
@@ -100,10 +102,12 @@ export default async function MemberNewsArticlePage(
     <>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
 

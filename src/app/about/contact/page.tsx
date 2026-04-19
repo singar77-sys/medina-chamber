@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ContactForm } from "./ContactForm";
 
 import { safeJsonLd } from "@/lib/json-ld";
+import { headers } from "next/headers";
 export const metadata: Metadata = {
   title: "Contact Us",
   description:
@@ -61,11 +62,13 @@ const contactJsonLd = {
   },
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   return (
     <>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(contactJsonLd) }}
       />
     <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">

@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { events, getEventBySlug, eventMetaDescription } from "@/data/events";
 
 import { safeJsonLd } from "@/lib/json-ld";
+import { headers } from "next/headers";
 // ── Static generation ──────────────────────────────────────────────────────
 export function generateStaticParams() {
   return events.map((e) => ({ slug: e.slug }));
@@ -36,6 +37,7 @@ export async function generateMetadata(
 export default async function EventPage(
   { params }: { params: Promise<{ slug: string }> }
 ) {
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   const { slug } = await params;
   const event = getEventBySlug(slug);
   if (!event) notFound();
@@ -104,10 +106,12 @@ export default async function EventPage(
     <>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
 

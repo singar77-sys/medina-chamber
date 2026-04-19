@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { safeJsonLd } from "@/lib/json-ld";
+import { headers } from "next/headers";
 export const metadata: Metadata = {
   title: "Athena Awards",
   description:
@@ -67,11 +68,13 @@ const pricing = [
   { tier: "Non-Members", price: "$55" },
 ];
 
-export default function AthenaAwardsPage() {
+export default async function AthenaAwardsPage() {
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   return (
     <>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
 

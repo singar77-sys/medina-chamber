@@ -61,6 +61,19 @@ jobs:
         run: npm run scrape:jobs
         continue-on-error: true
 
+      # Smoke check — refuse to push an empty events file.
+      # If GrowthZone changes their HTML and we silently scrape zero
+      # events, the homepage event widget would go dark. Better to fail
+      # the workflow loudly so a human investigates.
+      - name: Smoke check — events count must be sane
+        run: |
+          COUNT=$(node -e "console.log(JSON.parse(require('fs').readFileSync('src/data/events.json','utf8')).events.length)")
+          echo "Events in file: $COUNT"
+          if [ "$COUNT" -lt 1 ]; then
+            echo "❌ Events count is zero. Refusing to push — investigate scraper."
+            exit 1
+          fi
+
       - name: Show diff (for log visibility)
         run: |
           echo "=== Files changed ==="

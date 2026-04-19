@@ -1069,6 +1069,12 @@ body {
   outline: none;
 }
 
+/* Hide the icon-only trigger on desktop — the ⌘K pill is the desktop
+   surface. Matches Tailwind's sm: breakpoint (640px). */
+@media (min-width: 640px) {
+  .cmdk-navtrigger--icon { display: none; }
+}
+
 .cmdk-kbd {
   display: inline-flex;
   align-items: center;

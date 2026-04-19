@@ -1,6 +1,7 @@
 import { streamText, createTextStreamResponse } from "ai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createOpenAI } from "@ai-sdk/openai";
+import * as Sentry from "@sentry/nextjs";
 import { searchMembersForContext, formatMembersForPrompt } from "@/lib/chat-search";
 import { formatEventsForPrompt } from "@/lib/events-context";
 import { formatNewsForPrompt } from "@/lib/news-context";
@@ -195,6 +196,10 @@ function safeStream(upstream: ReadableStream<string>): ReadableStream<string> {
         }
       } catch (err) {
         console.error("[chat] upstream stream error:", err);
+        Sentry.captureException(err, {
+          tags: { route: "chat", phase: "stream" },
+          extra: { yieldedAny },
+        });
         if (!yieldedAny) {
           for (const chunk of OFFLINE_LINES) controller.enqueue(chunk);
         }
@@ -287,6 +292,7 @@ export async function POST(req: Request) {
     return createTextStreamResponse({ textStream: safeStream(result.textStream) });
   } catch (err) {
     console.error("[chat] streamText init error:", err);
+    Sentry.captureException(err, { tags: { route: "chat", phase: "init" } });
     return createTextStreamResponse({ textStream: offlineFallbackStream() });
   }
 }

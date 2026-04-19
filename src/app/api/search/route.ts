@@ -19,6 +19,7 @@
 import { NextResponse } from "next/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import * as Sentry from "@sentry/nextjs";
 import { searchMembers } from "@/lib/semantic-search";
 
 export const runtime = "edge";
@@ -103,6 +104,10 @@ export async function POST(req: Request) {
   } catch (err) {
     // Fail gracefully — client falls back to keyword filter on members.json
     console.error("[search] error:", err);
+    Sentry.captureException(err, {
+      tags: { route: "search" },
+      extra: { query: q.slice(0, 200), categoryFilter },
+    });
     return NextResponse.json(
       { error: "Search temporarily unavailable" },
       { status: 503 },

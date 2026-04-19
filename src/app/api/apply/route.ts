@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import * as Sentry from "@sentry/nextjs";
 import { formLimiter, applyRateLimit } from "@/lib/rate-limit";
 
 const resend = new Resend(process.env.RESEND_API_KEY || "re_placeholder");
@@ -179,6 +180,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("Apply route error:", err);
+    Sentry.captureException(err, {
+      tags: { route: "apply" },
+      extra: { businessName, contactName, email },
+    });
     return NextResponse.json(
       { error: "Something went wrong. Please try again." },
       { status: 500 }

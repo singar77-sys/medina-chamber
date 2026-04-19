@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import * as Sentry from "@sentry/nextjs";
 import { formLimiter, applyRateLimit } from "@/lib/rate-limit";
 
 const CHAMBER_EMAIL = "office@medinaohchamber.com";
@@ -100,6 +101,12 @@ export async function POST(req: Request) {
     return Response.json({ ok: true });
   } catch (err) {
     console.error("Resend error:", err);
+    Sentry.captureException(err, {
+      tags: { route: "contact" },
+      // PII: name + email are intentional — chamber needs to know who hit
+      // the error. Sentry's sendDefaultPii is on; this matches that policy.
+      extra: { senderName: name, senderEmail: email },
+    });
     return Response.json({ error: "Failed to send message. Please try again." }, { status: 500 });
   }
 }

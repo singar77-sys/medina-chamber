@@ -1,17 +1,19 @@
 /**
  * POST /api/search
  * ----------------
- * Semantic member search. Blends OpenAI vector similarity with keyword
- * scoring across name/categories/description. Returns ranked member slugs.
+ * Hybrid (dense + BM25) member search backed by Upstash Vector. Returns
+ * a ranked list of member slugs + scores. The client already has the
+ * full members.json bundle, so we only ship slugs back.
  *
  * Request body:
  *   { q: string, topK?: number, categoryFilter?: string | null }
  *
  * Response:
- *   { results: [{ slug, name, score, vectorScore, keywordScore }] }
+ *   { results: [{ slug, name, score }] }
  *
- * Runtime: Node.js (the 14 MB embeddings JSON exceeds the Edge Runtime's
- * 4 MB function size limit).
+ * Runtime: Edge. The 14 MB embeddings JSON that previously forced this
+ * onto Node runtime moved to Upstash; the search lib only imports
+ * members.json (388 KB) and the Upstash client.
  */
 
 import { NextResponse } from "next/server";
@@ -19,13 +21,14 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { searchMembers } from "@/lib/semantic-search";
 
-// Use Node.js runtime — Edge can't fit the 14 MB embeddings bundle.
-export const runtime = "nodejs";
+export const runtime = "edge";
 
-// Force dynamic so Next.js doesn't try to prerender this.
+// Force dynamic — POST handlers are dynamic by default but Next prerender
+// detection can flag them; explicit is safer.
 export const dynamic = "force-dynamic";
 
-// ── Local rate limiter (imports in @/lib/rate-limit are chat+form tuned) ──
+// ── Local rate limiter (the shared chat+form limits in @/lib/rate-limit
+//    are tuned differently; search gets its own bucket) ────────────────
 function makeSearchLimiter(): Ratelimit | null {
   if (
     !process.env.UPSTASH_REDIS_REST_URL ||
@@ -50,7 +53,6 @@ function getClientIp(req: Request): string {
   return req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "anonymous";
 }
 
-// ── Handler ────────────────────────────────────────────────────────
 export async function POST(req: Request) {
   // Rate limit
   if (searchLimiter) {
@@ -89,19 +91,17 @@ export async function POST(req: Request) {
       categoryFilter: categoryFilter ?? null,
     });
 
-    // Strip heavy member fields from response — client already has the full
-    // directory, we only need slugs + debug scores.
+    // Strip heavy member fields from response — client already has the
+    // full directory; we only need slug + name + score.
     return NextResponse.json({
       results: results.map((r) => ({
         slug: r.member.chamberSlug,
         name: r.member.name,
         score: Number(r.score.toFixed(4)),
-        vectorScore: Number(r.vectorScore.toFixed(4)),
-        keywordScore: Number(r.keywordScore.toFixed(4)),
       })),
     });
   } catch (err) {
-    // Fail gracefully — client will fall back to keyword filter
+    // Fail gracefully — client falls back to keyword filter on members.json
     console.error("[search] error:", err);
     return NextResponse.json(
       { error: "Search temporarily unavailable" },

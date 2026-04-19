@@ -1,18 +1,19 @@
-# Weekly data refresh — members + embeddings + websites + ratings.
+# Weekly data refresh — members + websites + ratings + Upstash sync.
 #
-# All four datasets are slow-moving (1–3 changes per week typically) and
+# All datasets are slow-moving (1–3 changes per week typically) and
 # share a critical dependency on members.json — the websites and ratings
-# scrapers iterate the member list, and the embeddings cover every member.
+# scrapers iterate the member list, and the Upstash vector index covers
+# every member.
 #
 # Order of operations (do NOT rearrange):
-#   1. Smoke-check the existing members.json before we start
-#   2. Scrape members              → writes src/data/members.json
-#   3. Smoke-check the new members.json (catch broken scrapes loudly)
-#   4. Regenerate embeddings       → writes src/data/member-embeddings.json
-#   5. Run the integrity check     → bails if drift remains
-#   6. Scrape member websites      → writes src/data/member-websites.json
-#   7. Scrape Google ratings       → writes src/data/member-ratings.json
-#   8. Commit all four data files together
+#   1. Scrape members              → writes src/data/members.json
+#   2. Smoke-check the new members.json (catch broken scrapes loudly)
+#   3. Scrape member websites      → writes src/data/member-websites.json
+#      (must run BEFORE the vector sync — Upstash documents pull website
+#       text into the embedding input)
+#   4. Sync vectors to Upstash     → server-side BAAI/bge-large dense + BM25
+#   5. Scrape Google ratings       → writes src/data/member-ratings.json
+#   6. Commit data files together
 #
 # Manual run: GitHub → Actions → "Weekly data refresh" → "Run workflow"
 
@@ -34,8 +35,8 @@ concurrency:
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    # Member scrape (~5 min) + 511 embeddings (~3 min) + website scrape
-    # (~10 min for 466 sites) + ratings (~3 min) + buffer.
+    # Member scrape (~5 min) + website scrape (~10 min for 466 sites)
+    # + Upstash sync (~2 sec) + ratings (~3 min) + buffer.
     timeout-minutes: 45
 
     steps:
@@ -70,32 +71,27 @@ jobs:
             exit 1
           fi
 
-      # ── Step 3: regenerate embeddings ────────────────────────
-      # Must run AFTER members.json is updated so embeddings cover the
-      # new set. Cost: ~$0.001 for 511 members. Needs OPENAI_API_KEY.
-      - name: Regenerate member embeddings
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: node scripts/generate-member-embeddings.mjs
-
-      # ── Step 4: integrity gate ───────────────────────────────
-      # If members.json count != embeddings count OR slugs don't match,
-      # this fails the workflow and we DO NOT push. The next deploy
-      # would have failed prebuild anyway; better to catch it here.
-      - name: Verify members ↔ embeddings parity
-        run: npm run check:data
-
-      # ── Step 5: scrape member websites ───────────────────────
-      # Iterates every member with a website URL, fetches their homepage,
-      # extracts about-text/services for ChamberBot context enrichment.
-      # No auth needed — public pages.
+      # ── Step 3: scrape member websites ───────────────────────
+      # Must run BEFORE the vector sync: the documents we upsert to
+      # Upstash include scraped website text (services, aboutText) for
+      # richer semantic matching. Stale website data → stale vectors.
       - name: Scrape member websites
         run: npm run scrape:websites
         continue-on-error: true   # one bad website shouldn't kill the run
 
-      # ── Step 6: scrape Google ratings ────────────────────────
+      # ── Step 4: sync to Upstash Vector ───────────────────────
+      # Upserts every member as a fresh document. Upstash's managed
+      # BAAI/bge-large-en-v1.5 (dense) + BM25 (sparse) handle vectorization
+      # server-side. Idempotent — safe to re-run anytime.
+      - name: Sync vectors to Upstash
+        env:
+          UPSTASH_VECTOR_REST_URL: ${{ secrets.UPSTASH_VECTOR_REST_URL }}
+          UPSTASH_VECTOR_REST_TOKEN: ${{ secrets.UPSTASH_VECTOR_REST_TOKEN }}
+        run: node scripts/sync-vectors-to-upstash.mjs
+
+      # ── Step 5: scrape Google ratings ────────────────────────
       # Pulls Google Places ratings for each member with a website URL.
-      # Needs GOOGLE_PLACES_API_KEY.
+      # Independent of vector sync — safe to fail without blocking push.
       - name: Scrape Google ratings
         env:
           GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
@@ -119,11 +115,11 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add src/data/members.json \
-                  src/data/member-embeddings.json \
                   src/data/member-websites.json \
                   src/data/member-ratings.json
           git commit -m "chore(data): weekly scrape — $(date -u +%Y-%m-%d)
 
-          Auto-refresh of member directory, embeddings, websites, and
-          Google ratings. Triggered by .github/workflows/scrape-weekly.yml."
+          Auto-refresh of member directory, websites, and Google ratings.
+          Vectors synced to Upstash separately (no JSON file).
+          Triggered by .github/workflows/scrape-weekly.yml."
           git push origin main

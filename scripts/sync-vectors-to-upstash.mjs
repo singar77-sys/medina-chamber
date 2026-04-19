@@ -67,6 +67,60 @@ function cleanText(t, maxLen = 600) {
   return String(t).replace(/\s+/g, " ").trim().slice(0, maxLen);
 }
 
+// Service-intent synonym map. Real chamber visitors search by the word
+// they'd say out loud ("haircut", "plumber", "mechanic"), but most member
+// docs only contain the category label ("Beauty Salons", "Plumbing
+// Contractor"). Without this enrichment, a query like "haircut downtown"
+// scored Wichert Insurance above Hair Haven Salon. Each rule appends a
+// "Also known as / commonly searched as" line if any of the member's
+// categories matches the substring (case-insensitive).
+const SYNONYM_RULES = [
+  { match: ["beauty salon", "hair salon"],     terms: "haircut hairstyle salon stylist makeover" },
+  { match: ["barbershop", "barber shop"],      terms: "haircut barber shave mens haircut" },
+  { match: ["plumb"],                          terms: "plumber drain leak pipe water heater clog" },
+  { match: ["heating", "hvac"],                terms: "furnace air conditioning ac hvac heat pump cooling" },
+  { match: ["pet grooming"],                   terms: "pet groomer dog grooming cat grooming" },
+  { match: ["veterin"],                        terms: "vet veterinarian animal hospital pet doctor" },
+  { match: ["lawn", "landscape"],              terms: "landscaper lawn care mowing yard work tree service" },
+  { match: ["fitness", "gym"],                 terms: "gym workout training exercise personal trainer" },
+  { match: ["cleaning service"],               terms: "cleaner housekeeping maid janitorial" },
+  { match: ["automobile repair", "auto repair"], terms: "mechanic car repair auto repair fix car" },
+  { match: ["auto detailing"],                 terms: "car wash detailing waxing" },
+  { match: ["photograph"],                     terms: "photographer photos headshots portraits family pictures" },
+  { match: ["print"],                          terms: "printing signs banners business cards flyers" },
+  { match: ["caterer", "catering"],            terms: "catering food service event food" },
+  { match: ["restaurant"],                     terms: "restaurant food dining lunch dinner takeout" },
+  { match: ["insurance"],                      terms: "insurance coverage policy auto home life health insurance" },
+  { match: ["dentist", "dental"],              terms: "dentist dental teeth oral hygiene" },
+  { match: ["physician", "surgeon", "medical center"], terms: "doctor physician medical clinic primary care" },
+  { match: ["construction", "general contractor"], terms: "contractor builder construction remodel renovation" },
+  { match: ["roofing"],                        terms: "roofer roof repair roof replacement gutters" },
+  { match: ["real estate"],                    terms: "realtor real estate agent home buying home selling listing" },
+  { match: ["bank"],                           terms: "bank banking loan mortgage checking savings credit" },
+  { match: ["accountant", "cpa"],              terms: "accountant cpa tax taxes bookkeeper bookkeeping" },
+  { match: ["counsel", "therap"],              terms: "therapist counselor mental health therapy" },
+  { match: ["marketing", "advertising"],       terms: "marketing advertising branding promotion design agency" },
+  { match: ["telecom"],                        terms: "phone internet wifi cellular telecom" },
+  { match: ["attorney", "lawyer", "law firm"], terms: "attorney lawyer legal counsel law firm" },
+  { match: ["chiropract"],                     terms: "chiropractor back pain neck adjustment spine" },
+  { match: ["massage"],                        terms: "massage therapist spa relaxation deep tissue" },
+  { match: ["nursing home", "assisted living"], terms: "nursing home assisted living senior care elderly" },
+  { match: ["funeral"],                        terms: "funeral home cremation burial memorial" },
+  { match: ["daycare", "preschool", "childcare"], terms: "daycare childcare preschool kids early childhood" },
+  { match: ["bakery"],                         terms: "bakery cake bread pastries cookies wedding cake" },
+];
+
+function expandSynonyms(categories) {
+  if (!categories?.length) return "";
+  const haystack = categories.join(" ").toLowerCase();
+  const hits = [];
+  for (const rule of SYNONYM_RULES) {
+    if (rule.match.some((m) => haystack.includes(m))) hits.push(rule.terms);
+  }
+  if (!hits.length) return "";
+  return "Also commonly searched as: " + hits.join(" ");
+}
+
 function buildDocument(member, scraped) {
   const lines = [];
 
@@ -77,6 +131,11 @@ function buildDocument(member, scraped) {
   if (member.categories?.length) {
     lines.push("Business categories: " + member.categories.join(", "));
   }
+
+  // 2b. Service-intent synonyms keyed off categories — boosts BM25 match
+  //     for the words real users type vs the category labels in the data.
+  const synonyms = expandSynonyms(member.categories);
+  if (synonyms) lines.push(synonyms);
 
   // 3. Chamber-curated description
   if (member.description?.trim().length > 5) {

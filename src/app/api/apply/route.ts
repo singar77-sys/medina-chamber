@@ -2,6 +2,30 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { formLimiter, applyRateLimit } from "@/lib/rate-limit";
 
+const resend = new Resend(process.env.RESEND_API_KEY || "re_placeholder");
+const CHAMBER_EMAIL = "office@medinaohchamber.com";
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Per-field length caps. Real applications stay well under these; anything
+// over is almost certainly abuse or a paste accident.
+const MAX = {
+  businessName: 200,
+  contactName: 200,
+  title: 150,
+  email: 320,        // RFC 5321
+  phone: 50,
+  website: 500,
+  address: 200,
+  city: 100,
+  state: 50,
+  zip: 20,
+  employees: 20,
+  category: 200,
+  referral: 500,
+  notes: 5000,
+};
+
 function escHtml(s: string): string {
   return String(s)
     .replace(/&/g, "&amp;")
@@ -10,61 +34,89 @@ function escHtml(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
-const resend = new Resend(process.env.RESEND_API_KEY || "re_placeholder");
-const CHAMBER_EMAIL = "office@medinaohchamber.com";
+/** Returns trimmed string if valid, null otherwise. Empty input → null. */
+function pickString(raw: unknown, max: number): string | null {
+  if (typeof raw !== "string") return null;
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+  if (trimmed.length > max) return null;
+  return trimmed;
+}
+
+/** Same as pickString but returns "" for missing/invalid (vs null). Used for
+ *  optional fields where we just want to skip rendering on empty. */
+function pickOptional(raw: unknown, max: number): string {
+  const v = pickString(raw, max);
+  return v ?? "";
+}
 
 export async function POST(req: NextRequest) {
   const limited = await applyRateLimit(req, formLimiter);
   if (limited) return limited;
 
+  // 1. Body must be valid JSON
+  let body: unknown;
   try {
-    const body = await req.json();
-    const {
-      businessName,
-      contactName,
-      title,
-      email,
-      phone,
-      website,
-      address,
-      city,
-      state,
-      zip,
-      employees,
-      category,
-      referral,
-      notes,
-    } = body;
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+  }
+  if (!body || typeof body !== "object") {
+    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+  }
 
-    // Basic validation
-    if (!businessName || !contactName || !email || !phone || !employees) {
-      return NextResponse.json(
-        { error: "Required fields missing." },
-        { status: 400 }
-      );
-    }
+  const raw = body as Record<string, unknown>;
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json({ error: "Invalid email address." }, { status: 400 });
-    }
+  // 2. Field-by-field validation
+  const businessName = pickString(raw.businessName, MAX.businessName);
+  const contactName  = pickString(raw.contactName,  MAX.contactName);
+  const email        = pickString(raw.email,        MAX.email);
+  const phone        = pickString(raw.phone,        MAX.phone);
+  const employees    = pickString(raw.employees,    MAX.employees);
 
-    const employeeLabel: Record<string, string> = {
-      "1": "1 (sole proprietor)",
-      "2-5": "2–5 employees",
-      "6-10": "6–10 employees",
-      "11-25": "11–25 employees",
-      "26-50": "26–50 employees",
-      "51-100": "51–100 employees",
-      "100+": "100+ employees",
-    };
+  if (!businessName || !contactName || !email || !phone || !employees) {
+    return NextResponse.json(
+      { error: "Required fields missing." },
+      { status: 400 }
+    );
+  }
+  if (!EMAIL_RE.test(email)) {
+    return NextResponse.json(
+      { error: "Please enter a valid email address." },
+      { status: 400 }
+    );
+  }
 
-    const fullAddress = [address, city, state, zip].filter(Boolean).join(", ");
-    const safeWebsite = /^https?:\/\//i.test(website ?? "") ? website : "";
+  // Optional fields (empty string when missing)
+  const title    = pickOptional(raw.title,    MAX.title);
+  const address  = pickOptional(raw.address,  MAX.address);
+  const city     = pickOptional(raw.city,     MAX.city);
+  const state    = pickOptional(raw.state,    MAX.state);
+  const zip      = pickOptional(raw.zip,      MAX.zip);
+  const category = pickOptional(raw.category, MAX.category);
+  const referral = pickOptional(raw.referral, MAX.referral);
+  const notes    = pickOptional(raw.notes,    MAX.notes);
+  const website  = pickOptional(raw.website,  MAX.website);
 
+  const employeeLabel: Record<string, string> = {
+    "1": "1 (sole proprietor)",
+    "2-5": "2–5 employees",
+    "6-10": "6–10 employees",
+    "11-25": "11–25 employees",
+    "26-50": "26–50 employees",
+    "51-100": "51–100 employees",
+    "100+": "100+ employees",
+  };
+
+  const fullAddress = [address, city, state, zip].filter(Boolean).join(", ");
+  // Only echo the website link if it actually parses as http(s) URL — guards
+  // against javascript:/data: payloads in the email body.
+  const safeWebsite = /^https?:\/\//i.test(website) ? website : "";
+
+  try {
     await resend.emails.send({
       from: "Chamber Membership <onboarding@resend.dev>",
-      replyTo: email.trim(),
+      replyTo: email,
       to: CHAMBER_EMAIL,
       subject: `Membership Application — ${businessName}`,
       html: `

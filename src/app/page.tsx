@@ -13,6 +13,7 @@ import { PartnersMarquee } from "@/components/PartnersMarquee";
 import { RentalSpaceCards } from "@/components/RentalSpaceCards";
 import { MemberVoice } from "@/components/MemberVoice";
 
+import { safeJsonLd } from "@/lib/json-ld";
 export const metadata: Metadata = {
   title: "Greater Medina Chamber of Commerce — Medina County, Ohio",
   description:
@@ -91,7 +92,7 @@ export default function HomePage() {
     <div>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(organizationJsonLd) }}
       />
 
       {/* ─── Hero ─────────────────────────────────────────── */}

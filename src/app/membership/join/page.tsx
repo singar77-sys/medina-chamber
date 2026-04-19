@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ApplicationForm } from "./ApplicationForm";
 
+import { safeJsonLd } from "@/lib/json-ld";
 export const metadata: Metadata = {
   title: "Join the Chamber",
   description:
@@ -81,7 +82,7 @@ export default function JoinPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(faqJsonLd) }}
       />
     <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
       {/* Hero */}

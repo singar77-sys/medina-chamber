@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 
+import { safeJsonLd } from "@/lib/json-ld";
 export const metadata: Metadata = {
   title: "Your First 30 Days",
   description:
@@ -167,11 +168,11 @@ export default function First30DaysPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(howToJsonLd) }}
       />
 
       <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">

@@ -29,35 +29,10 @@
  */
 
 import { NextResponse } from "next/server";
-import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
+import { healthLimiter, applyRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
-
-// ── Local rate limiter — 60/min/IP, separate bucket from chat/search ─
-function makeHealthLimiter(): Ratelimit | null {
-  if (
-    !process.env.UPSTASH_REDIS_REST_URL ||
-    !process.env.UPSTASH_REDIS_REST_TOKEN
-  ) {
-    return null;
-  }
-  const redis = new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN,
-  });
-  return new Ratelimit({
-    redis,
-    limiter: Ratelimit.slidingWindow(60, "1 m"),
-    prefix: "rl:health",
-  });
-}
-const healthLimiter = makeHealthLimiter();
-
-function getClientIp(req: Request): string {
-  return req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "anonymous";
-}
 
 // Each check returns a uniform shape. Per-dep timeout keeps the whole
 // /health request bounded — no waiting on a hung upstream.
@@ -137,12 +112,8 @@ async function checkResend(): Promise<DepResult> {
 }
 
 export async function GET(req: Request) {
-  if (healthLimiter) {
-    const { success } = await healthLimiter.limit(getClientIp(req));
-    if (!success) {
-      return new NextResponse("Too many requests", { status: 429 });
-    }
-  }
+  const limited = await applyRateLimit(req, healthLimiter);
+  if (limited) return limited;
 
   const [upstashVector, anthropic, resend] = await Promise.all([
     checkUpstashVector(),

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ContactForm } from "./ContactForm";
 
+import { safeJsonLd } from "@/lib/json-ld";
 export const metadata: Metadata = {
   title: "Contact Us",
   description:
@@ -65,7 +66,7 @@ export default function ContactPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(contactJsonLd) }}
       />
     <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
       {/* Hero */}

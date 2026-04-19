@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { members, getMemberBySlug, extractCity, getInitials, isVisibilityPlus } from "@/data/members";
 
+import { safeJsonLd } from "@/lib/json-ld";
 // ── Static generation ──────────────────────────────────────────
 export function generateStaticParams() {
   return members.map((m) => ({ slug: m.chamberSlug }));
@@ -89,11 +90,11 @@ export default async function MemberPage(
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
 
       <div className="mx-auto max-w-5xl px-6 lg:px-8 py-12 lg:py-20">

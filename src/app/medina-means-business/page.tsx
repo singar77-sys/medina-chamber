@@ -6,6 +6,7 @@ import { activeCommunities, getMembersByCity } from "@/data/communities";
 import { FadeIn } from "@/components/FadeIn";
 import { CountUp } from "@/components/CountUp";
 
+import { safeJsonLd } from "@/lib/json-ld";
 export const metadata: Metadata = {
   title: "Medina Means Business",
   description:
@@ -63,11 +64,11 @@ export default function MedinaMeansBusinessPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(webPageJsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
 
       {/* ─── Hero ─────────────────────────────────────────── */}

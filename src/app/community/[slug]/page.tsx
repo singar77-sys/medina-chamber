@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { safeJsonLd } from "@/lib/json-ld";
 import {
   activeCommunities,
   getCommunityBySlug,
@@ -81,7 +82,7 @@ export default async function CommunityPage(
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
 
       <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">

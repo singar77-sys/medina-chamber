@@ -17,10 +17,9 @@
  */
 
 import { NextResponse } from "next/server";
-import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
 import * as Sentry from "@sentry/nextjs";
 import { searchMembers } from "@/lib/semantic-search";
+import { searchLimiter, applyRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "edge";
 
@@ -28,42 +27,9 @@ export const runtime = "edge";
 // detection can flag them; explicit is safer.
 export const dynamic = "force-dynamic";
 
-// ── Local rate limiter (the shared chat+form limits in @/lib/rate-limit
-//    are tuned differently; search gets its own bucket) ────────────────
-function makeSearchLimiter(): Ratelimit | null {
-  if (
-    !process.env.UPSTASH_REDIS_REST_URL ||
-    !process.env.UPSTASH_REDIS_REST_TOKEN
-  ) {
-    return null;
-  }
-  const redis = new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN,
-  });
-  return new Ratelimit({
-    redis,
-    // 30 queries per minute per IP — generous for real browsing, rejects bots
-    limiter: Ratelimit.slidingWindow(30, "1 m"),
-    prefix: "rl:search",
-  });
-}
-const searchLimiter = makeSearchLimiter();
-
-function getClientIp(req: Request): string {
-  return req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "anonymous";
-}
-
 export async function POST(req: Request) {
-  // Rate limit
-  if (searchLimiter) {
-    const { success } = await searchLimiter.limit(getClientIp(req));
-    if (!success) {
-      return new NextResponse("Too many requests — please slow down.", {
-        status: 429,
-      });
-    }
-  }
+  const limited = await applyRateLimit(req, searchLimiter);
+  if (limited) return limited;
 
   // Parse body
   let body: unknown;

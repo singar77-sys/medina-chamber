@@ -126,16 +126,98 @@ function getAIProvider() {
     const openai = createOpenAI({ apiKey: process.env.OPENAI_API_KEY });
     return { model: openai("gpt-4o-mini"), provider: "openai" };
   }
-  throw new Error("No AI API key configured. Set ANTHROPIC_API_KEY or OPENAI_API_KEY.");
+  return null;
+}
+
+// ── Static appendix memo (events + news) ───────────────────────────
+// Events update once a day at most (data is built into the bundle), and
+// news the same. Rebuilding this string on every chat turn was wasted
+// work AND wasted cache opportunity. We hold it in module scope with
+// a 5-min TTL so hot edge isolates serve it instantly. Cold starts lose
+// the memo, which is correct — the cache shouldn't outlive the isolate.
+const STATIC_APPENDIX_TTL_MS = 5 * 60 * 1000;
+let cachedStaticAppendix: { value: string; expiresAt: number } | null = null;
+
+function getStaticAppendix(): string {
+  const now = Date.now();
+  if (cachedStaticAppendix && cachedStaticAppendix.expiresAt > now) {
+    return cachedStaticAppendix.value;
+  }
+  const value = [formatEventsForPrompt(), formatNewsForPrompt()]
+    .filter(Boolean)
+    .join("\n\n");
+  cachedStaticAppendix = { value, expiresAt: now + STATIC_APPENDIX_TTL_MS };
+  return value;
+}
+
+// ── Offline fallback stream ────────────────────────────────────────
+// If both AI providers are unavailable (no key, or upstream error), we
+// still return a 200 streaming response so the client UI doesn't spin
+// or show a generic "fetch failed" — instead the user sees a coherent
+// fallback message pointing them at the actionable next steps.
+const OFFLINE_LINES: readonly string[] = [
+  "Sorry — the ChamberBot is temporarily offline. ",
+  "You can still get to everything you need:\n\n",
+  "• Browse the [Member Directory](https://medinachamber.com/membership/directory)\n",
+  "• Check [upcoming events](https://medinachamber.com/events)\n",
+  "• Email Stephanie at stephanie@medinaohchamber.com or call **(330) 723-8773**\n\n",
+  "Try me again in a minute.",
+];
+
+function offlineFallbackStream(): ReadableStream<string> {
+  return new ReadableStream<string>({
+    start(controller) {
+      for (const chunk of OFFLINE_LINES) controller.enqueue(chunk);
+      controller.close();
+    },
+  });
+}
+
+// Wraps an upstream model stream so any mid-stream error pivots to the
+// offline fallback instead of cutting off abruptly. Also covers the
+// silent case where the upstream completes without yielding any tokens.
+// If we already yielded part of a real response, we stop on error rather
+// than appending fallback text — partial real + fallback would confuse.
+function safeStream(upstream: ReadableStream<string>): ReadableStream<string> {
+  return new ReadableStream<string>({
+    async start(controller) {
+      const reader = upstream.getReader();
+      let yieldedAny = false;
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          yieldedAny = true;
+          controller.enqueue(value);
+        }
+        if (!yieldedAny) {
+          for (const chunk of OFFLINE_LINES) controller.enqueue(chunk);
+        }
+      } catch (err) {
+        console.error("[chat] upstream stream error:", err);
+        if (!yieldedAny) {
+          for (const chunk of OFFLINE_LINES) controller.enqueue(chunk);
+        }
+      } finally {
+        try { reader.releaseLock(); } catch { /* noop */ }
+        controller.close();
+      }
+    },
+  });
 }
 
 export async function POST(req: Request) {
   const limited = await applyRateLimit(req, chatLimiter);
   if (limited) return limited;
 
-  const body = await req.json();
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch {
+    return new Response("Invalid JSON body", { status: 400 });
+  }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const raw: any[] = body?.messages;
+  const raw: any[] = (body as { messages?: unknown })?.messages as any[];
   if (!Array.isArray(raw) || raw.length === 0) {
     return new Response("Invalid request", { status: 400 });
   }
@@ -161,44 +243,50 @@ export async function POST(req: Request) {
   const relevantMembers = searchMembersForContext(searchContext, 8);
   const memberContext = formatMembersForPrompt(relevantMembers);
 
-  // Always inject live upcoming events and recent news
-  const eventsContext = formatEventsForPrompt();
-  const newsContext = formatNewsForPrompt();
+  // Static appendix (events + news) — TTL-cached at module scope.
+  const staticAppendix = getStaticAppendix();
 
-  const appendix = [
-    eventsContext,
-    newsContext,
-    memberContext ? `RELEVANT MEMBER BUSINESSES FOR THIS QUERY:\n${memberContext}` : "",
-  ]
-    .filter(Boolean)
-    .join("\n\n");
+  const provider = getAIProvider();
+  if (!provider) {
+    // No API key configured at all — short-circuit to offline fallback.
+    return createTextStreamResponse({ textStream: offlineFallbackStream() });
+  }
 
-  const { model } = getAIProvider();
-
-  // Static system prompt is marked ephemeral so Anthropic caches it after the
-  // first request (~10x cheaper on that block: $0.08/MTok vs $0.80/MTok).
-  // The dynamic appendix (live events, member context) is a separate system
-  // block without cache_control — it changes per request so caching it would
-  // never hit anyway.
+  // Three system blocks:
+  //   1. CHAMBER_SYSTEM_PROMPT — long, totally static. Anthropic-cached.
+  //   2. Static appendix (events + news) — changes every ~5 min. Also
+  //      Anthropic-cached so it hits the cache for ~5 min of traffic.
+  //   3. memberContext — per-query, NOT cached.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const allMessages: any[] = [
     {
       role: "system",
       content: CHAMBER_SYSTEM_PROMPT,
-      providerOptions: {
-        anthropic: { cacheControl: { type: "ephemeral" } },
-      },
+      providerOptions: { anthropic: { cacheControl: { type: "ephemeral" } } },
     },
-    ...(appendix ? [{ role: "system", content: appendix }] : []),
+    ...(staticAppendix
+      ? [{
+          role: "system",
+          content: staticAppendix,
+          providerOptions: { anthropic: { cacheControl: { type: "ephemeral" } } },
+        }]
+      : []),
+    ...(memberContext
+      ? [{ role: "system", content: `RELEVANT MEMBER BUSINESSES FOR THIS QUERY:\n${memberContext}` }]
+      : []),
     ...messages,
   ];
 
-  const result = streamText({
-    model,
-    messages: allMessages,
-    maxOutputTokens: 400,
-    temperature: 0.3,
-  });
-
-  return createTextStreamResponse({ textStream: result.textStream });
+  try {
+    const result = streamText({
+      model: provider.model,
+      messages: allMessages,
+      maxOutputTokens: 400,
+      temperature: 0.3,
+    });
+    return createTextStreamResponse({ textStream: safeStream(result.textStream) });
+  } catch (err) {
+    console.error("[chat] streamText init error:", err);
+    return createTextStreamResponse({ textStream: offlineFallbackStream() });
+  }
 }

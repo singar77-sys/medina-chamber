@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/check-data-integrity.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "check:data": "node scripts/check-data-integrity.mjs",
     "scrape": "node scripts/scrape-members.mjs",
     "scrape:fast": "node scripts/scrape-members.mjs --no-details",
     "scrape:websites": "node scripts/scrape-websites.mjs",

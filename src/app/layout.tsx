@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider, ThemeScript } from "@/components/ThemeProvider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -75,6 +77,11 @@ export default function RootLayout({
           <CommandPalette />
           <KeywordHotkey />
         </ThemeProvider>
+        {/* Vercel observability — page views + web vitals (LCP, INP, CLS).
+            Both ship sub-1KB scripts; data shows up in the Vercel project
+            dashboard under Analytics + Speed Insights. */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

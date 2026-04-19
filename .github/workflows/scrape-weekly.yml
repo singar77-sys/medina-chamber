@@ -123,3 +123,12 @@ jobs:
           Vectors synced to Upstash separately (no JSON file).
           Triggered by .github/workflows/scrape-weekly.yml."
           git push origin main
+
+      # Email Mark if anything in the workflow above failed. Skips
+      # silently if the notify secrets aren't configured.
+      - name: Notify on failure
+        if: failure()
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          CRON_ALERT_EMAIL: ${{ secrets.CRON_ALERT_EMAIL }}
+        run: node scripts/notify-cron-failure.mjs

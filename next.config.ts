@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import path from "node:path";
 import { withSentryConfig } from "@sentry/nextjs";
 
 // Security response headers applied to every route. We do NOT set CSP
@@ -26,6 +27,13 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Pin the Turbopack workspace root to this project. Without this,
+  // Turbopack walks up to C:\Users\Mark\ finds a stray package-lock.json,
+  // and uses THAT directory as the root — which then can't resolve
+  // tailwindcss / next-installed modules and OOMs the dev server.
+  turbopack: {
+    root: path.join(import.meta.dirname, "."),
+  },
   images: {
     qualities: [55, 60, 75, 85],
     remotePatterns: [

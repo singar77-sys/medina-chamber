@@ -248,11 +248,17 @@ export function ChamberChatGraphic({ mode = "social" }: { mode?: GraphicMode }) 
   // the cup on the right and the title on the left. Story is portrait —
   // the title sits at the bottom, so the cup goes up top so they don't
   // collide. Centered horizontally for a symmetric vertical composition.
+  //
+  // Saucer math: bottom of the outermost saucer ring sits at
+  //   cy + h + 16 + ry*0.8
+  // Social was previously cy=400 → saucer bottom 649.6 on a 630-tall
+  // canvas, so the mug bottom clipped. cy=350 pulls saucer bottom up
+  // to 599.6, leaving a ~30px visual margin.
   const cup = isStory
     ? { cx: 540, cy: 820,  rx: 260, ry: 65, h: 290 }
     : isSquare
     ? { cx: 820, cy: 720,  rx: 200, ry: 50, h: 220 }
-    : { cx: 980, cy: 400,  rx: 170, ry: 42, h: 200 };
+    : { cx: 980, cy: 350,  rx: 170, ry: 42, h: 200 };
 
   // BN Bergen bold "Chamber" at 260px measures ~1106px wide — wider than
   // the 1080 story canvas, so the final "r" would render past the right

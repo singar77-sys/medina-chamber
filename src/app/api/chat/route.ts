@@ -11,7 +11,7 @@ import { formatEventsForPrompt } from "@/lib/events-context";
 import { formatNewsForPrompt } from "@/lib/news-context";
 import { totalCount } from "@/data/members";
 import { chatLimiter, applyRateLimit, getRequestIp } from "@/lib/rate-limit";
-import { isOverDailyCap, recordTokenUsage } from "@/lib/spend-cap";
+import { isOverDailyCap, isOverMonthlyCap, recordTokenUsage } from "@/lib/spend-cap";
 import { isIpOverBlockThreshold, recordIpTokenUsage } from "@/lib/per-ip-watch";
 import {
   type ChatTurn,
@@ -266,14 +266,24 @@ export async function POST(req: Request) {
     return createTextStreamResponse({ textStream: offlineFallbackStream() });
   }
 
-  // Daily spend circuit breaker. Rate limits stop per-IP volume, but a
-  // rotating-proxy attacker would walk past that. The spend cap is the
-  // real backstop on the Anthropic bill — once today's token budget is
-  // spent, every further request streams the offline fallback.
+  // Monthly spend ceiling — the real budget cap. Sized to keep the
+  // Anthropic bill under a fixed monthly dollar target. Once this hits,
+  // the bot is offline until the calendar month rolls over.
+  if (await isOverMonthlyCap()) {
+    Sentry.captureMessage("chat MONTHLY token cap hit — bot offline until next month", {
+      level: "error",
+      tags: { route: "chat", phase: "spend-cap", severity: "monthly-cap-hit" },
+    });
+    return createTextStreamResponse({ textStream: offlineFallbackStream() });
+  }
+
+  // Daily tripwire at ~13% of monthly. Catches burst abuse within hours
+  // instead of letting it eat a big chunk of the monthly budget first.
+  // Offline until UTC midnight rolls the counter.
   if (await isOverDailyCap()) {
-    Sentry.captureMessage("chat daily token cap hit — serving fallback", {
+    Sentry.captureMessage("chat daily token cap hit — serving fallback until UTC midnight", {
       level: "warning",
-      tags: { route: "chat", phase: "spend-cap" },
+      tags: { route: "chat", phase: "spend-cap", severity: "daily-cap-hit" },
     });
     return createTextStreamResponse({ textStream: offlineFallbackStream() });
   }

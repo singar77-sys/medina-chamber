@@ -22,11 +22,15 @@
 import { Redis } from "@upstash/redis";
 import * as Sentry from "@sentry/nextjs";
 
+// Sized against a $20/month budget enforced by spend-cap.ts. The daily
+// cap is ~2M tokens, so any single IP reaching 200k/hour is eating 10%
+// of today's budget in one hour — a clear abuse signal worth blocking.
+// The 100k warn threshold stays as the early-warning heads-up.
 const PER_IP_WARN_TOKENS = Number(
   process.env.CHAT_PER_IP_WARN_TOKENS ?? 100_000,
 );
 const PER_IP_BLOCK_TOKENS = Number(
-  process.env.CHAT_PER_IP_BLOCK_TOKENS ?? 500_000,
+  process.env.CHAT_PER_IP_BLOCK_TOKENS ?? 200_000,
 );
 
 // 2h TTL so keys survive the hour-boundary rollover without being

@@ -4,7 +4,7 @@
  * using both GrowthZone data and scraped website content.
  */
 
-import { members, type Member } from "@/data/members";
+import { members, isVisibilityPlus, type Member } from "@/data/members";
 import { getWebData, formatEnrichedMember } from "@/lib/website-search";
 
 // Common English words that have no value as search terms. Lowercase.
@@ -95,4 +95,71 @@ export function searchMembersForContext(query: string, limit = 8): Member[] {
 export function formatMembersForPrompt(matched: Member[]): string {
   if (matched.length === 0) return "";
   return matched.map(formatEnrichedMember).join("\n\n");
+}
+
+/**
+ * Return matching members split into two groups — all Visibility Plus
+ * members that scored > 0 (up to `vpLimit`), and up to `otherLimit`
+ * of the next-highest-scoring non-VP members.
+ *
+ * The chat route injects these as two distinctly-labeled blocks so the
+ * LLM can "always list VP members first, then suggest the full
+ * directory" as a hard rule.
+ */
+export function searchMembersWithVPPriority(
+  query: string,
+  vpLimit = 20,
+  otherLimit = 3,
+): { vpMembers: Member[]; otherMembers: Member[] } {
+  const terms = query
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .filter((t) => t.length >= 2 && !STOPWORDS.has(t));
+
+  if (terms.length === 0) return { vpMembers: [], otherMembers: [] };
+
+  const scored = members
+    .map((m) => ({ member: m, score: scoreMatch(m, terms) }))
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score);
+
+  const vpMembers = scored
+    .filter(({ member }) => isVisibilityPlus(member))
+    .slice(0, vpLimit)
+    .map(({ member }) => member);
+
+  const otherMembers = scored
+    .filter(({ member }) => !isVisibilityPlus(member))
+    .slice(0, otherLimit)
+    .map(({ member }) => member);
+
+  return { vpMembers, otherMembers };
+}
+
+/**
+ * Format VP + other relevant members as two labeled blocks that the
+ * prompt can reference by name. Returns empty string if both groups
+ * are empty (no relevant members for this query).
+ */
+export function formatMembersGroupedForPrompt(
+  vpMembers: Member[],
+  otherMembers: Member[],
+): string {
+  const parts: string[] = [];
+  if (vpMembers.length > 0) {
+    parts.push(
+      `VISIBILITY PLUS MEMBERS MATCHING THIS QUERY (the chamber's top-tier listings — list ALL of these first):\n\n${vpMembers
+        .map(formatEnrichedMember)
+        .join("\n\n")}`,
+    );
+  }
+  if (otherMembers.length > 0) {
+    parts.push(
+      `OTHER RELEVANT MEMBERS (lower-tier; use as backup if VP matches are sparse):\n\n${otherMembers
+        .map(formatEnrichedMember)
+        .join("\n\n")}`,
+    );
+  }
+  return parts.join("\n\n");
 }

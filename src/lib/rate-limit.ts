@@ -18,23 +18,15 @@
  */
 
 import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
+import { getRedis } from "@/lib/upstash";
 
 // ── Upstash factory ───────────────────────────────────────────────
 function makeUpstashLimiter(
   requestsPerMinute: number,
   prefix: string,
 ): Ratelimit | null {
-  if (
-    !process.env.UPSTASH_REDIS_REST_URL ||
-    !process.env.UPSTASH_REDIS_REST_TOKEN
-  ) {
-    return null;
-  }
-  const redis = new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN,
-  });
+  const redis = getRedis();
+  if (!redis) return null;
   return new Ratelimit({
     redis,
     limiter: Ratelimit.slidingWindow(requestsPerMinute, "1 m"),

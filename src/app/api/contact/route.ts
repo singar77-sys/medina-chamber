@@ -1,11 +1,7 @@
-import { Resend } from "resend";
 import * as Sentry from "@sentry/nextjs";
 import { formLimiter, applyRateLimit } from "@/lib/rate-limit";
-
-const CHAMBER_EMAIL = "office@medinaohchamber.com";
-const resend = new Resend(process.env.RESEND_API_KEY || "re_placeholder");
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { resend, CHAMBER_NOTIFY_EMAIL, EMAIL_RE } from "@/lib/email";
+import { escHtml, pickString } from "@/lib/sanitize";
 
 // Per-field length caps. Anything longer is almost certainly abuse —
 // real chamber visitors don't paste novels into a contact form.
@@ -16,22 +12,11 @@ const MAX = {
   message: 5000,
 };
 
-function escHtml(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-/** Returns the trimmed string if valid, or null if it fails the rules. */
-function pickString(raw: unknown, max: number): string | null {
-  if (typeof raw !== "string") return null;
-  const trimmed = raw.trim();
-  if (!trimmed) return null;
-  if (trimmed.length > max) return null;
-  return trimmed;
-}
+// Minimum time between form render and submission. Real humans take
+// at least a few seconds to fill out a contact form; naive spam bots
+// submit within milliseconds. 1.5s catches the dumb ones without any
+// friction for real users.
+const MIN_FILL_MS = 1500;
 
 export async function POST(req: Request) {
   const limited = await applyRateLimit(req, formLimiter);
@@ -48,8 +33,25 @@ export async function POST(req: Request) {
     return Response.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  // 2. Field-by-field validation with explicit length caps
   const raw = body as Record<string, unknown>;
+
+  // 2. Honeypot + timing check. If either trips we return 200 so the
+  //    bot thinks it succeeded and doesn't adjust tactics — but we
+  //    never dispatch an email or call Resend. Sentry logs the event
+  //    so we can see volume if it matters.
+  const honeypot = typeof raw.website_confirm === "string" ? raw.website_confirm.trim() : "";
+  const formLoadedAt = typeof raw.formLoadedAt === "number" ? raw.formLoadedAt : 0;
+  const fillMs = Date.now() - formLoadedAt;
+  if (honeypot || (formLoadedAt > 0 && fillMs < MIN_FILL_MS)) {
+    Sentry.captureMessage("contact form rejected by honeypot/timing", {
+      level: "info",
+      tags: { route: "contact", phase: "honeypot" },
+      extra: { honeypotFilled: Boolean(honeypot), fillMs },
+    });
+    return Response.json({ ok: true });
+  }
+
+  // 3. Field-by-field validation with explicit length caps
   const name = pickString(raw.name, MAX.name);
   const email = pickString(raw.email, MAX.email);
   const message = pickString(raw.message, MAX.message);
@@ -80,7 +82,7 @@ export async function POST(req: Request) {
       // resend.dev sandbox — better deliverability, won't get spam-folder'd
       // by chamber inboxes. Display name still reads as the chamber.
       from: "Greater Medina Chamber Website <chamber@huntersystems.dev>",
-      to: CHAMBER_EMAIL,
+      to: CHAMBER_NOTIFY_EMAIL,
       replyTo: email,
       subject: `Contact form: ${name}`,
       text: [

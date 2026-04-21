@@ -1,12 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
 import * as Sentry from "@sentry/nextjs";
 import { formLimiter, applyRateLimit } from "@/lib/rate-limit";
-
-const resend = new Resend(process.env.RESEND_API_KEY || "re_placeholder");
-const CHAMBER_EMAIL = "office@medinaohchamber.com";
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { resend, CHAMBER_NOTIFY_EMAIL, EMAIL_RE } from "@/lib/email";
+import { escHtml, pickString, pickOptional } from "@/lib/sanitize";
 
 // Per-field length caps. Real applications stay well under these; anything
 // over is almost certainly abuse or a paste accident.
@@ -27,29 +23,9 @@ const MAX = {
   notes: 5000,
 };
 
-function escHtml(s: string): string {
-  return String(s)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-/** Returns trimmed string if valid, null otherwise. Empty input → null. */
-function pickString(raw: unknown, max: number): string | null {
-  if (typeof raw !== "string") return null;
-  const trimmed = raw.trim();
-  if (!trimmed) return null;
-  if (trimmed.length > max) return null;
-  return trimmed;
-}
-
-/** Same as pickString but returns "" for missing/invalid (vs null). Used for
- *  optional fields where we just want to skip rendering on empty. */
-function pickOptional(raw: unknown, max: number): string {
-  const v = pickString(raw, max);
-  return v ?? "";
-}
+// Minimum fill time — real applicants take at least a few seconds to
+// fill out a multi-field form; fast submissions are bots.
+const MIN_FILL_MS = 1500;
 
 export async function POST(req: NextRequest) {
   const limited = await applyRateLimit(req, formLimiter);
@@ -68,7 +44,23 @@ export async function POST(req: NextRequest) {
 
   const raw = body as Record<string, unknown>;
 
-  // 2. Field-by-field validation
+  // 2. Honeypot + timing check. Bots fill every field including the
+  //    hidden `website_confirm` and submit in well under a second.
+  //    If either tripwire fires we return 200 (so the bot doesn't
+  //    adjust tactics) but never touch Resend or the chamber inbox.
+  const honeypot = typeof raw.website_confirm === "string" ? raw.website_confirm.trim() : "";
+  const formLoadedAt = typeof raw.formLoadedAt === "number" ? raw.formLoadedAt : 0;
+  const fillMs = Date.now() - formLoadedAt;
+  if (honeypot || (formLoadedAt > 0 && fillMs < MIN_FILL_MS)) {
+    Sentry.captureMessage("apply form rejected by honeypot/timing", {
+      level: "info",
+      tags: { route: "apply", phase: "honeypot" },
+      extra: { honeypotFilled: Boolean(honeypot), fillMs },
+    });
+    return NextResponse.json({ success: true });
+  }
+
+  // 3. Field-by-field validation
   const businessName = pickString(raw.businessName, MAX.businessName);
   const contactName  = pickString(raw.contactName,  MAX.contactName);
   const email        = pickString(raw.email,        MAX.email);
@@ -121,7 +113,7 @@ export async function POST(req: NextRequest) {
       // by chamber inboxes. Display name still reads as the chamber.
       from: "Greater Medina Chamber Membership <chamber@huntersystems.dev>",
       replyTo: email,
-      to: CHAMBER_EMAIL,
+      to: CHAMBER_NOTIFY_EMAIL,
       subject: `Membership Application — ${businessName}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #1a1a1a;">

@@ -39,6 +39,11 @@ export function ApplicationForm() {
     referral: "",
     notes: "",
   });
+  // Honeypot + form-load timestamp — anti-spam. Hidden input real
+  // users never see; bots fill it. MIN_FILL_MS on the server rejects
+  // any submission under 1.5s as bot-speed.
+  const [websiteConfirm, setWebsiteConfirm] = useState("");
+  const [formLoadedAt] = useState(() => Date.now());
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -57,7 +62,11 @@ export function ApplicationForm() {
       const res = await fetch("/api/apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          website_confirm: websiteConfirm,
+          formLoadedAt,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Unknown error");
@@ -100,6 +109,21 @@ export function ApplicationForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Honeypot — off-screen hidden input. Real users never see or
+          fill this; naive spam bots fill every input by name and trip
+          the server-side check. */}
+      <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", width: 1, height: 1, overflow: "hidden" }}>
+        <label htmlFor="apply-website-confirm">Website (leave blank)</label>
+        <input
+          id="apply-website-confirm"
+          type="text"
+          name="website_confirm"
+          tabIndex={-1}
+          autoComplete="off"
+          value={websiteConfirm}
+          onChange={(e) => setWebsiteConfirm(e.target.value)}
+        />
+      </div>
       {/* Business info */}
       <div>
         <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-4">

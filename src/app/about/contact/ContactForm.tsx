@@ -9,6 +9,13 @@ export function ContactForm() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
+  // Honeypot — a hidden field real users never see. Bots autofill
+  // every input; if this isn't empty on submit, the server drops
+  // the request silently.
+  const [websiteConfirm, setWebsiteConfirm] = useState("");
+  // Form-load timestamp — paired with server-side MIN_FILL_MS check
+  // to reject spam bots that submit instantly.
+  const [formLoadedAt] = useState(() => Date.now());
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -21,7 +28,14 @@ export function ContactForm() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, message }),
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          message,
+          website_confirm: websiteConfirm,
+          formLoadedAt,
+        }),
       });
 
       const data = await res.json();
@@ -75,6 +89,22 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
+      {/* Honeypot. Hidden from real users via aria/tabindex/visibility —
+          bots that naively fill every input will trip the server-side
+          check and get a silent 200. Named plausibly so field-harvesters
+          don't skip it. */}
+      <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", width: 1, height: 1, overflow: "hidden" }}>
+        <label htmlFor="contact-website-confirm">Website (leave blank)</label>
+        <input
+          id="contact-website-confirm"
+          type="text"
+          name="website_confirm"
+          tabIndex={-1}
+          autoComplete="off"
+          value={websiteConfirm}
+          onChange={(e) => setWebsiteConfirm(e.target.value)}
+        />
+      </div>
       <div className="grid sm:grid-cols-2 gap-5">
         <div>
           <label htmlFor="contact-name" className="block text-body-sm font-bold text-text-primary mb-2">

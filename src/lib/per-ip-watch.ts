@@ -19,8 +19,8 @@
  * configured, so this is always active there.
  */
 
-import { Redis } from "@upstash/redis";
 import * as Sentry from "@sentry/nextjs";
+import { getRedis } from "@/lib/upstash";
 
 // Sized against a $20/month budget enforced by spend-cap.ts. The daily
 // cap is ~2M tokens, so any single IP reaching 200k/hour is eating 10%
@@ -49,19 +49,6 @@ function tokenKey(ip: string): string {
 
 function alertKey(ip: string): string {
   return `chat:alert:ip:${ip}:${currentHourSuffix()}`;
-}
-
-function getRedis(): Redis | null {
-  if (
-    !process.env.UPSTASH_REDIS_REST_URL ||
-    !process.env.UPSTASH_REDIS_REST_TOKEN
-  ) {
-    return null;
-  }
-  return new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN,
-  });
 }
 
 /**

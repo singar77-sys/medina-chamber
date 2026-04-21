@@ -152,16 +152,14 @@ function useStreamChat() {
   // local `messages` state above is for UI display only — the server
   // doesn't trust it (and therefore doesn't let anyone forge assistant
   // turns to jailbreak the system prompt).
+  //
+  // Null until the first request completes — the server mints the ID
+  // and echoes it back in the x-session-id response header, at which
+  // point we adopt it for subsequent turns.
   const sessionIdRef = useRef<string | null>(null);
 
   const sendMessage = useCallback(async (text: string) => {
     if (!text.trim() || isLoading) return;
-
-    // Lazily mint a session ID on first send. Stays stable for the
-    // lifetime of this ChatWidget instance (i.e. across open/close).
-    if (!sessionIdRef.current) {
-      sessionIdRef.current = crypto.randomUUID();
-    }
 
     const userMsg: Message = {
       id: crypto.randomUUID(),
@@ -184,6 +182,9 @@ function useStreamChat() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          // On the first turn, sessionIdRef.current is null and the
+          // server mints a fresh UUID. On subsequent turns we echo
+          // back whatever the server gave us.
           sessionId: sessionIdRef.current,
           message: userMsg.content,
         }),
@@ -192,6 +193,12 @@ function useStreamChat() {
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       if (!res.body) throw new Error("No response body");
+
+      // Adopt the server-issued session ID for future turns. Same-
+      // origin fetch exposes response headers to JS without any
+      // CORS expose-headers configuration.
+      const serverSid = res.headers.get("x-session-id");
+      if (serverSid) sessionIdRef.current = serverSid;
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder();

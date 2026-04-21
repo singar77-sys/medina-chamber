@@ -18,6 +18,7 @@ import {
   isValidSessionId,
   loadSession,
   commitRound,
+  mintSessionId,
 } from "@/lib/chat-session";
 
 export const runtime = "edge";
@@ -288,63 +289,38 @@ export async function POST(req: Request) {
     return createTextStreamResponse({ textStream: offlineFallbackStream() });
   }
 
-  let body: { sessionId?: unknown; message?: unknown; messages?: unknown };
+  let body: { sessionId?: unknown; message?: unknown };
   try {
     body = (await req.json()) as typeof body;
   } catch {
     return new Response("Invalid JSON body", { status: 400 });
   }
 
-  // Two input shapes are accepted:
-  //
-  //   NEW (preferred): { sessionId: UUIDv4, message: string }
-  //     Server owns the conversation transcript, keyed by sessionId in
-  //     Upstash. Client sends only the new user message. Prior assistant
-  //     turns are authoritative — the client can't forge them.
-  //
-  //   LEGACY: { messages: [{role, content}, …] }
-  //     Old ChatWidget format. Trusted client-sent history, which lets
-  //     an attacker prefill forged assistant turns to bypass the system
-  //     prompt's scope rules. Kept working for users with stale tabs
-  //     open mid-deploy, but STRIPPED to the last user message only —
-  //     forged assistant turns are discarded, context is lost until
-  //     they refresh.
+  // Request shape: { sessionId?: UUIDv4, message: string }
+  // The server owns the conversation transcript in Upstash. Clients
+  // echo the sessionId back on subsequent turns; if they send nothing
+  // or something malformed, the server mints a fresh one and returns
+  // it in the x-session-id response header so the client can adopt it.
   const MAX_CONTENT = 2000;
-  let userMessageContent = "";
-  let priorTurns: ChatTurn[] = [];
-  let sessionId: string | null = null;
 
-  if (isValidSessionId(body.sessionId) && typeof body.message === "string") {
-    sessionId = body.sessionId;
-    userMessageContent = body.message.slice(0, MAX_CONTENT).trim();
-    if (!userMessageContent) {
-      return new Response("Empty message", { status: 400 });
-    }
-    priorTurns = await loadSession(sessionId);
-  } else if (Array.isArray(body.messages) && body.messages.length > 0) {
-    Sentry.captureMessage("chat received legacy messages[] format", {
-      level: "info",
-      tags: { route: "chat", phase: "legacy-format" },
-    });
-    const raw = body.messages as Array<{ role?: unknown; content?: unknown }>;
-    const lastUser = [...raw]
-      .reverse()
-      .find((m) => m?.role === "user" && typeof m?.content === "string");
-    if (!lastUser || typeof lastUser.content !== "string") {
-      return new Response("Invalid request", { status: 400 });
-    }
-    userMessageContent = lastUser.content.slice(0, MAX_CONTENT).trim();
-    if (!userMessageContent) {
-      return new Response("Empty message", { status: 400 });
-    }
-    // priorTurns stays [] — legacy clients lose context until refresh.
-  } else {
+  if (typeof body.message !== "string") {
     return new Response("Invalid request", { status: 400 });
   }
+  const userMessageContent = body.message.slice(0, MAX_CONTENT).trim();
+  if (!userMessageContent) {
+    return new Response("Empty message", { status: 400 });
+  }
+
+  const sessionId = isValidSessionId(body.sessionId)
+    ? body.sessionId
+    : mintSessionId();
+  const priorTurns: ChatTurn[] = await loadSession(sessionId);
 
   // Assemble the model-visible message list. Prior turns come from
-  // trusted server storage (or are empty for legacy); the new user
-  // message is freshly sanitized above.
+  // trusted server storage; the new user message is freshly
+  // sanitized above. The client can't forge assistant turns because
+  // the assistant role is only ever written by our own onFinish
+  // callback via commitRound.
   const messages: ChatTurn[] = [
     ...priorTurns,
     { role: "user", content: userMessageContent },
@@ -427,15 +403,24 @@ export async function POST(req: Request) {
       onFinish: ({ totalUsage, text }) => {
         after(recordTokenUsage(totalUsage.inputTokens, totalUsage.outputTokens));
         after(recordIpTokenUsage(ip, totalUsage.inputTokens, totalUsage.outputTokens));
-        if (sessionId && text) {
+        if (text) {
           after(commitRound(sessionId, userMessageContent, text));
         }
       },
     });
-    return createTextStreamResponse({ textStream: safeStream(result.textStream) });
+    // Return the sessionId via header so clients that didn't supply
+    // one (or sent a bad one) can adopt the server-minted ID on
+    // subsequent turns. Same-origin — no CORS expose-headers needed.
+    return createTextStreamResponse({
+      textStream: safeStream(result.textStream),
+      headers: { "x-session-id": sessionId },
+    });
   } catch (err) {
     console.error("[chat] streamText init error:", err);
     Sentry.captureException(err, { tags: { route: "chat", phase: "init" } });
-    return createTextStreamResponse({ textStream: offlineFallbackStream() });
+    return createTextStreamResponse({
+      textStream: offlineFallbackStream(),
+      headers: { "x-session-id": sessionId },
+    });
   }
 }

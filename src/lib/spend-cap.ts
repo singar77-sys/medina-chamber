@@ -30,8 +30,8 @@
  * request's worth of tokens, bounded by maxOutputTokens.
  */
 
-import { Redis } from "@upstash/redis";
 import * as Sentry from "@sentry/nextjs";
+import { getRedis } from "@/lib/upstash";
 
 // Haiku 4.5 pricing (~Jan 2026): $1/M input, $5/M output, cached input
 // reads at $0.10/M. Blended chamber usage with prompt caching lands
@@ -61,19 +61,6 @@ function monthKey(): string {
 
 function monthWarnFiredKey(): string {
   return `chat:alert:monthly-warn:${new Date().toISOString().slice(0, 7)}`;
-}
-
-function getRedis(): Redis | null {
-  if (
-    !process.env.UPSTASH_REDIS_REST_URL ||
-    !process.env.UPSTASH_REDIS_REST_TOKEN
-  ) {
-    return null;
-  }
-  return new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN,
-  });
 }
 
 // In-memory fallback — single bucket per period per isolate.

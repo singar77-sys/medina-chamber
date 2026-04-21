@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-20T11:09:21.931Z",
+  "generatedAt": "2026-04-21T10:57:22.368Z",
   "totalJobs": 4,
   "jobs": [
     {
@@ -16,7 +16,7 @@
       "dateRaw": "4/9/2026",
       "dateISO": "2026-04-09",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/health-educator-324301",
-      "scrapedAt": "2026-04-20T11:09:20.204Z"
+      "scrapedAt": "2026-04-21T10:57:20.890Z"
     },
     {
       "slug": "dance-theate-music-and-art-teachers",
@@ -32,7 +32,7 @@
       "dateRaw": "3/25/2026",
       "dateISO": "2026-03-25",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/dance-theate-music-and-art-teachers-321116",
-      "scrapedAt": "2026-04-20T11:09:20.758Z"
+      "scrapedAt": "2026-04-21T10:57:21.372Z"
     },
     {
       "slug": "director-of-residential-services",
@@ -48,7 +48,7 @@
       "dateRaw": "3/22/2026",
       "dateISO": "2026-03-22",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/director-of-residential-services-320441",
-      "scrapedAt": "2026-04-20T11:09:21.370Z"
+      "scrapedAt": "2026-04-21T10:57:21.882Z"
     },
     {
       "slug": "music-teacher",
@@ -64,7 +64,7 @@
       "dateRaw": "3/6/2026",
       "dateISO": "2026-03-06",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/music-teacher-317454",
-      "scrapedAt": "2026-04-20T11:09:21.919Z"
+      "scrapedAt": "2026-04-21T10:57:22.356Z"
     }
   ]
 }

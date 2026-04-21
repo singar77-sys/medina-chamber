@@ -244,8 +244,12 @@ export function ChamberChatGraphic({ mode = "social" }: { mode?: GraphicMode }) 
 
   const vb = isStory ? "0 0 1080 1920" : isSquare ? "0 0 1080 1080" : "0 0 1200 630";
 
+  // Cup position is aspect-specific: wide layouts (social, square) put
+  // the cup on the right and the title on the left. Story is portrait —
+  // the title sits at the bottom, so the cup goes up top so they don't
+  // collide. Centered horizontally for a symmetric vertical composition.
   const cup = isStory
-    ? { cx: 780, cy: 1380, rx: 260, ry: 65, h: 290 }
+    ? { cx: 540, cy: 820,  rx: 260, ry: 65, h: 290 }
     : isSquare
     ? { cx: 820, cy: 720,  rx: 200, ry: 50, h: 220 }
     : { cx: 980, cy: 400,  rx: 170, ry: 42, h: 200 };
@@ -332,7 +336,7 @@ export function ChamberChatGraphic({ mode = "social" }: { mode?: GraphicMode }) 
           <img src={ASSETS.iconWhite} style={{ height: isStory ? 60 : 44 }} alt="" />
         </div>
 
-        <div style={{ maxWidth: isStory ? 760 : isSquare ? 620 : 640 }}>
+        <div style={{ maxWidth: isStory ? 960 : isSquare ? 620 : 640 }}>
           <div style={{ fontSize: titleSize, fontWeight: 700, lineHeight: 0.86, letterSpacing: "-0.045em", color: "#fff" }}>
             Chamber
           </div>

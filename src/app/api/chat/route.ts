@@ -1,6 +1,7 @@
 import { streamText, createTextStreamResponse } from "ai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createOpenAI } from "@ai-sdk/openai";
+import { after } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import {
   searchMembersWithVPPriority,
@@ -398,8 +399,7 @@ export async function POST(req: Request) {
       // 5–10 entries long for broad categories (insurance, printing).
       maxOutputTokens: 800,
       temperature: 0.3,
-      // Three post-stream jobs. All fire-and-forget so they never
-      // block or break the user-facing response.
+      // Three post-stream jobs:
       //   1. Record token usage against the global daily spend cap.
       //   2. Record token usage against the per-IP hourly watch.
       //   3. Commit this round (user + assistant) to the server-owned
@@ -407,11 +407,18 @@ export async function POST(req: Request) {
       //      only write AFTER a successful stream — a failed stream
       //      leaves the session unchanged, so the user's retry won't
       //      double-append the user turn.
+      //
+      // We route all three through `after()` so they survive past the
+      // response stream closing. Without it, Vercel Edge tears the
+      // isolate down the moment the client finishes reading the
+      // response, and fire-and-forget Redis writes get cut off
+      // mid-flight — which silently broke session continuity in prod
+      // even though it worked on local dev.
       onFinish: ({ totalUsage, text }) => {
-        void recordTokenUsage(totalUsage.inputTokens, totalUsage.outputTokens);
-        void recordIpTokenUsage(ip, totalUsage.inputTokens, totalUsage.outputTokens);
+        after(recordTokenUsage(totalUsage.inputTokens, totalUsage.outputTokens));
+        after(recordIpTokenUsage(ip, totalUsage.inputTokens, totalUsage.outputTokens));
         if (sessionId && text) {
-          void commitRound(sessionId, userMessageContent, text);
+          after(commitRound(sessionId, userMessageContent, text));
         }
       },
     });

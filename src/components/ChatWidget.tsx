@@ -147,8 +147,21 @@ function useStreamChat() {
   const [error, setError] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
+  // Server-owned session. The server keeps the real transcript in Upstash
+  // keyed by this ID; we only ever send the newest user message. The
+  // local `messages` state above is for UI display only — the server
+  // doesn't trust it (and therefore doesn't let anyone forge assistant
+  // turns to jailbreak the system prompt).
+  const sessionIdRef = useRef<string | null>(null);
+
   const sendMessage = useCallback(async (text: string) => {
     if (!text.trim() || isLoading) return;
+
+    // Lazily mint a session ID on first send. Stays stable for the
+    // lifetime of this ChatWidget instance (i.e. across open/close).
+    if (!sessionIdRef.current) {
+      sessionIdRef.current = crypto.randomUUID();
+    }
 
     const userMsg: Message = {
       id: crypto.randomUUID(),
@@ -164,18 +177,16 @@ function useStreamChat() {
     setIsLoading(true);
     setError(null);
 
-    // Build messages array for API — cap at last 16 messages (8 turns) to bound token cost
-    const apiMessages = [...messages, userMsg]
-      .slice(-16)
-      .map(({ role, content }) => ({ role, content }));
-
     abortRef.current = new AbortController();
 
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: apiMessages }),
+        body: JSON.stringify({
+          sessionId: sessionIdRef.current,
+          message: userMsg.content,
+        }),
         signal: abortRef.current.signal,
       });
 

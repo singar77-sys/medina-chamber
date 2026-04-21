@@ -12,6 +12,12 @@ import { totalCount } from "@/data/members";
 import { chatLimiter, applyRateLimit, getRequestIp } from "@/lib/rate-limit";
 import { isOverDailyCap, recordTokenUsage } from "@/lib/spend-cap";
 import { isIpOverBlockThreshold, recordIpTokenUsage } from "@/lib/per-ip-watch";
+import {
+  type ChatTurn,
+  isValidSessionId,
+  loadSession,
+  commitRound,
+} from "@/lib/chat-session";
 
 export const runtime = "edge";
 
@@ -271,27 +277,67 @@ export async function POST(req: Request) {
     return createTextStreamResponse({ textStream: offlineFallbackStream() });
   }
 
-  let body: unknown;
+  let body: { sessionId?: unknown; message?: unknown; messages?: unknown };
   try {
-    body = await req.json();
+    body = (await req.json()) as typeof body;
   } catch {
     return new Response("Invalid JSON body", { status: 400 });
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const raw: any[] = (body as { messages?: unknown })?.messages as any[];
-  if (!Array.isArray(raw) || raw.length === 0) {
+
+  // Two input shapes are accepted:
+  //
+  //   NEW (preferred): { sessionId: UUIDv4, message: string }
+  //     Server owns the conversation transcript, keyed by sessionId in
+  //     Upstash. Client sends only the new user message. Prior assistant
+  //     turns are authoritative — the client can't forge them.
+  //
+  //   LEGACY: { messages: [{role, content}, …] }
+  //     Old ChatWidget format. Trusted client-sent history, which lets
+  //     an attacker prefill forged assistant turns to bypass the system
+  //     prompt's scope rules. Kept working for users with stale tabs
+  //     open mid-deploy, but STRIPPED to the last user message only —
+  //     forged assistant turns are discarded, context is lost until
+  //     they refresh.
+  const MAX_CONTENT = 2000;
+  let userMessageContent = "";
+  let priorTurns: ChatTurn[] = [];
+  let sessionId: string | null = null;
+
+  if (isValidSessionId(body.sessionId) && typeof body.message === "string") {
+    sessionId = body.sessionId;
+    userMessageContent = body.message.slice(0, MAX_CONTENT).trim();
+    if (!userMessageContent) {
+      return new Response("Empty message", { status: 400 });
+    }
+    priorTurns = await loadSession(sessionId);
+  } else if (Array.isArray(body.messages) && body.messages.length > 0) {
+    Sentry.captureMessage("chat received legacy messages[] format", {
+      level: "info",
+      tags: { route: "chat", phase: "legacy-format" },
+    });
+    const raw = body.messages as Array<{ role?: unknown; content?: unknown }>;
+    const lastUser = [...raw]
+      .reverse()
+      .find((m) => m?.role === "user" && typeof m?.content === "string");
+    if (!lastUser || typeof lastUser.content !== "string") {
+      return new Response("Invalid request", { status: 400 });
+    }
+    userMessageContent = lastUser.content.slice(0, MAX_CONTENT).trim();
+    if (!userMessageContent) {
+      return new Response("Empty message", { status: 400 });
+    }
+    // priorTurns stays [] — legacy clients lose context until refresh.
+  } else {
     return new Response("Invalid request", { status: 400 });
   }
 
-  // Sanitize: cap history depth and truncate oversized content (prevents token injection)
-  const MAX_CONTENT = 2000;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const messages: any[] = raw
-    .slice(-32) // keep last 16 turns max
-    .map((m) => ({
-      role: m.role,
-      content: typeof m.content === "string" ? m.content.slice(0, MAX_CONTENT) : m.content,
-    }));
+  // Assemble the model-visible message list. Prior turns come from
+  // trusted server storage (or are empty for legacy); the new user
+  // message is freshly sanitized above.
+  const messages: ChatTurn[] = [
+    ...priorTurns,
+    { role: "user", content: userMessageContent },
+  ];
 
   // Search over last 3 user turns for better context continuity
   const searchContext = messages
@@ -352,14 +398,21 @@ export async function POST(req: Request) {
       // 5–10 entries long for broad categories (insurance, printing).
       maxOutputTokens: 800,
       temperature: 0.3,
-      // Record token usage for both the daily spend cap (global) and
-      // the per-IP hourly watch (anomaly alert + soft-block). Fires
-      // after the stream completes, independent of the client's
-      // consumption — we're always one request behind the true total,
-      // which is fine since the over-run is bounded by maxOutputTokens.
-      onFinish: ({ totalUsage }) => {
+      // Three post-stream jobs. All fire-and-forget so they never
+      // block or break the user-facing response.
+      //   1. Record token usage against the global daily spend cap.
+      //   2. Record token usage against the per-IP hourly watch.
+      //   3. Commit this round (user + assistant) to the server-owned
+      //      session transcript, if this was a new-format request. We
+      //      only write AFTER a successful stream — a failed stream
+      //      leaves the session unchanged, so the user's retry won't
+      //      double-append the user turn.
+      onFinish: ({ totalUsage, text }) => {
         void recordTokenUsage(totalUsage.inputTokens, totalUsage.outputTokens);
         void recordIpTokenUsage(ip, totalUsage.inputTokens, totalUsage.outputTokens);
+        if (sessionId && text) {
+          void commitRound(sessionId, userMessageContent, text);
+        }
       },
     });
     return createTextStreamResponse({ textStream: safeStream(result.textStream) });

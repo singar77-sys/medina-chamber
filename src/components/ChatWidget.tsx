@@ -256,6 +256,12 @@ export function ChatWidget() {
 
   const hasMessages = messages.length > 0;
 
+  // The homepage has its own full-screen ChamberBot portal experience
+  // (see HolographicChamber + ChamberBotPortal). The floating widget
+  // would compete with it, so we hide it on "/" only. Placed after all
+  // hooks so hook count stays stable across renders/navigation.
+  if (pathname === "/") return null;
+
   return (
     <>
       {/* ── Chat Panel ── */}

@@ -51,6 +51,28 @@ export function formatShortDate(event: ChamberEvent): string {
   return `${event.dayOfWeek.substring(0, 3)}, ${event.month} ${event.day}`;
 }
 
+/**
+ * Trim a trailing "- April 2026"-style suffix from an event title.
+ *
+ * Used in contexts where a separate date badge already communicates the
+ * month + year (e.g. homepage upcoming-event cards) — keeps every title
+ * on a single line so cards stay the same height.
+ *
+ * Leaves the full title intact on event detail pages, JSON-LD, and
+ * anywhere else the canonical name matters for SEO / accessibility.
+ *
+ * Only strips if the suffix is a recognised separator + full month name
+ * + 4-digit year. "Eggs & Expertise: Canva 101" stays whole.
+ */
+export function shortenEventTitle(title: string): string {
+  return title
+    .replace(
+      /\s*[-—–:·]\s*(?:january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{4}\s*$/i,
+      "",
+    )
+    .trim();
+}
+
 /** Meta description for an event page */
 export function eventMetaDescription(event: ChamberEvent): string {
   const date = `${event.dayOfWeek}, ${event.month} ${event.day}, ${event.year}`;

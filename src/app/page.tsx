@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { totalCount } from "@/data/members";
-import { getUpcomingEvents } from "@/data/events";
+import { getUpcomingEvents, shortenEventTitle } from "@/data/events";
 import { FadeIn } from "@/components/FadeIn";
 import { CountUp } from "@/components/CountUp";
 import { HolographicChamber } from "@/components/holographic/HolographicChamber";
@@ -12,6 +12,9 @@ import { ThreePillars } from "@/components/ThreePillars";
 import { PartnersMarquee } from "@/components/PartnersMarquee";
 import { RentalSpaceCards } from "@/components/RentalSpaceCards";
 import { MemberVoice } from "@/components/MemberVoice";
+import { getEventGraphicRenderer } from "@/components/events/graphics/EventGraphics";
+import { FluidGraphicFrame } from "@/components/events/graphics/FluidGraphicFrame";
+import { TiltCard } from "@/components/events/TiltCard";
 
 import { safeJsonLd } from "@/lib/json-ld";
 import { headers } from "next/headers";
@@ -278,8 +281,11 @@ export default async function HomePage() {
           ))}
 
           <div className="grid md:grid-cols-3 gap-4">
-            {upcomingEvents.map((event, i) => (
+            {upcomingEvents.map((event, i) => {
+              const Graphic = getEventGraphicRenderer(event);
+              return (
               <FadeIn key={event.slug} delay={i * 100}>
+                <TiltCard>
                 <Link
                   href={`/events/${event.slug}`}
                   className="
@@ -287,10 +293,20 @@ export default async function HomePage() {
                     bg-bg-secondary border border-border-secondary
                     rounded-[var(--radius-lg)]
                     overflow-hidden
-                    hover:border-cambridge/40 hover:shadow-[0_8px_30px_rgba(131,188,169,0.08)]
-                    transition-all duration-300
+                    hover:border-cambridge/40 hover:shadow-[0_12px_40px_rgba(131,188,169,0.12)]
+                    transition-shadow duration-300
                   "
                 >
+                  {/* Graphic hero — event-type identity. Falls back to
+                      no-banner if the event type isn't recognized. */}
+                  {Graphic && (
+                    <div className="border-b border-border-secondary">
+                      <FluidGraphicFrame mode="social">
+                        <Graphic mode="social" />
+                      </FluidGraphicFrame>
+                    </div>
+                  )}
+
                   {/* Date badge header */}
                   <div className="flex items-center gap-3 p-5 border-b border-border-secondary">
                     <div className="flex-shrink-0 w-14 text-center">
@@ -317,7 +333,7 @@ export default async function HomePage() {
                   {/* Title + details */}
                   <div className="flex flex-col flex-1 p-5">
                     <h3 className="text-h4 leading-snug line-clamp-2 group-hover:text-accent transition-colors">
-                      {event.title}
+                      {shortenEventTitle(event.title)}
                     </h3>
                     {event.location && (
                       <p className="text-caption text-text-tertiary mt-2 truncate">
@@ -334,8 +350,10 @@ export default async function HomePage() {
                     </p>
                   </div>
                 </Link>
+                </TiltCard>
               </FadeIn>
-            ))}
+              );
+            })}
           </div>
 
           <div className="mt-8 sm:hidden text-center">

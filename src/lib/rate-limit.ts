@@ -97,14 +97,22 @@ export const searchLimiter = makeLimiter(30, "rl:search");
 // 60 req/min per IP for health probe — uptime monitors poll frequently
 export const healthLimiter = makeLimiter(60, "rl:health");
 
+/**
+ * Extracts the client IP from a request. Trusts x-forwarded-for from
+ * Vercel's edge (where the proxy is well-known and sets this header
+ * before passing the request). Falls back to "anonymous" so every
+ * downstream keying scheme still has a stable key.
+ */
+export function getRequestIp(req: Request): string {
+  return req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "anonymous";
+}
+
 /** Returns a 429 Response if rate limited, null if OK to proceed. */
 export async function applyRateLimit(
   req: Request,
   limiter: SimpleLimiter,
 ): Promise<Response | null> {
-  const ip =
-    req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "anonymous";
-  const { success } = await limiter.limit(ip);
+  const { success } = await limiter.limit(getRequestIp(req));
   if (!success) {
     return new Response("Too many requests — please slow down.", {
       status: 429,

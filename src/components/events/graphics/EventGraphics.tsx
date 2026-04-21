@@ -254,7 +254,12 @@ export function ChamberChatGraphic({ mode = "social" }: { mode?: GraphicMode }) 
     ? { cx: 820, cy: 720,  rx: 200, ry: 50, h: 220 }
     : { cx: 980, cy: 400,  rx: 170, ry: 42, h: 200 };
 
-  const titleSize = pick([140, 200, 260] as const, mode);
+  // BN Bergen bold "Chamber" at 260px measures ~1106px wide — wider than
+  // the 1080 story canvas, so the final "r" would render past the right
+  // edge. Dropped story size to 230, which puts "Chamber" around 980px
+  // and leaves a ~30px safety margin inside the canvas. Social/square
+  // values unchanged — they had plenty of horizontal room already.
+  const titleSize = pick([140, 200, 230] as const, mode);
   const padding = isStory ? "110px 72px 100px" : isSquare ? "72px 64px" : "56px 64px";
 
   return (

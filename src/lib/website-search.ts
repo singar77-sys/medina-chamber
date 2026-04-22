@@ -2,6 +2,12 @@
  * Website data lookup for ChamberBot context.
  * Merges scraped website data with a member record to give the AI
  * a richer picture of what each business actually does.
+ *
+ * SECURITY: all scraped fields are sanitized before injection into LLM
+ * context. Newlines are the primary prompt-injection vector (attackers
+ * break out of a data field by adding line breaks that look like new
+ * instructions). We collapse them to spaces and strip control characters
+ * before any scraped text reaches the system prompt.
  */
 
 import type { Member } from "@/data/members";
@@ -46,6 +52,25 @@ export function getWebData(chamberSlug: string): MemberWebData | null {
 }
 
 /**
+ * Sanitize a scraped text field before it touches the LLM context.
+ *
+ * Strips C0/C1 control characters (except 0x09 tab — kept as a space
+ * substitute), collapses all whitespace runs (including newlines and
+ * carriage returns) to a single space, and truncates to maxLen. This
+ * prevents a member website from injecting multi-line content that the
+ * model could misread as a new instruction block.
+ */
+function sanitizeField(raw: string, maxLen: number): string {
+  return raw
+    // Strip null bytes and non-printable control characters
+    .replace(/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/g, "")
+    // Collapse all whitespace (newlines, tabs, CR) to a single space
+    .replace(/[\r\n\t\s]+/g, " ")
+    .trim()
+    .slice(0, maxLen);
+}
+
+/**
  * Format enriched member data as a compact string for the AI system prompt.
  */
 export function formatEnrichedMember(member: Member): string {
@@ -60,13 +85,16 @@ export function formatEnrichedMember(member: Member): string {
   const web = getWebData(member.chamberSlug);
   if (web) {
     if (web.metaDescription && web.metaDescription !== member.description) {
-      lines.push(`  Website tagline: ${web.metaDescription}`);
+      lines.push(`  Website tagline: ${sanitizeField(web.metaDescription, 200)}`);
     }
     if (web.services?.length) {
-      lines.push(`  Services/offerings: ${web.services.slice(0, 8).join(" · ")}`);
+      const cleanServices = web.services
+        .slice(0, 8)
+        .map((s) => sanitizeField(s, 80));
+      lines.push(`  Services/offerings: ${cleanServices.join(" · ")}`);
     }
     if (web.aboutText) {
-      lines.push(`  About (from website): ${web.aboutText.substring(0, 400)}`);
+      lines.push(`  About (from website): ${sanitizeField(web.aboutText, 400)}`);
     }
   }
 

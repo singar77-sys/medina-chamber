@@ -1,18 +1,21 @@
 /**
  * Shared auth gate for /api/admin/* routes.
  *
- * Expects a bearer token matching process.env.CHAT_ADMIN_TOKEN. The
- * token can arrive via:
- *   - Authorization: Bearer <token>   (preferred)
- *   - ?token=<token>                  (convenient for browser hits)
+ * Expects a bearer token matching process.env.CHAT_ADMIN_TOKEN, supplied
+ * via the Authorization header only:
  *
- * Returns null if authorized, or a 401 Response to return directly
- * otherwise. Uses timing-safe comparison to resist remote timing
- * attacks on the token value.
+ *   Authorization: Bearer <token>
  *
- * If CHAT_ADMIN_TOKEN is unset in the environment, every admin
- * request is rejected — fail-closed, never accidentally open the
- * door with a default credential.
+ * Query-string tokens (?token=…) are explicitly rejected. They appear in
+ * Vercel access logs, browser history, Referer headers, and session-replay
+ * tools — leaking a credential through any of those is unacceptable for
+ * an admin endpoint.
+ *
+ * Returns null if authorized, or a Response to return directly otherwise.
+ * Uses timing-safe comparison to resist remote timing attacks on the token.
+ *
+ * If CHAT_ADMIN_TOKEN is unset, every request is rejected — fail-closed,
+ * never accidentally open with a default credential.
  */
 
 function timingSafeEqual(a: string, b: string): boolean {
@@ -30,9 +33,6 @@ function extractToken(req: Request): string | null {
     const m = auth.match(/^Bearer\s+(.+)$/i);
     if (m) return m[1].trim();
   }
-  const url = new URL(req.url);
-  const qs = url.searchParams.get("token");
-  if (qs) return qs.trim();
   return null;
 }
 

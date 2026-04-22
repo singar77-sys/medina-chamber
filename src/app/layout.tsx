@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider, ThemeScript } from "@/components/ThemeProvider";
+import { PostHogProvider } from "@/components/PostHogProvider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
@@ -59,34 +60,36 @@ export default async function RootLayout({
         <ThemeScript nonce={nonce} />
       </head>
       <body className="min-h-screen flex flex-col antialiased">
-        <ThemeProvider>
-          <a
-            href="#main-content"
-            className="
-              sr-only focus:not-sr-only
-              focus:fixed focus:top-4 focus:left-4 focus:z-[100]
-              focus:px-4 focus:py-2
-              focus:bg-oxford focus:text-white
-              focus:rounded-[var(--radius-md)]
-              focus:outline-none focus:ring-2 focus:ring-cambridge/60
-              focus:text-body-sm focus:font-bold
-            "
-          >
-            Skip to main content
-          </a>
-          <Header />
-          <main id="main-content" tabIndex={-1} className="flex-1 focus:outline-none">
-            {children}
-          </main>
-          <Footer />
-          <ChatWidget />
-          <CommandPalette />
-          <KeywordHotkey />
-          {/* Weather-aware landing ambience — plays once per session
-              based on Medina's live conditions (snow/rain/fog) + applies
-              time-aware theme on first visit if user hasn't chosen. */}
-          <MedinaAmbience />
-        </ThemeProvider>
+        <PostHogProvider>
+          <ThemeProvider>
+            <a
+              href="#main-content"
+              className="
+                sr-only focus:not-sr-only
+                focus:fixed focus:top-4 focus:left-4 focus:z-[100]
+                focus:px-4 focus:py-2
+                focus:bg-oxford focus:text-white
+                focus:rounded-[var(--radius-md)]
+                focus:outline-none focus:ring-2 focus:ring-cambridge/60
+                focus:text-body-sm focus:font-bold
+              "
+            >
+              Skip to main content
+            </a>
+            <Header />
+            <main id="main-content" tabIndex={-1} className="flex-1 focus:outline-none">
+              {children}
+            </main>
+            <Footer />
+            <ChatWidget />
+            <CommandPalette />
+            <KeywordHotkey />
+            {/* Weather-aware landing ambience — plays once per session
+                based on Medina's live conditions (snow/rain/fog) + applies
+                time-aware theme on first visit if user hasn't chosen. */}
+            <MedinaAmbience />
+          </ThemeProvider>
+        </PostHogProvider>
         {/* Vercel observability — page views + web vitals (LCP, INP, CLS).
             Both ship sub-1KB scripts; data shows up in the Vercel project
             dashboard under Analytics + Speed Insights. */}

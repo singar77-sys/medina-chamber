@@ -25,6 +25,7 @@ import {
   type FormEvent,
 } from "react";
 import { createPortal } from "react-dom";
+import { usePostHog } from "posthog-js/react";
 import { ChamberBotMascot, type MascotIntent } from "./ChamberBotMascot";
 import { ParticleField } from "./ParticleField";
 import { renderMarkdown } from "@/lib/markdown";
@@ -42,10 +43,12 @@ type CbSource = "directory" | "events" | "general";
 
 /** Compact profile card rendered below directory answers. */
 function MemberCard({ slug }: { slug: string }) {
+  const posthog = usePostHog();
   const member = getMemberBySlug(slug);
   if (!member) return null;
   const isCI = isCommunityInvestor(member);
   const isVP = isVisibilityPlus(member);
+  const tier = isCI ? "ci" : isVP ? "vp" : "standard";
   return (
     <a
       href={`https://medinachamber.com/membership/directory/${member.chamberSlug}`}
@@ -53,6 +56,9 @@ function MemberCard({ slug }: { slug: string }) {
       rel="noopener noreferrer"
       className="cb-member-card"
       tabIndex={0}
+      onClick={() =>
+        posthog?.capture("chamberbot_member_card_clicked", { slug, tier })
+      }
     >
       {(isCI || isVP) && (
         <span className={`cb-member-card__tier ${isCI ? "cb-member-card__tier--ci" : "cb-member-card__tier--vp"}`}>
@@ -189,6 +195,7 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
   const sessionIdRef = useRef<string | null>(null);
 
   const audio = usePortalAudio();
+  const posthog = usePostHog();
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -198,8 +205,13 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
       const q = text.trim();
       if (!q) return;
       if (sceneState === "thinking") return;
-      setIntent(detectIntent(q));
+      const qIntent = detectIntent(q);
+      setIntent(qIntent);
       setPortalMode((m) => m === "contact" ? null : m); // leave contact mode on send
+      posthog?.capture("chamberbot_message_sent", {
+        intent: qIntent,
+        turn: messages.filter((m) => m.role === "user").length + 1,
+      });
 
       const userMsg: Message = { id: crypto.randomUUID(), role: "user", content: q };
       const assistantId = crypto.randomUUID();
@@ -287,6 +299,7 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
       setPhase("entering");
       audio.enter();
       audio.startAmbient();
+      posthog?.capture("chamberbot_opened");
       phaseTimerRef.current = setTimeout(() => {
         setPhase("open");
         phaseTimerRef.current = null;
@@ -295,6 +308,9 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
       setPhase("exiting");
       audio.exit();
       audio.stopAmbient();
+      posthog?.capture("chamberbot_closed", {
+        message_count: messages.length,
+      });
       phaseTimerRef.current = setTimeout(() => {
         setPhase("closed");
         setMessages([]);
@@ -506,6 +522,7 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
               type="button"
               className="cb-mode-btn"
               onClick={() => {
+                posthog?.capture("chamberbot_mode_selected", { mode: "find" });
                 setPortalMode("find");
                 setTimeout(() => inputRef.current?.focus(), 80);
               }}
@@ -517,7 +534,10 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
             <button
               type="button"
               className="cb-mode-btn"
-              onClick={() => sendMessage("What events are coming up in Medina this month?")}
+              onClick={() => {
+                posthog?.capture("chamberbot_mode_selected", { mode: "events" });
+                sendMessage("What events are coming up in Medina this month?");
+              }}
             >
               <span className="cb-mode-btn__icon" aria-hidden="true">📅</span>
               <span className="cb-mode-btn__label">Upcoming events</span>
@@ -526,7 +546,10 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
             <button
               type="button"
               className="cb-mode-btn"
-              onClick={() => sendMessage("How do I join the chamber and what does membership cost?")}
+              onClick={() => {
+                posthog?.capture("chamberbot_mode_selected", { mode: "join" });
+                sendMessage("How do I join the chamber and what does membership cost?");
+              }}
             >
               <span className="cb-mode-btn__icon" aria-hidden="true">🤝</span>
               <span className="cb-mode-btn__label">Join the chamber</span>
@@ -535,7 +558,10 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
             <button
               type="button"
               className="cb-mode-btn"
-              onClick={() => setPortalMode("contact")}
+              onClick={() => {
+                posthog?.capture("chamberbot_mode_selected", { mode: "contact" });
+                setPortalMode("contact");
+              }}
             >
               <span className="cb-mode-btn__icon" aria-hidden="true">👤</span>
               <span className="cb-mode-btn__label">Talk to a human</span>

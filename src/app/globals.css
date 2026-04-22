@@ -810,6 +810,79 @@ body {
   }
 }
 
+/* ─── Intent-aware one-shot reactions ────────────────────────────── */
+
+/* member: quick left-arm flourish (looking something up) */
+.cbm-mascot.cbm-intent-member .cbm-arm-left {
+  animation: cbm-hand-flourish 0.75s ease-out;
+}
+
+/* event: antenna gets excited */
+.cbm-mascot.cbm-intent-event .cbm-antenna {
+  animation: cbm-intent-event-antenna 0.85s ease-in-out;
+}
+@keyframes cbm-intent-event-antenna {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  25%       { transform: scale(1.18) rotate(-10deg); }
+  55%       { transform: scale(1.22) rotate(10deg); }
+  80%       { transform: scale(1.1) rotate(-4deg); }
+}
+
+/* count: small thoughtful nod */
+.cbm-mascot.cbm-intent-count {
+  animation: cbm-intent-count-nod 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes cbm-intent-count-nod {
+  0%   { transform: translateY(0); }
+  25%  { transform: translateY(-7px); }
+  55%  { transform: translateY(3px); }
+  80%  { transform: translateY(-2px); }
+  100% { transform: translateY(0); }
+}
+
+/* error: sympathetic antenna droop */
+.cbm-mascot.cbm-intent-error .cbm-antenna {
+  animation: cbm-intent-error-antenna 0.9s ease-in-out;
+}
+@keyframes cbm-intent-error-antenna {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  30%       { transform: scale(0.94) rotate(-14deg); }
+  60%       { transform: scale(0.96) rotate(-8deg); }
+  80%       { transform: scale(0.95) rotate(-10deg); }
+}
+
+/* ─── Micro-idle variations ──────────────────────────────────────── */
+
+/* Body stretch — a subtle elongation then settle */
+.cbm-mascot.cbm-micro-stretch .cbm-body {
+  animation: cbm-micro-stretch-body 1.3s ease-in-out;
+}
+@keyframes cbm-micro-stretch-body {
+  0%, 100% { transform: scaleY(1); }
+  30%       { transform: scaleY(1.025) translateY(-2px); }
+  65%       { transform: scaleY(0.987); }
+}
+
+/* Glance classes are visual-only hooks for the rAF gaze override;
+   no CSS transform needed since the rAF loop moves the pupils directly.
+   Eyebrows add a tiny raise to sell the "looking at something" read. */
+.cbm-mascot.cbm-micro-glance-left .cbm-eyebrows,
+.cbm-mascot.cbm-micro-glance-right .cbm-eyebrows {
+  transform: translateY(-2px);
+  transition: transform 200ms ease-out;
+}
+
+/* ─── Reduced-motion additions ───────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .cbm-mascot.cbm-intent-member .cbm-arm-left,
+  .cbm-mascot.cbm-intent-event .cbm-antenna,
+  .cbm-mascot.cbm-intent-count,
+  .cbm-mascot.cbm-intent-error .cbm-antenna,
+  .cbm-mascot.cbm-micro-stretch .cbm-body {
+    animation: none !important;
+  }
+}
+
 /* --- Robot-style float/fly animations (used by ChamberBotMascot) - */
 /*
  * These were originally one block of ~200 lines of animations for the

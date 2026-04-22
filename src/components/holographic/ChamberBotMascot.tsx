@@ -12,10 +12,15 @@ import {
 
 type SceneState = "idle" | "listening" | "thinking" | "responding";
 type Mood = "alert" | "sleeping";
+export type MascotIntent = "member" | "event" | "count" | "error" | "general";
 
 interface ChamberBotMascotProps {
   state?: SceneState;
   className?: string;
+  /** True when the user is typing while the bot is mid-response. */
+  userIsTyping?: boolean;
+  /** Answer-type for one-shot intent reactions (fires on each new query). */
+  intent?: MascotIntent;
 }
 
 interface Spark {
@@ -69,6 +74,8 @@ const AMBIENT_SPARKLE_MS = 2200;
 export function ChamberBotMascot({
   state = "idle",
   className = "",
+  userIsTyping = false,
+  intent,
 }: ChamberBotMascotProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const svgContainerRef = useRef<HTMLDivElement>(null);
@@ -76,6 +83,12 @@ export function ChamberBotMascot({
   const [mood, setMood] = useState<Mood>("alert");
   const [sparks, setSparks] = useState<Spark[]>([]);
   const [sparkles, setSparkles] = useState<Sparkle[]>([]);
+
+  // Ref mirrors for values the rAF loop reads without restarting
+  const userIsTypingRef = useRef(false);
+  const microGazeRef = useRef<{ x: number; y: number } | null>(null);
+  // Tracks last intent that triggered a reaction — reset on new thinking phase
+  const prevIntentRef = useRef<MascotIntent | undefined>(undefined);
 
   // ── Load SVG once ──────────────────────────────────────────────
   useEffect(() => {
@@ -131,6 +144,17 @@ export function ChamberBotMascot({
       cancelled = true;
     };
   }, []);
+
+  // Sync prop → ref so the rAF loop reads it without restarting
+  useEffect(() => {
+    userIsTypingRef.current = userIsTyping;
+  }, [userIsTyping]);
+
+  // Reset intent guard whenever a new thinking phase begins so the
+  // reaction fires fresh on every query, even repeated intents.
+  useEffect(() => {
+    if (state === "thinking") prevIntentRef.current = undefined;
+  }, [state]);
 
   // ── Blink (stops during sleep — eyes stay closed) ──────────────
   useEffect(() => {
@@ -250,6 +274,72 @@ export function ChamberBotMascot({
     prevStateRef.current = state;
   }, [state, loaded]);
 
+  // ── Intent-aware one-shot reactions ───────────────────────────
+  // Fires a short CSS class on the wrapper when the query intent
+  // changes. CSS handles the specific animation per intent type.
+  useEffect(() => {
+    if (!loaded || !intent || intent === "general") return;
+    if (intent === prevIntentRef.current) return;
+    prevIntentRef.current = intent;
+    const el = wrapperRef.current;
+    if (!el) return;
+
+    const cls = `cbm-intent-${intent}`;
+    el.classList.add(cls);
+    setTimeout(() => el.classList.remove(cls), 950);
+  }, [loaded, intent]);
+
+  // ── Micro-idle: periodic subtle variations between interactions ─
+  // Every 9-20s while alert and genuinely idle, pick a random small
+  // action — a sideways glance (rAF gaze), stretch (CSS), or upward
+  // look. Keeps the mascot from feeling frozen between conversations.
+  useEffect(() => {
+    if (!loaded || mood !== "alert") return;
+    const el = wrapperRef.current;
+    if (!el) return;
+
+    const reduceMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
+
+    let timeout: ReturnType<typeof setTimeout>;
+
+    const schedule = () => {
+      timeout = setTimeout(() => {
+        // Only fire during true idle — skip and reschedule otherwise
+        if (state !== "idle") { schedule(); return; }
+
+        type MicroAction = {
+          cls?: string;
+          gaze?: { x: number; y: number };
+          ms: number;
+        };
+        const actions: MicroAction[] = [
+          { cls: "cbm-micro-glance-left",  gaze: { x: -3.2, y: 0.3 }, ms: 1100 },
+          { cls: "cbm-micro-glance-right", gaze: { x:  3.2, y: 0.3 }, ms: 1100 },
+          { cls: "cbm-micro-stretch",      ms: 1300 },
+          { gaze: { x: 0.5, y: -1.4 }, ms: 900 }, // quiet upward look
+        ];
+        const pick = actions[Math.floor(Math.random() * actions.length)];
+        if (pick.cls) el.classList.add(pick.cls);
+        if (pick.gaze) microGazeRef.current = pick.gaze;
+
+        setTimeout(() => {
+          if (pick.cls) el.classList.remove(pick.cls);
+          microGazeRef.current = null;
+          schedule();
+        }, pick.ms);
+      }, 9000 + Math.random() * 11000);
+    };
+
+    schedule();
+    return () => {
+      clearTimeout(timeout);
+      microGazeRef.current = null;
+    };
+  }, [loaded, mood, state]);
+
   // ── Continuous cursor-tracking loop: eyes + head tilt ─────────
   // Single rAF loop runs for the lifetime of the mascot. Each frame
   // picks a target (cursor / thinking / sleeping) and lerps toward
@@ -308,15 +398,35 @@ export function ChamberBotMascot({
         tEyeX = 0;
         tEyeY = 0;
         tHead = -15;
+      } else if (state === "responding" && userIsTypingRef.current) {
+        // User interrupted mid-response — snap attention toward input (lower-left)
+        tEyeX = -2.0;
+        tEyeY = 1.8;
+        tHead = -4;
+      } else if (state === "responding") {
+        // Drift gaze toward the transcript panel (right side of portal)
+        tEyeX = 2.0;
+        tEyeY = -0.4;
+        tHead = cursorHead * 0.25;
       } else if (state === "thinking") {
         tEyeX = 0;
         tEyeY = 0;
         tHead = 3;
+      } else if (state === "listening") {
+        // Attentive — follow cursor but biased slightly downward toward input
+        tEyeX = cursorEyeX * 0.75;
+        tEyeY = cursorEyeY * 0.75 + 0.8;
+        tHead = cursorHead * 0.6;
+      } else if (microGazeRef.current) {
+        // Micro-idle gaze override (periodic random glance)
+        tEyeX = microGazeRef.current.x;
+        tEyeY = microGazeRef.current.y;
       }
 
-      // Slower lerp when settling into sleep for a dreamier settle.
-      const lerpEye = 0.15;
-      const lerpHead = mood === "sleeping" ? 0.06 : 0.12;
+      // Faster lerp during interrupts so the pivot feels snappy.
+      const isInterrupt = state === "responding" && userIsTypingRef.current;
+      const lerpEye = isInterrupt ? 0.28 : 0.15;
+      const lerpHead = mood === "sleeping" ? 0.06 : isInterrupt ? 0.22 : 0.12;
 
       curEyeX += (tEyeX - curEyeX) * lerpEye;
       curEyeY += (tEyeY - curEyeY) * lerpEye;
@@ -352,7 +462,7 @@ export function ChamberBotMascot({
       svg.querySelector<SVGGElement>('[id*="Mouth_Speaking_3"]'),
     ];
 
-    if (state === "responding") {
+    if (state === "responding" && !userIsTyping) {
       if (mouthClosed) mouthClosed.style.display = "none";
 
       const hideAll = () => {
@@ -401,7 +511,7 @@ export function ChamberBotMascot({
         if (m) m.style.display = "none";
       });
     }
-  }, [loaded, state]);
+  }, [loaded, state, userIsTyping]);
 
   // ── Idle sleep tracker ─────────────────────────────────────────
   useEffect(() => {

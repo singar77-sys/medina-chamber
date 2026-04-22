@@ -30,7 +30,7 @@ import {
   type FormEvent,
 } from "react";
 import { createPortal } from "react-dom";
-import { ChamberBotMascot } from "./ChamberBotMascot";
+import { ChamberBotMascot, type MascotIntent } from "./ChamberBotMascot";
 import { ParticleField } from "./ParticleField";
 import { renderMarkdown } from "@/lib/markdown";
 import { usePortalAudio } from "@/hooks/usePortalAudio";
@@ -54,14 +54,26 @@ export interface ChamberBotPortalProps {
 const ENTER_MS = 1400;
 const EXIT_MS = 800;
 
+/** Classify the user's question so the mascot can react appropriately. */
+function detectIntent(question: string): MascotIntent {
+  const q = question.toLowerCase();
+  if (/\bhow many\b|\bcount\b|\bnumber of\b|\btotal\b/.test(q)) return "count";
+  if (/\bevent|events|happening|upcoming|calendar\b/.test(q)) return "event";
+  if (/\b(?:find|who is|looking for|recommend|any)\b/.test(q)) return "member";
+  return "general";
+}
+
 export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPortalProps) {
   const [mounted, setMounted] = useState(false);
   const [phase, setPhase] = useState<Phase>("closed");
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [sceneState, setSceneState] = useState<SceneState>("idle");
+  const [intent, setIntent] = useState<MascotIntent>("general");
 
   const inputRef = useRef<HTMLInputElement>(null);
+  // Prevents the input's blur handler from fighting the submit flow
+  const justSubmittedRef = useRef(false);
   const transcriptEndRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
   const seededForQueryRef = useRef<string | null>(null);
@@ -87,7 +99,11 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
     async (text: string) => {
       const q = text.trim();
       if (!q) return;
-      if (sceneState === "thinking" || sceneState === "responding") return;
+      // Only block during "thinking" — during "responding" the abort at
+      // the top of this function will cancel the current stream so the
+      // user can interrupt mid-response.
+      if (sceneState === "thinking") return;
+      setIntent(detectIntent(q));
 
       const userMsg: Message = {
         id: crypto.randomUUID(),
@@ -201,6 +217,7 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
       phaseTimerRef.current = setTimeout(() => {
         setPhase("closed");
         setMessages([]);
+        setIntent("general");
         seededForQueryRef.current = null;
         phaseTimerRef.current = null;
       }, EXIT_MS);
@@ -271,8 +288,16 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    // Flag so the blur handler doesn't reset sceneState to idle
+    // after sendMessage already pushed it to "thinking".
+    justSubmittedRef.current = true;
+    setTimeout(() => { justSubmittedRef.current = false; }, 150);
     sendMessage(input);
   };
+
+  // True when the user has typed something while the bot is mid-response.
+  // Drives interruptibility body language in the mascot.
+  const userIsTyping = input.trim().length > 0 && sceneState === "responding";
 
   if (!mounted || phase === "closed") return null;
 
@@ -344,7 +369,12 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
         onClick={() => audio.boop()}
         aria-hidden="true"
       >
-        <ChamberBotMascot state={sceneState} className="cb-portal-mascot" />
+        <ChamberBotMascot
+          state={sceneState}
+          className="cb-portal-mascot"
+          userIsTyping={userIsTyping}
+          intent={intent}
+        />
       </div>
 
       {/* Transcript — conversation bubbles float to the right */}
@@ -401,16 +431,25 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
           ref={inputRef}
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onFocus={() => {
+            if (sceneState === "idle") setSceneState("listening");
+          }}
+          onBlur={() => {
+            // Don't fight sendMessage's state update on submit
+            if (!justSubmittedRef.current && sceneState === "listening") {
+              setSceneState("idle");
+            }
+          }}
           placeholder={
             sceneState === "thinking"
               ? "ChamberBot is thinking…"
               : sceneState === "responding"
-              ? "She's talking — ask when she's done"
+              ? "Type to interrupt…"
               : messages.length === 0
               ? "Ask anything…"
               : "Ask another question…"
           }
-          disabled={sceneState === "thinking" || sceneState === "responding"}
+          disabled={sceneState === "thinking"}
           aria-label="Ask the ChamberBot"
           className="cb-portal-input__field"
           name="chamberbot-message"
@@ -421,7 +460,7 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
         />
         <button
           type="submit"
-          disabled={!input.trim() || sceneState !== "idle"}
+          disabled={!input.trim() || sceneState === "thinking"}
           aria-label="Send"
           className="cb-portal-input__send"
         >

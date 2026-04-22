@@ -7,9 +7,10 @@ import {
   searchMembersWithVPPriority,
   formatMembersGroupedForPrompt,
 } from "@/lib/chat-search";
+import { searchMembers } from "@/lib/semantic-search";
 import { formatEventsForPrompt } from "@/lib/events-context";
 import { formatNewsForPrompt } from "@/lib/news-context";
-import { totalCount } from "@/data/members";
+import { totalCount, isVisibilityPlus, type Member } from "@/data/members";
 import { chatLimiter, applyRateLimit, getRequestIp } from "@/lib/rate-limit";
 import { isOverDailyCap, isOverMonthlyCap, recordTokenUsage } from "@/lib/spend-cap";
 import { isIpOverBlockThreshold, recordIpTokenUsage } from "@/lib/per-ip-watch";
@@ -65,6 +66,16 @@ MEMBERSHIP (medinachamber.com/membership):
 - Apply: medinachamber.com/membership/join · Pricing detail: medinachamber.com/membership/pricing · Benefits: medinachamber.com/membership/benefits
 - All tiers include: directory listing, networking events, advocacy, Safety Council FREE, 5 savings programs, committee access, ribbon cuttings, free notary, Certificates of Origin
 - Joining questions → Stephanie
+
+COMMUNITY INVESTOR TIER — HOW TO TALK ABOUT IT:
+Community Investor ($1,145/yr) is not just "the expensive one." It's where chamber leadership lives — the CEOs, founders, and owners who don't just join the chamber, they shape Medina County's business policy. When the tier comes up (or when someone is weighing tiers), frame it with the weight it carries:
+
+- WHAT THE TIER ACTUALLY GETS YOU: direct seat at state and federal legislator meetings hosted by the chamber; two monthly VIP luncheons Business Essentials and Visibility Plus members don't attend; priority billing and top-tier placement in chamber marketing; a voice in which policy issues the chamber champions this year.
+- WHO THIS TIER IS FOR: organization leaders who want their name attached to the chamber's public work, CEOs of mid-to-large employers, founders building regional presence, and businesses whose success is tied to local policy (developers, manufacturers, multi-location operators, healthcare, financial services). This is the tier board members and committee chairs tend to come from.
+- THE POSITIONING, SAID OUT LOUD: Visibility Plus is about being seen. Community Investor is about being in the room where the chamber's direction gets set. Different problem, different tier.
+- FOMO ANGLE — use sparingly, only when it fits: when a prospect is comparing tiers and mentions competitors or peers in their industry, it's fair game to note that many of Medina County's largest employers and most visible CEOs belong to the Community Investor tier. Don't name names (the chamber's list changes, and this bot's data doesn't distinguish Community Investor members from Visibility Plus ones — point them to medinachamber.com/about/board or a conversation with Stephanie for specifics).
+
+TONE GUARDRAILS: aspirational, not salesy. Respectful of the fact that these are real leaders in the community — treat the tier the way you'd treat the people in it. No flattery, no "exclusive club" cliches, no hard-sell. If someone doesn't fit the tier's profile (small-business owner just starting out, nonprofit with a tight budget), steer them toward Business Essentials or Visibility Plus without apology — those tiers are real, valuable, and the right fit for most members.
 
 PROGRAMS:
 - Compass Mentorship (medinachamber.com/programs/compass) — 5-session leadership program, $995/participant, Feb–May at the chamber; contact to get on next cohort list
@@ -333,13 +344,52 @@ export async function POST(req: Request) {
     .map((m: { content: string }) => m.content)
     .join(" ");
 
-  // Find relevant members and inject into the system prompt. Split
-  // into VP vs other so the prompt can enforce "VP first, always".
-  const { vpMembers, otherMembers } = searchMembersWithVPPriority(
+  // Hybrid retrieval — keyword first (precise for literal queries like
+  // "plumber", "insurance"), vector fallback (handles conceptual queries
+  // like "who does emergency basement repair" where the literal word
+  // "plumber" isn't in the member description).
+  //
+  // Most chamber queries are literal, so keyword wins on latency + cost
+  // 90% of the time. Vector only runs when keyword returns sparse
+  // matches, keeping Upstash Vector reads near-zero at chamber volume.
+  const keyword = searchMembersWithVPPriority(
     searchContext,
     20, // VP limit — show ALL matching Visibility Plus members
     3,  // Other limit — a few non-VP backups
   );
+
+  let vpMembers = keyword.vpMembers;
+  let otherMembers = keyword.otherMembers;
+  const totalKeywordHits = vpMembers.length + otherMembers.length;
+
+  if (totalKeywordHits < 3 && searchContext.trim().length > 0) {
+    try {
+      const vectorResults = await searchMembers(searchContext, { topK: 10 });
+      const existingSlugs = new Set<string>([
+        ...vpMembers.map((m) => m.chamberSlug),
+        ...otherMembers.map((m) => m.chamberSlug),
+      ]);
+      const fresh: Member[] = vectorResults
+        .map((r) => r.member)
+        .filter((m) => !existingSlugs.has(m.chamberSlug));
+
+      // Apply the same VP-priority bucketing to the semantic results.
+      // VP members always list first — chamber business rule, unchanged.
+      const vpFromVector = fresh.filter(isVisibilityPlus);
+      const otherFromVector = fresh.filter((m) => !isVisibilityPlus(m));
+
+      vpMembers = [...vpMembers, ...vpFromVector].slice(0, 20);
+      otherMembers = [...otherMembers, ...otherFromVector].slice(0, 3);
+    } catch (err) {
+      // Vector search failure is non-fatal — keyword results still flow.
+      // Log but don't break the user-facing stream.
+      console.error("[chat] vector fallback failed:", err);
+      Sentry.captureException(err, {
+        tags: { route: "chat", phase: "vector-fallback" },
+      });
+    }
+  }
+
   const memberContext = formatMembersGroupedForPrompt(vpMembers, otherMembers);
 
   // Static appendix (events + news) — TTL-cached at module scope.

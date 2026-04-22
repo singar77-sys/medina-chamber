@@ -2733,26 +2733,41 @@ body {
     drop-shadow(0 0 90px rgba(131, 188, 169, 0.22));
 }
 
-/* ── Transcript — chat bubbles column ──────────────────────────
-   Pinned to the bottom of its absolute-positioned container so short
-   conversations sit flush above the input bar (chat-app convention)
-   instead of floating at the top of the viewport with dead space
-   below. flex column + justify-content:flex-end does the work; when
-   content grows past the container height, overflow-y:auto kicks in
-   and the transcriptEnd ref handles scroll-to-newest. */
+/* ── Transcript — defined chat window ──────────────────────────
+   A contained glass-morphism panel that sits above the input bar
+   with a defined max-height. Short conversations anchor to the
+   bottom INSIDE the window (chat-app convention); long ones scroll
+   inside. Iteration history:
+     v1 — top:5rem, bottom:7rem (full vertical, top-anchored) →
+          messages floated up by the HUD with empty space below
+     v2 — same bounds + flex-end → messages flush to bottom of full
+          vertical space, but felt "too low" floating in dark void
+     v3 — defined window box with max-height + bottom anchor + glass
+          background (this) → messages live in a clear contained area
+          just above the input, like a real chat window */
 .cb-portal-transcript {
   position: absolute;
-  top: 5rem;
-  bottom: 7rem;
+  /* Anchored to the bottom; clears input bar (~2rem from edge + ~4rem
+     input height + 2rem breathing room = 8rem) */
+  bottom: 8rem;
+  top: auto;
   left: 1.5rem;
   right: 1.5rem;
+  max-height: 50vh;
   overflow-y: auto;
-  padding-right: 0.5rem;
+  padding: 1.25rem 1.25rem 1.25rem 1.5rem;
   z-index: 4;
   opacity: 0;
   animation: cbLayerIn 0.6s ease-out 1.1s forwards;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+  /* Window styling — subtle glass over the dark portal field */
+  background: rgba(8, 16, 30, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(131, 188, 169, 0.18);
+  border-radius: 14px;
+  /* Short messages anchor to the bottom INSIDE the window box */
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -2767,12 +2782,12 @@ body {
     /* Anchor transcript to viewport center + fixed offset (mirroring
        the mascot's center-anchored positioning). Width capped so it
        doesn't stretch to the edge on ultrawide monitors — reading
-       comfort + visual intimacy with the mascot beside it. */
+       comfort + visual intimacy with the mascot beside it.
+       Window box: bottom + max-height set in the base rule. */
     left: calc(50% + 50px);
     right: auto;
     width: min(480px, calc(50vw - 80px));
-    top: 5.5rem;
-    bottom: 7rem;
+    max-height: 55vh;
   }
 }
 
@@ -2782,8 +2797,11 @@ body {
     width: clamp(180px, 34vw, 260px);
   }
   .cb-portal-transcript {
-    top: auto;
-    max-height: 52vh;
+    /* Mobile window: shorter to leave room for mascot above + input
+       below + suggestion chips when present (which sit ~6.75rem above
+       the input). bottom 11rem clears chips + input on small screens. */
+    bottom: 11rem;
+    max-height: 38vh;
   }
 }
 

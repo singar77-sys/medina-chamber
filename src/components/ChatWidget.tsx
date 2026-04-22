@@ -15,7 +15,7 @@
  * Jackie ↔ wire. Don't mix. If you rename one side, rename both.
  */
 
-import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatedMascotHead } from "@/components/holographic/AnimatedMascotHead";
@@ -42,7 +42,7 @@ const DISMISS_KEY = "chamber-proactive-dismissed";
  */
 interface PageContext {
   greeting: string;
-  subtitle: string;
+  subtitle: ReactNode;
   prompts: string[];
 }
 
@@ -158,8 +158,16 @@ function contextForPath(pathname: string): PageContext {
   // the bubble panel show the same starter set on first open.
   return {
     greeting: "Not the average chatbot.",
-    subtitle:
-      "I know all 511 chamber members by name and the whole event calendar by heart. Try me on full screen or keep chatting here.",
+    subtitle: (
+      <>
+        I know all 511 chamber members by name and the whole event calendar by
+        heart.{" "}
+        <Link href="/chamberbot" className="underline underline-offset-2 hover:text-text-primary transition-colors">
+          Try me on full screen
+        </Link>{" "}
+        or keep chatting here.
+      </>
+    ),
     prompts: [...DEFAULT_PROMPTS].slice(0, 4),
   };
 }
@@ -264,7 +272,7 @@ function useStreamChat() {
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [handoffOpen, setHandoffOpen] = useState(false);
-  const [previewText, setPreviewText] = useState<string | null>(null);
+  const [previewText, setPreviewText] = useState<ReactNode | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const pathname = usePathname();

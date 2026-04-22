@@ -4,7 +4,12 @@
  * using both GrowthZone data and scraped website content.
  */
 
-import { members, isVisibilityPlus, type Member } from "@/data/members";
+import {
+  members,
+  isVisibilityPlus,
+  isCommunityInvestor,
+  type Member,
+} from "@/data/members";
 import { getWebData, formatEnrichedMember } from "@/lib/website-search";
 
 // Common English words that have no value as search terms. Lowercase.
@@ -98,31 +103,46 @@ export function formatMembersForPrompt(matched: Member[]): string {
 }
 
 /**
- * Return matching members split into two groups — all Visibility Plus
- * members that scored > 0 (up to `vpLimit`), and up to `otherLimit`
- * of the next-highest-scoring non-VP members.
+ * Return matching members split into three tier buckets —
+ * Community Investor (chamber leadership, $1,145/yr), Visibility Plus
+ * ($575/yr), and Other (everything else).
  *
- * The chat route injects these as two distinctly-labeled blocks so the
- * LLM can "always list VP members first, then suggest the full
- * directory" as a hard rule.
+ * The chat route injects these as three distinctly-labeled blocks so
+ * the LLM's directory rule is:
+ *   1. List ALL Community Investor matches first, highlighted as
+ *      chamber-leadership-tier
+ *   2. Then ALL Visibility Plus matches
+ *   3. Then a few Other matches as backup
+ *
+ * Previous "searchMembersWithVPPriority" only split by VP/non-VP and
+ * was ambiguous (the scraper's tier=2 flag mostly captured CI members,
+ * not VP ones). Using authoritative tier-overrides from the admin API.
  */
-export function searchMembersWithVPPriority(
+export function searchMembersWithTierPriority(
   query: string,
+  ciLimit = 20,
   vpLimit = 20,
   otherLimit = 3,
-): { vpMembers: Member[]; otherMembers: Member[] } {
+): { ciMembers: Member[]; vpMembers: Member[]; otherMembers: Member[] } {
   const terms = query
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, " ")
     .split(/\s+/)
     .filter((t) => t.length >= 2 && !STOPWORDS.has(t));
 
-  if (terms.length === 0) return { vpMembers: [], otherMembers: [] };
+  if (terms.length === 0) {
+    return { ciMembers: [], vpMembers: [], otherMembers: [] };
+  }
 
   const scored = members
     .map((m) => ({ member: m, score: scoreMatch(m, terms) }))
     .filter(({ score }) => score > 0)
     .sort((a, b) => b.score - a.score);
+
+  const ciMembers = scored
+    .filter(({ member }) => isCommunityInvestor(member))
+    .slice(0, ciLimit)
+    .map(({ member }) => member);
 
   const vpMembers = scored
     .filter(({ member }) => isVisibilityPlus(member))
@@ -130,33 +150,44 @@ export function searchMembersWithVPPriority(
     .map(({ member }) => member);
 
   const otherMembers = scored
-    .filter(({ member }) => !isVisibilityPlus(member))
+    .filter(
+      ({ member }) =>
+        !isCommunityInvestor(member) && !isVisibilityPlus(member),
+    )
     .slice(0, otherLimit)
     .map(({ member }) => member);
 
-  return { vpMembers, otherMembers };
+  return { ciMembers, vpMembers, otherMembers };
 }
 
 /**
- * Format VP + other relevant members as two labeled blocks that the
- * prompt can reference by name. Returns empty string if both groups
- * are empty (no relevant members for this query).
+ * Format the three-tier matched members as labeled prompt blocks.
+ * CI first (chamber leadership), then VP, then Other. Returns empty
+ * string if all buckets are empty.
  */
 export function formatMembersGroupedForPrompt(
+  ciMembers: Member[],
   vpMembers: Member[],
   otherMembers: Member[],
 ): string {
   const parts: string[] = [];
+  if (ciMembers.length > 0) {
+    parts.push(
+      `COMMUNITY INVESTOR MEMBERS MATCHING THIS QUERY (the chamber's leadership tier — list ALL of these first; these members invest at the highest level, sit on boards, and shape chamber policy):\n\n${ciMembers
+        .map(formatEnrichedMember)
+        .join("\n\n")}`,
+    );
+  }
   if (vpMembers.length > 0) {
     parts.push(
-      `VISIBILITY PLUS MEMBERS MATCHING THIS QUERY (the chamber's top-tier listings — list ALL of these first):\n\n${vpMembers
+      `VISIBILITY PLUS MEMBERS MATCHING THIS QUERY (mid-tier premium listings — list ALL of these after Community Investor matches):\n\n${vpMembers
         .map(formatEnrichedMember)
         .join("\n\n")}`,
     );
   }
   if (otherMembers.length > 0) {
     parts.push(
-      `OTHER RELEVANT MEMBERS (lower-tier; use as backup if VP matches are sparse):\n\n${otherMembers
+      `OTHER RELEVANT MEMBERS (standard tier; use as backup if premium matches are sparse):\n\n${otherMembers
         .map(formatEnrichedMember)
         .join("\n\n")}`,
     );

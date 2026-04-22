@@ -1,4 +1,8 @@
 import membersData from "./members.json";
+import {
+  COMMUNITY_INVESTOR_SLUGS,
+  VISIBILITY_PLUS_SLUGS,
+} from "./tier-overrides";
 
 export interface Member {
   name: string;
@@ -19,11 +23,16 @@ export interface Member {
     youtube?: string;
     pinterest?: string;
   };
-  /** GrowthZone Rank class number — 2 = Visibility Plus, 10 = Enhanced, 20 = Standard */
+  /** Legacy GrowthZone Rank class from the public directory scraper.
+   *  2 = detected-premium (mostly Community Investors + some VP),
+   *  10/20 = standard tiers. Ambiguous — do NOT use for tier gating;
+   *  use isCommunityInvestor / isVisibilityPlus (authoritative) instead. */
   membershipTier: number;
 }
 
-/** Human-readable tier label */
+/** Legacy label derived from the scraper's membershipTier. Kept only for
+ *  display in places that show the raw scraper rank; the authoritative
+ *  tier helpers below are what actually drives routing/priority. */
 export function getTierLabel(tier: number): "Visibility Plus" | "Featured" | "Enhanced" | "Standard" {
   if (tier === 2) return "Visibility Plus";
   if (tier === 5) return "Featured";
@@ -31,14 +40,26 @@ export function getTierLabel(tier: number): "Visibility Plus" | "Featured" | "En
   return "Standard";
 }
 
-/** True for members with any premium tier (rank < 20) */
-export function isPremiumMember(member: Member): boolean {
-  return (member.membershipTier ?? 20) < 20;
+/** True for the chamber's top-tier Community Investor members ($1,145/yr).
+ *  Backed by the authoritative slug set in tier-overrides.ts, sourced
+ *  from the authenticated GrowthZone admin API. */
+export function isCommunityInvestor(member: Member): boolean {
+  return COMMUNITY_INVESTOR_SLUGS.has(member.chamberSlug);
 }
 
-/** True for members with Visibility Plus membership (rank 2) */
+/** True for Visibility Plus members ($575/yr) — but NOT Community
+ *  Investors. CI is strictly above VP; a member is one or the other,
+ *  never both. */
 export function isVisibilityPlus(member: Member): boolean {
-  return (member.membershipTier ?? 20) === 2;
+  return (
+    VISIBILITY_PLUS_SLUGS.has(member.chamberSlug) &&
+    !COMMUNITY_INVESTOR_SLUGS.has(member.chamberSlug)
+  );
+}
+
+/** True for any premium-tier member (CI or VP). */
+export function isPremiumMember(member: Member): boolean {
+  return isCommunityInvestor(member) || isVisibilityPlus(member);
 }
 
 export interface MembersData {

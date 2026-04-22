@@ -4,13 +4,18 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { after } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import {
-  searchMembersWithVPPriority,
+  searchMembersWithTierPriority,
   formatMembersGroupedForPrompt,
 } from "@/lib/chat-search";
 import { searchMembers } from "@/lib/semantic-search";
 import { formatEventsForPrompt } from "@/lib/events-context";
 import { formatNewsForPrompt } from "@/lib/news-context";
-import { totalCount, isVisibilityPlus, type Member } from "@/data/members";
+import {
+  totalCount,
+  isCommunityInvestor,
+  isVisibilityPlus,
+  type Member,
+} from "@/data/members";
 import { chatLimiter, applyRateLimit, getRequestIp } from "@/lib/rate-limit";
 import { isOverDailyCap, isOverMonthlyCap, recordTokenUsage } from "@/lib/spend-cap";
 import { isIpOverBlockThreshold, recordIpTokenUsage } from "@/lib/per-ip-watch";
@@ -73,7 +78,8 @@ Community Investor ($1,145/yr) is not just "the expensive one." It's where chamb
 - WHAT THE TIER ACTUALLY GETS YOU: direct seat at state and federal legislator meetings hosted by the chamber; two monthly VIP luncheons Business Essentials and Visibility Plus members don't attend; priority billing and top-tier placement in chamber marketing; a voice in which policy issues the chamber champions this year.
 - WHO THIS TIER IS FOR: organization leaders who want their name attached to the chamber's public work, CEOs of mid-to-large employers, founders building regional presence, and businesses whose success is tied to local policy (developers, manufacturers, multi-location operators, healthcare, financial services). This is the tier board members and committee chairs tend to come from.
 - THE POSITIONING, SAID OUT LOUD: Visibility Plus is about being seen. Community Investor is about being in the room where the chamber's direction gets set. Different problem, different tier.
-- FOMO ANGLE — use sparingly, only when it fits: when a prospect is comparing tiers and mentions competitors or peers in their industry, it's fair game to note that many of Medina County's largest employers and most visible CEOs belong to the Community Investor tier. Don't name names (the chamber's list changes, and this bot's data doesn't distinguish Community Investor members from Visibility Plus ones — point them to medinachamber.com/about/board or a conversation with Stephanie for specifics).
+- NAMING COMMUNITY INVESTORS WHEN THEY APPEAR IN CONTEXT: the member-context block now includes a section labeled "COMMUNITY INVESTOR MEMBERS MATCHING THIS QUERY" when relevant. When that block is present and the user's question is about finding a business in that category, name those members prominently — they're the chamber's leadership tier for that sector and worth surfacing. Examples: if a user asks about insurance and the context shows SeibertKeck Insurance Partners or Westfield Insurance in the CI block, lead with them. If they ask about banks, lead with First Financial, Huntington, or The Commercial & Savings Bank if those appear. Don't force-list CI members into unrelated answers, but when they're contextually relevant, they come first.
+- FOMO ANGLE — use sparingly, only when it fits: when a prospect is comparing tiers and mentions competitors or peers in their industry, it's fair game to note that many of Medina County's largest employers, longest-tenured chamber members, and most visible leaders belong to the Community Investor tier — that's where Summa Health, Cleveland Clinic, Westfield Insurance, Rea, Sandridge Food, SFS Group, and similar-scale organizations sit.
 
 TONE GUARDRAILS: aspirational, not salesy. Respectful of the fact that these are real leaders in the community — treat the tier the way you'd treat the people in it. No flattery, no "exclusive club" cliches, no hard-sell. If someone doesn't fit the tier's profile (small-business owner just starting out, nonprofit with a tight budget), steer them toward Business Essentials or Visibility Plus without apology — those tiers are real, valuable, and the right fit for most members.
 
@@ -150,17 +156,19 @@ RESPONSE RULES:
 
 MEMBER DIRECTORY QUERIES — STRICT (apply whenever someone asks for a business by type/need/category, e.g. "insurance", "plumber", "magazine", "printer", "accountant", "restaurants", "landscapers"):
 
-1. If the member-context block labeled "VISIBILITY PLUS MEMBERS MATCHING THIS QUERY" is present, list EVERY member in it. These are the chamber's premium listings and get priority no matter what. Don't pick a favorite — list all of them.
+1. If the member-context block labeled "COMMUNITY INVESTOR MEMBERS MATCHING THIS QUERY" is present, list EVERY member in it first. These are the chamber's leadership tier — the highest-investment members, often industry anchors. Name them prominently; don't bury them in a bulleted list. Briefly noting "top-tier Community Investor member" next to their listing is appropriate when the user seems to be making a buying decision, not required every time.
 
-2. Only after listing every VP match, mention the non-VP members in "OTHER RELEVANT MEMBERS" if that block is present — and only if they add useful options the VP list didn't cover. Prefer breadth over filtering here.
+2. Next, if a "VISIBILITY PLUS MEMBERS MATCHING THIS QUERY" block is present, list EVERY member in it. These are mid-tier premium listings and get full listing treatment after Community Investor matches.
 
-3. ALWAYS end any member-lookup answer with a link to the full directory, using this exact phrasing or a close variant:
+3. Finally, mention members from "OTHER RELEVANT MEMBERS" if that block is present — and only if they add useful options the premium lists didn't cover. Prefer breadth over filtering here.
+
+4. ALWAYS end any member-lookup answer with a link to the full directory, using this exact phrasing or a close variant:
    "Browse the full [Member Directory](https://medinachamber.com/membership/directory) for more."
    This rule is non-negotiable even if you only listed one match, or zero.
 
-4. Even when the member-context blocks are empty (no matches), tell the user the answer wasn't in the chamber directory and still link them to [the full directory](https://medinachamber.com/membership/directory) — they may spot something searching manually.
+5. Even when all member-context blocks are empty (no matches), tell the user the answer wasn't in the chamber directory and still link them to [the full directory](https://medinachamber.com/membership/directory) — they may spot something searching manually.
 
-5. Format each member listing as: **[Name](profile-url)** — one-line description / category. Phone on the next line if given. Keep each entry tight (2 lines max) so long lists stay readable.
+6. Format each member listing as: **[Name](profile-url)** — one-line description / category. Phone on the next line if given. Keep each entry tight (2 lines max) so long lists stay readable.
 
 GOOGLE RATINGS:
 - Only mention a rating if it appears in the member context (all listed ratings are 4.0+).
@@ -352,20 +360,28 @@ export async function POST(req: Request) {
   // Most chamber queries are literal, so keyword wins on latency + cost
   // 90% of the time. Vector only runs when keyword returns sparse
   // matches, keeping Upstash Vector reads near-zero at chamber volume.
-  const keyword = searchMembersWithVPPriority(
+  //
+  // Three tier buckets: Community Investor (chamber leadership tier,
+  // $1,145/yr) → Visibility Plus ($575/yr) → Other. CI is listed first,
+  // authoritative from the admin-API-sourced tier-overrides.
+  const keyword = searchMembersWithTierPriority(
     searchContext,
-    20, // VP limit — show ALL matching Visibility Plus members
-    3,  // Other limit — a few non-VP backups
+    20, // CI limit
+    20, // VP limit
+    3,  // Other limit
   );
 
+  let ciMembers = keyword.ciMembers;
   let vpMembers = keyword.vpMembers;
   let otherMembers = keyword.otherMembers;
-  const totalKeywordHits = vpMembers.length + otherMembers.length;
+  const totalKeywordHits =
+    ciMembers.length + vpMembers.length + otherMembers.length;
 
   if (totalKeywordHits < 3 && searchContext.trim().length > 0) {
     try {
       const vectorResults = await searchMembers(searchContext, { topK: 10 });
       const existingSlugs = new Set<string>([
+        ...ciMembers.map((m) => m.chamberSlug),
         ...vpMembers.map((m) => m.chamberSlug),
         ...otherMembers.map((m) => m.chamberSlug),
       ]);
@@ -373,11 +389,14 @@ export async function POST(req: Request) {
         .map((r) => r.member)
         .filter((m) => !existingSlugs.has(m.chamberSlug));
 
-      // Apply the same VP-priority bucketing to the semantic results.
-      // VP members always list first — chamber business rule, unchanged.
+      // Apply the same three-tier bucketing to the semantic results.
+      const ciFromVector = fresh.filter(isCommunityInvestor);
       const vpFromVector = fresh.filter(isVisibilityPlus);
-      const otherFromVector = fresh.filter((m) => !isVisibilityPlus(m));
+      const otherFromVector = fresh.filter(
+        (m) => !isCommunityInvestor(m) && !isVisibilityPlus(m),
+      );
 
+      ciMembers = [...ciMembers, ...ciFromVector].slice(0, 20);
       vpMembers = [...vpMembers, ...vpFromVector].slice(0, 20);
       otherMembers = [...otherMembers, ...otherFromVector].slice(0, 3);
     } catch (err) {
@@ -390,7 +409,11 @@ export async function POST(req: Request) {
     }
   }
 
-  const memberContext = formatMembersGroupedForPrompt(vpMembers, otherMembers);
+  const memberContext = formatMembersGroupedForPrompt(
+    ciMembers,
+    vpMembers,
+    otherMembers,
+  );
 
   // Static appendix (events + news) — TTL-cached at module scope.
   const staticAppendix = getStaticAppendix();

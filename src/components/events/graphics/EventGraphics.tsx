@@ -1648,24 +1648,56 @@ export function BusinessBrewGraphic({
 }
 
 /* =============================================================================
-   10 — GET TO KNOW THE CHAMBER
-   Cambridge field, dashed map grid, full compass SVG, 3-line stacked title.
+   10 — GET TO KNOW THE CHAMBER  (system pass)
+
+   Brought into the design system established by Networking WOW / Safety
+   Council / Chamber Chat / Business Brew / Eggs & Expertise:
+     • Top rail with chamber wordmark + icon
+     • Mistrully-accent tagline ("Start *Here*")
+     • Optional event-info plinth (date · time · note)
+   Visual identity preserved: cambridge field, dashed map grid, full
+   compass SVG. Title kept (3-line stack) since it's the chamber's
+   actual mark for this orientation event.
    ============================================================================ */
 
-export function GetToKnowGraphic({ mode = "social" }: { mode?: GraphicMode }) {
+export function GetToKnowGraphic({
+  mode = "social",
+  eventInfo,
+}: {
+  mode?: GraphicMode;
+  eventInfo?: EventInfo;
+}) {
   const isStory = mode === "story";
   const isSquare = mode === "square";
 
-  const titleSize = pick([150, 180, 220] as const, mode);
+  const titleSize = pick([90, 150, 200] as const, mode);
   const vb = isStory ? "0 0 1080 1920" : isSquare ? "0 0 1080 1080" : "0 0 1200 630";
   const W = isStory ? 1080 : isSquare ? 1080 : 1200;
   const H = isStory ? 1920 : isSquare ? 1080 : 630;
 
+  // Compass anchored opposite the title in each layout
   const comp = isStory
-    ? { cx: 800, cy: 1480, r: 200 }
+    ? { cx: 800, cy: 1280, r: 180 }
     : isSquare
-    ? { cx: 820, cy: 780,  r: 180 }
-    : { cx: 970, cy: 340,  r: 170 };
+    ? { cx: 800, cy: 700,  r: 160 }
+    : { cx: 980, cy: 290,  r: 140 };
+
+  // Tagline + plinth sizes — match the system rhythm
+  const taglineSize = pick([22, 30, 40] as const, mode);
+  const scriptSize = pick([38, 52, 76] as const, mode);
+  const plinthLabel = pick([14, 18, 24] as const, mode);
+  const plinthBig = pick([22, 28, 38] as const, mode);
+
+  const dateLine = eventInfo
+    ? [
+        eventInfo.dayOfWeek?.substring(0, 3).toUpperCase(),
+        eventInfo.month && eventInfo.day
+          ? `${eventInfo.month.toUpperCase()} ${eventInfo.day}${eventInfo.year ? `, ${eventInfo.year}` : ""}`
+          : null,
+      ]
+        .filter(Boolean)
+        .join(" · ")
+    : null;
 
   return (
     <div style={containerStyle({ background: BRAND.cambridge, color: BRAND.oxford })}>
@@ -1723,16 +1755,25 @@ export function GetToKnowGraphic({ mode = "social" }: { mode?: GraphicMode }) {
       </svg>
 
       <div style={{
-        position: "relative", height: "100%",
-        padding: isStory ? "110px 72px 100px" : isSquare ? "72px 64px" : "56px 64px",
-        display: "flex", flexDirection: "column", justifyContent: "space-between",
+        position: "relative", zIndex: 2, height: "100%",
+        padding: isStory ? "60px 64px 64px" : isSquare ? "44px 56px 56px" : "32px 56px 36px",
+        display: "flex", flexDirection: "column",
       }}>
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        {/* Top rail — chamber wordmark left, icon right */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{
+            fontSize: pick([14, 16, 20] as const, mode),
+            fontWeight: 700, letterSpacing: "0.18em",
+            color: BRAND.emerald, textTransform: "uppercase",
+          }}>
+            Greater Medina Chamber
+          </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={ASSETS.iconOrange} style={{ height: isStory ? 60 : 44 }} alt="" />
+          <img src={ASSETS.iconOrange} style={{ height: isStory ? 56 : 36 }} alt="" />
         </div>
 
-        <div style={{ maxWidth: isStory ? 720 : isSquare ? 620 : 640 }}>
+        {/* Title + tagline anchored just above the plinth */}
+        <div style={{ marginTop: "auto", maxWidth: isStory ? 720 : isSquare ? 620 : 640 }}>
           <div style={{
             fontSize: isStory ? 32 : 22, fontWeight: 400, letterSpacing: "0.02em",
             color: BRAND.emerald, lineHeight: 1,
@@ -1745,7 +1786,76 @@ export function GetToKnowGraphic({ mode = "social" }: { mode?: GraphicMode }) {
             fontSize: titleSize, fontWeight: 700, lineHeight: 0.88,
             letterSpacing: "-0.045em", color: BRAND.oxford, marginTop: -8,
           }}>Chamber</div>
+
+          {/* Mistrully tagline — "Start *Here*" — single-word script
+              accent on "Here" mirrors the system established by the
+              other event graphics. Awaiting an official chamber slogan
+              for this event; this placeholder fits the orientation
+              feel without overcommitting. */}
+          <div style={{
+            marginTop: isStory ? 28 : 14,
+            display: "flex", alignItems: "baseline", flexWrap: "wrap",
+            columnGap: pick([10, 12, 16] as const, mode),
+            rowGap: 4,
+            color: BRAND.oxford,
+          }}>
+            <span style={{
+              fontSize: taglineSize, fontWeight: 400,
+              letterSpacing: "0.04em", textTransform: "uppercase",
+            }}>Start</span>
+            <span style={{
+              fontFamily: SCRIPT_STACK,
+              fontSize: scriptSize, lineHeight: 0.9,
+              color: BRAND.coquelicot, fontWeight: 400,
+              display: "inline-block",
+              transform: "translateY(0.18em) rotate(-3deg)",
+              transformOrigin: "left center",
+            }}>
+              Here
+            </span>
+          </div>
         </div>
+
+        {/* Event-info plinth */}
+        {eventInfo && (eventInfo.dayOfWeek || eventInfo.time || eventInfo.note) && (
+          <div style={{
+            marginTop: pick([14, 20, 26] as const, mode),
+            borderTop: `1px solid ${BRAND.oxford}33`,
+            paddingTop: pick([10, 16, 22] as const, mode),
+            display: "flex", alignItems: "flex-end", justifyContent: "space-between",
+            gap: 18, flexWrap: "wrap",
+          }}>
+            <div style={{ textAlign: "left" }}>
+              {dateLine && (
+                <div style={{
+                  fontSize: plinthLabel, fontWeight: 700,
+                  letterSpacing: "0.18em", color: BRAND.emerald,
+                  textTransform: "uppercase",
+                }}>
+                  {dateLine}
+                </div>
+              )}
+              {eventInfo.time && (
+                <div style={{
+                  fontSize: plinthBig, fontWeight: 700,
+                  color: BRAND.oxford, letterSpacing: "-0.01em", marginTop: 2,
+                }}>
+                  {eventInfo.time}
+                </div>
+              )}
+            </div>
+            {eventInfo.note && (
+              <div style={{
+                fontSize: plinthLabel, fontWeight: 700,
+                letterSpacing: "0.18em", color: BRAND.coquelicot,
+                textTransform: "uppercase", textAlign: "right",
+                paddingBottom: 2,
+              }}>
+                {eventInfo.note}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -143,7 +143,20 @@ export function getEventGraphicRenderer(
   ) {
     return MemberMeetingGraphic;
   }
-  if (s.startsWith("get-to-know")) return GetToKnowGraphic;
+  if (s.startsWith("get-to-know")) {
+    const info = eventInfoFor(event);
+    // Get-to-Know pricing in the chamber's GrowthZone scrape comes
+    // through empty (it's a free orientation), so eventInfoFor's
+    // regex falls through to undefined. Override the right-side
+    // plinth note explicitly — the chamber's copy says "RSVP Required"
+    // for this event regardless of price.
+    const withNote = { ...info, note: info.note ?? "Free · RSVP Required" };
+    const Bound: FC<{ mode?: GraphicMode }> = (props) => (
+      <GetToKnowGraphic {...props} eventInfo={withNote} />
+    );
+    Bound.displayName = "GetToKnowGraphic(bound)";
+    return Bound;
+  }
   if (s.startsWith("eggs-expertise")) {
     const info = eventInfoFor(event);
     // Slug suffix carries the topic: "eggs-expertise-canva-101" → "Canva 101"

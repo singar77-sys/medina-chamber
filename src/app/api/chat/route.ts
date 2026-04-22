@@ -162,6 +162,8 @@ RESPONSE RULES:
 
 MEMBER DIRECTORY QUERIES — STRICT (apply whenever someone asks for a business by type/need/category, e.g. "insurance", "plumber", "magazine", "printer", "accountant", "restaurants", "landscapers"):
 
+0. COUNT QUESTIONS — when the user asks "how many X?" or "how many [category] members?": the member context block will include a line starting with "TOTAL_MATCHING_COUNT:". Use that exact number as your answer. Example: if TOTAL_MATCHING_COUNT says 4, answer "4!" (not "I'm not sure" or "you'd have to search"). Then list the members by name. If TOTAL_MATCHING_COUNT is 0, say none are in the directory and link them to the full directory to double-check.
+
 1. If the member-context block labeled "COMMUNITY INVESTOR MEMBERS MATCHING THIS QUERY" is present, list EVERY member in it first. These are the chamber's leadership tier — the highest-investment members, often industry anchors. Name them prominently; don't bury them in a bulleted list. Briefly noting "top-tier Community Investor member" next to their listing is appropriate when the user seems to be making a buying decision, not required every time.
 
 2. Next, if a "VISIBILITY PLUS MEMBERS MATCHING THIS QUERY" block is present, list EVERY member in it. These are mid-tier premium listings and get full listing treatment after Community Investor matches.
@@ -380,6 +382,7 @@ export async function POST(req: Request) {
   let ciMembers = keyword.ciMembers;
   let vpMembers = keyword.vpMembers;
   let otherMembers = keyword.otherMembers;
+  let totalMatchCount = keyword.totalMatchCount;
   const totalKeywordHits =
     ciMembers.length + vpMembers.length + otherMembers.length;
 
@@ -405,6 +408,7 @@ export async function POST(req: Request) {
       ciMembers = [...ciMembers, ...ciFromVector].slice(0, 20);
       vpMembers = [...vpMembers, ...vpFromVector].slice(0, 20);
       otherMembers = [...otherMembers, ...otherFromVector].slice(0, 3);
+      totalMatchCount = ciMembers.length + vpMembers.length + otherMembers.length + fresh.length;
     } catch (err) {
       // Vector search failure is non-fatal — keyword results still flow.
       // Log but don't break the user-facing stream.
@@ -419,6 +423,7 @@ export async function POST(req: Request) {
     ciMembers,
     vpMembers,
     otherMembers,
+    totalMatchCount,
   );
 
   // Static appendix (events + news) — TTL-cached at module scope.

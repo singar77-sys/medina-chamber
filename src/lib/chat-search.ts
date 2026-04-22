@@ -123,7 +123,7 @@ export function searchMembersWithTierPriority(
   ciLimit = 20,
   vpLimit = 20,
   otherLimit = 3,
-): { ciMembers: Member[]; vpMembers: Member[]; otherMembers: Member[] } {
+): { ciMembers: Member[]; vpMembers: Member[]; otherMembers: Member[]; totalMatchCount: number } {
   const terms = query
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, " ")
@@ -131,7 +131,7 @@ export function searchMembersWithTierPriority(
     .filter((t) => t.length >= 2 && !STOPWORDS.has(t));
 
   if (terms.length === 0) {
-    return { ciMembers: [], vpMembers: [], otherMembers: [] };
+    return { ciMembers: [], vpMembers: [], otherMembers: [], totalMatchCount: 0 };
   }
 
   const scored = members
@@ -157,20 +157,29 @@ export function searchMembersWithTierPriority(
     .slice(0, otherLimit)
     .map(({ member }) => member);
 
-  return { ciMembers, vpMembers, otherMembers };
+  return { ciMembers, vpMembers, otherMembers, totalMatchCount: scored.length };
 }
 
 /**
  * Format the three-tier matched members as labeled prompt blocks.
- * CI first (chamber leadership), then VP, then Other. Returns empty
- * string if all buckets are empty.
+ * CI first (chamber leadership), then VP, then Other. Includes a
+ * TOTAL_MATCHING_COUNT header so the LLM can answer count questions
+ * accurately ("how many plumbers?") without fabricating.
+ * Returns empty string if all buckets are empty.
  */
 export function formatMembersGroupedForPrompt(
   ciMembers: Member[],
   vpMembers: Member[],
   otherMembers: Member[],
+  totalMatchCount?: number,
 ): string {
+  if (ciMembers.length === 0 && vpMembers.length === 0 && otherMembers.length === 0) {
+    return "";
+  }
   const parts: string[] = [];
+  if (totalMatchCount !== undefined) {
+    parts.push(`TOTAL_MATCHING_COUNT: ${totalMatchCount} members match this query in the chamber directory. Use this exact number when answering count questions ("how many X?").`);
+  }
   if (ciMembers.length > 0) {
     parts.push(
       `COMMUNITY INVESTOR MEMBERS MATCHING THIS QUERY (the chamber's leadership tier — list ALL of these first; these members invest at the highest level, sit on boards, and shape chamber policy):\n\n${ciMembers

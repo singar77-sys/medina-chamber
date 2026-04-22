@@ -16,6 +16,7 @@ import {
   AthenaAwardsGraphic,
   BusinessBrewGraphic,
   ChamberChatGraphic,
+  ComingSoonGraphic,
   EggsExpertiseGraphic,
   GetToKnowGraphic,
   GolfOutingGraphic,
@@ -87,6 +88,16 @@ function eventInfoFor(event: EventLike): EventInfo {
 }
 
 export function getEventGraphicRenderer(
+  _event: EventLike,
+): ComponentType<{ mode?: GraphicMode }> | null {
+  // All graphics are being redesigned — show the Coming Soon placeholder
+  // for every event type. Restore the slug-based routing below once the
+  // new designs are ready.
+  return ComingSoonGraphic;
+}
+
+/** @internal Preserved for when the redesigns ship — swap getEventGraphicRenderer back to this. */
+function _getEventGraphicRendererOriginal(
   event: EventLike,
 ): ComponentType<{ mode?: GraphicMode }> | null {
   const s = event.slug.toLowerCase();
@@ -145,11 +156,6 @@ export function getEventGraphicRenderer(
   }
   if (s.startsWith("get-to-know")) {
     const info = eventInfoFor(event);
-    // Get-to-Know pricing in the chamber's GrowthZone scrape comes
-    // through empty (it's a free orientation), so eventInfoFor's
-    // regex falls through to undefined. Override the right-side
-    // plinth note explicitly — the chamber's copy says "RSVP Required"
-    // for this event regardless of price.
     const withNote = { ...info, note: info.note ?? "Free · RSVP Required" };
     const Bound: FC<{ mode?: GraphicMode }> = (props) => (
       <GetToKnowGraphic {...props} eventInfo={withNote} />
@@ -159,7 +165,6 @@ export function getEventGraphicRenderer(
   }
   if (s.startsWith("eggs-expertise")) {
     const info = eventInfoFor(event);
-    // Slug suffix carries the topic: "eggs-expertise-canva-101" → "Canva 101"
     const suffix = s.replace(/^eggs-expertise-?/, "");
     const topic = suffix
       ? suffix

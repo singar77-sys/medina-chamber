@@ -12,7 +12,7 @@ import { ThreePillars } from "@/components/ThreePillars";
 import { PartnersMarquee } from "@/components/PartnersMarquee";
 import { RentalSpaceCards } from "@/components/RentalSpaceCards";
 import { MemberVoice } from "@/components/MemberVoice";
-import { getEventGraphicRenderer } from "@/components/events/graphics/EventGraphics";
+import { getEventGraphicRenderer } from "@/components/events/graphics/registry";
 import { FluidGraphicFrame } from "@/components/events/graphics/FluidGraphicFrame";
 import { TiltCard } from "@/components/events/TiltCard";
 

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getUpcomingEvents, getEventBySlug } from "@/data/events";
-import { getEventGraphicRenderer } from "@/components/events/graphics/EventGraphics";
+import { getEventGraphicRenderer } from "@/components/events/graphics/registry";
 import { FluidGraphicFrame } from "@/components/events/graphics/FluidGraphicFrame";
 
 export const metadata: Metadata = {

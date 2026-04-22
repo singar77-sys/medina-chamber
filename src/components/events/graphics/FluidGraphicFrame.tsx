@@ -1,7 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { GRAPHIC_DIMS, type GraphicMode } from "./EventGraphics";
+import { GRAPHIC_DIMS, type GraphicMode } from "./shared";
 
 /**
  * Responsive sibling of GraphicFrame. Fills its container's width,

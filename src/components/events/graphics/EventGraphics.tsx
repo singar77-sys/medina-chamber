@@ -1,113 +1,27 @@
 /**
- * Event Graphics — six chamber-event social graphics, each renderable at
- * three canvas sizes: social (1200×630), square (1080×1080), story (1080×1920).
+ * Event Graphics — eleven chamber-event social graphics, each renderable
+ * at three canvas sizes: social (1200×630), square (1080×1080), story
+ * (1080×1920).
  *
- * Ported from the AIDesigner "finals.jsx" adoption bundle. The components are
- * pure render — no state, no hooks — so they work as server components. Brand
- * colors are intentionally kept local (not tied to globals.css tokens) so the
- * graphics render identically regardless of theme or future token drift.
+ * Shared primitives (types, brand hex, asset URLs, pick helper, container
+ * styles, FONT/SCRIPT stacks) live in ./shared. The <GraphicFrame/>
+ * scaler is in ./GraphicFrame. Event routing + the EVENT_GRAPHICS
+ * registry are in ./registry. This file is just the eleven graphic
+ * component implementations.
  */
 
-import type { CSSProperties, ReactNode } from "react";
-
-export type GraphicMode = "social" | "square" | "story";
-
-export const GRAPHIC_MODES = ["social", "square", "story"] as const;
-
-/** Canvas dimensions per mode — these are the "design-intent" pixels. */
-export const GRAPHIC_DIMS: Record<GraphicMode, { w: number; h: number }> = {
-  social: { w: 1200, h: 630 },
-  square: { w: 1080, h: 1080 },
-  story:  { w: 1080, h: 1920 },
-};
-
-const BRAND = {
-  oxford:     "#0C1B33",
-  cambridge:  "#83BCA9",
-  coquelicot: "#FF4000",
-  emerald:    "#005450",
-  cream:      "#F4EFE6",
-  paper:      "#F7F5EF",
-};
-
-/** Asset URLs — live under public/ */
-const ASSETS = {
-  iconWhite:  "/images/chamber-logos/icon-white.png",
-  iconOrange: "/images/chamber-logos/icon-orange.png",
-  iconGreen:  "/images/chamber-logos/icon-green.png",
-  networking: "/images/events/networking.webp",
-};
-
-/** Pick the right value for the current mode from a 3-tuple [social, square, story]. */
-function pick<T>(values: readonly [T, T, T], mode: GraphicMode): T {
-  return mode === "social" ? values[0] : mode === "square" ? values[1] : values[2];
-}
-
-const FONT_STACK = '"BN Bergen", system-ui, -apple-system, sans-serif';
-const SCRIPT_STACK = '"Mistrully", "Brush Script MT", cursive';
-
-/**
- * Optional per-event info that a graphic can display when rendered with
- * a specific upcoming instance bound. Used for the "REGISTRATION REQUIRED"
- * plinth at the bottom of the social/square frames. When omitted, the
- * graphic renders as the generic, undated template.
- */
-export interface EventInfo {
-  dayOfWeek?: string;
-  month?: string;
-  day?: number;
-  year?: number;
-  time?: string;
-  note?: string; // e.g. "Registration required"
-}
-
-/* =============================================================================
-   GRAPHIC FRAME — scales a graphic to a target display width while preserving
-   the design-intent pixel dimensions inside. Uses CSS transform scale so all
-   inner px values stay faithful to the design.
-   ============================================================================ */
-
-export function GraphicFrame({
-  mode,
-  displayWidth,
-  className,
-  children,
-}: {
-  mode: GraphicMode;
-  displayWidth: number;
-  className?: string;
-  children: ReactNode;
-}) {
-  const { w, h } = GRAPHIC_DIMS[mode];
-  const scale = displayWidth / w;
-  const displayHeight = h * scale;
-
-  return (
-    <div
-      className={className}
-      style={{
-        width: displayWidth,
-        height: displayHeight,
-        overflow: "hidden",
-        position: "relative",
-      }}
-    >
-      <div
-        style={{
-          width: w,
-          height: h,
-          position: "absolute",
-          top: 0,
-          left: 0,
-          transform: `scale(${scale})`,
-          transformOrigin: "top left",
-        }}
-      >
-        {children}
-      </div>
-    </div>
-  );
-}
+import type { CSSProperties } from "react";
+import {
+  BRAND,
+  ASSETS,
+  FONT_STACK,
+  SCRIPT_STACK,
+  containerStyle,
+  svgFillStyle,
+  pick,
+  type EventInfo,
+  type GraphicMode,
+} from "./shared";
 
 /* =============================================================================
    1 — NETWORKING WOW  (redesign v2 — esoteric chamber-faithful)
@@ -1862,174 +1776,3 @@ export function EggsExpertiseGraphic({
   );
 }
 
-/* =============================================================================
-   Shared style helpers
-   ============================================================================ */
-
-function containerStyle({ background, color }: { background: string; color: string }): CSSProperties {
-  return {
-    width: "100%",
-    height: "100%",
-    position: "relative",
-    background,
-    color,
-    overflow: "hidden",
-    fontFamily: FONT_STACK,
-  };
-}
-
-const svgFillStyle: CSSProperties = {
-  position: "absolute",
-  inset: 0,
-  width: "100%",
-  height: "100%",
-};
-
-/* =============================================================================
-   Registry — ordered so the showcase page can iterate.
-   ============================================================================ */
-
-export interface EventGraphicEntry {
-  key: string;
-  title: string;
-  palette: "dark" | "light";
-  Component: React.ComponentType<{ mode?: GraphicMode }>;
-}
-
-/* =============================================================================
-   EVENT → GRAPHIC routing
-   Maps a chamber event (by slug + optional title) to the right graphic
-   component. Returns a plain `{ mode }`-accepting component so callers
-   don't need to think about per-graphic props — for Eggs & Expertise
-   the monthly topic is auto-extracted from the slug suffix and bound
-   into a wrapper.
-   ============================================================================ */
-
-export interface EventLike {
-  slug: string;
-  title?: string;
-  // Optional event-instance fields. When provided, graphics that support
-  // an event-info plinth (currently NetworkingWow) will render the
-  // bottom date/time/registration band.
-  dayOfWeek?: string;
-  month?: string;
-  day?: number;
-  year?: number;
-  startTime?: string;
-  pricing?: string;
-}
-
-/** Build the EventInfo bag that bound graphic components can render. */
-function eventInfoFor(event: EventLike): EventInfo {
-  // Right-side plinth note. Three buckets, derived from pricing copy:
-  //   1. "Registration Required"     — events where the chamber explicitly
-  //      blocks walk-ins (Networking WOW, Safety Council, paid programs).
-  //   2. "Free · Walk-Ins Welcome"   — free, casual events where the
-  //      chamber's copy says registration is preferred but not required
-  //      (Chamber Chat, Business Brew, Get to Know).
-  //   3. undefined                   — fallback; the plinth right side
-  //      is empty.
-  let note: string | undefined;
-  const p = event.pricing ?? "";
-  if (/registration required|walk-ins are not permitted|advanced registration required/i.test(p)) {
-    note = "Registration Required";
-  } else if (/no cost|free/i.test(p) && /preferred but not required|registration preferred/i.test(p)) {
-    note = "Free · Walk-Ins Welcome";
-  } else if (/^\s*\$\d/.test(p)) {
-    // Paid events without an explicit walk-in clause (Member Meeting,
-    // Eggs & Expertise, Golf) — the dollar amount up top means people
-    // need to register to pay, so the badge applies.
-    note = "Registration Required";
-  }
-  return {
-    dayOfWeek: event.dayOfWeek,
-    month: event.month,
-    day: event.day,
-    year: event.year,
-    time: event.startTime,
-    note,
-  };
-}
-
-export function getEventGraphicRenderer(
-  event: EventLike,
-): React.ComponentType<{ mode?: GraphicMode }> | null {
-  const s = event.slug.toLowerCase();
-  const t = (event.title ?? "").toLowerCase();
-
-  if (s.includes("golf") || t.includes("golf")) return GolfOutingGraphic;
-  if (s.includes("athena") || t.includes("athena")) return AthenaAwardsGraphic;
-  if (s.includes("ribbon") || t.includes("ribbon cutting")) return RibbonCuttingGraphic;
-  if (s.includes("social-connect") || t.includes("social connect")) return SocialConnectGraphic;
-  if (s.startsWith("networking-wow") || t.includes("networking wow")) {
-    const info = eventInfoFor(event);
-    const Bound: React.FC<{ mode?: GraphicMode }> = (props) => (
-      <NetworkingWowGraphic {...props} eventInfo={info} />
-    );
-    Bound.displayName = "NetworkingWowGraphic(bound)";
-    return Bound;
-  }
-  if (s.startsWith("safety-council")) {
-    const info = eventInfoFor(event);
-    const Bound: React.FC<{ mode?: GraphicMode }> = (props) => (
-      <SafetyCouncilGraphic {...props} eventInfo={info} />
-    );
-    Bound.displayName = "SafetyCouncilGraphic(bound)";
-    return Bound;
-  }
-  if (s.startsWith("chamber-chat")) {
-    const info = eventInfoFor(event);
-    const Bound: React.FC<{ mode?: GraphicMode }> = (props) => (
-      <ChamberChatGraphic {...props} eventInfo={info} />
-    );
-    Bound.displayName = "ChamberChatGraphic(bound)";
-    return Bound;
-  }
-  if (s.startsWith("business-brew")) {
-    const info = eventInfoFor(event);
-    const Bound: React.FC<{ mode?: GraphicMode }> = (props) => (
-      <BusinessBrewGraphic {...props} eventInfo={info} />
-    );
-    Bound.displayName = "BusinessBrewGraphic(bound)";
-    return Bound;
-  }
-  if (
-    s.startsWith("chamber-member-meeting") ||
-    s.startsWith("member-meeting") ||
-    t.includes("member meeting")
-  ) {
-    return MemberMeetingGraphic;
-  }
-  if (s.startsWith("get-to-know")) return GetToKnowGraphic;
-  if (s.startsWith("eggs-expertise")) {
-    const info = eventInfoFor(event);
-    // Slug suffix carries the topic: "eggs-expertise-canva-101" → "Canva 101"
-    const suffix = s.replace(/^eggs-expertise-?/, "");
-    const topic = suffix
-      ? suffix
-          .split("-")
-          .map((w) => (/^\d+$/.test(w) ? w : w.charAt(0).toUpperCase() + w.slice(1)))
-          .join(" ")
-      : "Canva 101";
-    const BoundEggs: React.FC<{ mode?: GraphicMode }> = (props) => (
-      <EggsExpertiseGraphic {...props} topic={topic} eventInfo={info} />
-    );
-    BoundEggs.displayName = `EggsExpertiseGraphic(${topic})`;
-    return BoundEggs;
-  }
-  return null;
-}
-
-export const EVENT_GRAPHICS: EventGraphicEntry[] = [
-  { key: "networking-wow",  title: "Networking WOW",         palette: "dark",  Component: NetworkingWowGraphic },
-  { key: "safety-council",  title: "Safety Council",         palette: "dark",  Component: SafetyCouncilGraphic },
-  { key: "chamber-chat",    title: "Chamber Chat",           palette: "dark",  Component: ChamberChatGraphic },
-  { key: "member-meeting",  title: "Member Meeting",         palette: "light", Component: MemberMeetingGraphic },
-  { key: "golf-outing",     title: "Golf Outing",            palette: "light", Component: GolfOutingGraphic },
-  { key: "athena-awards",   title: "Athena Awards",          palette: "dark",  Component: AthenaAwardsGraphic },
-  { key: "social-connect",  title: "Social Connect",         palette: "dark",  Component: SocialConnectGraphic },
-  { key: "ribbon-cutting",  title: "Ribbon Cutting",         palette: "light", Component: RibbonCuttingGraphic },
-  { key: "business-brew",   title: "Business Brew",          palette: "light", Component: BusinessBrewGraphic },
-  { key: "get-to-know",     title: "Get to Know the Chamber", palette: "light", Component: GetToKnowGraphic },
-  { key: "eggs-expertise",  title: "Eggs & Expertise",       palette: "dark",  Component: EggsExpertiseGraphic },
-];

@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { GRAPHIC_DIMS, type GraphicMode } from "@/components/events/graphics/shared";
+import { GraphicFrame } from "@/components/events/graphics/GraphicFrame";
 import {
   EVENT_GRAPHICS,
-  GRAPHIC_DIMS,
-  GraphicFrame,
   getEventGraphicRenderer,
-  type GraphicMode,
-} from "@/components/events/graphics/EventGraphics";
+} from "@/components/events/graphics/registry";
 import { getUpcomingEvents } from "@/data/events";
 
 export const metadata: Metadata = {

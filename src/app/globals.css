@@ -810,7 +810,17 @@ body {
   }
 }
 
-/* --- Robot Character animations --------------------------- */
+/* --- Robot-style float/fly animations (used by ChamberBotMascot) - */
+/*
+ * These were originally one block of ~200 lines of animations for the
+ * RobotCharacter / RobotHead SVGs. Those components were retired
+ * (orphan cleanup, commit d28a889). Only `robot-float` and
+ * `robot-fly-in` survived — ChamberBotMascot reuses them on its own
+ * SVG. The other 10 keyframes (eye-blink, chest-pulse, led-blink,
+ * hover-light, arm-wave, antenna-wobble, mouth-talk, think-dot,
+ * shadow-pulse, antenna-pulse, chip-glow, indicator, eye-wink-*)
+ * were tied to the deleted components and have been removed.
+ */
 
 @keyframes robot-float {
   0%, 100% { transform: translateY(0); }
@@ -833,180 +843,9 @@ body {
   animation: robot-fly-in 1100ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-@keyframes robot-antenna-pulse {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50%      { opacity: 1;   transform: scale(1.15); }
-}
-
-.robot-antenna-pulse {
-  transform-origin: 200px 40px;
-  transform-box: fill-box;
-  animation: robot-antenna-pulse var(--robot-pulse, 3s) ease-in-out infinite;
-}
-
-@keyframes robot-eye-blink {
-  0%, 45%, 48%, 93%, 95%, 100% { transform: scaleY(1); }
-  46.5%, 94%                   { transform: scaleY(0.1); }
-}
-
-@keyframes robot-eye-wink-left {
-  0%, 22%, 25%, 68%, 71%, 95%, 98%, 100% { transform: scaleY(1); }
-  23.5%, 69.5% { transform: scaleY(0.1); }
-  96.5%        { transform: scaleY(0.1); }
-}
-
-@keyframes robot-eye-wink-right {
-  0%, 22%, 25%, 95%, 98%, 100% { transform: scaleY(1); }
-  23.5% { transform: scaleY(0.1); }
-  96.5% { transform: scaleY(0.1); }
-}
-
-.robot-eye {
-  transform-origin: center;
-  transform-box: fill-box;
-}
-
-/* Both blink in sync at 23.5% and 96.5%. Left ALSO winks at 69.5% alone. */
-.robot-eye-left {
-  animation: robot-eye-wink-left 10s ease-in-out infinite;
-}
-.robot-eye-right {
-  animation: robot-eye-wink-right 10s ease-in-out infinite;
-}
-
-@keyframes robot-chest-pulse {
-  0%, 100% { opacity: 0.75; transform: scale(1); }
-  50%      { opacity: 1;    transform: scale(1.08); }
-}
-
-.robot-chest-pulse {
-  transform-origin: 200px 340px;
-  transform-box: fill-box;
-  animation: robot-chest-pulse var(--robot-pulse, 3s) ease-in-out infinite;
-}
-
-@keyframes robot-led-blink {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: 0.3; }
-}
-
-.robot-led-left {
-  animation: robot-led-blink 1.2s ease-in-out infinite;
-}
-.robot-led-right {
-  animation: robot-led-blink 1.2s ease-in-out infinite 0.3s;
-}
-
-@keyframes robot-indicator {
-  0%, 100% { opacity: 0.4; }
-  50%      { opacity: 1; }
-}
-
-.robot-indicator-1 { animation: robot-indicator 1.5s ease-in-out infinite; }
-.robot-indicator-2 { animation: robot-indicator 1.5s ease-in-out infinite 0.3s; }
-.robot-indicator-3 { animation: robot-indicator 1.5s ease-in-out infinite 0.6s; }
-
-@keyframes robot-chip-glow {
-  0%, 100% { opacity: 0.3; }
-  50%      { opacity: 0.9; }
-}
-
-.robot-chip-glow {
-  animation: robot-chip-glow 2s ease-in-out infinite;
-}
-
-@keyframes robot-hover-light {
-  0%, 100% { opacity: 0.4; }
-  50%      { opacity: 1; }
-}
-
-.robot-hover-1 { animation: robot-hover-light 1s ease-in-out infinite; }
-.robot-hover-2 { animation: robot-hover-light 1s ease-in-out infinite 0.2s; }
-.robot-hover-3 { animation: robot-hover-light 1s ease-in-out infinite 0.4s; }
-
-@keyframes robot-shadow-pulse {
-  0%, 100% { opacity: 0.3; transform: scaleX(1); }
-  50%      { opacity: 0.2; transform: scaleX(0.9); }
-}
-
-.robot-shadow {
-  transform-origin: 200px 490px;
-  transform-box: fill-box;
-  animation: robot-shadow-pulse 4s ease-in-out infinite;
-}
-
-/* Arm wave — periodic friendly wave on the left arm */
-@keyframes robot-arm-wave {
-  0%, 82%, 100%  { transform: rotate(0deg); }
-  85%            { transform: rotate(-18deg); }
-  88%            { transform: rotate(10deg); }
-  91%            { transform: rotate(-15deg); }
-  94%            { transform: rotate(8deg); }
-  97%            { transform: rotate(0deg); }
-}
-
-.robot-arm-wave {
-  animation: robot-arm-wave 12s ease-in-out infinite;
-}
-
-/* Antenna wobble — only during "thinking" state */
-@keyframes robot-antenna-wobble {
-  0%, 100% { transform: rotate(0deg); }
-  25%      { transform: rotate(8deg); }
-  75%      { transform: rotate(-8deg); }
-}
-
-.robot-antenna-wobble {
-  animation: robot-antenna-wobble 0.8s ease-in-out infinite;
-}
-
-/* Talking mouth — expands/contracts during "responding" */
-@keyframes robot-mouth-talk {
-  0%, 100% { transform: scaleY(0.3); }
-  25%      { transform: scaleY(1); }
-  50%      { transform: scaleY(0.5); }
-  75%      { transform: scaleY(0.9); }
-}
-
-.robot-mouth-talk {
-  transform-origin: center;
-  transform-box: fill-box;
-  animation: robot-mouth-talk 0.4s ease-in-out infinite;
-}
-
-/* Thinking dots — three dots bouncing above the head during "thinking" */
-@keyframes robot-think-dot {
-  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-  30%           { transform: translateY(-8px); opacity: 1; }
-}
-
-.robot-think-dot-1 { transform-box: fill-box; animation: robot-think-dot 1.2s ease-in-out infinite; }
-.robot-think-dot-2 { transform-box: fill-box; animation: robot-think-dot 1.2s ease-in-out infinite 0.15s; }
-.robot-think-dot-3 { transform-box: fill-box; animation: robot-think-dot 1.2s ease-in-out infinite 0.3s; }
-
 @media (prefers-reduced-motion: reduce) {
   .robot-fly-in,
-  .robot-float,
-  .robot-antenna-pulse,
-  .robot-antenna-wobble,
-  .robot-eye-left,
-  .robot-eye-right,
-  .robot-chest-pulse,
-  .robot-led-left,
-  .robot-led-right,
-  .robot-indicator-1,
-  .robot-indicator-2,
-  .robot-indicator-3,
-  .robot-chip-glow,
-  .robot-hover-1,
-  .robot-hover-2,
-  .robot-hover-3,
-  .robot-shadow,
-  .robot-arm-wave,
-  .robot-mouth-talk,
-  .robot-think-dot-1,
-  .robot-think-dot-2,
-  .robot-think-dot-3 {
+  .robot-float {
     animation: none;
   }
 

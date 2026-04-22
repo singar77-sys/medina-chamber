@@ -816,66 +816,262 @@ export function MemberMeetingGraphic({ mode = "social" }: { mode?: GraphicMode }
 }
 
 /* =============================================================================
-   5 — GOLF OUTING
-   Paper field, giant "38" watermark, green + flag SVG, emerald accent title.
+   5 — GOLF OUTING  (John Alvin pass)
+
+   Cinematic poster, not yard-sign clip-art. The chamber's annual golf
+   outing isn't a tournament — it's the summer ritual where Medina
+   business gets done in the open air, thirty-eight years running.
+   The poster captures the moment the day exhales.
+
+   Single symbolic image: a lone flag on the horizon at sunset.
+   Sky carries the whole emotional load — a vertical gradient from
+   twilight oxford navy at the top through cambridge teal residue
+   to a luminous coquelicot-amber band at the horizon. Two layered
+   hill silhouettes in atmospheric perspective. Single bird overhead.
+   A radial halo bloom around the pin — the Alvin luminous focal.
+
+   Type as cinema credits, not data UI. No standard plinth. The
+   icon moves to the credit row at the very bottom where studio
+   marks live on movie posters.
    ============================================================================ */
 
-export function GolfOutingGraphic({ mode = "social" }: { mode?: GraphicMode }) {
+export function GolfOutingGraphic({
+  mode = "social",
+  eventInfo,
+}: {
+  mode?: GraphicMode;
+  eventInfo?: EventInfo;
+}) {
   const isStory = mode === "story";
   const isSquare = mode === "square";
 
-  const titleSize = pick([180, 210, 240] as const, mode);
-  const bigNum = pick([680, 820, 1000] as const, mode);
+  const W = isStory ? 1080 : isSquare ? 1080 : 1200;
+  const H = isStory ? 1920 : isSquare ? 1080 : 630;
+  const vb = `0 0 ${W} ${H}`;
 
-  const vb = isStory ? "0 0 1080 1920" : isSquare ? "0 0 1080 1080" : "0 0 1200 630";
-  const cx = isStory ? 540 : isSquare ? 820 : 1000;
-  const cy = isStory ? 1640 : isSquare ? 920 : 540;
-  const rx = isStory ? 340 : 280;
-  const ry = isStory ? 32 : 26;
-  const flagTop = isStory ? 1180 : isSquare ? 620 : 250;
-  const flagW = isStory ? 160 : 120;
-  const flagH = isStory ? 70 : 50;
-  const flagMid = isStory ? 26 : 20;
-  const flagBottom = isStory ? 44 : 30;
+  // Horizon line — where sky meets the dark crest. Set high enough to
+  // give the sky 60-70% of the canvas (the sky is the hero).
+  const horizonY = isStory ? Math.round(H * 0.62) : isSquare ? Math.round(H * 0.65) : Math.round(H * 0.66);
+
+  // Flag pole — sits on the horizon. Rises about 35-40% of the canvas
+  // height up into the sky. Positioned slightly off-center for
+  // asymmetric balance against the type.
+  const poleX = isStory ? 540 : isSquare ? 660 : 820;
+  const poleBottomY = horizonY - 4;
+  const poleTopY = horizonY - Math.round(H * (isStory ? 0.30 : 0.34));
+  const flagW = isStory ? 110 : 90;
+  const flagH = isStory ? 60 : 48;
+
+  // Type sizing — title goes at the bottom in the dark foreground
+  const overlineSize = pick([16, 20, 26] as const, mode);
+  const titleSize = pick([90, 130, 170] as const, mode);
+  const creditSize = pick([13, 16, 20] as const, mode);
+
+  // Date credit line. Falls back to hardcoded if no eventInfo is bound.
+  const dateText =
+    eventInfo?.month && eventInfo.day && eventInfo.year
+      ? `${eventInfo.month.toUpperCase()} ${eventInfo.day}, ${eventInfo.year}`
+      : "JULY 20, 2026";
 
   return (
-    <div style={containerStyle({ background: BRAND.paper, color: BRAND.oxford })}>
-      <div style={{
-        position: "absolute",
-        right: isStory ? -60 : -40, top: isStory ? -140 : -80,
-        fontSize: bigNum, fontWeight: 700, lineHeight: 1,
-        color: BRAND.coquelicot, opacity: 0.12, letterSpacing: "-0.08em",
-      }}>
-        38
-      </div>
+    <div style={containerStyle({ background: BRAND.oxford, color: "#fff" })}>
+      <svg viewBox={vb} style={svgFillStyle} preserveAspectRatio="xMidYMid slice">
+        <defs>
+          {/* Golden-hour sky — pulled WAY warmer than the v1 twilight.
+              The user said "mountains at night" — that was the navy at
+              the top dominating. Now the gradient is mostly amber/peach
+              with just a soft dusty blue cap at the very top, the way
+              an Ohio summer dusk actually reads. */}
+          <linearGradient id={`alvin-sky-${mode}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor="#3E5269" />
+            <stop offset="22%"  stopColor="#7A7088" />
+            <stop offset="48%"  stopColor="#C28464" />
+            <stop offset="72%"  stopColor="#F09455" />
+            <stop offset="90%"  stopColor="#FFC07A" />
+            <stop offset="100%" stopColor="#FFE0B0" />
+          </linearGradient>
 
-      <svg viewBox={vb} style={svgFillStyle}>
-        <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill={BRAND.emerald} opacity="0.9" />
-        <ellipse cx={cx} cy={cy} rx={rx * 0.72} ry={ry * 0.7} fill={BRAND.cambridge} opacity="0.8" />
-        <circle cx={cx} cy={cy} r={isStory ? 14 : 10} fill={BRAND.oxford} />
-        <line x1={cx} y1={cy} x2={cx} y2={flagTop} stroke={BRAND.oxford} strokeWidth={isStory ? 6 : 4} />
-        <path d={`M${cx} ${flagTop} L${cx + flagW} ${flagTop + flagMid} L${cx + flagW} ${flagTop + flagH} L${cx} ${flagTop + flagBottom} Z`} fill={BRAND.coquelicot} />
-        <text x={cx + flagW / 2} y={flagTop + (isStory ? 34 : 25)} fill="#fff" fontFamily={FONT_STACK} fontSize={isStory ? 34 : 24} fontWeight="700" textAnchor="middle" dominantBaseline="central">
-          18
-        </text>
+          {/* Halo bloom around the pin — softer than v1. */}
+          <radialGradient id={`alvin-halo-${mode}`} cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stopColor="#FFE8B4" stopOpacity="0.45" />
+            <stop offset="50%"  stopColor="#FF8030" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="#FF4000" stopOpacity="0" />
+          </radialGradient>
+
+          {/* Far hill — warm haze. Atmospheric perspective via warmer,
+              dustier colors instead of the cold-blue version that
+              made everything read alpine. */}
+          <linearGradient id={`alvin-hill-far-${mode}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"  stopColor="#8B6450" />
+            <stop offset="100%" stopColor="#5C4838" />
+          </linearGradient>
+
+          {/* Mid hill — darker green-shadow, hint of fairway color */}
+          <linearGradient id={`alvin-hill-mid-${mode}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"  stopColor="#2A3A2A" />
+            <stop offset="100%" stopColor="#152018" />
+          </linearGradient>
+
+          {/* Foreground crest — deep emerald shadow with a hint of
+              warm rim light along the top edge (sun catching grass) */}
+          <linearGradient id={`alvin-fg-${mode}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"  stopColor="#1A2D1F" />
+            <stop offset="20%" stopColor="#0E1A12" />
+            <stop offset="100%" stopColor="#06100B" />
+          </linearGradient>
+        </defs>
+
+        {/* Sky fill — top portion of the frame */}
+        <rect x="0" y="0" width={W} height={horizonY + 40} fill={`url(#alvin-sky-${mode})`} />
+
+        {/* Halo bloom behind the pin — drawn before the pin so it
+            glows out from behind. */}
+        <circle
+          cx={poleX}
+          cy={poleTopY + flagH * 0.4}
+          r={isStory ? 320 : 240}
+          fill={`url(#alvin-halo-${mode})`}
+        />
+
+        {/* Far hill ridge — VERY gentle Ohio-rolling, not mountain
+            peaks. Amplitude reduced to ~15px from horizon line so the
+            hills read as fairway, not Rockies. */}
+        <path
+          d={`M 0 ${horizonY + 28}
+              C ${W * 0.3} ${horizonY + 14}, ${W * 0.5} ${horizonY + 32}, ${W * 0.7} ${horizonY + 18}
+              C ${W * 0.85} ${horizonY + 12}, ${W} ${horizonY + 24}, ${W} ${horizonY + 30}
+              L ${W} ${horizonY + 80}
+              L 0 ${horizonY + 80} Z`}
+          fill={`url(#alvin-hill-far-${mode})`}
+        />
+
+        {/* Mid hill — same lazy roll, slightly more amplitude */}
+        <path
+          d={`M 0 ${horizonY + 64}
+              C ${W * 0.25} ${horizonY + 50}, ${W * 0.5} ${horizonY + 76}, ${W * 0.72} ${horizonY + 56}
+              C ${W * 0.88} ${horizonY + 48}, ${W} ${horizonY + 68}, ${W} ${horizonY + 64}
+              L ${W} ${H}
+              L 0 ${H} Z`}
+          fill={`url(#alvin-hill-mid-${mode})`}
+        />
+
+        {/* Foreground crest — gentle fairway sweep, no peaks */}
+        <path
+          d={`M 0 ${H - (isStory ? 240 : isSquare ? 170 : 110)}
+              C ${W * 0.35} ${H - (isStory ? 260 : isSquare ? 188 : 122)},
+                ${W * 0.7} ${H - (isStory ? 230 : isSquare ? 162 : 102)},
+                ${W} ${H - (isStory ? 248 : isSquare ? 178 : 116)}
+              L ${W} ${H}
+              L 0 ${H} Z`}
+          fill={`url(#alvin-fg-${mode})`}
+        />
+
+        {/* Flag pole — thin, dark silhouette */}
+        <line
+          x1={poleX}
+          y1={poleTopY}
+          x2={poleX}
+          y2={poleBottomY}
+          stroke="#000"
+          strokeWidth={isStory ? 4 : 3}
+          strokeLinecap="round"
+        />
+
+        {/* Flag — coquelicot, with two-tone fold suggesting wind.
+            Lit edge catches the warm sky; trailing edge in shadow. */}
+        <path
+          d={`M ${poleX} ${poleTopY}
+              Q ${poleX + flagW * 0.55} ${poleTopY + flagH * 0.18},
+                ${poleX + flagW} ${poleTopY + flagH * 0.45}
+              Q ${poleX + flagW * 0.55} ${poleTopY + flagH * 0.65},
+                ${poleX} ${poleTopY + flagH * 0.85}
+              Z`}
+          fill={BRAND.coquelicot}
+        />
+        {/* Flag fold — shadow side */}
+        <path
+          d={`M ${poleX} ${poleTopY + flagH * 0.4}
+              Q ${poleX + flagW * 0.4} ${poleTopY + flagH * 0.55},
+                ${poleX + flagW * 0.7} ${poleTopY + flagH * 0.62}
+              Q ${poleX + flagW * 0.4} ${poleTopY + flagH * 0.75},
+                ${poleX} ${poleTopY + flagH * 0.85}
+              Z`}
+          fill="#A52B00"
+          opacity="0.75"
+        />
+
+        {/* Tiny finial dot at the top of the pole */}
+        <circle cx={poleX} cy={poleTopY - 4} r={isStory ? 4 : 3} fill="#000" />
       </svg>
 
+      {/* Type layer */}
       <div style={{
-        position: "relative", height: "100%",
-        padding: isStory ? "110px 72px 80px" : "64px",
+        position: "relative", zIndex: 2, height: "100%",
+        padding: isStory ? "60px 64px 64px" : isSquare ? "44px 56px 48px" : "32px 56px 36px",
         display: "flex", flexDirection: "column", justifyContent: "space-between",
       }}>
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={ASSETS.iconGreen} style={{ height: isStory ? 60 : 44 }} alt="" />
+        {/* Top rail — overline only (38th annual). The icon moves to
+            the credit row at the bottom, cinema-poster style. */}
+        <div>
+          <p style={{
+            fontSize: overlineSize, fontWeight: 700,
+            letterSpacing: "0.24em", color: BRAND.coquelicot,
+            textTransform: "uppercase", margin: 0,
+          }}>
+            38th Annual
+          </p>
         </div>
 
-        <div>
-          <div style={{ fontSize: titleSize, fontWeight: 700, lineHeight: 0.85, letterSpacing: "-0.045em", color: BRAND.oxford }}>
+        {/* Title block + credits — anchored bottom in the dark
+            foreground area where movie titles live.
+
+            Both lines BN Bergen Bold, uniform weight. The size
+            differential carries the hierarchy: "The Chamber" smaller
+            (set ~70% of the main title) and "Golf Outing" the hero.
+            v1 used Light + Bold contrast which made the Light line
+            read as a different typeface entirely. */}
+        <div style={{ marginTop: "auto" }}>
+          <div style={{
+            fontSize: titleSize * 0.7, fontWeight: 700, lineHeight: 0.95,
+            letterSpacing: "-0.01em", color: "#fff",
+            textTransform: "uppercase",
+            opacity: 0.92,
+          }}>
             The Chamber
           </div>
-          <div style={{ fontSize: titleSize, fontWeight: 700, lineHeight: 0.85, letterSpacing: "-0.045em", color: BRAND.emerald, marginTop: -4 }}>
+          <div style={{
+            fontSize: titleSize, fontWeight: 700, lineHeight: 0.9,
+            letterSpacing: "-0.025em", color: "#fff",
+            textTransform: "uppercase",
+            marginTop: -4,
+          }}>
             Golf Outing
+          </div>
+
+          {/* Credit line — cinema-poster bottom rail. Date · Venue,
+              with the chamber icon sitting on the right as the
+              "studio mark". */}
+          <div style={{
+            marginTop: pick([18, 24, 32] as const, mode),
+            paddingTop: pick([14, 18, 22] as const, mode),
+            borderTop: `1px solid #ffffff33`,
+            display: "flex", alignItems: "center", justifyContent: "space-between",
+            gap: 16, flexWrap: "wrap",
+          }}>
+            <div style={{
+              fontSize: creditSize, fontWeight: 700,
+              letterSpacing: "0.18em", color: "#fff",
+              textTransform: "uppercase",
+              opacity: 0.85,
+            }}>
+              {dateText} · Westfield Country Club
+            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={ASSETS.iconWhite}
+              style={{ height: isStory ? 36 : 28, opacity: 0.65 }}
+              alt=""
+            />
           </div>
         </div>
       </div>

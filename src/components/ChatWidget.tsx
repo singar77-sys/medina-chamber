@@ -1,10 +1,27 @@
 "use client";
 
+/**
+ * NAMING NOTE — "Jackie" vs "ChamberBot"
+ *
+ * The bot's user-facing name is **ChamberBot** (canonical — see the
+ * system prompt in api/chat/route.ts). All UI copy says "ChamberBot."
+ *
+ * Internal identifiers — the `jackie:open` CustomEvent, the
+ * `cmdk-group--jackie` / `jkc-jackie-col` CSS classes, the
+ * `askJackie()` function in CommandPalette — were named when the
+ * mascot was called "Jackie" and have not been mass-renamed because
+ * doing so would touch CSS class names tracked across globals.css
+ * (~10 selectors). The two naming systems are stable: copy ↔ user,
+ * Jackie ↔ wire. Don't mix. If you rename one side, rename both.
+ */
+
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatedMascotHead } from "@/components/holographic/AnimatedMascotHead";
 import { HandoffForm } from "@/components/chat/HandoffForm";
 import { renderMarkdown } from "@/lib/markdown";
+import { DEFAULT_PROMPTS } from "@/lib/chamberbot-prompts";
 
 /**
  * Delay before the proactive preview bubble pops on a content-specific
@@ -133,17 +150,14 @@ function contextForPath(pathname: string): PageContext {
     };
   }
 
-  // Default — homepage / everything else
+  // Default — homepage / everything else.
+  // Generic-default prompts come from the shared module so the portal
+  // and the bubble panel show the same starter set on first open.
   return {
     greeting: "Hi! I'm the ChamberBot.",
     subtitle:
       "Ask me about member businesses, events, membership, or anything about the chamber.",
-    prompts: [
-      "Find a local dentist",
-      "How do I join?",
-      "Upcoming events",
-      "What is Visibility Plus?",
-    ],
+    prompts: [...DEFAULT_PROMPTS].slice(0, 4),
   };
 }
 
@@ -294,14 +308,18 @@ export function ChatWidget() {
 
   const hasMessages = messages.length > 0;
 
-  // Homepage rule: the desktop hero renders the full HolographicChamber
-  // portal experience (see HolographicChamber + ChamberBotPortal), so
-  // the floating widget would compete with it — hide it there. But
-  // HolographicChamber is itself `hidden md:block`, meaning mobile
-  // home has no ChamberBot surface unless we ship this widget. So we
-  // hide the widget on desktop home only and let it render on mobile
-  // home. Every other page shows the widget at every breakpoint.
-  const isHome = pathname === "/";
+  // Suppress the proactive preview-bubble nag on:
+  //  • /chamberbot — the page IS the bot; proactive nudges would be
+  //    redundant. The `return null` early bail below also hides the
+  //    bubble itself there, so this is belt-and-suspenders.
+  //  • /         — the homepage. Landing-page visitors are still
+  //    orienting; nagging them in the first 20 seconds reads as desperate.
+  //    The bubble is fully visible on home now (was previously hidden
+  //    behind a HolographicChamber hero), so users can self-initiate.
+  //
+  // Every other route is a content-specific surface where a tailored
+  // prompt is genuinely helpful and gets the proactive treatment.
+  const suppressProactive = pathname === "/" || pathname.startsWith("/chamberbot");
 
   // Proactive popup — after PROACTIVE_DELAY_MS on a content-specific
   // route, a small preview bubble pops next to the chat button with a
@@ -310,7 +328,7 @@ export function ChatWidget() {
   // on the same page. Never fires if chat is already open or if
   // contextForPath() fell through to the generic default.
   useEffect(() => {
-    if (open || isHome) return;
+    if (open || suppressProactive) return;
     if (typeof window === "undefined") return;
 
     const dismissKey = `${DISMISS_KEY}:${pathname}`;
@@ -327,7 +345,7 @@ export function ChatWidget() {
     }, PROACTIVE_DELAY_MS);
 
     return () => window.clearTimeout(showTimer);
-  }, [pathname, open, isHome, ctx]);
+  }, [pathname, open, suppressProactive, ctx]);
 
   // Auto-fade the bubble if it's been sitting ignored
   useEffect(() => {
@@ -357,8 +375,13 @@ export function ChatWidget() {
     setOpen(true);
   }
 
+  // Hide the floating bubble on /chamberbot itself — that page IS the
+  // ChamberBot experience, no need for a redundant floating mascot
+  // fighting the immersive surface for attention.
+  if (pathname.startsWith("/chamberbot")) return null;
+
   return (
-    <div className={isHome ? "md:hidden" : undefined}>
+    <div>
       {/* ── Chat Panel ── */}
       {open && (
         <div className="
@@ -390,6 +413,29 @@ export function ChatWidget() {
               </div>
             </div>
             <div className="flex items-center gap-1">
+              {/* Open in fullscreen — routes to /chamberbot which
+                  auto-opens the immersive ChamberBotPortal. Always
+                  visible (not just empty state) so a user mid-chat
+                  can still escalate to the bigger surface.
+
+                  Tap-target sizing: explicit w-11 h-11 (44×44) meets
+                  WCAG 2.5.5 AAA + Apple HIG floor on mobile. Was p-1
+                  (~28×28) which thumbs miss on phones. */}
+              {!handoffOpen && (
+                <Link
+                  href="/chamberbot"
+                  aria-label="Open ChamberBot fullscreen"
+                  title="Open fullscreen"
+                  className="w-11 h-11 inline-flex items-center justify-center text-white/70 hover:text-white transition-colors"
+                >
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M15 3h6v6" />
+                    <path d="M9 21H3v-6" />
+                    <path d="M21 3l-7 7" />
+                    <path d="M3 21l7-7" />
+                  </svg>
+                </Link>
+              )}
               {/* Talk-to-a-human escalation. Hidden while the handoff
                   form is already showing (can't escalate what's already
                   escalated). */}
@@ -398,7 +444,7 @@ export function ChatWidget() {
                   onClick={() => setHandoffOpen(true)}
                   aria-label="Talk to a chamber team member"
                   title="Talk to a chamber team member"
-                  className="text-white/70 hover:text-white transition-colors p-1"
+                  className="w-11 h-11 inline-flex items-center justify-center text-white/70 hover:text-white transition-colors"
                 >
                   <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
@@ -411,7 +457,7 @@ export function ChatWidget() {
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Close chat"
-                className="text-white/60 hover:text-white transition-colors p-1"
+                className="w-11 h-11 inline-flex items-center justify-center text-white/60 hover:text-white transition-colors"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M18 6L6 18M6 6l12 12"/>
@@ -455,6 +501,9 @@ export function ChatWidget() {
                     </button>
                   ))}
                 </div>
+                {/* Note: the "Open fullscreen" escape hatch lives in
+                    the panel header (always visible), not duplicated
+                    here in the empty state. */}
               </div>
             )}
 
@@ -501,11 +550,15 @@ export function ChatWidget() {
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask about members, events, or the chamber…"
               disabled={isLoading}
+              /* font-size 16px+ kills iOS Safari's zoom-on-focus jerk.
+                 text-body-sm (14px) was triggering it on every tap.
+                 lg: pulls back to text-body-sm to keep the desktop
+                 panel feeling tight. */
               className="
                 flex-1 px-4 py-2.5
                 bg-bg-secondary border border-border-secondary
                 rounded-[var(--radius-md)]
-                text-body-sm text-text-primary placeholder:text-text-tertiary
+                text-base lg:text-body-sm text-text-primary placeholder:text-text-tertiary
                 focus:outline-none focus:ring-2 focus:ring-cambridge/40 focus:border-cambridge
                 disabled:opacity-50 transition-colors
               "

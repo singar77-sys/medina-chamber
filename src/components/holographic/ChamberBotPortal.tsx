@@ -34,6 +34,7 @@ import { ChamberBotMascot } from "./ChamberBotMascot";
 import { ParticleField } from "./ParticleField";
 import { renderMarkdown } from "@/lib/markdown";
 import { usePortalAudio } from "@/hooks/usePortalAudio";
+import { DEFAULT_PROMPTS } from "@/lib/chamberbot-prompts";
 
 type Phase = "closed" | "entering" | "open" | "exiting";
 type SceneState = "idle" | "listening" | "thinking" | "responding";
@@ -65,6 +66,11 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
   const abortRef = useRef<AbortController | null>(null);
   const seededForQueryRef = useRef<string | null>(null);
   const phaseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Session ID for the server-side conversation log. The server owns
+  // the transcript (security: prevents client from injecting fake
+  // assistant turns). We start with null; first response sets the
+  // server-minted UUID via the x-session-id response header.
+  const sessionIdRef = useRef<string | null>(null);
 
   const audio = usePortalAudio();
 
@@ -91,11 +97,6 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
       const assistantId = crypto.randomUUID();
       const assistantMsg: Message = { id: assistantId, role: "assistant", content: "" };
 
-      // Snapshot conversation + new user msg for the API
-      const history = [...messages, userMsg]
-        .slice(-16)
-        .map(({ role, content }) => ({ role, content }));
-
       setMessages((prev) => [...prev, userMsg, assistantMsg]);
       setInput("");
       setSceneState("thinking");
@@ -104,14 +105,32 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
       abortRef.current = new AbortController();
 
       try {
+        // Server-side history shape: { sessionId, message }. The server
+        // owns the conversation log in Upstash and tacks the prior turns
+        // on internally — we only send the new user message + the
+        // session ID so the server can look up the prior turns. The
+        // first POST has sessionIdRef.current === null and the server
+        // mints a fresh UUID and returns it in x-session-id; we adopt
+        // that for subsequent turns.
+        //
+        // Was previously sending `{ messages: history }` — the API
+        // returned 400 Invalid Request because that shape was retired
+        // when chat history moved server-side (a security fix to kill
+        // fake-assistant-turn injection from a client).
         const res = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ messages: history }),
+          body: JSON.stringify({
+            sessionId: sessionIdRef.current,
+            message: q,
+          }),
           signal: abortRef.current.signal,
         });
 
         if (!res.ok || !res.body) throw new Error("Failed");
+
+        const serverSid = res.headers.get("x-session-id");
+        if (serverSid) sessionIdRef.current = serverSid;
 
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
@@ -144,7 +163,9 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
         setSceneState("idle");
       }
     },
-    [messages, sceneState, audio],
+    // No `messages` dep — state updates use the prev-callback form,
+    // and we no longer snapshot history client-side (server owns it).
+    [sceneState, audio],
   );
 
   // Phase machine — orchestrate enter/exit with timers so CSS
@@ -354,7 +375,27 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
         </div>
       </div>
 
-      {/* Input — bottom center */}
+      {/* Suggestion chips — only on first open. Fills the empty-stage
+          dead zone above the input on mobile and gives users an obvious
+          starting point. Disappears the moment a conversation begins. */}
+      {messages.length === 0 && phase === "open" && (
+        <div className="cb-portal-suggestions" aria-label="Try one of these">
+          {DEFAULT_PROMPTS.map((p) => (
+            <button
+              key={p}
+              type="button"
+              onClick={() => sendMessage(p)}
+              className="cb-portal-suggestion-chip"
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Input — bottom center. Placeholder shifts based on state +
+          whether this is the first message (no "another" before there's
+          a first one). */}
       <form className="cb-portal-input" onSubmit={handleSubmit}>
         <input
           ref={inputRef}
@@ -365,6 +406,8 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
               ? "ChamberBot is thinking…"
               : sceneState === "responding"
               ? "She's talking — ask when she's done"
+              : messages.length === 0
+              ? "Ask anything…"
               : "Ask another question…"
           }
           disabled={sceneState === "thinking" || sceneState === "responding"}

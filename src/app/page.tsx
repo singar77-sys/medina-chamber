@@ -5,9 +5,7 @@ import { totalCount } from "@/data/members";
 import { getUpcomingEvents, shortenEventTitle } from "@/data/events";
 import { FadeIn } from "@/components/FadeIn";
 import { CountUp } from "@/components/CountUp";
-import { HolographicChamber } from "@/components/holographic/HolographicChamber";
 import { MouseGradient } from "@/components/MouseGradient";
-import { NetworkBackdrop } from "@/components/holographic/NetworkBackdrop";
 import { ThreePillars } from "@/components/ThreePillars";
 import { PartnersMarquee } from "@/components/PartnersMarquee";
 import { RentalSpaceCards } from "@/components/RentalSpaceCards";
@@ -199,19 +197,6 @@ export default async function HomePage() {
           </div>
         </div>
       </MouseGradient>
-
-      {/* ─── Holographic Chamber (AI Section) ──────────────── */}
-      {/* overflow-x-clip (not hidden) so position:sticky works on the
-          mascot inside — overflow:hidden on an ancestor would neuter
-          the sticky positioning. */}
-      <section className="relative bg-bg-secondary border-t border-border-secondary overflow-x-clip">
-        <NetworkBackdrop />
-        <div className="relative">
-          <FadeIn>
-            <HolographicChamber />
-          </FadeIn>
-        </div>
-      </section>
 
       {/* ─── Upcoming Events ──────────────────────────────── */}
       {upcomingEvents.length > 0 && (

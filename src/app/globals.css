@@ -2530,6 +2530,12 @@ body {
   overflow: hidden;
   color: #fff;
   font-family: var(--font-sans);
+  /* Solid opaque base. Without this, the portal relied entirely on
+     .cb-portal-bg for opacity — which meant the page underneath was
+     visible through the portal during the 500ms entering animation,
+     and visible at all times if .cb-portal-bg's gradient happened
+     to fail to render. Belt-and-suspenders. */
+  background: #050b18;
   opacity: 0;
   pointer-events: none;
 }
@@ -2664,13 +2670,22 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem; height: 2.25rem;
+  /* Touch-first sizing: meets WCAG 2.5.5 / Apple HIG 44×44 floor on
+     mobile. Desktop pulls back to 36×36 because precision pointers
+     can hit smaller targets and the larger size felt heavy at the
+     top of an otherwise-cinematic frame. */
+  width: 2.75rem; height: 2.75rem;
   color: rgba(255, 255, 255, 0.35);
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 999px;
   transition: all 0.25s ease;
   cursor: pointer;
+}
+@media (min-width: 1024px) {
+  .cb-portal-hud__btn {
+    width: 2.25rem; height: 2.25rem;
+  }
 }
 .cb-portal-hud__btn:hover {
   color: #fff;
@@ -2864,10 +2879,77 @@ body {
   30%           { opacity: 1;   transform: scale(1);   }
 }
 
+/* ── Suggestion chips — visible only on first open ──────────────
+   Sits above the input bar. Glassy translucent buttons that stay
+   inside the cinematic palette (cambridge accent, low-contrast pill
+   strokes, no aggressive surface fills). On mobile they wrap and
+   center; on desktop they stay in a tight row. */
+.cb-portal-suggestions {
+  position: absolute;
+  /* Anchored just above the input bar. Same safe-area calc + plus the
+     input's height (~3.5rem) + a comfortable gap (1.25rem). */
+  bottom: max(6.75rem, calc(5.5rem + env(safe-area-inset-bottom)));
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(640px, calc(100% - 3rem));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  z-index: 9;
+  opacity: 0;
+  /* cbLayerInCentered (NOT cbLayerIn) — preserves translateX(-50%).
+     The plain version stripped centering and shifted the chips off
+     the right edge of the viewport. */
+  animation: cbLayerInCentered 0.5s ease-out 1.4s forwards;
+  pointer-events: auto;
+}
+
+.cb-portal-suggestion-chip {
+  /* WCAG 2.5.5 tap target — 44px floor on mobile via min-height +
+     adequate padding. */
+  min-height: 2.75rem;
+  padding: 0.5rem 0.95rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(131, 188, 169, 0.25);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+  /* Defensive constraints for ultra-narrow viewports (≤320px iPhone SE
+     1st gen / Galaxy Fold cover screen). Without these the longer chip
+     labels would push past the suggestions container and clip. */
+  max-width: 100%;
+  box-sizing: border-box;
+  white-space: normal;
+  text-align: center;
+}
+.cb-portal-suggestion-chip:hover,
+.cb-portal-suggestion-chip:focus-visible {
+  background: rgba(131, 188, 169, 0.14);
+  border-color: rgba(131, 188, 169, 0.5);
+  color: #fff;
+  outline: none;
+}
+
+/* On larger screens the chips can ride higher off the input because
+   there's more room. */
+@media (min-width: 1024px) {
+  .cb-portal-suggestions {
+    bottom: 7rem;
+  }
+}
+
 /* ── Input bar — bottom center ───────────────────────────────── */
 .cb-portal-input {
   position: absolute;
-  bottom: 2rem;
+  /* Lift above the iOS home indicator on modern iPhones (~34px safe
+     area) so the input can never be obscured by the system home bar. */
+  bottom: max(2rem, calc(1rem + env(safe-area-inset-bottom)));
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -2881,7 +2963,9 @@ body {
   backdrop-filter: blur(16px);
   z-index: 10;
   opacity: 0;
-  animation: cbLayerIn 0.5s ease-out 1.2s forwards;
+  /* cbLayerInCentered preserves translateX(-50%) — same fix as
+     .cb-portal-suggestions above. */
+  animation: cbLayerInCentered 0.5s ease-out 1.2s forwards;
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.35),
     0 0 0 1px rgba(131, 188, 169, 0.05);
@@ -2903,8 +2987,14 @@ body {
   border: 0;
   outline: 0;
   color: #fff;
-  font-size: 15px;
+  /* iOS Safari zooms in on any <input> with font-size < 16px when it
+     gains focus. Locked to 16px on mobile to prevent that jerk. Desktop
+     pulls back to 15px for visual cadence with surrounding HUD type. */
+  font-size: 16px;
   font-family: inherit;
+}
+@media (min-width: 1024px) {
+  .cb-portal-input__field { font-size: 15px; }
 }
 
 .cb-portal-input__field::placeholder {
@@ -2918,12 +3008,20 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem; height: 2.5rem;
+  /* WCAG 2.5.5 minimum tap target on mobile (was 40×40 → fail).
+     Desktop pulls to the original 40×40 since a precision pointer can
+     hit it cleanly and the bigger pill looked weighty in the input bar. */
+  width: 2.75rem; height: 2.75rem;
   background: #83BCA9;
   color: #0C1B33;
   border-radius: 999px;
   transition: all 0.2s ease;
   cursor: pointer;
+}
+@media (min-width: 1024px) {
+  .cb-portal-input__send {
+    width: 2.5rem; height: 2.5rem;
+  }
 }
 .cb-portal-input__send:hover:not(:disabled) {
   background: #9bcdbb;
@@ -2961,6 +3059,19 @@ body {
 @keyframes cbLayerIn {
   0%   { opacity: 0; transform: translateY(8px); }
   100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Centered variant — preserves the translateX(-50%) that elements
+   like .cb-portal-input and .cb-portal-suggestions rely on for
+   horizontal centering. The plain cbLayerIn keyframes set
+   `transform: translateY(0)` which OBLITERATED the static
+   translateX(-50%) on those elements (animation transform wins
+   over rule transform), shifting them to the right by half their
+   width. This variant rolls translateX(-50%) into every keyframe so
+   centered elements stay centered through the animation. */
+@keyframes cbLayerInCentered {
+  0%   { opacity: 0; transform: translate(-50%, 8px); }
+  100% { opacity: 1; transform: translate(-50%, 0); }
 }
 
 /* ── Exit — reverse the star elements ────────────────────────── */

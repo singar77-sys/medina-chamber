@@ -9,8 +9,7 @@ import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermar
 /**
  * ThreePillars — the "Why Members Join" section on the homepage.
  *
- * Heaviest visual moment on the page after the hero and the Jackie
- * section. Three cards with:
+ * Heaviest visual moment on the page after the hero. Three cards with:
  *
  *   1. Per-card reactive SVG graphic (gauge / network / chart)
  *   2. 3D cursor tilt (perspective + rotateX/Y toward cursor)

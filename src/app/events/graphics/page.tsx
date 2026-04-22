@@ -49,6 +49,7 @@ export default function EventGraphicsPage() {
   bind("chamber-chat", "chamber-chat");
   bind("business-brew", "business-brew");
   bind("eggs-expertise", "eggs-expertise");
+  bind("golf-outing",    "annual-chamber-golf");
 
   return (
     <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">

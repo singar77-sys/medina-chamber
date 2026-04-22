@@ -5,9 +5,9 @@
  * HTML-escapes all raw text first so no injection is possible, then
  * applies a narrow set of transformations.
  *
- * Used by the homepage HolographicChamber answer display and by the
- * ChatWidget message list. Share this so the two surfaces stay in
- * visual and behavioral sync.
+ * Used by the ChamberBotPortal transcript and the floating ChatWidget
+ * message list. Shared so the two surfaces stay in visual and
+ * behavioral sync.
  *
  * LINK SAFETY — host allowlist.
  * The model is instructed to only emit medinachamber.com URLs, but

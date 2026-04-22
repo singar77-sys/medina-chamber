@@ -5,13 +5,18 @@ import { useRouter } from "next/navigation";
 
 /**
  * CommandPalette — global intent layer. ⌘K / Ctrl+K / "/" from anywhere
- * opens a single input that routes to any page, action, or Jackie.
+ * opens a single input that routes to any page, action, or the ChamberBot.
  *
  * Zero dependencies (no `cmdk` package). Server-safe (renders nothing
  * until hydrated; the keyboard shortcut hint is the only prepaint).
- * When no command matches, the fallback row hands the query off to
- * Jackie via the `jackie:open` CustomEvent — which ChatWidget listens
- * for and auto-sends.
+ * When no command matches, the fallback row hands the query off to the
+ * ChamberBot via the `jackie:open` CustomEvent — which ChatWidget
+ * listens for and auto-sends.
+ *
+ * NAMING NOTE — "Jackie" identifiers (jackie:open, askJackie,
+ * cmdk-group--jackie, cmdk-row--jackie) are the wire-level names. The
+ * user-facing label is always "ChamberBot." See ChatWidget.tsx for the
+ * full naming convention.
  */
 
 type CommandGroup =

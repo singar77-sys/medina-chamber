@@ -92,7 +92,14 @@ export function getEventGraphicRenderer(
   const s = event.slug.toLowerCase();
   const t = (event.title ?? "").toLowerCase();
 
-  if (s.includes("golf") || t.includes("golf")) return GolfOutingGraphic;
+  if (s.includes("golf") || t.includes("golf")) {
+    const info = eventInfoFor(event);
+    const Bound: FC<{ mode?: GraphicMode }> = (props) => (
+      <GolfOutingGraphic {...props} eventInfo={info} />
+    );
+    Bound.displayName = "GolfOutingGraphic(bound)";
+    return Bound;
+  }
   if (s.includes("athena") || t.includes("athena")) return AthenaAwardsGraphic;
   if (s.includes("ribbon") || t.includes("ribbon cutting")) return RibbonCuttingGraphic;
   if (s.includes("social-connect") || t.includes("social connect")) return SocialConnectGraphic;

@@ -157,9 +157,9 @@ function contextForPath(pathname: string): PageContext {
   // Generic-default prompts come from the shared module so the portal and
   // the bubble panel show the same starter set on first open.
   return {
-    greeting: "Hi! I'm the ChamberBot.",
+    greeting: "Not the average chatbot.",
     subtitle:
-      "Not the average AI. I know all 511 chamber members by name and the whole event calendar by heart. Try me.",
+      "I know all 511 chamber members by name and the whole event calendar by heart. Try me on full screen or keep chatting here.",
     prompts: [...DEFAULT_PROMPTS].slice(0, 4),
   };
 }
@@ -340,7 +340,7 @@ export function ChatWidget() {
     // Only fire on routes where contextForPath returned a non-generic
     // greeting — those are the ones with tailored prompts worth
     // surfacing. Default fall-through stays quiet.
-    const isGenericContext = ctx.greeting === "Hi! I'm the ChamberBot.";
+    const isGenericContext = ctx.greeting === "Not the average chatbot.";
     if (isGenericContext) return;
 
     const showTimer = window.setTimeout(() => {

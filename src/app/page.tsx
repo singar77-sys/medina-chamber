@@ -335,11 +335,16 @@ export default async function HomePage() {
                         {event.location}
                       </p>
                     )}
-                    {event.pricing && (
-                      <p className="text-body-sm text-cambridge mt-3 font-medium line-clamp-1">
-                        {event.pricing.split("\n")[0]}
-                      </p>
-                    )}
+                    {/* Pricing line — always renders so the three cards
+                        have uniform content density. Get-to-Know has an
+                        empty pricing field in the GrowthZone scrape (it's
+                        a free orientation), which previously left a
+                        ragged hole where Chamber Chat / Business Brew
+                        show their cambridge pricing line. Fallback "Free"
+                        keeps the visual rhythm consistent. */}
+                    <p className="text-body-sm text-cambridge mt-3 font-medium line-clamp-1">
+                      {event.pricing ? event.pricing.split("\n")[0] : "Free"}
+                    </p>
                     <p className="mt-auto pt-4 text-body-sm font-bold text-cambridge group-hover:translate-x-1 transition-transform">
                       Event details →
                     </p>

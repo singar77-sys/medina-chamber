@@ -460,15 +460,7 @@ export default async function HomePage() {
 
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <FadeIn>
-          <TiltCard>
-          <div
-            className="
-              p-10 lg:p-16 bg-bg-secondary border border-border-secondary
-              rounded-[var(--radius-lg)]
-              hover:border-cambridge/40 hover:shadow-[0_12px_40px_rgba(131,188,169,0.12)]
-              transition-shadow duration-300
-            "
-          >
+          <div className="p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-10 items-center">
               <div>
                 <p className="text-overline text-cambridge mb-4">Membership</p>
@@ -519,7 +511,6 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
-          </TiltCard>
         </FadeIn>
         </div>
       </section>

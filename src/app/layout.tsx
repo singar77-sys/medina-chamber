@@ -8,6 +8,7 @@ import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
 import { CommandPalette } from "@/components/CommandPalette";
 import { KeywordHotkey } from "@/components/KeywordHotkey";
+import { MedinaAmbience } from "@/components/weather/MedinaAmbience";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -81,6 +82,10 @@ export default async function RootLayout({
           <ChatWidget />
           <CommandPalette />
           <KeywordHotkey />
+          {/* Weather-aware landing ambience — plays once per session
+              based on Medina's live conditions (snow/rain/fog) + applies
+              time-aware theme on first visit if user hasn't chosen. */}
+          <MedinaAmbience />
         </ThemeProvider>
         {/* Vercel observability — page views + web vitals (LCP, INP, CLS).
             Both ship sub-1KB scripts; data shows up in the Vercel project

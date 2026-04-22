@@ -269,12 +269,22 @@ export default async function HomePage() {
             {upcomingEvents.map((event, i) => {
               const Graphic = getEventGraphicRenderer(event);
               return (
-              <FadeIn key={event.slug} delay={i * 100}>
-                <TiltCard>
+              /* min-w-0 is REQUIRED on grid items here. Without it the
+                 grid track sizes itself to each item's min-content
+                 width, and the truncated address line below
+                 (`white-space: nowrap` via the .truncate class) becomes
+                 the intrinsic min-content. Result: the third card
+                 overflowed the right edge of the viewport at narrower
+                 desktops because the address line "139 N. Court Street
+                 Suite A, Medina, OH, 44256" is wider than 1/3 of the
+                 container at < ~1280px. min-w-0 lets the track shrink
+                 and the truncate handles the overflow inside the card. */
+              <FadeIn key={event.slug} delay={i * 100} className="min-w-0">
+                <TiltCard className="min-w-0">
                 <Link
                   href={`/events/${event.slug}`}
                   className="
-                    group flex flex-col h-full
+                    group flex flex-col h-full min-w-0
                     bg-bg-secondary border border-border-secondary
                     rounded-[var(--radius-lg)]
                     overflow-hidden
@@ -316,7 +326,7 @@ export default async function HomePage() {
                   </div>
 
                   {/* Title + details */}
-                  <div className="flex flex-col flex-1 p-5">
+                  <div className="flex flex-col flex-1 p-5 min-w-0">
                     <h3 className="text-h4 leading-snug line-clamp-2 group-hover:text-accent transition-colors">
                       {shortenEventTitle(event.title)}
                     </h3>

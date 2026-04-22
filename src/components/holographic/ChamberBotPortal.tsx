@@ -413,6 +413,11 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
           disabled={sceneState === "thinking" || sceneState === "responding"}
           aria-label="Ask the ChamberBot"
           className="cb-portal-input__field"
+          name="chamberbot-message"
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="sentences"
+          spellCheck={true}
         />
         <button
           type="submit"
@@ -426,10 +431,6 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
         </button>
       </form>
 
-      {/* Hint chip — visible only on first open */}
-      <div className="cb-portal-hint" aria-hidden={phase !== "open"}>
-        Press <kbd>Esc</kbd> to return
-      </div>
     </div>,
     document.body,
   );

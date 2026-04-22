@@ -556,6 +556,11 @@ export function ChatWidget() {
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask about members, events, or the chamber…"
               disabled={isLoading}
+              name="chamberbot-message"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="sentences"
+              spellCheck={true}
               /* font-size 16px+ kills iOS Safari's zoom-on-focus jerk.
                  text-body-sm (14px) was triggering it on every tap.
                  lg: pulls back to text-body-sm to keep the desktop

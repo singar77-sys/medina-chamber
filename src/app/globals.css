@@ -2795,6 +2795,7 @@ body {
   .cb-portal-stage {
     top: 26%;
     width: clamp(180px, 34vw, 260px);
+    z-index: 2; /* sit behind transcript on mobile */
   }
   .cb-portal-transcript {
     /* Mobile window: shorter to leave room for mascot above + input
@@ -2802,6 +2803,7 @@ body {
        the input). bottom 11rem clears chips + input on small screens. */
     bottom: 11rem;
     max-height: 38vh;
+    z-index: 6; /* above stage (2) so text is never masked by the avatar */
   }
 }
 

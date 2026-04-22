@@ -3,7 +3,20 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { usePathname } from "next/navigation";
 import { AnimatedMascotHead } from "@/components/holographic/AnimatedMascotHead";
+import { HandoffForm } from "@/components/chat/HandoffForm";
 import { renderMarkdown } from "@/lib/markdown";
+
+/**
+ * Delay before the proactive preview bubble pops on a content-specific
+ * route (pricing, programs, events, etc). Long enough that a user who's
+ * clearly leaving or skimming isn't interrupted, short enough that a
+ * user actually considering membership gets a nudge.
+ */
+const PROACTIVE_DELAY_MS = 20000;
+/** How long the bubble stays visible before auto-fading if ignored. */
+const PROACTIVE_AUTOFADE_MS = 25000;
+/** SessionStorage key prefix — per-path dismissal scoped to this tab. */
+const DISMISS_KEY = "chamber-proactive-dismissed";
 
 /**
  * Page-context → quick-prompts mapping. Jackie reads the current
@@ -223,16 +236,23 @@ function useStreamChat() {
     }
   }, [messages, isLoading]);
 
-  return { messages, input, setInput, isLoading, error, sendMessage };
+  /** Expose a getter for the current session ID so the handoff form
+   *  can attach it to its POST. Not a setter — the server is
+   *  authoritative on session identity. */
+  const getSessionId = useCallback(() => sessionIdRef.current, []);
+
+  return { messages, input, setInput, isLoading, error, sendMessage, getSessionId };
 }
 
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
+  const [handoffOpen, setHandoffOpen] = useState(false);
+  const [previewText, setPreviewText] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const pathname = usePathname();
 
-  const { messages, input, setInput, isLoading, error, sendMessage } = useStreamChat();
+  const { messages, input, setInput, isLoading, error, sendMessage, getSessionId } = useStreamChat();
 
   // Context-aware greeting + quick prompts based on current route
   const ctx = useMemo(() => contextForPath(pathname || "/"), [pathname]);
@@ -274,14 +294,71 @@ export function ChatWidget() {
 
   const hasMessages = messages.length > 0;
 
-  // The homepage has its own full-screen ChamberBot portal experience
-  // (see HolographicChamber + ChamberBotPortal). The floating widget
-  // would compete with it, so we hide it on "/" only. Placed after all
-  // hooks so hook count stays stable across renders/navigation.
-  if (pathname === "/") return null;
+  // Homepage rule: the desktop hero renders the full HolographicChamber
+  // portal experience (see HolographicChamber + ChamberBotPortal), so
+  // the floating widget would compete with it — hide it there. But
+  // HolographicChamber is itself `hidden md:block`, meaning mobile
+  // home has no ChamberBot surface unless we ship this widget. So we
+  // hide the widget on desktop home only and let it render on mobile
+  // home. Every other page shows the widget at every breakpoint.
+  const isHome = pathname === "/";
+
+  // Proactive popup — after PROACTIVE_DELAY_MS on a content-specific
+  // route, a small preview bubble pops next to the chat button with a
+  // page-tailored prompt. Gets dismissed once per path per tab (via
+  // sessionStorage) so users who already said no don't get re-nagged
+  // on the same page. Never fires if chat is already open or if
+  // contextForPath() fell through to the generic default.
+  useEffect(() => {
+    if (open || isHome) return;
+    if (typeof window === "undefined") return;
+
+    const dismissKey = `${DISMISS_KEY}:${pathname}`;
+    if (sessionStorage.getItem(dismissKey)) return;
+
+    // Only fire on routes where contextForPath returned a non-generic
+    // greeting — those are the ones with tailored prompts worth
+    // surfacing. Default fall-through stays quiet.
+    const isGenericContext = ctx.greeting === "Hi! I'm the ChamberBot.";
+    if (isGenericContext) return;
+
+    const showTimer = window.setTimeout(() => {
+      setPreviewText(ctx.subtitle);
+    }, PROACTIVE_DELAY_MS);
+
+    return () => window.clearTimeout(showTimer);
+  }, [pathname, open, isHome, ctx]);
+
+  // Auto-fade the bubble if it's been sitting ignored
+  useEffect(() => {
+    if (!previewText) return;
+    const fadeTimer = window.setTimeout(
+      () => setPreviewText(null),
+      PROACTIVE_AUTOFADE_MS,
+    );
+    return () => window.clearTimeout(fadeTimer);
+  }, [previewText]);
+
+  // Dismiss the preview as soon as chat opens (whether via click,
+  // proactive accept, or any other path).
+  useEffect(() => {
+    if (open && previewText) setPreviewText(null);
+  }, [open, previewText]);
+
+  function dismissPreview(persist: boolean) {
+    setPreviewText(null);
+    if (persist && typeof window !== "undefined") {
+      sessionStorage.setItem(`${DISMISS_KEY}:${pathname}`, "1");
+    }
+  }
+
+  function acceptPreview() {
+    dismissPreview(true);
+    setOpen(true);
+  }
 
   return (
-    <>
+    <div className={isHome ? "md:hidden" : undefined}>
       {/* ── Chat Panel ── */}
       {open && (
         <div className="
@@ -312,17 +389,46 @@ export function ChatWidget() {
                 <p className="text-[11px] text-cambridge mt-0.5">ChamberBot · Medina Chamber</p>
               </div>
             </div>
-            <button
-              onClick={() => setOpen(false)}
-              aria-label="Close chat"
-              className="text-white/60 hover:text-white transition-colors p-1"
-            >
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M18 6L6 18M6 6l12 12"/>
-              </svg>
-            </button>
+            <div className="flex items-center gap-1">
+              {/* Talk-to-a-human escalation. Hidden while the handoff
+                  form is already showing (can't escalate what's already
+                  escalated). */}
+              {!handoffOpen && (
+                <button
+                  onClick={() => setHandoffOpen(true)}
+                  aria-label="Talk to a chamber team member"
+                  title="Talk to a chamber team member"
+                  className="text-white/70 hover:text-white transition-colors p-1"
+                >
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                    <path d="M16 3.13a4 4 0 010 7.75" />
+                  </svg>
+                </button>
+              )}
+              <button
+                onClick={() => setOpen(false)}
+                aria-label="Close chat"
+                className="text-white/60 hover:text-white transition-colors p-1"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
           </div>
 
+          {/* Handoff form replaces messages+input when active. Keeps the
+              user in-panel so they don't lose their place in the chat. */}
+          {handoffOpen ? (
+            <HandoffForm
+              sessionId={getSessionId()}
+              onBack={() => setHandoffOpen(false)}
+            />
+          ) : (
+            <>
           {/* Messages */}
           <div className="overflow-y-auto px-4 py-4 space-y-4 min-h-[200px] max-h-[400px]">
             {!hasMessages && (
@@ -419,6 +525,55 @@ export function ChatWidget() {
               </svg>
             </button>
           </form>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* ── Proactive preview bubble ── */}
+      {previewText && !open && (
+        <div
+          className="
+            fixed bottom-24 right-4 sm:right-6 z-50
+            max-w-[300px]
+            bg-bg-primary border border-border-secondary
+            rounded-[var(--radius-md)]
+            shadow-[0_6px_24px_rgba(0,0,0,0.16)]
+            p-4
+            animate-in fade-in slide-in-from-bottom-2 duration-300
+          "
+          role="dialog"
+          aria-label="Suggestion from ChamberBot"
+        >
+          <button
+            onClick={() => dismissPreview(true)}
+            aria-label="Dismiss"
+            className="absolute top-2 right-2 text-text-tertiary hover:text-text-secondary transition-colors p-1"
+          >
+            <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+          <div className="flex gap-3 items-start pr-4">
+            <div className="w-8 h-8 shrink-0 rounded-full bg-bg-secondary overflow-hidden">
+              <AnimatedMascotHead className="w-full h-full" ariaLabel="" />
+            </div>
+            <div>
+              <p className="text-body-sm text-text-primary leading-snug">
+                {previewText}
+              </p>
+              <button
+                onClick={acceptPreview}
+                className="
+                  mt-3 inline-flex items-center px-3 py-1.5 text-[11px] font-bold
+                  bg-oxford hover:bg-oxford/80
+                  text-white rounded-full transition-colors
+                "
+              >
+                Let&apos;s chat →
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -452,6 +607,6 @@ export function ChatWidget() {
           </div>
         )}
       </button>
-    </>
+    </div>
   );
 }

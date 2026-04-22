@@ -35,8 +35,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# scraper debug output
+# scraper debug + report output (regenerated on demand, shouldn't
+# live in git history — they're scraper byproducts, not source)
 scripts/_debug-raw.html
+scripts/image-catalog.json
+scripts/link-audit-report.json
+scripts/logo-scrape-report.json
 
 # Designer scratch — HTML mockups, .jsx design files, pasted-screenshot
 # uploads, and the unused asset tree under "public/images/chamber events/"

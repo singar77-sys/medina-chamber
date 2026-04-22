@@ -42,6 +42,22 @@ function termMatches(haystack: string, term: string): boolean {
   return haystack.includes(term);
 }
 
+// Generate stem variants so "plumbers" matches "Plumbing", "contractors"
+// matches "Contracting", etc. without a full NLP library. Each variant is
+// tried independently; if any hit, the term scores once.
+function stemVariants(term: string): string[] {
+  const v = new Set([term]);
+  // "plumbers" → "plumb", "electricians" → "electrician" → "electric"
+  if (term.length >= 7 && term.endsWith("ers")) v.add(term.slice(0, -3));
+  // "plumbing" → "plumb", "contracting" → "contract"
+  if (term.length >= 7 && term.endsWith("ing")) v.add(term.slice(0, -3));
+  // "contractors" → "contractor", "lawyers" → "lawyer"
+  if (term.length >= 5 && term.endsWith("s") && !term.endsWith("ss")) v.add(term.slice(0, -1));
+  // "construction" → "construct"
+  if (term.length >= 8 && term.endsWith("tion")) v.add(term.slice(0, -4));
+  return [...v];
+}
+
 function scoreMatch(member: Member, terms: string[]): number {
   let score = 0;
   const name = member.name.toLowerCase();
@@ -58,12 +74,14 @@ function scoreMatch(member: Member, terms: string[]): number {
     web?.homeText?.substring(0, 500) ?? "",
   ].join(" ").toLowerCase();
 
-  for (const term of terms) {
-    if (termMatches(name, term)) score += 10;
-    if (termMatches(cats, term)) score += 6;
-    if (termMatches(webText, term)) score += 4; // website content is high signal
-    if (termMatches(desc, term)) score += 3;
-    if (termMatches(addr, term)) score += 2;
+  for (const rawTerm of terms) {
+    const variants = stemVariants(rawTerm);
+    const hit = (h: string) => variants.some((t) => termMatches(h, t));
+    if (hit(name))    score += 10;
+    if (hit(cats))    score += 6;
+    if (hit(webText)) score += 4;
+    if (hit(desc))    score += 3;
+    if (hit(addr))    score += 2;
   }
 
   // Boost premium members slightly so they surface when relevant

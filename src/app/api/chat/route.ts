@@ -514,16 +514,33 @@ export async function POST(req: Request) {
     // Return the sessionId via header so clients that didn't supply
     // one (or sent a bad one) can adopt the server-minted ID on
     // subsequent turns. Same-origin — no CORS expose-headers needed.
+    // Tell the client which members surfaced and where the answer came from.
+    // The client renders profile cards from x-cb-members slugs (it has the
+    // full member list in-bundle) and shows a provenance tag from x-cb-source.
+    const memberSlugsHeader = [...ciMembers, ...vpMembers, ...otherMembers]
+      .slice(0, 8)
+      .map((m) => m.chamberSlug)
+      .join(",");
+    const cbSource = memberSlugsHeader
+      ? "directory"
+      : /\bevent|events\b/i.test(searchContext)
+      ? "events"
+      : "general";
+
     return createTextStreamResponse({
       textStream: safeStream(result.textStream),
-      headers: { "x-session-id": sessionId },
+      headers: {
+        "x-session-id": sessionId,
+        ...(memberSlugsHeader ? { "x-cb-members": memberSlugsHeader } : {}),
+        "x-cb-source": cbSource,
+      },
     });
   } catch (err) {
     console.error("[chat] streamText init error:", err);
     Sentry.captureException(err, { tags: { route: "chat", phase: "init" } });
     return createTextStreamResponse({
       textStream: offlineFallbackStream(),
-      headers: { "x-session-id": sessionId },
+      headers: { "x-session-id": sessionId, "x-cb-source": "general" },
     });
   }
 }

@@ -2771,33 +2771,66 @@ body {
 }
 
 /* ── Stage — mascot position ─────────────────────────────────── */
-.cb-portal-stage {
+/* Stage layout wrapper — owns position, z-index, and the shrink
+   transition. Split from the inner .cb-portal-stage so the enter/exit
+   animation on the inner element is never clobbered by layout changes.
+   Mobile (base): mascot sits at top-25%, centered horizontally. */
+.cb-portal-stage-wrap {
   position: absolute;
   left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: clamp(260px, 32vw, 420px);
+  top: 26%;
+  transform: translateX(-50%);
+  width: clamp(180px, 34vw, 260px);
+  z-index: 2;
+  pointer-events: none;
+  /* Transition drives the post-first-turn mascot shrink */
+  transition:
+    left   0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    top    0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    width  0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@media (min-width: 1024px) {
+  .cb-portal-stage-wrap {
+    /* Desktop: anchor to viewport center with fixed offset so the gap
+       between mascot and transcript stays constant regardless of
+       monitor width (1024px laptop → 4K). */
+    left: calc(50% - 240px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: clamp(260px, 28vw, 360px);
+    z-index: 5;
+  }
+}
+
+/* After the first conversational turn, shrink the mascot so the
+   answer area dominates the viewport. */
+@media (max-width: 1023px) {
+  .cb-portal[data-has-messages="true"] .cb-portal-stage-wrap {
+    top: 10%;
+    width: clamp(70px, 16vw, 100px);
+  }
+}
+@media (min-width: 1024px) {
+  .cb-portal[data-has-messages="true"] .cb-portal-stage-wrap {
+    left: calc(50% - 340px);
+    width: clamp(160px, 17vw, 210px);
+  }
+}
+
+/* Stage inner — handles enter/exit animation (scale + opacity only).
+   Position is handled by the wrapper above. */
+.cb-portal-stage {
+  position: relative;
+  width: 100%;
   opacity: 0;
   animation: cbStageEmerge 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s forwards;
-  z-index: 5;
   pointer-events: auto;
 }
 
 @keyframes cbStageEmerge {
-  0%   { opacity: 0; transform: translate(-50%, -30%) scale(0.85); filter: brightness(0.2); }
-  60%  { opacity: 1;                                                filter: brightness(0.95); }
-  100% { opacity: 1; transform: translate(-50%, -50%) scale(1);    filter: brightness(1); }
-}
-
-@media (min-width: 1024px) {
-  .cb-portal-stage {
-    /* Anchor to viewport CENTER with a fixed pixel offset, not a
-       percentage. This keeps the mascot sitting right next to the
-       transcript on any monitor width — 1024px laptop or 2560px 4K,
-       the gap between her and the chat stays constant (~110px). */
-    left: calc(50% - 240px);
-    width: clamp(260px, 28vw, 360px);
-  }
+  0%   { opacity: 0; transform: scale(0.85) translateY(-10%); filter: brightness(0.2); }
+  60%  { opacity: 1;                                           filter: brightness(0.95); }
+  100% { opacity: 1; transform: scale(1) translateY(0);       filter: brightness(1); }
 }
 
 .cb-portal-mascot {
@@ -2852,31 +2885,34 @@ body {
 
 @media (min-width: 1024px) {
   .cb-portal-transcript {
-    /* Anchor transcript to viewport center + fixed offset (mirroring
-       the mascot's center-anchored positioning). Width capped so it
-       doesn't stretch to the edge on ultrawide monitors — reading
-       comfort + visual intimacy with the mascot beside it.
-       Window box: bottom + max-height set in the base rule. */
     left: calc(50% + 50px);
     right: auto;
     width: min(480px, calc(50vw - 80px));
     max-height: 55vh;
+    transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  /* After first turn: expand transcript as mascot shrinks left */
+  .cb-portal[data-has-messages="true"] .cb-portal-transcript {
+    left: calc(50% - 130px);
+    width: min(560px, calc(50vw + 30px));
   }
 }
 
 @media (max-width: 1023px) {
-  .cb-portal-stage {
-    top: 26%;
-    width: clamp(180px, 34vw, 260px);
-    z-index: 2; /* sit behind transcript on mobile */
-  }
+  /* Stage position/sizing now lives on .cb-portal-stage-wrap (see above). */
   .cb-portal-transcript {
-    /* Mobile window: shorter to leave room for mascot above + input
-       below + suggestion chips when present (which sit ~6.75rem above
-       the input). bottom 11rem clears chips + input on small screens. */
+    /* Mobile window: leave room for mascot above + input + mode selector. */
     bottom: 11rem;
     max-height: 38vh;
-    z-index: 6; /* above stage (2) so text is never masked by the avatar */
+    z-index: 6; /* above stage-wrap (2) so text is never masked by the avatar */
+  }
+  /* Expanded transcript after first turn on mobile */
+  .cb-portal[data-has-messages="true"] .cb-portal-transcript {
+    bottom: 7rem;
+    max-height: 54vh;
+    transition: bottom 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                max-height 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
 }
 
@@ -3046,6 +3082,231 @@ body {
   }
 }
 
+/* ── Mode selector — concierge entry screen ─────────────────── */
+.cb-mode-selector {
+  position: absolute;
+  bottom: max(7rem, calc(6rem + env(safe-area-inset-bottom)));
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(540px, calc(100% - 3rem));
+  z-index: 9;
+  opacity: 0;
+  animation: cbLayerInCentered 0.5s ease-out 1.3s forwards;
+  pointer-events: auto;
+}
+.cb-mode-selector__label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+.cb-mode-selector__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.cb-mode-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  padding: 0.8rem 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(131, 188, 169, 0.2);
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.18s ease, border-color 0.18s ease;
+  min-height: 3.5rem;
+}
+.cb-mode-btn:hover,
+.cb-mode-btn:focus-visible {
+  background: rgba(131, 188, 169, 0.1);
+  border-color: rgba(131, 188, 169, 0.45);
+  outline: none;
+}
+.cb-mode-btn__icon { font-size: 18px; margin-bottom: 0.1rem; }
+.cb-mode-btn__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.2;
+}
+.cb-mode-btn__sub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  line-height: 1.2;
+}
+
+/* ── Member profile cards ───────────────────────────────────── */
+.cb-member-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+.cb-member-card {
+  display: block;
+  padding: 0.6rem 0.9rem;
+  background: rgba(131, 188, 169, 0.06);
+  border: 1px solid rgba(131, 188, 169, 0.22);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.cb-member-card:hover,
+.cb-member-card:focus-visible {
+  background: rgba(131, 188, 169, 0.12);
+  border-color: rgba(131, 188, 169, 0.45);
+  outline: none;
+}
+.cb-member-card__tier {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 2px 8px;
+  margin-bottom: 0.3rem;
+}
+.cb-member-card__tier--ci {
+  background: rgba(212, 175, 55, 0.18);
+  color: #d4af37;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+.cb-member-card__tier--vp {
+  background: rgba(131, 188, 169, 0.15);
+  color: #83BCA9;
+  border: 1px solid rgba(131, 188, 169, 0.28);
+}
+.cb-member-card__name {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.3;
+}
+.cb-member-card__cat {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+  margin-top: 0.1rem;
+}
+.cb-member-card__phone {
+  font-size: 12px;
+  color: rgba(131, 188, 169, 0.75);
+  margin-top: 0.2rem;
+}
+
+/* ── Provenance tag ─────────────────────────────────────────── */
+.cb-provenance {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.22);
+  margin-top: 0.4rem;
+}
+.cb-provenance__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(131, 188, 169, 0.45);
+  flex-shrink: 0;
+}
+
+/* ── Contact panel ──────────────────────────────────────────── */
+.cb-contact-panel {
+  position: absolute;
+  bottom: max(6.5rem, calc(5.5rem + env(safe-area-inset-bottom)));
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(440px, calc(100% - 3rem));
+  background: rgba(8, 16, 30, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(131, 188, 169, 0.2);
+  border-radius: 16px;
+  padding: 1.25rem;
+  z-index: 9;
+  animation: cbLayerInCentered 0.35s ease-out forwards;
+}
+.cb-contact-panel__title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+  margin-bottom: 0.9rem;
+}
+.cb-contact-panel__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.cb-contact-panel__divider {
+  height: 1px;
+  background: rgba(131, 188, 169, 0.15);
+  margin: 0.25rem 0;
+}
+.cb-contact-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+a.cb-contact-row:hover,
+a.cb-contact-row:focus-visible {
+  background: rgba(131, 188, 169, 0.08);
+  outline: none;
+}
+.cb-contact-row--static { cursor: default; }
+.cb-contact-row__icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.cb-contact-row__label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  line-height: 1.2;
+}
+.cb-contact-row__value {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.3;
+}
+.cb-contact-row__sub {
+  font-size: 12px;
+  color: rgba(131, 188, 169, 0.7);
+}
+.cb-contact-panel__back {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.6rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.cb-contact-panel__back:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
+}
+
 /* ── Input bar — bottom center ───────────────────────────────── */
 .cb-portal-input {
   position: absolute;
@@ -3181,8 +3442,8 @@ body {
   animation: cbStageSink 0.6s ease-in forwards;
 }
 @keyframes cbStageSink {
-  0%   { opacity: 1; transform: translate(-50%, -50%) scale(1);    filter: brightness(1); }
-  100% { opacity: 0; transform: translate(-50%, -30%) scale(0.92); filter: brightness(0.2); }
+  0%   { opacity: 1; transform: scale(1) translateY(0);       filter: brightness(1); }
+  100% { opacity: 0; transform: scale(0.92) translateY(-10%); filter: brightness(0.2); }
 }
 
 .cb-portal[data-phase="exiting"] .cb-portal-beam {
@@ -3206,18 +3467,22 @@ body {
   .cb-portal-particles,
   .cb-portal-beam,
   .cb-portal-floor,
+  .cb-portal-stage-wrap,
   .cb-portal-stage,
   .cb-portal-transcript,
   .cb-portal-input,
   .cb-portal-hud,
   .cb-portal-hint,
   .cb-portal-hud__dot,
+  .cb-mode-selector,
+  .cb-contact-panel,
   .cb-msg,
   .cb-msg__typing span {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
     filter: none !important;
+    transition: none !important;
   }
 }
 

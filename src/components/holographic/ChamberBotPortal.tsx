@@ -3,21 +3,16 @@
 /**
  * ChamberBotPortal — the "Dr. Know booth" experience.
  *
- * A full-viewport overlay that takes over the screen when the user
- * commits to a question on the homepage. Inspired by the Dr. Know scene
- * from A.I. Artificial Intelligence (2001) — a 2D projection you
- * converse with, not 3D — the portal dissolves away the site, raises a
- * stage light, emerges the mascot through it, and drops you into a
- * conversation framed by ambient particles and a synthesized score.
- *
- * Invariant: the portal renders into document.body via createPortal, so
- * its z-index and layout are isolated from the rest of the page. Body
- * scroll is locked while open.
+ * Concierge interface, not a decorated transcript. Four entry modes
+ * (Find a business / Upcoming events / Join the chamber / Talk to a human)
+ * replace the generic "Ask anything" blank. Member answers render as
+ * profile cards with provenance tags. The mascot shrinks after the first
+ * turn so the answer area dominates.
  *
  * Lifecycle — driven by a single `phase` state:
  *   closed   → nothing mounted
- *   entering → enter animations running (≈1400ms)
- *   open     → steady state, input is live
+ *   entering → enter animations running (≈1400ms); input is live at 400ms
+ *   open     → steady state
  *   exiting  → exit animations running (≈800ms)
  */
 
@@ -35,14 +30,125 @@ import { ParticleField } from "./ParticleField";
 import { renderMarkdown } from "@/lib/markdown";
 import { usePortalAudio } from "@/hooks/usePortalAudio";
 import { DEFAULT_PROMPTS } from "@/lib/chamberbot-prompts";
+import {
+  getMemberBySlug,
+  isCommunityInvestor,
+  isVisibilityPlus,
+} from "@/data/members";
+
+// ── Sub-components ────────────────────────────────────────────────
+
+type CbSource = "directory" | "events" | "general";
+
+/** Compact profile card rendered below directory answers. */
+function MemberCard({ slug }: { slug: string }) {
+  const member = getMemberBySlug(slug);
+  if (!member) return null;
+  const isCI = isCommunityInvestor(member);
+  const isVP = isVisibilityPlus(member);
+  return (
+    <a
+      href={`https://medinachamber.com/membership/directory/${member.chamberSlug}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="cb-member-card"
+      tabIndex={0}
+    >
+      {(isCI || isVP) && (
+        <span className={`cb-member-card__tier ${isCI ? "cb-member-card__tier--ci" : "cb-member-card__tier--vp"}`}>
+          {isCI ? "Community Investor" : "Visibility Plus"}
+        </span>
+      )}
+      <div className="cb-member-card__name">{member.name}</div>
+      {member.categories[0] && (
+        <div className="cb-member-card__cat">{member.categories[0]}</div>
+      )}
+      {member.phone && (
+        <div className="cb-member-card__phone">{member.phone}</div>
+      )}
+    </a>
+  );
+}
+
+/** Source attribution shown under each bot reply. */
+function ProvenanceTag({ source }: { source: CbSource }) {
+  const labels: Record<CbSource, string> = {
+    directory: "from member directory",
+    events: "from event calendar",
+    general: "from chamber knowledge base",
+  };
+  return (
+    <div className="cb-provenance">
+      <span className="cb-provenance__dot" />
+      {labels[source]}
+    </div>
+  );
+}
+
+/** "Talk to a human" contact panel — shown instead of chat. */
+function ContactPanel({ onBack }: { onBack: () => void }) {
+  return (
+    <div className="cb-contact-panel">
+      <div className="cb-contact-panel__title">Reach the Chamber Team</div>
+      <div className="cb-contact-panel__rows">
+        <a href="tel:+13307238773" className="cb-contact-row">
+          <span className="cb-contact-row__icon" aria-hidden="true">📞</span>
+          <div>
+            <div className="cb-contact-row__label">Phone</div>
+            <div className="cb-contact-row__value">(330) 723-8773</div>
+          </div>
+        </a>
+        <a href="mailto:office@medinaohchamber.com" className="cb-contact-row">
+          <span className="cb-contact-row__icon" aria-hidden="true">✉️</span>
+          <div>
+            <div className="cb-contact-row__label">Email</div>
+            <div className="cb-contact-row__value">office@medinaohchamber.com</div>
+          </div>
+        </a>
+        <div className="cb-contact-row cb-contact-row--static">
+          <span className="cb-contact-row__icon" aria-hidden="true">⏰</span>
+          <div>
+            <div className="cb-contact-row__label">Hours</div>
+            <div className="cb-contact-row__value">Mon–Fri · 10 AM – 4 PM</div>
+          </div>
+        </div>
+        <div className="cb-contact-panel__divider" />
+        <a href="mailto:stephanie@medinaohchamber.com" className="cb-contact-row">
+          <span className="cb-contact-row__icon" aria-hidden="true">👋</span>
+          <div>
+            <div className="cb-contact-row__label">Membership & Events</div>
+            <div className="cb-contact-row__value">Stephanie Mueller</div>
+            <div className="cb-contact-row__sub">stephanie@medinaohchamber.com</div>
+          </div>
+        </a>
+        <a href="mailto:jaclyn@medinaohchamber.com" className="cb-contact-row">
+          <span className="cb-contact-row__icon" aria-hidden="true">🏛️</span>
+          <div>
+            <div className="cb-contact-row__label">Executive Director</div>
+            <div className="cb-contact-row__value">Jaclyn Ringstmeier</div>
+            <div className="cb-contact-row__sub">jaclyn@medinaohchamber.com</div>
+          </div>
+        </a>
+      </div>
+      <button type="button" onClick={onBack} className="cb-contact-panel__back">
+        Ask ChamberBot instead
+      </button>
+    </div>
+  );
+}
+
+// ── Types ─────────────────────────────────────────────────────────
 
 type Phase = "closed" | "entering" | "open" | "exiting";
 type SceneState = "idle" | "listening" | "thinking" | "responding";
+type PortalMode = "find" | "events" | "join" | "contact";
 
 interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
+  source?: CbSource;
+  memberSlugs?: string[];
 }
 
 export interface ChamberBotPortalProps {
@@ -63,6 +169,8 @@ function detectIntent(question: string): MascotIntent {
   return "general";
 }
 
+// ── Component ─────────────────────────────────────────────────────
+
 export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPortalProps) {
   const [mounted, setMounted] = useState(false);
   const [phase, setPhase] = useState<Phase>("closed");
@@ -70,46 +178,30 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
   const [input, setInput] = useState("");
   const [sceneState, setSceneState] = useState<SceneState>("idle");
   const [intent, setIntent] = useState<MascotIntent>("general");
+  const [portalMode, setPortalMode] = useState<PortalMode | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
-  // Prevents the input's blur handler from fighting the submit flow
   const justSubmittedRef = useRef(false);
   const transcriptEndRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
   const seededForQueryRef = useRef<string | null>(null);
   const phaseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // Session ID for the server-side conversation log. The server owns
-  // the transcript (security: prevents client from injecting fake
-  // assistant turns). We start with null; first response sets the
-  // server-minted UUID via the x-session-id response header.
   const sessionIdRef = useRef<string | null>(null);
 
   const audio = usePortalAudio();
 
-  // Mount flag — defer createPortal until we're in the browser
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => { setMounted(true); }, []);
 
-  // Streaming logic — runs a user question through /api/chat and
-  // incrementally appends tokens to the assistant message. Mirrors the
-  // original HolographicChamber logic but uses a proper message list
-  // so multi-turn works.
+  // ── Streaming ────────────────────────────────────────────────────
   const sendMessage = useCallback(
     async (text: string) => {
       const q = text.trim();
       if (!q) return;
-      // Only block during "thinking" — during "responding" the abort at
-      // the top of this function will cancel the current stream so the
-      // user can interrupt mid-response.
       if (sceneState === "thinking") return;
       setIntent(detectIntent(q));
+      setPortalMode((m) => m === "contact" ? null : m); // leave contact mode on send
 
-      const userMsg: Message = {
-        id: crypto.randomUUID(),
-        role: "user",
-        content: q,
-      };
+      const userMsg: Message = { id: crypto.randomUUID(), role: "user", content: q };
       const assistantId = crypto.randomUUID();
       const assistantMsg: Message = { id: assistantId, role: "assistant", content: "" };
 
@@ -121,25 +213,10 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
       abortRef.current = new AbortController();
 
       try {
-        // Server-side history shape: { sessionId, message }. The server
-        // owns the conversation log in Upstash and tacks the prior turns
-        // on internally — we only send the new user message + the
-        // session ID so the server can look up the prior turns. The
-        // first POST has sessionIdRef.current === null and the server
-        // mints a fresh UUID and returns it in x-session-id; we adopt
-        // that for subsequent turns.
-        //
-        // Was previously sending `{ messages: history }` — the API
-        // returned 400 Invalid Request because that shape was retired
-        // when chat history moved server-side (a security fix to kill
-        // fake-assistant-turn injection from a client).
         const res = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            sessionId: sessionIdRef.current,
-            message: q,
-          }),
+          body: JSON.stringify({ sessionId: sessionIdRef.current, message: q }),
           signal: abortRef.current.signal,
         });
 
@@ -147,6 +224,11 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
 
         const serverSid = res.headers.get("x-session-id");
         if (serverSid) sessionIdRef.current = serverSid;
+
+        // Read provenance headers before streaming starts
+        const xSource = (res.headers.get("x-cb-source") ?? "general") as CbSource;
+        const xMembers = res.headers.get("x-cb-members");
+        const memberSlugs = xMembers ? xMembers.split(",").filter(Boolean) : [];
 
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
@@ -160,6 +242,14 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
             setSceneState("responding");
             audio.receive();
             firstToken = false;
+            // Tag the assistant message with provenance on first token
+            setMessages((prev) =>
+              prev.map((m) =>
+                m.id === assistantId
+                  ? { ...m, source: xSource, memberSlugs }
+                  : m,
+              ),
+            );
           }
           setMessages((prev) =>
             prev.map((m) => (m.id === assistantId ? { ...m, content: m.content + chunk } : m)),
@@ -172,31 +262,22 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
         setMessages((prev) =>
           prev.map((m) =>
             m.id === assistantId
-              ? { ...m, content: "Connection disrupted. Try again, or close the portal and use the chat widget." }
+              ? { ...m, content: "Connection disrupted. Try again, or close the portal and use the chat widget.", source: "general" }
               : m,
           ),
         );
         setSceneState("idle");
       }
     },
-    // No `messages` dep — state updates use the prev-callback form,
-    // and we no longer snapshot history client-side (server owns it).
     [sceneState, audio],
   );
 
-  // Phase machine — orchestrate enter/exit with timers so CSS
-  // animations can finish before unmount. Driven by edges only:
-  // we act when a new transition is actually needed, not on every
-  // render. Crucially, we do NOT clear the timer in a cleanup, because
-  // the effect re-runs when phase changes mid-transition — any cleanup
-  // there would kill the timer before it can fire.
+  // ── Phase machine ─────────────────────────────────────────────────
   useEffect(() => {
     const shouldEnter = open && (phase === "closed" || phase === "exiting");
     const shouldExit = !open && (phase === "open" || phase === "entering");
-
     if (!shouldEnter && !shouldExit) return;
 
-    // Starting a fresh transition — cancel any prior pending timer.
     if (phaseTimerRef.current) {
       clearTimeout(phaseTimerRef.current);
       phaseTimerRef.current = null;
@@ -218,61 +299,56 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
         setPhase("closed");
         setMessages([]);
         setIntent("general");
+        setPortalMode(null);
         seededForQueryRef.current = null;
         phaseTimerRef.current = null;
       }, EXIT_MS);
     }
-  // We intentionally omit `audio` — the hook identity is stable.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, phase]);
 
-  // Unmount-only cleanup: kill any stray timer when the component
-  // actually goes away. Runs once on unmount because of the empty deps.
   useEffect(() => {
-    return () => {
-      if (phaseTimerRef.current) clearTimeout(phaseTimerRef.current);
-    };
+    return () => { if (phaseTimerRef.current) clearTimeout(phaseTimerRef.current); };
   }, []);
 
-  // Seed the first question exactly once when the portal opens with an
-  // initialQuery. Guarded by seededForQueryRef so React StrictMode
-  // double-invocations don't send it twice.
+  // Seed first question from props
   useEffect(() => {
     if (phase !== "entering" && phase !== "open") return;
     if (!initialQuery) return;
     if (seededForQueryRef.current === initialQuery) return;
     seededForQueryRef.current = initialQuery;
-    // Delay slightly so the enter animation has breathing room
     const t = setTimeout(() => sendMessage(initialQuery), 900);
     return () => clearTimeout(t);
-  // sendMessage changes across renders — we want this to fire only when
-  // phase transitions / initialQuery changes, not when messages do.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, initialQuery]);
 
-  // Lock body scroll while portal is showing
+  // Lock body scroll
   useLayoutEffect(() => {
     if (phase === "closed") return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prev;
-    };
+    return () => { document.body.style.overflow = prev; };
   }, [phase]);
 
-  // Auto-focus input once portal is fully open
+  // Focus input early — during entering (400ms in) so it's ready before
+  // the theatrics finish, then again once fully open as a safety catch.
   useEffect(() => {
-    if (phase !== "open") return;
-    const t = setTimeout(() => inputRef.current?.focus(), 60);
-    return () => clearTimeout(t);
+    if (phase === "entering") {
+      const t = setTimeout(() => inputRef.current?.focus(), 400);
+      return () => clearTimeout(t);
+    }
+    if (phase === "open") {
+      const t = setTimeout(() => inputRef.current?.focus(), 60);
+      return () => clearTimeout(t);
+    }
   }, [phase]);
 
-  // Keep transcript pinned to the newest message
+  // Pin transcript to newest message
   useEffect(() => {
     transcriptEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages]);
 
-  // Escape → close
+  // ESC → close
   useEffect(() => {
     if (phase === "closed") return;
     const onKey = (e: KeyboardEvent) => {
@@ -288,16 +364,15 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    // Flag so the blur handler doesn't reset sceneState to idle
-    // after sendMessage already pushed it to "thinking".
     justSubmittedRef.current = true;
     setTimeout(() => { justSubmittedRef.current = false; }, 150);
     sendMessage(input);
   };
 
-  // True when the user has typed something while the bot is mid-response.
-  // Drives interruptibility body language in the mascot.
   const userIsTyping = input.trim().length > 0 && sceneState === "responding";
+  const hasMessages = messages.length > 0;
+  const showModeSelector = !hasMessages && portalMode === null && phase === "open";
+  const showContact = portalMode === "contact" && !hasMessages;
 
   if (!mounted || phase === "closed") return null;
 
@@ -305,6 +380,7 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
     <div
       className="cb-portal"
       data-phase={phase}
+      data-has-messages={hasMessages ? "true" : "false"}
       role="dialog"
       aria-modal="true"
       aria-label="ChamberBot — live conversation"
@@ -321,7 +397,7 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
       <div className="cb-portal-beam" aria-hidden="true" />
       <div className="cb-portal-floor" aria-hidden="true" />
 
-      {/* HUD — top strip with label + controls */}
+      {/* HUD */}
       <header className="cb-portal-hud" aria-hidden={phase !== "open"}>
         <div className="cb-portal-hud__label">
           <span className="cb-portal-hud__dot" />
@@ -347,10 +423,7 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
           </button>
           <button
             type="button"
-            onClick={() => {
-              abortRef.current?.abort();
-              onClose();
-            }}
+            onClick={() => { abortRef.current?.abort(); onClose(); }}
             aria-label="Close portal"
             className="cb-portal-hud__btn cb-portal-hud__btn--close"
           >
@@ -361,23 +434,23 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
         </div>
       </header>
 
-      {/* Stage — mascot rises here. Click anywhere on the stage plays a
-          little "boop" sound alongside the mascot's built-in spark burst
-          (which she handles internally via her own click handler). */}
-      <div
-        className="cb-portal-stage"
-        onClick={() => audio.boop()}
-        aria-hidden="true"
-      >
-        <ChamberBotMascot
-          state={sceneState}
-          className="cb-portal-mascot"
-          userIsTyping={userIsTyping}
-          intent={intent}
-        />
+      {/* Stage wrapper — handles position + shrink transition.
+          Inner .cb-portal-stage handles the enter/exit animation. */}
+      <div className="cb-portal-stage-wrap" aria-hidden="true">
+        <div
+          className="cb-portal-stage"
+          onClick={() => audio.boop()}
+        >
+          <ChamberBotMascot
+            state={sceneState}
+            className="cb-portal-mascot"
+            userIsTyping={userIsTyping}
+            intent={intent}
+          />
+        </div>
       </div>
 
-      {/* Transcript — conversation bubbles float to the right */}
+      {/* Transcript — conversation history */}
       <div className="cb-portal-transcript" aria-live="polite">
         <div className="cb-portal-transcript__inner">
           {messages.map((m) => (
@@ -399,43 +472,87 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
                   </span>
                 )}
               </div>
+
+              {/* Provenance + member cards — bot messages only, after content loads */}
+              {m.role === "assistant" && m.source && m.content && (
+                <>
+                  <ProvenanceTag source={m.source} />
+                  {m.memberSlugs && m.memberSlugs.length > 0 && (
+                    <div className="cb-member-cards">
+                      {m.memberSlugs.slice(0, 4).map((slug) => (
+                        <MemberCard key={slug} slug={slug} />
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           ))}
           <div ref={transcriptEndRef} />
         </div>
       </div>
 
-      {/* Suggestion chips — only on first open. Fills the empty-stage
-          dead zone above the input on mobile and gives users an obvious
-          starting point. Disappears the moment a conversation begins. */}
-      {messages.length === 0 && phase === "open" && (
-        <div className="cb-portal-suggestions" aria-label="Try one of these">
-          {DEFAULT_PROMPTS.map((p) => (
+      {/* Contact panel — replaces mode selector when "Talk to a human" selected */}
+      {showContact && (
+        <ContactPanel onBack={() => setPortalMode(null)} />
+      )}
+
+      {/* Mode selector — appears before first message, replaces suggestion chips */}
+      {showModeSelector && (
+        <div className="cb-mode-selector" aria-label="Choose a topic">
+          <p className="cb-mode-selector__label">What can I help with?</p>
+          <div className="cb-mode-selector__grid">
             <button
-              key={p}
               type="button"
-              onClick={() => sendMessage(p)}
-              className="cb-portal-suggestion-chip"
+              className="cb-mode-btn"
+              onClick={() => {
+                setPortalMode("find");
+                setTimeout(() => inputRef.current?.focus(), 80);
+              }}
             >
-              {p}
+              <span className="cb-mode-btn__icon" aria-hidden="true">🏢</span>
+              <span className="cb-mode-btn__label">Find a business</span>
+              <span className="cb-mode-btn__sub">Search 511 members</span>
             </button>
-          ))}
+            <button
+              type="button"
+              className="cb-mode-btn"
+              onClick={() => sendMessage("What events are coming up in Medina this month?")}
+            >
+              <span className="cb-mode-btn__icon" aria-hidden="true">📅</span>
+              <span className="cb-mode-btn__label">Upcoming events</span>
+              <span className="cb-mode-btn__sub">What's on the calendar</span>
+            </button>
+            <button
+              type="button"
+              className="cb-mode-btn"
+              onClick={() => sendMessage("How do I join the chamber and what does membership cost?")}
+            >
+              <span className="cb-mode-btn__icon" aria-hidden="true">🤝</span>
+              <span className="cb-mode-btn__label">Join the chamber</span>
+              <span className="cb-mode-btn__sub">Tiers, benefits, cost</span>
+            </button>
+            <button
+              type="button"
+              className="cb-mode-btn"
+              onClick={() => setPortalMode("contact")}
+            >
+              <span className="cb-mode-btn__icon" aria-hidden="true">👤</span>
+              <span className="cb-mode-btn__label">Talk to a human</span>
+              <span className="cb-mode-btn__sub">Staff contact info</span>
+            </button>
+          </div>
         </div>
       )}
 
-      {/* Input — bottom center. Placeholder shifts based on state +
-          whether this is the first message (no "another" before there's
-          a first one). */}
+      {/* Input bar */}
       <form className="cb-portal-input" onSubmit={handleSubmit}>
         <input
           ref={inputRef}
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onFocus={() => {
-            if (sceneState === "idle") setSceneState("listening");
-          }}
+          onFocus={() => { if (sceneState === "idle") setSceneState("listening"); }}
           onBlur={() => {
-            // Don't fight sendMessage's state update on submit
             if (!justSubmittedRef.current && sceneState === "listening") {
               setSceneState("idle");
             }
@@ -445,9 +562,11 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
               ? "ChamberBot is thinking…"
               : sceneState === "responding"
               ? "Type to interrupt…"
-              : messages.length === 0
-              ? "Ask anything…"
-              : "Ask another question…"
+              : portalMode === "find"
+              ? "What type of business are you looking for?"
+              : hasMessages
+              ? "Ask another question…"
+              : "Ask anything…"
           }
           disabled={sceneState === "thinking"}
           aria-label="Ask the ChamberBot"
@@ -469,7 +588,6 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
           </svg>
         </button>
       </form>
-
     </div>,
     document.body,
   );

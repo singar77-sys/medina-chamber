@@ -20,7 +20,7 @@ const quickLinks = [
   { label: "Advocacy", href: "/about/advocacy" },
   { label: "Chamber News", href: "/news" },
   { label: "Contact", href: "/about/contact" },
-  { label: "Sitemap", href: "/sitemap.xml" },
+  { label: "Privacy", href: "/privacy" },
 ];
 
 const socialLinks = [

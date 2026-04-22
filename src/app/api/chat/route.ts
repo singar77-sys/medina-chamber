@@ -26,6 +26,12 @@ import {
   commitRound,
   mintSessionId,
 } from "@/lib/chat-session";
+import {
+  logConversation,
+  incrementMessageCounter,
+  incrementTopicCounter,
+} from "@/lib/chat-log";
+import { classifyUserMessage } from "@/lib/topic-classify";
 
 export const runtime = "edge";
 
@@ -476,8 +482,22 @@ export async function POST(req: Request) {
       onFinish: ({ totalUsage, text }) => {
         after(recordTokenUsage(totalUsage.inputTokens, totalUsage.outputTokens));
         after(recordIpTokenUsage(ip, totalUsage.inputTokens, totalUsage.outputTokens));
+        // Conversation log + analytics — 90-day retention, admin-only read.
+        // Separate from the 1-hour session store; this one powers "what
+        // are people asking about" product insight.
+        after(incrementMessageCounter());
         if (text) {
           after(commitRound(sessionId, userMessageContent, text));
+          after(
+            (async () => {
+              const topic = await classifyUserMessage(userMessageContent);
+              await incrementTopicCounter(topic);
+              // Fetch fresh turns post-commit so the log reflects the
+              // complete round (both user + assistant message included).
+              const fresh = await loadSession(sessionId);
+              await logConversation(sessionId, ip, fresh, topic);
+            })(),
+          );
         }
       },
     });

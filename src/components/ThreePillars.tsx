@@ -4,6 +4,7 @@ import { useEffect, useRef, type CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 
 /**
  * ThreePillars — the "Why Members Join" section on the homepage.
@@ -69,6 +70,11 @@ const PILLARS: Pillar[] = [
 export function ThreePillars() {
   return (
     <section className="tp-section relative mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
+      {/* Ambient sacred-geometry watermark — three interlocking circles
+          (vesica piscis) pulsing softly behind the entire section.
+          pointer-events: none so the tilt cards above it keep their
+          full hover surface. */}
+      <VesicaPiscisWatermark className="tp-vesica" />
       <FadeIn>
         <div className="grid lg:grid-cols-[1.25fr_1fr] gap-10 lg:gap-14 items-end mb-14 lg:mb-16">
           <div>

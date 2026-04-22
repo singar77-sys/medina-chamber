@@ -63,16 +63,21 @@ export function Footer() {
           <p className="text-overline text-cambridge mb-3 tracking-[0.2em]">
             Since 1938
           </p>
-          <p
-            className="
-              font-display font-bold uppercase
-              leading-[0.92] tracking-tight text-text-primary
-              text-[clamp(2rem,5.5vw,4.25rem)]
-            "
-          >
-            Medina Means{" "}
-            <span className="text-cambridge">Business.</span>
-          </p>
+          <div className="font-display font-bold uppercase leading-[0.88] tracking-tight text-text-primary">
+            <div className="text-[clamp(2.75rem,7.5vw,5.75rem)]">Medina</div>
+            <div className="text-[clamp(2rem,5.5vw,4.25rem)] mt-1">Means</div>
+            <div
+              className="
+                font-script normal-case
+                text-[clamp(3rem,8.5vw,6.25rem)]
+                leading-[0.85] inline-block
+                -mt-[0.32em]
+              "
+              style={{ color: "var(--coquelicot)", transform: "rotate(-2deg)" }}
+            >
+              business
+            </div>
+          </div>
           <p className="text-body-sm text-text-secondary mt-5 max-w-lg mx-auto">
             A century of local advocacy, connection, and growth — and
             we&apos;re just getting started.

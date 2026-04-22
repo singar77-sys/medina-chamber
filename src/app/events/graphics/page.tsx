@@ -4,8 +4,10 @@ import {
   EVENT_GRAPHICS,
   GRAPHIC_DIMS,
   GraphicFrame,
+  getEventGraphicRenderer,
   type GraphicMode,
 } from "@/components/events/graphics/EventGraphics";
+import { getUpcomingEvents } from "@/data/events";
 
 export const metadata: Metadata = {
   title: "Event Graphics",
@@ -31,6 +33,24 @@ const MODE_LABELS: Record<GraphicMode, string> = {
 const MODES: GraphicMode[] = ["social", "square", "story"];
 
 export default function EventGraphicsPage() {
+  // For graphics that support an event-info plinth (currently only
+  // Networking WOW), bind the preview to the next scheduled instance so
+  // the showcase reflects what would actually post — date/time/registration.
+  // Generic templates render unchanged.
+  const upcoming = getUpcomingEvents();
+  const boundComponents: Record<string, React.ComponentType<{ mode?: GraphicMode }>> = {};
+  const bind = (key: string, slugPrefix: string) => {
+    const next = upcoming.find((e) => e.slug.startsWith(slugPrefix));
+    if (!next) return;
+    const Bound = getEventGraphicRenderer(next);
+    if (Bound) boundComponents[key] = Bound;
+  };
+  bind("networking-wow", "networking-wow");
+  bind("safety-council", "safety-council");
+  bind("chamber-chat", "chamber-chat");
+  bind("business-brew", "business-brew");
+  bind("eggs-expertise", "eggs-expertise");
+
   return (
     <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
 
@@ -62,7 +82,9 @@ export default function EventGraphicsPage() {
 
       {/* ── Graphic grid ── */}
       <section className="mt-20 space-y-20">
-        {EVENT_GRAPHICS.map((g, i) => (
+        {EVENT_GRAPHICS.map((g, i) => {
+          const Component = boundComponents[g.key] ?? g.Component;
+          return (
           <article key={g.key} className="border-t border-border-secondary pt-10">
 
             {/* Header row */}
@@ -72,6 +94,11 @@ export default function EventGraphicsPage() {
                   {String(i + 1).padStart(2, "0")}
                 </p>
                 <h2 className="text-h2 mt-1">{g.title}</h2>
+                {boundComponents[g.key] && (
+                  <p className="text-caption text-cambridge mt-1 font-medium">
+                    Preview bound to next scheduled instance
+                  </p>
+                )}
               </div>
               <p className="text-caption text-text-tertiary font-mono">
                 {g.key}
@@ -98,7 +125,7 @@ export default function EventGraphicsPage() {
                       style={{ width, height }}
                     >
                       <GraphicFrame mode={mode} displayWidth={width}>
-                        <g.Component mode={mode} />
+                        <Component mode={mode} />
                       </GraphicFrame>
                     </div>
                     <figcaption className="text-caption text-text-tertiary text-center font-medium">
@@ -109,7 +136,8 @@ export default function EventGraphicsPage() {
               })}
             </div>
           </article>
-        ))}
+          );
+        })}
       </section>
 
       {/* ── Usage notes ── */}

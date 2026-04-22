@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { safeJsonLd } from "@/lib/json-ld";
 import { headers } from "next/headers";
 import {
-  activeCommunities,
+  communities,
   getCommunityBySlug,
   getMembersByCity,
 } from "@/data/communities";
@@ -12,8 +12,13 @@ import { getUpcomingEvents } from "@/data/events";
 import { isVisibilityPlus } from "@/data/members";
 
 // ── Static generation ─────────────────────────────────────────────
+// Prerender every defined community, including ones with zero current
+// members. The Rittman node on the contact-page map links here, and
+// SEO-target cities (Rittman, Hinckley, Lafayette) need an indexable
+// landing page to compete for "{city} OH chamber" searches even
+// before the first member from that city joins.
 export function generateStaticParams() {
-  return activeCommunities.map((c) => ({ slug: c.slug }));
+  return communities.map((c) => ({ slug: c.slug }));
 }
 
 // ── Per-page metadata ─────────────────────────────────────────────

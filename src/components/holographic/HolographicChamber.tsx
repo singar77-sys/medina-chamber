@@ -113,10 +113,18 @@ export function HolographicChamber() {
           the tablet+ "meet the bot" hero moment. */}
       <section className="hidden md:block mx-auto max-w-5xl px-6 lg:px-8 py-20 lg:py-28 overflow-x-clip">
         <div className="flex flex-col items-center text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-cambridge/10 border border-cambridge/20 rounded-full mb-6">
+          {/* Badge — Mistrully script accent above the headline.
+              Script fonts place their baseline above the UPM center
+              of the box, so a naive flex-center leaves the text
+              riding high in the pill. Nudging the span down ~3px via
+              translateY lands the visual x-height on the pill's
+              optical center without changing layout height. */}
+          <div className="inline-flex items-center gap-2.5 px-5 py-1.5 bg-cambridge/10 border border-cambridge/20 rounded-full mb-6">
             <span className="w-2 h-2 bg-cambridge rounded-full animate-pulse" />
-            <span className="text-caption font-bold text-cambridge uppercase tracking-wider">
+            <span
+              className="font-script text-cambridge text-[1.4rem] leading-none inline-block"
+              style={{ transform: "translateY(3px)" }}
+            >
               {greeting.badge}
             </span>
           </div>

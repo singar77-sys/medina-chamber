@@ -37,3 +37,10 @@ next-env.d.ts
 
 # scraper debug output
 scripts/_debug-raw.html
+
+# Designer scratch — HTML mockups, .jsx design files, pasted-screenshot
+# uploads, and the unused asset tree under "public/images/chamber events/"
+# (note: space in the path — the canonical in-app asset paths live under
+# public/images/chamber-logos/, public/images/events/, etc). ~32 MB of
+# reference material that nothing in src/ imports; keeping it local only.
+public/images/chamber events/

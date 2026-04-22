@@ -127,6 +127,30 @@ const allCommunities: Community[] = [
     chamberPitch:
       "Lafayette's growth means opportunity — chamber membership puts your business in front of every established and new business owner in the county.",
   },
+  {
+    slug: "granger",
+    name: "Granger Township",
+    cityMatch: "Granger",
+    county: "Medina County",
+    zip: ["44256"],
+    tagline: "Rural character, Medina proximity, countywide reach",
+    description:
+      "Granger Township sits just northeast of Medina city — a largely residential community where local trades, professional services, and agricultural-adjacent businesses serve the township and the surrounding corridor between Medina and Brunswick.",
+    chamberPitch:
+      "Granger businesses gain a countywide stage through the chamber — membership connects your operation to Medina, Brunswick, and the full 511-member network without leaving the township.",
+  },
+  {
+    slug: "montville",
+    name: "Montville Township",
+    cityMatch: "Montville",
+    county: "Medina County",
+    zip: ["44256"],
+    tagline: "The township that wraps Medina — residential, commercial, and everything between",
+    description:
+      "Montville Township surrounds Medina city on three sides, blending established neighborhoods, professional corridors along Route 18 and I-71, and light-industrial pockets that serve the county's daily commerce.",
+    chamberPitch:
+      "Montville businesses operate at the heart of Medina County — chamber membership gives you access to the downtown core's foot traffic and the countywide network at the same time.",
+  },
 ];
 
 /** Get all members whose address city matches (case-insensitive) */
@@ -149,7 +173,21 @@ export const activeCommunities: Community[] = allCommunities.filter(
 /** Full list including empty communities (for future reference) */
 export const communities = allCommunities;
 
-/** Get a community by its slug (active only) */
+/**
+ * Get a community by its slug.
+ *
+ * Searches the FULL list (not just active) so SEO-target cities like
+ * Rittman can have a landing page even before the first chamber
+ * member with a Rittman address joins. The page template already
+ * conditionally hides the "Top Industries" and "Chamber Members in
+ * {city}" sections when there are no members, so an empty community
+ * renders as a clean prospect page: hero, stats (showing 0 members),
+ * "Why {city} businesses join," and the apply CTA.
+ *
+ * The map on /about/contact links to /community/rittman, and the
+ * homepage event/community surfaces still use `activeCommunities` so
+ * they don't advertise empty cities as if they were populated.
+ */
 export function getCommunityBySlug(slug: string): Community | undefined {
-  return activeCommunities.find((c) => c.slug === slug);
+  return allCommunities.find((c) => c.slug === slug);
 }

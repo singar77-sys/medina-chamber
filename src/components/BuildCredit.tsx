@@ -1,11 +1,11 @@
-import { MetatronSigil } from "./MetatronSigil";
+import { IlluminatiTriangle } from "./IlluminatiTriangle";
 
 /**
  * BuildCredit — the "Designed by Hunter Systems" footer mark.
  *
- * Server Component. Pulse animation is pure CSS (see globals.css
+ * Server Component. Breath animation is pure CSS (see globals.css
  * `.hs-mark` block) so no client JS is shipped for this credit.
- * The Metatron sigil is generated geometrically as inline SVG.
+ * The illuminati triangle is inline SVG, currentColor-themed.
  */
 export function BuildCredit() {
   return (
@@ -19,7 +19,7 @@ export function BuildCredit() {
       <span className="text-caption text-text-tertiary">Designed by</span>
       <span className="hs-mark inline-flex items-center gap-1.5">
         <span className="hs-mark__word">Hunter Systems</span>
-        <MetatronSigil className="hs-mark__sigil" />
+        <IlluminatiTriangle className="hs-mark__sigil" />
       </span>
     </a>
   );

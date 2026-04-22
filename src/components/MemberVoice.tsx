@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
+import { BrandShaderBackground } from "@/components/effects/BrandShaderBackground";
 
 /**
  * MemberVoice — typographic pull quote as architectural moment.
@@ -14,13 +15,14 @@ import { FadeIn } from "@/components/FadeIn";
 export function MemberVoice() {
   return (
     <section className="mv-section relative bg-bg-primary border-y border-border-secondary py-20 lg:py-28 overflow-hidden">
-      {/* Architectural accent — faint cambridge wash to anchor the band */}
-      <div
-        className="mv-wash absolute inset-0 pointer-events-none"
-        aria-hidden="true"
-      />
+      {/* Liquid-chrome shader wallpaper — brand-tinted WebGL backdrop
+          that flows with time and reacts to cursor. Sits behind the
+          quote with pointer-events: none so it never interferes with
+          selection or reading. Replaces the old static cambridge
+          radial wash with something living. */}
+      <BrandShaderBackground className="mv-shader-bg" />
 
-      <div className="relative mx-auto max-w-6xl px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-6xl px-6 lg:px-8">
         <FadeIn>
           <p className="text-overline text-cambridge mb-8 tracking-[0.2em]">
             Member Voice

@@ -12,7 +12,7 @@ select,
 summary,
 [onclick],
 .cursor-pointer {
-  cursor: url("/images/cat-paw.png") 16 16, pointer;
+  cursor: pointer;
 }
 
 /* ============================================================
@@ -43,6 +43,18 @@ summary,
   font-family: "BN Bergen";
   src: url("/fonts/BNBergen-Bold.otf") format("opentype");
   font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Mistrully — handwritten script, brand accent font. Used only as an
+   expressive counterpoint to BN Bergen (never for body or nav). The
+   chamber's current website uses it exclusively on the word "business"
+   in the "MEDINA MEANS business" tagline. */
+@font-face {
+  font-family: "Mistrully";
+  src: url("/fonts/Mistrully.ttf") format("truetype");
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
@@ -176,6 +188,7 @@ summary,
   --color-nav-border: var(--nav-border);
 
   --font-sans: "BN Bergen", system-ui, -apple-system, sans-serif;
+  --font-script: "Mistrully", "Brush Script MT", cursive;
 }
 
 /* --- Dark-mode accent text overrides ---------------------- */
@@ -523,7 +536,7 @@ body {
 /* Wrapper — pos for overlay layers (shadow / sparkles / sparks / zzz) */
 .cbm-mascot {
   position: relative;
-  cursor: url("/images/cat-paw.png") 16 16, pointer;
+  cursor: pointer;
 }
 
 .cbm-mascot:focus-visible {
@@ -1026,7 +1039,7 @@ body {
     color 200ms ease,
     border-color 200ms ease,
     background-color 200ms ease;
-  cursor: url("/images/cat-paw.png") 16 16, pointer;
+  cursor: pointer;
 }
 
 .cmdk-navtrigger:hover,
@@ -1059,7 +1072,7 @@ body {
   background: transparent;
   border: none;
   transition: background-color 200ms ease, color 200ms ease;
-  cursor: url("/images/cat-paw.png") 16 16, pointer;
+  cursor: pointer;
 }
 
 .cmdk-navtrigger--icon:hover,
@@ -1199,7 +1212,7 @@ body {
   text-align: left;
   color: var(--text-primary);
   font-size: 0.9rem;
-  cursor: url("/images/cat-paw.png") 16 16, pointer;
+  cursor: pointer;
   transition: background-color 120ms ease, color 120ms ease;
 }
 
@@ -1341,7 +1354,7 @@ body {
     border-color 200ms ease,
     background-color 200ms ease,
     transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
-  cursor: url("/images/cat-paw.png") 16 16, pointer;
+  cursor: pointer;
 }
 
 .jkc-chip:hover,
@@ -1588,82 +1601,93 @@ body {
 }
 
 .hs-mark__word {
-  animation: hs-pulse 3.6s ease-in-out infinite;
-  text-shadow: 0 0 12px rgba(131, 188, 169, 0.35);
+  animation: hs-breath 4s ease-in-out infinite;
   transition: color 200ms ease;
 }
 
 .hs-mark__sigil {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   color: var(--cambridge);
-  opacity: 0.75;
-  transition:
-    opacity 260ms ease,
-    transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  opacity: 0.78;
+  animation: hs-breath 4s ease-in-out infinite;
+  transition: opacity 260ms ease;
+  display: inline-block;
+  /* Nudge up a touch — the iris/pupil sit in the triangle's lower
+     third, so its visual centre is below its geometric centre. A small
+     negative margin-top re-balances against the "Hunter Systems"
+     baseline. Explicitly no transform — triangle stays static. */
+  margin-top: -3px;
 }
 
 .hs-credit:hover .hs-mark__sigil,
 .hs-credit:focus-visible .hs-mark__sigil {
   opacity: 1;
-  transform: rotate(60deg);
 }
 
 .hs-credit:hover .hs-mark__word {
   color: #fff;
-  text-shadow: 0 0 16px rgba(131, 188, 169, 0.7);
 }
 
-@keyframes hs-pulse {
-  0%, 100% {
-    opacity: 0.82;
-    text-shadow: 0 0 8px rgba(131, 188, 169, 0.25);
-  }
-  50% {
-    opacity: 1;
-    text-shadow:
-      0 0 14px rgba(131, 188, 169, 0.55),
-      0 0 24px rgba(131, 188, 169, 0.2);
-  }
+/* Gentle opacity breath — no glow, no text-shadow. Just presence. */
+@keyframes hs-breath {
+  0%, 100% { opacity: 0.78; }
+  50%      { opacity: 1;    }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hs-mark__word {
+  .hs-mark__word,
+  .hs-mark__sigil {
     animation: none !important;
     opacity: 1;
   }
   .ftr-social,
-  .ftr-cta,
-  .hs-mark__sigil {
+  .ftr-cta {
     transition: none !important;
-    transform: none !important;
   }
 }
 
 /* ============================================================
-   RENTAL SPACE CARDS — Vault / Main Room stat cards
+   RENTAL SPACE CARDS — Vault / Main Room clickable cards
+   + the detail modal they open.
    ============================================================ */
+
+/* ── Card button ─────────────────────────────────────────────────── */
 
 .rsc-card {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;                       /* fill the grid row */
   padding: 1.75rem;
   background: var(--bg-primary);
   border: 1px solid var(--border-secondary);
   border-radius: var(--radius-lg);
-  color: var(--cambridge);                  /* currentColor for SVG seats */
-  overflow: hidden;
+  color: var(--cambridge);
+  text-align: left;
+  cursor: pointer;
   transition:
     border-color 300ms ease,
     box-shadow 300ms ease,
     transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.rsc-card:hover {
+.rsc-card:hover,
+.rsc-card:focus-visible {
   transform: translateY(-3px);
   border-color: rgba(131, 188, 169, 0.5);
   box-shadow:
     0 16px 42px rgba(131, 188, 169, 0.14),
     0 0 0 1px rgba(131, 188, 169, 0.22);
+  outline: none;
+}
+
+.rsc-card:focus-visible {
+  /* Extra ring so keyboard users see clear focus on top of the glow. */
+  box-shadow:
+    0 16px 42px rgba(131, 188, 169, 0.14),
+    0 0 0 3px rgba(131, 188, 169, 0.45);
 }
 
 /* Differentiation chip — top-right */
@@ -1680,76 +1704,265 @@ body {
   border: 1px solid rgba(131, 188, 169, 0.28);
   padding: 0.3rem 0.7rem;
   border-radius: 999px;
-  z-index: 3;
 }
 
-/* Hover-revealed room photo — fills the card, fades in with a subtle
-   Ken Burns zoom so the space feels "alive" when you point at it. */
-.rsc-card__photo {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  opacity: 0;
-  transform: scale(1.02);
-  transition:
-    opacity 450ms ease,
-    transform 6s cubic-bezier(0.22, 1, 0.36, 1);
-  z-index: 0;
-  pointer-events: none;
+/* "View details →" affordance is pinned to the bottom of the card
+   via `margin-top: auto` inside the flex column — so even when one
+   room's description wraps longer than the other's, the two CTAs
+   line up horizontally across the grid row. The padding-top floors
+   the gap to 1.25rem when a description fills the full card. */
+.rsc-card__cta {
+  margin-top: auto;
+  padding-top: 1.25rem;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cambridge);
+  opacity: 0.82;
+  transition: opacity 200ms ease, transform 200ms ease;
 }
 
-/* Oxford-tinted scrim — keeps the stat text readable on the photo.
-   Slightly stronger at top + bottom to frame the number + description. */
-.rsc-card__scrim {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(12, 27, 51, 0.82) 0%,
-    rgba(12, 27, 51, 0.55) 45%,
-    rgba(12, 27, 51, 0.92) 100%
-  );
-  opacity: 0;
-  transition: opacity 400ms ease;
-  z-index: 1;
-  pointer-events: none;
+.rsc-card__cta-arrow {
+  width: 14px;
+  height: 14px;
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.rsc-card__content {
-  position: relative;
-  z-index: 2;
-}
-
-.rsc-card:hover .rsc-card__photo {
-  opacity: 1;
-  transform: scale(1.08);
-}
-.rsc-card:hover .rsc-card__scrim {
+.rsc-card:hover .rsc-card__cta,
+.rsc-card:focus-visible .rsc-card__cta {
   opacity: 1;
 }
-
-/* On hover the card sits over a dark photo — lift the text to white so
-   it stays legible. Scoped to :hover so the default state is unchanged. */
-.rsc-card:hover .text-text-secondary { color: rgba(255, 255, 255, 0.92) !important; }
-.rsc-card:hover .text-text-tertiary  { color: rgba(255, 255, 255, 0.72) !important; }
-.rsc-card:hover .text-oxford         { color: #ffffff !important; }
-.rsc-card:hover .text-cambridge      { color: rgba(255, 240, 210, 0.95) !important; }
-/* Chip keeps its cambridge look but gains a darker, more readable backer. */
-.rsc-card:hover .rsc-card__chip {
-  color: #ffffff;
-  background: rgba(131, 188, 169, 0.3);
-  border-color: rgba(255, 255, 255, 0.4);
+.rsc-card:hover .rsc-card__cta-arrow,
+.rsc-card:focus-visible .rsc-card__cta-arrow {
+  transform: translateX(4px);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .rsc-card {
+  .rsc-card,
+  .rsc-card__cta,
+  .rsc-card__cta-arrow {
     transition: none !important;
     transform: none !important;
   }
-  .rsc-card__photo,
-  .rsc-card__scrim {
-    transition: opacity 200ms ease !important;
+}
+
+/* ── Modal ───────────────────────────────────────────────────────── */
+
+/* Full-viewport scrim that darkens the page behind the dialog. */
+.rsc-modal-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(12, 27, 51, 0.74);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: rscScrimIn 240ms ease-out both;
+}
+
+@keyframes rscScrimIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Split-pane dialog: photo on the left at desktop widths, on top for
+   mobile. Max height keeps the dialog scroll-contained on short
+   viewports — body pane scrolls internally if content overflows.
+   `min-height: 0` on both grid items is REQUIRED: without it the
+   body pane refuses to shrink below its content height and pushes
+   the whole modal past its max-height, cutting off the top on
+   short viewports. */
+.rsc-modal {
+  position: relative;
+  width: min(1040px, 100%);
+  max-height: min(92vh, 760px);
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 38vh minmax(0, 1fr);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(131, 188, 169, 0.12);
+  animation: rscModalIn 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes rscModalIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1.00); }
+}
+
+@media (min-width: 768px) {
+  .rsc-modal {
+    grid-template-columns: 1.1fr 1fr;
+    /* `minmax(0, 1fr)` instead of plain `1fr` — same reason as the
+       body pane's min-height: 0 below. Without the 0-minimum the row
+       inherits content intrinsic size and the modal can't honor its
+       max-height. */
+    grid-template-rows: minmax(0, 1fr);
+  }
+}
+
+/* Photo pane */
+.rsc-modal__photo {
+  position: relative;
+  overflow: hidden;
+  min-height: 0;          /* let the grid row constrain it */
+  background: #0c1b33;
+}
+
+/* Next/Image fills the pane; slow Ken-Burns zoom on open so the
+   room feels alive without being distracting. */
+.rsc-modal__photo-img {
+  object-fit: cover;
+  animation: rscKenBurns 10s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes rscKenBurns {
+  from { transform: scale(1.00); }
+  to   { transform: scale(1.06); }
+}
+
+.rsc-modal__chip {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: rgba(12, 27, 51, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  backdrop-filter: blur(4px);
+}
+
+/* Body pane — min-height: 0 lets the grid row clamp it so the
+   internal `overflow-y: auto` actually kicks in for tall content
+   instead of pushing the whole modal past its max-height. */
+.rsc-modal__body {
+  padding: 2rem 1.75rem 2rem;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+@media (min-width: 768px) {
+  .rsc-modal__body {
+    padding: 2.5rem 2.5rem;
+  }
+}
+
+.rsc-modal__section {
+  margin-top: 1.75rem;
+}
+
+.rsc-modal__features {
+  display: grid;
+  gap: 0.65rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rsc-modal__features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.rsc-modal__check {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin-top: 3px;
+  color: var(--cambridge);
+}
+
+.rsc-modal__actions {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.rsc-modal__btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.85rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.rsc-modal__btn--primary {
+  color: #ffffff;
+  background: var(--coquelicot);
+}
+.rsc-modal__btn--primary:hover {
+  background: #e63900;
+}
+
+.rsc-modal__btn--ghost {
+  color: var(--text-primary);
+  border: 1px solid var(--border-primary);
+}
+.rsc-modal__btn--ghost:hover {
+  border-color: var(--text-tertiary);
+}
+
+/* Close button — floats over the photo pane top-right */
+.rsc-modal__close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 3;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  background: rgba(12, 27, 51, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background 160ms ease, transform 160ms ease;
+}
+.rsc-modal__close:hover {
+  background: rgba(255, 64, 0, 0.9);
+  transform: scale(1.06);
+}
+.rsc-modal__close:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+.rsc-modal__close svg {
+  width: 16px;
+  height: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rsc-modal-scrim,
+  .rsc-modal,
+  .rsc-modal__photo-img {
+    animation: none !important;
     transform: none !important;
   }
 }
@@ -1771,7 +1984,7 @@ body {
     transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
     border-color 280ms ease,
     box-shadow 280ms ease;
-  cursor: url("/images/cat-paw.png") 16 16, pointer;
+  cursor: pointer;
 }
 
 .pm-tile:hover,
@@ -1802,6 +2015,34 @@ body {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  /* Optional per-tile scale bump — used by partners whose source
+     artwork has heavy internal whitespace (Hunter Consulting) so the
+     actual mark lands at the same visual weight as its neighbors.
+     Defaults to 1 (no change) when the custom property is not set. */
+  transform: scale(var(--pm-logo-scale, 1));
+  transform-origin: center;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Liquid-chrome shader wallpaper behind the Member Voice section.
+   Dialed DOWN to 0.32 (from 0.9) so the motion reads as atmospheric
+   — a quiet backing color-shift — rather than a trendy WebGL flex.
+   The shader's internal color amplitudes are unchanged, we're just
+   compositing it at a softer alpha so it accompanies the quote
+   instead of competing with it. */
+.mv-shader-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.32;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mv-shader-bg { opacity: 0.22; }
 }
 
 /* Caption drawer slides up from the bottom of the tile on hover. */
@@ -1852,6 +2093,72 @@ body {
     transition: none !important;
     transform: none !important;
   }
+}
+
+/* ============================================================
+   VESICA PISCIS WATERMARK — sacred-geometry breathing watermark.
+   Used behind "Why Members Join" but kept generic so it can sit behind
+   any section. Pulses between two low opacities on a slow 6s breath.
+   ============================================================ */
+
+.vp-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* Square footprint sized to the section — big enough to read as a
+     background mandala, not so big it crowds the content. */
+  width: min(680px, 90vw);
+  height: min(680px, 90vw);
+  /* translate + scale are standalone transform-components, safe to
+     pair with the inner rotor's transform: rotate() because they
+     don't touch the same CSS property. */
+  translate: -50% -50%;
+  color: var(--cambridge);
+  pointer-events: none;
+  z-index: 0;
+  animation: vpBreath 6.5s ease-in-out infinite;
+  will-change: opacity, scale;
+}
+
+/* Inner group carries the slow spin — 180s per full turn. Using a
+   plain `transform: rotate()` keyframe on a child is more reliable
+   than the standalone `rotate` property on the root when multiple
+   animations stack, and the viewBox is centered at (0, 0) so we
+   don't need to touch transform-origin. */
+.vp-rotor {
+  transform-origin: 0 0;
+  animation: vpSpin 180s linear infinite;
+  will-change: transform;
+}
+
+/* Watermark opacity scales with theme, and is dialed down 15% from
+   the original so it reads as atmosphere rather than decoration. */
+:root[data-theme="light"] .vp-watermark { --vp-floor: 0.047; --vp-peak: 0.094; }
+:root[data-theme="dark"]  .vp-watermark { --vp-floor: 0.068; --vp-peak: 0.136; }
+
+@keyframes vpBreath {
+  0%,  100% { opacity: var(--vp-floor, 0.05); scale: 1.000; }
+  50%       { opacity: var(--vp-peak,  0.10); scale: 1.015; }
+}
+
+@keyframes vpSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Per-section size tweak only — no offset, watermark sits dead center
+   of the section so the three circles frame the content evenly. */
+.tp-vesica {
+  width: min(720px, 95vw);
+  height: min(720px, 95vw);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vp-watermark,
+  .vp-rotor {
+    animation: none;
+  }
+  .vp-watermark { opacity: var(--vp-floor, 0.06); }
 }
 
 /* ============================================================
@@ -2129,6 +2436,196 @@ body {
     transform: none !important;
     stroke-dashoffset: 0 !important;
     opacity: 1 !important;
+  }
+}
+
+/* Mistrully script — brand accent font. Applied via this utility class
+   on the word "business" in the "MEDINA MEANS business" tagline (footer
+   brand rail). Use sparingly — accent voice only, never body/nav. */
+.font-script {
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-style: normal;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   MEDINA NETWORK MAP — blueprint-style county map w/ HQ + data pulses
+   (contact page hero). Lives inside `.mnm-wrap`; all internal classes
+   are scoped by that root.
+   ═════════════════════════════════════════════════════════════════ */
+
+.mnm-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1200 / 440;
+  background:
+    radial-gradient(ellipse at 46% 52%, rgba(255, 64, 0, 0.06), transparent 60%),
+    linear-gradient(180deg, #050b18 0%, #0C1B33 55%, #030814 100%);
+  border: 1px solid rgba(131, 188, 169, 0.15);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.22),
+    0 0 0 1px rgba(131, 188, 169, 0.08) inset;
+}
+
+.mnm-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  font-family: var(--font-sans);
+}
+
+/* Ghosted chamber-building backdrop inside the map — blends with the
+   oxford gradient below it so the photo reads as texture, not content. */
+.mnm-photo {
+  opacity: 0.2;
+  filter: grayscale(1) contrast(1.05) brightness(0.85);
+  mix-blend-mode: luminosity;
+  pointer-events: none;
+}
+
+/* Curved connection paths — always visible. Traveling orbs (rendered
+   separately via <animateMotion>) ride each curve from HQ outward. */
+.mnm-curve {
+  transition: stroke 250ms ease, stroke-width 250ms ease;
+}
+
+.mnm-node {
+  cursor: pointer;
+  outline: none;
+}
+.mnm-node:focus-visible circle:nth-of-type(2) {
+  stroke: #FF4000;
+  stroke-width: 2;
+}
+
+.mnm-label {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  transition: fill 250ms ease;
+}
+
+.mnm-hq-label {
+  font-size: 13px;
+  font-weight: 700;
+  fill: #ffffff;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+/* HQ breath — one gentle ring slowly pulsing opacity + scale.
+   transform-origin MUST match HQ_X / HQ_Y in MedinaNetworkMap.tsx. */
+.mnm-hq-breath {
+  transform-origin: 550px 150px;
+  transform-box: fill-box;
+  animation: mnmBreath 3.6s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes mnmBreath {
+  0%, 100% { transform: scale(1);   opacity: 0.6; }
+  50%      { transform: scale(1.7); opacity: 0;   }
+}
+
+/* Compass N indicator — decorative, shows map-north orientation. */
+.mnm-compass-label {
+  font-size: 9px;
+  font-weight: 700;
+  fill: rgba(131, 188, 169, 0.75);
+  letter-spacing: 0.2em;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mnm-hq-breath,
+  .mnm-orb {
+    animation: none !important;
+    opacity: 0 !important; /* hide orbs entirely when reduced-motion is set */
+  }
+  .mnm-wrap animateMotion {
+    /* SMIL doesn't respect prefers-reduced-motion by default —
+       hiding the parent orb suppresses the visible effect anyway. */
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   SLOW GRADIENT BACKDROP — ambient moving-gradient page background
+   Drop a .slow-gradient div at position: fixed; inset: 0; z-index: -1
+   ═════════════════════════════════════════════════════════════════ */
+
+.slow-gradient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.slow-gradient::before,
+.slow-gradient::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.5;
+  will-change: transform;
+}
+
+/* Blob A — cambridge, drifts clockwise. Very low alpha so it reads as
+   ambient atmosphere, not a visible color wash. */
+.slow-gradient::before {
+  top: -20%;
+  left: -15%;
+  width: 70%;
+  height: 70%;
+  background: radial-gradient(circle at 40% 40%, rgba(131, 188, 169, 0.12), transparent 65%);
+  animation: slowGradA 72s ease-in-out infinite alternate;
+}
+
+/* Blob B — coquelicot, drifts counter-clockwise, out of phase. Also dim. */
+.slow-gradient::after {
+  bottom: -20%;
+  right: -15%;
+  width: 75%;
+  height: 75%;
+  background: radial-gradient(circle at 60% 60%, rgba(255, 64, 0, 0.08), transparent 65%);
+  animation: slowGradB 84s ease-in-out infinite alternate;
+}
+
+@keyframes slowGradA {
+  0%   { transform: translate(0, 0)       rotate(0deg); }
+  50%  { transform: translate(6%, 8%)     rotate(35deg); }
+  100% { transform: translate(-4%, 12%)   rotate(-20deg); }
+}
+
+@keyframes slowGradB {
+  0%   { transform: translate(0, 0)       rotate(0deg); }
+  50%  { transform: translate(-8%, -6%)   rotate(-40deg); }
+  100% { transform: translate(6%, -10%)   rotate(25deg); }
+}
+
+/* A fine noise/grid overlay so the gradient doesn't look flat */
+.slow-gradient__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(131, 188, 169, 0.08) 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: 0.7;
+  mask-image: radial-gradient(ellipse at 50% 50%, black 40%, transparent 90%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 50%, black 40%, transparent 90%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slow-gradient::before,
+  .slow-gradient::after {
+    animation: none !important;
   }
 }
 
@@ -2669,5 +3166,120 @@ body {
     opacity: 1 !important;
     transform: none !important;
     filter: none !important;
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   MEDINA AMBIENCE — weather-aware landing effect
+   Brief visual that plays once per session based on Medina's live
+   weather feed: snow flakes, rain streaks + lightning, or fog banks.
+   Lives in a fixed full-viewport overlay with pointer-events: none.
+   ═════════════════════════════════════════════════════════════════ */
+
+.mwx {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 60; /* above most content, below modals/portals at 90+ */
+  opacity: 0;
+  transition: opacity 700ms ease-out;
+}
+.mwx--entering { opacity: 1; }
+.mwx--holding  { opacity: 1; }
+.mwx--leaving  {
+  opacity: 0;
+  transition: opacity 1500ms ease-in;
+}
+
+/* ─── Snow ──────────────────────────────────────────────────── */
+
+.mwx-flake {
+  position: absolute;
+  top: -5%;
+  display: block;
+  background: radial-gradient(circle, #ffffff 0%, rgba(255,255,255,0.4) 60%, transparent 80%);
+  border-radius: 50%;
+  filter: blur(0.4px);
+  animation-name: mwxFlakeFall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+@keyframes mwxFlakeFall {
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(var(--flake-drift, 0), 110vh, 0); }
+}
+
+/* ─── Rain ──────────────────────────────────────────────────── */
+
+.mwx-streak {
+  position: absolute;
+  top: -10%;
+  width: 1px;
+  background: linear-gradient(to bottom, rgba(170, 200, 230, 0) 0%, rgba(170, 200, 230, 0.55) 100%);
+  animation-name: mwxStreakFall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+@keyframes mwxStreakFall {
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(4vw, 115vh, 0); }
+}
+
+/* Lightning — full-viewport white flash that fires once, then hides.
+   Uses animation-fill-mode: both with a one-shot curve. */
+.mwx-flash {
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+  opacity: 0;
+  mix-blend-mode: screen;
+  animation: mwxFlash 180ms ease-out 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes mwxFlash {
+  0%   { opacity: 0; }
+  10%  { opacity: 0.85; }
+  25%  { opacity: 0.15; }
+  45%  { opacity: 0.6; }   /* second pulse — the signature lightning flicker */
+  100% { opacity: 0; }
+}
+
+/* ─── Fog ───────────────────────────────────────────────────── */
+
+.mwx-fog {
+  position: absolute;
+  left: -20%;
+  width: 140%;
+  height: 22%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(200, 210, 225, 0.55) 30%,
+    rgba(220, 225, 235, 0.7) 50%,
+    rgba(200, 210, 225, 0.55) 70%,
+    transparent 100%
+  );
+  filter: blur(18px);
+  animation-name: mwxFogDrift;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+@keyframes mwxFogDrift {
+  0%   { transform: translate3d(-10%, 0, 0); }
+  100% { transform: translate3d(10%, 0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mwx,
+  .mwx * {
+    display: none !important;
   }
 }

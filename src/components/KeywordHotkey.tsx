@@ -21,6 +21,20 @@ const SECRETS: Array<{ phrase: string; href: string }> = [
   { phrase: "icebreaker", href: "/icebreaker" },
 ];
 
+/**
+ * Ambient easter-egg triggers. Typing any of these words (outside an
+ * input) fires `mc-ambience-play`, which MedinaAmbience listens for to
+ * kick off the matching weather effect — completely decoupled from
+ * real Medina conditions. Lets us (or a curious visitor) summon snow
+ * on a sunny day.
+ */
+const AMBIENT_TRIGGERS: Array<"snow" | "rain" | "thunder" | "fog"> = [
+  "snow",
+  "rain",
+  "thunder",
+  "fog",
+];
+
 export function KeywordHotkey() {
   const router = useRouter();
 
@@ -54,6 +68,21 @@ export function KeywordHotkey() {
         if (buffer.endsWith(secret.phrase)) {
           buffer = "";
           router.push(secret.href);
+          return;
+        }
+      }
+
+      // Ambient weather triggers — fire an event, don't navigate.
+      // Keep the buffer cleared so consecutive triggers ("snowsnow")
+      // each fire cleanly instead of compounding.
+      for (const condition of AMBIENT_TRIGGERS) {
+        if (buffer.endsWith(condition)) {
+          buffer = "";
+          window.dispatchEvent(
+            new CustomEvent("mc-ambience-play", {
+              detail: { condition },
+            }),
+          );
           return;
         }
       }

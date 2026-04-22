@@ -44,6 +44,22 @@ function pick<T>(values: readonly [T, T, T], mode: GraphicMode): T {
 }
 
 const FONT_STACK = '"BN Bergen", system-ui, -apple-system, sans-serif';
+const SCRIPT_STACK = '"Mistrully", "Brush Script MT", cursive';
+
+/**
+ * Optional per-event info that a graphic can display when rendered with
+ * a specific upcoming instance bound. Used for the "REGISTRATION REQUIRED"
+ * plinth at the bottom of the social/square frames. When omitted, the
+ * graphic renders as the generic, undated template.
+ */
+export interface EventInfo {
+  dayOfWeek?: string;
+  month?: string;
+  day?: number;
+  year?: number;
+  time?: string;
+  note?: string; // e.g. "Registration required"
+}
 
 /* =============================================================================
    GRAPHIC FRAME — scales a graphic to a target display width while preserving
@@ -94,138 +110,517 @@ export function GraphicFrame({
 }
 
 /* =============================================================================
-   1 — NETWORKING WOW
-   Oxford blue field, coquelicot "WOW!" wordmark, cambridge radial burst.
+   1 — NETWORKING WOW  (redesign v2 — esoteric chamber-faithful)
+
+   Layered composition:
+     • Oxford blue field
+     • Hexagonal honeycomb grid at low opacity (chamber as society)
+     • 12-node ring with full all-to-all connection web (the literal
+       "network", also reads as a hermetic seal / fraternal compass)
+     • Three concentric ghost rings (radial seal feel)
+     • Coquelicot radial glow centered on the title
+     • BN Bergen "Networking" / "WOW!" wordmark
+     • Mistrully script accent on "Opportunities" in the chamber's
+       actual tagline ("Watch Opportunities Work")
+     • Optional event-info plinth at the bottom (date · time + a
+       "REGISTRATION REQUIRED" note) when an EventInfo is supplied —
+       generic preview omits it so the template still works for any
+       month's instance.
    ============================================================================ */
 
-export function NetworkingWowGraphic({ mode = "social" }: { mode?: GraphicMode }) {
+export function NetworkingWowGraphic({
+  mode = "social",
+  eventInfo,
+}: {
+  mode?: GraphicMode;
+  eventInfo?: EventInfo;
+}) {
   const isStory = mode === "story";
   const isSquare = mode === "square";
 
   const titleTop = pick([180, 132, 170] as const, mode);
   const titleBig = pick([260, 220, 300] as const, mode);
 
-  const vb = isStory ? "0 0 1080 1920" : isSquare ? "0 0 1080 1080" : "0 0 1200 630";
-  const gradCx = isStory ? "50%" : isSquare ? "82%" : "78%";
-  const gradCy = isStory ? "28%" : "50%";
+  const W = isStory ? 1080 : isSquare ? 1080 : 1200;
+  const H = isStory ? 1920 : isSquare ? 1080 : 630;
+  const vb = `0 0 ${W} ${H}`;
 
-  const cx = isStory ? 540 : isSquare ? 900 : 940;
-  const cy = isStory ? 550 : isSquare ? 540 : 315;
-  const scale = isStory ? 1.4 : 1;
-  const r1 = 200 * scale;
-  const r2 = 250 * scale;
+  // Sacred-geometry "network web" placement — anchored opposite the
+  // title block in each layout so it never collides with type.
+  const seal = isStory
+    ? { cx: 540, cy: 620, r: 320 }
+    : isSquare
+    ? { cx: 760, cy: 540, r: 320 }
+    : { cx: 880, cy: 315, r: 240 };
+
+  // 12 nodes around the seal — connect every pair to form the
+  // complete graph K_12 (66 edges). Reads as both "networking" and
+  // a hermetic seal / society compass.
+  const nodes = Array.from({ length: 12 }, (_, i) => {
+    const a = (i / 12) * Math.PI * 2 - Math.PI / 2;
+    return { x: seal.cx + Math.cos(a) * seal.r, y: seal.cy + Math.sin(a) * seal.r };
+  });
+  const edges: Array<[number, number]> = [];
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) edges.push([i, j]);
+  }
+
+  // Tagline geometry (sits under the WOW! mark)
+  const taglineSize = pick([34, 40, 52] as const, mode);
+  const scriptSize = pick([56, 70, 92] as const, mode);
+
+  // Bottom info plinth heights
+  const plinthGap = pick([18, 22, 28] as const, mode);
+  const plinthLabel = pick([18, 22, 28] as const, mode);
+  const plinthBig = pick([28, 34, 40] as const, mode);
+
+  // Date string for the plinth, e.g. "WED · MAY 20, 2026"
+  const dateLine = eventInfo
+    ? [
+        eventInfo.dayOfWeek?.substring(0, 3).toUpperCase(),
+        eventInfo.month && eventInfo.day
+          ? `${eventInfo.month.toUpperCase()} ${eventInfo.day}${eventInfo.year ? `, ${eventInfo.year}` : ""}`
+          : null,
+      ]
+        .filter(Boolean)
+        .join(" · ")
+    : null;
 
   return (
     <div style={containerStyle({ background: BRAND.oxford, color: "#fff" })}>
       <svg viewBox={vb} style={svgFillStyle}>
         <defs>
-          <radialGradient id={`nwglow-${mode}`} cx={gradCx} cy={gradCy} r="55%">
-            <stop offset="0%" stopColor={BRAND.coquelicot} stopOpacity="0.45" />
-            <stop offset="70%" stopColor={BRAND.coquelicot} stopOpacity="0" />
+          {/* Coquelicot wash under the wordmark — toned way down (was
+              0.55 → felt like an abrasive orange spotlight against the
+              already-saturated WOW! mark). 0.22 reads as warmth, not
+              heat, with a soft midpoint to smooth the falloff. */}
+          <radialGradient id={`nwglow-${mode}`} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor={BRAND.coquelicot} stopOpacity="0.22" />
+            <stop offset="40%" stopColor={BRAND.coquelicot} stopOpacity="0.08" />
+            <stop offset="80%" stopColor={BRAND.coquelicot} stopOpacity="0" />
           </radialGradient>
+          {/* Honeycomb grid — hexagons via two offset diagonal repeats */}
+          <pattern id={`nwhex-${mode}`} x="0" y="0" width="64" height="56" patternUnits="userSpaceOnUse">
+            <path
+              d="M 32 0 L 64 16 L 64 40 L 32 56 L 0 40 L 0 16 Z"
+              fill="none"
+              stroke={BRAND.cambridge}
+              strokeOpacity="0.07"
+              strokeWidth="1"
+            />
+          </pattern>
         </defs>
-        <rect width="100%" height="100%" fill={`url(#nwglow-${mode})`} />
 
+        {/* Honeycomb texture across the full field */}
+        <rect width="100%" height="100%" fill={`url(#nwhex-${mode})`} />
+
+        {/* Glow halo behind the WOW! mark — anchored to the title side */}
         <g>
-          {Array.from({ length: 36 }, (_, i) => {
-            const a = (i * 10 * Math.PI) / 180;
-            const r2i = r2 + (i % 3) * 12;
-            return (
-              <line
-                key={i}
-                x1={cx + Math.cos(a) * r1}
-                y1={cy + Math.sin(a) * r1}
-                x2={cx + Math.cos(a) * r2i}
-                y2={cy + Math.sin(a) * r2i}
-                stroke={BRAND.cambridge}
-                strokeOpacity={0.5}
-                strokeWidth={2 * scale}
-              />
-            );
-          })}
-          <circle cx={cx} cy={cy} r={150 * scale} fill="none" stroke={BRAND.cambridge} strokeWidth={1.5 * scale} strokeDasharray="2 6" opacity={0.55} />
-          <circle cx={cx} cy={cy} r={110 * scale} fill="none" stroke={BRAND.cambridge} strokeWidth={1.2 * scale} opacity={0.35} />
+          <circle
+            cx={isStory ? 380 : isSquare ? 360 : 420}
+            cy={isStory ? 1280 : isSquare ? 720 : 380}
+            r={isStory ? 480 : 360}
+            fill={`url(#nwglow-${mode})`}
+          />
         </g>
+
+        {/* Sacred-geometry seal — three concentric ghost rings */}
+        <g opacity="0.32">
+          <circle cx={seal.cx} cy={seal.cy} r={seal.r * 1.18} fill="none" stroke={BRAND.cambridge} strokeWidth="1.5" strokeDasharray="1 5" />
+          <circle cx={seal.cx} cy={seal.cy} r={seal.r * 1.06} fill="none" stroke={BRAND.cambridge} strokeWidth="1.2" />
+          <circle cx={seal.cx} cy={seal.cy} r={seal.r * 0.92} fill="none" stroke={BRAND.cambridge} strokeWidth="1" strokeDasharray="2 8" />
+        </g>
+
+        {/* Complete-graph K_12 connection web */}
+        <g stroke={BRAND.cambridge} strokeOpacity="0.22" strokeWidth="1">
+          {edges.map(([a, b], i) => (
+            <line key={i} x1={nodes[a].x} y1={nodes[a].y} x2={nodes[b].x} y2={nodes[b].y} />
+          ))}
+        </g>
+
+        {/* Outer ring */}
+        <circle cx={seal.cx} cy={seal.cy} r={seal.r} fill="none" stroke={BRAND.cambridge} strokeOpacity="0.55" strokeWidth="1.5" />
+
+        {/* 12 nodes — alternating coquelicot accent at cardinal positions */}
+        {nodes.map((n, i) => {
+          const cardinal = i % 3 === 0;
+          return (
+            <g key={i}>
+              <circle cx={n.x} cy={n.y} r={cardinal ? 8 : 5} fill={cardinal ? BRAND.coquelicot : BRAND.cambridge} />
+              {cardinal && (
+                <circle cx={n.x} cy={n.y} r={16} fill="none" stroke={BRAND.coquelicot} strokeOpacity="0.4" strokeWidth="1.5" />
+              )}
+            </g>
+          );
+        })}
+
+        {/* Center mark — small coquelicot dot + cambridge ring */}
+        <circle cx={seal.cx} cy={seal.cy} r="6" fill={BRAND.coquelicot} />
+        <circle cx={seal.cx} cy={seal.cy} r="14" fill="none" stroke={BRAND.cambridge} strokeOpacity="0.5" strokeWidth="1" />
       </svg>
 
+      {/* Content layer */}
       <div style={{
-        position: "relative", height: "100%",
-        padding: isStory ? "80px 72px 90px" : isSquare ? "64px 64px" : "56px 64px",
+        position: "relative", zIndex: 2, height: "100%",
+        padding: isStory ? "72px 72px 84px" : isSquare ? "56px 64px 64px" : "44px 64px 52px",
         display: "flex", flexDirection: "column", justifyContent: "space-between",
       }}>
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        {/* Top rail — chamber wordmark left, icon right */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{
+            fontSize: pick([14, 16, 20] as const, mode),
+            fontWeight: 700, letterSpacing: "0.18em",
+            color: BRAND.cambridge, textTransform: "uppercase",
+          }}>
+            Greater Medina Chamber
+          </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={ASSETS.iconWhite} style={{ height: isStory ? 60 : 44, opacity: 0.95 }} alt="" />
         </div>
 
-        <div>
-          <div style={{ fontSize: titleTop, fontWeight: 700, lineHeight: 0.82, letterSpacing: "-0.05em", color: "#fff" }}>
+        {/* Title + tagline block */}
+        <div style={{ marginTop: isStory ? -120 : 0 }}>
+          <div style={{
+            fontSize: titleTop, fontWeight: 700, lineHeight: 0.82,
+            letterSpacing: "-0.05em", color: "#fff",
+          }}>
             Networking
           </div>
-          <div style={{ fontSize: titleBig, fontWeight: 700, lineHeight: 0.82, letterSpacing: "-0.06em", color: BRAND.coquelicot, marginTop: -20, marginLeft: -8 }}>
+          <div style={{
+            fontSize: titleBig, fontWeight: 700, lineHeight: 0.82,
+            letterSpacing: "-0.06em", color: BRAND.coquelicot,
+            marginTop: -20, marginLeft: -8,
+          }}>
             WOW!
           </div>
+
+          {/* Tagline — BN Bergen "Watch ___ Work" with Mistrully on
+              "Opportunities" as a single-word brand accent. */}
+          <div style={{
+            marginTop: isStory ? 32 : 18,
+            display: "flex", alignItems: "baseline", flexWrap: "wrap",
+            columnGap: pick([14, 16, 20] as const, mode),
+            rowGap: 4,
+            color: "#fff",
+          }}>
+            <span style={{
+              fontSize: taglineSize, fontWeight: 300,
+              letterSpacing: "0.04em", textTransform: "uppercase",
+            }}>Watch</span>
+            <span style={{
+              fontFamily: SCRIPT_STACK,
+              fontSize: scriptSize, lineHeight: 0.9,
+              color: BRAND.cambridge, fontWeight: 400,
+              transform: "translateY(0.08em)", display: "inline-block",
+            }}>
+              Opportunities
+            </span>
+            <span style={{
+              fontSize: taglineSize, fontWeight: 300,
+              letterSpacing: "0.04em", textTransform: "uppercase",
+            }}>Work</span>
+          </div>
         </div>
+
+        {/* Bottom event-info plinth — only renders when bound to a
+            specific upcoming event. The generic template stays clean. */}
+        {eventInfo && (dateLine || eventInfo.time || eventInfo.note) && (
+          <div style={{
+            borderTop: `1px solid ${BRAND.cambridge}55`,
+            paddingTop: plinthGap,
+            display: "flex", alignItems: "flex-end", justifyContent: "space-between",
+            gap: 24, flexWrap: "wrap",
+          }}>
+            <div>
+              {dateLine && (
+                <div style={{
+                  fontSize: plinthLabel, fontWeight: 700,
+                  letterSpacing: "0.16em", color: BRAND.cambridge,
+                  textTransform: "uppercase",
+                }}>
+                  {dateLine}
+                </div>
+              )}
+              {eventInfo.time && (
+                <div style={{
+                  fontSize: plinthBig, fontWeight: 700,
+                  color: "#fff", letterSpacing: "-0.01em", marginTop: 4,
+                }}>
+                  {eventInfo.time}
+                </div>
+              )}
+            </div>
+            {eventInfo.note && (
+              <div style={{
+                fontSize: plinthLabel, fontWeight: 700,
+                letterSpacing: "0.18em", color: BRAND.coquelicot,
+                textTransform: "uppercase", textAlign: "right",
+                paddingBottom: 4,
+              }}>
+                {eventInfo.note}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
 /* =============================================================================
-   2 — SAFETY COUNCIL
-   Emerald field, coquelicot/oxford hazard stripe, ring monogram.
+   2 — SAFETY COUNCIL  (redesign v2 — esoteric chamber-faithful)
+
+   Sacred geometry: Metatron's Cube — the alchemical / hermetic symbol of
+   protection (13 circles in Fruit-of-Life arrangement, all centers
+   connected, projects the five Platonic solids). Different shape system
+   than Networking WOW's K_12 web; same compositional grammar (top rail,
+   title, three-word Mistrully tagline, optional event-info plinth).
+
+   Palette stays emerald + cambridge with a thin coquelicot hazard
+   accent, but the chunky safety stripe is replaced with a single
+   diagonal corner pennant — more design, less construction-zone.
    ============================================================================ */
 
-export function SafetyCouncilGraphic({ mode = "social" }: { mode?: GraphicMode }) {
+export function SafetyCouncilGraphic({
+  mode = "social",
+  eventInfo,
+}: {
+  mode?: GraphicMode;
+  eventInfo?: EventInfo;
+}) {
   const isStory = mode === "story";
   const isSquare = mode === "square";
 
   const titleSize = pick([180, 220, 260] as const, mode);
 
-  const hazardStyle: CSSProperties = isStory
-    ? {
-        top: 0, left: 0, right: 0, height: 50,
-        background: `repeating-linear-gradient(45deg, ${BRAND.coquelicot} 0 28px, ${BRAND.oxford} 28px 56px)`,
-      }
-    : {
-        top: 0, right: 0, bottom: 0, width: isSquare ? 50 : 60,
-        background: `repeating-linear-gradient(-45deg, ${BRAND.coquelicot} 0 24px, ${BRAND.oxford} 24px 48px)`,
-      };
+  const W = isStory ? 1080 : isSquare ? 1080 : 1200;
+  const H = isStory ? 1920 : isSquare ? 1080 : 630;
+  const vb = `0 0 ${W} ${H}`;
 
-  const monogramStyle: CSSProperties = isStory
-    ? { right: -100, bottom: 140, width: 600, height: 600 }
+  // Metatron's Cube anchor — opposite the title block in each layout.
+  const seal = isStory
+    ? { cx: 540, cy: 600, r: 280 }
     : isSquare
-    ? { left: -60, bottom: -60, width: 520, height: 520 }
-    : { left: -80, bottom: -80, width: 520, height: 520 };
+    ? { cx: 770, cy: 540, r: 280 }
+    : { cx: 880, cy: 315, r: 220 };
+
+  // The 13 Fruit-of-Life centers: one at the middle, six in an inner
+  // hexagon at radius r/2, six in an outer hexagon at radius r.
+  const centers: Array<{ x: number; y: number; ring: 0 | 1 | 2 }> = [
+    { x: seal.cx, y: seal.cy, ring: 0 },
+  ];
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2 - Math.PI / 2;
+    centers.push({ x: seal.cx + Math.cos(a) * (seal.r / 2), y: seal.cy + Math.sin(a) * (seal.r / 2), ring: 1 });
+    centers.push({ x: seal.cx + Math.cos(a) * seal.r, y: seal.cy + Math.sin(a) * seal.r, ring: 2 });
+  }
+  // Edges between every pair of centers — the cube projection itself.
+  const edges: Array<[number, number]> = [];
+  for (let i = 0; i < centers.length; i++) {
+    for (let j = i + 1; j < centers.length; j++) edges.push([i, j]);
+  }
+  const circleR = pick([10, 12, 14] as const, mode);
+
+  // Tagline geometry
+  const taglineSize = pick([34, 40, 52] as const, mode);
+  const scriptSize = pick([56, 70, 92] as const, mode);
+
+  // Bottom info plinth
+  const plinthGap = pick([18, 22, 28] as const, mode);
+  const plinthLabel = pick([18, 22, 28] as const, mode);
+  const plinthBig = pick([28, 34, 40] as const, mode);
+
+  const dateLine = eventInfo
+    ? [
+        eventInfo.dayOfWeek?.substring(0, 3).toUpperCase(),
+        eventInfo.month && eventInfo.day
+          ? `${eventInfo.month.toUpperCase()} ${eventInfo.day}${eventInfo.year ? `, ${eventInfo.year}` : ""}`
+          : null,
+      ]
+        .filter(Boolean)
+        .join(" · ")
+    : null;
 
   return (
     <div style={containerStyle({ background: BRAND.emerald, color: "#fff" })}>
-      <div style={{ position: "absolute", ...hazardStyle }} />
+      {/* Single diagonal coquelicot pennant — the safety/hazard cue,
+          dialed back from the previous full-stripe to a corner accent. */}
+      <div style={{
+        position: "absolute",
+        top: -20, right: -60,
+        width: isStory ? 220 : 180, height: 36,
+        background: BRAND.coquelicot,
+        transform: "rotate(45deg)",
+        transformOrigin: "top right",
+      }} />
+      <div style={{
+        position: "absolute",
+        top: 26, right: -60,
+        width: isStory ? 220 : 180, height: 8,
+        background: BRAND.oxford,
+        transform: "rotate(45deg)",
+        transformOrigin: "top right",
+        opacity: 0.85,
+      }} />
 
-      <svg viewBox="0 0 400 400" style={{ position: "absolute", opacity: 0.12, ...monogramStyle }}>
-        <g fill="none" stroke="#fff" strokeWidth="2">
-          <circle cx="200" cy="200" r="60" />
-          <circle cx="200" cy="200" r="110" />
-          <circle cx="200" cy="200" r="160" strokeDasharray="3 6" />
-          <line x1="30" y1="200" x2="370" y2="200" />
-          <line x1="200" y1="30" x2="200" y2="370" />
+      <svg viewBox={vb} style={svgFillStyle}>
+        <defs>
+          <radialGradient id={`scglow-${mode}`} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor={BRAND.cambridge} stopOpacity="0.35" />
+            <stop offset="70%" stopColor={BRAND.cambridge} stopOpacity="0" />
+          </radialGradient>
+          {/* Subtle dot lattice across the field — different texture
+              than the Networking WOW honeycomb so the two graphics
+              read as siblings, not twins. */}
+          <pattern id={`scdots-${mode}`} x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r="1.2" fill={BRAND.cambridge} opacity="0.10" />
+          </pattern>
+        </defs>
+
+        <rect width="100%" height="100%" fill={`url(#scdots-${mode})`} />
+
+        {/* Cambridge glow halo behind the cube */}
+        <circle cx={seal.cx} cy={seal.cy} r={seal.r * 1.4} fill={`url(#scglow-${mode})`} />
+
+        {/* Outer perimeter circle (the seal boundary) */}
+        <circle cx={seal.cx} cy={seal.cy} r={seal.r * 1.05} fill="none" stroke={BRAND.cambridge} strokeOpacity="0.35" strokeWidth="1" strokeDasharray="2 6" />
+
+        {/* The 13 Fruit-of-Life circles, drawn empty for the lattice */}
+        <g fill="none" stroke={BRAND.cambridge} strokeOpacity="0.35" strokeWidth="1.2">
+          {centers.map((c, i) => (
+            <circle key={`fol-${i}`} cx={c.x} cy={c.y} r={seal.r / 2} />
+          ))}
         </g>
+
+        {/* Metatron's Cube — connect every pair of centers */}
+        <g stroke={BRAND.cambridge} strokeOpacity="0.5" strokeWidth="1.1">
+          {edges.map(([a, b], i) => (
+            <line key={i} x1={centers[a].x} y1={centers[a].y} x2={centers[b].x} y2={centers[b].y} />
+          ))}
+        </g>
+
+        {/* The 13 nodes themselves — outer ring uses coquelicot,
+            inner ring cambridge, center filled coquelicot */}
+        {centers.map((c, i) => {
+          const fill =
+            c.ring === 0
+              ? BRAND.coquelicot
+              : c.ring === 1
+              ? BRAND.cambridge
+              : "#fff";
+          const r = c.ring === 0 ? circleR + 3 : circleR;
+          return (
+            <g key={`node-${i}`}>
+              <circle cx={c.x} cy={c.y} r={r} fill={fill} />
+              {c.ring === 0 && (
+                <circle cx={c.x} cy={c.y} r={r + 8} fill="none" stroke={BRAND.coquelicot} strokeOpacity="0.5" strokeWidth="2" />
+              )}
+            </g>
+          );
+        })}
       </svg>
 
+      {/* Content layer */}
       <div style={{
-        position: "relative", height: "100%",
-        padding: isStory ? "110px 72px 80px" : isSquare ? "72px 100px 72px 64px" : "56px 100px 56px 64px",
+        position: "relative", zIndex: 2, height: "100%",
+        padding: isStory ? "72px 72px 84px" : isSquare ? "56px 64px 64px" : "44px 64px 52px",
         display: "flex", flexDirection: "column", justifyContent: "space-between",
       }}>
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        {/* Top rail — chamber wordmark left, icon right */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{
+            fontSize: pick([14, 16, 20] as const, mode),
+            fontWeight: 700, letterSpacing: "0.18em",
+            color: BRAND.cambridge, textTransform: "uppercase",
+          }}>
+            Greater Medina Chamber
+          </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={ASSETS.iconWhite} style={{ height: isStory ? 60 : 44, opacity: 0.9 }} alt="" />
         </div>
 
-        <div>
-          <div style={{ fontSize: titleSize, fontWeight: 700, lineHeight: 0.82, letterSpacing: "-0.045em", color: "#fff" }}>Safety</div>
-          <div style={{ fontSize: titleSize, fontWeight: 300, lineHeight: 0.82, letterSpacing: "-0.04em", color: BRAND.cambridge, fontStyle: "italic" }}>Council</div>
+        {/* Title + tagline block */}
+        <div style={{ marginTop: isStory ? -120 : 0 }}>
+          <div style={{
+            fontSize: titleSize, fontWeight: 700, lineHeight: 0.82,
+            letterSpacing: "-0.045em", color: "#fff",
+          }}>
+            Safety
+          </div>
+          <div style={{
+            fontSize: titleSize, fontWeight: 300, lineHeight: 0.82,
+            letterSpacing: "-0.04em", color: BRAND.cambridge, fontStyle: "italic",
+          }}>
+            Council
+          </div>
+
+          {/* Tagline — TRAIN · _Together_ · PREVENT */}
+          <div style={{
+            marginTop: isStory ? 32 : 18,
+            display: "flex", alignItems: "baseline", flexWrap: "wrap",
+            columnGap: pick([14, 16, 20] as const, mode),
+            rowGap: 4,
+            color: "#fff",
+          }}>
+            <span style={{
+              fontSize: taglineSize, fontWeight: 300,
+              letterSpacing: "0.04em", textTransform: "uppercase",
+            }}>Train</span>
+            <span style={{
+              fontFamily: SCRIPT_STACK,
+              fontSize: scriptSize, lineHeight: 0.9,
+              color: BRAND.cambridge, fontWeight: 400,
+              transform: "translateY(0.08em)", display: "inline-block",
+            }}>
+              Together
+            </span>
+            <span style={{
+              fontSize: taglineSize, fontWeight: 300,
+              letterSpacing: "0.04em", textTransform: "uppercase",
+            }}>Prevent</span>
+          </div>
         </div>
+
+        {/* Bottom event-info plinth — only when bound to a specific
+            upcoming event. */}
+        {eventInfo && (dateLine || eventInfo.time || eventInfo.note) && (
+          <div style={{
+            borderTop: `1px solid ${BRAND.cambridge}55`,
+            paddingTop: plinthGap,
+            display: "flex", alignItems: "flex-end", justifyContent: "space-between",
+            gap: 24, flexWrap: "wrap",
+          }}>
+            <div>
+              {dateLine && (
+                <div style={{
+                  fontSize: plinthLabel, fontWeight: 700,
+                  letterSpacing: "0.16em", color: BRAND.cambridge,
+                  textTransform: "uppercase",
+                }}>
+                  {dateLine}
+                </div>
+              )}
+              {eventInfo.time && (
+                <div style={{
+                  fontSize: plinthBig, fontWeight: 700,
+                  color: "#fff", letterSpacing: "-0.01em", marginTop: 4,
+                }}>
+                  {eventInfo.time}
+                </div>
+              )}
+            </div>
+            {eventInfo.note && (
+              <div style={{
+                fontSize: plinthLabel, fontWeight: 700,
+                letterSpacing: "0.18em", color: BRAND.coquelicot,
+                textTransform: "uppercase", textAlign: "right",
+                paddingBottom: 4,
+              }}>
+                {eventInfo.note}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -238,7 +633,13 @@ export function SafetyCouncilGraphic({ mode = "social" }: { mode?: GraphicMode }
    coquelicot-accented "WHEN" stat.
    ============================================================================ */
 
-export function ChamberChatGraphic({ mode = "social" }: { mode?: GraphicMode }) {
+export function ChamberChatGraphic({
+  mode = "social",
+  eventInfo,
+}: {
+  mode?: GraphicMode;
+  eventInfo?: EventInfo;
+}) {
   const isStory = mode === "story";
   const isSquare = mode === "square";
 
@@ -249,16 +650,16 @@ export function ChamberChatGraphic({ mode = "social" }: { mode?: GraphicMode }) 
   // the title sits at the bottom, so the cup goes up top so they don't
   // collide. Centered horizontally for a symmetric vertical composition.
   //
-  // Saucer math: bottom of the outermost saucer ring sits at
-  //   cy + h + 16 + ry*0.8
-  // Social was previously cy=400 → saucer bottom 649.6 on a 630-tall
-  // canvas, so the mug bottom clipped. cy=350 pulls saucer bottom up
-  // to 599.6, leaving a ~30px visual margin.
+  // Story cup needed to move up ~280px (760 → 480) because the new
+  // title-block height (title + tagline + plinth ≈ 700px) was leaving
+  // only ~2px between the saucer bottom and the title top — they were
+  // effectively touching. Also slimmed h slightly so the saucer bottom
+  // lands ~y=820 in story, well above the y=1120 title top.
   const cup = isStory
-    ? { cx: 540, cy: 820,  rx: 260, ry: 65, h: 290 }
+    ? { cx: 540, cy: 480,  rx: 230, ry: 58, h: 250 }
     : isSquare
-    ? { cx: 820, cy: 720,  rx: 200, ry: 50, h: 220 }
-    : { cx: 980, cy: 350,  rx: 170, ry: 42, h: 200 };
+    ? { cx: 820, cy: 600,  rx: 200, ry: 50, h: 220 }
+    : { cx: 980, cy: 320,  rx: 160, ry: 40, h: 180 };
 
   // BN Bergen bold "Chamber" at 260px measures ~1106px wide — wider than
   // the 1080 story canvas, so the final "r" would render past the right
@@ -342,7 +743,16 @@ export function ChamberChatGraphic({ mode = "social" }: { mode?: GraphicMode }) 
         padding,
         display: "flex", flexDirection: "column", justifyContent: "space-between",
       }}>
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        {/* Top rail — chamber wordmark left, icon right (matches the
+            grammar established by Networking WOW + Safety Council v2) */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{
+            fontSize: pick([14, 16, 20] as const, mode),
+            fontWeight: 700, letterSpacing: "0.18em",
+            color: BRAND.cambridge, textTransform: "uppercase",
+          }}>
+            Greater Medina Chamber
+          </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={ASSETS.iconWhite} style={{ height: isStory ? 60 : 44 }} alt="" />
         </div>
@@ -354,7 +764,85 @@ export function ChamberChatGraphic({ mode = "social" }: { mode?: GraphicMode }) 
           <div style={{ fontSize: titleSize, fontWeight: 700, lineHeight: 0.86, letterSpacing: "-0.045em", color: BRAND.cambridge, marginTop: -8 }}>
             Chat
           </div>
+
+          {/* Chamber's actual slogan: "Where Connections Happen" —
+              Mistrully on "Connections" (the relationship word). */}
+          <div style={{
+            marginTop: isStory ? 28 : 16,
+            display: "flex", alignItems: "baseline", flexWrap: "wrap",
+            columnGap: pick([12, 14, 18] as const, mode),
+            rowGap: 4,
+            color: "#fff",
+          }}>
+            <span style={{
+              fontSize: pick([28, 36, 48] as const, mode), fontWeight: 300,
+              letterSpacing: "0.04em", textTransform: "uppercase",
+            }}>Where</span>
+            <span style={{
+              fontFamily: SCRIPT_STACK,
+              fontSize: pick([46, 60, 80] as const, mode), lineHeight: 0.9,
+              color: BRAND.cambridge, fontWeight: 400,
+              transform: "translateY(0.08em)", display: "inline-block",
+            }}>
+              Connections
+            </span>
+            <span style={{
+              fontSize: pick([28, 36, 48] as const, mode), fontWeight: 300,
+              letterSpacing: "0.04em", textTransform: "uppercase",
+            }}>Happen</span>
+          </div>
         </div>
+
+        {/* Bottom event-info plinth — only when bound to a specific
+            upcoming event. */}
+        {eventInfo && (eventInfo.dayOfWeek || eventInfo.time || eventInfo.note) && (
+          <div style={{
+            borderTop: `1px solid ${BRAND.cambridge}55`,
+            paddingTop: pick([18, 22, 28] as const, mode),
+            display: "flex", alignItems: "flex-end", justifyContent: "space-between",
+            gap: 24, flexWrap: "wrap",
+          }}>
+            <div>
+              {(() => {
+                const dateLine = [
+                  eventInfo.dayOfWeek?.substring(0, 3).toUpperCase(),
+                  eventInfo.month && eventInfo.day
+                    ? `${eventInfo.month.toUpperCase()} ${eventInfo.day}${eventInfo.year ? `, ${eventInfo.year}` : ""}`
+                    : null,
+                ]
+                  .filter(Boolean)
+                  .join(" · ");
+                return dateLine ? (
+                  <div style={{
+                    fontSize: pick([18, 22, 28] as const, mode), fontWeight: 700,
+                    letterSpacing: "0.16em", color: BRAND.cambridge,
+                    textTransform: "uppercase",
+                  }}>
+                    {dateLine}
+                  </div>
+                ) : null;
+              })()}
+              {eventInfo.time && (
+                <div style={{
+                  fontSize: pick([28, 34, 40] as const, mode), fontWeight: 700,
+                  color: "#fff", letterSpacing: "-0.01em", marginTop: 4,
+                }}>
+                  {eventInfo.time}
+                </div>
+              )}
+            </div>
+            {eventInfo.note && (
+              <div style={{
+                fontSize: pick([18, 22, 28] as const, mode), fontWeight: 700,
+                letterSpacing: "0.18em", color: BRAND.coquelicot,
+                textTransform: "uppercase", textAlign: "right",
+                paddingBottom: 4,
+              }}>
+                {eventInfo.note}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -693,246 +1181,357 @@ export function RibbonCuttingGraphic({ mode = "social" }: { mode?: GraphicMode }
 }
 
 /* =============================================================================
-   9 — BUSINESS BREW  (redesign v2)
-   Oxford field, warm coquelicot radial glow, cambridge dot texture, a pint
-   of beer clinking a highball cocktail (with ice + citrus wedge), and the
-   event repositioned from morning coffee → after-5 drinks.
+   9 — BUSINESS BREW  (Philip Castle / Kubrick pass)
+
+   The chamber's friendly happy hour rendered like a Castle film poster.
+   Stark cream field. Dead-axial composition. One hyper-stylized
+   centerpiece carries the whole frame:
+
+     a coupe glass, airbrushed in radial gradients (light coquelicot
+     surface → deep coquelicot bottom, white rim highlight, oxford
+     foot shadow), with a single white paper airplane perched on the
+     rim like a swizzle stick.
+
+   Type stacks tight beneath — BUSINESS / BREW in oxford BN Bergen,
+   classical centered, weight as the design. The slogan slashes
+   diagonally across the lower third in coquelicot, the way
+   "ULTRAVIOLENCE" slashed Alex's poster. Plinth becomes credits.
+
+   Negative space carries the tension. The orange is the wound.
    ============================================================================ */
 
-export function BusinessBrewGraphic({ mode = "social" }: { mode?: GraphicMode }) {
+export function BusinessBrewGraphic({
+  mode = "social",
+  eventInfo,
+}: {
+  mode?: GraphicMode;
+  eventInfo?: EventInfo;
+}) {
   const isStory = mode === "story";
   const isSquare = mode === "square";
 
-  const titleSize = pick([180, 220, 260] as const, mode);
-  const vb = isStory ? "0 0 1080 1920" : isSquare ? "0 0 1080 1080" : "0 0 1200 630";
-  const W = isStory ? 1080 : isSquare ? 1080 : 1200;
-  const H = isStory ? 1920 : isSquare ? 1080 : 630;
-
-  // Center point for the pair of glasses + the uniform scale factor
-  const center = isStory
-    ? { cx: 540, cy: 1420, scale: 1.4 }
+  // Glass anchor — strict horizontal center. cy chosen per-mode so
+  // the bowl + stem + foot sits cleanly above the type block, with
+  // a comfortable visual gap. Story has the most vertical room and
+  // gets the biggest glass; social is the tightest.
+  const glass = isStory
+    ? { cx: 540, cy: 620, bowlR: 210, stemH: 120, footR: 85 }
     : isSquare
-    ? { cx: 820, cy: 760,  scale: 1.0 }
-    : { cx: 970, cy: 370,  scale: 0.92 };
-  const s = center.scale;
+    ? { cx: 540, cy: 320, bowlR: 150, stemH: 85,  footR: 65 }
+    : { cx: 600, cy: 180, bowlR: 80,  stemH: 50,  footR: 38 };
 
-  // Pint glass (left) — tapered pilsner shape
-  const pintTopY = center.cy - 260 * s;
-  const pintBotY = center.cy + 60 * s;
-  const pintTopHalf = 90 * s;
-  const pintBotHalf = 65 * s;
-  const pintCx = center.cx - 110 * s;
-  const beerTopY = pintTopY + 14 * s;
-  const beerBotY = pintBotY - 6 * s;
+  const vb = isStory ? "0 0 1080 1920" : isSquare ? "0 0 1080 1080" : "0 0 1200 630";
 
-  // Highball (right) — straight-sided rocks glass
-  const rockTopY = center.cy - 220 * s;
-  const rockBotY = center.cy + 60 * s;
-  const rockHalf = 78 * s;
-  const rockCx = center.cx + 115 * s;
+  // Type sizes — landscape (social) is the tightest format and
+  // gets the most aggressive size pull-back. Square stays mid.
+  // Story keeps the full poster scale.
+  const titleSize = pick([90, 150, 220] as const, mode);
+  const sloganSize = pick([20, 30, 40] as const, mode);
+  const sloganScript = pick([34, 52, 76] as const, mode);
 
-  const glowX = (center.cx / W) * 100;
-  const glowY = (center.cy / H) * 100;
+  // Plinth (credits) sizes
+  const plinthLabel = pick([13, 18, 24] as const, mode);
+  const plinthBig = pick([20, 28, 38] as const, mode);
+
+  // Coupe glass geometry (V-bowl: a triangle with rounded outer edges)
+  const bowlTopY = glass.cy - glass.bowlR;
+  const bowlPointY = glass.cy + glass.bowlR * 0.05;
+  const bowlLeftX = glass.cx - glass.bowlR;
+  const bowlRightX = glass.cx + glass.bowlR;
+  const stemTopY = bowlPointY + 2;
+  const stemBotY = stemTopY + glass.stemH;
+  const footY = stemBotY;
+
+  // Liquid surface (an ellipse cut where the V is at that y)
+  const liquidLevel = bowlTopY + glass.bowlR * 0.18; // small headroom under rim
+  // x-extent of the V at liquidLevel
+  const tProgress = (liquidLevel - bowlTopY) / (bowlPointY - bowlTopY);
+  const liquidHalfW = glass.bowlR * (1 - tProgress * 1);
+  const liquidLeftX = glass.cx - liquidHalfW;
+  const liquidRightX = glass.cx + liquidHalfW;
+
+  // Paper airplane on the rim (right side)
+  const planeBaseX = glass.cx + glass.bowlR * 0.55;
+  const planeBaseY = bowlTopY - 6;
+  const planeR = pick([28, 38, 50] as const, mode);
 
   return (
-    <div style={containerStyle({ background: BRAND.oxford, color: "#fff" })}>
-      {/* Warm coquelicot radial glow behind the glasses */}
-      <div style={{
-        position: "absolute", inset: 0,
-        background: `radial-gradient(circle at ${glowX}% ${glowY}%, ${BRAND.coquelicot}40 0%, transparent 50%)`,
-      }} />
-
+    <div style={containerStyle({ background: BRAND.cream, color: BRAND.oxford })}>
       <svg viewBox={vb} style={svgFillStyle}>
         <defs>
-          <pattern id={`bbdots-${mode}`} x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
-            <circle cx="2" cy="2" r="1.2" fill={BRAND.cambridge} opacity="0.12" />
-          </pattern>
+          {/* Airbrushed liquid — bright orange surface fading into
+              deep coquelicot at the bowl point. */}
+          <radialGradient id={`bbliquid-${mode}`} cx="50%" cy="20%" r="80%">
+            <stop offset="0%"  stopColor="#FF6A2E" />
+            <stop offset="55%" stopColor={BRAND.coquelicot} />
+            <stop offset="100%" stopColor="#9F2400" />
+          </radialGradient>
+          {/* Glass body shimmer — soft highlight along the inner left
+              edge of the bowl. */}
+          <linearGradient id={`bbshine-${mode}`} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"  stopColor="#fff" stopOpacity="0.55" />
+            <stop offset="60%" stopColor="#fff" stopOpacity="0" />
+          </linearGradient>
+          {/* Rim highlight — narrow white-blue arc */}
+          <linearGradient id={`bbrim-${mode}`} x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"  stopColor="#fff" stopOpacity="0" />
+            <stop offset="50%" stopColor="#fff" stopOpacity="0.95" />
+            <stop offset="100%" stopColor="#fff" stopOpacity="0" />
+          </linearGradient>
+          {/* Foot shadow — soft cool gradient under the base */}
+          <radialGradient id={`bbfootshadow-${mode}`} cx="50%" cy="50%" r="50%">
+            <stop offset="0%"  stopColor={BRAND.oxford} stopOpacity="0.3" />
+            <stop offset="100%" stopColor={BRAND.oxford} stopOpacity="0" />
+          </radialGradient>
         </defs>
-        <rect width="100%" height="100%" fill={`url(#bbdots-${mode})`} />
 
-        {/* "Clink" spark lines between the glasses */}
-        <g stroke={BRAND.coquelicot} strokeWidth={isStory ? 5 : 3.5} strokeLinecap="round" fill="none">
-          <path d={`M ${center.cx} ${pintTopY + 40 * s} l ${-18 * s} ${-28 * s}`} />
-          <path d={`M ${center.cx + 18 * s} ${pintTopY + 30 * s} l ${14 * s} ${-24 * s}`} />
-          <path d={`M ${center.cx - 8 * s} ${pintTopY + 70 * s} l ${-26 * s} ${4 * s}`} />
-          <path d={`M ${center.cx + 22 * s} ${pintTopY + 65 * s} l ${26 * s} ${2 * s}`} />
-          <circle
-            cx={center.cx}
-            cy={pintTopY + 44 * s}
-            r={isStory ? 8 : 5}
-            fill={BRAND.coquelicot}
-            stroke="none"
-          />
-        </g>
+        {/* Foot shadow first (behind everything) */}
+        <ellipse
+          cx={glass.cx}
+          cy={footY + 8}
+          rx={glass.footR + 24}
+          ry={glass.footR * 0.18}
+          fill={`url(#bbfootshadow-${mode})`}
+        />
 
-        {/* ── Pint glass (left, tilted -8°) ── */}
-        <g transform={`rotate(-8 ${pintCx} ${pintBotY})`}>
-          {/* Amber beer liquid */}
+        {/* Glass FOOT (base disc) */}
+        <ellipse cx={glass.cx} cy={footY} rx={glass.footR} ry={glass.footR * 0.16} fill={BRAND.oxford} opacity="0.85" />
+        <ellipse cx={glass.cx} cy={footY - 2} rx={glass.footR - 6} ry={glass.footR * 0.12} fill={BRAND.cream} opacity="0.6" />
+
+        {/* Glass STEM */}
+        <rect
+          x={glass.cx - 4}
+          y={stemTopY}
+          width={8}
+          height={glass.stemH}
+          fill={BRAND.oxford}
+          opacity="0.88"
+        />
+        <rect
+          x={glass.cx - 1.5}
+          y={stemTopY}
+          width={3}
+          height={glass.stemH}
+          fill="#fff"
+          opacity="0.45"
+        />
+
+        {/* Liquid (filled V from rim level down to point) — airbrushed */}
+        <path
+          d={`M ${liquidLeftX} ${liquidLevel}
+              L ${liquidRightX} ${liquidLevel}
+              L ${glass.cx} ${bowlPointY}
+              Z`}
+          fill={`url(#bbliquid-${mode})`}
+        />
+        {/* Liquid surface highlight — thin ellipse at the rim line */}
+        <ellipse
+          cx={glass.cx}
+          cy={liquidLevel}
+          rx={liquidHalfW}
+          ry={liquidHalfW * 0.16}
+          fill="#FF8C5A"
+          opacity="0.85"
+        />
+        {/* Subtle inner-bowl shadow on the liquid (dark crescent at the
+            point, suggests depth) */}
+        <ellipse
+          cx={glass.cx}
+          cy={bowlPointY - liquidHalfW * 0.28}
+          rx={liquidHalfW * 0.45}
+          ry={liquidHalfW * 0.16}
+          fill="#4A0E00"
+          opacity="0.35"
+        />
+
+        {/* Glass BOWL outline (V) — oxford lines with airbrush shine
+            overlay for depth */}
+        <path
+          d={`M ${bowlLeftX} ${bowlTopY}
+              L ${glass.cx} ${bowlPointY}
+              L ${bowlRightX} ${bowlTopY}`}
+          fill="none"
+          stroke={BRAND.oxford}
+          strokeWidth={3}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        {/* Inner shine sliver */}
+        <path
+          d={`M ${bowlLeftX + 8} ${bowlTopY + 6}
+              L ${glass.cx - 6} ${bowlPointY - 18}`}
+          fill="none"
+          stroke={`url(#bbshine-${mode})`}
+          strokeWidth={4}
+          strokeLinecap="round"
+        />
+
+        {/* Rim — single crisp ellipse cap */}
+        <ellipse
+          cx={glass.cx}
+          cy={bowlTopY}
+          rx={glass.bowlR}
+          ry={glass.bowlR * 0.14}
+          fill="none"
+          stroke={BRAND.oxford}
+          strokeWidth={3}
+        />
+        {/* Rim highlight — bright crest along top half of the ellipse */}
+        <path
+          d={`M ${bowlLeftX + glass.bowlR * 0.2} ${bowlTopY - glass.bowlR * 0.04}
+              Q ${glass.cx} ${bowlTopY - glass.bowlR * 0.18}
+                ${bowlRightX - glass.bowlR * 0.2} ${bowlTopY - glass.bowlR * 0.04}`}
+          fill="none"
+          stroke={`url(#bbrim-${mode})`}
+          strokeWidth={3}
+        />
+
+        {/* Paper airplane perched on the right rim */}
+        <g transform={`translate(${planeBaseX} ${planeBaseY}) rotate(-18)`}>
           <path
-            d={`M ${pintCx - pintTopHalf + 6 * s} ${beerTopY}
-                L ${pintCx + pintTopHalf - 6 * s} ${beerTopY}
-                L ${pintCx + pintBotHalf - 4 * s} ${beerBotY}
-                L ${pintCx - pintBotHalf + 4 * s} ${beerBotY} Z`}
-            fill="#E8A13A"
-          />
-          {/* Liquid shine */}
-          <rect
-            x={pintCx - pintTopHalf + 20 * s}
-            y={beerTopY + 20 * s}
-            width={8 * s}
-            height={180 * s}
-            fill="rgba(255,255,255,0.22)"
-            rx={3 * s}
-          />
-
-          {/* Foam head — four overlapping ellipses */}
-          <ellipse cx={pintCx}                              cy={beerTopY + 4 * s}   rx={pintTopHalf - 4 * s}  ry={14 * s} fill="#FFF5DC" />
-          <ellipse cx={pintCx - pintTopHalf * 0.45}         cy={beerTopY - 8 * s}   rx={18 * s}               ry={14 * s} fill="#FFF5DC" />
-          <ellipse cx={pintCx + pintTopHalf * 0.2}          cy={beerTopY - 14 * s}  rx={22 * s}               ry={16 * s} fill="#FFF5DC" />
-          <ellipse cx={pintCx + pintTopHalf * 0.5}          cy={beerTopY - 6 * s}   rx={14 * s}               ry={12 * s} fill="#FFF5DC" />
-
-          {/* Glass outline */}
-          <path
-            d={`M ${pintCx - pintTopHalf} ${pintTopY}
-                L ${pintCx + pintTopHalf} ${pintTopY}
-                L ${pintCx + pintBotHalf} ${pintBotY}
-                L ${pintCx - pintBotHalf} ${pintBotY} Z`}
-            fill="none"
-            stroke="#fff"
-            strokeWidth={isStory ? 6 : 4}
+            d={`M ${-planeR} ${planeR * 0.3}
+                L ${planeR} ${-planeR * 0.55}
+                L ${planeR * 0.08} ${planeR * 0.06}
+                Z`}
+            fill="#fff"
+            stroke={BRAND.oxford}
+            strokeWidth={1.5}
             strokeLinejoin="round"
           />
-
-          {/* Bubbles */}
-          {[0, 1, 2, 3, 4].map((i) => (
-            <circle
-              key={i}
-              cx={pintCx + (i % 2 ? -18 : 20) * s + (i * 6 - 14) * s}
-              cy={beerTopY + (30 + i * 38) * s}
-              r={(3 + (i % 3)) * s}
-              fill="rgba(255,255,255,0.6)"
-            />
-          ))}
-        </g>
-
-        {/* ── Highball glass (right, tilted +8°) ── */}
-        <g transform={`rotate(8 ${rockCx} ${rockBotY})`}>
-          {/* Coquelicot cocktail */}
-          <rect
-            x={rockCx - rockHalf + 6 * s}
-            y={rockTopY + 60 * s}
-            width={(rockHalf - 6 * s) * 2}
-            height={rockBotY - rockTopY - 66 * s}
-            fill={BRAND.coquelicot}
-          />
-          {/* Liquid surface ellipse */}
-          <ellipse
-            cx={rockCx}
-            cy={rockTopY + 60 * s}
-            rx={rockHalf - 6 * s}
-            ry={10 * s}
-            fill="#FF6633"
-          />
-          {/* Liquid shine */}
-          <rect
-            x={rockCx - rockHalf + 16 * s}
-            y={rockTopY + 80 * s}
-            width={6 * s}
-            height={150 * s}
-            fill="rgba(255,255,255,0.3)"
-            rx={3 * s}
-          />
-
-          {/* Ice cubes */}
-          <rect
-            x={rockCx - 32 * s}
-            y={rockTopY + 30 * s}
-            width={44 * s}
-            height={44 * s}
-            fill="rgba(255,255,255,0.55)"
-            stroke="#fff"
-            strokeWidth={2 * s}
-            rx={4 * s}
-            transform={`rotate(-6 ${rockCx - 10 * s} ${rockTopY + 52 * s})`}
-          />
-          <rect
-            x={rockCx - 6 * s}
-            y={rockTopY + 58 * s}
-            width={38 * s}
-            height={38 * s}
-            fill="rgba(255,255,255,0.4)"
-            stroke="#fff"
-            strokeWidth={2 * s}
-            rx={4 * s}
-            transform={`rotate(12 ${rockCx + 13 * s} ${rockTopY + 77 * s})`}
-          />
-
-          {/* Citrus wedge on the rim */}
-          <g transform={`translate(${rockCx + rockHalf - 10 * s} ${rockTopY - 4 * s})`}>
-            <circle r={18 * s} fill="#FFD542" stroke="#fff" strokeWidth={2 * s} />
-            <circle r={14 * s} fill="#FFE57A" />
-            <path
-              d={`M 0 ${-12 * s} L 0 ${12 * s} M ${-12 * s} 0 L ${12 * s} 0
-                  M ${-8 * s} ${-8 * s} L ${8 * s} ${8 * s} M ${-8 * s} ${8 * s} L ${8 * s} ${-8 * s}`}
-              stroke="#fff"
-              strokeWidth={1.5 * s}
-            />
-          </g>
-
-          {/* Glass outline — straight-sided */}
-          <rect
-            x={rockCx - rockHalf}
-            y={rockTopY}
-            width={rockHalf * 2}
-            height={rockBotY - rockTopY}
-            fill="none"
-            stroke="#fff"
-            strokeWidth={isStory ? 6 : 4}
+          <path
+            d={`M ${-planeR} ${planeR * 0.3}
+                L ${planeR * 0.08} ${planeR * 0.06}
+                L ${planeR * 0.4} ${planeR * 0.5}
+                Z`}
+            fill="#F0E6D6"
+            stroke={BRAND.oxford}
+            strokeWidth={1.5}
             strokeLinejoin="round"
-            rx={4 * s}
+          />
+          <line
+            x1={-planeR}
+            y1={planeR * 0.3}
+            x2={planeR * 0.08}
+            y2={planeR * 0.06}
+            stroke={BRAND.oxford}
+            strokeWidth={1.5}
           />
         </g>
-
-        {/* Shadows under each glass */}
-        <ellipse
-          cx={pintCx}
-          cy={pintBotY + 10 * s}
-          rx={pintBotHalf + 14 * s}
-          ry={8 * s}
-          fill="rgba(0,0,0,0.35)"
-          transform={`rotate(-8 ${pintCx} ${pintBotY})`}
-        />
-        <ellipse
-          cx={rockCx}
-          cy={rockBotY + 10 * s}
-          rx={rockHalf + 10 * s}
-          ry={8 * s}
-          fill="rgba(0,0,0,0.35)"
-          transform={`rotate(8 ${rockCx} ${rockBotY})`}
-        />
       </svg>
 
-      {/* Content layer */}
+      {/* Content layer — three flex children pinned by justify-between:
+          (1) icon at top, (2) title block anchored above plinth via
+          mt:auto, (3) plinth at bottom. The SVG glass renders in the
+          empty middle gap. No marginTop kludge. */}
       <div style={{
         position: "relative", zIndex: 2, height: "100%",
-        padding: isStory ? "110px 72px 100px" : isSquare ? "72px 64px" : "56px 64px",
-        display: "flex", flexDirection: "column", justifyContent: "space-between",
+        padding: isStory ? "60px 64px 72px" : isSquare ? "44px 56px 56px" : "28px 48px 36px",
+        display: "flex", flexDirection: "column",
+        alignItems: "stretch", textAlign: "center",
       }}>
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        {/* Top rail — icon only */}
+        <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={ASSETS.iconWhite} style={{ height: isStory ? 60 : 44 }} alt="" />
+          <img src={ASSETS.iconOrange} style={{ height: isStory ? 56 : 36, opacity: 0.95 }} alt="" />
         </div>
 
-        <div style={{ maxWidth: isStory ? 720 : isSquare ? 620 : 640 }}>
+        {/* Title + slogan block — mt:auto pushes it to the bottom of
+            the available space, just above the plinth. The glass
+            occupies the gap between the icon row and this block. */}
+        <div style={{ marginTop: "auto" }}>
           <div style={{
             fontSize: titleSize, fontWeight: 700, lineHeight: 0.86,
-            letterSpacing: "-0.045em", color: "#fff",
+            letterSpacing: "-0.045em", color: BRAND.oxford,
           }}>Business</div>
           <div style={{
             fontSize: titleSize, fontWeight: 700, lineHeight: 0.86,
-            letterSpacing: "-0.045em", color: BRAND.coquelicot, marginTop: -8,
+            letterSpacing: "-0.045em", color: BRAND.coquelicot, marginTop: -6,
           }}>Brew</div>
+
+          {/* Slashed slogan — single line tilted -3°, centered. The
+              "ULTRAVIOLENCE" gesture, civilized. Mistrully word in
+              oxford for inverted contrast on the cream field. */}
+          <div style={{
+            marginTop: isStory ? 28 : 14,
+            display: "flex", alignItems: "baseline", justifyContent: "center",
+            flexWrap: "wrap",
+            columnGap: pick([8, 10, 14] as const, mode),
+            rowGap: 4,
+            transform: "rotate(-3deg)",
+            transformOrigin: "center center",
+          }}>
+            <span style={{
+              fontSize: sloganSize, fontWeight: 400,
+              letterSpacing: "0.16em", textTransform: "uppercase",
+              color: BRAND.coquelicot,
+            }}>Where</span>
+            <span style={{
+              fontFamily: SCRIPT_STACK,
+              fontSize: sloganScript, lineHeight: 0.9,
+              color: BRAND.oxford, fontWeight: 400,
+              display: "inline-block",
+              transform: "translateY(0.18em)",
+            }}>
+              Networking
+            </span>
+            <span style={{
+              fontSize: sloganSize, fontWeight: 400,
+              letterSpacing: "0.16em", textTransform: "uppercase",
+              color: BRAND.coquelicot,
+            }}>Takes Flight</span>
+          </div>
         </div>
+
+        {/* Plinth as movie credits — pinned to the canvas bottom */}
+        {eventInfo && (eventInfo.dayOfWeek || eventInfo.time || eventInfo.note) && (
+          <div style={{
+            marginTop: pick([14, 20, 26] as const, mode),
+            borderTop: `1px solid ${BRAND.oxford}33`,
+            paddingTop: pick([10, 16, 22] as const, mode),
+            display: "flex", alignItems: "flex-end", justifyContent: "space-between",
+            gap: 18, flexWrap: "wrap",
+          }}>
+            <div style={{ textAlign: "left" }}>
+              {(() => {
+                const dateLine = [
+                  eventInfo.dayOfWeek?.substring(0, 3).toUpperCase(),
+                  eventInfo.month && eventInfo.day
+                    ? `${eventInfo.month.toUpperCase()} ${eventInfo.day}${eventInfo.year ? `, ${eventInfo.year}` : ""}`
+                    : null,
+                ]
+                  .filter(Boolean)
+                  .join(" · ");
+                return dateLine ? (
+                  <div style={{
+                    fontSize: plinthLabel, fontWeight: 700,
+                    letterSpacing: "0.18em", color: BRAND.oxford,
+                    textTransform: "uppercase", opacity: 0.7,
+                  }}>
+                    {dateLine}
+                  </div>
+                ) : null;
+              })()}
+              {eventInfo.time && (
+                <div style={{
+                  fontSize: plinthBig, fontWeight: 700,
+                  color: BRAND.oxford, letterSpacing: "-0.01em", marginTop: 2,
+                }}>
+                  {eventInfo.time}
+                </div>
+              )}
+            </div>
+            {eventInfo.note && (
+              <div style={{
+                fontSize: plinthLabel, fontWeight: 700,
+                letterSpacing: "0.18em", color: BRAND.coquelicot,
+                textTransform: "uppercase", textAlign: "right",
+                paddingBottom: 2,
+              }}>
+                {eventInfo.note}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -1055,9 +1654,11 @@ export function EggsExpertiseGraphic({
   // simplified graphic no longer displays it. The card/page below can
   // still show the specific monthly topic.
   topic: _topic = "Canva 101",
+  eventInfo,
 }: {
   mode?: GraphicMode;
   topic?: string;
+  eventInfo?: EventInfo;
 }) {
   const isStory = mode === "story";
   const isSquare = mode === "square";
@@ -1150,10 +1751,18 @@ export function EggsExpertiseGraphic({
 
       <div style={{
         position: "relative", height: "100%",
-        padding: isStory ? "110px 72px 100px" : isSquare ? "72px 64px" : "56px 64px",
+        padding: isStory ? "72px 72px 84px" : isSquare ? "56px 64px 64px" : "44px 64px 52px",
         display: "flex", flexDirection: "column", justifyContent: "space-between",
       }}>
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        {/* Top rail — chamber wordmark left, icon right */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{
+            fontSize: pick([14, 16, 20] as const, mode),
+            fontWeight: 700, letterSpacing: "0.18em",
+            color: BRAND.cambridge, textTransform: "uppercase",
+          }}>
+            Greater Medina Chamber
+          </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={ASSETS.iconWhite} style={{ height: isStory ? 60 : 44, opacity: 0.95 }} alt="" />
         </div>
@@ -1174,7 +1783,80 @@ export function EggsExpertiseGraphic({
           }}>
             Expertise
           </div>
+
+          {/* Chamber's actual slogan: "Serving Up Knowledge" —
+              Mistrully on "Knowledge" (the payoff word). */}
+          <div style={{
+            marginTop: isStory ? 28 : 16,
+            display: "flex", alignItems: "baseline", flexWrap: "wrap",
+            columnGap: pick([12, 14, 18] as const, mode),
+            rowGap: 4,
+            color: "#fff",
+          }}>
+            <span style={{
+              fontSize: pick([28, 36, 48] as const, mode), fontWeight: 300,
+              letterSpacing: "0.04em", textTransform: "uppercase",
+            }}>Serving Up</span>
+            <span style={{
+              fontFamily: SCRIPT_STACK,
+              fontSize: pick([46, 60, 80] as const, mode), lineHeight: 0.9,
+              color: BRAND.cambridge, fontWeight: 400,
+              transform: "translateY(0.08em)", display: "inline-block",
+            }}>
+              Knowledge
+            </span>
+          </div>
         </div>
+
+        {/* Event-info plinth */}
+        {eventInfo && (eventInfo.dayOfWeek || eventInfo.time || eventInfo.note) && (
+          <div style={{
+            borderTop: `1px solid ${BRAND.cambridge}55`,
+            paddingTop: pick([18, 22, 28] as const, mode),
+            display: "flex", alignItems: "flex-end", justifyContent: "space-between",
+            gap: 24, flexWrap: "wrap",
+          }}>
+            <div>
+              {(() => {
+                const dateLine = [
+                  eventInfo.dayOfWeek?.substring(0, 3).toUpperCase(),
+                  eventInfo.month && eventInfo.day
+                    ? `${eventInfo.month.toUpperCase()} ${eventInfo.day}${eventInfo.year ? `, ${eventInfo.year}` : ""}`
+                    : null,
+                ]
+                  .filter(Boolean)
+                  .join(" · ");
+                return dateLine ? (
+                  <div style={{
+                    fontSize: pick([18, 22, 28] as const, mode), fontWeight: 700,
+                    letterSpacing: "0.16em", color: BRAND.cambridge,
+                    textTransform: "uppercase",
+                  }}>
+                    {dateLine}
+                  </div>
+                ) : null;
+              })()}
+              {eventInfo.time && (
+                <div style={{
+                  fontSize: pick([28, 34, 40] as const, mode), fontWeight: 700,
+                  color: "#fff", letterSpacing: "-0.01em", marginTop: 4,
+                }}>
+                  {eventInfo.time}
+                </div>
+              )}
+            </div>
+            {eventInfo.note && (
+              <div style={{
+                fontSize: pick([18, 22, 28] as const, mode), fontWeight: 700,
+                letterSpacing: "0.18em", color: BRAND.coquelicot,
+                textTransform: "uppercase", textAlign: "right",
+                paddingBottom: 4,
+              }}>
+                {eventInfo.note}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -1226,6 +1908,47 @@ export interface EventGraphicEntry {
 export interface EventLike {
   slug: string;
   title?: string;
+  // Optional event-instance fields. When provided, graphics that support
+  // an event-info plinth (currently NetworkingWow) will render the
+  // bottom date/time/registration band.
+  dayOfWeek?: string;
+  month?: string;
+  day?: number;
+  year?: number;
+  startTime?: string;
+  pricing?: string;
+}
+
+/** Build the EventInfo bag that bound graphic components can render. */
+function eventInfoFor(event: EventLike): EventInfo {
+  // Right-side plinth note. Three buckets, derived from pricing copy:
+  //   1. "Registration Required"     — events where the chamber explicitly
+  //      blocks walk-ins (Networking WOW, Safety Council, paid programs).
+  //   2. "Free · Walk-Ins Welcome"   — free, casual events where the
+  //      chamber's copy says registration is preferred but not required
+  //      (Chamber Chat, Business Brew, Get to Know).
+  //   3. undefined                   — fallback; the plinth right side
+  //      is empty.
+  let note: string | undefined;
+  const p = event.pricing ?? "";
+  if (/registration required|walk-ins are not permitted|advanced registration required/i.test(p)) {
+    note = "Registration Required";
+  } else if (/no cost|free/i.test(p) && /preferred but not required|registration preferred/i.test(p)) {
+    note = "Free · Walk-Ins Welcome";
+  } else if (/^\s*\$\d/.test(p)) {
+    // Paid events without an explicit walk-in clause (Member Meeting,
+    // Eggs & Expertise, Golf) — the dollar amount up top means people
+    // need to register to pay, so the badge applies.
+    note = "Registration Required";
+  }
+  return {
+    dayOfWeek: event.dayOfWeek,
+    month: event.month,
+    day: event.day,
+    year: event.year,
+    time: event.startTime,
+    note,
+  };
 }
 
 export function getEventGraphicRenderer(
@@ -1238,10 +1961,38 @@ export function getEventGraphicRenderer(
   if (s.includes("athena") || t.includes("athena")) return AthenaAwardsGraphic;
   if (s.includes("ribbon") || t.includes("ribbon cutting")) return RibbonCuttingGraphic;
   if (s.includes("social-connect") || t.includes("social connect")) return SocialConnectGraphic;
-  if (s.startsWith("networking-wow") || t.includes("networking wow")) return NetworkingWowGraphic;
-  if (s.startsWith("safety-council")) return SafetyCouncilGraphic;
-  if (s.startsWith("chamber-chat")) return ChamberChatGraphic;
-  if (s.startsWith("business-brew")) return BusinessBrewGraphic;
+  if (s.startsWith("networking-wow") || t.includes("networking wow")) {
+    const info = eventInfoFor(event);
+    const Bound: React.FC<{ mode?: GraphicMode }> = (props) => (
+      <NetworkingWowGraphic {...props} eventInfo={info} />
+    );
+    Bound.displayName = "NetworkingWowGraphic(bound)";
+    return Bound;
+  }
+  if (s.startsWith("safety-council")) {
+    const info = eventInfoFor(event);
+    const Bound: React.FC<{ mode?: GraphicMode }> = (props) => (
+      <SafetyCouncilGraphic {...props} eventInfo={info} />
+    );
+    Bound.displayName = "SafetyCouncilGraphic(bound)";
+    return Bound;
+  }
+  if (s.startsWith("chamber-chat")) {
+    const info = eventInfoFor(event);
+    const Bound: React.FC<{ mode?: GraphicMode }> = (props) => (
+      <ChamberChatGraphic {...props} eventInfo={info} />
+    );
+    Bound.displayName = "ChamberChatGraphic(bound)";
+    return Bound;
+  }
+  if (s.startsWith("business-brew")) {
+    const info = eventInfoFor(event);
+    const Bound: React.FC<{ mode?: GraphicMode }> = (props) => (
+      <BusinessBrewGraphic {...props} eventInfo={info} />
+    );
+    Bound.displayName = "BusinessBrewGraphic(bound)";
+    return Bound;
+  }
   if (
     s.startsWith("chamber-member-meeting") ||
     s.startsWith("member-meeting") ||
@@ -1251,15 +2002,17 @@ export function getEventGraphicRenderer(
   }
   if (s.startsWith("get-to-know")) return GetToKnowGraphic;
   if (s.startsWith("eggs-expertise")) {
+    const info = eventInfoFor(event);
     // Slug suffix carries the topic: "eggs-expertise-canva-101" → "Canva 101"
     const suffix = s.replace(/^eggs-expertise-?/, "");
-    if (!suffix) return EggsExpertiseGraphic;
     const topic = suffix
-      .split("-")
-      .map((w) => (/^\d+$/.test(w) ? w : w.charAt(0).toUpperCase() + w.slice(1)))
-      .join(" ");
+      ? suffix
+          .split("-")
+          .map((w) => (/^\d+$/.test(w) ? w : w.charAt(0).toUpperCase() + w.slice(1)))
+          .join(" ")
+      : "Canva 101";
     const BoundEggs: React.FC<{ mode?: GraphicMode }> = (props) => (
-      <EggsExpertiseGraphic {...props} topic={topic} />
+      <EggsExpertiseGraphic {...props} topic={topic} eventInfo={info} />
     );
     BoundEggs.displayName = `EggsExpertiseGraphic(${topic})`;
     return BoundEggs;

@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
@@ -23,6 +24,13 @@ interface Partner {
   /** 1-line descriptor of what the relationship is. */
   tagline: string;
   external?: boolean;
+  /**
+   * Optional scale for the logo image inside its tile. A few source
+   * PNGs (Hunter Consulting in particular) ship with heavy internal
+   * whitespace that makes the actual mark render smaller than tiles
+   * whose art fills edge-to-edge. A per-tile scale bump levels them.
+   */
+  logoScale?: number;
 }
 
 const PARTNERS: Partner[] = [
@@ -56,6 +64,10 @@ const PARTNERS: Partner[] = [
     logo: "/images/partners/hunter-consulting.png",
     href: "/membership/savings",
     tagline: "Workers' compensation savings",
+    // Source PNG has heavy internal whitespace; a small scale bump
+    // brings its visual weight in line with neighbors without making
+    // the horn/wordmark crowd the tile edges.
+    logoScale: 1.15,
   },
   {
     name: "Medina City Schools",
@@ -87,7 +99,14 @@ export function PartnersMarquee() {
             {PARTNERS.map((p) => {
               const inner = (
                 <>
-                  <div className="pm-tile__logo">
+                  <div
+                    className="pm-tile__logo"
+                    style={
+                      p.logoScale
+                        ? ({ "--pm-logo-scale": p.logoScale } as CSSProperties)
+                        : undefined
+                    }
+                  >
                     <Image
                       src={p.logo}
                       alt={`${p.name} logo — Medina Chamber partner`}

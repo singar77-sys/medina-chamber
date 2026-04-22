@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { events, getEventBySlug, eventMetaDescription } from "@/data/events";
+import { getEventGraphicRenderer } from "@/components/events/graphics/EventGraphics";
+import { FluidGraphicFrame } from "@/components/events/graphics/FluidGraphicFrame";
 
 import { safeJsonLd } from "@/lib/json-ld";
 import { headers } from "next/headers";
@@ -92,6 +94,8 @@ export default async function EventPage(
     ? event.pricing.split("\n").filter(Boolean)
     : [];
 
+  const Graphic = getEventGraphicRenderer(event);
+
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -141,8 +145,19 @@ export default async function EventPage(
               {event.startTime} – {event.endTime}
             </p>
 
-            {/* Image */}
-            {event.image && (
+            {/* Hero — prefer the branded SVG graphic; fall back to the
+                cloudinary event image only if the slug doesn't map to one
+                of the 11 graphic templates. */}
+            {Graphic ? (
+              <figure className="mt-8 rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary m-0">
+                <FluidGraphicFrame mode="social">
+                  <Graphic mode="social" />
+                </FluidGraphicFrame>
+                <figcaption className="sr-only">
+                  {event.title} — Greater Medina Chamber of Commerce event on {event.dayOfWeek}, {event.month} {event.day}, {event.year} in Medina, Ohio
+                </figcaption>
+              </figure>
+            ) : event.image ? (
               <figure className="mt-8 rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary m-0">
                 <Image
                   src={event.image}
@@ -155,7 +170,7 @@ export default async function EventPage(
                   {event.title} — Greater Medina Chamber of Commerce event on {event.dayOfWeek}, {event.month} {event.day}, {event.year} in Medina, Ohio
                 </figcaption>
               </figure>
-            )}
+            ) : null}
 
             {/* Location */}
             <div className="mt-10">

@@ -151,12 +151,15 @@ function contextForPath(pathname: string): PageContext {
   }
 
   // Default — homepage / everything else.
-  // Generic-default prompts come from the shared module so the portal
-  // and the bubble panel show the same starter set on first open.
+  // Subtitle leans into what differentiates ChamberBot from generic AI:
+  // it's trained on the chamber's actual member directory + live event
+  // calendar, not the open internet. That's the one thing ChatGPT can't do.
+  // Generic-default prompts come from the shared module so the portal and
+  // the bubble panel show the same starter set on first open.
   return {
     greeting: "Hi! I'm the ChamberBot.",
     subtitle:
-      "Ask me about member businesses, events, membership, or anything about the chamber.",
+      "Not the average AI. I know all 511 chamber members by name and the whole event calendar by heart. Try me.",
     prompts: [...DEFAULT_PROMPTS].slice(0, 4),
   };
 }
@@ -409,7 +412,10 @@ export function ChatWidget() {
               </div>
               <div>
                 <p className="text-body-sm font-bold text-white leading-none">ChamberBot</p>
-                <p className="text-[11px] text-cambridge mt-0.5">ChamberBot · Medina Chamber</p>
+                <p className="text-[11px] text-cambridge mt-0.5">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-cambridge mr-1.5 align-middle" />
+                  Live · Medina Chamber
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-1">

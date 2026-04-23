@@ -1976,30 +1976,18 @@ body {
   will-change: opacity, scale;
 }
 
-/* Inner group carries the slow spin — 180s per full turn. Using a
-   plain `transform: rotate()` keyframe on a child is more reliable
-   than the standalone `rotate` property on the root when multiple
-   animations stack, and the viewBox is centered at (0, 0) so we
-   don't need to touch transform-origin. */
+/* Inner rotor — spin removed, element kept for SVG structure. */
 .vp-rotor {
   transform-origin: 0 0;
-  animation: vpSpin 180s linear infinite;
-  will-change: transform;
 }
 
-/* Watermark opacity scales with theme, and is dialed down 15% from
-   the original so it reads as atmosphere rather than decoration. */
-:root[data-theme="light"] .vp-watermark { --vp-floor: 0.047; --vp-peak: 0.094; }
-:root[data-theme="dark"]  .vp-watermark { --vp-floor: 0.068; --vp-peak: 0.136; }
+/* Opacity dialed well back — reads as texture, not decoration. */
+:root[data-theme="light"] .vp-watermark { --vp-floor: 0.022; --vp-peak: 0.044; }
+:root[data-theme="dark"]  .vp-watermark { --vp-floor: 0.032; --vp-peak: 0.062; }
 
 @keyframes vpBreath {
-  0%,  100% { opacity: var(--vp-floor, 0.05); scale: 1.000; }
-  50%       { opacity: var(--vp-peak,  0.10); scale: 1.015; }
-}
-
-@keyframes vpSpin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  0%,  100% { opacity: var(--vp-floor, 0.03); scale: 1.000; }
+  50%       { opacity: var(--vp-peak,  0.06); scale: 1.015; }
 }
 
 /* Per-section size tweak only — no offset, watermark sits dead center
@@ -2014,7 +2002,7 @@ body {
   .vp-rotor {
     animation: none;
   }
-  .vp-watermark { opacity: var(--vp-floor, 0.06); }
+  .vp-watermark { opacity: var(--vp-floor, 0.03); }
 }
 
 /* ============================================================
@@ -2567,7 +2555,7 @@ body {
   overflow: hidden;
   isolation: isolate;
   color: var(--paper);
-  font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   opacity: 0;
   pointer-events: none;
@@ -2838,24 +2826,31 @@ body {
 }
 
 /* ── Welcome screen ───────────────────────────────────────────── */
-.cb-portal .welcome { display: flex; flex-direction: column; gap: 12px; }
+.cb-portal .welcome { display: flex; flex-direction: column; gap: 14px; }
 .cb-portal .welcome-eyebrow { color: var(--cambridge); margin-bottom: 6px; }
 
 .cb-portal .mode-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
 }
 .cb-portal .mode-btn {
-  display: grid;
-  grid-template-rows: auto auto auto;
-  gap: 4px; align-items: start;
-  padding: 12px;
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 16px;
   background: rgba(131, 188, 169, 0.04);
   border: 1px solid var(--edge); border-radius: 3px;
   color: var(--paper); cursor: pointer; text-align: left;
-  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: border-color 220ms ease, background 220ms ease, transform 180ms ease;
   font: inherit;
   opacity: 0;
   animation: cbModeBtnIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+/* Left accent wipe — slides up from bottom on hover */
+.cb-portal .mode-btn::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+  background: var(--cambridge);
+  transform: scaleY(0); transform-origin: bottom center;
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .cb-portal .mode-grid .mode-btn:nth-child(1) { animation-delay: 0.8s; }
 .cb-portal .mode-grid .mode-btn:nth-child(2) { animation-delay: 0.9s; }
@@ -2866,19 +2861,23 @@ body {
   100% { opacity: 1; transform: none; }
 }
 .cb-portal .mode-btn:hover {
-  border-color: var(--cambridge);
+  border-color: var(--edge-strong);
   background: rgba(131, 188, 169, 0.09);
   transform: translateY(-1px);
 }
+.cb-portal .mode-btn:hover::before { transform: scaleY(1); }
+.cb-portal .mode-btn:active { transform: scale(0.98); transition-duration: 80ms; }
 .cb-portal .mode-glyph {
-  font-size: 18px; color: var(--cambridge);
-  width: 28px; height: 28px;
-  display: grid; place-items: center;
-  border: 1px solid var(--edge); border-radius: 2px;
-  background: rgba(0,0,0,0.3);
+  font-size: 22px; color: var(--cambridge-soft);
+  line-height: 1; display: block; margin-bottom: 2px;
+  transition: color 220ms, transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.cb-portal .mode-head { font-weight: 500; font-size: 13.5px; letter-spacing: -0.005em; line-height: 1.25; }
-.cb-portal .mode-sub { color: var(--paper-fade); }
+.cb-portal .mode-btn:hover .mode-glyph {
+  color: var(--cambridge);
+  transform: scale(1.18) translateX(2px);
+}
+.cb-portal .mode-head { font-weight: 500; font-size: 14px; letter-spacing: -0.01em; line-height: 1.2; }
+.cb-portal .mode-sub { font-size: 10px; color: var(--paper-fade); margin-top: 1px; }
 
 /* ── Transcript ─────────────────────────────────────────────────── */
 .cb-portal .transcript { display: flex; flex-direction: column; gap: 18px; }
@@ -3035,7 +3034,6 @@ body {
   .cb-portal .rail-item:nth-child(n+4):not(.rail-spacer) { display: none; }
 }
 @media (max-width: 600px) {
-  .cb-portal .mode-grid { grid-template-columns: repeat(2, 1fr); }
   .cb-portal .scene { padding: 16px; gap: 16px; }
 }
 

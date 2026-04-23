@@ -44,6 +44,7 @@ interface PageContext {
   greeting: string;
   subtitle: ReactNode;
   prompts: string[];
+  showPortalCta?: boolean;
 }
 
 function contextForPath(pathname: string): PageContext {
@@ -151,24 +152,11 @@ function contextForPath(pathname: string): PageContext {
   }
 
   // Default — homepage / everything else.
-  // Subtitle leans into what differentiates ChamberBot from generic AI:
-  // it's trained on the chamber's actual member directory + live event
-  // calendar, not the open internet. That's the one thing ChatGPT can't do.
-  // Generic-default prompts come from the shared module so the portal and
-  // the bubble panel show the same starter set on first open.
   return {
-    greeting: "Not the average chatbot.",
-    subtitle: (
-      <>
-        I know all 511 chamber members by name and the whole event calendar by
-        heart.{" "}
-        <Link href="/chamberbot" className="underline underline-offset-2 hover:text-text-primary transition-colors">
-          Try me on full screen
-        </Link>{" "}
-        or keep chatting here.
-      </>
-    ),
-    prompts: [...DEFAULT_PROMPTS].slice(0, 4),
+    greeting: "Your Medina Chamber concierge.",
+    subtitle: "511 members, live events, every program — ask me anything.",
+    prompts: [...DEFAULT_PROMPTS],
+    showPortalCta: true,
   };
 }
 
@@ -492,14 +480,46 @@ export function ChatWidget() {
           {/* Messages */}
           <div className="overflow-y-auto px-4 py-4 space-y-4 min-h-[200px] max-h-[400px]">
             {!hasMessages && (
-              <div className="text-center py-6">
+              <div className="py-5 px-1">
                 <p className="text-body-sm font-bold text-text-primary">
                   {ctx.greeting}
                 </p>
-                <p className="text-caption text-text-tertiary mt-1 max-w-xs mx-auto">
+                <p className="text-caption text-text-tertiary mt-1">
                   {ctx.subtitle}
                 </p>
-                <div className="mt-4 flex flex-wrap gap-2 justify-center">
+
+                {/* Full-screen concierge CTA — only on the generic/default context */}
+                {ctx.showPortalCta && (
+                  <Link
+                    href="/chamberbot"
+                    className="
+                      mt-4 flex items-center justify-between gap-3
+                      px-4 py-3 w-full
+                      bg-oxford border border-cambridge/25
+                      rounded-[var(--radius-md)]
+                      group hover:border-cambridge/60 hover:bg-oxford/80
+                      transition-all duration-200
+                    "
+                  >
+                    <div className="min-w-0">
+                      <p className="text-[12px] font-bold text-white leading-tight">
+                        Open the full experience
+                      </p>
+                      <p className="text-[10.5px] text-cambridge mt-0.5 leading-tight">
+                        Holographic portal · all concierge modes
+                      </p>
+                    </div>
+                    <svg
+                      className="w-4 h-4 text-cambridge shrink-0 group-hover:translate-x-0.5 transition-transform duration-150"
+                      viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                    >
+                      <path d="M7 17L17 7M17 7H7M17 7v10"/>
+                    </svg>
+                  </Link>
+                )}
+
+                <div className="mt-3 flex flex-wrap gap-2">
                   {ctx.prompts.map((prompt) => (
                     <button
                       key={prompt}
@@ -515,9 +535,6 @@ export function ChatWidget() {
                     </button>
                   ))}
                 </div>
-                {/* Note: the "Open fullscreen" escape hatch lives in
-                    the panel header (always visible), not duplicated
-                    here in the empty state. */}
               </div>
             )}
 

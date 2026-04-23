@@ -5,9 +5,7 @@ import {
   useEffect,
   useRef,
   useState,
-  type CSSProperties,
   type KeyboardEvent as ReactKeyboardEvent,
-  type MouseEvent as ReactMouseEvent,
 } from "react";
 
 type SceneState = "idle" | "listening" | "thinking" | "responding";
@@ -23,29 +21,7 @@ interface ChamberBotMascotProps {
   intent?: MascotIntent;
 }
 
-interface Spark {
-  id: string;
-  x: number; // px inside wrapper
-  y: number;
-  dx: number; // delta px
-  dy: number;
-  hue: "cambridge" | "accent";
-}
-
-interface Sparkle {
-  id: string;
-  left: number; // percent inside wrapper
-  top: number;
-  driftX: number; // px drift
-  delay: number; // ms
-  size: number; // px
-}
-
-let pId = 0;
-const uid = () => `p${++pId}`;
-
 const IDLE_SLEEP_MS = 30_000;
-const AMBIENT_SPARKLE_MS = 2200;
 
 /**
  * Animated ChamberBot mascot.
@@ -53,8 +29,8 @@ const AMBIENT_SPARKLE_MS = 2200;
  * Loads /images/chamberbot.svg client-side and manipulates named
  * Illustrator groups (eyes, mouth, antenna, arms, body, face) via
  * DOM refs + CSS hook classes. Wrapper owns animation overlays
- * (shadow, ambient sparkles, click sparks, sleep Z's) as siblings of
- * the SVG container so innerHTML injection doesn't wipe them.
+ * (shadow, sleep Z's) as siblings of the SVG container so innerHTML
+ * injection doesn't wipe them.
  *
  * Behaviors:
  *   - Eye pupils track the cursor window-wide
@@ -65,10 +41,9 @@ const AMBIENT_SPARKLE_MS = 2200;
  *   - Blinks on randomized cadence with triple / double / single
  *   - Waves once on first scroll-into-view, flourishes when a reply
  *     finishes
- *   - Click / Enter / Space → surprised jump + radial spark burst
+ *   - Click / Enter / Space → surprised jump
  *   - Idle >30s → sleeping (eyes closed, head droops, Z particles
  *     drift up). Mouse move / keydown / touchstart wakes it up.
- *   - Ambient cambridge sparkles drift near the antenna tip
  *   - Floor shadow scales with the jump
  */
 export function ChamberBotMascot({
@@ -81,8 +56,6 @@ export function ChamberBotMascot({
   const svgContainerRef = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(false);
   const [mood, setMood] = useState<Mood>("alert");
-  const [sparks, setSparks] = useState<Spark[]>([]);
-  const [sparkles, setSparkles] = useState<Sparkle[]>([]);
 
   // Ref mirrors for values the rAF loop reads without restarting
   const userIsTypingRef = useRef(false);
@@ -540,85 +513,25 @@ export function ChamberBotMascot({
     };
   }, [loaded]);
 
-  // ── Ambient sparkles near the antenna ──────────────────────────
-  useEffect(() => {
-    if (!loaded || mood === "sleeping") return;
-
-    const reduceMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    if (reduceMotion) return;
-
-    const spawn = () => {
-      const sparkle: Sparkle = {
-        id: uid(),
-        left: 40 + Math.random() * 22, // 40–62% horizontal (near antenna)
-        top: 2 + Math.random() * 14, // 2–16% vertical (top of mascot)
-        driftX: (Math.random() - 0.5) * 34,
-        delay: 0,
-        size: 4 + Math.random() * 5,
-      };
-      setSparkles((prev) => [...prev, sparkle]);
-      setTimeout(() => {
-        setSparkles((prev) => prev.filter((s) => s.id !== sparkle.id));
-      }, 3200);
-    };
-
-    // Fire one immediately, then on interval
-    spawn();
-    const interval = setInterval(spawn, AMBIENT_SPARKLE_MS);
-    return () => clearInterval(interval);
-  }, [loaded, mood]);
-
-  // ── Click / keyboard → surprised jump + spark burst ───────────
-  const triggerSurprise = useCallback((clickX: number, clickY: number) => {
+  // ── Click / keyboard → surprised jump ────────────────────────
+  const triggerSurprise = useCallback(() => {
     const el = wrapperRef.current;
     if (!el) return;
-
-    const N = 14;
-    const batch: Spark[] = Array.from({ length: N }, (_, i) => {
-      const baseAngle = (i / N) * Math.PI * 2;
-      const angle = baseAngle + (Math.random() - 0.5) * 0.6;
-      const distance = 42 + Math.random() * 48;
-      const hue: "cambridge" | "accent" = i % 4 === 0 ? "accent" : "cambridge";
-      return {
-        id: uid(),
-        x: clickX,
-        y: clickY,
-        dx: Math.cos(angle) * distance,
-        dy: Math.sin(angle) * distance,
-        hue,
-      };
-    });
-    setSparks((prev) => [...prev, ...batch]);
-
     el.classList.add("cbm-surprised");
     setTimeout(() => {
       wrapperRef.current?.classList.remove("cbm-surprised");
     }, 800);
-
-    setTimeout(() => {
-      const ids = new Set(batch.map((s) => s.id));
-      setSparks((prev) => prev.filter((s) => !ids.has(s.id)));
-    }, 900);
   }, []);
 
-  const onClick = useCallback(
-    (e: ReactMouseEvent<HTMLDivElement>) => {
-      const rect = wrapperRef.current?.getBoundingClientRect();
-      if (!rect) return;
-      triggerSurprise(e.clientX - rect.left, e.clientY - rect.top);
-    },
-    [triggerSurprise],
-  );
+  const onClick = useCallback(() => {
+    triggerSurprise();
+  }, [triggerSurprise]);
 
   const onKeyDown = useCallback(
     (e: ReactKeyboardEvent<HTMLDivElement>) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        const rect = wrapperRef.current?.getBoundingClientRect();
-        if (!rect) return;
-        triggerSurprise(rect.width / 2, rect.height * 0.4);
+        triggerSurprise();
       }
     },
     [triggerSurprise],
@@ -643,45 +556,8 @@ export function ChamberBotMascot({
       {/* Floor shadow — scales during jumps */}
       <div className="cbm-shadow" aria-hidden="true" />
 
-      {/* Ambient sparkles behind the mascot */}
-      <div className="cbm-fx cbm-fx--sparkles" aria-hidden="true">
-        {sparkles.map((s) => (
-          <span
-            key={s.id}
-            className="cbm-sparkle"
-            style={
-              {
-                left: `${s.left}%`,
-                top: `${s.top}%`,
-                width: `${s.size}px`,
-                height: `${s.size}px`,
-                "--cbm-drift-x": `${s.driftX}px`,
-              } as CSSProperties
-            }
-          />
-        ))}
-      </div>
-
       {/* SVG mount point — innerHTML-injected. Must have no React children. */}
       <div ref={svgContainerRef} className="cbm-svg" />
-
-      {/* Click spark burst in front of the mascot */}
-      <div className="cbm-fx cbm-fx--sparks" aria-hidden="true">
-        {sparks.map((s) => (
-          <span
-            key={s.id}
-            className={`cbm-spark cbm-spark--${s.hue}`}
-            style={
-              {
-                left: `${s.x}px`,
-                top: `${s.y}px`,
-                "--cbm-spark-dx": `${s.dx}px`,
-                "--cbm-spark-dy": `${s.dy}px`,
-              } as CSSProperties
-            }
-          />
-        ))}
-      </div>
 
       {/* Sleep Z particles */}
       {mood === "sleeping" && (

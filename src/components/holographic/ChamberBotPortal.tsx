@@ -1,19 +1,18 @@
 "use client";
 
 /**
- * ChamberBotPortal — the "Dr. Know booth" experience.
+ * ChamberBotPortal — holographic full-screen AI concierge.
  *
- * Concierge interface, not a decorated transcript. Four entry modes
- * (Find a business / Upcoming events / Join the chamber / Talk to a human)
- * replace the generic "Ask anything" blank. Member answers render as
- * profile cards with provenance tags. The mascot shrinks after the first
- * turn so the answer area dominates.
+ * Layout matches the Holographic Chamber design handoff exactly:
+ *   - Grid: 56px HUD | 1fr Scene | 36px Rail
+ *   - Scene (theater): minmax(0,1fr) Stage | auto Panel
+ *   - Mascot lives in mascot-slot with aura + floor rings
+ *   - Stage caption "Ask me anything." is inside the stage
+ *   - Mode buttons use Unicode glyphs (◈ ◉ ◊ ◎), no SVG icons
+ *   - Input bar is flat, not pill/capsule
+ *   - Rail is its own grid row, always visible
  *
- * Lifecycle — driven by a single `phase` state:
- *   closed   → nothing mounted
- *   entering → enter animations running (≈1400ms); input is live at 400ms
- *   open     → steady state
- *   exiting  → exit animations running (≈800ms)
+ * Phase lifecycle: closed → entering → open → exiting → closed
  */
 
 import {
@@ -27,124 +26,12 @@ import {
 import { createPortal } from "react-dom";
 import { usePostHog } from "posthog-js/react";
 import { ChamberBotMascot, type MascotIntent } from "./ChamberBotMascot";
-import { ParticleField } from "./ParticleField";
 import { renderMarkdown } from "@/lib/markdown";
 import { usePortalAudio } from "@/hooks/usePortalAudio";
-import { DEFAULT_PROMPTS } from "@/lib/chamberbot-prompts";
-import {
-  getMemberBySlug,
-  isCommunityInvestor,
-  isVisibilityPlus,
-} from "@/data/members";
-
-// ── Sub-components ────────────────────────────────────────────────
-
-type CbSource = "directory" | "events" | "general";
-
-/** Compact profile card rendered below directory answers. */
-function MemberCard({ slug }: { slug: string }) {
-  const posthog = usePostHog();
-  const member = getMemberBySlug(slug);
-  if (!member) return null;
-  const isCI = isCommunityInvestor(member);
-  const isVP = isVisibilityPlus(member);
-  const tier = isCI ? "ci" : isVP ? "vp" : "standard";
-  return (
-    <a
-      href={`https://medinachamber.com/membership/directory/${member.chamberSlug}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="cb-member-card"
-      tabIndex={0}
-      onClick={() =>
-        posthog?.capture("chamberbot_member_card_clicked", { slug, tier })
-      }
-    >
-      {(isCI || isVP) && (
-        <span className={`cb-member-card__tier ${isCI ? "cb-member-card__tier--ci" : "cb-member-card__tier--vp"}`}>
-          {isCI ? "Community Investor" : "Visibility Plus"}
-        </span>
-      )}
-      <div className="cb-member-card__name">{member.name}</div>
-      {member.categories[0] && (
-        <div className="cb-member-card__cat">{member.categories[0]}</div>
-      )}
-      {member.phone && (
-        <div className="cb-member-card__phone">{member.phone}</div>
-      )}
-    </a>
-  );
-}
-
-/** Source attribution shown under each bot reply. */
-function ProvenanceTag({ source }: { source: CbSource }) {
-  const labels: Record<CbSource, string> = {
-    directory: "from member directory",
-    events: "from event calendar",
-    general: "from chamber knowledge base",
-  };
-  return (
-    <div className="cb-provenance">
-      <span className="cb-provenance__dot" />
-      {labels[source]}
-    </div>
-  );
-}
-
-/** "Talk to a human" contact panel — shown instead of chat. */
-function ContactPanel({ onBack }: { onBack: () => void }) {
-  return (
-    <div className="cb-contact-panel">
-      <div className="cb-contact-panel__title">Reach the Chamber Team</div>
-      <div className="cb-contact-panel__rows">
-        <a href="tel:+13307238773" className="cb-contact-row">
-          <span className="cb-contact-row__icon" aria-hidden="true">📞</span>
-          <div>
-            <div className="cb-contact-row__label">Phone</div>
-            <div className="cb-contact-row__value">(330) 723-8773</div>
-          </div>
-        </a>
-        <a href="mailto:office@medinaohchamber.com" className="cb-contact-row">
-          <span className="cb-contact-row__icon" aria-hidden="true">✉️</span>
-          <div>
-            <div className="cb-contact-row__label">Email</div>
-            <div className="cb-contact-row__value">office@medinaohchamber.com</div>
-          </div>
-        </a>
-        <div className="cb-contact-row cb-contact-row--static">
-          <span className="cb-contact-row__icon" aria-hidden="true">⏰</span>
-          <div>
-            <div className="cb-contact-row__label">Hours</div>
-            <div className="cb-contact-row__value">Mon–Fri · 10 AM – 4 PM</div>
-          </div>
-        </div>
-        <div className="cb-contact-panel__divider" />
-        <a href="mailto:stephanie@medinaohchamber.com" className="cb-contact-row">
-          <span className="cb-contact-row__icon" aria-hidden="true">👋</span>
-          <div>
-            <div className="cb-contact-row__label">Membership & Events</div>
-            <div className="cb-contact-row__value">Stephanie Mueller</div>
-            <div className="cb-contact-row__sub">stephanie@medinaohchamber.com</div>
-          </div>
-        </a>
-        <a href="mailto:jaclyn@medinaohchamber.com" className="cb-contact-row">
-          <span className="cb-contact-row__icon" aria-hidden="true">🏛️</span>
-          <div>
-            <div className="cb-contact-row__label">Executive Director</div>
-            <div className="cb-contact-row__value">Jaclyn Ringstmeier</div>
-            <div className="cb-contact-row__sub">jaclyn@medinaohchamber.com</div>
-          </div>
-        </a>
-      </div>
-      <button type="button" onClick={onBack} className="cb-contact-panel__back">
-        Ask ChamberBot instead
-      </button>
-    </div>
-  );
-}
 
 // ── Types ─────────────────────────────────────────────────────────
 
+type CbSource = "directory" | "events" | "general";
 type Phase = "closed" | "entering" | "open" | "exiting";
 type SceneState = "idle" | "listening" | "thinking" | "responding";
 type PortalMode = "find" | "events" | "join" | "contact";
@@ -163,10 +50,199 @@ export interface ChamberBotPortalProps {
   onClose: () => void;
 }
 
+// ── Sub-components ────────────────────────────────────────────────
+
+
+/**
+ * Concentric holographic rings — pure SVG, zero JS.
+ * Centered in the stage behind the mascot.
+ * CSS drives rotation; state class adjusts animation speed.
+ */
+function HoloRings({ state }: { state: string }) {
+  return (
+    <div className={`holo-rings state-${state}`} aria-hidden="true">
+      {/* Outer ring: dashed gradient arc */}
+      <svg viewBox="-200 -200 400 400" className="hr hr-1">
+        <defs>
+          <linearGradient id="cb-hr-grad-1" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stopColor="#83BCA9" stopOpacity="0" />
+            <stop offset="0.5" stopColor="#83BCA9" stopOpacity="0.9" />
+            <stop offset="1" stopColor="#83BCA9" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <circle
+          r="180"
+          fill="none"
+          stroke="url(#cb-hr-grad-1)"
+          strokeWidth="0.6"
+          strokeDasharray="2 6"
+        />
+        <circle
+          r="180"
+          fill="none"
+          stroke="#83BCA9"
+          strokeOpacity="0.10"
+          strokeWidth="0.4"
+        />
+      </svg>
+      {/* Mid ring: dashed + 12 tick marks */}
+      <svg viewBox="-200 -200 400 400" className="hr hr-2">
+        <circle
+          r="140"
+          fill="none"
+          stroke="#83BCA9"
+          strokeOpacity="0.16"
+          strokeWidth="0.6"
+          strokeDasharray="1 4"
+        />
+        <g>
+          {Array.from({ length: 12 }, (_, i) => (
+            <line
+              key={i}
+              x1="138"
+              y1="0"
+              x2="148"
+              y2="0"
+              stroke="#83BCA9"
+              strokeOpacity="0.4"
+              strokeWidth="0.8"
+              transform={`rotate(${i * 30})`}
+            />
+          ))}
+        </g>
+      </svg>
+      {/* Inner accent: coquelicot dashed */}
+      <svg viewBox="-200 -200 400 400" className="hr hr-3">
+        <circle
+          r="95"
+          fill="none"
+          stroke="#FF4000"
+          strokeOpacity="0.3"
+          strokeWidth="0.5"
+          strokeDasharray="0.5 3"
+        />
+      </svg>
+      {/* Core ring: solid cambridge */}
+      <svg viewBox="-200 -200 400 400" className="hr hr-4">
+        <circle
+          r="60"
+          fill="none"
+          stroke="#83BCA9"
+          strokeOpacity="0.45"
+          strokeWidth="0.6"
+        />
+      </svg>
+    </div>
+  );
+}
+
+/** Mode selection grid — shown when no messages and not in contact mode. */
+function Welcome({ onMode }: { onMode: (m: PortalMode) => void }) {
+  return (
+    <div className="welcome">
+      <div className="mode-grid">
+        <button
+          type="button"
+          className="mode-btn"
+          onClick={() => onMode("find")}
+        >
+          <span className="mode-glyph" aria-hidden="true">
+            ◈
+          </span>
+          <span className="mode-head">Find a business</span>
+          <span className="mode-sub mono">SEARCH 511 MEMBERS</span>
+        </button>
+        <button
+          type="button"
+          className="mode-btn"
+          onClick={() => onMode("events")}
+        >
+          <span className="mode-glyph" aria-hidden="true">
+            ◉
+          </span>
+          <span className="mode-head">Upcoming events</span>
+          <span className="mode-sub mono">CALENDAR · APR – JUN</span>
+        </button>
+        <button
+          type="button"
+          className="mode-btn"
+          onClick={() => onMode("join")}
+        >
+          <span className="mode-glyph" aria-hidden="true">
+            ◊
+          </span>
+          <span className="mode-head">Join the chamber</span>
+          <span className="mode-sub mono">TIERS · BENEFITS · COST</span>
+        </button>
+        <button
+          type="button"
+          className="mode-btn"
+          onClick={() => onMode("contact")}
+        >
+          <span className="mode-glyph" aria-hidden="true">
+            ◎
+          </span>
+          <span className="mode-head">Talk to a human</span>
+          <span className="mode-sub mono">STAFF CONTACT</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/** Staff contact info — replaces the panel-body when in contact mode. */
+function ContactPanel({ onBack }: { onBack: () => void }) {
+  return (
+    <div className="contact-panel">
+      <div className="welcome-eyebrow mono">CHAMBER STAFF · DIRECT LINE</div>
+      <div className="contact-rows">
+        <a className="contact-row" href="tel:+13307238773">
+          <div className="contact-k mono">PHONE</div>
+          <div className="contact-v">(330) 723-8773</div>
+        </a>
+        <a className="contact-row" href="mailto:office@medinaohchamber.com">
+          <div className="contact-k mono">EMAIL</div>
+          <div className="contact-v">office@medinaohchamber.com</div>
+        </a>
+        <div className="contact-row">
+          <div className="contact-k mono">HOURS</div>
+          <div className="contact-v">Mon – Fri · 10 AM – 4 PM</div>
+        </div>
+        <div className="contact-divider" />
+        <a
+          className="contact-row"
+          href="mailto:stephanie@medinaohchamber.com"
+        >
+          <div className="contact-k mono">MEMBERSHIP &amp; EVENTS</div>
+          <div className="contact-v">Stephanie Mueller</div>
+          <div className="contact-sub">stephanie@medinaohchamber.com</div>
+        </a>
+        <a className="contact-row" href="mailto:jaclyn@medinaohchamber.com">
+          <div className="contact-k mono">EXECUTIVE DIRECTOR</div>
+          <div className="contact-v">Jaclyn Ringstmeier</div>
+          <div className="contact-sub">jaclyn@medinaohchamber.com</div>
+        </a>
+      </div>
+      <button type="button" className="back-btn" onClick={onBack}>
+        ← Ask ChamberBot instead
+      </button>
+    </div>
+  );
+}
+
+// ── Constants ─────────────────────────────────────────────────────
+
 const ENTER_MS = 1400;
 const EXIT_MS = 800;
 
-/** Classify the user's question so the mascot can react appropriately. */
+const TAGLINES = [
+  "I know this town.",
+  "511 members at your fingertips.",
+  "Events, businesses, membership — ask away.",
+  "What are you looking for today?",
+  "Your holographic concierge is ready.",
+];
+
 function detectIntent(question: string): MascotIntent {
   const q = question.toLowerCase();
   if (/\bhow many\b|\bcount\b|\bnumber of\b|\btotal\b/.test(q)) return "count";
@@ -177,7 +253,11 @@ function detectIntent(question: string): MascotIntent {
 
 // ── Component ─────────────────────────────────────────────────────
 
-export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPortalProps) {
+export function ChamberBotPortal({
+  open,
+  initialQuery,
+  onClose,
+}: ChamberBotPortalProps) {
   const [mounted, setMounted] = useState(false);
   const [phase, setPhase] = useState<Phase>("closed");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -185,6 +265,8 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
   const [sceneState, setSceneState] = useState<SceneState>("idle");
   const [intent, setIntent] = useState<MascotIntent>("general");
   const [portalMode, setPortalMode] = useState<PortalMode | null>(null);
+  const [clock, setClock] = useState("");
+  const [taglineIdx, setTaglineIdx] = useState(0);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const justSubmittedRef = useRef(false);
@@ -197,7 +279,34 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
   const audio = usePortalAudio();
   const posthog = usePostHog();
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Live EST clock — ticks every second
+  useEffect(() => {
+    const tick = () => {
+      const d = new Date();
+      const hh = String(d.getHours()).padStart(2, "0");
+      const mm = String(d.getMinutes()).padStart(2, "0");
+      const ss = String(d.getSeconds()).padStart(2, "0");
+      setClock(`${hh}:${mm}:${ss}`);
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  // Tagline carousel — cycles while the stage caption is visible
+  const hasMessages = messages.length > 0;
+  const showContact = portalMode === "contact" && !hasMessages;
+  useEffect(() => {
+    if (hasMessages || showContact) return;
+    const id = setInterval(() => {
+      setTaglineIdx(i => (i + 1) % TAGLINES.length);
+    }, 3800);
+    return () => clearInterval(id);
+  }, [hasMessages, showContact]);
 
   // ── Streaming ────────────────────────────────────────────────────
   const sendMessage = useCallback(
@@ -205,17 +314,26 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
       const q = text.trim();
       if (!q) return;
       if (sceneState === "thinking") return;
+
       const qIntent = detectIntent(q);
       setIntent(qIntent);
-      setPortalMode((m) => m === "contact" ? null : m); // leave contact mode on send
+      setPortalMode((m) => (m === "contact" ? null : m));
       posthog?.capture("chamberbot_message_sent", {
         intent: qIntent,
         turn: messages.filter((m) => m.role === "user").length + 1,
       });
 
-      const userMsg: Message = { id: crypto.randomUUID(), role: "user", content: q };
+      const userMsg: Message = {
+        id: crypto.randomUUID(),
+        role: "user",
+        content: q,
+      };
       const assistantId = crypto.randomUUID();
-      const assistantMsg: Message = { id: assistantId, role: "assistant", content: "" };
+      const assistantMsg: Message = {
+        id: assistantId,
+        role: "assistant",
+        content: "",
+      };
 
       setMessages((prev) => [...prev, userMsg, assistantMsg]);
       setInput("");
@@ -237,8 +355,9 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
         const serverSid = res.headers.get("x-session-id");
         if (serverSid) sessionIdRef.current = serverSid;
 
-        // Read provenance headers before streaming starts
-        const xSource = (res.headers.get("x-cb-source") ?? "general") as CbSource;
+        const xSource = (
+          res.headers.get("x-cb-source") ?? "general"
+        ) as CbSource;
         const xMembers = res.headers.get("x-cb-members");
         const memberSlugs = xMembers ? xMembers.split(",").filter(Boolean) : [];
 
@@ -254,17 +373,18 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
             setSceneState("responding");
             audio.receive();
             firstToken = false;
-            // Tag the assistant message with provenance on first token
             setMessages((prev) =>
               prev.map((m) =>
-                m.id === assistantId
-                  ? { ...m, source: xSource, memberSlugs }
-                  : m,
+                m.id === assistantId ? { ...m, source: xSource, memberSlugs } : m,
               ),
             );
           }
           setMessages((prev) =>
-            prev.map((m) => (m.id === assistantId ? { ...m, content: m.content + chunk } : m)),
+            prev.map((m) =>
+              m.id === assistantId
+                ? { ...m, content: m.content + chunk }
+                : m,
+            ),
           );
         }
 
@@ -274,14 +394,19 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
         setMessages((prev) =>
           prev.map((m) =>
             m.id === assistantId
-              ? { ...m, content: "Connection disrupted. Try again, or close the portal and use the chat widget.", source: "general" }
+              ? {
+                  ...m,
+                  content:
+                    "Connection disrupted. Try again or close the portal and use the chat widget.",
+                  source: "general",
+                }
               : m,
           ),
         );
         setSceneState("idle");
       }
     },
-    [sceneState, audio],
+    [sceneState, audio, messages, posthog],
   );
 
   // ── Phase machine ─────────────────────────────────────────────────
@@ -308,9 +433,7 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
       setPhase("exiting");
       audio.exit();
       audio.stopAmbient();
-      posthog?.capture("chamberbot_closed", {
-        message_count: messages.length,
-      });
+      posthog?.capture("chamberbot_closed", { message_count: messages.length });
       phaseTimerRef.current = setTimeout(() => {
         setPhase("closed");
         setMessages([]);
@@ -320,14 +443,16 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
         phaseTimerRef.current = null;
       }, EXIT_MS);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, phase]);
 
   useEffect(() => {
-    return () => { if (phaseTimerRef.current) clearTimeout(phaseTimerRef.current); };
+    return () => {
+      if (phaseTimerRef.current) clearTimeout(phaseTimerRef.current);
+    };
   }, []);
 
-  // Seed first question from props
+  // Seed first question from props (chat widget hand-off)
   useEffect(() => {
     if (phase !== "entering" && phase !== "open") return;
     if (!initialQuery) return;
@@ -335,19 +460,20 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
     seededForQueryRef.current = initialQuery;
     const t = setTimeout(() => sendMessage(initialQuery), 900);
     return () => clearTimeout(t);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, initialQuery]);
 
-  // Lock body scroll
+  // Lock body scroll while portal is open
   useLayoutEffect(() => {
     if (phase === "closed") return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = prev; };
+    return () => {
+      document.body.style.overflow = prev;
+    };
   }, [phase]);
 
-  // Focus input early — during entering (400ms in) so it's ready before
-  // the theatrics finish, then again once fully open as a safety catch.
+  // Input focus — early during entering, then again once fully open
   useEffect(() => {
     if (phase === "entering") {
       const t = setTimeout(() => inputRef.current?.focus(), 400);
@@ -361,7 +487,10 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
 
   // Pin transcript to newest message
   useEffect(() => {
-    transcriptEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    transcriptEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
   }, [messages]);
 
   // ESC → close
@@ -381,239 +510,289 @@ export function ChamberBotPortal({ open, initialQuery, onClose }: ChamberBotPort
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     justSubmittedRef.current = true;
-    setTimeout(() => { justSubmittedRef.current = false; }, 150);
+    setTimeout(() => {
+      justSubmittedRef.current = false;
+    }, 150);
     sendMessage(input);
   };
 
-  const userIsTyping = input.trim().length > 0 && sceneState === "responding";
-  const hasMessages = messages.length > 0;
-  const showModeSelector = !hasMessages && portalMode === null && phase === "open";
-  const showContact = portalMode === "contact" && !hasMessages;
+  const handleMode = (m: PortalMode) => {
+    posthog?.capture("chamberbot_mode_selected", { mode: m });
+    if (m === "contact") {
+      setPortalMode("contact");
+      return;
+    }
+    if (m === "find") {
+      setPortalMode("find");
+      setTimeout(() => inputRef.current?.focus(), 80);
+      return;
+    }
+    const seeds: Partial<Record<PortalMode, string>> = {
+      events: "What events are coming up in Medina this month?",
+      join: "How do I join the chamber and what does membership cost?",
+    };
+    const seed = seeds[m];
+    if (seed) sendMessage(seed);
+  };
 
+  const userIsTyping =
+    input.trim().length > 0 && sceneState === "responding";
   if (!mounted || phase === "closed") return null;
 
   return createPortal(
     <div
-      className="cb-portal"
+      className={`cb-portal state-${sceneState}`}
       data-phase={phase}
-      data-has-messages={hasMessages ? "true" : "false"}
+      data-state={sceneState}
       role="dialog"
       aria-modal="true"
-      aria-label="ChamberBot — live conversation"
+      aria-label="ChamberBot — Medina County Chamber concierge"
     >
-      {/* Layered backdrop */}
-      <div className="cb-portal-bg" aria-hidden="true" />
-      <div className="cb-portal-vignette" aria-hidden="true" />
-      <ParticleField
-        className="cb-portal-particles"
-        intensity={sceneState}
-        color="rgba(131, 188, 169, 0.5)"
-        count={70}
-      />
-      <div className="cb-portal-beam" aria-hidden="true" />
-      <div className="cb-portal-floor" aria-hidden="true" />
+      {/* ── Atmospheric backdrop layers ── */}
+      <div className="chamber-sky" aria-hidden="true" />
+      <div className="chamber-vignette" aria-hidden="true" />
+      <div className="chamber-grid" aria-hidden="true" />
+      <div className="chamber-scanlines" aria-hidden="true" />
 
-      {/* HUD */}
-      <header className="cb-portal-hud" aria-hidden={phase !== "open"}>
-        <div className="cb-portal-hud__label">
-          <span className="cb-portal-hud__dot" />
-          ChamberBot &middot; Live
+      {/* ── HUD — 56px top grid row ── */}
+      <header className="hud">
+        <div className="hud-left">
+          <div className="hud-wordmark">
+            <span className="wm-1">MEDINA</span>
+            <span className="wm-dot">·</span>
+            <span className="wm-2">CHAMBER</span>
+          </div>
+          <div className="hud-sep" />
+          <div className="hud-status">
+            <span className="status-dot" />
+            ChamberBot <span className="mono">· live</span>
+          </div>
         </div>
-        <div className="cb-portal-hud__actions">
+        <div className="hud-right">
+          <div className="hud-chip mono">EST {clock}</div>
+          <div className="hud-chip mono">SINCE 1938</div>
           <button
             type="button"
+            className="hud-btn"
             onClick={audio.toggleMute}
-            aria-label={audio.muted ? "Unmute portal audio" : "Mute portal audio"}
-            title={audio.muted ? "Unmute" : "Mute"}
-            className="cb-portal-hud__btn"
+            aria-label={
+              audio.muted ? "Unmute portal audio" : "Mute portal audio"
+            }
           >
             {audio.muted ? (
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M11 5L6 9H2v6h4l5 4V5zM23 9l-6 6M17 9l6 6" />
+              <svg
+                viewBox="0 0 18 18"
+                width="14"
+                height="14"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M8 4L4 7H1v4h3l4 3V4z" />
+                <line x1="13" y1="7" x2="17" y2="11" />
+                <line x1="17" y1="7" x2="13" y2="11" />
               </svg>
             ) : (
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14" />
+              <svg
+                viewBox="0 0 18 18"
+                width="14"
+                height="14"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M8 4L4 7H1v4h3l4 3V4zM12 6a4 4 0 010 6M14.5 3.5a7 7 0 010 11" />
               </svg>
             )}
           </button>
           <button
             type="button"
-            onClick={() => { abortRef.current?.abort(); onClose(); }}
+            className="hud-btn hud-btn--close"
+            onClick={() => {
+              abortRef.current?.abort();
+              onClose();
+            }}
             aria-label="Close portal"
-            className="cb-portal-hud__btn cb-portal-hud__btn--close"
           >
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M18 6L6 18M6 6l12 12" />
+            <svg
+              viewBox="0 0 18 18"
+              width="14"
+              height="14"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            >
+              <path d="M4 4l10 10M14 4L4 14" />
             </svg>
           </button>
         </div>
       </header>
 
-      {/* Stage wrapper — handles position + shrink transition.
-          Inner .cb-portal-stage handles the enter/exit animation. */}
-      <div className="cb-portal-stage-wrap" aria-hidden="true">
-        <div
-          className="cb-portal-stage"
-          onClick={() => audio.boop()}
-        >
-          <ChamberBotMascot
-            state={sceneState}
-            className="cb-portal-mascot"
-            userIsTyping={userIsTyping}
-            intent={intent}
-          />
-        </div>
-      </div>
+      {/* ── Scene — 1fr middle grid row ── */}
+      <main className="scene">
+        {/* Stage: mascot + rings centered, caption at bottom */}
+        <section className="stage">
+          <HoloRings state={sceneState} />
+          <div
+            className="mascot-slot"
+            onClick={() => audio.boop()}
+            aria-label="ChamberBot mascot"
+          >
+            <div className="mascot-aura" aria-hidden="true" />
+            <div className="mascot-figure">
+              <ChamberBotMascot
+                state={sceneState}
+                className="cb-portal-mascot"
+                userIsTyping={userIsTyping}
+                intent={intent}
+              />
+            </div>
+            <div className="mascot-floor" aria-hidden="true">
+              <div className="floor-ring r1" />
+              <div className="floor-ring r2" />
+              <div className="floor-ring r3" />
+            </div>
+          </div>
+          {!hasMessages && !showContact && (
+            <div className="stage-caption" aria-hidden="true">
+              <div className="sc-eyebrow mono">ChamberBot</div>
+              <div className="sc-title" key={taglineIdx}>{TAGLINES[taglineIdx]}</div>
+            </div>
+          )}
+        </section>
 
-      {/* Transcript — conversation history */}
-      <div className="cb-portal-transcript" aria-live="polite">
-        <div className="cb-portal-transcript__inner">
-          {messages.map((m) => (
-            <div
-              key={m.id}
-              className={`cb-msg ${m.role === "user" ? "cb-msg--user" : "cb-msg--bot"}`}
-            >
-              <div className="cb-msg__label">
-                {m.role === "user" ? "You" : "ChamberBot"}
-              </div>
-              <div className="cb-msg__bubble">
-                {m.role === "user" ? (
-                  m.content
-                ) : m.content ? (
-                  <span dangerouslySetInnerHTML={{ __html: renderMarkdown(m.content) }} />
-                ) : (
-                  <span className="cb-msg__typing" aria-label="thinking">
-                    <span /><span /><span />
-                  </span>
-                )}
-              </div>
+        {/* Panel: content body + input bar */}
+        <section className="panel">
+          <div className="panel-frame">
+            <div className="panel-corners" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+              <span />
+            </div>
 
-              {/* Provenance + member cards — bot messages only, after content loads */}
-              {m.role === "assistant" && m.source && m.content && (
-                <>
-                  <ProvenanceTag source={m.source} />
-                  {m.memberSlugs && m.memberSlugs.length > 0 && (
-                    <div className="cb-member-cards">
-                      {m.memberSlugs.slice(0, 4).map((slug) => (
-                        <MemberCard key={slug} slug={slug} />
-                      ))}
+            <div className="panel-body">
+              {showContact ? (
+                <ContactPanel onBack={() => setPortalMode(null)} />
+              ) : hasMessages ? (
+                <div className="transcript" aria-live="polite">
+                  {messages.map((m) => (
+                    <div
+                      key={m.id}
+                      className={`msg msg-${m.role}`}
+                    >
+                      <div className="msg-label mono">
+                        {m.role === "user" ? "YOU" : "CHAMBERBOT"}
+                      </div>
+                      <div className="msg-bubble">
+                        {m.role === "user" ? (
+                          m.content
+                        ) : m.content ? (
+                          <span
+                            dangerouslySetInnerHTML={{
+                              __html: renderMarkdown(m.content),
+                            }}
+                          />
+                        ) : (
+                          <span
+                            className="typing"
+                            aria-label="ChamberBot is thinking"
+                          >
+                            <span />
+                            <span />
+                            <span />
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  )}
-                </>
+                  ))}
+                  <div ref={transcriptEndRef} />
+                </div>
+              ) : (
+                <Welcome onMode={handleMode} />
               )}
             </div>
-          ))}
-          <div ref={transcriptEndRef} />
-        </div>
-      </div>
 
-      {/* Contact panel — replaces mode selector when "Talk to a human" selected */}
-      {showContact && (
-        <ContactPanel onBack={() => setPortalMode(null)} />
-      )}
-
-      {/* Mode selector — appears before first message, replaces suggestion chips */}
-      {showModeSelector && (
-        <div className="cb-mode-selector" aria-label="Choose a topic">
-          <p className="cb-mode-selector__label">What can I help with?</p>
-          <div className="cb-mode-selector__grid">
-            <button
-              type="button"
-              className="cb-mode-btn"
-              onClick={() => {
-                posthog?.capture("chamberbot_mode_selected", { mode: "find" });
-                setPortalMode("find");
-                setTimeout(() => inputRef.current?.focus(), 80);
-              }}
-            >
-              <span className="cb-mode-btn__icon" aria-hidden="true">🏢</span>
-              <span className="cb-mode-btn__label">Find a business</span>
-              <span className="cb-mode-btn__sub">Search 511 members</span>
-            </button>
-            <button
-              type="button"
-              className="cb-mode-btn"
-              onClick={() => {
-                posthog?.capture("chamberbot_mode_selected", { mode: "events" });
-                sendMessage("What events are coming up in Medina this month?");
-              }}
-            >
-              <span className="cb-mode-btn__icon" aria-hidden="true">📅</span>
-              <span className="cb-mode-btn__label">Upcoming events</span>
-              <span className="cb-mode-btn__sub">What's on the calendar</span>
-            </button>
-            <button
-              type="button"
-              className="cb-mode-btn"
-              onClick={() => {
-                posthog?.capture("chamberbot_mode_selected", { mode: "join" });
-                sendMessage("How do I join the chamber and what does membership cost?");
-              }}
-            >
-              <span className="cb-mode-btn__icon" aria-hidden="true">🤝</span>
-              <span className="cb-mode-btn__label">Join the chamber</span>
-              <span className="cb-mode-btn__sub">Tiers, benefits, cost</span>
-            </button>
-            <button
-              type="button"
-              className="cb-mode-btn"
-              onClick={() => {
-                posthog?.capture("chamberbot_mode_selected", { mode: "contact" });
-                setPortalMode("contact");
-              }}
-            >
-              <span className="cb-mode-btn__icon" aria-hidden="true">👤</span>
-              <span className="cb-mode-btn__label">Talk to a human</span>
-              <span className="cb-mode-btn__sub">Staff contact info</span>
-            </button>
+            <form className="input-bar" onSubmit={handleSubmit}>
+              <div className="input-pulse" aria-hidden="true" />
+              <input
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onFocus={() => {
+                  if (sceneState === "idle") setSceneState("listening");
+                }}
+                onBlur={() => {
+                  if (
+                    !justSubmittedRef.current &&
+                    sceneState === "listening"
+                  ) {
+                    setSceneState("idle");
+                  }
+                }}
+                placeholder={
+                  sceneState === "thinking"
+                    ? "ChamberBot is thinking…"
+                    : sceneState === "responding"
+                      ? "Type to interrupt…"
+                      : portalMode === "find"
+                        ? "What type of business are you looking for?"
+                        : hasMessages
+                          ? "Ask another question…"
+                          : "Ask anything about Medina businesses, events, or joining the chamber…"
+                }
+                disabled={sceneState === "thinking"}
+                aria-label="Ask the ChamberBot"
+                className="input-field"
+                name="chamberbot-message"
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="sentences"
+                spellCheck={true}
+              />
+              <button
+                type="submit"
+                disabled={!input.trim() || sceneState === "thinking"}
+                aria-label="Send"
+                className="send-btn"
+              >
+                <svg
+                  viewBox="0 0 18 18"
+                  width="14"
+                  height="14"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M2 9l14-7-5 16-3-7-6-2z" />
+                </svg>
+              </button>
+            </form>
           </div>
-        </div>
-      )}
+        </section>
+      </main>
 
-      {/* Input bar */}
-      <form className="cb-portal-input" onSubmit={handleSubmit}>
-        <input
-          ref={inputRef}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onFocus={() => { if (sceneState === "idle") setSceneState("listening"); }}
-          onBlur={() => {
-            if (!justSubmittedRef.current && sceneState === "listening") {
-              setSceneState("idle");
-            }
-          }}
-          placeholder={
-            sceneState === "thinking"
-              ? "ChamberBot is thinking…"
-              : sceneState === "responding"
-              ? "Type to interrupt…"
-              : portalMode === "find"
-              ? "What type of business are you looking for?"
-              : hasMessages
-              ? "Ask another question…"
-              : "Ask anything…"
-          }
-          disabled={sceneState === "thinking"}
-          aria-label="Ask the ChamberBot"
-          className="cb-portal-input__field"
-          name="chamberbot-message"
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="sentences"
-          spellCheck={true}
-        />
-        <button
-          type="submit"
-          disabled={!input.trim() || sceneState === "thinking"}
-          aria-label="Send"
-          className="cb-portal-input__send"
-        >
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
-          </svg>
-        </button>
-      </form>
+      {/* ── Rail — 36px bottom grid row ── */}
+      <footer className="rail mono" aria-hidden="true">
+        <div className="rail-item">
+          <span className="rail-dot ok" /> 511 MEMBERS INDEXED
+        </div>
+        <div className="rail-item">
+          <span className="rail-dot warn" /> 12 EVENTS THIS MONTH
+        </div>
+        <div className="rail-spacer" />
+        <div className="rail-item">VECTOR INDEX · v4.2.1</div>
+        <div className="rail-item">
+          LATENCY <span className="rail-val">—</span>
+        </div>
+      </footer>
     </div>,
     document.body,
   );

@@ -114,10 +114,9 @@ function PillarGrid() {
     const grid = gridRef.current;
     if (!grid) return;
 
-    const reduceMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    if (reduceMotion) {
+    const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    const isTouch = window.matchMedia?.("(hover: none) and (pointer: coarse)").matches;
+    if (reduceMotion || isTouch) {
       grid.classList.add("tp-grid--live");
       return;
     }
@@ -190,10 +189,9 @@ function PillarCard({ pillar }: { pillar: Pillar }) {
     const card = cardRef.current;
     if (!card) return;
 
-    const reduceMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    if (reduceMotion) return;
+    const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    const isTouch = window.matchMedia?.("(hover: none) and (pointer: coarse)").matches;
+    if (reduceMotion || isTouch) return;
 
     let trx = 0;
     let try_ = 0;

@@ -466,18 +466,27 @@ export function ChamberBotPortal({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, initialQuery]);
 
-  // Lock body scroll while portal is open
+  // Lock body scroll while portal is open.
+  // position:fixed approach prevents iOS Safari rubber-band scroll behind the portal.
   useLayoutEffect(() => {
     if (phase === "closed") return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const y = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${y}px`;
+    document.body.style.width = "100%";
     return () => {
-      document.body.style.overflow = prev;
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+      window.scrollTo(0, y);
     };
   }, [phase]);
 
-  // Input focus — early during entering, then again once fully open
+  // Input focus — desktop only. Touch devices skip auto-focus so the
+  // virtual keyboard doesn't collapse the portal on open.
   useEffect(() => {
+    const isTouch = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    if (isTouch) return;
     if (phase === "entering") {
       const t = setTimeout(() => inputRef.current?.focus(), 400);
       return () => clearTimeout(t);

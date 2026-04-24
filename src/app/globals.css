@@ -2589,11 +2589,13 @@ body {
 
 /* ── Root portal shell — full-screen grid ───────────────────── */
 /* position:fixed inset:0 covers the site nav intentionally.
-   The portal owns the full viewport and provides its own HUD. */
+   The portal owns the full viewport and provides its own HUD.
+   z-index 9500: above site nav (40), mobile menu (50), weather
+   overlay (60), membership modal (90). Below bee easter egg (9999). */
 .cb-portal {
   position: fixed;
   inset: 0;
-  z-index: 90;
+  z-index: 9500;
   display: grid;
   grid-template-rows: 56px 1fr 36px;
   overflow: hidden;
@@ -2681,6 +2683,9 @@ body {
 .cb-portal .hud-right {
   display: flex; align-items: center; gap: 14px;
 }
+/* hud-left must not grow past its content and push close btn off-screen */
+.cb-portal .hud-left { min-width: 0; overflow: hidden; flex-shrink: 1; }
+.cb-portal .hud-right { flex-shrink: 0; }
 .cb-portal .hud-wordmark {
   display: flex; align-items: baseline; gap: 6px;
   font-weight: 700; letter-spacing: 0.22em; font-size: 13px;
@@ -3102,8 +3107,56 @@ body {
   .cb-portal .mascot-slot { width: 200px; height: 260px; }
   .cb-portal .rail-item:nth-child(n+4):not(.rail-spacer) { display: none; }
 }
+
+/* ── Mobile (≤600px) — full phone treatment ────────────────────── */
 @media (max-width: 600px) {
-  .cb-portal .scene { padding: 16px; gap: 16px; }
+  /* Scene: tighter inset so mode buttons don't bleed off-screen */
+  .cb-portal .scene { padding: 12px; gap: 10px; }
+
+  /* ── HUD: strip decorative items so the close button is
+     always reachable. On a 375px screen the full HUD would
+     overflow and the close button would be clipped by
+     overflow:hidden on the portal shell. Keep wordmark + close,
+     hide everything else.                                       */
+  .cb-portal .hud               { padding: 0 12px; }
+  .cb-portal .hud-chip          { display: none; }
+  .cb-portal .hud-sep           { display: none; }
+  .cb-portal .hud-status        { display: none; }
+  /* Mute btn: audio autoplay is blocked on mobile anyway */
+  .cb-portal .hud-btn:not(.hud-btn--close) { display: none; }
+
+  /* Close button: 44px minimum tap target (WCAG 2.5.5) */
+  .cb-portal .hud-btn--close    { width: 44px; height: 44px; }
+
+  /* Wordmark: tighten letter-spacing so it reads cleanly at small size */
+  .cb-portal .hud-wordmark      { font-size: 11px; letter-spacing: 0.10em; }
+
+  /* ── Mode grid: switch from auto-min columns to zero-min
+     columns. `1fr` has implicit min-width: auto which lets the
+     mono subtitle text expand the column beyond the viewport.
+     `minmax(0, 1fr)` clamps each column to its fair share.     */
+  .cb-portal .mode-grid         { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .cb-portal .mode-btn          { padding: 10px 12px; }
+  .cb-portal .mode-glyph        { font-size: 18px; }
+  /* Clip subtitle text inside column width */
+  .cb-portal .mode-sub          { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* ── Stage: reduce mascot footprint on phones so the
+     stage-caption and panel both have breathing room.           */
+  .cb-portal .stage             { min-height: 130px; }
+  .cb-portal .mascot-slot       { width: 150px; height: 210px; }
+
+  /* Stage caption: allow wrapping, smaller title */
+  .cb-portal .stage-caption     { white-space: normal; width: calc(100% - 24px); }
+  .cb-portal .sc-title          { font-size: 20px; }
+
+  /* ── Input bar: bigger send button tap target */
+  .cb-portal .send-btn          { width: 44px; height: 44px; border-radius: 4px; }
+  .cb-portal .input-bar         { padding: 10px 12px; gap: 8px; }
+
+  /* ── Rail: tighten and hide version/latency items */
+  .cb-portal .rail              { padding: 0 12px; gap: 10px; }
+  .cb-portal .rail-item:last-child { display: none; }
 }
 
 /* ── Phase exit animations ──────────────────────────────────────── */

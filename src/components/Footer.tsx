@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { FooterStamp } from "./FooterStamp";
 import { BuildCredit } from "./BuildCredit";
@@ -60,54 +59,42 @@ export function Footer() {
     <footer className="ftr bg-bg-secondary border-t border-border-primary">
       <div className="mx-auto max-w-5xl px-6 lg:px-8 pt-16 lg:pt-20 pb-10 lg:pb-14">
         {/* ─── Band 0: Closing statement — bookends the hero ──── */}
-        <div className="relative overflow-hidden rounded-2xl text-center mb-14 lg:mb-16 py-12 px-6">
-          {/* Faded gazebo photo — texture layer behind typography */}
-          <Image
-            src="/images/photos/gazebo-daytime-flag.jpg"
-            alt=""
-            aria-hidden="true"
-            fill
-            sizes="(max-width: 1024px) 100vw, 1024px"
-            className="object-cover object-center opacity-[0.08] select-none pointer-events-none"
-          />
-          {/* Content wrapper — positioned so it paints above the absolute image layer */}
-          <div className="relative">
-            <p className="text-overline text-cambridge mb-3 tracking-[0.2em]">
-              Since 1938
-            </p>
-            <div className="font-display font-bold uppercase leading-[0.88] tracking-tight text-text-primary">
-              <div className="text-[clamp(2.75rem,7.5vw,5.75rem)]">Medina</div>
-              <div className="text-[clamp(2rem,5.5vw,4.25rem)] mt-1">Means</div>
-              <div
-                className="
-                  font-script normal-case
-                  text-[clamp(3rem,8.5vw,6.25rem)]
-                  leading-[0.85] inline-block
-                  -mt-[0.32em]
-                "
-                style={{ color: "var(--coquelicot)", transform: "rotate(-2deg)" }}
-              >
-                business
-              </div>
-            </div>
-            <p className="text-body-sm text-text-secondary mt-5 max-w-lg mx-auto">
-              A century of local advocacy, connection, and growth — and
-              we&apos;re just getting started.
-            </p>
-            <Link
-              href="/membership/join"
+        <div className="text-center mb-14 lg:mb-16">
+          <p className="text-overline text-cambridge mb-3 tracking-[0.2em]">
+            Since 1938
+          </p>
+          <div className="font-display font-bold uppercase leading-[0.88] tracking-tight text-text-primary">
+            <div className="text-[clamp(2.75rem,7.5vw,5.75rem)]">Medina</div>
+            <div className="text-[clamp(2rem,5.5vw,4.25rem)] mt-1">Means</div>
+            <div
               className="
-                mt-7 inline-flex items-center gap-2 px-7 py-3.5
-                bg-accent hover:bg-accent-hover
-                text-white font-bold text-body-sm
-                rounded-[var(--radius-md)]
-                transition-colors
+                font-script normal-case
+                text-[clamp(3rem,8.5vw,6.25rem)]
+                leading-[0.85] inline-block
+                -mt-[0.32em]
               "
+              style={{ color: "var(--coquelicot)", transform: "rotate(-2deg)" }}
             >
-              Join the Chamber
-              <span aria-hidden="true">→</span>
-            </Link>
+              business
+            </div>
           </div>
+          <p className="text-body-sm text-text-secondary mt-5 max-w-lg mx-auto">
+            A century of local advocacy, connection, and growth — and
+            we&apos;re just getting started.
+          </p>
+          <Link
+            href="/membership/join"
+            className="
+              mt-7 inline-flex items-center gap-2 px-7 py-3.5
+              bg-accent hover:bg-accent-hover
+              text-white font-bold text-body-sm
+              rounded-[var(--radius-md)]
+              transition-colors
+            "
+          >
+            Join the Chamber
+            <span aria-hidden="true">→</span>
+          </Link>
         </div>
 
         {/* Accent stripe */}

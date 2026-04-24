@@ -1523,160 +1523,284 @@ export function GetToKnowGraphic({
   mode?: GraphicMode;
   eventInfo?: EventInfo;
 }) {
-  const isStory = mode === "story";
+  const isStory  = mode === "story";
   const isSquare = mode === "square";
 
-  const W = isSquare ? 1080 : isStory ? 1080 : 1200;
+  const W = isStory ? 1080 : isSquare ? 1080 : 1200;
   const H = isStory ? 1920 : isSquare ? 1080 : 630;
 
-  // Saul Bass hard split: oxford top / cambridge bottom
-  const splitY = Math.round(H * 0.40);
+  // ── Central medallion ─────────────────────────────────────────────────────
+  // Social: circle sits right-of-center; square + story: centered on canvas.
+  const cR  = pick([245, 295, 385] as const, mode); // radius
+  const cCx = pick([862, 540, 540] as const, mode); // center X
+  const cCy = pick([315, 390, 820] as const, mode); // center Y
 
-  const knowSize    = pick([260, 320, 430] as const, mode);
-  const getToSize   = pick([66,  82,  108] as const, mode);
-  const chamberSize = pick([28,  34,   46] as const, mode);
-  const infoSize    = pick([13,  16,   22] as const, mode);
-  const pad         = pick([52,  64,   88] as const, mode);
+  // ── Typography scale ──────────────────────────────────────────────────────
+  const knowSize    = pick([238, 232, 308] as const, mode);
+  const getToSize   = pick([46,  50,  68]  as const, mode);
+  const chamberSize = pick([27,  31,  43]  as const, mode);
+  const infoSize    = pick([14,  16,  22]  as const, mode);
+  const pad         = pick([60,  72,  96]  as const, mode);
 
-  // "KNOW" baseline straddles the split — ~32% below the line
-  const knowY  = Math.round(splitY + knowSize * 0.32);
-  // "GET TO" sits just above KNOW in the oxford zone
-  const getToY = Math.round(knowY - knowSize * 0.78 - getToSize * 0.15);
+  // ── Text layout ───────────────────────────────────────────────────────────
+  // Social: left-aligned type on left side; square + story: centered.
+  const isCentered = isSquare || isStory;
+  const textX      = isCentered ? W / 2 : pad;
+  const tAnchor    = isCentered ? "middle" : "start";
 
-  // Ghost logo — large icon watermark in cambridge zone
-  const logoSize = Math.round((H - splitY) * 0.72);
-  const logoX    = W - logoSize - pad;
-  const logoY    = splitY + Math.round((H - splitY - logoSize) / 2);
+  // Y baselines
+  const getToY   = pick([86,  88,  272] as const, mode);
+  const knowY    = pick([356, 530, 592] as const, mode);
+  const ruleY    = pick([390, 574, 644] as const, mode);
+  const chamberY = pick([432, 628, 710] as const, mode);
 
-  // Mistrully script ghost — lowercase "know" watermark in the cambridge zone
-  const scriptSize = pick([165, 210, 290] as const, mode);
-  const scriptX    = pad;
-  const scriptY    = Math.round(splitY + (H - splitY) * 0.60);
+  // Rule width: centered modes use proportional inset; social follows text width
+  const ruleX1 = isCentered ? W * 0.18 : pad;
+  const ruleX2 = isCentered ? W * 0.82 : pad + knowSize * 2.2;
 
   const dateLine = eventInfo
     ? [eventInfo.dayOfWeek, eventInfo.month,
-        eventInfo.day ? `${eventInfo.day},` : "", eventInfo.year ?? ""]
-        .filter(Boolean).join(" · ").replace(/\s{2,}/g, " ").trim()
+       eventInfo.day ? `${eventInfo.day},` : "", eventInfo.year ?? ""]
+       .filter(Boolean).join(" · ").replace(/\s{2,}/g, " ").trim()
     : "";
 
-  // Percentage coords for the ghost logo (HTML img scales with container)
-  const logoTopPct   = `${((logoY / H) * 100).toFixed(2)}%`;
-  const logoRightPct = `${((pad / W) * 100).toFixed(2)}%`;
-  const logoWidthPct = `${((logoSize / W) * 100).toFixed(2)}%`;
+  // Unique gradient/filter IDs scoped per mode (component can appear multiple times)
+  const uid = `gtk2-${mode}`;
 
   return (
-    <div style={containerStyle({ background: BRAND.oxford, color: "#fff" })}>
+    <div style={containerStyle({ background: BRAND.oxford, color: BRAND.cream })}>
       <svg viewBox={`0 0 ${W} ${H}`} style={svgFillStyle}>
         <defs>
-          {/* Split clip paths — each word rendered twice, each half a different color */}
-          <clipPath id={`gtk-top-${mode}`}>
-            <rect x={0} y={0} width={W} height={splitY} />
+          {/* ── Background: Castle airbrush warm glow ── */}
+          {/* A soft cream halo centred on the medallion bleeds across the canvas
+              like the signature Castle spotlight — warmth emanating from a single
+              source, the dark field pressing in from the edges. */}
+          <radialGradient
+            id={`${uid}-bg`}
+            cx={cCx} cy={cCy} r={cR * 2.4}
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop offset="0%"   stopColor={BRAND.cream}    stopOpacity="0.20" />
+            <stop offset="38%"  stopColor={BRAND.cambridge} stopOpacity="0.07" />
+            <stop offset="100%" stopColor={BRAND.oxford}    stopOpacity="0"    />
+          </radialGradient>
+
+          {/* ── "KNOW" text gradient ── */}
+          {/* Cream at cap-height → cambridge at baseline: simulates a top-lit
+              airbrush pass, as if the word has weight and is lit from above. */}
+          <linearGradient
+            id={`${uid}-know`}
+            x1={textX} y1={knowY - knowSize}
+            x2={textX} y2={knowY}
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop offset="0%"   stopColor={BRAND.cream}                     />
+            <stop offset="65%"  stopColor={BRAND.cambridge}                  />
+            <stop offset="100%" stopColor={BRAND.cambridge} stopOpacity="0.72" />
+          </linearGradient>
+
+          {/* ── Circle clip path for photo ── */}
+          <clipPath id={`${uid}-clip`}>
+            <circle cx={cCx} cy={cCy} r={cR} />
           </clipPath>
-          <clipPath id={`gtk-bot-${mode}`}>
-            <rect x={0} y={splitY} width={W} height={H - splitY} />
-          </clipPath>
+
+          {/* ── Circle edge vignette ── */}
+          {/* Darkens the perimeter of the photo, keeping the painted look
+              — Castle always lost the photo into the dark at the edges. */}
+          <radialGradient
+            id={`${uid}-vig`}
+            cx={cCx} cy={cCy} r={cR}
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop offset="30%"  stopColor={BRAND.oxford} stopOpacity="0"    />
+            <stop offset="78%"  stopColor={BRAND.oxford} stopOpacity="0.28" />
+            <stop offset="100%" stopColor={BRAND.oxford} stopOpacity="0.60" />
+          </radialGradient>
+
+          {/* ── Outer bloom filter ── */}
+          {/* Low-pass blur applied to the coquelicot outer ring to create
+              the halation effect Castle got with real airbrush overspray. */}
+          <filter id={`${uid}-bloom`} x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur" />
+          </filter>
+
+          {/* ── "KNOW" text shadow ── */}
+          {/* Ensures contrast when the text overlaps the photo substrate. */}
+          <filter id={`${uid}-tshadow`} x="-4%" y="-15%" width="108%" height="130%">
+            <feDropShadow
+              dx="0" dy="3" stdDeviation="10"
+              floodColor={BRAND.oxford} floodOpacity="0.50"
+            />
+          </filter>
         </defs>
 
-        {/* Two-tone field: oxford above, cambridge below */}
-        <rect x={0} y={0} width={W} height={splitY} fill={BRAND.oxford} />
-        <rect x={0} y={splitY} width={W} height={H - splitY} fill={BRAND.cambridge} />
+        {/* ── Layer 1: Base field ───────────────────────────────────────────── */}
+        <rect x={0} y={0} width={W} height={H} fill={BRAND.oxford} />
 
-        {/* Mistrully ghost — lowercase "know" in script, watermarked into the
-            cambridge zone. Bergen shouts it above the split; Mistrully whispers
-            it below. Same word, two voices — the Bergen/script duality. */}
-        <text
-          x={scriptX}
-          y={scriptY}
-          fontFamily={SCRIPT_STACK}
-          fontSize={scriptSize}
-          fill={BRAND.oxford}
-          opacity={0.18}
-          clipPath={`url(#gtk-bot-${mode})`}
-        >
-          know
-        </text>
+        {/* ── Layer 2: Airbrush warm spotlight ─────────────────────────────── */}
+        <rect x={0} y={0} width={W} height={H} fill={`url(#${uid}-bg)`} />
 
-        {/* Coquelicot split rule */}
-        <line
-          x1={0} y1={splitY} x2={W} y2={splitY}
-          stroke={BRAND.coquelicot} strokeWidth={isStory ? 4 : 2.5}
+        {/* ── Layer 3: Outer coquelicot bloom halo ─────────────────────────── */}
+        {/* The blurred ring at full opacity 0.09 reads as a soft chromatic
+            aura — Castle's coquelicot was never flat, always luminous. */}
+        <circle
+          cx={cCx} cy={cCy} r={cR + 24}
+          fill="none" stroke={BRAND.coquelicot}
+          strokeWidth={50} opacity={0.09}
+          filter={`url(#${uid}-bloom)`}
         />
 
-        {/* "GET TO" — cream on oxford */}
+        {/* ── Layer 4: Precision structural rings ──────────────────────────── */}
+        {/* Two clean concentric rings — the retrofuturist precision that
+            anchors the softness of the airbrush work. */}
+        <circle
+          cx={cCx} cy={cCy} r={cR + 18}
+          fill="none" stroke={BRAND.coquelicot}
+          strokeWidth={isStory ? 2.5 : 1.6}
+          opacity={0.70}
+        />
+        <circle
+          cx={cCx} cy={cCy} r={cR + 9}
+          fill="none" stroke={BRAND.cambridge}
+          strokeWidth={isStory ? 2 : 1.2}
+          opacity={0.38}
+        />
+
+        {/* ── Layer 5: Photo substrate ──────────────────────────────────────── */}
+        {/* The photographic base Castle would paint over — real people,
+            real warmth, real event — barely glimpsed beneath the wash. */}
+        <image
+          href={ASSETS.getToKnow}
+          x={cCx - cR} y={cCy - cR}
+          width={cR * 2} height={cR * 2}
+          clipPath={`url(#${uid}-clip)`}
+          preserveAspectRatio="xMidYMid slice"
+        />
+
+        {/* ── Layer 6: Cambridge airbrush color wash ────────────────────────── */}
+        {/* Castle's signature move: lay a flat chromatic wash over the photo
+            to unify it with the surrounding palette. The photo still breathes
+            through — warm faces under cool teal light. */}
+        <circle
+          cx={cCx} cy={cCy} r={cR}
+          fill={BRAND.cambridge} opacity={0.50}
+          clipPath={`url(#${uid}-clip)`}
+        />
+
+        {/* ── Layer 7: Edge vignette ────────────────────────────────────────── */}
+        <circle cx={cCx} cy={cCy} r={cR} fill={`url(#${uid}-vig)`} />
+
+        {/* ── Layer 8: Centre reticle — retrofuturist precision mark ───────── */}
+        {/* A sighting-ring + 8-ray starburst at the medallion's heart.
+            Lifts the whole piece into the graphic-design-as-architecture space
+            Castle inhabited. Coquelicot at partial opacity — noticed, not forced. */}
+        <circle
+          cx={cCx} cy={cCy} r={cR * 0.065}
+          fill="none" stroke={BRAND.coquelicot}
+          strokeWidth={isStory ? 2 : 1.4}
+          opacity={0.85}
+        />
+        <circle
+          cx={cCx} cy={cCy} r={cR * 0.020}
+          fill={BRAND.coquelicot} opacity={0.80}
+        />
+        {Array.from({ length: 8 }).map((_, i) => {
+          const a  = (i * Math.PI * 2) / 8;
+          const r0 = cR * 0.090;
+          const r1 = cR * 0.195;
+          return (
+            <line
+              key={i}
+              x1={cCx + Math.cos(a) * r0} y1={cCy + Math.sin(a) * r0}
+              x2={cCx + Math.cos(a) * r1} y2={cCy + Math.sin(a) * r1}
+              stroke={BRAND.coquelicot}
+              strokeWidth={isStory ? 1.8 : 1.2}
+              opacity={0.72}
+            />
+          );
+        })}
+
+        {/* ── Layer 9: Typography ───────────────────────────────────────────── */}
+
+        {/* "GET TO" — small, tracked, warm cream. The setup before the reveal. */}
         <text
-          x={pad} y={getToY}
+          x={textX} y={getToY}
           fontFamily={FONT_STACK} fontWeight={700} fontSize={getToSize}
-          fill={BRAND.cream} letterSpacing="-0.02em"
+          fill={BRAND.cream} letterSpacing="0.22em"
+          textAnchor={tAnchor} opacity={0.82}
         >
           GET TO
         </text>
 
-        {/* "KNOW" split-color: cream where it overlaps oxford, oxford where it overlaps cambridge */}
+        {/* "KNOW" — the Castle word. Gradient-painted, airbrushed from cream
+            at the cap-height to cambridge at the baseline. Drop shadow ensures
+            it reads whether it falls over the photo or the dark field. */}
         <text
-          x={pad} y={knowY}
+          x={textX} y={knowY}
           fontFamily={FONT_STACK} fontWeight={700} fontSize={knowSize}
-          fill={BRAND.cream} letterSpacing="-0.04em"
-          clipPath={`url(#gtk-top-${mode})`}
-        >
-          KNOW
-        </text>
-        <text
-          x={pad} y={knowY}
-          fontFamily={FONT_STACK} fontWeight={700} fontSize={knowSize}
-          fill={BRAND.oxford} letterSpacing="-0.04em"
-          clipPath={`url(#gtk-bot-${mode})`}
+          fill={`url(#${uid}-know)`}
+          letterSpacing="-0.04em"
+          textAnchor={tAnchor}
+          filter={`url(#${uid}-tshadow)`}
         >
           KNOW
         </text>
 
-        {/* "THE CHAMBER" — oxford on cambridge, bottom right */}
+        {/* Coquelicot rule — the Castle signature divider */}
+        <line
+          x1={ruleX1} y1={ruleY}
+          x2={ruleX2} y2={ruleY}
+          stroke={BRAND.coquelicot}
+          strokeWidth={isStory ? 3 : 2}
+        />
+
+        {/* "THE CHAMBER" — cambridge teal, wide tracking, calm authority */}
         <text
-          x={W - pad}
-          y={H - pad - (eventInfo ? infoSize * 3.5 : 0)}
+          x={textX} y={chamberY}
           fontFamily={FONT_STACK} fontWeight={700} fontSize={chamberSize}
-          fill={BRAND.oxford} letterSpacing="0.22em" textAnchor="end"
+          fill={BRAND.cambridge} letterSpacing="0.26em"
+          textAnchor={tAnchor}
         >
           THE CHAMBER
         </text>
 
-        {/* Event info — bottom left, oxford text on cambridge */}
+        {/* ── Layer 10: Event info ──────────────────────────────────────────── */}
         {eventInfo && (
           <>
             <text
-              x={pad} y={H - pad - infoSize * 1.6}
-              fontFamily={FONT_STACK} fontWeight={700} fontSize={infoSize * 0.80}
-              fill={BRAND.oxford} letterSpacing="0.12em" opacity={0.60}
+              x={textX} y={H - pad - infoSize * 1.9}
+              fontFamily={FONT_STACK} fontWeight={700}
+              fontSize={infoSize * 0.80}
+              fill={BRAND.cream} letterSpacing="0.12em" opacity={0.50}
+              textAnchor={tAnchor}
             >
               {dateLine.toUpperCase()}
             </text>
             <text
-              x={pad} y={H - pad}
+              x={textX} y={H - pad}
               fontFamily={FONT_STACK} fontWeight={700} fontSize={infoSize}
-              fill={BRAND.oxford} letterSpacing="-0.01em"
+              fill={BRAND.cream} letterSpacing="-0.01em"
+              textAnchor={tAnchor}
             >
               {(eventInfo.time ?? "") + (eventInfo.venue ? `  ·  ${eventInfo.venue}` : "")}
             </text>
           </>
         )}
-      </svg>
 
-      {/* Ghost logo — after SVG so it composites over the teal zone */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={ASSETS.iconWhite}
-        alt=""
-        style={{
-          position: "absolute",
-          top: logoTopPct,
-          right: logoRightPct,
-          width: logoWidthPct,
-          opacity: 0.18,
-          filter: "brightness(0)",
-          mixBlendMode: "multiply",
-          pointerEvents: "none",
-          userSelect: "none",
-        }}
-      />
+        {/* ── Story-only: Mistrully ghost in the lower void ─────────────────── */}
+        {/* Story format is tall — a whispered script "know" at the bottom
+            fills the negative space without competing with the medallion. */}
+        {isStory && (
+          <text
+            x={W / 2} y={H * 0.88}
+            fontFamily={SCRIPT_STACK} fontSize={340} fontWeight={400}
+            fill={BRAND.cambridge} opacity={0.055}
+            textAnchor="middle"
+          >
+            know
+          </text>
+        )}
+      </svg>
     </div>
   );
 }

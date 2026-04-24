@@ -57,17 +57,26 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Preload fonts for fastest paint */}
+        {/* Preload brand fonts — woff2 only (otf kept as @font-face fallback).
+            Bold preloaded first: used in hero h1, event graphics, nav; block
+            display means it must arrive before first paint of those elements. */}
         <link
           rel="preload"
-          href="/fonts/bn-bergen-bold.woff2"
+          href="/fonts/BNBergen-Bold.woff2"
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"
         />
         <link
           rel="preload"
-          href="/fonts/bn-bergen-regular.woff2"
+          href="/fonts/BNBergen.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/Mistrully.woff2"
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"

@@ -22,10 +22,13 @@ summary,
    ============================================================ */
 
 /* --- Font Faces ------------------------------------------- */
+/* woff2 listed first (30-40% smaller, better browser caching);
+   original otf/ttf kept as fallback for older runtimes.        */
 
 @font-face {
   font-family: "BN Bergen";
-  src: url("/fonts/BNBergen-Light.otf") format("opentype");
+  src: url("/fonts/BNBergen-Light.woff2") format("woff2"),
+       url("/fonts/BNBergen-Light.otf")   format("opentype");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -33,30 +36,37 @@ summary,
 
 @font-face {
   font-family: "BN Bergen";
-  src: url("/fonts/BNBergen.otf") format("opentype");
+  src: url("/fonts/BNBergen.woff2") format("woff2"),
+       url("/fonts/BNBergen.otf")   format("opentype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
+/* Bold uses font-display: block so event graphics never flash a system
+   font — the root layout preloads this weight so the block window is
+   sub-100ms in practice. Body text uses the lighter weights (swap). */
 @font-face {
   font-family: "BN Bergen";
-  src: url("/fonts/BNBergen-Bold.otf") format("opentype");
+  src: url("/fonts/BNBergen-Bold.woff2") format("woff2"),
+       url("/fonts/BNBergen-Bold.otf")   format("opentype");
   font-weight: 700;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
 
 /* Mistrully — handwritten script, brand accent font. Used only as an
    expressive counterpoint to BN Bergen (never for body or nav). The
    chamber's current website uses it exclusively on the word "business"
-   in the "MEDINA MEANS business" tagline. */
+   in the "MEDINA MEANS business" tagline. block: it's 24 KB woff2 and
+   must render correctly — no system-font flash acceptable here. */
 @font-face {
   font-family: "Mistrully";
-  src: url("/fonts/Mistrully.ttf") format("truetype");
+  src: url("/fonts/Mistrully.woff2") format("woff2"),
+       url("/fonts/Mistrully.ttf")   format("truetype");
   font-weight: 400;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
 
 /* --- Light Mode (default) --------------------------------- */

@@ -1548,10 +1548,10 @@ export function GetToKnowGraphic({
   const logoX    = W - logoSize - pad;
   const logoY    = splitY + Math.round((H - splitY - logoSize) / 2);
 
-  // Coquelicot ghost — faint accent echo in the oxford-zone negative space
-  const topGhostSize = Math.round(splitY * (isStory ? 0.55 : 0.62));
-  const topGhostX    = W - topGhostSize - pad;
-  const topGhostY    = Math.round((splitY - topGhostSize) / 2);
+  // Mistrully script ghost — lowercase "know" watermark in the cambridge zone
+  const scriptSize = pick([165, 210, 290] as const, mode);
+  const scriptX    = pad;
+  const scriptY    = Math.round(splitY + (H - splitY) * 0.60);
 
   const dateLine = eventInfo
     ? [eventInfo.dayOfWeek, eventInfo.month,
@@ -1575,29 +1575,26 @@ export function GetToKnowGraphic({
           <clipPath id={`gtk-bot-${mode}`}>
             <rect x={0} y={splitY} width={W} height={H - splitY} />
           </clipPath>
-          {/* Flood-fill filter: replaces any opaque pixel with coquelicot */}
-          <filter id={`gtk-coq-${mode}`} colorInterpolationFilters="sRGB" x="0" y="0" width="100%" height="100%">
-            <feFlood floodColor={BRAND.coquelicot} result="color" />
-            <feComposite in="color" in2="SourceAlpha" operator="in" />
-          </filter>
         </defs>
 
         {/* Two-tone field: oxford above, cambridge below */}
         <rect x={0} y={0} width={W} height={splitY} fill={BRAND.oxford} />
         <rect x={0} y={splitY} width={W} height={H - splitY} fill={BRAND.cambridge} />
 
-        {/* Coquelicot ghost icon — oxford-zone negative space; echoes the dark
-            cambridge ghost but in accent color, clipped to stay above the split */}
-        <image
-          href={ASSETS.iconWhite}
-          x={topGhostX}
-          y={topGhostY}
-          width={topGhostSize}
-          height={topGhostSize}
-          filter={`url(#gtk-coq-${mode})`}
-          opacity={0.11}
-          clipPath={`url(#gtk-top-${mode})`}
-        />
+        {/* Mistrully ghost — lowercase "know" in script, watermarked into the
+            cambridge zone. Bergen shouts it above the split; Mistrully whispers
+            it below. Same word, two voices — the Bergen/script duality. */}
+        <text
+          x={scriptX}
+          y={scriptY}
+          fontFamily={SCRIPT_STACK}
+          fontSize={scriptSize}
+          fill={BRAND.oxford}
+          opacity={0.18}
+          clipPath={`url(#gtk-bot-${mode})`}
+        >
+          know
+        </text>
 
         {/* Coquelicot split rule */}
         <line

@@ -229,6 +229,13 @@ summary,
   color: color-mix(in oklab, var(--text-accent) 80%, transparent);
 }
 
+/* Hero exception: the hero always has a dark oxford overlay so cambridge
+ * (#83BCA9) reads cleanly there. Keep teal in both themes by overriding
+ * the global light-mode rule above with a tighter selector. */
+[data-theme="light"] .site-hero .text-cambridge {
+  color: var(--cambridge);
+}
+
 /* Nav logo: CSS-driven show/hide — no React state involved so there
  * is no hydration-flash window. The ThemeScript sets data-theme on
  * <html> before first paint; these rules read that attribute directly. */

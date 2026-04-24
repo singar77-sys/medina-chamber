@@ -101,7 +101,7 @@ export default async function HomePage() {
       />
 
       {/* ─── Hero ─────────────────────────────────────────── */}
-      <section className="relative min-h-[85vh] flex items-end overflow-hidden">
+      <section className="site-hero relative min-h-[85vh] flex items-end overflow-hidden">
         {/* Background photos — theme-aware */}
         <Image
           src="/images/photos/gazebo-daytime-flag.jpg"

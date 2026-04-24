@@ -210,6 +210,32 @@ summary,
   color: #FF8855;
 }
 
+/* Cambridge text → accent in light mode.
+ *
+ * #83BCA9 on light backgrounds = ~2.3:1 contrast (fails WCAG AA).
+ * In light mode every `.text-cambridge` element (section eyebrows,
+ * overlines, footer labels) should render as `--text-accent` (#C84A1E)
+ * which achieves 5.6:1 on white — comfortably AA. Decorative uses of
+ * cambridge that aren't text (bg-cambridge/*, border-cambridge/*) are
+ * at low opacity and left intentionally as teal brand accents.
+ */
+[data-theme="light"] .text-cambridge {
+  color: var(--text-accent);
+}
+[data-theme="light"] .hover\:text-cambridge:hover {
+  color: var(--text-accent);
+}
+[data-theme="light"] .hover\:text-cambridge\/80:hover {
+  color: color-mix(in oklab, var(--text-accent) 80%, transparent);
+}
+
+/* Nav logo: CSS-driven show/hide — no React state involved so there
+ * is no hydration-flash window. The ThemeScript sets data-theme on
+ * <html> before first paint; these rules read that attribute directly. */
+.nav-logo--dark  { display: none; }
+[data-theme="dark"] .nav-logo--light { display: none; }
+[data-theme="dark"] .nav-logo--dark  { display: inline; }
+
 /* --- Theme Transition ------------------------------------- */
 /* Only transition the elements that visibly change on theme toggle.
    The old rule targeted every bg-/border-/text- class — hundreds of

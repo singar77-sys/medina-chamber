@@ -7,7 +7,6 @@ import { usePathname } from "next/navigation";
 import { navigation, ctaLink, memberLogin, type NavItem } from "@/lib/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 import { CommandPaletteTrigger } from "./CommandPaletteTrigger";
-import { useTheme } from "./ThemeProvider";
 
 /* ─── Scroll Lock Hook ───────────────────────────────────── */
 
@@ -440,7 +439,6 @@ function MobileMenu({
 /* ─── Header ───────────────────────────────────────────── */
 
 export function Header() {
-  const { theme } = useTheme();
   const pathname = usePathname();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -491,11 +489,6 @@ export function Header() {
     return () => cancelClose();
   }, [cancelClose]);
 
-  const logoSrc =
-    theme === "dark"
-      ? "/images/logos/logo-horizontal-white.png"
-      : "/images/logos/logo-horizontal-blue.png";
-
   return (
     <>
       <header
@@ -514,13 +507,26 @@ export function Header() {
 
             {/* ── Left wing: Logo + bee mark ── */}
             <div className="flex items-center gap-2">
+              {/* Logo pair: CSS-driven by data-theme to avoid hydration flash.
+                  JS reads theme AFTER hydration → logo briefly shows the
+                  wrong variant. These are toggled by the inline ThemeScript
+                  which sets data-theme before first paint — no flash possible. */}
               <Link href="/" className="flex-shrink-0">
                 <Image
-                  src={logoSrc}
+                  src="/images/logos/logo-horizontal-blue.png"
                   alt="Medina Chamber"
                   width={180}
                   height={48}
-                  className="h-10 w-auto"
+                  className="nav-logo nav-logo--light h-10 w-auto"
+                  priority
+                />
+                <Image
+                  src="/images/logos/logo-horizontal-white.png"
+                  alt=""
+                  aria-hidden="true"
+                  width={180}
+                  height={48}
+                  className="nav-logo nav-logo--dark h-10 w-auto"
                   priority
                 />
               </Link>

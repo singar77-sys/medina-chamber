@@ -569,7 +569,7 @@ export function Header() {
             </nav>
 
             {/* ── Right wing: Controls ── */}
-            <div className="flex items-center justify-end gap-2">
+            <div className="flex items-center justify-end gap-2 col-start-3">
               <CommandPaletteTrigger />
               <ThemeToggle />
 

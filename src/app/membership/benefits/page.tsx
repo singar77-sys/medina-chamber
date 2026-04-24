@@ -73,7 +73,7 @@ const extraBenefits = [
   {
     title: "Certificates of Origin",
     description:
-      "International trade documentation assistance for businesses involved in import/export. Pricing available upon request.",
+      "International trade documentation assistance for businesses involved in import/export. Free for non-freight forwarders on Visibility Plus and Community Investor tiers. Freight forwarders: pricing on request.",
   },
   {
     title: "Ribbon Cuttings",

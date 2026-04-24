@@ -11,11 +11,10 @@ import { headers } from "next/headers";
 export const metadata: Metadata = {
   title: "Medina Means Business",
   description:
-    "Medina Means Business is the official tagline of the Greater Medina Chamber of Commerce — and a statement of fact. 511+ member businesses, nearly 90 years of chamber work, and a manufacturing economy that outperforms. Here's what it actually means.",
+    `Medina Means Business is the official tagline of the Greater Medina Chamber of Commerce — and a statement of fact. ${totalCount}+ member businesses, ${new Date().getFullYear() - 1938}+ years of chamber work, and a manufacturing economy that outperforms. Here's what it actually means.`,
   openGraph: {
     title: "Medina Means Business — Greater Medina Chamber of Commerce",
-    description:
-      "The tagline, the magazine, and the reality. 511+ businesses, nearly 90 years of Chamber work, and what Medina County's business community looks like today.",
+    description: `The tagline, the magazine, and the reality. ${totalCount}+ businesses, ${new Date().getFullYear() - 1938}+ years of Chamber work, and what Medina County's business community looks like today.`,
   },
   alternates: { canonical: "/medina-means-business" },
 };
@@ -136,7 +135,7 @@ export default async function MedinaMeansBusinessPage() {
                   storefronts on the Square.
                 </p>
                 <p>
-                  The Chamber didn&apos;t invent that. We built a 511-member
+                  The Chamber didn&apos;t invent that. We built a {totalCount}-member
                   network around it — connecting the businesses, advocating
                   for the policies, and creating the programs that keep
                   Medina&apos;s economy compounding year after year.
@@ -165,7 +164,7 @@ export default async function MedinaMeansBusinessPage() {
           {[
             { end: 1938, label: "Chamber Founded", suffix: "" },
             { end: totalCount, label: "Chamber Members", suffix: "+" },
-            { end: 88, label: "Years of Advocacy", suffix: "+" },
+            { end: new Date().getFullYear() - 1938, label: "Years of Advocacy", suffix: "+" },
             { end: 9, label: "Active Committees", suffix: "" },
           ].map((s, i) => (
             <FadeIn key={s.label} delay={i * 80}>

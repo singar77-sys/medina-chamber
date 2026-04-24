@@ -8,6 +8,25 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
 
+// Module-level singleton — one fetch per page lifetime, shared across all
+// instances and remounts. The Promise itself is the cache: concurrent mounts
+// share the in-flight request; resolved mounts get the cached value as a
+// microtask. Reset to null on failure so the next mount retries cleanly.
+let svgCache: Promise<string> | null = null;
+
+function getChamberBotSvg(): Promise<string> {
+  if (!svgCache) {
+    svgCache = fetch("/images/chamberbot.svg")
+      .then((r) => r.text())
+      .then((raw) => raw.replace(/<g id="BG">[\s\S]*?<\/g>/, ""))
+      .catch((err) => {
+        svgCache = null;
+        throw err;
+      });
+  }
+  return svgCache;
+}
+
 type SceneState = "idle" | "listening" | "thinking" | "responding";
 type Mood = "alert" | "sleeping";
 export type MascotIntent = "member" | "event" | "count" | "error" | "general";
@@ -69,11 +88,9 @@ export function ChamberBotMascot({
     if (!el) return;
 
     let cancelled = false;
-    fetch("/images/chamberbot.svg")
-      .then((r) => r.text())
-      .then((svg) => {
+    getChamberBotSvg()
+      .then((cleaned) => {
         if (cancelled) return;
-        const cleaned = svg.replace(/<g id="BG">[\s\S]*?<\/g>/, "");
         el.innerHTML = cleaned;
 
         const svgEl = el.querySelector("svg");

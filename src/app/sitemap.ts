@@ -46,6 +46,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/community`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
     // Brand landing page
     { url: `${BASE_URL}/medina-means-business`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
+    // Resources
+    { url: `${BASE_URL}/resources`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/resources/start-a-business`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE_URL}/resources/business-grants`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE_URL}/resources/workforce`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
     // ChamberBot — dedicated immersive AI experience
     { url: `${BASE_URL}/chamberbot`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
     // Policy / legal

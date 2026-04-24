@@ -7,6 +7,9 @@ type SceneState = "idle" | "listening" | "thinking" | "responding";
 export interface ParticleFieldProps {
   state?: SceneState;
   className?: string;
+  /** When true, stops the rAF loop and clears the canvas — same effect as
+   *  prefers-reduced-motion, but user-controlled. */
+  chill?: boolean;
 }
 
 // Brand color triplets for canvas blending
@@ -51,7 +54,7 @@ interface Particle {
  * Purely decorative — pointer-events: none, skipped entirely when the
  * user has prefers-reduced-motion set.
  */
-export function ParticleField({ state = "idle", className = "" }: ParticleFieldProps) {
+export function ParticleField({ state = "idle", className = "", chill = false }: ParticleFieldProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
   const stateRef = useRef(state);
@@ -63,11 +66,15 @@ export function ParticleField({ state = "idle", className = "" }: ParticleFieldP
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Decorative — skip entirely for users who prefer reduced motion
+    // Decorative — skip entirely when chill mode is on or OS prefers-reduced-motion
     if (
-      typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
-    ) return;
+      chill ||
+      (typeof window !== "undefined" &&
+        window.matchMedia?.("(prefers-reduced-motion: reduce)").matches)
+    ) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      return;
+    }
 
     let W = 0, H = 0, DPR = 1;
     const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
@@ -237,7 +244,7 @@ export function ParticleField({ state = "idle", className = "" }: ParticleFieldP
       ro.disconnect();
       window.removeEventListener("pointermove", onMove);
     };
-  }, []); // stable: no deps change at runtime — stateRef handles live state
+  }, [chill]); // chill can toggle at runtime; stateRef handles live scene state
 
   return (
     <canvas

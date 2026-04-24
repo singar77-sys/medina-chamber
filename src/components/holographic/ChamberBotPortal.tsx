@@ -243,14 +243,6 @@ const TAGLINES = [
   "Your holographic concierge is ready.",
 ];
 
-function detectIntent(question: string): MascotIntent {
-  const q = question.toLowerCase();
-  if (/\bhow many\b|\bcount\b|\bnumber of\b|\btotal\b/.test(q)) return "count";
-  if (/\bevent|events|happening|upcoming|calendar\b/.test(q)) return "event";
-  if (/\b(?:find|who is|looking for|recommend|any)\b/.test(q)) return "member";
-  return "general";
-}
-
 // ── Component ─────────────────────────────────────────────────────
 
 export function ChamberBotPortal({
@@ -267,6 +259,14 @@ export function ChamberBotPortal({
   const [portalMode, setPortalMode] = useState<PortalMode | null>(null);
   const [clock, setClock] = useState("");
   const [taglineIdx, setTaglineIdx] = useState(0);
+  // Chill mode: pause decorative animations. Initialises from localStorage
+  // preference if set, otherwise mirrors the OS prefers-reduced-motion signal.
+  const [chillMode, setChillMode] = useState(() => {
+    if (typeof window === "undefined") return false;
+    const stored = localStorage.getItem("cb-chill");
+    if (stored !== null) return stored === "true";
+    return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+  });
 
   const inputRef = useRef<HTMLInputElement>(null);
   const justSubmittedRef = useRef(false);
@@ -297,6 +297,11 @@ export function ChamberBotPortal({
     return () => clearInterval(id);
   }, []);
 
+  // Persist chill preference across sessions
+  useEffect(() => {
+    localStorage.setItem("cb-chill", String(chillMode));
+  }, [chillMode]);
+
   // Tagline carousel — cycles while the stage caption is visible
   const hasMessages = messages.length > 0;
   const showContact = portalMode === "contact" && !hasMessages;
@@ -315,11 +320,8 @@ export function ChamberBotPortal({
       if (!q) return;
       if (sceneState === "thinking") return;
 
-      const qIntent = detectIntent(q);
-      setIntent(qIntent);
       setPortalMode((m) => (m === "contact" ? null : m));
       posthog?.capture("chamberbot_message_sent", {
-        intent: qIntent,
         turn: messages.filter((m) => m.role === "user").length + 1,
       });
 
@@ -355,11 +357,11 @@ export function ChamberBotPortal({
         const serverSid = res.headers.get("x-session-id");
         if (serverSid) sessionIdRef.current = serverSid;
 
-        const xSource = (
-          res.headers.get("x-cb-source") ?? "general"
-        ) as CbSource;
+        const xSource = (res.headers.get("x-cb-source") ?? "general") as CbSource;
+        const xIntent = (res.headers.get("x-cb-intent") ?? "general") as MascotIntent;
         const xMembers = res.headers.get("x-cb-members");
         const memberSlugs = xMembers ? xMembers.split(",").filter(Boolean) : [];
+        setIntent(xIntent);
 
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
@@ -541,7 +543,7 @@ export function ChamberBotPortal({
 
   return createPortal(
     <div
-      className={`cb-portal state-${sceneState}`}
+      className={`cb-portal state-${sceneState}${chillMode ? " cb-chill" : ""}`}
       data-phase={phase}
       data-state={sceneState}
       role="dialog"
@@ -780,16 +782,25 @@ export function ChamberBotPortal({
       </main>
 
       {/* ── Rail — 36px bottom grid row ── */}
-      <footer className="rail mono" aria-hidden="true">
-        <div className="rail-item">
+      <footer className="rail mono">
+        <div className="rail-item" aria-hidden="true">
           <span className="rail-dot ok" /> 511 MEMBERS INDEXED
         </div>
-        <div className="rail-item">
+        <div className="rail-item" aria-hidden="true">
           <span className="rail-dot warn" /> 12 EVENTS THIS MONTH
         </div>
-        <div className="rail-spacer" />
-        <div className="rail-item">VECTOR INDEX · v4.2.1</div>
-        <div className="rail-item">
+        <button
+          className="rail-item rail-toggle"
+          onClick={() => setChillMode((c) => !c)}
+          aria-pressed={chillMode}
+          aria-label={chillMode ? "Chill mode on — click to resume animations" : "Pause animations (chill mode)"}
+        >
+          <span className={`rail-dot ${chillMode ? "ok" : "off"}`} />
+          CHILL
+        </button>
+        <div className="rail-spacer" aria-hidden="true" />
+        <div className="rail-item" aria-hidden="true">VECTOR INDEX · v4.2.1</div>
+        <div className="rail-item" aria-hidden="true">
           LATENCY <span className="rail-val">—</span>
         </div>
       </footer>

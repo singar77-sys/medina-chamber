@@ -2726,6 +2726,18 @@ body {
 .cb-portal.state-thinking .hr-1 { animation-duration: 12s; }
 .cb-portal.state-thinking .hr-3 { animation-duration: 4s; }
 
+/* ── Chill mode — user-activated animation pause ─────────────── */
+/* Mirrors the decorative kills in prefers-reduced-motion but as a
+   persistent user toggle. Functional animations (typing dots, msg
+   entrance) are intentionally left alive — those are feedback, not
+   eye candy. Uses animation-play-state on rings so they freeze in
+   place rather than snapping away. */
+.cb-portal.cb-chill .holo-rings,
+.cb-portal.cb-chill .hr         { animation-play-state: paused !important; }
+.cb-portal.cb-chill .mascot-aura { animation: none !important; opacity: 0.25 !important; }
+.cb-portal.cb-chill .floor-ring  { animation: none !important; opacity: 0 !important; }
+.cb-portal.cb-chill .input-pulse { animation: none !important; }
+
 /* ── Mascot slot ──────────────────────────────────────────────── */
 .cb-portal .mascot-slot {
   position: relative;
@@ -3025,6 +3037,19 @@ body {
 .cb-portal .rail-dot.warn { background: var(--coquelicot); box-shadow: 0 0 6px var(--coquelicot); }
 .cb-portal .rail-spacer   { flex: 1; }
 .cb-portal .rail-val      { color: var(--cambridge); margin-left: 2px; }
+.cb-portal .rail-dot.off  { background: var(--paper-fade); box-shadow: none; opacity: 0.35; }
+.cb-portal .rail-toggle {
+  display: flex; align-items: center; gap: 6px;
+  background: none; border: none; padding: 0;
+  font: inherit; color: inherit; cursor: pointer;
+  white-space: nowrap; opacity: 0.55;
+  transition: opacity 0.15s, color 0.15s;
+}
+.cb-portal .rail-toggle:hover        { opacity: 1; }
+.cb-portal .rail-toggle:focus-visible {
+  outline: 1px solid var(--cambridge); outline-offset: 3px; border-radius: 2px;
+}
+.cb-portal .rail-toggle[aria-pressed="true"]  { opacity: 1; color: var(--cambridge); }
 
 /* ── Responsive ─────────────────────────────────────────────────── */
 @media (max-width: 900px) {
@@ -3136,23 +3161,20 @@ body {
   100% { transform: translate3d(4vw, 115vh, 0); }
 }
 
-/* Lightning — full-viewport white flash that fires once, then hides.
-   Uses animation-fill-mode: both with a one-shot curve. */
+/* Lightning — soft sky-glow, single pulse, no strobe. */
 .mwx-flash {
   position: absolute;
   inset: 0;
-  background: #ffffff;
+  background: radial-gradient(ellipse at 50% 0%, #e8f4ff 0%, #ffffff 60%, transparent 100%);
   opacity: 0;
   mix-blend-mode: screen;
-  animation: mwxFlash 180ms ease-out 1;
+  animation: mwxFlash 320ms ease-out 1;
   animation-fill-mode: forwards;
 }
 
 @keyframes mwxFlash {
   0%   { opacity: 0; }
-  10%  { opacity: 0.85; }
-  25%  { opacity: 0.15; }
-  45%  { opacity: 0.6; }   /* second pulse — the signature lightning flicker */
+  15%  { opacity: 0.22; }
   100% { opacity: 0; }
 }
 

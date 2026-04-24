@@ -18,8 +18,7 @@ import { safeJsonLd } from "@/lib/json-ld";
 import { headers } from "next/headers";
 export const metadata: Metadata = {
   title: "Greater Medina Chamber of Commerce — Medina County, Ohio",
-  description:
-    "The Greater Medina Chamber of Commerce connects and champions businesses across Medina County, Ohio. 511+ member businesses, networking events, advocacy, and programs since 1938.",
+  description: `The Greater Medina Chamber of Commerce connects and champions businesses across Medina County, Ohio. ${totalCount}+ member businesses, networking events, advocacy, and programs since 1938.`,
   openGraph: {
     title: "Greater Medina Chamber of Commerce",
     description:
@@ -38,7 +37,7 @@ const organizationJsonLd = {
   logo: "https://medinachamber.com/images/logos/logo-full-blue.png",
   image: "https://medinachamber.com/images/photos/chamber-building-exterior.jpg",
   description:
-    "The Greater Medina Chamber of Commerce connects and champions businesses across Medina County, Ohio. 511+ member businesses, networking events, advocacy, and programs since 1938.",
+    `The Greater Medina Chamber of Commerce connects and champions businesses across Medina County, Ohio. ${totalCount}+ member businesses, networking events, advocacy, and programs since 1938.`,
   foundingDate: "1938",
   telephone: "+1-330-723-8773",
   email: "office@medinaohchamber.com",
@@ -82,7 +81,7 @@ const organizationJsonLd = {
   numberOfEmployees: { "@type": "QuantitativeValue", value: 2 },
   member: {
     "@type": "QuantitativeValue",
-    value: 511,
+    value: totalCount,
     unitText: "member businesses",
   },
 };
@@ -179,7 +178,7 @@ export default async function HomePage() {
               { end: totalCount, label: "Member Businesses", suffix: "+" },
               { end: 30, label: "Events Per Year", suffix: "+" },
               { end: 9, label: "Committees" },
-              { end: 88, label: "Years Serving", suffix: "+" },
+              { end: new Date().getFullYear() - 1938, label: "Years Serving", suffix: "+" },
             ].map((s) => (
               <div key={s.label} className="text-center">
                 <p className="text-display text-oxford [[data-theme=dark]_&]:text-cambridge leading-none">

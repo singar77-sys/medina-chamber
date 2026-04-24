@@ -178,7 +178,7 @@ export default function AboutPage() {
                 business voices were heard in the halls of power.
               </p>
               <p>
-                Nearly 90 years later, that dual approach still defines us.
+                {new Date().getFullYear() - 1938} years later, that dual approach still defines us.
                 Today, {totalCount}+ Medina County businesses stand taller,
                 better connected, and better represented — shaping a thriving
                 future together. We&apos;re not a networking club. We&apos;re

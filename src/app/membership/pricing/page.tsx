@@ -41,7 +41,7 @@ const essentialsBenefits = [
   "Referral network access",
   "Personalized onboarding with Chamber staff",
   "Free notary service",
-  "Group health insurance (2–50 employees)",
+  "Group health insurance (2–49 employees)",
   "20% discount at Medina Recreation Center",
   "Workers' compensation program",
   "Member-only event pricing",
@@ -100,7 +100,7 @@ const tiers: Tier[] = [
 const faqs = [
   {
     q: "Do I qualify for group health insurance?",
-    a: "Available for employers with 2–50 employees. Details provided during onboarding.",
+    a: "Available for employers with 2–49 employees. Details provided during onboarding.",
   },
   {
     q: "What's included in member spotlights?",

@@ -163,6 +163,11 @@ export const searchablePages: { label: string; href: string; keywords: string }[
   { label: "Contact", href: "/about/contact", keywords: "contact phone email address location" },
   // Brand
   { label: "Medina Means Business", href: "/medina-means-business", keywords: "medina means business tagline brand magazine statement slogan" },
+  // Resources
+  { label: "Business Resources", href: "/resources", keywords: "resources guide programs tools medina county" },
+  { label: "Start a Business in Medina County", href: "/resources/start-a-business", keywords: "start business medina ohio llc register license launch new" },
+  { label: "Business Grants & Funding", href: "/resources/business-grants", keywords: "grant funding loan sba usda jobsohio finance money capital" },
+  { label: "Workforce & Hiring Resources", href: "/resources/workforce", keywords: "hire workforce jobs training ohiomeansjobs techecred employees" },
   // Communities
   { label: "Medina County Communities", href: "/community", keywords: "community area city township county medina" },
   { label: "Medina Businesses", href: "/community/medina", keywords: "medina ohio business downtown square" },

@@ -2010,6 +2010,50 @@ body {
    3D tilt + per-card reactive SVG graphics + shared cursor awareness.
    ============================================================ */
 
+/* Honeycomb watermark — ghosted behind all pillar content */
+.tp-section { isolation: isolate; }
+.tp-honeycomb {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  /* Break out of max-w-7xl — section is centered so 50% of section = center
+     of viewport, then subtract 50vw to reach the viewport left edge */
+  left: calc(50% - 50vw);
+  width: 100vw;
+  z-index: -1;
+  pointer-events: none;
+  /* Dark mode default: cambridge green, low opacity */
+  background-image:
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='72' height='41.57'><polygon points='60,20.78 48,0 24,0 12,20.78 24,41.57 48,41.57' fill='none' stroke='rgb(131,188,169)' stroke-width='0.7'/></svg>"),
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='72' height='41.57'><polygon points='60,20.78 48,0 24,0 12,20.78 24,41.57 48,41.57' fill='none' stroke='rgb(131,188,169)' stroke-width='0.7'/></svg>");
+  background-size: 72px 41.57px;
+  background-position: 0 0, 36px 20.78px;
+  mask-image: radial-gradient(ellipse 100% 90% at 50% 50%, #000 30%, transparent 85%);
+  -webkit-mask-image: radial-gradient(ellipse 100% 90% at 50% 50%, #000 30%, transparent 85%);
+  opacity: 0.03;
+  animation: tpHoneycombBreathe 6s ease-in-out infinite;
+}
+@keyframes tpHoneycombBreathe {
+  0%, 100% { opacity: 0.03; }
+  50%       { opacity: 0.09; }
+}
+/* Light mode: emerald stroke — darker so it reads on light backgrounds */
+:root[data-theme="light"] .tp-honeycomb {
+  background-image:
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='72' height='41.57'><polygon points='60,20.78 48,0 24,0 12,20.78 24,41.57 48,41.57' fill='none' stroke='rgb(0,84,80)' stroke-width='0.9'/></svg>"),
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='72' height='41.57'><polygon points='60,20.78 48,0 24,0 12,20.78 24,41.57 48,41.57' fill='none' stroke='rgb(0,84,80)' stroke-width='0.9'/></svg>");
+  opacity: 0.09;
+  animation-name: tpHoneycombBreatheLM;
+}
+@keyframes tpHoneycombBreatheLM {
+  0%, 100% { opacity: 0.09; }
+  50%       { opacity: 0.13; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tp-honeycomb { animation: none; opacity: 0.05; }
+  :root[data-theme="light"] .tp-honeycomb { opacity: 0.11; }
+}
+
 .tp-card-perspective {
   perspective: 1100px;
   transform-style: preserve-3d;
@@ -3210,4 +3254,60 @@ body {
   .mwx * {
     display: none !important;
   }
+}
+
+/* ─── BeeFly Easter egg ──────────────────────────────────────── */
+.bee-wrapper {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  will-change: left;
+}
+.bee-active-ltr {
+  animation: beeFlyX-ltr 11s linear forwards;
+}
+.bee-active-rtl {
+  animation: beeFlyX-rtl 11s linear forwards;
+}
+.bee-inner {
+  animation: beeWave 1.8s ease-in-out infinite;
+}
+/* Flip the SVG horizontally when flying right-to-left */
+.bee-rtl {
+  transform: scaleX(-1);
+}
+.bee-wing-l,
+.bee-wing-r {
+  transform-box: fill-box;
+  animation: beeFlapWing 0.2s ease-in-out infinite alternate;
+}
+/* Both wings attach at the body's shoulder (right/lower of their bounding box) */
+.bee-wing-l {
+  transform-origin: 90% 85%;
+}
+.bee-wing-r {
+  transform-origin: 85% 90%;
+  animation-delay: -0.1s;
+}
+@keyframes beeFlyX-ltr {
+  from { left: -70px; }
+  to   { left: calc(100vw + 70px); }
+}
+@keyframes beeFlyX-rtl {
+  from { left: calc(100vw + 70px); }
+  to   { left: -70px; }
+}
+@keyframes beeWave {
+  0%   { transform: translateY(0px) rotate(-4deg); }
+  25%  { transform: translateY(-22px) rotate(2deg); }
+  50%  { transform: translateY(0px) rotate(4deg); }
+  75%  { transform: translateY(-22px) rotate(2deg); }
+  100% { transform: translateY(0px) rotate(-4deg); }
+}
+@keyframes beeFlapWing {
+  from { transform: scaleY(1); }
+  to   { transform: scaleY(-0.4); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bee-wrapper { display: none !important; }
 }

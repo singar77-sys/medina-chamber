@@ -34,10 +34,22 @@ export const BRAND = {
 
 /** Asset URLs — live under public/. Used as background-image or <img src>. */
 export const ASSETS = {
-  iconWhite:  "/images/chamber-logos/icon-white.png",
-  iconOrange: "/images/chamber-logos/icon-orange.png",
-  iconGreen:  "/images/chamber-logos/icon-green.png",
-  networking: "/images/events/networking.webp",
+  iconWhite:       "/images/chamber-logos/icon-white.png",
+  iconOrange:      "/images/chamber-logos/icon-orange.png",
+  iconGreen:       "/images/chamber-logos/icon-green.png",
+  stampOrange:     "/images/chamber-logos/stamp-orange.png",
+  stampTeal:       "/images/chamber-logos/stamp-teal.png",
+  networking:      "/images/events/networking.webp",
+  networkingPeople:"/images/events/networking-people.png",
+  getToKnow:       "/images/events/get-to-know.jpg",
+  golf01:          "/images/events/golf-outing/golf-01.jpg",
+  golf03:          "/images/events/golf-outing/golf-03.jpg",
+  golfFoursome:    "/images/events/golf-outing/golf-foursome.png",
+  athena04:        "/images/events/athena-awards/athena-04.jpg",
+  social03:        "/images/events/social-connect/social-03.jpg",
+  chamberBuilding: "/images/events/chamber-building.webp",
+  industryMedina:  "/images/events/industry-medina.jpg",
+  businessBrewLogo:"/images/events/business-brew/business-brew-logo.png",
 } as const;
 
 export const FONT_STACK = '"BN Bergen", system-ui, -apple-system, sans-serif';
@@ -61,6 +73,8 @@ export interface EventInfo {
   year?: number;
   time?: string;
   note?: string;
+  venue?: string;
+  address?: string;
 }
 
 /** Outer container style shared by every graphic — full-bleed, positioned

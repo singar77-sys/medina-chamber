@@ -506,20 +506,50 @@ export function Header() {
         "
       >
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="flex items-center justify-between h-[4.5rem]">
-            {/* Logo */}
-            <Link href="/" className="flex-shrink-0">
-              <Image
-                src={logoSrc}
-                alt="Medina Chamber"
-                width={180}
-                height={48}
-                className="h-10 w-auto"
-                priority
-              />
-            </Link>
+          {/* Grid: left-wing [logo] · sacred-center [nav] · right-wing [controls]
+              grid-cols-[1fr_auto_1fr] gives the logo and controls equal fractional
+              width, so the nav is truly centred — hierophant bilateral symmetry. */}
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center h-[4.5rem]">
 
-            {/* Desktop nav — 4 items */}
+            {/* ── Left wing: Logo + bee mark ── */}
+            <div className="flex items-center gap-2">
+              <Link href="/" className="flex-shrink-0">
+                <Image
+                  src={logoSrc}
+                  alt="Medina Chamber"
+                  width={180}
+                  height={48}
+                  className="h-10 w-auto"
+                  priority
+                />
+              </Link>
+              {/* Virtual Chamber — bee mark, desktop only */}
+              <Link
+                href="/chamberbot"
+                aria-label="Open Virtual Chamber"
+                title="Virtual Chamber"
+                className="
+                  hidden lg:flex w-9 h-9 items-center justify-center
+                  rounded-full bg-bg-tertiary hover:bg-border-primary
+                  transition-colors flex-shrink-0
+                "
+              >
+                <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <ellipse cx="6.5" cy="8.5" rx="4.8" ry="2.6" fill="#83BCA9" transform="rotate(-18 6.5 8.5)" />
+                  <ellipse cx="13.5" cy="8.5" rx="4.8" ry="2.6" fill="#83BCA9" transform="rotate(18 13.5 8.5)" />
+                  <ellipse cx="10" cy="13.5" rx="3.2" ry="4.8" fill="#FF4000" />
+                  <ellipse cx="10" cy="12.8" rx="3.2" ry="1.1" fill="#0C1B33" opacity="0.3" />
+                  <ellipse cx="10" cy="15.2" rx="3.2" ry="1.1" fill="#0C1B33" opacity="0.3" />
+                  <circle cx="10" cy="8" r="2.1" fill="#FF4000" />
+                  <path d="M8.9 6.4 L7.2 4" stroke="#0C1B33" strokeWidth="1.1" strokeLinecap="round" />
+                  <path d="M11.1 6.4 L12.8 4" stroke="#0C1B33" strokeWidth="1.1" strokeLinecap="round" />
+                  <circle cx="7.2" cy="4" r="0.9" fill="#0C1B33" />
+                  <circle cx="12.8" cy="4" r="0.9" fill="#0C1B33" />
+                </svg>
+              </Link>
+            </div>
+
+            {/* ── Sacred center: Desktop nav ── */}
             <nav
               className="hidden lg:flex items-center gap-1"
               onPointerLeave={scheduleClose}
@@ -537,8 +567,8 @@ export function Header() {
               ))}
             </nav>
 
-            {/* Right side: Search + Theme + CTA + Mobile */}
-            <div className="flex items-center gap-2">
+            {/* ── Right wing: Controls ── */}
+            <div className="flex items-center justify-end gap-2">
               <CommandPaletteTrigger />
               <ThemeToggle />
 
@@ -548,7 +578,8 @@ export function Header() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="
-                  hidden lg:flex items-center px-4 py-2.5
+                  hidden lg:flex items-center px-3.5 py-2
+                  whitespace-nowrap
                   bg-emerald hover:bg-emerald/90
                   text-white font-bold text-body-sm
                   rounded-[var(--radius-md)]
@@ -562,7 +593,8 @@ export function Header() {
               <Link
                 href={ctaLink.href}
                 className="
-                  hidden lg:flex items-center px-5 py-2.5
+                  hidden lg:flex items-center px-4 py-2
+                  whitespace-nowrap
                   bg-accent hover:bg-accent-hover
                   text-white font-bold text-body-sm
                   rounded-[var(--radius-md)]

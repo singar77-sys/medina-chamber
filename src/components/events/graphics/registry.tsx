@@ -51,6 +51,8 @@ export interface EventLike {
   year?: number;
   startTime?: string;
   pricing?: string;
+  venue?: string;
+  address?: string;
 }
 
 /** Build the EventInfo bag that bound graphic components can render.
@@ -84,20 +86,12 @@ function eventInfoFor(event: EventLike): EventInfo {
     year: event.year,
     time: event.startTime,
     note,
+    venue: event.venue,
+    address: event.address,
   };
 }
 
 export function getEventGraphicRenderer(
-  _event: EventLike,
-): ComponentType<{ mode?: GraphicMode }> | null {
-  // All graphics are being redesigned — show the Coming Soon placeholder
-  // for every event type. Restore the slug-based routing below once the
-  // new designs are ready.
-  return ComingSoonGraphic;
-}
-
-/** @internal Preserved for when the redesigns ship — swap getEventGraphicRenderer back to this. */
-function _getEventGraphicRendererOriginal(
   event: EventLike,
 ): ComponentType<{ mode?: GraphicMode }> | null {
   const s = event.slug.toLowerCase();

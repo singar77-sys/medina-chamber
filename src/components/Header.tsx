@@ -503,6 +503,7 @@ export function Header() {
           sticky top-0 z-40
           bg-nav-bg backdrop-blur-xl
           border-b border-nav-border
+          pt-[env(safe-area-inset-top)]
         "
       >
         <div className="mx-auto max-w-7xl px-6 lg:px-8">

@@ -24,7 +24,7 @@ export function CommandPaletteTrigger() {
         type="button"
         onClick={open}
         aria-label="Open search and navigation"
-        className="cmdk-navtrigger hidden sm:inline-flex"
+        className="cmdk-navtrigger hidden lg:inline-flex"
       >
         <svg
           viewBox="0 0 20 20"
@@ -47,7 +47,7 @@ export function CommandPaletteTrigger() {
         type="button"
         onClick={open}
         aria-label="Open search"
-        className="cmdk-navtrigger--icon sm:hidden"
+        className="cmdk-navtrigger--icon lg:hidden"
       >
         <svg
           viewBox="0 0 20 20"

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { totalCount } from "@/data/members";
 
 /**
  * CommandPalette — global intent layer. ⌘K / Ctrl+K / "/" from anywhere
@@ -91,7 +92,7 @@ const COMMANDS: Command[] = [
     group: "Membership",
     href: "/membership/directory",
     keywords: ["find", "search", "business", "company", "members"],
-    hint: "Search 511+ member businesses",
+    hint: `Search ${totalCount}+ member businesses`,
   },
   {
     id: "join",

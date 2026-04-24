@@ -176,7 +176,7 @@ export default async function EventPage(
             <div className="mt-10">
               <h2 className="text-h3 mb-4">Location</h2>
               <div className="p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-                <p className="text-body font-semibold">Greater Medina Chamber of Commerce</p>
+                <p className="text-body font-semibold">{event.venue ?? "Greater Medina Chamber of Commerce"}</p>
                 <p className="text-body-sm text-text-secondary mt-1">{event.street}</p>
                 <p className="text-body-sm text-text-secondary">
                   {event.city}, {event.state} {event.zip}

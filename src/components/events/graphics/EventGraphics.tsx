@@ -541,15 +541,14 @@ export function SafetyCouncilGraphic({
 }
 
 /* =============================================================================
-   3 — CHAMBER CHAT  (redesign v2)
-   Oxford field with a ghosted networking photo + linear darken gradient,
-   cambridge coffee cup and steam swirls, split-color title stack,
-   coquelicot-accented "WHEN" stat.
+   3 — CHAMBER CHAT
+   Oxford field + ghosted networking photo, cambridge coffee cup + steam,
+   split-color "Chamber / Chat." wordmark, tagline + WHEN stat bottom row.
    ============================================================================ */
 
 export function ChamberChatGraphic({
   mode = "social",
-  eventInfo,
+  eventInfo: _eventInfo,
 }: {
   mode?: GraphicMode;
   eventInfo?: EventInfo;
@@ -558,30 +557,30 @@ export function ChamberChatGraphic({
   const isSquare = mode === "square";
 
   const vb = isStory ? "0 0 1080 1920" : isSquare ? "0 0 1080 1080" : "0 0 1200 630";
+  const vbW = isStory || isSquare ? 1080 : 1200;
+  const vbH = isStory ? 1920 : isSquare ? 1080 : 630;
 
-  // Cup position is aspect-specific: wide layouts (social, square) put
-  // the cup on the right and the title on the left. Story is portrait —
-  // the title sits at the bottom, so the cup goes up top so they don't
-  // collide. Centered horizontally for a symmetric vertical composition.
-  //
-  // Story cup needed to move up ~280px (760 → 480) because the new
-  // title-block height (title + tagline + plinth ≈ 700px) was leaving
-  // only ~2px between the saucer bottom and the title top — they were
-  // effectively touching. Also slimmed h slightly so the saucer bottom
-  // lands ~y=820 in story, well above the y=1120 title top.
+  // Cup: coffee surface at φ horizontal (vbH / 1.618), handle bleeds right edge
   const cup = isStory
-    ? { cx: 540, cy: 480,  rx: 230, ry: 58, h: 250 }
+    ? { cx: 840,  cy: 1440, rx: 260, ry: 65, h: 290 }
     : isSquare
-    ? { cx: 820, cy: 600,  rx: 200, ry: 50, h: 220 }
-    : { cx: 980, cy: 320,  rx: 160, ry: 40, h: 180 };
+    ? { cx: 860,  cy: 800,  rx: 200, ry: 50, h: 220 }
+    : { cx: 950,  cy: 388,  rx: 170, ry: 42, h: 200 };
 
-  // BN Bergen bold "Chamber" at 260px measures ~1106px wide — wider than
-  // the 1080 story canvas, so the final "r" would render past the right
-  // edge. Dropped story size to 230, which puts "Chamber" around 980px
-  // and leaves a ~30px safety margin inside the canvas. Social/square
-  // values unchanged — they had plenty of horizontal room already.
-  const titleSize = pick([140, 200, 230] as const, mode);
+  const titleSize = pick([140, 200, 260] as const, mode);
   const padding = isStory ? "110px 72px 100px" : isSquare ? "72px 64px" : "56px 64px";
+
+  const dotX = cup.cx + cup.rx * 0.35;
+  const dotY = cup.cy + 2;
+  const dotR  = isStory ? 10 : 7;
+
+  // Bokeh: city-light particles [fracX, fracY, r, opacity]
+  const bokeh: [number, number, number, number][] = [
+    [0.10, 0.13, 2.5, 0.14], [0.28, 0.07, 1.8, 0.10], [0.48, 0.14, 3.0, 0.09],
+    [0.63, 0.09, 2.0, 0.13], [0.17, 0.82, 2.2, 0.08], [0.38, 0.76, 1.5, 0.11],
+    [0.07, 0.49, 1.6, 0.07], [0.43, 0.31, 2.0, 0.12], [0.68, 0.22, 1.8, 0.08],
+    [0.13, 0.28, 3.0, 0.06], [0.52, 0.47, 2.0, 0.09], [0.23, 0.61, 1.4, 0.07],
+  ];
 
   return (
     <div style={containerStyle({ background: BRAND.oxford, color: "#fff" })}>
@@ -590,65 +589,103 @@ export function ChamberChatGraphic({
         position: "absolute", inset: 0,
         backgroundImage: `url(${ASSETS.networking})`,
         backgroundSize: "cover", backgroundPosition: "center",
-        opacity: 0.32, mixBlendMode: "luminosity",
-        filter: "grayscale(1) contrast(1.1)",
-      }} />
-      {/* Darken gradient */}
-      <div style={{
-        position: "absolute", inset: 0,
-        background: `linear-gradient(180deg, ${BRAND.oxford}99 0%, ${BRAND.oxford}cc 55%, ${BRAND.oxford}f2 100%)`,
+        opacity: 0.28, mixBlendMode: "luminosity",
+        filter: "grayscale(1) contrast(1.2)",
       }} />
 
-      {/* Coffee cup illustration — cambridge palette */}
+      {/* Deep atmospheric gradient */}
+      <div style={{
+        position: "absolute", inset: 0,
+        background: `linear-gradient(168deg, ${BRAND.oxford}88 0%, ${BRAND.oxford}bb 45%, ${BRAND.oxford}f4 100%)`,
+      }} />
+
+      {/* John Alvin "heavy light": warm coquelicot glow radiating from cup position */}
+      <div style={{
+        position: "absolute", inset: 0,
+        background: `radial-gradient(ellipse 55% 70% at ${(cup.cx / vbW) * 100}% ${(cup.cy / vbH) * 100}%, ${BRAND.coquelicot}1e 0%, transparent 62%)`,
+      }} />
+
+      {/* Cambridge counterglow — cool upper atmosphere */}
+      <div style={{
+        position: "absolute", inset: 0,
+        background: `radial-gradient(ellipse 38% 32% at 18% 12%, ${BRAND.cambridge}1c 0%, transparent 70%)`,
+      }} />
+
+      {/* SVG: esoteric geometry + particles + cup + glow */}
       <svg viewBox={vb} style={svgFillStyle}>
-        {/* Steam swirls */}
-        <g opacity="0.5" fill="none" stroke={BRAND.cambridge} strokeWidth={isStory ? 4 : 3} strokeLinecap="round">
+        <defs>
+          {/* Bloom glow for steam curls */}
+          <filter id={`cc-steam-${mode}`} x="-120%" y="-40%" width="340%" height="180%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation={isStory ? 5 : 3.5} result="b" />
+            <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+
+          {/* Bloom glow for coquelicot focal dot */}
+          <filter id={`cc-dot-${mode}`} x="-400%" y="-400%" width="900%" height="900%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation={isStory ? 18 : 11} result="b" />
+            <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+        </defs>
+
+        {/* Esoteric Architect: invisible circle anchors the composition —
+            the eye perceives its weight without ever seeing the line */}
+        <circle
+          cx={cup.cx} cy={cup.cy} r={isStory ? 500 : isSquare ? 370 : 288}
+          fill="none" stroke={BRAND.cambridge}
+          strokeWidth={isStory ? 0.8 : 0.5} opacity="0.08"
+        />
+
+        {/* Bokeh city-light field — warm amber + cool cambridge + white */}
+        {bokeh.map(([fx, fy, r, o], i) => (
+          <circle key={i}
+            cx={fx * vbW} cy={fy * vbH} r={r}
+            fill={i % 3 === 0 ? BRAND.cambridge : i % 3 === 1 ? "#C8963E" : "#ffffff"}
+            opacity={o}
+          />
+        ))}
+
+        {/* Steam curls — with bloom */}
+        <g fill="none" stroke={BRAND.cambridge} strokeWidth={isStory ? 4 : 3}
+           strokeLinecap="round" opacity="0.72"
+           filter={`url(#cc-steam-${mode})`}>
           {[0, 1, 2].map((i) => {
-            const x = cup.cx + (i - 1) * (cup.rx * 0.45);
+            const x    = cup.cx + (i - 1) * (cup.rx * 0.45);
             const topY = cup.cy - cup.ry - (isStory ? 260 : 180);
             const botY = cup.cy - cup.ry - 12;
             const midX = x + (i % 2 === 0 ? 20 : -20);
             return (
-              <path
-                key={i}
-                d={`M ${x} ${botY} C ${midX} ${botY - 50}, ${x + 28} ${botY - 100}, ${x - 10} ${botY - 150} S ${midX + 14} ${topY + 30}, ${x} ${topY}`}
-              />
+              <path key={i}
+                d={`M ${x} ${botY} C ${midX} ${botY-50}, ${x+28} ${botY-100}, ${x-10} ${botY-150} S ${midX+14} ${topY+30}, ${x} ${topY}`} />
             );
           })}
         </g>
 
-        {/* Saucer — three rings */}
-        <ellipse cx={cup.cx} cy={cup.cy + cup.h + 16} rx={cup.rx + 36} ry={cup.ry * 0.8}  fill={BRAND.cambridge} opacity="0.22" />
-        <ellipse cx={cup.cx} cy={cup.cy + cup.h + 10} rx={cup.rx + 30} ry={cup.ry * 0.7}  fill={BRAND.cambridge} />
-        <ellipse cx={cup.cx} cy={cup.cy + cup.h + 6}  rx={cup.rx + 22} ry={cup.ry * 0.55} fill={BRAND.oxford} />
+        {/* Saucer */}
+        <ellipse cx={cup.cx} cy={cup.cy+cup.h+16} rx={cup.rx+36} ry={cup.ry*0.8}  fill={BRAND.cambridge} opacity="0.22" />
+        <ellipse cx={cup.cx} cy={cup.cy+cup.h+10} rx={cup.rx+30} ry={cup.ry*0.7}  fill={BRAND.cambridge} />
+        <ellipse cx={cup.cx} cy={cup.cy+cup.h+6}  rx={cup.rx+22} ry={cup.ry*0.55} fill={BRAND.oxford} />
 
-        {/* Cup body — tapered */}
-        <path
-          d={`M ${cup.cx - cup.rx} ${cup.cy}
-              C ${cup.cx - cup.rx} ${cup.cy + cup.h * 0.8}, ${cup.cx - cup.rx * 0.6} ${cup.cy + cup.h}, ${cup.cx} ${cup.cy + cup.h}
-              C ${cup.cx + cup.rx * 0.6} ${cup.cy + cup.h}, ${cup.cx + cup.rx} ${cup.cy + cup.h * 0.8}, ${cup.cx + cup.rx} ${cup.cy}
-              Z`}
-          fill={BRAND.cambridge}
-        />
-
+        {/* Cup body */}
+        <path d={`M ${cup.cx-cup.rx} ${cup.cy}
+                  C ${cup.cx-cup.rx} ${cup.cy+cup.h*0.8}, ${cup.cx-cup.rx*0.6} ${cup.cy+cup.h}, ${cup.cx} ${cup.cy+cup.h}
+                  C ${cup.cx+cup.rx*0.6} ${cup.cy+cup.h}, ${cup.cx+cup.rx} ${cup.cy+cup.h*0.8}, ${cup.cx+cup.rx} ${cup.cy}
+                  Z`} fill={BRAND.cambridge} />
         {/* Handle */}
-        <path
-          d={`M ${cup.cx + cup.rx - 4} ${cup.cy + cup.h * 0.2}
-              Q ${cup.cx + cup.rx + cup.rx * 0.55} ${cup.cy + cup.h * 0.35}, ${cup.cx + cup.rx + cup.rx * 0.55} ${cup.cy + cup.h * 0.55}
-              Q ${cup.cx + cup.rx + cup.rx * 0.55} ${cup.cy + cup.h * 0.78}, ${cup.cx + cup.rx - 4} ${cup.cy + cup.h * 0.72}`}
-          fill="none"
-          stroke={BRAND.cambridge}
-          strokeWidth={isStory ? 28 : 22}
-          strokeLinecap="round"
-        />
-
+        <path d={`M ${cup.cx+cup.rx-4} ${cup.cy+cup.h*0.2}
+                  Q ${cup.cx+cup.rx+cup.rx*0.55} ${cup.cy+cup.h*0.35}, ${cup.cx+cup.rx+cup.rx*0.55} ${cup.cy+cup.h*0.55}
+                  Q ${cup.cx+cup.rx+cup.rx*0.55} ${cup.cy+cup.h*0.78}, ${cup.cx+cup.rx-4} ${cup.cy+cup.h*0.72}`}
+          fill="none" stroke={BRAND.cambridge} strokeWidth={isStory ? 28 : 22} strokeLinecap="round" />
         {/* Coffee surface */}
-        <ellipse cx={cup.cx} cy={cup.cy} rx={cup.rx}      ry={cup.ry}      fill={BRAND.oxford} />
-        <ellipse cx={cup.cx} cy={cup.cy} rx={cup.rx - 10} ry={cup.ry - 8}  fill="#1a1306" />
-        <ellipse cx={cup.cx - cup.rx * 0.3} cy={cup.cy - cup.ry * 0.3} rx={cup.rx * 0.45} ry={cup.ry * 0.25} fill="rgba(255,255,255,0.06)" />
+        <ellipse cx={cup.cx} cy={cup.cy} rx={cup.rx}     ry={cup.ry}     fill={BRAND.oxford} />
+        <ellipse cx={cup.cx} cy={cup.cy} rx={cup.rx-10}  ry={cup.ry-8}   fill="#1a1306" />
+        <ellipse cx={cup.cx-cup.rx*0.3} cy={cup.cy-cup.ry*0.3} rx={cup.rx*0.45} ry={cup.ry*0.25} fill="rgba(255,255,255,0.09)" />
 
-        {/* Coquelicot accent dot */}
-        <circle cx={cup.cx + cup.rx * 0.35} cy={cup.cy + 2} r={isStory ? 10 : 7} fill={BRAND.coquelicot} opacity="0.95" />
+        {/* Coquelicot focal point — the single John Alvin light source, glowing halos */}
+        <circle cx={dotX} cy={dotY} r={dotR*5.5} fill={BRAND.coquelicot} opacity="0.07"
+                filter={`url(#cc-dot-${mode})`} />
+        <circle cx={dotX} cy={dotY} r={dotR*3}   fill={BRAND.coquelicot} opacity="0.20" />
+        <circle cx={dotX} cy={dotY} r={dotR*1.7} fill={BRAND.coquelicot} opacity="0.55" />
+        <circle cx={dotX} cy={dotY} r={dotR}      fill={BRAND.coquelicot} opacity="0.95" />
       </svg>
 
       {/* Content layer */}
@@ -657,106 +694,52 @@ export function ChamberChatGraphic({
         padding,
         display: "flex", flexDirection: "column", justifyContent: "space-between",
       }}>
-        {/* Top rail — chamber wordmark left, icon right (matches the
-            grammar established by Networking WOW + Safety Council v2) */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{
-            fontSize: pick([14, 16, 20] as const, mode),
-            fontWeight: 700, letterSpacing: "0.18em",
-            color: BRAND.cambridge, textTransform: "uppercase",
-          }}>
-            Greater Medina Chamber
+        {/* Top rail */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+          <div>
+            <div style={{ fontSize: isStory ? 16 : 12, letterSpacing: "0.3em", color: BRAND.cambridge, fontWeight: 700 }}>
+              MONTHLY NETWORKING
+            </div>
+            <div style={{ fontSize: isStory ? 17 : 13, color: "rgba(255,255,255,0.55)", marginTop: 6, letterSpacing: "0.1em" }}>
+              GREATER MEDINA CHAMBER
+            </div>
           </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={ASSETS.iconWhite} style={{ height: isStory ? 60 : 44 }} alt="" />
+          <img src={ASSETS.iconWhite} style={{ height: isStory ? 60 : 44, width: "auto" }} alt="" />
         </div>
 
-        <div style={{ maxWidth: isStory ? 960 : isSquare ? 620 : 640 }}>
-          <div style={{ fontSize: titleSize, fontWeight: 700, lineHeight: 0.86, letterSpacing: "-0.045em", color: "#fff" }}>
+        {/* Wordmark — heavy bottom-left anchor, neon glow treatment */}
+        <div style={{ maxWidth: isStory ? 760 : isSquare ? 620 : 560 }}>
+          <div style={{
+            borderTop: `1px solid ${BRAND.cambridge}38`,
+            paddingTop: isStory ? 28 : 18,
+            marginBottom: isStory ? 10 : 6,
+          }} />
+          <div style={{
+            fontSize: titleSize, fontWeight: 700, lineHeight: 0.86, letterSpacing: "-0.045em",
+            color: "#fff",
+            textShadow: `0 0 ${isStory ? 60 : 38}px rgba(255,255,255,0.20), 0 0 ${isStory ? 120 : 75}px rgba(255,255,255,0.09)`,
+          }}>
             Chamber
           </div>
-          <div style={{ fontSize: titleSize, fontWeight: 700, lineHeight: 0.86, letterSpacing: "-0.045em", color: BRAND.cambridge, marginTop: -8 }}>
+          <div style={{
+            fontSize: titleSize, fontWeight: 700, lineHeight: 0.86, letterSpacing: "-0.045em",
+            color: BRAND.cambridge, marginTop: -8,
+            textShadow: `0 0 ${isStory ? 48 : 30}px ${BRAND.cambridge}80, 0 0 ${isStory ? 96 : 60}px ${BRAND.cambridge}40, 0 0 ${isStory ? 180 : 110}px ${BRAND.cambridge}1a`,
+          }}>
             Chat
           </div>
-
-          {/* Chamber's actual slogan: "Where Connections Happen" —
-              Mistrully on "Connections" (the relationship word). */}
           <div style={{
-            marginTop: isStory ? 28 : 16,
-            display: "flex", alignItems: "baseline", flexWrap: "wrap",
-            columnGap: pick([12, 14, 18] as const, mode),
-            rowGap: 4,
-            color: "#fff",
+            fontFamily: SCRIPT_STACK,
+            fontSize: pick([34, 48, 68] as const, mode),
+            color: "rgba(255,255,255,0.72)",
+            marginTop: isStory ? 18 : 10,
+            letterSpacing: "0.01em",
+            lineHeight: 1.1,
           }}>
-            <span style={{
-              fontSize: pick([28, 36, 48] as const, mode), fontWeight: 300,
-              letterSpacing: "0.04em", textTransform: "uppercase",
-            }}>Where</span>
-            <span style={{
-              fontFamily: SCRIPT_STACK,
-              fontSize: pick([46, 60, 80] as const, mode), lineHeight: 0.9,
-              color: BRAND.cambridge, fontWeight: 400,
-              transform: "translateY(0.08em)", display: "inline-block",
-            }}>
-              Connections
-            </span>
-            <span style={{
-              fontSize: pick([28, 36, 48] as const, mode), fontWeight: 300,
-              letterSpacing: "0.04em", textTransform: "uppercase",
-            }}>Happen</span>
+            where connections happen
           </div>
         </div>
-
-        {/* Bottom event-info plinth — only when bound to a specific
-            upcoming event. */}
-        {eventInfo && (eventInfo.dayOfWeek || eventInfo.time || eventInfo.note) && (
-          <div style={{
-            borderTop: `1px solid ${BRAND.cambridge}55`,
-            paddingTop: pick([18, 22, 28] as const, mode),
-            display: "flex", alignItems: "flex-end", justifyContent: "space-between",
-            gap: 24, flexWrap: "wrap",
-          }}>
-            <div>
-              {(() => {
-                const dateLine = [
-                  eventInfo.dayOfWeek?.substring(0, 3).toUpperCase(),
-                  eventInfo.month && eventInfo.day
-                    ? `${eventInfo.month.toUpperCase()} ${eventInfo.day}${eventInfo.year ? `, ${eventInfo.year}` : ""}`
-                    : null,
-                ]
-                  .filter(Boolean)
-                  .join(" · ");
-                return dateLine ? (
-                  <div style={{
-                    fontSize: pick([18, 22, 28] as const, mode), fontWeight: 700,
-                    letterSpacing: "0.16em", color: BRAND.cambridge,
-                    textTransform: "uppercase",
-                  }}>
-                    {dateLine}
-                  </div>
-                ) : null;
-              })()}
-              {eventInfo.time && (
-                <div style={{
-                  fontSize: pick([28, 34, 40] as const, mode), fontWeight: 700,
-                  color: "#fff", letterSpacing: "-0.01em", marginTop: 4,
-                }}>
-                  {eventInfo.time}
-                </div>
-              )}
-            </div>
-            {eventInfo.note && (
-              <div style={{
-                fontSize: pick([18, 22, 28] as const, mode), fontWeight: 700,
-                letterSpacing: "0.18em", color: BRAND.coquelicot,
-                textTransform: "uppercase", textAlign: "right",
-                paddingBottom: 4,
-              }}>
-                {eventInfo.note}
-              </div>
-            )}
-          </div>
-        )}
       </div>
     </div>
   );
@@ -1317,347 +1300,220 @@ export function BusinessBrewGraphic({
   mode?: GraphicMode;
   eventInfo?: EventInfo;
 }) {
-  const isStory = mode === "story";
+  const isStory  = mode === "story";
   const isSquare = mode === "square";
 
-  // Glass anchor — strict horizontal center. cy chosen per-mode so
-  // the bowl + stem + foot sits cleanly above the type block, with
-  // a comfortable visual gap. Story has the most vertical room and
-  // gets the biggest glass; social is the tightest.
-  const glass = isStory
-    ? { cx: 540, cy: 620, bowlR: 210, stemH: 120, footR: 85 }
-    : isSquare
-    ? { cx: 540, cy: 320, bowlR: 150, stemH: 85,  footR: 65 }
-    : { cx: 600, cy: 180, bowlR: 80,  stemH: 50,  footR: 38 };
+  // Shared event data helpers
+  const MONTH_NUM: Record<string, string> = {
+    january:"01", february:"02", march:"03",    april:"04",
+    may:"05",     june:"06",     july:"07",      august:"08",
+    september:"09", october:"10", november:"11", december:"12",
+  };
+  const issueNo  = eventInfo?.month ? (MONTH_NUM[eventInfo.month.toLowerCase()] ?? "—") : "—";
+  const issueYr  = eventInfo?.year  ? String(eventInfo.year) : "—";
+  const dayShort = eventInfo?.dayOfWeek?.substring(0, 3).toUpperCase() ?? "";
+  const monShort = eventInfo?.month?.substring(0, 3).toUpperCase() ?? "";
+  const whenDate = [dayShort, (monShort && eventInfo?.day) ? `${monShort} ${eventInfo.day}` : ""]
+    .filter(Boolean).join(" · ") || "—";
+  const timeLine = eventInfo?.time ?? "";
+  const hasVenue = !!eventInfo?.venue;
 
-  const vb = isStory ? "0 0 1080 1920" : isSquare ? "0 0 1080 1080" : "0 0 1200 630";
-
-  // Type sizes — landscape (social) is the tightest format and
-  // gets the most aggressive size pull-back. Square stays mid.
-  // Story keeps the full poster scale.
-  const titleSize = pick([90, 150, 220] as const, mode);
-  const sloganSize = pick([20, 30, 40] as const, mode);
-  const sloganScript = pick([34, 52, 76] as const, mode);
-
-  // Plinth (credits) sizes
-  const plinthLabel = pick([13, 18, 24] as const, mode);
-  const plinthBig = pick([20, 28, 38] as const, mode);
-
-  // Coupe glass geometry (V-bowl: a triangle with rounded outer edges)
-  const bowlTopY = glass.cy - glass.bowlR;
-  const bowlPointY = glass.cy + glass.bowlR * 0.05;
-  const bowlLeftX = glass.cx - glass.bowlR;
-  const bowlRightX = glass.cx + glass.bowlR;
-  const stemTopY = bowlPointY + 2;
-  const stemBotY = stemTopY + glass.stemH;
-  const footY = stemBotY;
-
-  // Liquid surface (an ellipse cut where the V is at that y)
-  const liquidLevel = bowlTopY + glass.bowlR * 0.18; // small headroom under rim
-  // x-extent of the V at liquidLevel
-  const tProgress = (liquidLevel - bowlTopY) / (bowlPointY - bowlTopY);
-  const liquidHalfW = glass.bowlR * (1 - tProgress * 1);
-  const liquidLeftX = glass.cx - liquidHalfW;
-  const liquidRightX = glass.cx + liquidHalfW;
-
-  // Paper airplane on the rim (right side)
-  const planeBaseX = glass.cx + glass.bowlR * 0.55;
-  const planeBaseY = bowlTopY - 6;
-  const planeR = pick([28, 38, 50] as const, mode);
-
-  return (
-    <div style={containerStyle({ background: BRAND.cream, color: BRAND.oxford })}>
-      <svg viewBox={vb} style={svgFillStyle}>
-        <defs>
-          {/* Airbrushed liquid — bright orange surface fading into
-              deep coquelicot at the bowl point. */}
-          <radialGradient id={`bbliquid-${mode}`} cx="50%" cy="20%" r="80%">
-            <stop offset="0%"  stopColor="#FF6A2E" />
-            <stop offset="55%" stopColor={BRAND.coquelicot} />
-            <stop offset="100%" stopColor="#9F2400" />
-          </radialGradient>
-          {/* Glass body shimmer — soft highlight along the inner left
-              edge of the bowl. */}
-          <linearGradient id={`bbshine-${mode}`} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%"  stopColor="#fff" stopOpacity="0.55" />
-            <stop offset="60%" stopColor="#fff" stopOpacity="0" />
-          </linearGradient>
-          {/* Rim highlight — narrow white-blue arc */}
-          <linearGradient id={`bbrim-${mode}`} x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%"  stopColor="#fff" stopOpacity="0" />
-            <stop offset="50%" stopColor="#fff" stopOpacity="0.95" />
-            <stop offset="100%" stopColor="#fff" stopOpacity="0" />
-          </linearGradient>
-          {/* Foot shadow — soft cool gradient under the base */}
-          <radialGradient id={`bbfootshadow-${mode}`} cx="50%" cy="50%" r="50%">
-            <stop offset="0%"  stopColor={BRAND.oxford} stopOpacity="0.3" />
-            <stop offset="100%" stopColor={BRAND.oxford} stopOpacity="0" />
-          </radialGradient>
-        </defs>
-
-        {/* Foot shadow first (behind everything) */}
-        <ellipse
-          cx={glass.cx}
-          cy={footY + 8}
-          rx={glass.footR + 24}
-          ry={glass.footR * 0.18}
-          fill={`url(#bbfootshadow-${mode})`}
-        />
-
-        {/* Glass FOOT (base disc) */}
-        <ellipse cx={glass.cx} cy={footY} rx={glass.footR} ry={glass.footR * 0.16} fill={BRAND.oxford} opacity="0.85" />
-        <ellipse cx={glass.cx} cy={footY - 2} rx={glass.footR - 6} ry={glass.footR * 0.12} fill={BRAND.cream} opacity="0.6" />
-
-        {/* Glass STEM */}
-        <rect
-          x={glass.cx - 4}
-          y={stemTopY}
-          width={8}
-          height={glass.stemH}
-          fill={BRAND.oxford}
-          opacity="0.88"
-        />
-        <rect
-          x={glass.cx - 1.5}
-          y={stemTopY}
-          width={3}
-          height={glass.stemH}
-          fill="#fff"
-          opacity="0.45"
-        />
-
-        {/* Liquid (filled V from rim level down to point) — airbrushed */}
-        <path
-          d={`M ${liquidLeftX} ${liquidLevel}
-              L ${liquidRightX} ${liquidLevel}
-              L ${glass.cx} ${bowlPointY}
-              Z`}
-          fill={`url(#bbliquid-${mode})`}
-        />
-        {/* Liquid surface highlight — thin ellipse at the rim line */}
-        <ellipse
-          cx={glass.cx}
-          cy={liquidLevel}
-          rx={liquidHalfW}
-          ry={liquidHalfW * 0.16}
-          fill="#FF8C5A"
-          opacity="0.85"
-        />
-        {/* Subtle inner-bowl shadow on the liquid (dark crescent at the
-            point, suggests depth) */}
-        <ellipse
-          cx={glass.cx}
-          cy={bowlPointY - liquidHalfW * 0.28}
-          rx={liquidHalfW * 0.45}
-          ry={liquidHalfW * 0.16}
-          fill="#4A0E00"
-          opacity="0.35"
-        />
-
-        {/* Glass BOWL outline (V) — oxford lines with airbrush shine
-            overlay for depth */}
-        <path
-          d={`M ${bowlLeftX} ${bowlTopY}
-              L ${glass.cx} ${bowlPointY}
-              L ${bowlRightX} ${bowlTopY}`}
-          fill="none"
-          stroke={BRAND.oxford}
-          strokeWidth={3}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        {/* Inner shine sliver */}
-        <path
-          d={`M ${bowlLeftX + 8} ${bowlTopY + 6}
-              L ${glass.cx - 6} ${bowlPointY - 18}`}
-          fill="none"
-          stroke={`url(#bbshine-${mode})`}
-          strokeWidth={4}
-          strokeLinecap="round"
-        />
-
-        {/* Rim — single crisp ellipse cap */}
-        <ellipse
-          cx={glass.cx}
-          cy={bowlTopY}
-          rx={glass.bowlR}
-          ry={glass.bowlR * 0.14}
-          fill="none"
-          stroke={BRAND.oxford}
-          strokeWidth={3}
-        />
-        {/* Rim highlight — bright crest along top half of the ellipse */}
-        <path
-          d={`M ${bowlLeftX + glass.bowlR * 0.2} ${bowlTopY - glass.bowlR * 0.04}
-              Q ${glass.cx} ${bowlTopY - glass.bowlR * 0.18}
-                ${bowlRightX - glass.bowlR * 0.2} ${bowlTopY - glass.bowlR * 0.04}`}
-          fill="none"
-          stroke={`url(#bbrim-${mode})`}
-          strokeWidth={3}
-        />
-
-        {/* Paper airplane perched on the right rim */}
-        <g transform={`translate(${planeBaseX} ${planeBaseY}) rotate(-18)`}>
-          <path
-            d={`M ${-planeR} ${planeR * 0.3}
-                L ${planeR} ${-planeR * 0.55}
-                L ${planeR * 0.08} ${planeR * 0.06}
-                Z`}
-            fill="#fff"
-            stroke={BRAND.oxford}
-            strokeWidth={1.5}
-            strokeLinejoin="round"
-          />
-          <path
-            d={`M ${-planeR} ${planeR * 0.3}
-                L ${planeR * 0.08} ${planeR * 0.06}
-                L ${planeR * 0.4} ${planeR * 0.5}
-                Z`}
-            fill="#F0E6D6"
-            stroke={BRAND.oxford}
-            strokeWidth={1.5}
-            strokeLinejoin="round"
-          />
-          <line
-            x1={-planeR}
-            y1={planeR * 0.3}
-            x2={planeR * 0.08}
-            y2={planeR * 0.06}
-            stroke={BRAND.oxford}
-            strokeWidth={1.5}
-          />
-        </g>
-      </svg>
-
-      {/* Content layer — three flex children pinned by justify-between:
-          (1) icon at top, (2) title block anchored above plinth via
-          mt:auto, (3) plinth at bottom. The SVG glass renders in the
-          empty middle gap. No marginTop kludge. */}
-      <div style={{
-        position: "relative", zIndex: 2, height: "100%",
-        padding: isStory ? "60px 64px 72px" : isSquare ? "44px 56px 56px" : "28px 48px 36px",
-        display: "flex", flexDirection: "column",
-        alignItems: "stretch", textAlign: "center",
-      }}>
-        {/* Top rail — icon only */}
-        <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={ASSETS.iconOrange} style={{ height: isStory ? 56 : 36, opacity: 0.95 }} alt="" />
-        </div>
-
-        {/* Title + slogan block — mt:auto pushes it to the bottom of
-            the available space, just above the plinth. The glass
-            occupies the gap between the icon row and this block. */}
-        <div style={{ marginTop: "auto" }}>
-          <div style={{
-            fontSize: titleSize, fontWeight: 700, lineHeight: 0.86,
-            letterSpacing: "-0.045em", color: BRAND.oxford,
-          }}>Business</div>
-          <div style={{
-            fontSize: titleSize, fontWeight: 700, lineHeight: 0.86,
-            letterSpacing: "-0.045em", color: BRAND.coquelicot, marginTop: -6,
-          }}>Brew</div>
-
-          {/* Slashed slogan — single line tilted -3°, centered. The
-              "ULTRAVIOLENCE" gesture, civilized. Mistrully word in
-              oxford for inverted contrast on the cream field. */}
-          <div style={{
-            marginTop: isStory ? 28 : 14,
-            display: "flex", alignItems: "baseline", justifyContent: "center",
-            flexWrap: "wrap",
-            columnGap: pick([8, 10, 14] as const, mode),
-            rowGap: 4,
-            transform: "rotate(-3deg)",
-            transformOrigin: "center center",
-          }}>
-            <span style={{
-              fontSize: sloganSize, fontWeight: 400,
-              letterSpacing: "0.16em", textTransform: "uppercase",
-              color: BRAND.coquelicot,
-            }}>Where</span>
-            <span style={{
-              fontFamily: SCRIPT_STACK,
-              fontSize: sloganScript, lineHeight: 0.9,
-              color: BRAND.oxford, fontWeight: 400,
-              display: "inline-block",
-              transform: "translateY(0.18em)",
-            }}>
-              Networking
-            </span>
-            <span style={{
-              fontSize: sloganSize, fontWeight: 400,
-              letterSpacing: "0.16em", textTransform: "uppercase",
-              color: BRAND.coquelicot,
-            }}>Takes Flight</span>
+  // ── SQUARE — port of BrewSquareFlight (1080×1080) ──────────────────────
+  if (isSquare) {
+    return (
+      <div style={containerStyle({ background: BRAND.cream, color: BRAND.oxford })}>
+        <svg viewBox="0 0 1080 1080" style={svgFillStyle} xmlns="http://www.w3.org/2000/svg">
+          <path d="M -80 780 C 240 420, 620 220, 1180 120"
+            fill="none" stroke={BRAND.coquelicot} strokeWidth="5"
+            strokeLinecap="round" strokeDasharray="2 18" />
+        </svg>
+        <div style={{ position: "absolute", inset: 0, zIndex: 2, fontFamily: FONT_STACK }}>
+          <div style={{ position: "absolute", top: 70, left: 70, fontSize: 22, letterSpacing: 8, fontWeight: 700 }}>
+            MEDINA CHAMBER · MONTHLY NETWORKING
           </div>
-        </div>
-
-        {/* Plinth as movie credits — pinned to the canvas bottom */}
-        {eventInfo && (eventInfo.dayOfWeek || eventInfo.time || eventInfo.note) && (
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/events/business-brew/bee-mug.png" alt="" width={320}
+            style={{ position: "absolute", top: 140, right: 90, height: "auto", display: "block" }} />
+          <div style={{ position: "absolute", top: 320, left: 70, right: 450 }}>
+            <div style={{ fontFamily: SCRIPT_STACK, color: BRAND.coquelicot, fontSize: 76, lineHeight: 0.9, marginBottom: 4 }}>
+              Business
+            </div>
+            <div style={{ fontSize: 200, fontWeight: 700, letterSpacing: -2, lineHeight: 0.88 }}>BREW</div>
+            <div style={{ marginTop: 20, width: 120, height: 4, background: BRAND.cambridge }} />
+            <div style={{ marginTop: 22, fontSize: 26, letterSpacing: 3, opacity: 0.8, fontWeight: 700, lineHeight: 1.25, maxWidth: 480 }}>
+              Where networking<br />takes flight.
+            </div>
+          </div>
           <div style={{
-            marginTop: pick([14, 20, 26] as const, mode),
-            borderTop: `1px solid ${BRAND.oxford}33`,
-            paddingTop: pick([10, 16, 22] as const, mode),
-            display: "flex", alignItems: "flex-end", justifyContent: "space-between",
-            gap: 18, flexWrap: "wrap",
+            position: "absolute", bottom: 0, left: 0, right: 0, height: 260,
+            background: BRAND.oxford, color: BRAND.cream, padding: "44px 70px",
           }}>
-            <div style={{ textAlign: "left" }}>
-              {(() => {
-                const dateLine = [
-                  eventInfo.dayOfWeek?.substring(0, 3).toUpperCase(),
-                  eventInfo.month && eventInfo.day
-                    ? `${eventInfo.month.toUpperCase()} ${eventInfo.day}${eventInfo.year ? `, ${eventInfo.year}` : ""}`
-                    : null,
-                ]
-                  .filter(Boolean)
-                  .join(" · ");
-                return dateLine ? (
-                  <div style={{
-                    fontSize: plinthLabel, fontWeight: 700,
-                    letterSpacing: "0.18em", color: BRAND.oxford,
-                    textTransform: "uppercase", opacity: 0.7,
-                  }}>
-                    {dateLine}
-                  </div>
-                ) : null;
-              })()}
-              {eventInfo.time && (
-                <div style={{
-                  fontSize: plinthBig, fontWeight: 700,
-                  color: BRAND.oxford, letterSpacing: "-0.01em", marginTop: 2,
-                }}>
-                  {eventInfo.time}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+              <div>
+                <div style={{ fontSize: 16, letterSpacing: 5, color: BRAND.cambridge, fontWeight: 700, marginBottom: 8 }}>WHEN</div>
+                <div style={{ fontSize: 64, fontWeight: 700, lineHeight: 0.95, letterSpacing: 1 }}>{whenDate}</div>
+                {timeLine && <div style={{ fontSize: 26, marginTop: 6, opacity: 0.9 }}>{timeLine}</div>}
+              </div>
+              {hasVenue && (
+                <div style={{ textAlign: "right" }}>
+                  <div style={{ fontSize: 16, letterSpacing: 5, color: BRAND.cambridge, fontWeight: 700, marginBottom: 8 }}>WHERE</div>
+                  <div style={{ fontSize: 36, fontWeight: 700, lineHeight: 1 }}>{eventInfo!.venue}</div>
+                  {eventInfo?.address && <div style={{ fontSize: 22, marginTop: 6, opacity: 0.85, lineHeight: 1.25 }}>{eventInfo.address}</div>}
                 </div>
               )}
             </div>
-            {eventInfo.note && (
-              <div style={{
-                fontSize: plinthLabel, fontWeight: 700,
-                letterSpacing: "0.18em", color: BRAND.coquelicot,
-                textTransform: "uppercase", textAlign: "right",
-                paddingBottom: 2,
-              }}>
-                {eventInfo.note}
+            <div style={{
+              marginTop: 28, paddingTop: 18,
+              borderTop: `1px solid ${BRAND.cambridge}44`,
+              display: "flex", justifyContent: "space-between", alignItems: "center",
+            }}>
+              <div style={{ fontSize: 18, letterSpacing: 3, opacity: 0.85 }}>Free to attend · RSVP preferred</div>
+              <div style={{ fontSize: 18, letterSpacing: 4, color: BRAND.cambridge, fontWeight: 700 }}>MEDINACHAMBER.ORG</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── STORY — port of BrewStory (1080×1920) ──────────────────────────────
+  if (isStory) {
+    return (
+      <div style={containerStyle({ background: BRAND.cream, color: BRAND.oxford })}>
+        <svg viewBox="0 0 1080 1920" style={svgFillStyle} xmlns="http://www.w3.org/2000/svg">
+          <path d="M -60 1500 C 260 1100, 700 900, 1160 500"
+            fill="none" stroke={BRAND.coquelicot} strokeWidth="5"
+            strokeLinecap="round" strokeDasharray="2 18" />
+          <path d="M -60 1620 C 260 1260, 700 1080, 1160 700"
+            fill="none" stroke={BRAND.cambridge} strokeWidth="4" opacity="0.7"
+            strokeLinecap="round" strokeDasharray="2 18" />
+        </svg>
+        <div style={{ position: "absolute", inset: 0, zIndex: 2, fontFamily: FONT_STACK }}>
+          <div style={{
+            position: "absolute", top: 140, left: 0, right: 0, textAlign: "center",
+            fontSize: 26, letterSpacing: 10, fontWeight: 700, color: BRAND.coquelicot,
+          }}>
+            · MONTHLY NETWORKING ·
+          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/events/business-brew/bee-mug.png" alt="" width={440}
+            style={{ position: "absolute", top: 230, left: "50%", transform: "translateX(-50%)", height: "auto", display: "block" }} />
+          <div style={{ position: "absolute", top: 1080, left: 0, right: 0, textAlign: "center" }}>
+            <div style={{ fontFamily: SCRIPT_STACK, color: BRAND.cambridge, fontSize: 104, lineHeight: 0.9, marginBottom: -10 }}>
+              Business
+            </div>
+            <div style={{ fontSize: 240, fontWeight: 700, letterSpacing: -4, lineHeight: 0.88 }}>BREW</div>
+          </div>
+          <div style={{
+            position: "absolute", top: 1430, left: 0, right: 0, textAlign: "center",
+            fontSize: 30, letterSpacing: 6, fontWeight: 700, opacity: 0.85,
+          }}>
+            WHERE NETWORKING TAKES FLIGHT
+          </div>
+          <div style={{
+            position: "absolute", bottom: 0, left: 0, right: 0, height: 380,
+            background: BRAND.oxford, color: BRAND.cream, padding: "50px 80px",
+          }}>
+            <div style={{ fontSize: 74, fontWeight: 700, letterSpacing: 1, lineHeight: 1 }}>{whenDate}</div>
+            {timeLine && <div style={{ fontSize: 40, marginTop: 10, color: BRAND.cambridge, letterSpacing: 3, fontWeight: 700 }}>{timeLine}</div>}
+            {hasVenue && (
+              <div style={{ fontSize: 28, marginTop: 20, opacity: 0.9, lineHeight: 1.3 }}>
+                {eventInfo!.venue}{eventInfo?.address ? ` · ${eventInfo.address}` : ""}
               </div>
             )}
+            <div style={{
+              marginTop: 28, paddingTop: 20,
+              borderTop: `1px solid ${BRAND.cambridge}55`,
+              display: "flex", justifyContent: "space-between", alignItems: "center",
+            }}>
+              <div style={{ fontSize: 20, letterSpacing: 3, opacity: 0.85 }}>Free · RSVP preferred</div>
+              <div style={{ fontSize: 20, letterSpacing: 4, color: BRAND.cambridge, fontWeight: 700 }}>MEDINACHAMBER.ORG</div>
+            </div>
           </div>
-        )}
+        </div>
+      </div>
+    );
+  }
+
+  // ── SOCIAL — Brew4KLandscape proportionally scaled to 1200×630 ─────────
+  // Source: 3840×2160. scX = 1200/3840 ≈ 0.3125, scY = 630/2160 ≈ 0.2917.
+  const W  = 1200;
+  const H  = 630;
+  const scX = W / 3840;
+  const scY = H / 2160;
+  const S = (x: number) => x * scX;   // horizontal
+  const Y = (y: number) => y * scY;   // vertical
+
+  return (
+    <div style={containerStyle({ background: BRAND.cream, color: BRAND.oxford })}>
+      <svg viewBox={`0 0 ${W} ${H}`} style={svgFillStyle} xmlns="http://www.w3.org/2000/svg">
+        <path
+          d={`M ${S(-200)} ${Y(1600)} C ${S(800)} ${Y(900)}, ${S(2100)} ${Y(600)}, ${S(4000)} ${Y(280)}`}
+          fill="none" stroke={BRAND.coquelicot} strokeWidth={S(10)}
+          strokeLinecap="round" strokeDasharray={`${S(4)} ${S(36)}`} />
+        <path
+          d={`M ${S(-200)} ${Y(1780)} C ${S(800)} ${Y(1180)}, ${S(2100)} ${Y(900)}, ${S(4000)} ${Y(620)}`}
+          fill="none" stroke={BRAND.cambridge} strokeWidth={S(8)} opacity="0.6"
+          strokeLinecap="round" strokeDasharray={`${S(4)} ${S(36)}`} />
+      </svg>
+      <div style={{ position: "absolute", inset: 0, zIndex: 2, fontFamily: FONT_STACK }}>
+        {/* Eyebrow */}
+        <div style={{
+          position: "absolute", top: Y(140), left: S(200), right: S(200),
+          display: "flex", justifyContent: "space-between", alignItems: "center",
+          fontSize: S(40), letterSpacing: S(14), fontWeight: 700,
+          paddingBottom: Y(40), borderBottom: `${S(3)}px solid ${BRAND.oxford}`,
+        }}>
+          <span>GREATER MEDINA CHAMBER · MONTHLY NETWORKING</span>
+          <span style={{ color: BRAND.coquelicot }}>NO. {issueNo} — {issueYr}</span>
+        </div>
+        {/* Bee-mug */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/events/business-brew/bee-mug.png" alt=""
+          width={S(640)}
+          style={{ position: "absolute", top: Y(380), right: S(320), height: "auto", display: "block" }} />
+        {/* Headline stack */}
+        <div style={{ position: "absolute", top: Y(532), left: S(200), width: S(2400), zIndex: 2 }}>
+          <div style={{
+            fontFamily: SCRIPT_STACK, color: BRAND.coquelicot,
+            fontSize: S(340), lineHeight: 0.85, marginBottom: Y(-30),
+          }}>
+            Business
+          </div>
+          <div style={{ fontSize: S(620), fontWeight: 700, letterSpacing: S(-10), lineHeight: 0.86 }}>
+            BREW
+          </div>
+          <div style={{ marginTop: Y(50), width: S(220), height: Y(8), background: BRAND.cambridge }} />
+          <div style={{
+            marginTop: Y(60), fontSize: S(170), letterSpacing: S(4),
+            fontWeight: 700, opacity: 0.85, lineHeight: 1.0,
+          }}>
+            WHERE NETWORKING<br />TAKES{" "}
+            <span style={{
+              color: BRAND.coquelicot,
+              fontStyle: "italic",
+              display: "inline-block",
+              transform: "skewX(-4deg) translateY(-0.06em)",
+              letterSpacing: S(6),
+            }}>FLIGHT!</span>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
 /* =============================================================================
-   10 — GET TO KNOW THE CHAMBER  (system pass)
+   10 — GET TO KNOW THE CHAMBER
 
-   Brought into the design system established by Networking WOW / Safety
-   Council / Chamber Chat / Business Brew / Eggs & Expertise:
-     • Top rail with chamber wordmark + icon
-     • Mistrully-accent tagline ("Start *Here*")
-     • Optional event-info plinth (date · time · note)
-   Visual identity preserved: cambridge field, dashed map grid, full
-   compass SVG. Title kept (3-line stack) since it's the chamber's
-   actual mark for this orientation event.
+   Teal foundation. One dominant image: a circular photo portal positioned
+   right-of-center, bleeding off-frame (Saul Bass kinetic tension). Massive
+   Mistrully "get to know" IS the composition — it sweeps left-to-right,
+   crossing through the circle so type and image are one unified mark (Paul
+   Rand). Coquelicot focal dot marks the exact threshold where the type
+   enters the circle (John Alvin single light source). φ scaffolding holds
+   the invisible geometry (Esoteric). Logo is a small bottom stamp, not a
+   decoration — the type does the talking.
    ============================================================================ */
 
 export function GetToKnowGraphic({
@@ -1670,193 +1526,137 @@ export function GetToKnowGraphic({
   const isStory = mode === "story";
   const isSquare = mode === "square";
 
-  const titleSize = pick([90, 150, 200] as const, mode);
-  const vb = isStory ? "0 0 1080 1920" : isSquare ? "0 0 1080 1080" : "0 0 1200 630";
-  const W = isStory ? 1080 : isSquare ? 1080 : 1200;
+  const W = isSquare ? 1080 : isStory ? 1080 : 1200;
   const H = isStory ? 1920 : isSquare ? 1080 : 630;
 
-  // Compass anchored opposite the title in each layout
-  const comp = isStory
-    ? { cx: 800, cy: 1280, r: 180 }
-    : isSquare
-    ? { cx: 800, cy: 700,  r: 160 }
-    : { cx: 980, cy: 290,  r: 140 };
+  // Saul Bass hard split: oxford top / cambridge bottom
+  const splitY = Math.round(H * 0.40);
 
-  // Tagline + plinth sizes — match the system rhythm
-  const taglineSize = pick([22, 30, 40] as const, mode);
-  const scriptSize = pick([38, 52, 76] as const, mode);
-  const plinthLabel = pick([14, 18, 24] as const, mode);
-  const plinthBig = pick([22, 28, 38] as const, mode);
+  const knowSize    = pick([260, 320, 430] as const, mode);
+  const getToSize   = pick([66,  82,  108] as const, mode);
+  const chamberSize = pick([28,  34,   46] as const, mode);
+  const infoSize    = pick([13,  16,   22] as const, mode);
+  const pad         = pick([52,  64,   88] as const, mode);
+
+  // "KNOW" baseline straddles the split — ~32% below the line
+  const knowY  = Math.round(splitY + knowSize * 0.32);
+  // "GET TO" sits just above KNOW in the oxford zone
+  const getToY = Math.round(knowY - knowSize * 0.78 - getToSize * 0.15);
+
+  // Ghost logo — large icon watermark in cambridge zone
+  const logoSize = Math.round((H - splitY) * 0.72);
+  const logoX    = W - logoSize - pad;
+  const logoY    = splitY + Math.round((H - splitY - logoSize) / 2);
 
   const dateLine = eventInfo
-    ? [
-        eventInfo.dayOfWeek?.substring(0, 3).toUpperCase(),
-        eventInfo.month && eventInfo.day
-          ? `${eventInfo.month.toUpperCase()} ${eventInfo.day}${eventInfo.year ? `, ${eventInfo.year}` : ""}`
-          : null,
-      ]
-        .filter(Boolean)
-        .join(" · ")
-    : null;
+    ? [eventInfo.dayOfWeek, eventInfo.month,
+        eventInfo.day ? `${eventInfo.day},` : "", eventInfo.year ?? ""]
+        .filter(Boolean).join(" · ").replace(/\s{2,}/g, " ").trim()
+    : "";
+
+  // Percentage coords for the ghost logo (HTML img scales with container)
+  const logoTopPct   = `${((logoY / H) * 100).toFixed(2)}%`;
+  const logoRightPct = `${((pad / W) * 100).toFixed(2)}%`;
+  const logoWidthPct = `${((logoSize / W) * 100).toFixed(2)}%`;
 
   return (
-    <div style={containerStyle({ background: BRAND.cambridge, color: BRAND.oxford })}>
-      <svg viewBox={vb} style={svgFillStyle}>
-        {/* Dashed map grid */}
-        <g stroke={BRAND.oxford} strokeOpacity="0.12" strokeWidth="1.5" strokeDasharray="4 6" fill="none">
-          {Array.from({ length: Math.floor(H / 80) }, (_, i) => (
-            <line key={`h${i}`} x1="0"     y1={i * 80 + 40} x2={W}     y2={i * 80 + 40} />
-          ))}
-          {Array.from({ length: Math.floor(W / 80) }, (_, i) => (
-            <line key={`v${i}`} x1={i * 80 + 40} y1="0"     x2={i * 80 + 40} y2={H}     />
-          ))}
-        </g>
+    <div style={containerStyle({ background: BRAND.oxford, color: "#fff" })}>
+      <svg viewBox={`0 0 ${W} ${H}`} style={svgFillStyle}>
+        <defs>
+          {/* Split clip paths — each word rendered twice, each half a different color */}
+          <clipPath id={`gtk-top-${mode}`}>
+            <rect x={0} y={0} width={W} height={splitY} />
+          </clipPath>
+          <clipPath id={`gtk-bot-${mode}`}>
+            <rect x={0} y={splitY} width={W} height={H - splitY} />
+          </clipPath>
+        </defs>
 
-        {/* Compass */}
-        <g transform={`translate(${comp.cx} ${comp.cy})`}>
-          <circle r={comp.r * 1.8}  fill={BRAND.oxford} opacity="0.05" />
-          <circle r={comp.r * 1.4}  fill={BRAND.oxford} opacity="0.06" />
-          <circle r={comp.r * 1.05} fill={BRAND.oxford} opacity="0.08" />
-          <circle r={comp.r}        fill={BRAND.cream}  stroke={BRAND.oxford} strokeWidth="3" />
-          <circle r={comp.r - 12}   fill="none"         stroke={BRAND.oxford} strokeWidth="1" strokeDasharray="2 6" opacity="0.4" />
+        {/* Two-tone field: oxford above, cambridge below */}
+        <rect x={0} y={0} width={W} height={splitY} fill={BRAND.oxford} />
+        <rect x={0} y={splitY} width={W} height={H - splitY} fill={BRAND.cambridge} />
 
-          {/* Tick marks every 15° */}
-          {Array.from({ length: 24 }, (_, i) => {
-            const a = (i * 15 * Math.PI) / 180;
-            const r1 = comp.r - 20;
-            const r2 = comp.r - (i % 6 === 0 ? 40 : 30);
-            return (
-              <line
-                key={i}
-                x1={Math.cos(a) * r1} y1={Math.sin(a) * r1}
-                x2={Math.cos(a) * r2} y2={Math.sin(a) * r2}
-                stroke={BRAND.oxford} strokeWidth={i % 6 === 0 ? 3 : 1.5}
-              />
-            );
-          })}
+        {/* Coquelicot split rule */}
+        <line
+          x1={0} y1={splitY} x2={W} y2={splitY}
+          stroke={BRAND.coquelicot} strokeWidth={isStory ? 4 : 2.5}
+        />
 
-          <text x="0"               y={-comp.r + 62} textAnchor="middle" fill={BRAND.coquelicot}
-                fontSize={comp.r * 0.18} fontWeight="700" fontFamily={FONT_STACK}>N</text>
-          <text x={comp.r - 36}     y="6"           textAnchor="middle" fill={BRAND.oxford}
-                fontSize={comp.r * 0.14} fontWeight="700" fontFamily={FONT_STACK}>E</text>
-          <text x="0"               y={comp.r - 48} textAnchor="middle" fill={BRAND.oxford}
-                fontSize={comp.r * 0.14} fontWeight="700" fontFamily={FONT_STACK}>S</text>
-          <text x={-comp.r + 36}    y="6"           textAnchor="middle" fill={BRAND.oxford}
-                fontSize={comp.r * 0.14} fontWeight="700" fontFamily={FONT_STACK}>W</text>
+        {/* "GET TO" — cream on oxford */}
+        <text
+          x={pad} y={getToY}
+          fontFamily={FONT_STACK} fontWeight={700} fontSize={getToSize}
+          fill={BRAND.cream} letterSpacing="-0.02em"
+        >
+          GET TO
+        </text>
 
-          {/* Needle — points NE */}
-          <g transform="rotate(-30)">
-            <polygon points={`0,${-comp.r * 0.78} 16,0 0,${comp.r * 0.18} -16,0`}  fill={BRAND.coquelicot} />
-            <polygon points={`0,${comp.r * 0.78}  16,0 0,${-comp.r * 0.18} -16,0`} fill={BRAND.oxford} />
-            <circle r="10" fill={BRAND.oxford} />
-            <circle r="4"  fill={BRAND.cream} />
-          </g>
-        </g>
+        {/* "KNOW" split-color: cream where it overlaps oxford, oxford where it overlaps cambridge */}
+        <text
+          x={pad} y={knowY}
+          fontFamily={FONT_STACK} fontWeight={700} fontSize={knowSize}
+          fill={BRAND.cream} letterSpacing="-0.04em"
+          clipPath={`url(#gtk-top-${mode})`}
+        >
+          KNOW
+        </text>
+        <text
+          x={pad} y={knowY}
+          fontFamily={FONT_STACK} fontWeight={700} fontSize={knowSize}
+          fill={BRAND.oxford} letterSpacing="-0.04em"
+          clipPath={`url(#gtk-bot-${mode})`}
+        >
+          KNOW
+        </text>
+
+        {/* "THE CHAMBER" — oxford on cambridge, bottom right */}
+        <text
+          x={W - pad}
+          y={H - pad - (eventInfo ? infoSize * 3.5 : 0)}
+          fontFamily={FONT_STACK} fontWeight={700} fontSize={chamberSize}
+          fill={BRAND.oxford} letterSpacing="0.22em" textAnchor="end"
+        >
+          THE CHAMBER
+        </text>
+
+        {/* Event info — bottom left, oxford text on cambridge */}
+        {eventInfo && (
+          <>
+            <text
+              x={pad} y={H - pad - infoSize * 1.6}
+              fontFamily={FONT_STACK} fontWeight={700} fontSize={infoSize * 0.80}
+              fill={BRAND.oxford} letterSpacing="0.12em" opacity={0.60}
+            >
+              {dateLine.toUpperCase()}
+            </text>
+            <text
+              x={pad} y={H - pad}
+              fontFamily={FONT_STACK} fontWeight={700} fontSize={infoSize}
+              fill={BRAND.oxford} letterSpacing="-0.01em"
+            >
+              {(eventInfo.time ?? "") + (eventInfo.venue ? `  ·  ${eventInfo.venue}` : "")}
+            </text>
+          </>
+        )}
       </svg>
 
-      <div style={{
-        position: "relative", zIndex: 2, height: "100%",
-        padding: isStory ? "60px 64px 64px" : isSquare ? "44px 56px 56px" : "32px 56px 36px",
-        display: "flex", flexDirection: "column",
-      }}>
-        {/* Top rail — chamber wordmark left, icon right */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{
-            fontSize: pick([14, 16, 20] as const, mode),
-            fontWeight: 700, letterSpacing: "0.18em",
-            color: BRAND.emerald, textTransform: "uppercase",
-          }}>
-            Greater Medina Chamber
-          </div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={ASSETS.iconOrange} style={{ height: isStory ? 56 : 36 }} alt="" />
-        </div>
-
-        {/* Title + tagline anchored just above the plinth */}
-        <div style={{ marginTop: "auto", maxWidth: isStory ? 720 : isSquare ? 620 : 640 }}>
-          <div style={{
-            fontSize: isStory ? 32 : 22, fontWeight: 400, letterSpacing: "0.02em",
-            color: BRAND.emerald, lineHeight: 1,
-          }}>Get to know</div>
-          <div style={{
-            fontSize: titleSize, fontWeight: 700, lineHeight: 0.88,
-            letterSpacing: "-0.045em", color: BRAND.oxford, marginTop: 4,
-          }}>the</div>
-          <div style={{
-            fontSize: titleSize, fontWeight: 700, lineHeight: 0.88,
-            letterSpacing: "-0.045em", color: BRAND.oxford, marginTop: -8,
-          }}>Chamber</div>
-
-          {/* Mistrully tagline — "Start *Here*" — single-word script
-              accent on "Here" mirrors the system established by the
-              other event graphics. Awaiting an official chamber slogan
-              for this event; this placeholder fits the orientation
-              feel without overcommitting. */}
-          <div style={{
-            marginTop: isStory ? 28 : 14,
-            display: "flex", alignItems: "baseline", flexWrap: "wrap",
-            columnGap: pick([10, 12, 16] as const, mode),
-            rowGap: 4,
-            color: BRAND.oxford,
-          }}>
-            <span style={{
-              fontSize: taglineSize, fontWeight: 400,
-              letterSpacing: "0.04em", textTransform: "uppercase",
-            }}>Start</span>
-            <span style={{
-              fontFamily: SCRIPT_STACK,
-              fontSize: scriptSize, lineHeight: 0.9,
-              color: BRAND.coquelicot, fontWeight: 400,
-              display: "inline-block",
-              transform: "translateY(0.18em) rotate(-3deg)",
-              transformOrigin: "left center",
-            }}>
-              Here
-            </span>
-          </div>
-        </div>
-
-        {/* Event-info plinth */}
-        {eventInfo && (eventInfo.dayOfWeek || eventInfo.time || eventInfo.note) && (
-          <div style={{
-            marginTop: pick([14, 20, 26] as const, mode),
-            borderTop: `1px solid ${BRAND.oxford}33`,
-            paddingTop: pick([10, 16, 22] as const, mode),
-            display: "flex", alignItems: "flex-end", justifyContent: "space-between",
-            gap: 18, flexWrap: "wrap",
-          }}>
-            <div style={{ textAlign: "left" }}>
-              {dateLine && (
-                <div style={{
-                  fontSize: plinthLabel, fontWeight: 700,
-                  letterSpacing: "0.18em", color: BRAND.emerald,
-                  textTransform: "uppercase",
-                }}>
-                  {dateLine}
-                </div>
-              )}
-              {eventInfo.time && (
-                <div style={{
-                  fontSize: plinthBig, fontWeight: 700,
-                  color: BRAND.oxford, letterSpacing: "-0.01em", marginTop: 2,
-                }}>
-                  {eventInfo.time}
-                </div>
-              )}
-            </div>
-            {eventInfo.note && (
-              <div style={{
-                fontSize: plinthLabel, fontWeight: 700,
-                letterSpacing: "0.18em", color: BRAND.coquelicot,
-                textTransform: "uppercase", textAlign: "right",
-                paddingBottom: 2,
-              }}>
-                {eventInfo.note}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+      {/* Ghost logo — after SVG so it composites over the teal zone */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={ASSETS.iconWhite}
+        alt=""
+        style={{
+          position: "absolute",
+          top: logoTopPct,
+          right: logoRightPct,
+          width: logoWidthPct,
+          opacity: 0.18,
+          filter: "brightness(0)",
+          mixBlendMode: "multiply",
+          pointerEvents: "none",
+          userSelect: "none",
+        }}
+      />
     </div>
   );
 }

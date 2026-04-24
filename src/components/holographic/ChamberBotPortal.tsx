@@ -28,6 +28,7 @@ import { usePostHog } from "posthog-js/react";
 import { ChamberBotMascot, type MascotIntent } from "./ChamberBotMascot";
 import { renderMarkdown } from "@/lib/markdown";
 import { usePortalAudio } from "@/hooks/usePortalAudio";
+import { totalCount } from "@/data/members";
 
 // ── Types ─────────────────────────────────────────────────────────
 
@@ -150,7 +151,7 @@ function Welcome({ onMode }: { onMode: (m: PortalMode) => void }) {
             ◈
           </span>
           <span className="mode-head">Find a business</span>
-          <span className="mode-sub mono">SEARCH 511 MEMBERS</span>
+          <span className="mode-sub mono">SEARCH {totalCount} MEMBERS</span>
         </button>
         <button
           type="button"
@@ -237,7 +238,7 @@ const EXIT_MS = 800;
 
 const TAGLINES = [
   "I know this town.",
-  "511 members at your fingertips.",
+  `${totalCount} members at your fingertips.`,
   "Events, businesses, membership — ask away.",
   "What are you looking for today?",
   "Your holographic concierge is ready.",
@@ -784,7 +785,7 @@ export function ChamberBotPortal({
       {/* ── Rail — 36px bottom grid row ── */}
       <footer className="rail mono">
         <div className="rail-item" aria-hidden="true">
-          <span className="rail-dot ok" /> 511 MEMBERS INDEXED
+          <span className="rail-dot ok" /> {totalCount} MEMBERS INDEXED
         </div>
         <div className="rail-item" aria-hidden="true">
           <span className="rail-dot warn" /> 12 EVENTS THIS MONTH

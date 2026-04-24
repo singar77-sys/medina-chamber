@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ContactForm } from "./ContactForm";
 import { MedinaNetworkMap } from "@/components/about/MedinaNetworkMap";
-
+import { totalCount } from "@/data/members";
 import { safeJsonLd } from "@/lib/json-ld";
 import { headers } from "next/headers";
 export const metadata: Metadata = {
@@ -92,7 +92,7 @@ export default async function ContactPage() {
               <span className="text-accent">with the Chamber</span>
             </h1>
             <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-              We&apos;re the hub of Medina County&apos;s business network — 511+
+              We&apos;re the hub of Medina County&apos;s business network — {totalCount}+
               members across every community in the area. Questions about
               membership, events, or how the Chamber can help your business?
               Drop us a line below or call the office.
@@ -151,7 +151,7 @@ export default async function ContactPage() {
             <div className="max-w-3xl mb-8 lg:mb-10">
               <p className="text-overline text-cambridge mb-3">Where we are</p>
               <h2 className="text-h2">
-                139 N. Court Street — and 511+ members across Medina County
+                139 N. Court Street — and {totalCount}+ members across Medina County
               </h2>
               <p className="text-body text-text-secondary mt-4 max-w-2xl">
                 Click the hub to open directions, or explore the network

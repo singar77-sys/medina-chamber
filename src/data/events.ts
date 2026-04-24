@@ -14,6 +14,7 @@ export interface ChamberEvent {
   dateString: string;
   location: string;
   locationDesc: string;
+  venue?: string;
   street: string;
   city: string;
   state: string;

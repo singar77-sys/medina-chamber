@@ -216,7 +216,7 @@ export default async function MedinaMeansBusinessPage() {
 
           <FadeIn>
             <p className="relative text-body-sm text-text-tertiary mt-10 max-w-2xl">
-              And 511 more member businesses across every sector — retail,
+              And {totalCount}+ member businesses across every sector — retail,
               healthcare, professional services, construction, hospitality,
               food and beverage, technology, agriculture, and the trades.
             </p>
@@ -341,7 +341,7 @@ export default async function MedinaMeansBusinessPage() {
           {[
             {
               title: "The Member Directory",
-              desc: "All 511+ member businesses in one searchable directory.",
+              desc: `All ${totalCount}+ member businesses in one searchable directory.`,
               href: "/membership/directory",
             },
             {

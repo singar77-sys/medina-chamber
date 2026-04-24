@@ -10,6 +10,7 @@ import { ChatWidget } from "@/components/ChatWidget";
 import { CommandPalette } from "@/components/CommandPalette";
 import { KeywordHotkey } from "@/components/KeywordHotkey";
 import { MedinaAmbience } from "@/components/weather/MedinaAmbience";
+import { BirthdayConfetti } from "@/components/BirthdayConfetti";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -27,6 +28,14 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+  },
+  icons: {
+    icon: [
+      { url: "/images/chamber-logos/icon-green.png", type: "image/png" },
+    ],
+    apple: [
+      { url: "/images/chamber-logos/icon-green.png" },
+    ],
   },
 };
 
@@ -88,6 +97,7 @@ export default async function RootLayout({
                 based on Medina's live conditions (snow/rain/fog) + applies
                 time-aware theme on first visit if user hasn't chosen. */}
             <MedinaAmbience />
+            <BirthdayConfetti />
           </ThemeProvider>
         </PostHogProvider>
         {/* Vercel observability — page views + web vitals (LCP, INP, CLS).

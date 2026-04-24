@@ -157,15 +157,20 @@ export function searchMembersWithTierPriority(
     .filter(({ score }) => score > 0)
     .sort((a, b) => b.score - a.score);
 
+  const sortByName = (a: Member, b: Member) =>
+    a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
+
   const ciMembers = scored
     .filter(({ member }) => isCommunityInvestor(member))
     .slice(0, ciLimit)
-    .map(({ member }) => member);
+    .map(({ member }) => member)
+    .sort(sortByName);
 
   const vpMembers = scored
     .filter(({ member }) => isVisibilityPlus(member))
     .slice(0, vpLimit)
-    .map(({ member }) => member);
+    .map(({ member }) => member)
+    .sort(sortByName);
 
   const otherMembers = scored
     .filter(
@@ -173,7 +178,8 @@ export function searchMembersWithTierPriority(
         !isCommunityInvestor(member) && !isVisibilityPlus(member),
     )
     .slice(0, otherLimit)
-    .map(({ member }) => member);
+    .map(({ member }) => member)
+    .sort(sortByName);
 
   return { ciMembers, vpMembers, otherMembers, totalMatchCount: scored.length };
 }

@@ -14,6 +14,7 @@ import { getEventGraphicRenderer } from "@/components/events/graphics/registry";
 import { FluidGraphicFrame } from "@/components/events/graphics/FluidGraphicFrame";
 import { TiltCard } from "@/components/events/TiltCard";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
+import { BeeFly } from "@/components/effects/BeeFly";
 
 import { safeJsonLd } from "@/lib/json-ld";
 import { headers } from "next/headers";
@@ -174,11 +175,10 @@ export default async function HomePage() {
         color="rgba(92, 149, 183, 0.22)"
       >
         <div className="mx-auto max-w-7xl px-6 lg:px-8 py-14">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-3 gap-8">
             {[
               { end: totalCount, label: "Member Businesses", suffix: "+" },
               { end: 30, label: "Events Per Year", suffix: "+" },
-              { end: 9, label: "Committees" },
               { end: new Date().getFullYear() - 1938, label: "Years Serving", suffix: "+" },
             ].map((s) => (
               <div key={s.label} className="text-center">
@@ -515,6 +515,8 @@ export default async function HomePage() {
         </FadeIn>
         </div>
       </section>
+
+      <BeeFly />
     </div>
   );
 }

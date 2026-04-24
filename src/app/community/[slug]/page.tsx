@@ -9,7 +9,7 @@ import {
   getMembersByCity,
 } from "@/data/communities";
 import { getUpcomingEvents } from "@/data/events";
-import { isVisibilityPlus } from "@/data/members";
+import { isVisibilityPlus, totalCount } from "@/data/members";
 
 // ── Static generation ─────────────────────────────────────────────
 // Prerender every defined community, including ones with zero current
@@ -316,7 +316,7 @@ export default async function CommunityPage(
               Put your {community.name} business on the map
             </h2>
             <p className="text-body-lg text-text-secondary mt-4">
-              Join 511+ Medina County businesses in the chamber. Get listed in
+              Join {totalCount}+ Medina County businesses in the chamber. Get listed in
               the directory, attend networking events, and access savings
               programs that more than pay for membership.
             </p>

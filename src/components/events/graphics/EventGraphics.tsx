@@ -1548,6 +1548,11 @@ export function GetToKnowGraphic({
   const logoX    = W - logoSize - pad;
   const logoY    = splitY + Math.round((H - splitY - logoSize) / 2);
 
+  // Coquelicot ghost — faint accent echo in the oxford-zone negative space
+  const topGhostSize = Math.round(splitY * (isStory ? 0.55 : 0.62));
+  const topGhostX    = W - topGhostSize - pad;
+  const topGhostY    = Math.round((splitY - topGhostSize) / 2);
+
   const dateLine = eventInfo
     ? [eventInfo.dayOfWeek, eventInfo.month,
         eventInfo.day ? `${eventInfo.day},` : "", eventInfo.year ?? ""]
@@ -1570,11 +1575,29 @@ export function GetToKnowGraphic({
           <clipPath id={`gtk-bot-${mode}`}>
             <rect x={0} y={splitY} width={W} height={H - splitY} />
           </clipPath>
+          {/* Flood-fill filter: replaces any opaque pixel with coquelicot */}
+          <filter id={`gtk-coq-${mode}`} colorInterpolationFilters="sRGB" x="0" y="0" width="100%" height="100%">
+            <feFlood floodColor={BRAND.coquelicot} result="color" />
+            <feComposite in="color" in2="SourceAlpha" operator="in" />
+          </filter>
         </defs>
 
         {/* Two-tone field: oxford above, cambridge below */}
         <rect x={0} y={0} width={W} height={splitY} fill={BRAND.oxford} />
         <rect x={0} y={splitY} width={W} height={H - splitY} fill={BRAND.cambridge} />
+
+        {/* Coquelicot ghost icon — oxford-zone negative space; echoes the dark
+            cambridge ghost but in accent color, clipped to stay above the split */}
+        <image
+          href={ASSETS.iconWhite}
+          x={topGhostX}
+          y={topGhostY}
+          width={topGhostSize}
+          height={topGhostSize}
+          filter={`url(#gtk-coq-${mode})`}
+          opacity={0.11}
+          clipPath={`url(#gtk-top-${mode})`}
+        />
 
         {/* Coquelicot split rule */}
         <line

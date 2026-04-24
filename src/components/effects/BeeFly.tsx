@@ -10,15 +10,18 @@ export function BeeFly() {
   const [active, setActive] = useState(false);
   const [rtl, setRtl] = useState(false);
   const [top, setTop] = useState("40vh");
-  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const timer    = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const firstRun = useRef(true);
 
   function schedule() {
     clearTimeout(timer.current);
+    const delay = firstRun.current ? 100_000 : 90_000;
+    firstRun.current = false;
     timer.current = setTimeout(() => {
       setRtl(Math.random() < 0.5);
       setTop(`${rand(20, 72)}vh`);
       setActive(true);
-    }, rand(30_000, 100_000));
+    }, delay);
   }
 
   useEffect(() => {

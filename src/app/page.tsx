@@ -107,6 +107,7 @@ export default async function HomePage() {
           src="/images/photos/gazebo-daytime-flag.jpg"
           alt="Historic Medina Square gazebo"
           fill
+          sizes="100vw"
           className="object-cover object-center [[data-theme=dark]_&]:hidden"
           priority
           quality={85}
@@ -115,6 +116,7 @@ export default async function HomePage() {
           src="/images/photos/gazebo-night-flag.jpg"
           alt="Historic Medina gazebo at night"
           fill
+          sizes="100vw"
           className="object-cover object-center hidden [[data-theme=dark]_&]:block"
           priority
           quality={85}

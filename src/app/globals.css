@@ -1993,8 +1993,8 @@ body {
 /* Per-section size tweak only — no offset, watermark sits dead center
    of the section so the three circles frame the content evenly. */
 .tp-vesica {
-  width: min(720px, 95vw);
-  height: min(720px, 95vw);
+  width: min(1080px, 95vw);
+  height: min(1080px, 95vw);
 }
 
 @media (prefers-reduced-motion: reduce) {

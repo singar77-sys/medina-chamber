@@ -13,6 +13,7 @@ import { MemberVoice } from "@/components/MemberVoice";
 import { getEventGraphicRenderer } from "@/components/events/graphics/registry";
 import { FluidGraphicFrame } from "@/components/events/graphics/FluidGraphicFrame";
 import { TiltCard } from "@/components/events/TiltCard";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 
 import { safeJsonLd } from "@/lib/json-ld";
 import { headers } from "next/headers";
@@ -199,7 +200,8 @@ export default async function HomePage() {
 
       {/* ─── Upcoming Events ──────────────────────────────── */}
       {upcomingEvents.length > 0 && (
-        <section className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
+        <section className="relative overflow-hidden mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
+          <VesicaPiscisWatermark className="tp-vesica" />
           <FadeIn>
             <div className="flex items-end justify-between mb-10 gap-4 flex-wrap">
               <div>

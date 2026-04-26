@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-04-11T18:06:00.389Z",
-  "totalFetched": 511,
-  "foundCount": 511,
-  "notFoundCount": 0,
+  "generatedAt": "2026-04-26T11:39:24.765Z",
+  "totalFetched": 515,
+  "foundCount": 512,
+  "notFoundCount": 1,
   "members": [
     {
       "chamberSlug": "3m-company",
@@ -5813,6 +5813,47 @@
       "businessStatus": "OPERATIONAL",
       "hours": null,
       "googleAddress": "620 E Smith Rd W-14, Medina, OH 44256"
+    },
+    {
+      "chamberSlug": "boost-bookkeeping-llc",
+      "fetchedAt": "2026-04-26T11:39:22.958Z",
+      "found": false
+    },
+    {
+      "chamberSlug": "castle-noel",
+      "fetchedAt": "2026-04-26T11:39:23.469Z",
+      "found": true,
+      "placeId": "ChIJ8UrJUB7IMIgR1CU-74w9DBU",
+      "googleName": "Castle Noel",
+      "rating": 4.7,
+      "reviewCount": 2073,
+      "businessStatus": "OPERATIONAL",
+      "hours": null,
+      "googleAddress": "260 S Court St, Medina, OH 44256"
+    },
+    {
+      "chamberSlug": "high-standard-hauling-junk-removal-llc",
+      "fetchedAt": "2026-04-26T11:39:23.996Z",
+      "found": true,
+      "placeId": "ChIJ-0D4gKK3MIgRavHr3miGIbY",
+      "googleName": "High Standard Hauling & Junk Removal L.L.C",
+      "rating": 4.9,
+      "reviewCount": 85,
+      "businessStatus": "OPERATIONAL",
+      "hours": null,
+      "googleAddress": "1085 Featherstone Dr, Medina, OH 44256"
+    },
+    {
+      "chamberSlug": "sinceri-senior-living",
+      "fetchedAt": "2026-04-26T11:39:24.514Z",
+      "found": true,
+      "placeId": "ChIJYfpukP3HMIgRfp7UUy8yTGA",
+      "googleName": "Broadway Creek Senior Living",
+      "rating": 3.8,
+      "reviewCount": 52,
+      "businessStatus": "OPERATIONAL",
+      "hours": null,
+      "googleAddress": "1046 N Jefferson St, Medina, OH 44256"
     }
   ]
 }

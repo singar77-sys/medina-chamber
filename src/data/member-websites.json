@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-04-11T00:46:56.296Z",
-  "totalScraped": 466,
-  "successCount": 398,
-  "failCount": 68,
+  "generatedAt": "2026-04-26T11:39:18.906Z",
+  "totalScraped": 470,
+  "successCount": 466,
+  "failCount": 2,
   "members": [
     {
       "chamberSlug": "3m-company",
@@ -12047,6 +12047,73 @@
       "pagesScraped": [
         "home"
       ]
+    },
+    {
+      "chamberSlug": "boost-bookkeeping-llc",
+      "website": "http://www.boostbookkeepingllc.com/",
+      "scrapedAt": "2026-04-26T11:39:12.687Z",
+      "title": "Boost Bookkeeping LLC",
+      "metaDescription": "",
+      "h1": [
+        "Clear Books.",
+        "Confident Decisions.",
+        "About Boost Bookkeeping LLC"
+      ],
+      "services": [
+        "Bookkeeping Services",
+        "Why Choose Boost Bookkeeping?",
+        "Ongoing Bookkeeping",
+        "Catch Up & Clean Up",
+        "Short-Term Boost"
+      ],
+      "listItems": [
+        "Transaction categorization",
+        "Account reconciliations",
+        "Monthly financial reports",
+        "Ongoing monitoring",
+        "Historical cleanup",
+        "Reconciliations",
+        "Error correction",
+        "Organized financials",
+        "Getting systems set up",
+        "Organizing and optimizing workflows",
+        "Supporting a busy period",
+        "Helping you transition to self-managed books"
+      ],
+      "homeText": "Clear Books. Confident Decisions. Personalized bookkeeping support for small businesses that need accurate, dependable financials. About Boost Bookkeeping LLC At Boost Bookkeeping LLC, I provide practical, reliable bookkeeping support for small businesses. My focus is simple - keeping your records accurate, organized, and easy to understand so you can make informed decisions with confidence. Learn more Learn more Contact MeInterested in working together? Fill out some info and I will be in touch shortly. I can’t wait to hear from you!",
+      "aboutText": "Why Choose Boost Bookkeeping? Boost Bookkeeping was built to provide practical, reliable bookkeeping support for their small businesses that need accuracy, consistency, and clarity in their financials. I’m Heidi, the owner of Boost Bookkeeping. I bring a hands-on, detail focused approach to bookkeeping, shaped by experience across several demanding industries.My background includes accounting work in manufacturing, automotive retail, chemicals, government contracting, and steel fabrication. Each of these environments requires a strong understanding of how money actually moves through a business - from purchasing inventory to job costing, vendor management, general and administrative costs, and cash flow.In these roles, I have worked closely with day to day operations, not just the numbers. That means I understand the real processes behind transactions - how invoices are generated, how costs are tracks, and how the financial decisions impact the business as a whole. About Me My approach is straightforward: keep your books accurate, organized, and dependable so you can trust your financial information. Whether I am maintaining monthly records, cleaning up historical data, or supporti",
+      "pagesScraped": [
+        "home",
+        "services",
+        "about"
+      ]
+    },
+    {
+      "chamberSlug": "castle-noel",
+      "website": "http://www.castlenoel.com/",
+      "scrapedAt": "2026-04-26T11:39:15.897Z",
+      "ok": false
+    },
+    {
+      "chamberSlug": "high-standard-hauling-junk-removal-llc",
+      "website": "https://instagram.com/high_standard85?utm_source=qr&igshid=ZDc4ODBmNjlmNQ%3D%3D",
+      "scrapedAt": "2026-04-26T11:39:16.498Z",
+      "title": "Instagram",
+      "metaDescription": "",
+      "h1": [],
+      "services": [],
+      "listItems": [],
+      "homeText": "",
+      "aboutText": "",
+      "pagesScraped": [
+        "home"
+      ]
+    },
+    {
+      "chamberSlug": "sinceri-senior-living",
+      "website": "http://sinceriseniorliving.com/medina-pointe",
+      "scrapedAt": "2026-04-26T11:39:18.306Z",
+      "ok": false
     }
   ]
 }

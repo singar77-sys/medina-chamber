@@ -246,6 +246,24 @@ summary,
   color: var(--cambridge);
 }
 
+/* Community Investors — explicit per-theme overrides.
+ *
+ * [[data-theme=dark]_&]: Tailwind variants appear to apply in both themes
+ * due to @layer specificity ordering in this Next.js/Tailwind v4 setup.
+ * Unlayered rules here (above any @layer) win the cascade outright and
+ * provide correct per-theme behavior — same pattern as .text-accent above.
+ */
+[data-theme="light"] .ci-section { background-color: var(--bg-secondary); }
+[data-theme="dark"]  .ci-section { background-color: var(--oxford-blue); }
+
+[data-theme="light"] .ci-card              { background-color: #ffffff; border-color: var(--border-secondary); }
+[data-theme="light"] .ci-card:hover        { background-color: var(--bg-tertiary); border-color: var(--border-primary); }
+[data-theme="dark"]  .ci-card              { background-color: rgb(255 255 255 / 0.03); border-color: rgb(255 255 255 / 0.08); }
+[data-theme="dark"]  .ci-card:hover        { background-color: rgb(255 255 255 / 0.07); border-color: rgb(131 188 169 / 0.3); }
+[data-theme="dark"]  .ci-card img          { opacity: 0.75; }
+[data-theme="dark"]  .ci-card:hover img    { opacity: 1; }
+
+
 /* ── Hero Ken Burns — slow zoom + drift on background photos ──── */
 @keyframes heroKenBurns {
   from { transform: scale(1.00) translate(0%,    0%   ); }

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { totalCount } from "@/data/members";
 import { FadeIn } from "@/components/FadeIn";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "About the Chamber",
@@ -100,8 +101,53 @@ const quickLinks = [
 ];
 
 export default function AboutPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: "About — Greater Medina Chamber of Commerce",
+    description:
+      "The Greater Medina Chamber of Commerce has championed Medina County's business community since 1938 — through advocacy, connection, and leadership.",
+    url: "https://medinachamber.com/about",
+    mainEntity: {
+      "@type": "Organization",
+      name: "Greater Medina Chamber of Commerce",
+      foundingDate: "1938",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "139 N. Court Street, Suite A",
+        addressLocality: "Medina",
+        addressRegion: "OH",
+        postalCode: "44256",
+        addressCountry: "US",
+      },
+      telephone: "+13307238773",
+      email: "office@medinaohchamber.com",
+      employee: [
+        {
+          "@type": "Person",
+          name: "Jaclyn Ringstmeier IOM",
+          jobTitle: "Executive Director",
+          email: "jaclyn@medinaohchamber.com",
+          worksFor: { "@type": "Organization", name: "Greater Medina Chamber of Commerce" },
+        },
+        {
+          "@type": "Person",
+          name: "Stephanie Mueller",
+          jobTitle: "Membership & Events Coordinator",
+          email: "stephanie@medinaohchamber.com",
+          worksFor: { "@type": "Organization", name: "Greater Medina Chamber of Commerce" },
+        },
+      ],
+    },
+  };
+
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+      />
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
       {/* ─── Hero ─────────────────────────────────────────── */}
       <section className="max-w-3xl">
         <p className="text-overline text-cambridge mb-4">About</p>
@@ -464,5 +510,6 @@ export default function AboutPage() {
         </section>
       </FadeIn>
     </div>
+    </>
   );
 }

@@ -21,6 +21,7 @@ const quickLinks = [
   { label: "Advocacy", href: "/about/advocacy" },
   { label: "Contact", href: "/about/contact" },
   { label: "Privacy", href: "/privacy" },
+  { label: "Terms", href: "/terms" },
 ];
 
 const socialLinks = [

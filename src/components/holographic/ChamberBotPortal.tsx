@@ -19,6 +19,7 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   type FormEvent,
@@ -29,6 +30,7 @@ import { ChamberBotMascot, type MascotIntent } from "./ChamberBotMascot";
 import { renderMarkdown } from "@/lib/markdown";
 import { usePortalAudio } from "@/hooks/usePortalAudio";
 import { totalCount } from "@/data/members";
+import { getUpcomingEvents } from "@/data/events";
 
 // ── Types ─────────────────────────────────────────────────────────
 
@@ -43,6 +45,7 @@ interface Message {
   content: string;
   source?: CbSource;
   memberSlugs?: string[];
+  showCapture?: boolean;
 }
 
 export interface ChamberBotPortalProps {
@@ -231,6 +234,104 @@ function ContactPanel({ onBack }: { onBack: () => void }) {
   );
 }
 
+// ── Portal lead-capture card ──────────────────────────────────────
+function PortalCaptureCard({
+  messageId,
+  sessionId,
+  onClose,
+}: {
+  messageId: string;
+  sessionId: string | null;
+  onClose: (id: string) => void;
+}) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const formLoadedAt = useRef(Date.now());
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/chat/handoff", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionId,
+          name: name.trim(),
+          email: email.trim(),
+          topic: "membership",
+          note: "ChamberBot lead — expressed interest via chat",
+          website_confirm: "",
+          formLoadedAt: formLoadedAt.current,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed");
+      setStatus("sent");
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  if (status === "sent") {
+    return (
+      <div className="cb-capture cb-capture--sent">
+        <span className="mono">✓ CONFIRMED —</span> Stephanie will be in touch.
+      </div>
+    );
+  }
+
+  return (
+    <div className="cb-capture">
+      <div className="cb-capture__head mono">STEPHANIE WILL REACH OUT</div>
+      <p className="cb-capture__body">
+        Drop your name and email — she&apos;ll follow up directly.
+      </p>
+      {status === "error" && (
+        <p className="cb-capture__error mono">Send failed — try again.</p>
+      )}
+      <form className="cb-capture__form" onSubmit={handleSubmit}>
+        <input
+          className="cb-capture__input"
+          type="text"
+          placeholder="Your name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          autoComplete="name"
+          aria-label="Your name"
+        />
+        <input
+          className="cb-capture__input"
+          type="email"
+          placeholder="Email address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          autoComplete="email"
+          aria-label="Email address"
+        />
+        <div className="cb-capture__actions">
+          <button
+            type="submit"
+            className="cb-capture__btn cb-capture__btn--primary"
+            disabled={status === "sending" || !name.trim() || !email.trim()}
+          >
+            {status === "sending" ? "Sending…" : "Send →"}
+          </button>
+          <button
+            type="button"
+            className="cb-capture__btn cb-capture__btn--ghost"
+            onClick={() => onClose(messageId)}
+          >
+            No thanks
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
 // ── Constants ─────────────────────────────────────────────────────
 
 const ENTER_MS = 1400;
@@ -268,6 +369,8 @@ export function ChamberBotPortal({
     if (stored !== null) return stored === "true";
     return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
   });
+
+  const upcomingEventCount = useMemo(() => getUpcomingEvents().length, []);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const justSubmittedRef = useRef(false);
@@ -390,6 +493,20 @@ export function ChamberBotPortal({
             ),
           );
         }
+
+        // Detect and strip lead-capture token after stream completes.
+        setMessages((prev) =>
+          prev.map((m) => {
+            if (m.id !== assistantId) return m;
+            const hasCapture = m.content.includes("[→STEPHANIE]");
+            if (!hasCapture) return m;
+            return {
+              ...m,
+              content: m.content.replace(/\[→STEPHANIE\]\s*/g, "").trim(),
+              showCapture: true,
+            };
+          })
+        );
 
         setSceneState("idle");
       } catch (e: unknown) {
@@ -694,33 +811,45 @@ export function ChamberBotPortal({
               ) : hasMessages ? (
                 <div className="transcript" aria-live="polite">
                   {messages.map((m) => (
-                    <div
-                      key={m.id}
-                      className={`msg msg-${m.role}`}
-                    >
-                      <div className="msg-label mono">
-                        {m.role === "user" ? "YOU" : "CHAMBERBOT"}
+                    <div key={m.id}>
+                      <div className={`msg msg-${m.role}`}>
+                        <div className="msg-label mono">
+                          {m.role === "user" ? "YOU" : "CHAMBERBOT"}
+                        </div>
+                        <div className="msg-bubble">
+                          {m.role === "user" ? (
+                            m.content
+                          ) : m.content ? (
+                            <span
+                              dangerouslySetInnerHTML={{
+                                __html: renderMarkdown(m.content),
+                              }}
+                            />
+                          ) : (
+                            <span
+                              className="typing"
+                              aria-label="ChamberBot is thinking"
+                            >
+                              <span />
+                              <span />
+                              <span />
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <div className="msg-bubble">
-                        {m.role === "user" ? (
-                          m.content
-                        ) : m.content ? (
-                          <span
-                            dangerouslySetInnerHTML={{
-                              __html: renderMarkdown(m.content),
-                            }}
-                          />
-                        ) : (
-                          <span
-                            className="typing"
-                            aria-label="ChamberBot is thinking"
-                          >
-                            <span />
-                            <span />
-                            <span />
-                          </span>
-                        )}
-                      </div>
+                      {m.showCapture && (
+                        <PortalCaptureCard
+                          messageId={m.id}
+                          sessionId={sessionIdRef.current}
+                          onClose={(id) =>
+                            setMessages((prev) =>
+                              prev.map((msg) =>
+                                msg.id === id ? { ...msg, showCapture: false } : msg
+                              )
+                            )
+                          }
+                        />
+                      )}
                     </div>
                   ))}
                   <div ref={transcriptEndRef} />
@@ -788,6 +917,14 @@ export function ChamberBotPortal({
               </button>
             </form>
           </div>
+          <p className="cb-disclaimer mono" aria-hidden="true">
+            AI — responses may be inaccurate · verify with{" "}
+            <a href="/about/contact" tabIndex={-1}>office@medinaohchamber.com</a>
+            {" · "}
+            <a href="/privacy" tabIndex={-1}>Privacy</a>
+            {" · "}
+            <a href="/terms" tabIndex={-1}>Terms</a>
+          </p>
         </section>
       </main>
 
@@ -797,7 +934,7 @@ export function ChamberBotPortal({
           <span className="rail-dot ok" /> {totalCount} MEMBERS INDEXED
         </div>
         <div className="rail-item" aria-hidden="true">
-          <span className="rail-dot warn" /> 12 EVENTS THIS MONTH
+          <span className="rail-dot ok" /> {upcomingEventCount} UPCOMING EVENTS
         </div>
         <button
           className="rail-item rail-toggle"

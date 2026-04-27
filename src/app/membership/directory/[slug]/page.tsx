@@ -5,7 +5,6 @@ import { notFound } from "next/navigation";
 import { members, getMemberBySlug, extractCity, getInitials, isVisibilityPlus } from "@/data/members";
 
 import { safeJsonLd } from "@/lib/json-ld";
-import { headers } from "next/headers";
 // ── Static generation ──────────────────────────────────────────
 export function generateStaticParams() {
   return members.map((m) => ({ slug: m.chamberSlug }));
@@ -42,7 +41,6 @@ export async function generateMetadata(
 export default async function MemberPage(
   { params }: { params: Promise<{ slug: string }> }
 ) {
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
   const { slug } = await params;
   const member = getMemberBySlug(slug);
   if (!member) notFound();
@@ -50,6 +48,12 @@ export default async function MemberPage(
   const city = extractCity(member.address);
   const initials = getInitials(member.name);
   const visPlus = isVisibilityPlus(member);
+
+  const logoAbsoluteUrl = member.logoUrl
+    ? member.logoUrl.startsWith("http")
+      ? member.logoUrl
+      : `https://medinachamber.com${member.logoUrl}`
+    : undefined;
 
   // JSON-LD LocalBusiness schema
   const jsonLd = {
@@ -68,7 +72,7 @@ export default async function MemberPage(
         }
       : undefined,
     description: member.description || undefined,
-    image: member.logoUrl || undefined,
+    image: logoAbsoluteUrl,
     memberOf: {
       "@type": "Organization",
       name: "Greater Medina Chamber of Commerce",
@@ -92,12 +96,10 @@ export default async function MemberPage(
     <>
       <script
         type="application/ld+json"
-        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
       <script
         type="application/ld+json"
-        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
 

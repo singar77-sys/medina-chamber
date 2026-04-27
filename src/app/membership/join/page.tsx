@@ -3,7 +3,6 @@ import Link from "next/link";
 import { ApplicationForm } from "./ApplicationForm";
 
 import { safeJsonLd } from "@/lib/json-ld";
-import { headers } from "next/headers";
 export const metadata: Metadata = {
   title: "Join the Chamber",
   description:
@@ -78,13 +77,11 @@ const faqJsonLd = {
   })),
 };
 
-export default async function JoinPage() {
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
+export default function JoinPage() {
   return (
     <>
       <script
         type="application/ld+json"
-        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(faqJsonLd) }}
       />
     <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">

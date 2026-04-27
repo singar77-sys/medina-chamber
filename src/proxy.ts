@@ -21,8 +21,23 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { verifySession, ADMIN_COOKIE } from "@/lib/admin-session";
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Guard /admin/** — skip the login page itself to avoid redirect loops
+  if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
+    const token = request.cookies.get(ADMIN_COOKIE)?.value;
+    const valid = token ? await verifySession(token) : false;
+    if (!valid) {
+      const res = NextResponse.redirect(new URL("/admin/login", request.url));
+      if (token) res.cookies.delete(ADMIN_COOKIE);
+      return res;
+    }
+  }
+
+
   // 16 random bytes → 22-char base64 nonce. crypto.randomUUID is
   // available in the edge runtime; we hash it through btoa for compactness.
   const nonceBytes = crypto.getRandomValues(new Uint8Array(16));
@@ -32,7 +47,11 @@ export function proxy(request: NextRequest) {
     `default-src 'self'`,
     // strict-dynamic + nonce: trust scripts that we mark with the nonce,
     // and scripts those load (Next.js bootstrap → analytics, Sentry, etc).
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
+    // Dev: React requires 'unsafe-eval' for hot reload / devtools.
+    // Omitted in production — strict-dynamic covers runtime scripts.
+    process.env.NODE_ENV === "development"
+      ? `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-eval'`
+      : `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
     // Tailwind injects inline styles; without 'unsafe-inline' Tailwind
     // breaks on every page. Acceptable trade — style XSS is much narrower
     // than script XSS.

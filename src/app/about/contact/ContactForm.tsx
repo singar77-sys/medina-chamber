@@ -173,6 +173,13 @@ export function ContactForm() {
         <p className="text-body-sm text-red-500">{errorMsg}</p>
       )}
 
+      <p className="text-caption text-text-tertiary">
+        Your information is used to respond to your inquiry.{" "}
+        <a href="/privacy" className="underline hover:text-text-secondary transition-colors">
+          Privacy Policy
+        </a>
+      </p>
+
       <button
         type="submit"
         disabled={status === "loading"}

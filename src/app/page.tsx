@@ -15,9 +15,9 @@ import { FluidGraphicFrame } from "@/components/events/graphics/FluidGraphicFram
 import { TiltCard } from "@/components/events/TiltCard";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { BeeFly } from "@/components/effects/BeeFly";
+import { CommunityInvestors } from "@/components/CommunityInvestors";
 
 import { safeJsonLd } from "@/lib/json-ld";
-import { headers } from "next/headers";
 export const metadata: Metadata = {
   title: "Greater Medina Chamber of Commerce — Medina County, Ohio",
   description: `The Greater Medina Chamber of Commerce connects and champions businesses across Medina County, Ohio. ${totalCount}+ member businesses, networking events, advocacy, and programs since 1938.`,
@@ -88,15 +88,13 @@ const organizationJsonLd = {
   },
 };
 
-export default async function HomePage() {
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
+export default function HomePage() {
   const upcomingEvents = getUpcomingEvents().slice(0, 3);
 
   return (
     <div>
       <script
         type="application/ld+json"
-        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(organizationJsonLd) }}
       />
 
@@ -108,7 +106,7 @@ export default async function HomePage() {
           alt="Historic Medina Square gazebo"
           fill
           sizes="100vw"
-          className="object-cover object-center [[data-theme=dark]_&]:hidden"
+          className="object-cover object-center hero-ken-burns [[data-theme=dark]_&]:hidden"
           priority
           quality={85}
         />
@@ -117,7 +115,7 @@ export default async function HomePage() {
           alt="Historic Medina gazebo at night"
           fill
           sizes="100vw"
-          className="object-cover object-center hidden [[data-theme=dark]_&]:block"
+          className="object-cover object-center hero-ken-burns hidden [[data-theme=dark]_&]:block"
           priority
           quality={85}
         />
@@ -177,7 +175,7 @@ export default async function HomePage() {
         color="rgba(92, 149, 183, 0.22)"
       >
         <div className="mx-auto max-w-7xl px-6 lg:px-8 py-14">
-          <div className="grid grid-cols-3 gap-8">
+          <div className="grid grid-cols-3 gap-4 md:gap-8">
             {[
               { end: totalCount, label: "Member Businesses", suffix: "+" },
               { end: 30, label: "Events Per Year", suffix: "+" },
@@ -225,7 +223,7 @@ export default async function HomePage() {
               key={`ld-${event.slug}`}
               type="application/ld+json"
               dangerouslySetInnerHTML={{
-                __html: JSON.stringify({
+                __html: safeJsonLd({
                   "@context": "https://schema.org",
                   "@type": "Event",
                   name: event.title,
@@ -443,6 +441,9 @@ export default async function HomePage() {
 
       {/* ─── Partners & Sponsors ──────────────────────────── */}
       <PartnersMarquee />
+
+      {/* ─── Community Investors ──────────────────────────── */}
+      <CommunityInvestors />
 
       {/* ─── Join CTA ─────────────────────────────────────── */}
       <section className="relative py-20 lg:py-28 overflow-hidden">

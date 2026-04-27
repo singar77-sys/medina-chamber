@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "Board of Directors",
@@ -41,8 +42,53 @@ const staff = [
 ];
 
 export default function BoardPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: "Board of Directors — Greater Medina Chamber of Commerce",
+    description:
+      "Meet the volunteer board of directors leading the Greater Medina Chamber of Commerce — local business leaders guiding strategy and advocacy for Medina County.",
+    url: "https://medinachamber.com/about/board",
+    mainEntity: {
+      "@type": "Organization",
+      name: "Greater Medina Chamber of Commerce",
+      member: [
+        { "@type": "OrganizationRole", roleName: "Board President", member: { "@type": "Person", name: "Julie McNabb" } },
+        { "@type": "OrganizationRole", roleName: "Board Chair", member: { "@type": "Person", name: "Steve Allison" } },
+        { "@type": "OrganizationRole", roleName: "Board of Directors", member: { "@type": "Person", name: "Malorie Kormos" } },
+        { "@type": "OrganizationRole", roleName: "Board of Directors", member: { "@type": "Person", name: "Steve Ferris" } },
+        { "@type": "OrganizationRole", roleName: "Board of Directors", member: { "@type": "Person", name: "Terry Blascak" } },
+        { "@type": "OrganizationRole", roleName: "Board of Directors", member: { "@type": "Person", name: "David Ferrell" } },
+        { "@type": "OrganizationRole", roleName: "Board of Directors", member: { "@type": "Person", name: "Kathy Elseser" } },
+        { "@type": "OrganizationRole", roleName: "Board of Directors", member: { "@type": "Person", name: "Randy Fuerst" } },
+        { "@type": "OrganizationRole", roleName: "Board of Directors", member: { "@type": "Person", name: "Brian Harr" } },
+        { "@type": "OrganizationRole", roleName: "Board of Directors", member: { "@type": "Person", name: "Nick Howell" } },
+        { "@type": "OrganizationRole", roleName: "Past Board President", member: { "@type": "Person", name: "Dan Calvin" } },
+      ],
+      employee: [
+        {
+          "@type": "Person",
+          name: "Jaclyn Ringstmeier IOM",
+          jobTitle: "Executive Director",
+          email: "jaclyn@medinaohchamber.com",
+        },
+        {
+          "@type": "Person",
+          name: "Stephanie Mueller",
+          jobTitle: "Membership & Events Coordinator",
+          email: "stephanie@medinaohchamber.com",
+        },
+      ],
+    },
+  };
+
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+      />
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
       {/* Hero */}
       <section className="max-w-3xl">
         <p className="text-overline text-cambridge mb-4">Leadership</p>
@@ -134,5 +180,6 @@ export default function BoardPage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

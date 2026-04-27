@@ -72,6 +72,15 @@ export default function PrivacyPage() {
           don&apos;t build cross-site profiles. We don&apos;t use Google
           Analytics, Facebook Pixel, or any advertising tracker on this site.
         </p>
+        <p className="text-body text-text-secondary mt-3">
+          We also use PostHog to understand how visitors interact with specific
+          features — for example, whether you open the ChamberBot, which
+          programs you view, and how you navigate the site. PostHog stores this
+          data in your browser&apos;s local storage (not cookies) and does not
+          build cross-site profiles. Session recording is disabled. You can opt
+          out by enabling Do Not Track in your browser — we honor the DNT
+          signal.
+        </p>
 
         <h3 className="text-h3 mt-8 mb-3">Member directory data</h3>
         <p className="text-body text-text-secondary">

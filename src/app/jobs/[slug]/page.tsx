@@ -5,7 +5,6 @@ import { jobs, getJobBySlug, formatJobDate } from "@/data/jobs";
 import { members } from "@/data/members";
 
 import { safeJsonLd } from "@/lib/json-ld";
-import { headers } from "next/headers";
 // ── Static generation ─────────────────────────────────────────────
 export function generateStaticParams() {
   return jobs.map((j) => ({ slug: j.slug }));
@@ -36,7 +35,6 @@ export async function generateMetadata(
 export default async function JobDetailPage(
   { params }: { params: Promise<{ slug: string }> }
 ) {
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
   const { slug } = await params;
   const job = getJobBySlug(slug);
   if (!job) notFound();
@@ -53,25 +51,70 @@ export default async function JobDetailPage(
     ? job.body.split("\n").filter(Boolean)
     : [];
 
+  // Map tags to schema.org employmentType enum values (future-proof for when
+  // GrowthZone job tags are populated).
+  const EMPLOYMENT_TYPE_MAP: Record<string, string> = {
+    "full-time": "FULL_TIME",
+    "full time": "FULL_TIME",
+    "part-time": "PART_TIME",
+    "part time": "PART_TIME",
+    "contract": "CONTRACTOR",
+    "contractor": "CONTRACTOR",
+    "temporary": "TEMPORARY",
+    "temp": "TEMPORARY",
+    "intern": "INTERN",
+    "internship": "INTERN",
+    "volunteer": "VOLUNTEER",
+    "per diem": "PER_DIEM",
+  };
+  const employmentTypes = [
+    ...new Set(
+      job.tags
+        .map((t) => EMPLOYMENT_TYPE_MAP[t.toLowerCase()])
+        .filter(Boolean)
+    ),
+  ];
+
+  // validThrough: Google recommends a closing date. Default to 90 days after
+  // posting since GrowthZone doesn't expose an expiration date.
+  const validThrough = (() => {
+    if (!job.dateISO) return undefined;
+    const d = new Date(job.dateISO);
+    d.setDate(d.getDate() + 90);
+    return d.toISOString().substring(0, 10);
+  })();
+
   // JSON-LD JobPosting schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "JobPosting",
     title: job.title,
-    description: job.body.substring(0, 5000),
+    description: job.body || job.subtitle || `${job.title} position at ${job.companyName} in Medina County, Ohio.`,
     datePosted: job.dateISO,
+    ...(validThrough && { validThrough }),
+    ...(employmentTypes.length > 0 && { employmentType: employmentTypes }),
+    ...(job.jobId && {
+      identifier: {
+        "@type": "PropertyValue",
+        name: job.companyName,
+        value: job.jobId,
+      },
+    }),
     hiringOrganization: {
       "@type": "Organization",
       name: job.companyName,
-      ...(memberRecord?.website && { url: memberRecord.website }),
+      // sameAs is the correct schema.org field for the company's own website.
+      ...(memberRecord?.website && { sameAs: memberRecord.website }),
       ...(memberRecord?.logoUrl && { logo: memberRecord.logoUrl }),
     },
     jobLocation: {
       "@type": "Place",
+      ...(job.location && { name: job.location }),
       address: {
         "@type": "PostalAddress",
         addressLocality: "Medina",
         addressRegion: "OH",
+        postalCode: "44256",
         addressCountry: "US",
       },
     },
@@ -93,12 +136,10 @@ export default async function JobDetailPage(
     <>
       <script
         type="application/ld+json"
-        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
       <script
         type="application/ld+json"
-        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
 

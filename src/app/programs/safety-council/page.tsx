@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "Medina County Safety Council",
@@ -37,8 +38,45 @@ const requirements = [
 ];
 
 export default function SafetyCouncilPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Medina County Safety Council",
+    description:
+      "Workplace safety education and Ohio BWC Group Rebate program for Medina County employers. Monthly meetings covering OSHA compliance, injury prevention, ergonomics, and emergency preparedness.",
+    provider: {
+      "@type": "Organization",
+      name: "Greater Medina Chamber of Commerce",
+      url: "https://medinachamber.com",
+    },
+    areaServed: { "@type": "AdministrativeArea", name: "Medina County, Ohio" },
+    offers: [
+      {
+        "@type": "Offer",
+        name: "Chamber Members",
+        price: "0",
+        priceCurrency: "USD",
+        description: "Free for Greater Medina Chamber members",
+      },
+      {
+        "@type": "Offer",
+        name: "Non-Members",
+        price: "100",
+        priceCurrency: "USD",
+        description: "Annual membership fee for non-chamber employers",
+      },
+    ],
+    serviceType: "Workplace Safety Education",
+    url: "https://medinachamber.com/programs/safety-council",
+  };
+
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+      />
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
       {/* Hero */}
       <section className="max-w-3xl">
         <p className="text-overline text-cambridge mb-4">Programs</p>
@@ -258,5 +296,6 @@ export default function SafetyCouncilPage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

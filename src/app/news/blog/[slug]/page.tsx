@@ -3,18 +3,50 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { blogPosts, getBlogPostBySlug, formatBlogDate, blogMetaDescription } from "@/data/blog";
+import { getCmsBlogPost } from "@/lib/cms-store";
 
 import { safeJsonLd } from "@/lib/json-ld";
-import { headers } from "next/headers";
+
+// Allow dynamic slugs for CMS posts added after build
+export const dynamicParams = true;
+
 export function generateStaticParams() {
   return blogPosts.map((p) => ({ slug: p.slug }));
+}
+
+// Normalized shape used by the page — compatible with both BlogPost and CmsBlogPost
+interface ResolvedPost {
+  slug: string;
+  title: string;
+  excerpt: string;
+  body: string;
+  author: string;
+  dateISO: string;
+  dateRaw: string;
+  image: string;
+  sourceUrl: string;
+  scrapedAt: string;
+}
+
+async function resolvePost(slug: string): Promise<ResolvedPost | null> {
+  const cms = await getCmsBlogPost(slug);
+  if (cms) {
+    return {
+      ...cms,
+      dateRaw: cms.dateISO,
+      sourceUrl: "",
+      scrapedAt: cms.createdAt,
+    };
+  }
+  const static_ = getBlogPostBySlug(slug);
+  return static_ ?? null;
 }
 
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
   const { slug } = await params;
-  const post = getBlogPostBySlug(slug);
+  const post = await resolvePost(slug);
   if (!post) return { title: "Post Not Found" };
 
   const description = blogMetaDescription(post);
@@ -34,9 +66,8 @@ export async function generateMetadata(
 export default async function BlogPostPage(
   { params }: { params: Promise<{ slug: string }> }
 ) {
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
   const { slug } = await params;
-  const post = getBlogPostBySlug(slug);
+  const post = await resolvePost(slug);
   if (!post) notFound();
 
   const dateDisplay = formatBlogDate(post);
@@ -85,12 +116,10 @@ export default async function BlogPostPage(
     <>
       <script
         type="application/ld+json"
-        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
       <script
         type="application/ld+json"
-        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
 

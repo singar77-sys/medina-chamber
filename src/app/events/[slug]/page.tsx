@@ -3,11 +3,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { events, getEventBySlug, eventMetaDescription } from "@/data/events";
+import { getCmsEventData } from "@/lib/cms-store";
 import { getEventGraphicRenderer } from "@/components/events/graphics/registry";
 import { FluidGraphicFrame } from "@/components/events/graphics/FluidGraphicFrame";
+import { getEventPhotos } from "@/lib/media-store";
+import { EventGallery } from "@/components/events/EventGallery";
 
 import { safeJsonLd } from "@/lib/json-ld";
-import { headers } from "next/headers";
+
+// Allow CMS-managed slugs added after build
+export const dynamicParams = true;
+
 // ── Static generation ──────────────────────────────────────────────────────
 export function generateStaticParams() {
   return events.map((e) => ({ slug: e.slug }));
@@ -18,8 +24,10 @@ export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
   const { slug } = await params;
-  const event = getEventBySlug(slug);
-  if (!event) return { title: "Event Not Found" };
+  const base = getEventBySlug(slug);
+  if (!base) return { title: "Event Not Found" };
+  const override = await getCmsEventData(slug);
+  const event = override ? { ...base, ...override } : base;
 
   const description = eventMetaDescription(event);
 
@@ -39,10 +47,14 @@ export async function generateMetadata(
 export default async function EventPage(
   { params }: { params: Promise<{ slug: string }> }
 ) {
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
   const { slug } = await params;
-  const event = getEventBySlug(slug);
-  if (!event) notFound();
+  const base = getEventBySlug(slug);
+  if (!base) notFound();
+  const [override, photos] = await Promise.all([
+    getCmsEventData(slug),
+    getEventPhotos(slug),
+  ]);
+  const event = override ? { ...base, ...override } : base;
 
   // JSON-LD Event schema for Google rich results
   const jsonLd = {
@@ -110,12 +122,10 @@ export default async function EventPage(
     <>
       <script
         type="application/ld+json"
-        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
       <script
         type="application/ld+json"
-        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
 
@@ -223,6 +233,13 @@ export default async function EventPage(
                   </span>
                   {event.contactPhone && ` at ${event.contactPhone}`}.
                 </p>
+              </div>
+            )}
+
+            {/* Photo gallery */}
+            {photos.length > 0 && (
+              <div className="mt-10">
+                <EventGallery photos={photos} title="Event Photos" />
               </div>
             )}
           </div>

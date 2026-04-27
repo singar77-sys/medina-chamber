@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "Annual Chamber Golf Outing",
@@ -44,8 +45,54 @@ const pricing = [
 ];
 
 export default function GolfOutingPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SportsEvent",
+    name: "Greater Medina Chamber of Commerce Annual Golf Outing 2026",
+    startDate: "2026-07-20T09:30:00-04:00",
+    endDate: "2026-07-20T19:00:00-04:00",
+    sport: "Golf",
+    location: {
+      "@type": "SportsActivityLocation",
+      name: "Westfield Country Club",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Westfield Center",
+        addressRegion: "OH",
+        addressCountry: "US",
+      },
+    },
+    organizer: {
+      "@type": "Organization",
+      name: "Greater Medina Chamber of Commerce",
+      url: "https://medinachamber.com",
+    },
+    offers: [
+      {
+        "@type": "Offer",
+        name: "Chamber Members",
+        price: "230",
+        priceCurrency: "USD",
+        url: "https://business.medinachamber.com/ap/Events/Register/07FA922CxCwCR",
+      },
+      {
+        "@type": "Offer",
+        name: "Non-Members",
+        price: "260",
+        priceCurrency: "USD",
+        url: "https://business.medinachamber.com/ap/Events/Register/07FA922CxCwCR",
+      },
+    ],
+    url: "https://medinachamber.com/programs/golf-outing",
+  };
+
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+      />
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
       {/* Hero */}
       <section className="max-w-3xl">
         <p className="text-overline text-cambridge mb-4">Annual Event</p>
@@ -220,5 +267,6 @@ export default function GolfOutingPage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

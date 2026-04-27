@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "Social Connect",
@@ -38,8 +39,40 @@ const components = [
 ];
 
 export default function SocialConnectPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: "Social Connect",
+    description:
+      "The Greater Medina Chamber's signature networking event — professional networking, the Foundry Faceoff competition, and a public Business Circuit Expo at Foundry Social in Medina, Ohio.",
+    organizer: {
+      "@type": "Organization",
+      name: "Greater Medina Chamber of Commerce",
+      url: "https://medinachamber.com",
+    },
+    location: {
+      "@type": "Place",
+      name: "Foundry Social",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "333 Foundry Street",
+        addressLocality: "Medina",
+        addressRegion: "OH",
+        postalCode: "44256",
+        addressCountry: "US",
+      },
+    },
+    eventStatus: "https://schema.org/EventScheduled",
+    url: "https://medinachamber.com/programs/social-connect",
+  };
+
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+      />
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
       {/* Hero */}
       <section className="max-w-3xl">
         <p className="text-overline text-cambridge mb-4">Networking Event</p>
@@ -211,5 +244,6 @@ export default function SocialConnectPage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

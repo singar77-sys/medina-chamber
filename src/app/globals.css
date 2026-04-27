@@ -246,6 +246,22 @@ summary,
   color: var(--cambridge);
 }
 
+/* ── Hero Ken Burns — slow zoom + drift on background photos ──── */
+@keyframes heroKenBurns {
+  from { transform: scale(1.00) translate(0%,    0%   ); }
+  to   { transform: scale(1.08) translate(-1.5%, 0.8% ); }
+}
+
+.hero-ken-burns {
+  animation: heroKenBurns 24s ease-in-out infinite alternate;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-ken-burns { animation: none; }
+}
+
 /* Nav logo: CSS-driven show/hide — no React state involved so there
  * is no hydration-flash window. The ThemeScript sets data-theme on
  * <html> before first paint; these rules read that attribute directly. */
@@ -1811,10 +1827,10 @@ body {
 
 .rsc-modal__btn--primary {
   color: #ffffff;
-  background: var(--coquelicot);
+  background: var(--accent);
 }
 .rsc-modal__btn--primary:hover {
-  background: #e63900;
+  background: var(--accent-hover);
 }
 
 .rsc-modal__btn--ghost {
@@ -3060,6 +3076,108 @@ body {
   background: transparent; border: none;
   color: var(--cambridge); font: inherit; font-size: 13px;
   cursor: pointer; align-self: flex-start; padding: 6px 0;
+}
+
+/* ── AI disclaimer strip — sits between input bar and Rail ──────── */
+.cb-portal .cb-disclaimer {
+  padding: 3px 16px 4px;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  color: var(--paper-fade);
+  text-align: center;
+  border-top: 1px solid rgba(131, 188, 169, 0.08);
+  background: rgba(5, 12, 26, 0.4);
+}
+.cb-portal .cb-disclaimer a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.cb-portal .cb-disclaimer a:hover { color: var(--cambridge); }
+
+/* ── Lead-capture card (PortalCaptureCard) ────────────────────── */
+.cb-portal .cb-capture {
+  margin: 6px 0 2px 0;
+  padding: 12px 14px 14px;
+  background: rgba(5, 12, 26, 0.72);
+  border: 1px solid rgba(131, 188, 169, 0.22);
+  border-left: 2px solid rgba(131, 188, 169, 0.55);
+  border-radius: 4px;
+  max-width: 420px;
+}
+.cb-portal .cb-capture--sent {
+  color: var(--cambridge);
+  font-size: 12px;
+  padding: 10px 14px;
+}
+.cb-portal .cb-capture--sent .mono { opacity: 0.8; }
+.cb-portal .cb-capture__head {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--cambridge);
+  opacity: 0.75;
+  margin-bottom: 5px;
+}
+.cb-portal .cb-capture__body {
+  font-size: 12px;
+  color: rgba(220, 232, 245, 0.82);
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+.cb-portal .cb-capture__error {
+  font-size: 9px;
+  color: #ff6233;
+  margin-bottom: 8px;
+  letter-spacing: 0.06em;
+}
+.cb-portal .cb-capture__form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cb-portal .cb-capture__input {
+  background: rgba(131, 188, 169, 0.06);
+  border: 1px solid rgba(131, 188, 169, 0.2);
+  border-radius: 3px;
+  padding: 7px 10px;
+  font-size: 12px;
+  color: #dce8f5;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.15s;
+}
+.cb-portal .cb-capture__input::placeholder { color: rgba(131, 188, 169, 0.35); }
+.cb-portal .cb-capture__input:focus { border-color: rgba(131, 188, 169, 0.55); }
+.cb-portal .cb-capture__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+.cb-portal .cb-capture__btn {
+  padding: 6px 14px;
+  font-size: 11px;
+  font-family: var(--font-mono, monospace);
+  letter-spacing: 0.06em;
+  border-radius: 3px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: opacity 0.15s, background 0.15s;
+}
+.cb-portal .cb-capture__btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.cb-portal .cb-capture__btn--primary {
+  background: var(--cambridge);
+  color: #0c1b33;
+  border-color: var(--cambridge);
+}
+.cb-portal .cb-capture__btn--primary:not(:disabled):hover { opacity: 0.85; }
+.cb-portal .cb-capture__btn--ghost {
+  background: transparent;
+  color: rgba(131, 188, 169, 0.6);
+  border-color: rgba(131, 188, 169, 0.2);
+}
+.cb-portal .cb-capture__btn--ghost:hover {
+  color: var(--cambridge);
+  border-color: rgba(131, 188, 169, 0.45);
 }
 
 /* ── Input bar — flat style, no pill/capsule ──────────────────── */

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "Chamber Ambassadors",
@@ -129,8 +130,39 @@ const roles = [
 ];
 
 export default function AmbassadorsPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: "Chamber Ambassadors — Greater Medina Chamber of Commerce",
+    description:
+      "Meet the Greater Medina Chamber of Commerce Ambassadors — volunteer member business representatives who welcome new members, attend ribbon cuttings, and represent the chamber throughout Medina County.",
+    url: "https://medinachamber.com/about/ambassadors",
+    mainEntity: {
+      "@type": "Organization",
+      name: "Greater Medina Chamber of Commerce",
+      member: [
+        { "@type": "Person", name: "Kari Deeks", jobTitle: "Treasury Management Officer", worksFor: { "@type": "Organization", name: "First Federal of Lakewood" } },
+        { "@type": "Person", name: "Brittney Esser", jobTitle: "Escrow Processor", worksFor: { "@type": "Organization", name: "Title Select" } },
+        { "@type": "Person", name: "Tania Grant", jobTitle: "Owner", worksFor: { "@type": "Organization", name: "TAG Studio" } },
+        { "@type": "Person", name: "Don Hicks", jobTitle: "Area Vice President – Midwest Region", worksFor: { "@type": "Organization", name: "Vensure" } },
+        { "@type": "Person", name: "Laurin Jeffers", jobTitle: "Events and Community Manager", worksFor: { "@type": "Organization", name: "Foundry Social" } },
+        { "@type": "Person", name: "Danielle Litton", jobTitle: "MRO Midwest Sales Manager", worksFor: { "@type": "Organization", name: "National Process Systems" } },
+        { "@type": "Person", name: "Claus Meyer", jobTitle: "Certified Financial Planner", worksFor: { "@type": "Organization", name: "Raymond James" } },
+        { "@type": "Person", name: "Cindy Phillips", jobTitle: "Vice President, Wealth Advisor", worksFor: { "@type": "Organization", name: "Huntington Bank" } },
+        { "@type": "Person", name: "Sam Pietrangelo", jobTitle: "Community Marketing Manager", worksFor: { "@type": "Organization", name: "Armstrong" } },
+        { "@type": "Person", name: "Tori Toth", jobTitle: "Walk Manager", worksFor: { "@type": "Organization", name: "Alzheimer's Association" } },
+        { "@type": "Person", name: "Kimberly Valco", jobTitle: "Community Relations", worksFor: { "@type": "Organization", name: "Western Reserve Masonic Community" } },
+      ],
+    },
+  };
+
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+      />
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
       {/* Hero */}
       <section className="max-w-3xl">
         <p className="text-overline text-cambridge mb-4">Volunteers</p>
@@ -240,5 +272,6 @@ export default function AmbassadorsPage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

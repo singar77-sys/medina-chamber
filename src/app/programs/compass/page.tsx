@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "Compass Leadership Program",
@@ -71,8 +72,53 @@ const audience = [
 ];
 
 export default function CompassPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    name: "Compass Leadership Program",
+    description:
+      "A five-session professional leadership development program covering self-awareness, communication, well-being, and community citizenship. Presented by the Greater Medina Chamber of Commerce and the Center for Immersive Leadership.",
+    provider: [
+      {
+        "@type": "Organization",
+        name: "Greater Medina Chamber of Commerce",
+        url: "https://medinachamber.com",
+      },
+      { "@type": "Organization", name: "Center for Immersive Leadership" },
+    ],
+    offers: {
+      "@type": "Offer",
+      price: "995",
+      priceCurrency: "USD",
+    },
+    hasCourseInstance: {
+      "@type": "CourseInstance",
+      courseMode: "onsite",
+      location: {
+        "@type": "Place",
+        name: "Greater Medina Chamber of Commerce",
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: "139 N. Court Street",
+          addressLocality: "Medina",
+          addressRegion: "OH",
+          postalCode: "44256",
+          addressCountry: "US",
+        },
+      },
+      startDate: "2026-02-01",
+      endDate: "2026-05-31",
+    },
+    url: "https://medinachamber.com/programs/compass",
+  };
+
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+      />
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
       {/* Hero */}
       <section className="max-w-3xl">
         <p className="text-overline text-cambridge mb-4">Leadership Development</p>
@@ -220,5 +266,6 @@ export default function CompassPage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

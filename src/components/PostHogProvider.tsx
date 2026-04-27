@@ -31,6 +31,8 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
       // Respect DNT and the user's privacy settings.
       respect_dnt: true,
       persistence: "localStorage",
+      // Session recording disabled — not disclosed in privacy policy.
+      disable_session_recording: true,
     });
   }, []);
 

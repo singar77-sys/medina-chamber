@@ -2,141 +2,46 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { safeJsonLd } from "@/lib/json-ld";
-import { headers } from "next/headers";
-export const metadata: Metadata = {
-  title: "Membership Pricing",
-  description:
-    "Three Greater Medina Chamber of Commerce membership tiers: Business Essentials ($345/year), Visibility Plus ($575/year), and Community Investor ($1,145/year). Choose the level that fits your goals.",
-  openGraph: {
-    title: "Membership Pricing — Greater Medina Chamber of Commerce",
-    description:
-      "Three tiers: Business Essentials ($345), Visibility Plus ($575), Community Investor ($1,145). Pick the level that fits your business.",
-  },
-  alternates: { canonical: "/membership/pricing" },
-};
+import { getCmsPricing, DEFAULT_PRICING } from "@/lib/cms-store";
 
-interface Tier {
-  key: "essentials" | "plus" | "investor";
-  name: string;
-  price: number;
-  tagline: string;
-  who: string;
-  benefits: string[];
-  /** Benefits added on top of the previous tier */
-  addedBenefits?: string[];
-  cta: string;
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const pricing = (await getCmsPricing()) ?? DEFAULT_PRICING;
+  const [e, p, i] = pricing.tiers;
+  const desc = `Three Greater Medina Chamber of Commerce membership tiers: ${e.name} ($${e.price}/year), ${p.name} ($${p.price}/year), and ${i.name} ($${i.price}/year). Choose the level that fits your goals.`;
+  return {
+    title: "Membership Pricing",
+    description: desc,
+    openGraph: {
+      title: "Membership Pricing — Greater Medina Chamber of Commerce",
+      description: `Three tiers: ${e.name} ($${e.price}), ${p.name} ($${p.price}), ${i.name} ($${i.price}). Pick the level that fits your business.`,
+    },
+    alternates: { canonical: "/membership/pricing" },
+  };
 }
 
-const essentialsBenefits = [
-  "Online directory listing",
-  "Ribbon cutting ceremony",
-  "Member mailing address list",
-  "Post sharing on Chamber socials",
-  "Business advocacy & economic development support",
-  "Access to coworking space",
-  "Member Portal account",
-  "Custom digital membership badge",
-  "Free job postings",
-  "Share company announcements in Member Portal",
-  "Referral network access",
-  "Personalized onboarding with Chamber staff",
-  "Free notary service",
-  "Group health insurance (2–49 employees)",
-  "20% discount at Medina Recreation Center",
-  "Workers' compensation program",
-  "Member-only event pricing",
-];
-
-const plusAdded = [
-  "Directory listing enhanced with logo",
-  "Member spotlight (social & email)",
-  "Custom digital membership sticker video",
-  "E-newsletter ad placement (4 per year)",
-  "Free certificate of origin (non-freight forwarders)",
-];
-
-const investorAdded = [
-  "Investor member spotlight (social, email, & website)",
-  "2 free tickets to monthly luncheons",
-  "Access to local & state legislator events & introductions",
-  "Recognition at all events as Investor",
-];
-
-const tiers: Tier[] = [
-  {
-    key: "essentials",
-    name: "Business Essentials",
-    price: 345,
-    tagline:
-      "Everything you need to plug into the Medina business community — visibility, advocacy, and member pricing — at a starter-friendly rate.",
-    who: "Solopreneurs and small teams needing credibility, network access, and baseline marketing boosts.",
-    benefits: essentialsBenefits,
-    cta: "Join Essentials",
-  },
-  {
-    key: "plus",
-    name: "Visibility Plus",
-    price: 575,
-    tagline:
-      "Turn up your reach with logo-enhanced directory, member spotlights, and four newsletter ads per year — done-for-you visibility.",
-    who: "Growth-minded small and mid-sized businesses seeking more impressions and owned media slots.",
-    benefits: essentialsBenefits,
-    addedBenefits: plusAdded,
-    cta: "Upgrade to Plus",
-  },
-  {
-    key: "investor",
-    name: "Community Investor",
-    price: 1145,
-    tagline:
-      "Lead from the front: VIP spotlights, two luncheon tickets monthly, and direct access to legislator events — with recognition at every Chamber event.",
-    who: "Established firms prioritizing policy access, high-profile recognition, and year-round VIP presence.",
-    benefits: [...essentialsBenefits, ...plusAdded],
-    addedBenefits: investorAdded,
-    cta: "Become an Investor",
-  },
-];
-
-const faqs = [
-  {
-    q: "Do I qualify for group health insurance?",
-    a: "Available for employers with 2–49 employees. Details provided during onboarding.",
-  },
-  {
-    q: "What's included in member spotlights?",
-    a: "Visibility Plus spotlights run on social and email. Community Investor spotlights run on social, email, and the chamber website.",
-  },
-  {
-    q: "Do Investors get ongoing event perks?",
-    a: "Yes — two free luncheon tickets every month plus recognition at all events.",
-  },
-  {
-    q: "What's the Certificate of Origin benefit?",
-    a: "Free for non-freight forwarders on Visibility Plus and Community Investor tiers.",
-  },
-  {
-    q: "How do I upgrade later?",
-    a: "Contact Stephanie Mueller at any time. Upgrades are prorated based on where you are in your membership year.",
-  },
-];
-
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
-
 export default async function PricingPage() {
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
+  const pricing = (await getCmsPricing()) ?? DEFAULT_PRICING;
+  const tiers = pricing.tiers;
+  const faqs = pricing.faqs;
+  const essentialsTier = tiers.find((t) => t.key === "essentials");
+  const essentialsBenefits = essentialsTier?.benefits ?? [];
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
-        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(faqJsonLd) }}
       />
 
@@ -185,7 +90,7 @@ export default async function PricingPage() {
         {/* Tier cards */}
         <section className="mt-20 grid lg:grid-cols-3 gap-6">
           {tiers.map((tier) => {
-            const isFeatured = tier.key === "plus";
+            const isFeatured = !!tier.featured;
             return (
               <div
                 key={tier.key}
@@ -268,9 +173,9 @@ export default async function PricingPage() {
                         isFeatured ? "text-cambridge" : "text-cambridge"
                       }`}
                     >
-                      {tier.key === "plus"
-                        ? "Everything in Essentials, plus"
-                        : "Everything in Visibility Plus, plus"}
+                      {tier.key === "investor"
+                        ? "Everything in Visibility Plus, plus"
+                        : "Everything in Essentials, plus"}
                     </p>
                     <ul className="space-y-2">
                       {tier.addedBenefits.map((item) => (
@@ -298,7 +203,7 @@ export default async function PricingPage() {
                   </div>
                 )}
 
-                {tier.key === "essentials" && (
+                {!tier.addedBenefits && (
                   <div className="mt-5 pt-5 border-t border-border-secondary">
                     <p className="text-caption font-bold text-cambridge mb-3">
                       What&apos;s included

@@ -165,6 +165,7 @@ interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
+  showCapture?: boolean;
 }
 
 function useStreamChat() {
@@ -240,6 +241,20 @@ function useStreamChat() {
           )
         );
       }
+
+      // After stream completes: detect and strip the lead-capture token.
+      setMessages((prev) =>
+        prev.map((m) => {
+          if (m.id !== assistantId) return m;
+          const hasCapture = m.content.includes("[→STEPHANIE]");
+          if (!hasCapture) return m;
+          return {
+            ...m,
+            content: m.content.replace(/\[→STEPHANIE\]\s*/g, "").trim(),
+            showCapture: true,
+          };
+        })
+      );
     } catch (e: unknown) {
       if (e instanceof Error && e.name === "AbortError") return;
       setError("Something went wrong. Please try again.");
@@ -255,7 +270,92 @@ function useStreamChat() {
    *  authoritative on session identity. */
   const getSessionId = useCallback(() => sessionIdRef.current, []);
 
-  return { messages, input, setInput, isLoading, error, sendMessage, getSessionId };
+  const dismissCapture = useCallback((id: string) => {
+    setMessages((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, showCapture: false } : m))
+    );
+  }, []);
+
+  return { messages, input, setInput, isLoading, error, sendMessage, getSessionId, dismissCapture };
+}
+
+// ── Stephanie capture card ────────────────────────────────────────
+function StephanieCaptureCard({
+  messageId,
+  sessionId,
+  onClose,
+}: {
+  messageId: string;
+  sessionId: string | null;
+  onClose: (id: string) => void;
+}) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [formLoadedAt] = useState(() => Date.now());
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/chat/handoff", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionId,
+          name: name.trim(),
+          email: email.trim(),
+          topic: "membership",
+          note: "ChamberBot lead — expressed interest via chat",
+          website_confirm: "",
+          formLoadedAt,
+        }),
+      });
+      setStatus(res.ok ? "sent" : "error");
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  const fieldCls = `
+    flex-1 min-w-0 px-2.5 py-1.5 text-caption
+    bg-bg-primary border border-border-secondary rounded-[var(--radius-sm)]
+    text-text-primary placeholder:text-text-tertiary
+    focus:outline-none focus:ring-1 focus:ring-cambridge/40 focus:border-cambridge
+    disabled:opacity-50 transition-colors
+  `;
+
+  if (status === "sent") {
+    return (
+      <div className="mt-2 px-3 py-2.5 rounded-[var(--radius-md)] bg-bg-secondary border border-border-secondary text-caption text-text-secondary flex items-center justify-between gap-3">
+        <span><span className="font-bold text-text-primary">Got it.</span> Stephanie will be in touch within one business day.</span>
+        <button onClick={() => onClose(messageId)} className="shrink-0 text-text-tertiary hover:text-text-secondary transition-colors underline">Dismiss</button>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="mt-2 px-3 py-3 rounded-[var(--radius-md)] bg-bg-secondary border border-cambridge/25 space-y-2">
+      <p className="text-caption font-bold text-text-primary">Want Stephanie to reach out?</p>
+      <div className="flex gap-2">
+        <input type="text" required placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} disabled={status === "sending"} className={fieldCls} />
+        <input type="email" required placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} disabled={status === "sending"} className={fieldCls} />
+      </div>
+      {status === "error" && <p className="text-[10px] text-red-500">Something went wrong — try again.</p>}
+      <div className="flex items-center gap-3">
+        <button
+          type="submit"
+          disabled={status === "sending" || !name.trim() || !email.trim()}
+          className="px-3 py-1.5 text-caption font-bold bg-oxford hover:bg-oxford/80 disabled:opacity-40 text-white rounded-[var(--radius-sm)] transition-colors"
+        >
+          {status === "sending" ? "Sending…" : "Send →"}
+        </button>
+        <button type="button" onClick={() => onClose(messageId)} className="text-caption text-text-tertiary hover:text-text-secondary transition-colors">
+          No thanks
+        </button>
+      </div>
+    </form>
+  );
 }
 
 export function ChatWidget() {
@@ -266,7 +366,7 @@ export function ChatWidget() {
   const inputRef = useRef<HTMLInputElement>(null);
   const pathname = usePathname();
 
-  const { messages, input, setInput, isLoading, error, sendMessage, getSessionId } = useStreamChat();
+  const { messages, input, setInput, isLoading, error, sendMessage, getSessionId, dismissCapture } = useStreamChat();
 
   // Context-aware greeting + quick prompts based on current route
   const ctx = useMemo(() => contextForPath(pathname || "/"), [pathname]);
@@ -337,7 +437,7 @@ export function ChatWidget() {
     // Only fire on routes where contextForPath returned a non-generic
     // greeting — those are the ones with tailored prompts worth
     // surfacing. Default fall-through stays quiet.
-    const isGenericContext = ctx.greeting === "Not the average chatbot.";
+    const isGenericContext = ctx.greeting === "Your Medina Chamber concierge.";
     if (isGenericContext) return;
 
     const showTimer = window.setTimeout(() => {
@@ -540,7 +640,7 @@ export function ChatWidget() {
             )}
 
             {messages.map((m) => (
-              <div key={m.id} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+              <div key={m.id} className={`flex flex-col ${m.role === "user" ? "items-end" : "items-start"}`}>
                 <div className={`
                   max-w-[85%] px-4 py-2.5 rounded-[var(--radius-md)]
                   text-body-sm leading-relaxed
@@ -561,6 +661,15 @@ export function ChatWidget() {
                     </span>
                   ) : ""}
                 </div>
+                {m.showCapture && (
+                  <div className="w-full max-w-[85%]">
+                    <StephanieCaptureCard
+                      messageId={m.id}
+                      sessionId={getSessionId()}
+                      onClose={dismissCapture}
+                    />
+                  </div>
+                )}
               </div>
             ))}
 
@@ -615,6 +724,13 @@ export function ChatWidget() {
               </svg>
             </button>
           </form>
+          <p className="px-4 pb-2 pt-1 text-[10px] text-text-tertiary leading-snug text-center">
+            AI — verify important info with the{" "}
+            <a href="/about/contact" className="underline hover:text-text-secondary transition-colors">office</a>.{" "}
+            <a href="/privacy" className="underline hover:text-text-secondary transition-colors">Privacy</a>
+            {" · "}
+            <a href="/terms" className="underline hover:text-text-secondary transition-colors">Terms</a>
+          </p>
             </>
           )}
         </div>

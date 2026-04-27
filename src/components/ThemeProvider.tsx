@@ -43,7 +43,10 @@ export function ThemeScript({ nonce }: { nonce?: string }) {
       } catch(e) {}
     })();
   `;
-  return <script nonce={nonce} dangerouslySetInnerHTML={{ __html: script }} />;
+  // suppressHydrationWarning: React normalises nonce="" during hydration
+  // (intentional nonce-hiding behaviour). The mismatch warning is harmless
+  // but causes a visible dev-mode overlay — suppress it here.
+  return <script suppressHydrationWarning nonce={nonce} dangerouslySetInnerHTML={{ __html: script }} />;
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {

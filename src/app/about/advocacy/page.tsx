@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "Advocacy",
@@ -55,8 +56,27 @@ const activities = [
 ];
 
 export default function AdvocacyPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "Business Advocacy — Greater Medina Chamber of Commerce",
+    description:
+      "The Greater Medina Chamber of Commerce advocates for pro-business policies at the local, state, and federal level — mobilizing Medina County's business community on issues that matter.",
+    url: "https://medinachamber.com/about/advocacy",
+    about: {
+      "@type": "Organization",
+      name: "Greater Medina Chamber of Commerce",
+      url: "https://medinachamber.com",
+    },
+  };
+
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+      />
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
       {/* Hero */}
       <section className="max-w-3xl">
         <p className="text-overline text-cambridge mb-4">About</p>
@@ -170,5 +190,6 @@ export default function AdvocacyPage() {
         </Link>
       </div>
     </div>
+    </>
   );
 }

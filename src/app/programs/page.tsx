@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "Programs",
@@ -59,8 +60,30 @@ const programs = [
 ];
 
 export default function ProgramsPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Chamber Programs — Greater Medina Chamber of Commerce",
+    description:
+      "Greater Medina Chamber programs — leadership development, networking events, workplace safety, and professional meeting space for Medina County businesses.",
+    url: "https://medinachamber.com/programs",
+    hasPart: [
+      { "@type": "WebPage", name: "Compass Leadership Program", url: "https://medinachamber.com/programs/compass" },
+      { "@type": "WebPage", name: "Social Connect", url: "https://medinachamber.com/programs/social-connect" },
+      { "@type": "WebPage", name: "Annual Golf Outing", url: "https://medinachamber.com/programs/golf-outing" },
+      { "@type": "WebPage", name: "Athena Awards", url: "https://medinachamber.com/programs/athena-awards" },
+      { "@type": "WebPage", name: "Medina County Safety Council", url: "https://medinachamber.com/programs/safety-council" },
+      { "@type": "WebPage", name: "Meeting & Rental Space", url: "https://medinachamber.com/programs/rental-space" },
+    ],
+  };
+
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+      />
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
       {/* Hero */}
       <section className="max-w-3xl">
         <p className="text-overline text-cambridge mb-4">Membership</p>
@@ -147,5 +170,6 @@ export default function ProgramsPage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

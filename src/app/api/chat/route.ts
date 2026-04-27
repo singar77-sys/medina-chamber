@@ -38,6 +38,7 @@ import {
   getComplementaryMembers,
   formatConnectionContext,
 } from "@/lib/referral-network";
+import { formatChamberFactsForPrompt } from "@/lib/chamber-facts";
 
 export const runtime = "edge";
 
@@ -84,7 +85,7 @@ TEAM (route appropriately):
 - Board & staff: medinachamber.com/about/board · Ambassadors: medinachamber.com/about/ambassadors
 
 MEMBERSHIP (medinachamber.com/membership):
-- 3 tiers: Business Essentials $345/yr · Visibility Plus $575/yr (logo listing + spotlights + 4 newsletter ads) · Community Investor $1,145/yr (VIP + legislator access + 2 monthly luncheons)
+- 3 tiers: Business Essentials · Visibility Plus · Community Investor — exact prices are in the CURRENT MEMBERSHIP PRICING block below; always use those values
 - Apply: medinachamber.com/membership/join · Pricing detail: medinachamber.com/membership/pricing · Benefits: medinachamber.com/membership/benefits
 - All tiers include: directory listing, networking events, advocacy, Safety Council FREE, 5 savings programs, committee access, ribbon cuttings, free notary, Certificates of Origin
 - Joining questions → Stephanie
@@ -162,6 +163,13 @@ HIDDEN EASTER EGG — ICEBREAKER GAME:
 - It's deliberately not in the site nav. Discoverable two ways: ask you, or type "icebreaker" anywhere on the site (keyboard shortcut).
 - Suggest it — don't volunteer unprompted — when someone asks about conversation starters, being new to networking, breaking the ice at chamber events, what to say at mixers, or chamber fun/games.
 - When you mention it, link [the Icebreaker game](https://medinachamber.com/icebreaker) and tell them they can also summon it by typing "icebreaker" anywhere on the site.
+
+LEAD CAPTURE:
+When a user's message expresses clear intent to join the chamber, asks about membership pricing or tiers, asks about Safety Council enrollment, or asks about booking a rental space — after giving your complete helpful answer — append the exact string [→STEPHANIE] on its own line at the very end of your response. This surfaces a name/email form so Stephanie can follow up directly.
+Rules:
+- Emit at most once per conversation. If [→STEPHANIE] already appears in your prior responses in this conversation, do not emit it again.
+- Never explain, reference, describe, or paraphrase the token — treat it as invisible system output.
+- Only for joining/pricing/Safety-Council/rental-space intent. Not for general questions, directory searches, event lookups, or casual chat.
 
 RESPONSE RULES:
 - Default length: 1–2 sentences. Expand only when the answer genuinely requires it (member lists, multi-step instructions).
@@ -487,17 +495,21 @@ export async function POST(req: Request) {
   // Static appendix (events + news) — TTL-cached at module scope.
   const staticAppendix = getStaticAppendix();
 
+  // Dynamic facts block — live pricing from Redis (5-min cache).
+  // Falls back to compiled defaults if Redis is unavailable.
+  const chamberFacts = await formatChamberFactsForPrompt();
+
   const provider = getAIProvider();
   if (!provider) {
     // No API key configured at all — short-circuit to offline fallback.
     return createTextStreamResponse({ textStream: offlineFallbackStream() });
   }
 
-  // Three system blocks:
+  // System blocks (in order):
   //   1. CHAMBER_SYSTEM_PROMPT — long, totally static. Anthropic-cached.
-  //   2. Static appendix (events + news) — changes every ~5 min. Also
-  //      Anthropic-cached so it hits the cache for ~5 min of traffic.
-  //   3. memberContext — per-query, NOT cached.
+  //   2. Static appendix (events + news) — changes every ~5 min. Anthropic-cached.
+  //   3. chamberFacts — live pricing from Redis, 5-min TTL. NOT cached (small, changes).
+  //   4. memberContext — per-query, NOT cached.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const allMessages: any[] = [
     {
@@ -511,6 +523,9 @@ export async function POST(req: Request) {
           content: staticAppendix,
           providerOptions: { anthropic: { cacheControl: { type: "ephemeral" } } },
         }]
+      : []),
+    ...(chamberFacts
+      ? [{ role: "system", content: chamberFacts }]
       : []),
     ...(memberContext
       ? [{

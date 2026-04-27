@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "Rental Space",
@@ -46,8 +47,40 @@ const amenities = [
 ];
 
 export default function RentalSpacePage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: "Greater Medina Chamber of Commerce — Meeting & Event Space",
+    description:
+      "Professional meeting and event space in downtown Medina. The Vault conference room seats up to 16. The Main Room training space seats up to 50. Free parking, Wi-Fi, and AV included.",
+    url: "https://medinachamber.com/programs/rental-space",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "139 N. Court Street, Suite A",
+      addressLocality: "Medina",
+      addressRegion: "OH",
+      postalCode: "44256",
+      addressCountry: "US",
+    },
+    telephone: "+13307238773",
+    email: "memberservices@medinaohchamber.com",
+    openingHours: "Mo-Fr 07:30-17:30",
+    amenityFeature: [
+      { "@type": "LocationFeatureSpecification", name: "High-Speed Wi-Fi", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Free On-Site Parking", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Flat Screen TV / Display", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Coffee Station", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Wheelchair Accessible", value: true },
+    ],
+  };
+
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+      />
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
       {/* Hero */}
       <section className="max-w-3xl">
         <p className="text-overline text-cambridge mb-4">Programs</p>
@@ -253,5 +286,6 @@ export default function RentalSpacePage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

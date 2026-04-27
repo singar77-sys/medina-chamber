@@ -3,7 +3,6 @@ import { ContactForm } from "./ContactForm";
 import { MedinaNetworkMap } from "@/components/about/MedinaNetworkMap";
 import { totalCount } from "@/data/members";
 import { safeJsonLd } from "@/lib/json-ld";
-import { headers } from "next/headers";
 export const metadata: Metadata = {
   title: "Contact Us",
   description:
@@ -63,13 +62,11 @@ const contactJsonLd = {
   },
 };
 
-export default async function ContactPage() {
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
+export default function ContactPage() {
   return (
     <>
       <script
         type="application/ld+json"
-        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(contactJsonLd) }}
       />
       <div className="relative isolate overflow-hidden">

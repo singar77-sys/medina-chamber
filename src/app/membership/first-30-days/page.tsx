@@ -4,7 +4,6 @@ import { totalCount } from "@/data/members";
 import { FadeIn } from "@/components/FadeIn";
 
 import { safeJsonLd } from "@/lib/json-ld";
-import { headers } from "next/headers";
 export const metadata: Metadata = {
   title: "Your First 30 Days",
   description:
@@ -165,18 +164,15 @@ const howToJsonLd = {
   })),
 };
 
-export default async function First30DaysPage() {
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
+export default function First30DaysPage() {
   return (
     <>
       <script
         type="application/ld+json"
-        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
       <script
         type="application/ld+json"
-        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(howToJsonLd) }}
       />
 

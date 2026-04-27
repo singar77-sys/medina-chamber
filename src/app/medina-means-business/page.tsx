@@ -7,7 +7,6 @@ import { FadeIn } from "@/components/FadeIn";
 import { CountUp } from "@/components/CountUp";
 
 import { safeJsonLd } from "@/lib/json-ld";
-import { headers } from "next/headers";
 export const metadata: Metadata = {
   title: "Medina Means Business",
   description:
@@ -52,8 +51,7 @@ const breadcrumbJsonLd = {
   ],
 };
 
-export default async function MedinaMeansBusinessPage() {
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
+export default function MedinaMeansBusinessPage() {
   const topCommunities = activeCommunities
     .map((c) => ({
       ...c,
@@ -65,12 +63,10 @@ export default async function MedinaMeansBusinessPage() {
     <>
       <script
         type="application/ld+json"
-        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(webPageJsonLd) }}
       />
       <script
         type="application/ld+json"
-        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
 

@@ -1,0 +1,107 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const NAV_ITEMS: { href: string; label: string; icon: string; exact?: boolean }[] = [
+  { href: "/admin", label: "Dashboard", icon: "▦", exact: true },
+  { href: "/admin/content", label: "Page Content", icon: "✎" },
+  { href: "/admin/events", label: "Events", icon: "◈" },
+  { href: "/admin/graphic-templates", label: "Graphic Templates", icon: "◑" },
+  { href: "/admin/media", label: "Media Library", icon: "⬡" },
+  { href: "/admin/blog", label: "Blog", icon: "◧" },
+  { href: "/admin/chat", label: "Chat Log", icon: "◫" },
+  { href: "/admin/members", label: "Members", icon: "◉" },
+  { href: "/admin/notify", label: "Contact Support", icon: "◎" },
+];
+
+export function AdminNav() {
+  const pathname = usePathname();
+
+  function isActive(item: (typeof NAV_ITEMS)[number]) {
+    if (item.exact) return pathname === item.href;
+    return pathname.startsWith(item.href);
+  }
+
+  async function handleLogout() {
+    const token = document.cookie
+      .split("; ")
+      .find((r) => r.startsWith("admin_session="))
+      ?.split("=")[1];
+
+    await fetch("/api/admin/auth", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token ?? ""}`,
+      },
+      body: JSON.stringify({}),
+    });
+
+    // Simpler: just hit the logout path
+    await fetch("/api/admin/auth/logout", { method: "POST" });
+    window.location.href = "/admin/login";
+  }
+
+  return (
+    <aside
+      className="flex flex-col w-56 shrink-0 border-r"
+      style={{ background: "#0C1B33", borderColor: "#1a2d4a" }}
+    >
+      {/* Logo */}
+      <div className="flex items-center gap-2 px-5 py-5 border-b" style={{ borderColor: "#1a2d4a" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/chamber-logos/icon-white.png" alt="" className="w-7 h-7" />
+        <div>
+          <p className="text-white text-xs font-semibold leading-tight">Chamber Admin</p>
+          <p style={{ color: "#83BCA9" }} className="text-[10px] leading-tight">
+            Hunter Systems
+          </p>
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 px-3 py-4 space-y-0.5">
+        {NAV_ITEMS.map((item) => {
+          const active = isActive(item);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors"
+              style={{
+                color: active ? "#ffffff" : "#94a3b8",
+                background: active ? "rgba(131,188,169,0.15)" : "transparent",
+              }}
+            >
+              <span style={{ color: active ? "#83BCA9" : "#64748b" }} className="text-base leading-none">
+                {item.icon}
+              </span>
+              {item.label}
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Footer */}
+      <div className="px-3 py-4 border-t" style={{ borderColor: "#1a2d4a" }}>
+        <a
+          href="/admin/notify"
+          className="flex items-center gap-2 px-3 py-2 rounded-md text-xs mb-1 transition-colors"
+          style={{ color: "#94a3b8" }}
+        >
+          <span style={{ color: "#83BCA9" }}>⟳</span>
+          View public site
+        </a>
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-xs transition-colors text-left"
+          style={{ color: "#94a3b8" }}
+        >
+          <span>⎋</span>
+          Log out
+        </button>
+      </div>
+    </aside>
+  );
+}

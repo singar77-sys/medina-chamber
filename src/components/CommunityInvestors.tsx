@@ -7,6 +7,10 @@ import { FadeIn } from "@/components/FadeIn";
 /**
  * CommunityInvestors — homepage showcase of Chamber top-tier members.
  *
+ * Section is permanently dark (oxford-blue) in both themes. Avoids the
+ * [[data-theme=dark]_&]: pattern which generates unconditional CSS rules
+ * in Tailwind v4 and breaks light-mode overrides.
+ *
  * Logos are served from /public/images/members/logos/{chamberSlug}.{ext}.
  * The directory is scanned once at module load time — any extension works
  * (jpg, png, svg, webp, avif). Adding a new file is the only deploy step needed.
@@ -41,7 +45,7 @@ export function CommunityInvestors() {
         <FadeIn>
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12 lg:mb-16">
             <div>
-              <p className="text-overline text-cambridge mb-3 tracking-[0.2em]">
+              <p className="text-overline [color:var(--cambridge)] mb-3 tracking-[0.2em]">
                 Community Investors
               </p>
               <h2 className="text-h2 text-white">
@@ -57,8 +61,8 @@ export function CommunityInvestors() {
               className="
                 shrink-0 self-start sm:self-auto
                 inline-flex items-center gap-2 px-5 py-3
-                border border-cambridge/30 hover:border-cambridge
-                text-cambridge font-bold text-body-sm
+                border border-cambridge/40 hover:border-cambridge
+                [color:var(--cambridge)] font-bold text-body-sm
                 rounded-[var(--radius-md)]
                 transition-colors
               "
@@ -69,9 +73,9 @@ export function CommunityInvestors() {
           </div>
         </FadeIn>
 
-        {/* Grid */}
+        {/* Grid — 3 cols (11 rows × 3 = 33) */}
         <FadeIn delay={100}>
-          <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {investors.map((m) => {
               const logoPath = MEMBER_LOGOS.get(m.chamberSlug);
               return (
@@ -109,7 +113,7 @@ export function CommunityInvestors() {
                       )}
                     </div>
 
-                    <p className="text-caption text-cambridge/40 group-hover:text-cambridge/70 mt-3 font-bold transition-colors">
+                    <p className="text-caption text-white/40 group-hover:text-cambridge/80 mt-3 font-bold transition-colors">
                       View profile →
                     </p>
                   </Link>
@@ -125,7 +129,7 @@ export function CommunityInvestors() {
             {investors.length} Community Investors · Greater Medina Chamber of Commerce ·{" "}
             <Link
               href="/membership/benefits"
-              className="hover:text-cambridge/60 transition-colors underline underline-offset-2"
+              className="hover:text-cambridge transition-colors underline underline-offset-2"
             >
               See all membership tiers
             </Link>

@@ -1,7 +1,26 @@
 {
-  "generatedAt": "2026-04-26T10:34:32.226Z",
-  "totalArticles": 11,
+  "generatedAt": "2026-04-27T11:29:46.640Z",
+  "totalArticles": 12,
   "articles": [
+    {
+      "slug": "retail-is-thriving-in-the-micro-fulfillment-on-demand-delivery-era",
+      "articleId": "321828",
+      "title": "Retail is Thriving in the Micro-fulfillment On-Demand Delivery Era",
+      "subtitle": "Images",
+      "body": "Have you noticed your online shopping orders arriving faster than ever? Brands are completely rewiring how they get products to you. Instead of shipping from massive warehouses across the country, they are using your local retail stores as mini-warehouses. It&rsquo;s a massive win-win-win: faster delivery for you, better inventory turnover for the brand, and more opportunities for local drivers.Danielle Savino with Fractional CRO LLC latest blog breaks down exactly how giants like Target, Walmart, and H&M are pulling this off&mdash;and most importantly how local businesses can use the exact same strategies to scale their own growth.  Drop a comment below: What's the fastest delivery you've ever experienced from a clothing or tech brand? Read the full breakdown here: https://www.fractionalcro.org/post/retail-is-thriving-in-the-on-demand-delivery-era",
+      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1099,w_1576,x_0,y_0/q_auto/f_auto/q_auto/v1774642882/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/a2e854606d43486a9adcb973b00f0576/Fractional-CRO.jpg",
+      "tags": [
+        "By\r\n                            Fractional CRO LLC",
+        "4/27/2026"
+      ],
+      "memberName": "Fractional CRO LLC",
+      "memberSlug": "33314326",
+      "dateRaw": "4/27/2026",
+      "dateISO": "2026-04-27",
+      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1099,w_1576,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774642882/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/a2e854606d43486a9adcb973b00f0576/Fractional-CRO.jpg",
+      "detailUrl": "https://business.medinachamber.com/news/Details/retail-is-thriving-in-the-micro-fulfillment-on-demand-delivery-era-321828",
+      "scrapedAt": "2026-04-27T11:29:40.300Z"
+    },
     {
       "slug": "live-the-lube",
       "articleId": "323361",
@@ -19,7 +38,7 @@
       "dateISO": "2026-04-06",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775437199/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/ca1644f1072a40ab8a6f809c5ede0e6d/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/live-the-lube-323361",
-      "scrapedAt": "2026-04-26T10:34:26.915Z"
+      "scrapedAt": "2026-04-27T11:29:40.844Z"
     },
     {
       "slug": "car-cruise-in",
@@ -38,7 +57,7 @@
       "dateISO": "2026-04-06",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775437512/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/62aa1d5146da4ab78eb0def384a2a8ee/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/car-cruise-in-323364",
-      "scrapedAt": "2026-04-26T10:34:27.443Z"
+      "scrapedAt": "2026-04-27T11:29:41.392Z"
     },
     {
       "slug": "medina-lifestyle",
@@ -57,7 +76,7 @@
       "dateISO": "2026-04-06",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_200,w_200,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775492816/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/a6bd201182304080a550016f8fbeef6d/facebook-logo.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/medina-lifestyle-323463",
-      "scrapedAt": "2026-04-26T10:34:27.933Z"
+      "scrapedAt": "2026-04-27T11:29:41.963Z"
     },
     {
       "slug": "apex-skin-melanoma-monday-free-skin-cancer-spot-checks",
@@ -76,7 +95,7 @@
       "dateISO": "2026-04-02",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1500,w_1500,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775157414/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/f59f64bba07c46318d5d64715a968237/APEX-SKIN-Logo-STK.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/apex-skin-melanoma-monday-free-skin-cancer-spot-checks-323038",
-      "scrapedAt": "2026-04-26T10:34:28.464Z"
+      "scrapedAt": "2026-04-27T11:29:42.547Z"
     },
     {
       "slug": "bike-nite",
@@ -95,7 +114,7 @@
       "dateISO": "2026-04-01",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774648438/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/e08d0c37302f4d648ab30ebb100e7704/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/bike-nite-321880",
-      "scrapedAt": "2026-04-26T10:34:28.976Z"
+      "scrapedAt": "2026-04-27T11:29:43.137Z"
     },
     {
       "slug": "april-art-workshops-at-bella-moxie-gallery-boutique",
@@ -114,7 +133,7 @@
       "dateISO": "2026-04-01",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1328,w_1501,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775157304/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/7d6820ad746a44a1abbd9dc4c1bbb110/Bella-Moxie.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/april-art-workshops-at-bella-moxie-gallery-boutique-322856",
-      "scrapedAt": "2026-04-26T10:34:29.469Z"
+      "scrapedAt": "2026-04-27T11:29:43.735Z"
     },
     {
       "slug": "office-space-for-lease-in-brunswick-medina-area",
@@ -133,7 +152,7 @@
       "dateISO": "2026-03-30",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_173,w_622,x_19,y_17/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774884260/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/01c3e1965c7f43d38cba8aa81b32ede7/st-mark-logo-for-web.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/office-space-for-lease-in-brunswick-medina-area-322021",
-      "scrapedAt": "2026-04-26T10:34:29.992Z"
+      "scrapedAt": "2026-04-27T11:29:44.316Z"
     },
     {
       "slug": "how-a-luxury-brand-snagged-the-sport-with-a-400-surge",
@@ -152,7 +171,7 @@
       "dateISO": "2026-03-27",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1099,w_1576,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774642815/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/d25a586b7db645ee995c853c30758afc/Fractional-CRO.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/how-a-luxury-brand-snagged-the-sport-with-a-400-surge-321821",
-      "scrapedAt": "2026-04-26T10:34:30.566Z"
+      "scrapedAt": "2026-04-27T11:29:44.926Z"
     },
     {
       "slug": "4-70-home-equity-loan",
@@ -171,7 +190,7 @@
       "dateISO": "2026-03-05",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_102,w_329,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1772744802/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/67b2db200e8d45f8a690794e3d701c2e/PSE-Credit-Union.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/4-70-home-equity-loan-317280",
-      "scrapedAt": "2026-04-26T10:34:31.087Z"
+      "scrapedAt": "2026-04-27T11:29:45.495Z"
     },
     {
       "slug": "200-cash-bonus",
@@ -190,7 +209,7 @@
       "dateISO": "2026-03-05",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_102,w_329,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1772744846/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/31bfffc7383c4077a2e0726ec4b96f2a/PSE-Credit-Union.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/200-cash-bonus-317282",
-      "scrapedAt": "2026-04-26T10:34:31.630Z"
+      "scrapedAt": "2026-04-27T11:29:46.056Z"
     },
     {
       "slug": "sgt-clean-car-wash-scholarship",
@@ -209,7 +228,7 @@
       "dateISO": "2026-02-26",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_299,w_1051,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1772481718/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/18156c5dff35405aa3a24cfb434a3dd5/Sgt-Clean-Car-Wash.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/sgt-clean-car-wash-scholarship-315697",
-      "scrapedAt": "2026-04-26T10:34:32.219Z"
+      "scrapedAt": "2026-04-27T11:29:46.633Z"
     }
   ]
 }

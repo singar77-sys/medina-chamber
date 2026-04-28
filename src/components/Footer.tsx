@@ -24,7 +24,6 @@ const quickLinks = [
   { label: "Advocacy", href: "/about/advocacy" },
   { label: "Contact", href: "/about/contact" },
   { label: "Privacy", href: "/privacy" },
-  { label: "Terms", href: "/terms" },
 ];
 
 const socialLinks = [
@@ -193,6 +192,7 @@ export function Footer() {
 
         {/* ─── Band 2: Quick links ─────────────────────────────── */}
         {/* mt-f34 (34px) gap-x-f21 (21px) gap-y-f13 (13px) — F9/F8/F7 */}
+        {/* 8 links = F6 — fills 2 rows × 4 cols exactly */}
         <nav aria-label="Footer quick links" className="mt-f34">
           <ul className="grid grid-cols-2 sm:grid-cols-4 gap-x-f21 gap-y-f13 text-body-sm text-center">
             {quickLinks.map((link) => (
@@ -224,9 +224,9 @@ export function Footer() {
             <Link href="/accessibility" className="ftr-utility">
               Accessibility
             </Link>
-            <a href="#top" className="ftr-utility" aria-label="Back to top">
-              ↑ Top
-            </a>
+            <Link href="/terms" className="ftr-utility">
+              Terms
+            </Link>
           </div>
           <BuildCredit />
         </div>

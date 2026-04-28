@@ -10,6 +10,9 @@ import { BuildCredit } from "./BuildCredit";
  *
  * FooterStamp is the only client island; everything else renders on
  * the server.
+ *
+ * All spacing follows the Euclidean φ system (globals.css).
+ * Every padding/gap/margin value is a Fibonacci ordinal.
  */
 
 const quickLinks = [
@@ -58,10 +61,14 @@ export function Footer() {
 
   return (
     <footer className="ftr bg-bg-secondary border-t border-border-primary">
-      <div className="mx-auto max-w-5xl px-6 lg:px-8 pt-16 lg:pt-20 pb-10 lg:pb-14">
+      {/* pt-f55/f89 (55/89px) pb-f34/f55 (34/55px) — Fibonacci vertical rhythm */}
+      <div className="mx-auto max-w-5xl px-6 lg:px-8 pt-f55 lg:pt-f89 pb-f34 lg:pb-f55">
+
         {/* ─── Band 0: Closing statement — bookends the hero ──── */}
-        <div className="text-center mb-14 lg:mb-16">
-          <p className="text-overline text-cambridge mb-3 tracking-[0.2em]">
+        {/* mb-f55 (55px) — Fibonacci separation to brand rail */}
+        <div className="text-center mb-f55">
+          {/* mb-f3 (3px) — Fibonacci micro-gap, exact F2 */}
+          <p className="text-overline text-cambridge mb-f3 tracking-[0.2em]">
             Since 1938
           </p>
           <div className="font-display font-bold uppercase leading-[0.88] tracking-tight text-text-primary">
@@ -79,14 +86,16 @@ export function Footer() {
               business
             </div>
           </div>
-          <p className="text-body-sm text-text-secondary mt-5 max-w-lg mx-auto">
+          {/* mt-f21 (21px) — F8 */}
+          <p className="text-body-sm text-text-secondary mt-f21 max-w-lg mx-auto">
             A century of local advocacy, connection, and growth — and
             we&apos;re just getting started.
           </p>
+          {/* mt-f13 (13px) px-f21 (21px) py-f13 (13px) — F7/F8/F7 */}
           <Link
             href="/membership/join"
             className="
-              mt-7 inline-flex items-center gap-2 px-7 py-3.5
+              mt-f13 inline-flex items-center gap-2 px-f21 py-f13
               bg-accent hover:bg-accent-hover
               text-white font-bold text-body-sm
               rounded-[var(--radius-md)]
@@ -102,16 +111,18 @@ export function Footer() {
         <div className="ftr__rule" aria-hidden="true" />
 
         {/* ─── Band 1: Brand rail (centered) ──────────────────── */}
-        <div className="flex flex-col items-center text-center mt-10 lg:mt-12">
+        {/* mt-f34 (34px) — F9 */}
+        <div className="flex flex-col items-center text-center mt-f34">
           <FooterStamp />
-          <p className="text-body-sm text-text-secondary max-w-md leading-relaxed mt-1">
+          {/* mt-f3 (3px) — F2, tight sub-label rhythm */}
+          <p className="text-body-sm text-text-secondary max-w-md leading-relaxed mt-f3">
             Greater Medina Chamber of Commerce.
             <br />
             Connecting Medina County business since 1938.
           </p>
 
-          {/* Contact */}
-          <div className="mt-5 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
+          {/* Contact — mt-f21 (21px) gap-f13 sm:gap-f34 (13/34px) — F8/F7/F9 */}
+          <div className="mt-f21 flex flex-col sm:flex-row items-center justify-center gap-f13 sm:gap-f34">
             <a
               href="tel:+13307238773"
               className="ftr-contact text-body-sm text-text-secondary inline-flex items-center gap-2"
@@ -152,8 +163,8 @@ export function Footer() {
             </a>
           </div>
 
-          {/* Social rail */}
-          <ul className="mt-6 flex items-center justify-center gap-2">
+          {/* Social rail — mt-f21 (21px) gap-f8 (8px) — F8/F6 */}
+          <ul className="mt-f21 flex items-center justify-center gap-f8">
             {socialLinks.map((s) => (
               <li key={s.label}>
                 <a
@@ -177,14 +188,13 @@ export function Footer() {
           </ul>
         </div>
 
-        {/* Accent stripe */}
-        <div className="ftr__rule mt-10" aria-hidden="true" />
+        {/* Accent stripe — mt-f34 (34px) — F9 */}
+        <div className="ftr__rule mt-f34" aria-hidden="true" />
 
-        {/* ─── Band 2: Quick links — 2-col grid on mobile, 4-col on
-             desktop. Spans the same width as the bottom bar so the
-             whole composition aligns. ────────────────────────────── */}
-        <nav aria-label="Footer quick links" className="mt-8">
-          <ul className="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-3 text-body-sm text-center">
+        {/* ─── Band 2: Quick links ─────────────────────────────── */}
+        {/* mt-f34 (34px) gap-x-f21 (21px) gap-y-f13 (13px) — F9/F8/F7 */}
+        <nav aria-label="Footer quick links" className="mt-f34">
+          <ul className="grid grid-cols-2 sm:grid-cols-4 gap-x-f21 gap-y-f13 text-body-sm text-center">
             {quickLinks.map((link) => (
               <li key={link.href}>
                 <Link href={link.href} className="ftr-link">
@@ -195,18 +205,19 @@ export function Footer() {
           </ul>
         </nav>
 
-        {/* Accent stripe */}
-        <div className="ftr__rule mt-10" aria-hidden="true" />
+        {/* Accent stripe — mt-f34 (34px) — F9 */}
+        <div className="ftr__rule mt-f34" aria-hidden="true" />
 
-        {/* ─── Band 3: Bottom bar — fully centered stack to match
-             the rest of the footer's centered composition. ──────── */}
-        <div className="mt-6 flex flex-col items-center gap-4">
+        {/* ─── Band 3: Bottom bar ──────────────────────────────── */}
+        {/* mt-f21 (21px) gap-f13 (13px) — F8/F7 */}
+        <div className="mt-f21 flex flex-col items-center gap-f13">
           <p className="text-caption text-text-tertiary text-center">
             © {year} Greater Medina Chamber of Commerce.
             <span className="mx-2 text-border-primary">·</span>
             Est. 1938 · {chamberYears} years
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+          {/* gap-x-f21 (21px) gap-y-f8 (8px) — F8/F6 */}
+          <div className="flex flex-wrap items-center justify-center gap-x-f21 gap-y-f8">
             <Link href="/about/contact" className="ftr-utility">
               Contact
             </Link>

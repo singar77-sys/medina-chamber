@@ -122,8 +122,8 @@ export default function HomePage() {
         {/* Gradient overlay — oxford wash in both modes */}
         <div className="absolute inset-0 bg-gradient-to-t from-oxford via-oxford/60 to-oxford/15" />
 
-        {/* Content */}
-        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-24 pt-40 w-full">
+        {/* Content — vertical rhythm: pt-f144 (144px) / pb-f89 (89px) */}
+        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 pb-f89 lg:pb-f89 pt-f144 w-full">
           <div className="max-w-3xl">
             <p className="text-overline text-cambridge mb-4 tracking-widest">
               Greater Medina Chamber of Commerce
@@ -138,12 +138,14 @@ export default function HomePage() {
                 business
               </span>
             </h1>
-            <p className="text-body-lg text-white/80 mt-6 max-w-2xl">
+            {/* mt-f21 = 21px — Fibonacci; replaces arbitrary mt-6 (24px) */}
+            <p className="text-body-lg text-white/80 mt-f21 max-w-2xl">
               Championing Medina&apos;s business community since 1938. Advocacy
               that moves policy. Connections that open doors. Resources that
               drive growth.
             </p>
-            <div className="mt-8 flex flex-wrap gap-4">
+            {/* mt-f34 (34px) gap-f21 (21px) — both Fibonacci nodes */}
+            <div className="mt-f34 flex flex-wrap gap-f21">
               <Link
                 href="/membership/join"
                 className="
@@ -174,12 +176,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── Stats Strip ──────────────────────────────────── */}
+      {/* ─── Stats Strip — py-f55 (55px) ─────────────────── */}
       <MouseGradient
         className="bg-bg-secondary border-y border-border-secondary overflow-hidden"
         color="rgba(92, 149, 183, 0.22)"
       >
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 py-14">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 py-f55">
           <div className="grid grid-cols-3 gap-4 md:gap-8">
             {[
               { end: totalCount, label: "Member Businesses", suffix: "+" },
@@ -203,12 +205,13 @@ export default function HomePage() {
         </div>
       </MouseGradient>
 
-      {/* ─── Upcoming Events ──────────────────────────────── */}
+      {/* ─── Upcoming Events — py-f89 lg:py-f144 ─────────── */}
       {upcomingEvents.length > 0 && (
-        <section className="relative overflow-hidden mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
+        <section className="relative overflow-hidden mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
           <VesicaPiscisWatermark className="tp-vesica" />
           <FadeIn>
-            <div className="flex items-end justify-between mb-10 gap-4 flex-wrap">
+            {/* mb-f34 (34px) gap-f21 (21px) — Fibonacci header rhythm */}
+            <div className="flex items-end justify-between mb-f34 gap-f21 flex-wrap">
               <div>
                 <p className="text-overline text-cambridge mb-2">Upcoming Events</p>
                 <h2 className="text-h2">What&apos;s next in Medina business.</h2>
@@ -271,7 +274,8 @@ export default function HomePage() {
             />
           ))}
 
-          <div className="grid md:grid-cols-3 gap-4">
+          {/* gap-f21 (21px) — Fibonacci card gap */}
+          <div className="grid md:grid-cols-3 gap-f21">
             {upcomingEvents.map((event, i) => {
               const Graphic = getEventGraphicRenderer(event);
               return (
@@ -382,8 +386,8 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* ─── Rental Space Showcase ────────────────────────── */}
-      <section className="relative bg-bg-secondary border-y border-border-secondary py-20 lg:py-28 overflow-hidden">
+      {/* ─── Rental Space — py-f89 lg:py-f144 ────────────── */}
+      <section className="relative bg-bg-secondary border-y border-border-secondary py-f89 lg:py-f144 overflow-hidden">
         {/* Ghosted meeting-room photo backdrop */}
         <div
           className="absolute inset-0 pointer-events-none select-none"
@@ -401,7 +405,8 @@ export default function HomePage() {
 
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
-            <div className="grid lg:grid-cols-[1fr_1.3fr] gap-10 lg:gap-14 items-start">
+            {/* Golden ratio columns: 1fr : φ (1.618fr) — exact divine proportion */}
+            <div className="grid lg:grid-cols-[1fr_1.618fr] gap-f34 lg:gap-f55 items-start">
               <div>
                 <p className="text-overline text-cambridge mb-3">Meeting Space</p>
                 <h2 className="text-h2">
@@ -413,7 +418,8 @@ export default function HomePage() {
                   Medina. Free parking, Wi-Fi, and AV included. Member pricing
                   available.
                 </p>
-                <div className="mt-8 flex flex-wrap gap-3">
+                {/* mt-f34 (34px) gap-f13 (13px) — Fibonacci button rhythm */}
+                <div className="mt-f34 flex flex-wrap gap-f13">
                   <Link
                     href="/programs/rental-space"
                     className="
@@ -459,8 +465,8 @@ export default function HomePage() {
       {/* ─── Community Investors ──────────────────────────── */}
       <CommunityInvestors />
 
-      {/* ─── Join CTA ─────────────────────────────────────── */}
-      <section className="relative py-20 lg:py-28 overflow-hidden">
+      {/* ─── Join CTA — py-f89 lg:py-f144 ────────────────── */}
+      <section className="relative py-f89 lg:py-f144 overflow-hidden">
         {/* Ghosted Medina industry backdrop across the whole band */}
         <div
           className="absolute inset-0 pointer-events-none select-none"
@@ -478,8 +484,10 @@ export default function HomePage() {
 
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <FadeIn>
-          <div className="p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-            <div className="grid lg:grid-cols-2 gap-10 items-center">
+          {/* p-f34 lg:p-f55 — Fibonacci interior padding (34px / 55px) */}
+          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+            {/* gap-f34 (34px) — Fibonacci column gap */}
+            <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
                 <p className="text-overline text-cambridge mb-4">Membership</p>
                 <h2 className="text-h2">
@@ -491,7 +499,8 @@ export default function HomePage() {
                   will walk you through everything — no pressure.
                 </p>
               </div>
-              <div className="space-y-4">
+              {/* space-y-f21 (21px) — Fibonacci vertical rhythm between links */}
+              <div className="space-y-f21">
                 <Link
                   href="/membership/join"
                   className="

@@ -165,6 +165,51 @@ summary,
   --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.4);
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+   EUCLIDEAN MATHEMATICS — φ (Golden Ratio) Spatial System
+
+   φ = 1.6180339887... The divine proportion encoded in the Parthenon,
+   the nautilus shell, the spiral galaxy, and the double helix.
+   Every F(n) / F(n-1) in the Fibonacci sequence converges to φ.
+
+   The Fibonacci sequence:
+   1  1  2  3  5  8  13  21  34  55  89  144  233  377  610...
+
+   Every spatial token below is a node on this sequence. No value
+   is arbitrary. Each is incommensurable with a base-4 / base-8
+   grid — that incommensurability IS the esoteric feel.
+
+   The existing border radii (6 / 10 / 16px) are already φ-sequential:
+     6 × φ = 9.71 ≈ 10px  ✓
+     10 × φ = 16.18 ≈ 16px  ✓
+   A new --radius-xl (16.18px exact) completes the series.
+
+   Usage: var(--f89) for raw CSS; py-f89 / gap-f34 as Tailwind utilities.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  --phi:  1.6180339887;         /* Golden Ratio — the divine proportion */
+  --phi2: 2.6180339887;         /* φ²  */
+  --phi3: 4.2360679775;         /* φ³  */
+
+  /* Fibonacci spatial scale (÷ 16px base = rem) */
+  --f3:    0.1875rem;    /*   3px */
+  --f5:    0.3125rem;    /*   5px */
+  --f8:    0.5rem;       /*   8px */
+  --f13:   0.8125rem;    /*  13px */
+  --f21:   1.3125rem;    /*  21px */
+  --f34:   2.125rem;     /*  34px */
+  --f55:   3.4375rem;    /*  55px */
+  --f89:   5.5625rem;    /*  89px */
+  --f144:  9rem;         /* 144px */
+  --f233: 14.5625rem;    /* 233px */
+  --f377: 23.5625rem;    /* 377px */
+
+  /* φ-exact radius extension — existing sm/md/lg are φ-adjacent;
+     xl closes the series at the mathematically precise value. */
+  --radius-xl: 16.18px;  /* 10 × φ = 16.180... */
+}
+
 /* --- Tailwind Theme Bridge -------------------------------- */
 
 @theme inline {
@@ -199,6 +244,20 @@ summary,
 
   --font-sans: "BN Bergen", system-ui, -apple-system, sans-serif;
   --font-script: "Mistrully", "Brush Script MT", cursive;
+
+  /* Fibonacci spacing scale — bridged to Tailwind utilities.
+     Use as: py-f89, gap-f34, mt-f21, p-f55, etc.
+     Every value is a Fibonacci ordinal; none is arbitrary. */
+  --spacing-f3:    0.1875rem;
+  --spacing-f5:    0.3125rem;
+  --spacing-f8:    0.5rem;
+  --spacing-f13:   0.8125rem;
+  --spacing-f21:   1.3125rem;
+  --spacing-f34:   2.125rem;
+  --spacing-f55:   3.4375rem;
+  --spacing-f89:   5.5625rem;
+  --spacing-f144:  9rem;
+  --spacing-f233:  14.5625rem;
 }
 
 /* --- Dark-mode accent text overrides ---------------------- */

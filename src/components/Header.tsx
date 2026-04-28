@@ -579,17 +579,16 @@ export function Header() {
               <CommandPaletteTrigger />
               <ThemeToggle />
 
-              {/* Desktop Member Login */}
+              {/* Desktop Member Login — ghost link so Join Now is the only filled CTA */}
               <a
                 href={memberLogin.href}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="
-                  hidden lg:flex items-center px-3.5 py-2
+                  hidden lg:flex items-center px-3 py-2
                   whitespace-nowrap
-                  bg-emerald hover:bg-emerald/90
-                  text-white font-bold text-body-sm
-                  rounded-[var(--radius-md)]
+                  text-text-secondary hover:text-text-primary
+                  font-bold text-body-sm
                   transition-colors
                 "
               >

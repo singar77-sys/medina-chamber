@@ -74,7 +74,7 @@ export function ThreePillars() {
         <div className="grid lg:grid-cols-[1.25fr_1fr] gap-10 lg:gap-14 items-end mb-14 lg:mb-16">
           <div>
             <p className="text-overline text-cambridge mb-3">Why Members Join</p>
-            <h2 className="text-h2">Three things the Chamber does for you.</h2>
+            <h2 className="text-h2">How the Chamber works for you.</h2>
             <p className="text-body-lg text-text-secondary mt-4 max-w-xl leading-relaxed">
               Since 1938, from our downtown Medina headquarters, the Chamber has
               served as the voice, the network, and the growth engine for

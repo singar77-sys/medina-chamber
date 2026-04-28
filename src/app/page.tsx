@@ -128,10 +128,15 @@ export default function HomePage() {
             <p className="text-overline text-cambridge mb-4 tracking-widest">
               Greater Medina Chamber of Commerce
             </p>
-            <h1 className="text-display text-white">
-              Medina Means
-              <br />
-              <span className="text-cambridge">Business</span>
+            <h1 className="font-display font-bold uppercase leading-[0.88] tracking-tight text-white">
+              <span className="block text-[clamp(2.75rem,7.5vw,5.75rem)]">Medina</span>
+              <span className="block text-[clamp(2rem,5.5vw,4.25rem)] mt-1">Means</span>
+              <span
+                className="font-script normal-case text-[clamp(3rem,8.5vw,6.25rem)] leading-[0.85] inline-block -mt-[0.32em]"
+                style={{ color: "var(--coquelicot)", transform: "rotate(-2deg)" }}
+              >
+                business
+              </span>
             </h1>
             <p className="text-body-lg text-white/80 mt-6 max-w-2xl">
               Championing Medina&apos;s business community since 1938. Advocacy
@@ -344,7 +349,16 @@ export default function HomePage() {
                         show their cambridge pricing line. Fallback "Free"
                         keeps the visual rhythm consistent. */}
                     <p className="text-body-sm text-cambridge mt-3 font-medium line-clamp-1">
-                      {event.pricing ? event.pricing.split("\n")[0] : "Free"}
+                      {(() => {
+                        if (!event.pricing) return "Free";
+                        // First line, then first sentence — prevents mid-word truncation
+                        // like "Registration preferred, but not..." in the cards.
+                        const firstLine = event.pricing.split("\n")[0];
+                        const periodIdx = firstLine.indexOf(".");
+                        return periodIdx > 0
+                          ? firstLine.slice(0, periodIdx + 1)
+                          : firstLine;
+                      })()}
                     </p>
                     <p className="mt-auto pt-4 text-body-sm font-bold text-cambridge group-hover:translate-x-1 transition-transform">
                       Event details →

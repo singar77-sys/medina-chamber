@@ -242,19 +242,19 @@ export default function ContactPage() {
                 className="
                   absolute bottom-5 left-5 z-10
                   max-w-[260px]
-                  bg-[rgba(12,27,51,0.90)] backdrop-blur-md
-                  border border-cambridge/20
+                  bg-bg-primary backdrop-blur-md
+                  border border-cambridge/50
                   rounded-[var(--radius-md)]
                   p-5 shadow-xl
                 "
               >
-                <p className="text-caption font-bold text-white mb-1">Chamber Headquarters</p>
-                <p className="text-caption text-white/65 leading-relaxed">
+                <p className="text-caption font-bold text-text-primary mb-1">Chamber Headquarters</p>
+                <p className="text-caption text-text-secondary leading-relaxed">
                   139 N. Court Street, Suite A
                   <br />
                   Medina, OH 44256
                 </p>
-                <p className="text-caption text-white/50 mt-1.5">
+                <p className="text-caption text-text-tertiary mt-1.5">
                   Mon–Fri · 10:00 AM – 4:00 PM
                 </p>
                 <a

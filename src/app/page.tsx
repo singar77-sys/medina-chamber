@@ -459,9 +459,6 @@ export default function HomePage() {
       {/* ─── Member Voice ──────────────────────────────────── */}
       <MemberVoice />
 
-      {/* ─── Partners & Sponsors ──────────────────────────── */}
-      <PartnersMarquee />
-
       {/* ─── Community Investors ──────────────────────────── */}
       <CommunityInvestors />
 
@@ -543,6 +540,9 @@ export default function HomePage() {
       </section>
 
       <BeeFly />
+
+      {/* ─── Partners & Sponsors ──────────────────────────── */}
+      <PartnersMarquee />
     </div>
   );
 }

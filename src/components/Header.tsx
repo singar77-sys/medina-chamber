@@ -102,7 +102,7 @@ function Dropdown({
       <Link
         href={item.href}
         className={`
-          flex items-center px-3 py-2
+          flex items-center px-f13 py-f8
           text-body-sm font-bold
           hover:text-text-primary transition-colors
           ${isActive ? "text-text-primary" : "text-text-secondary"}
@@ -123,7 +123,7 @@ function Dropdown({
       <button
         ref={triggerRef}
         className={`
-          flex items-center gap-1 px-3 py-2
+          flex items-center gap-f5 px-f13 py-f8
           text-body-sm font-bold
           hover:text-text-primary transition-colors
           cursor-pointer
@@ -206,7 +206,7 @@ function Dropdown({
                 tabIndex={isOpen ? 0 : -1}
                 aria-current={isCurrent ? "page" : undefined}
                 className={`
-                  flex flex-col px-4 py-3 outline-none
+                  flex flex-col px-f13 py-f8 outline-none
                   hover:bg-bg-secondary focus-visible:bg-bg-secondary transition-colors
                   ${isCurrent ? "bg-bg-secondary" : ""}
                 `}
@@ -287,11 +287,11 @@ function MobileMenu({
           ${animating ? "translate-x-0" : "translate-x-full"}
         `}
       >
-        <div className="flex items-center justify-between p-6 border-b border-border-primary">
+        <div className="flex items-center justify-between p-f21 border-b border-border-primary">
           <span className="text-h4 font-bold">Menu</span>
           <button
             onClick={onClose}
-            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-bg-tertiary cursor-pointer"
+            className="w-f34 h-f34 flex items-center justify-center rounded-full hover:bg-bg-tertiary cursor-pointer"
             aria-label="Close menu"
           >
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -306,7 +306,7 @@ function MobileMenu({
         </div>
 
         {/* Mobile Member Login */}
-        <div className="px-6 pt-6">
+        <div className="px-f21 pt-f21">
           <a
             href={memberLogin.href}
             target="_blank"
@@ -324,7 +324,7 @@ function MobileMenu({
           </a>
         </div>
 
-        <div className="p-6 space-y-1">
+        <div className="p-f21 space-y-f5">
           {navigation.map((item) => {
             // Direct link items
             if (!item.children || item.children.length === 0) {
@@ -416,7 +416,7 @@ function MobileMenu({
         </div>
 
         {/* Mobile CTA */}
-        <div className="p-6 pt-0">
+        <div className="p-f21 pt-0">
           <Link
             href={ctaLink.href}
             className="
@@ -503,7 +503,8 @@ export function Header() {
           {/* Grid: left-wing [logo] · sacred-center [nav] · right-wing [controls]
               grid-cols-[1fr_auto_1fr] gives the logo and controls equal fractional
               width, so the nav is truly centred — hierophant bilateral symmetry. */}
-          <div className="grid grid-cols-[1fr_auto_1fr] items-center h-[4.5rem]">
+          {/* h-f89 (89px) nav / logo h-f55 (55px) → ratio 55:89 = F10:F11 = φ⁻¹ = 0.618 */}
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center h-f89">
 
             {/* ── Left wing: Logo + bee mark ── */}
             <div className="flex items-center gap-2">
@@ -517,7 +518,7 @@ export function Header() {
                   alt="Medina Chamber"
                   width={180}
                   height={48}
-                  className="nav-logo nav-logo--light h-10 w-auto"
+                  className="nav-logo nav-logo--light h-f55 w-auto"
                   priority
                 />
                 <Image
@@ -526,7 +527,7 @@ export function Header() {
                   aria-hidden="true"
                   width={180}
                   height={48}
-                  className="nav-logo nav-logo--dark h-10 w-auto"
+                  className="nav-logo nav-logo--dark h-f55 w-auto"
                   priority
                 />
               </Link>
@@ -536,7 +537,7 @@ export function Header() {
                 aria-label="Open Virtual Chamber"
                 title="Virtual Chamber"
                 className="
-                  hidden lg:flex w-9 h-9 items-center justify-center
+                  hidden lg:flex w-f34 h-f34 items-center justify-center
                   rounded-full bg-bg-tertiary hover:bg-border-primary
                   transition-colors flex-shrink-0
                 "
@@ -558,7 +559,7 @@ export function Header() {
 
             {/* ── Sacred center: Desktop nav ── */}
             <nav
-              className="hidden lg:flex items-center gap-1"
+              className="hidden lg:flex items-center gap-f5"
               onPointerLeave={scheduleClose}
             >
               {navigation.map((item) => (
@@ -575,7 +576,7 @@ export function Header() {
             </nav>
 
             {/* ── Right wing: Controls ── */}
-            <div className="flex items-center justify-end gap-2 col-start-3">
+            <div className="flex items-center justify-end gap-f8 col-start-3">
               <CommandPaletteTrigger />
               <ThemeToggle />
 
@@ -599,7 +600,7 @@ export function Header() {
               <Link
                 href={ctaLink.href}
                 className="
-                  hidden lg:flex items-center px-4 py-2
+                  hidden lg:flex items-center px-f13 py-f8
                   whitespace-nowrap
                   bg-accent hover:bg-accent-hover
                   text-white font-bold text-body-sm
@@ -613,7 +614,7 @@ export function Header() {
               {/* Mobile hamburger */}
               <button
                 onClick={() => setMobileOpen(true)}
-                className="lg:hidden w-10 h-10 flex items-center justify-center rounded-full hover:bg-bg-tertiary cursor-pointer"
+                className="lg:hidden w-f34 h-f34 flex items-center justify-center rounded-full hover:bg-bg-tertiary cursor-pointer"
                 aria-label="Open menu"
               >
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">

@@ -116,7 +116,7 @@ function drawLabelPill(
   textColor: string,
   bold?: boolean,
 ) {
-  ctx.font = `${bold ? "700 " : ""}${fontSize}px system-ui,-apple-system,sans-serif`;
+  ctx.font = `${bold ? "700 " : ""}${fontSize}px 'BN Bergen','BN Bergen',system-ui,-apple-system,sans-serif`;
   const tw  = ctx.measureText(text).width;
   const ph  = fontSize * 1.6;
   const px  = fontSize * 0.65;
@@ -171,10 +171,11 @@ export function MemberGraph({ members }: MemberGraphProps) {
   const startTimeRef     = useRef(Date.now());
   const zoomRef          = useRef(1);
   const bgColorRef       = useRef("#ffffff");
-  const mouseInCircleRef = useRef(false);
   const engineStoppedRef = useRef(false);
   // Dynamic boundary radius — updated whenever container resizes
   const boundaryRRef     = useRef(230);
+  // Device pixel ratio — cached on resize, never read inside the 60fps loop
+  const dprRef           = useRef(typeof window !== "undefined" ? (window.devicePixelRatio || 1) : 1);
   // Node positions captured from paintNode each frame.
   // Reading this ref inside render callbacks is safe; calling
   // fgRef.current.graphData() inside a frame callback is NOT safe in v1.29.1.
@@ -193,7 +194,6 @@ export function MemberGraph({ members }: MemberGraphProps) {
   const [sidebarHovId,   setSidebarHovId]   = useState<string | null>(null);
   const [search,         setSearch]         = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [mouseInCircle,  setMouseInCircle]  = useState(false);
   const [sheetOpen,      setSheetOpen]      = useState(false);
   // True on touch-primary devices — pinch zoom works without the circle gate
   const [isTouch,        setIsTouch]        = useState(false);
@@ -297,9 +297,10 @@ export function MemberGraph({ members }: MemberGraphProps) {
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-    const ro = new ResizeObserver(([e]) =>
-      setDimensions({ width: e.contentRect.width, height: e.contentRect.height }),
-    );
+    const ro = new ResizeObserver(([e]) => {
+      dprRef.current = window.devicePixelRatio || 1;
+      setDimensions({ width: e.contentRect.width, height: e.contentRect.height });
+    });
     ro.observe(el);
     setDimensions({ width: el.offsetWidth, height: el.offsetHeight });
     return () => ro.disconnect();
@@ -423,7 +424,7 @@ export function MemberGraph({ members }: MemberGraphProps) {
     const ch = ctx.canvas.height;
     // Euclidean: largest circle centered at (cw/2, ch/2) that clears the
     // top UI stack (toggle + caption) and bottom hint, in physical pixels.
-    const dpr     = window.devicePixelRatio || 1;
+    const dpr     = dprRef.current;
     const topPad  = Math.round(110 * dpr);
     const botPad  = Math.round(32  * dpr);
     const sidePad = Math.round(12  * dpr);
@@ -444,9 +445,8 @@ export function MemberGraph({ members }: MemberGraphProps) {
     // Members mode uses batched single-stroke calls (no per-line gradient
     // objects) to stay inside frame budget with 500+ nodes.
     if (!activeCatRef.current && nodePositionsRef.current.size > 0) {
-      const dpr = window.devicePixelRatio || 1;
       const k   = zoomRef.current;
-      const pr  = Math.max(32, Math.min(cr * 0.30, 110));
+      const pr  = Math.max(26, Math.min(cr * 0.24, 88));
       const ocx = cw / 2;
       const ocy = ch / 2;
 
@@ -605,15 +605,15 @@ export function MemberGraph({ members }: MemberGraphProps) {
       } else {
         // ── Text fallback while seal loads ──────────────────────────────────
         ctx.fillStyle    = "rgba(131,188,169,0.93)";
-        ctx.font         = `700 ${Math.round(pr * 0.26)}px system-ui,-apple-system,sans-serif`;
+        ctx.font         = `700 ${Math.round(pr * 0.26)}px 'BN Bergen',system-ui,-apple-system,sans-serif`;
         ctx.textAlign    = "center";
         ctx.textBaseline = "middle";
         ctx.fillText("MEDINA", cx, cy - pr * 0.13);
         ctx.fillStyle = "rgba(255,255,255,0.48)";
-        ctx.font      = `300 ${Math.round(pr * 0.165)}px system-ui,-apple-system,sans-serif`;
+        ctx.font      = `300 ${Math.round(pr * 0.165)}px 'BN Bergen',system-ui,-apple-system,sans-serif`;
         ctx.fillText("CHAMBER", cx, cy + pr * 0.13);
         ctx.fillStyle = "rgba(131,188,169,0.36)";
-        ctx.font      = `${Math.round(pr * 0.105)}px system-ui,-apple-system,sans-serif`;
+        ctx.font      = `${Math.round(pr * 0.105)}px 'BN Bergen',system-ui,-apple-system,sans-serif`;
         ctx.fillText("EST. 1938", cx, cy + pr * 0.36);
       }
     }
@@ -826,44 +826,6 @@ export function MemberGraph({ members }: MemberGraphProps) {
     setHoveredId(node?.id ?? null);
     const canvas = containerRef.current?.querySelector("canvas") as HTMLElement | null;
     if (canvas) canvas.style.cursor = node ? "pointer" : "default";
-  }, []);
-
-  // ── Mouse circle detection (desktop) ──────────────────────────────────
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    const rect   = e.currentTarget.getBoundingClientRect();
-    const dx     = e.clientX - rect.left  - rect.width  / 2;
-    const dy     = e.clientY - rect.top   - rect.height / 2;
-    const cr     = Math.min(rect.width, rect.height) / 2 - 2;
-    const inside = Math.sqrt(dx * dx + dy * dy) < cr;
-    if (inside !== mouseInCircleRef.current) {
-      mouseInCircleRef.current = inside;
-      setMouseInCircle(inside);
-    }
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    mouseInCircleRef.current = false;
-    setMouseInCircle(false);
-  }, []);
-
-  // ── Touch circle detection (iPhone / iPad) ─────────────────────────────
-  // On touch devices, pinch-to-zoom is always allowed — no scroll conflict
-  // to worry about, so we just enable zoom when any finger is in the circle.
-  const handleTouchStart = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
-    const touch = e.touches[0];
-    if (!touch) return;
-    const rect   = e.currentTarget.getBoundingClientRect();
-    const dx     = touch.clientX - rect.left  - rect.width  / 2;
-    const dy     = touch.clientY - rect.top   - rect.height / 2;
-    const cr     = Math.min(rect.width, rect.height) / 2 - 2;
-    const inside = Math.sqrt(dx * dx + dy * dy) < cr;
-    mouseInCircleRef.current = inside;
-    setMouseInCircle(inside);
-  }, []);
-
-  const handleTouchEnd = useCallback(() => {
-    mouseInCircleRef.current = false;
-    setMouseInCircle(false);
   }, []);
 
   const focusCategory = useCallback((cat: string) => {
@@ -1170,10 +1132,6 @@ export function MemberGraph({ members }: MemberGraphProps) {
       <div
         className={`${isMobile ? "absolute inset-0" : "relative flex-1"} overflow-hidden`}
         style={{ background: "var(--bg-primary)" }}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
       >
         {/* ForceGraph2D canvas */}
         <div ref={containerRef} className="w-full h-full">

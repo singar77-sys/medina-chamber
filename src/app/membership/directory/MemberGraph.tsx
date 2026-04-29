@@ -29,42 +29,59 @@ const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }) as any;
 
-// ── Color palette (raw hex — CSS vars unavailable in canvas) ─────────────
+// ── Boundary force — keeps all nodes inside a circle in D3 simulation space
+const BOUNDARY_R = 260;
+function forceRadialBoundary(radius: number, strength = 0.14) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let nodes: any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function force(alpha: number) {
+    nodes.forEach((n) => {
+      const x = n.x ?? 0;
+      const y = n.y ?? 0;
+      const d = Math.sqrt(x * x + y * y);
+      if (d > radius) {
+        const factor = ((d - radius) / d) * strength * alpha;
+        n.vx = (n.vx ?? 0) - x * factor;
+        n.vy = (n.vy ?? 0) - y * factor;
+      }
+    });
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  force.initialize = (n: any[]) => { nodes = n; };
+  return force;
+}
+
+// ── Color palette (raw hex — CSS vars unavailable inside canvas) ──────────
 const C = {
   bg:          "#0C1B33",
   // Member tiers
-  ci:          "#83BCA9",                  // cambridge teal
+  ci:          "#83BCA9",              // cambridge teal — Community Investor
   ciRgb:       "131,188,169",
-  vp:          "#FF6233",                  // dark-mode text-accent (5.9:1 on oxford-blue)
+  vp:          "#FF6233",              // dark-mode text-accent (5.9:1 on dark)
   vpRgb:       "255,98,51",
   standard:    "rgba(131,188,169,0.58)",
-  dimmed:      "rgba(131,188,169,0.025)",
-  // Hub nodes — brighter so they're visible on dark bg
-  cat:         "#00B894",                  // bright teal-green (was #005450 — too dark)
+  dimmed:      "rgba(131,188,169,0.022)",
+  // Hubs
+  cat:         "#00B894",              // bright teal-green (was #005450 — invisible on dark)
   catRgb:      "0,184,148",
-  catDim:      "rgba(0,184,148,0.06)",
-  city:        "#4D8EBA",                  // steel blue (was #1E3A5F — invisible on dark)
+  catDim:      "rgba(0,184,148,0.05)",
+  city:        "#4D8EBA",              // steel blue (was #1E3A5F — invisible on dark)
   cityRgb:     "77,142,186",
   // Links
-  link:        "rgba(131,188,169,0.038)",
-  linkActive:  "rgba(0,184,148,0.42)",
+  link:        "rgba(131,188,169,0.032)",
+  linkActive:  "rgba(0,184,148,0.45)",
 } as const;
 
-function resolveColor(
-  node: GraphNode,
-  activeCat: string | null,
-  search: string,
-): string {
+function resolveColor(node: GraphNode, activeCat: string | null, search: string): string {
   if (node.type === "category") {
     return activeCat && activeCat !== node.name ? C.catDim : C.cat;
   }
   if (node.type === "city") return C.city;
-
   const catOk  = !activeCat || node.categories?.includes(activeCat);
   const termOk = !search    ||
     node.name.toLowerCase().includes(search.toLowerCase()) ||
     node.description?.toLowerCase().includes(search.toLowerCase());
-
   if (!catOk || !termOk) return C.dimmed;
   if (node.tier === "ci")  return C.ci;
   if (node.tier === "vp")  return C.vp;
@@ -88,14 +105,14 @@ export function MemberGraph({ members, categories }: MemberGraphProps) {
   const [search, setSearch]                   = useState("");
   const [activeCategory, setActiveCategory]   = useState<string | null>(null);
   const [engineStopped, setEngineStopped]     = useState(false);
+  const [isFocused, setIsFocused]             = useState(false);
 
-  // Refs for canvas RAF callbacks — no stale closures
-  const activeCatRef = useRef<string | null>(null);
-  const searchRef    = useRef<string>("");
-  const hoveredIdRef = useRef<string | null>(null);
-  activeCatRef.current = activeCategory;
-  searchRef.current    = search;
-  hoveredIdRef.current = hoveredId;
+  const activeCatRef  = useRef<string | null>(null);
+  const searchRef     = useRef<string>("");
+  const hoveredIdRef  = useRef<string | null>(null);
+  activeCatRef.current  = activeCategory;
+  searchRef.current     = search;
+  hoveredIdRef.current  = hoveredId;
 
   const graphData = useMemo(() => buildGraphData(members), [members]);
 
@@ -111,16 +128,18 @@ export function MemberGraph({ members, categories }: MemberGraphProps) {
     return () => ro.disconnect();
   }, []);
 
-  // ── Custom D3 forces ──────────────────────────────────────────────────
+  // ── Custom D3 forces + circular boundary ─────────────────────────────
   useEffect(() => {
     const fg = fgRef.current;
     if (!fg) return;
     const charge = fg.d3Force("charge");
     if (charge) charge.strength((n: GraphNode) =>
-      n.type === "category" ? -700 : n.type === "city" ? -220 : -65
+      n.type === "category" ? -800 : n.type === "city" ? -200 : -45
     );
     const link = fg.d3Force("link");
-    if (link) link.distance(55).strength(0.55);
+    if (link) link.distance(42).strength(0.65);
+    // Confine all nodes to a circle — creates the "globe" cluster shape
+    fg.d3Force("boundary", forceRadialBoundary(BOUNDARY_R, 0.14));
     fg.d3ReheatSimulation();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graphData]);
@@ -128,10 +147,43 @@ export function MemberGraph({ members, categories }: MemberGraphProps) {
   // ── Zoom to fit once simulation settles ───────────────────────────────
   const handleEngineStop = useCallback(() => {
     if (!engineStopped) {
-      fgRef.current?.zoomToFit(700, 80);
+      fgRef.current?.zoomToFit(800, 60);
       setEngineStopped(true);
     }
   }, [engineStopped]);
+
+  // ── Globe ring + vignette drawn before nodes ──────────────────────────
+  const handleRenderFramePre = useCallback((ctx: CanvasRenderingContext2D) => {
+    const r = BOUNDARY_R;
+    const t = (Date.now() - startTimeRef.current) / 1000;
+    const pulse = 0.5 + 0.5 * Math.sin(t * Math.PI * 2 * 0.18); // very slow breathing
+
+    // Outer glow halo
+    const halo = ctx.createRadialGradient(0, 0, r * 0.82, 0, 0, r * 1.28);
+    halo.addColorStop(0, `rgba(131,188,169,${(0.035 + pulse * 0.028).toFixed(3)})`);
+    halo.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.beginPath();
+    ctx.arc(0, 0, r * 1.28, 0, Math.PI * 2);
+    ctx.fillStyle = halo;
+    ctx.fill();
+
+    // Boundary ring — the "globe" edge
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(131,188,169,${(0.07 + pulse * 0.07).toFixed(3)})`;
+    ctx.lineWidth   = 0.6;
+    ctx.stroke();
+
+    // Inner vignette — darkens edges for depth / sphere feel
+    const vignette = ctx.createRadialGradient(0, 0, r * 0.45, 0, 0, r);
+    vignette.addColorStop(0,   "rgba(40,68,105,0.08)");
+    vignette.addColorStop(0.7, "rgba(12,27,51,0)");
+    vignette.addColorStop(1,   "rgba(0,0,0,0.42)");
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.fillStyle = vignette;
+    ctx.fill();
+  }, []);
 
   // ── Canvas node renderer ──────────────────────────────────────────────
   const paintNode = useCallback(
@@ -147,134 +199,117 @@ export function MemberGraph({ members, categories }: MemberGraphProps) {
 
       // ── Category hub ─────────────────────────────────────────────────
       if (node.type === "category") {
-        const r     = 11;
+        const r     = 10;
         const isDim = !!(cat && cat !== node.name);
         const isAct = cat === node.name;
 
         if (!isDim) {
-          // Animated outer ring — gentle pulse
-          const pulse = 0.4 + 0.3 * Math.sin(t * Math.PI * 2 * 0.5);
+          // Slow outer pulse ring
+          const pulse = 0.42 + 0.3 * Math.sin(t * Math.PI * 2 * 0.42);
           ctx.beginPath();
-          ctx.arc(x, y, r * 3.5, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(${C.catRgb},${(pulse * 0.18).toFixed(3)})`;
-          ctx.lineWidth   = 1.2;
+          ctx.arc(x, y, r * 3, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(${C.catRgb},${(pulse * 0.14).toFixed(3)})`;
+          ctx.lineWidth   = 1;
           ctx.stroke();
 
-          // Steady mid ring (brighter when active)
+          // Mid ring — brighter when this hub is the active filter
           ctx.beginPath();
-          ctx.arc(x, y, r * 2, 0, Math.PI * 2);
-          ctx.strokeStyle = isAct
-            ? `rgba(${C.catRgb},0.7)`
-            : `rgba(${C.catRgb},0.28)`;
-          ctx.lineWidth   = isAct ? 1.6 : 0.9;
+          ctx.arc(x, y, r * 1.8, 0, Math.PI * 2);
+          ctx.strokeStyle = isAct ? `rgba(${C.catRgb},0.8)` : `rgba(${C.catRgb},0.24)`;
+          ctx.lineWidth   = isAct ? 1.6 : 0.8;
           ctx.stroke();
 
-          // Ambient glow
-          const grd = ctx.createRadialGradient(x, y, 0, x, y, r * 5);
-          grd.addColorStop(0, isAct
-            ? `rgba(${C.catRgb},0.32)`
-            : `rgba(${C.catRgb},0.14)`);
+          // Ambient glow field
+          const grd = ctx.createRadialGradient(x, y, 0, x, y, r * 4.5);
+          grd.addColorStop(0, isAct ? `rgba(${C.catRgb},0.38)` : `rgba(${C.catRgb},0.12)`);
           grd.addColorStop(1, "rgba(0,0,0,0)");
           ctx.beginPath();
-          ctx.arc(x, y, r * 5, 0, Math.PI * 2);
+          ctx.arc(x, y, r * 4.5, 0, Math.PI * 2);
           ctx.fillStyle = grd;
           ctx.fill();
         }
 
-        // Core circle
+        // Core dot
         ctx.beginPath();
         ctx.arc(x, y, r, 0, Math.PI * 2);
         ctx.fillStyle = isDim ? C.catDim : C.cat;
         ctx.fill();
 
-        // Inner white center dot — precision crosshair feel
+        // Inner white center point
         if (!isDim) {
           ctx.beginPath();
-          ctx.arc(x, y, r * 0.4, 0, Math.PI * 2);
-          ctx.fillStyle = "rgba(255,255,255,0.8)";
+          ctx.arc(x, y, r * 0.36, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(255,255,255,0.88)";
           ctx.fill();
         }
 
-        // Label
-        const fs = Math.max(11 / globalScale, 1.5);
+        // Category labels — always shown (they ARE the structure)
+        const fs = Math.max(10.5 / globalScale, 1.2);
         ctx.font         = `700 ${fs}px system-ui, -apple-system, sans-serif`;
-        ctx.fillStyle    = isDim ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.92)";
+        ctx.fillStyle    = isDim ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.9)";
         ctx.textAlign    = "center";
         ctx.textBaseline = "top";
-        const lbl = node.name.length > 22 ? node.name.slice(0, 20) + "…" : node.name;
-        ctx.fillText(lbl, x, y + r + 4 / globalScale);
+        const lbl = node.name.length > 20 ? node.name.slice(0, 18) + "…" : node.name;
+        ctx.fillText(lbl, x, y + r + 3 / globalScale);
         return;
       }
 
       // ── City hub ──────────────────────────────────────────────────────
       if (node.type === "city") {
-        const r = 4;
-        // Subtle ambient glow
-        const grd = ctx.createRadialGradient(x, y, 0, x, y, r * 3);
-        grd.addColorStop(0, `rgba(${C.cityRgb},0.22)`);
-        grd.addColorStop(1, "rgba(0,0,0,0)");
-        ctx.beginPath();
-        ctx.arc(x, y, r * 3, 0, Math.PI * 2);
-        ctx.fillStyle = grd;
-        ctx.fill();
-
+        const r = 3.2;
         ctx.beginPath();
         ctx.arc(x, y, r, 0, Math.PI * 2);
         ctx.fillStyle = C.city;
         ctx.fill();
-
-        // Outer ring
         ctx.beginPath();
-        ctx.arc(x, y, r + 1.5, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(${C.cityRgb},0.3)`;
-        ctx.lineWidth   = 0.7;
+        ctx.arc(x, y, r + 1, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(${C.cityRgb},0.22)`;
+        ctx.lineWidth   = 0.5;
         ctx.stroke();
-
-        const fs = Math.max(8.5 / globalScale, 1);
-        ctx.font         = `${fs}px system-ui, -apple-system, sans-serif`;
-        ctx.fillStyle    = `rgba(${C.cityRgb},0.55)`;
-        ctx.textAlign    = "center";
-        ctx.textBaseline = "top";
-        ctx.fillText(node.name, x, y + r + 2 / globalScale);
+        // City labels only when zoomed in deeply — they add noise at overview
+        if (globalScale > 2.8) {
+          const fs = Math.max(8 / globalScale, 1);
+          ctx.font         = `${fs}px system-ui, -apple-system, sans-serif`;
+          ctx.fillStyle    = `rgba(${C.cityRgb},0.6)`;
+          ctx.textAlign    = "center";
+          ctx.textBaseline = "top";
+          ctx.fillText(node.name, x, y + r + 1.5 / globalScale);
+        }
         return;
       }
 
       // ── Member node ───────────────────────────────────────────────────
-      const baseR = node.tier === "ci" ? 5 : node.tier === "vp" ? 3.2 : 2;
-      const r     = isHov ? baseR * 1.6 : baseR;
+      const baseR = node.tier === "ci" ? 4.5 : node.tier === "vp" ? 3 : 1.7;
+      const r     = isHov ? baseR * 1.65 : baseR;
       const isDim = color === C.dimmed;
       const rgb   = node.tier === "ci" ? C.ciRgb : node.tier === "vp" ? C.vpRgb : C.ciRgb;
 
-      // CI — pulsing glow ring (phase-offset by position for organic feel)
+      // CI — pulsing glow with per-node phase so they breathe organically
       if (node.tier === "ci" && !isDim) {
-        const phase = (node.x ?? 0) * 0.3 + (node.y ?? 0) * 0.2;
-        const pulse = 0.38 + 0.28 * Math.sin(t * Math.PI * 2 * 0.65 + phase);
-
-        // Glow field
-        const grd = ctx.createRadialGradient(x, y, r * 0.4, x, y, r * 6);
-        grd.addColorStop(0, `rgba(${rgb},${(pulse * 0.5).toFixed(3)})`);
-        grd.addColorStop(0.5, `rgba(${rgb},${(pulse * 0.15).toFixed(3)})`);
-        grd.addColorStop(1, "rgba(0,0,0,0)");
+        const phase = (node.x ?? 0) * 0.22 + (node.y ?? 0) * 0.14;
+        const pulse = 0.36 + 0.28 * Math.sin(t * Math.PI * 2 * 0.62 + phase);
+        const grd   = ctx.createRadialGradient(x, y, r * 0.3, x, y, r * 5.5);
+        grd.addColorStop(0,   `rgba(${rgb},${(pulse * 0.52).toFixed(3)})`);
+        grd.addColorStop(0.5, `rgba(${rgb},${(pulse * 0.13).toFixed(3)})`);
+        grd.addColorStop(1,   "rgba(0,0,0,0)");
         ctx.beginPath();
-        ctx.arc(x, y, r * 6, 0, Math.PI * 2);
+        ctx.arc(x, y, r * 5.5, 0, Math.PI * 2);
         ctx.fillStyle = grd;
         ctx.fill();
-
-        // Pulse ring
         ctx.beginPath();
-        ctx.arc(x, y, r + 2.8, 0, Math.PI * 2);
+        ctx.arc(x, y, r + 2.4, 0, Math.PI * 2);
         ctx.strokeStyle = `rgba(${rgb},${(pulse * 0.65).toFixed(3)})`;
-        ctx.lineWidth   = 1.1;
+        ctx.lineWidth   = 1;
         ctx.stroke();
       }
 
-      // VP — steady accent glow
+      // VP — steady warm accent glow
       if (node.tier === "vp" && !isDim) {
-        const grd = ctx.createRadialGradient(x, y, 0, x, y, r * 4.5);
+        const grd = ctx.createRadialGradient(x, y, 0, x, y, r * 4);
         grd.addColorStop(0, `rgba(${rgb},0.38)`);
         grd.addColorStop(1, "rgba(0,0,0,0)");
         ctx.beginPath();
-        ctx.arc(x, y, r * 4.5, 0, Math.PI * 2);
+        ctx.arc(x, y, r * 4, 0, Math.PI * 2);
         ctx.fillStyle = grd;
         ctx.fill();
       }
@@ -296,18 +331,15 @@ export function MemberGraph({ members, categories }: MemberGraphProps) {
       ctx.fillStyle = color;
       ctx.fill();
 
-      // Labels: CI always visible at normal zoom; others on hover or deep zoom
-      const showLabel = node.tier === "ci"
-        ? (!isDim && globalScale > 0.75)
-        : (isHov || globalScale > 4);
-
-      if (showLabel) {
-        const fs = Math.max(node.tier === "ci" ? 9.5 / globalScale : 9 / globalScale, 1.4);
+      // Member labels — ONLY on hover or when deeply zoomed in
+      // (removed "CI always visible" — it creates label soup at overview zoom)
+      if (isHov || globalScale > 3.5) {
+        const fs = Math.max(9 / globalScale, 1.4);
         ctx.font         = `${node.tier === "ci" ? "600 " : ""}${fs}px system-ui, -apple-system, sans-serif`;
-        ctx.fillStyle    = isDim ? "rgba(255,255,255,0.22)" : "rgba(255,255,255,0.92)";
+        ctx.fillStyle    = isDim ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.92)";
         ctx.textAlign    = "center";
         ctx.textBaseline = "top";
-        const lbl = node.name.length > 26 ? node.name.slice(0, 24) + "…" : node.name;
+        const lbl = node.name.length > 24 ? node.name.slice(0, 22) + "…" : node.name;
         ctx.fillText(lbl, x, y + r + 2 / globalScale);
       }
     },
@@ -326,7 +358,7 @@ export function MemberGraph({ members, categories }: MemberGraphProps) {
     [activeCategory],
   );
 
-  // ── Node physics weight ───────────────────────────────────────────────
+  // ── Physics weight ────────────────────────────────────────────────────
   const getNodeVal = useCallback((node: GraphNode) => {
     if (node.type === "category") return 100;
     if (node.type === "city")     return 20;
@@ -352,33 +384,81 @@ export function MemberGraph({ members, categories }: MemberGraphProps) {
 
   const clearFilters = () => { setSearch(""); setActiveCategory(null); };
   const hasFilters   = !!(search || activeCategory);
-
-  const catCount = useMemo(
+  const catCount     = useMemo(
     () => new Set(members.flatMap((m) => m.categories)).size,
     [members],
   );
 
-  // ── Shared inline style parts ─────────────────────────────────────────
   const glass = {
-    background:    "rgba(12,27,51,0.88)",
+    background:     "rgba(12,27,51,0.88)",
     backdropFilter: "blur(16px)",
-    border:        "1px solid rgba(131,188,169,0.14)",
-    boxShadow:     "0 4px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(131,188,169,0.07)",
+    border:         "1px solid rgba(131,188,169,0.14)",
+    boxShadow:      "0 4px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(131,188,169,0.07)",
   } as const;
 
   return (
-    <div className="relative w-full" style={{ height: "85vh", background: C.bg }}>
+    <div
+      className="relative w-full select-none"
+      style={{ height: "85vh", background: C.bg }}
+      onMouseEnter={() => setIsFocused(true)}
+      onMouseLeave={() => setIsFocused(false)}
+    >
+
+      {/* ── Top gradient — page bg fades into graph ──────────── */}
+      <div
+        className="absolute top-0 inset-x-0 pointer-events-none z-[3]"
+        style={{
+          height: 72,
+          background: "linear-gradient(to bottom, var(--bg-primary) 0%, rgba(12,27,51,0) 100%)",
+        }}
+      />
+
+      {/* ── Bottom gradient — graph fades back to page bg ────── */}
+      <div
+        className="absolute bottom-0 inset-x-0 pointer-events-none z-[3]"
+        style={{
+          height: 72,
+          background: "linear-gradient(to top, var(--bg-primary) 0%, rgba(12,27,51,0) 100%)",
+        }}
+      />
+
+      {/* ── Screen-space edge vignette — globe depth effect ──── */}
+      <div
+        className="absolute inset-0 pointer-events-none z-[2]"
+        style={{
+          background: "radial-gradient(ellipse at 50% 50%, transparent 42%, rgba(6,14,28,0.72) 100%)",
+        }}
+      />
+
+      {/* ── Hover-to-activate badge — visible when not focused ─ */}
+      {!isFocused && (
+        <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 pointer-events-none">
+          <div style={{
+            padding: "7px 16px", borderRadius: 20,
+            background: "rgba(12,27,51,0.72)",
+            border: "1px solid rgba(131,188,169,0.22)",
+            backdropFilter: "blur(8px)",
+            whiteSpace: "nowrap",
+          }}>
+            <p style={{
+              fontSize: 10, letterSpacing: "0.13em", fontWeight: 700,
+              color: "rgba(131,188,169,0.55)", textTransform: "uppercase", margin: 0,
+            }}>
+              Hover to zoom &amp; pan
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* ── HUD Controls ─────────────────────────────────────── */}
-      <div className="absolute top-5 left-5 z-10">
-        <div style={{ ...glass, display: "flex", flexDirection: "column", gap: 8, padding: 14, borderRadius: 12, minWidth: 224 }}>
+      <div className="absolute top-20 left-5 z-10">
+        <div style={{ ...glass, display: "flex", flexDirection: "column", gap: 8, padding: 14, borderRadius: 12, minWidth: 220 }}>
 
-          {/* Live indicator + count */}
+          {/* Live indicator */}
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <span style={{
               width: 5, height: 5, borderRadius: "50%",
-              background: "#00B894",
-              boxShadow: "0 0 7px rgba(0,184,148,0.9)",
+              background: "#00B894", boxShadow: "0 0 7px rgba(0,184,148,0.9)",
             }} />
             <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.15em", color: "rgba(0,184,148,0.65)", textTransform: "uppercase", margin: 0 }}>
               {members.length} members · {catCount} industries
@@ -440,12 +520,12 @@ export function MemberGraph({ members, categories }: MemberGraphProps) {
               border: "1px solid rgba(0,184,148,0.28)",
               borderRadius: 6,
             }}>
-              <span style={{ fontSize: 11, color: "#00B894", fontWeight: 600, letterSpacing: "0.02em" }}>
+              <span style={{ fontSize: 11, color: "#00B894", fontWeight: 600 }}>
                 {activeCategory}
               </span>
               <button
                 onClick={() => setActiveCategory(null)}
-                style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(0,184,148,0.55)", fontSize: 13, padding: 0, lineHeight: 1 }}
+                style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(0,184,148,0.55)", fontSize: 13, padding: 0 }}
               >✕</button>
             </div>
           )}
@@ -464,15 +544,15 @@ export function MemberGraph({ members, categories }: MemberGraphProps) {
 
       {/* ── Legend ───────────────────────────────────────────── */}
       <div
-        className="absolute bottom-5 left-5 z-10"
+        className="absolute bottom-20 left-5 z-10"
         style={{ ...glass, display: "flex", flexDirection: "column", gap: 6, padding: "12px 14px", borderRadius: 10 }}
       >
         {([
-          { color: C.ci,       label: "Community Investor", glow: C.ciRgb  },
-          { color: C.vp,       label: "Visibility Plus",    glow: C.vpRgb  },
-          { color: C.standard, label: "Member",             glow: null     },
-          { color: C.cat,      label: "Industry hub",       glow: C.catRgb },
-          { color: C.city,     label: "City",               glow: C.cityRgb},
+          { color: C.ci,       label: "Community Investor", glow: C.ciRgb   },
+          { color: C.vp,       label: "Visibility Plus",    glow: C.vpRgb   },
+          { color: C.standard, label: "Member",             glow: null      },
+          { color: C.cat,      label: "Industry hub",       glow: C.catRgb  },
+          { color: C.city,     label: "City",               glow: C.cityRgb },
         ] as const).map(({ color, label, glow }) => (
           <span
             key={label}
@@ -490,10 +570,12 @@ export function MemberGraph({ members, categories }: MemberGraphProps) {
 
       {/* ── Hint ─────────────────────────────────────────────── */}
       <p
-        className="hidden sm:block absolute bottom-5 right-5 z-10"
-        style={{ fontSize: 10.5, color: "rgba(255,255,255,0.15)", letterSpacing: "0.04em", margin: 0 }}
+        className="hidden sm:block absolute bottom-20 right-5 z-10"
+        style={{ fontSize: 10.5, color: "rgba(255,255,255,0.14)", letterSpacing: "0.04em", margin: 0, lineHeight: 1.6 }}
       >
-        Click member to open · Click industry hub to filter · Scroll to zoom
+        Click member to open profile<br />
+        Click industry hub to filter<br />
+        Scroll to zoom · drag to pan
       </p>
 
       {/* ── Canvas ───────────────────────────────────────────── */}
@@ -509,20 +591,22 @@ export function MemberGraph({ members, categories }: MemberGraphProps) {
           onNodeClick={handleNodeClick}
           onNodeHover={handleNodeHover}
           onEngineStop={handleEngineStop}
+          onRenderFramePre={handleRenderFramePre}
           linkColor={getLinkColor}
-          linkWidth={0.35}
+          linkWidth={0.3}
           backgroundColor={C.bg}
           width={dimensions.width}
           height={dimensions.height}
-          warmupTicks={80}
+          warmupTicks={100}
           cooldownTicks={200}
           cooldownTime={8000}
           d3AlphaDecay={0.04}
           d3VelocityDecay={0.45}
           minZoom={0.12}
           maxZoom={14}
-          enableZoomInteraction
-          enablePanInteraction
+          // Zoom/pan ONLY active when mouse is over the graph — prevents page scroll hijacking
+          enableZoomInteraction={isFocused}
+          enablePanInteraction={isFocused}
         />
       </div>
 

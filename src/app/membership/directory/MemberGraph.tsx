@@ -197,10 +197,15 @@ export function MemberGraph({ members }: MemberGraphProps) {
   const [sheetOpen,      setSheetOpen]      = useState(false);
   // True on touch-primary devices — pinch zoom works without the circle gate
   const [isTouch,        setIsTouch]        = useState(false);
+  // Toggle between showing industry categories or individual members in the globe
+  const [globeMode,      setGlobeMode]      = useState<"categories" | "members">("categories");
 
   activeCatRef.current  = activeCategory;
   hoveredIdRef.current  = hoveredId;
   sidebarHovRef.current = sidebarHovId;
+  // Stable ref so canvas callbacks read globeMode without stale closures
+  const globeModeRef = useRef(globeMode);
+  globeModeRef.current = globeMode;
 
   // Detect touch-primary device once on mount
   useEffect(() => {
@@ -244,6 +249,13 @@ export function MemberGraph({ members }: MemberGraphProps) {
   // ── Graph data fed to ForceGraph2D ─────────────────────────────────────
   const graphData = useMemo<{ nodes: GraphNode[]; links: GraphLink[] }>(() => {
     if (!activeCategory) {
+      if (globeMode === "members") {
+        // Members overview: every member node, no links (spokes drawn in POST)
+        return {
+          nodes: allGraphData.nodes.filter((n) => n.type === "member"),
+          links: [],
+        };
+      }
       return {
         nodes: allGraphData.nodes.filter(
           (n) => n.type === "category" && topCatSet.has(n.name),
@@ -264,7 +276,7 @@ export function MemberGraph({ members }: MemberGraphProps) {
       nodes: [pinnedCat, ...memberNodes],
       links: memberNodes.map((m) => ({ source: m.id, target: `cat:${activeCategory}` })),
     };
-  }, [activeCategory, allGraphData, topCatSet]);
+  }, [activeCategory, globeMode, allGraphData, topCatSet]);
 
   // ── Read page bg colour for canvas mask ────────────────────────────────
   useEffect(() => {
@@ -310,13 +322,21 @@ export function MemberGraph({ members }: MemberGraphProps) {
       fg.d3Force("boundary", forceRadialBoundary(boundaryRRef.current, 0.18));
       fg.d3Force("ring",    null); // ring force not needed in focus mode
       fg.d3Force("collide", null); // collision force not needed in focus mode
+    } else if (globeMode === "members") {
+      // Members overview: 500+ small dots fill the globe organically.
+      // Light charge for even distribution; no ring (fill whole globe area);
+      // strong boundary to contain them; no custom collide (charge handles spacing).
+      fg.d3Force("charge")?.strength(-20);
+      fg.d3Force("link")?.strength(0);
+      fg.d3Force("boundary", forceRadialBoundary(boundaryRRef.current, 0.30));
+      fg.d3Force("ring",    null);
+      fg.d3Force("collide", null);
     } else {
-      // Overview: ring force pulls category nodes toward a target orbit band,
+      // Categories overview: ring force pulls category nodes toward a target orbit band,
       // leaving the centre clear for the Chamber pupil.
       //
-      // Ring target at 0.70 × boundary (was 0.82) gives labels ~30% of the
-      // boundary radius as outward clearance so they don't clip the circle edge.
-      // Stronger boundary (0.22) and collision force prevent nodes from escaping.
+      // Ring target at 0.70 × boundary gives labels ~30% of the boundary radius
+      // as outward clearance so they don't clip the circle edge.
       fg.d3Force("charge")?.strength(-360);
       fg.d3Force("link")?.strength(0);
       fg.d3Force("boundary", forceRadialBoundary(boundaryRRef.current, 0.22));
@@ -400,10 +420,10 @@ export function MemberGraph({ members }: MemberGraphProps) {
     const _t     = (Date.now() - startTimeRef.current) / 1000;
     const _pulse = 0.55 + 0.45 * Math.sin(_t * Math.PI * 2 * 0.22);
 
-    // ── Spokes: coquelicot radial lines from Chamber pupil → each industry ──
-    // Two-pass (glow + core) gives an orange-red bloom like a hot filament.
-    // Drawn before the corner clip (masked at edge) and before the pupil fill
-    // (pupil buries the origins).
+    // ── Spokes: coquelicot radial lines from Chamber pupil to each node ──
+    // Two-pass (glow + core) for the orange-red bloom effect.
+    // Members mode uses batched single-stroke calls (no per-line gradient
+    // objects) to stay inside frame budget with 500+ nodes.
     if (!activeCatRef.current && nodePositionsRef.current.size > 0) {
       const dpr = window.devicePixelRatio || 1;
       const k   = zoomRef.current;
@@ -411,48 +431,82 @@ export function MemberGraph({ members }: MemberGraphProps) {
       const ocx = cw / 2;
       const ocy = ch / 2;
 
-      nodePositionsRef.current.forEach(({ x, y }) => {
-        const sx = ocx + x * k * dpr;
-        const sy = ocy + y * k * dpr;
-        const dx = sx - ocx;
-        const dy = sy - ocy;
-        const d  = Math.sqrt(dx * dx + dy * dy);
-        if (d < pr + 4) return;
-        const nx = dx / d;
-        const ny = dy / d;
-        const x0 = ocx + nx * (pr + 10);
-        const y0 = ocy + ny * (pr + 10);
-        const x1 = sx  - nx * 7;
-        const y1 = sy  - ny * 7;
-
-        // Glow pass — wide soft halo in coquelicot
-        const glowA  = (0.18 * _pulse).toFixed(3);
-        const glowA2 = (0.30 * _pulse).toFixed(3);
-        const glowGrad = ctx.createLinearGradient(x0, y0, x1, y1);
-        glowGrad.addColorStop(0,   "rgba(255,80,0,0)");
-        glowGrad.addColorStop(0.2, `rgba(255,80,0,${glowA})`);
-        glowGrad.addColorStop(1,   `rgba(255,98,33,${glowA2})`);
+      if (globeModeRef.current === "members") {
+        // Batched: collect all sub-paths, single stroke() per pass
         ctx.beginPath();
-        ctx.moveTo(x0, y0);
-        ctx.lineTo(x1, y1);
-        ctx.strokeStyle = glowGrad;
-        ctx.lineWidth   = Math.max(3.0, 2.8 * dpr);
+        ctx.strokeStyle = `rgba(255,80,0,${(0.05 * _pulse).toFixed(3)})`;
+        ctx.lineWidth   = Math.max(1.2, 1.1 * dpr);
+        nodePositionsRef.current.forEach(({ x, y }) => {
+          const sx = ocx + x * k * dpr;
+          const sy = ocy + y * k * dpr;
+          const dx = sx - ocx, dy = sy - ocy;
+          const d  = Math.sqrt(dx * dx + dy * dy);
+          if (d < pr + 4) return;
+          const nx = dx / d, ny = dy / d;
+          ctx.moveTo(ocx + nx * (pr + 8), ocy + ny * (pr + 8));
+          ctx.lineTo(sx - nx * 4, sy - ny * 4);
+        });
         ctx.stroke();
 
-        // Core pass — tight bright line
-        const coreA  = (0.28 * _pulse).toFixed(3);
-        const coreA2 = (0.60 * _pulse).toFixed(3);
-        const coreGrad = ctx.createLinearGradient(x0, y0, x1, y1);
-        coreGrad.addColorStop(0,    "rgba(255,98,51,0)");
-        coreGrad.addColorStop(0.15, `rgba(255,98,51,${coreA})`);
-        coreGrad.addColorStop(1,    `rgba(255,140,70,${coreA2})`);
         ctx.beginPath();
-        ctx.moveTo(x0, y0);
-        ctx.lineTo(x1, y1);
-        ctx.strokeStyle = coreGrad;
-        ctx.lineWidth   = Math.max(0.7, 0.65 * dpr);
+        ctx.strokeStyle = `rgba(255,98,51,${(0.22 * _pulse).toFixed(3)})`;
+        ctx.lineWidth   = Math.max(0.45, 0.40 * dpr);
+        nodePositionsRef.current.forEach(({ x, y }) => {
+          const sx = ocx + x * k * dpr;
+          const sy = ocy + y * k * dpr;
+          const dx = sx - ocx, dy = sy - ocy;
+          const d  = Math.sqrt(dx * dx + dy * dy);
+          if (d < pr + 4) return;
+          const nx = dx / d, ny = dy / d;
+          ctx.moveTo(ocx + nx * (pr + 8), ocy + ny * (pr + 8));
+          ctx.lineTo(sx - nx * 4, sy - ny * 4);
+        });
         ctx.stroke();
-      });
+      } else {
+        // Per-node gradient spokes for ≤35 category nodes
+        nodePositionsRef.current.forEach(({ x, y }) => {
+          const sx = ocx + x * k * dpr;
+          const sy = ocy + y * k * dpr;
+          const dx = sx - ocx;
+          const dy = sy - ocy;
+          const d  = Math.sqrt(dx * dx + dy * dy);
+          if (d < pr + 4) return;
+          const nx = dx / d;
+          const ny = dy / d;
+          const x0 = ocx + nx * (pr + 10);
+          const y0 = ocy + ny * (pr + 10);
+          const x1 = sx  - nx * 7;
+          const y1 = sy  - ny * 7;
+
+          // Glow pass — wide soft halo in coquelicot
+          const glowA  = (0.18 * _pulse).toFixed(3);
+          const glowA2 = (0.30 * _pulse).toFixed(3);
+          const glowGrad = ctx.createLinearGradient(x0, y0, x1, y1);
+          glowGrad.addColorStop(0,   "rgba(255,80,0,0)");
+          glowGrad.addColorStop(0.2, `rgba(255,80,0,${glowA})`);
+          glowGrad.addColorStop(1,   `rgba(255,98,33,${glowA2})`);
+          ctx.beginPath();
+          ctx.moveTo(x0, y0);
+          ctx.lineTo(x1, y1);
+          ctx.strokeStyle = glowGrad;
+          ctx.lineWidth   = Math.max(3.0, 2.8 * dpr);
+          ctx.stroke();
+
+          // Core pass — tight bright line
+          const coreA  = (0.28 * _pulse).toFixed(3);
+          const coreA2 = (0.60 * _pulse).toFixed(3);
+          const coreGrad = ctx.createLinearGradient(x0, y0, x1, y1);
+          coreGrad.addColorStop(0,    "rgba(255,98,51,0)");
+          coreGrad.addColorStop(0.15, `rgba(255,98,51,${coreA})`);
+          coreGrad.addColorStop(1,    `rgba(255,140,70,${coreA2})`);
+          ctx.beginPath();
+          ctx.moveTo(x0, y0);
+          ctx.lineTo(x1, y1);
+          ctx.strokeStyle = coreGrad;
+          ctx.lineWidth   = Math.max(0.7, 0.65 * dpr);
+          ctx.stroke();
+        });
+      }
     }
 
     ctx.beginPath();
@@ -647,49 +701,69 @@ export function MemberGraph({ members }: MemberGraphProps) {
         return;
       }
 
-      // ── Member node (focus mode) ──────────────────────────────────────
-      const baseR = node.tier === "ci" ? 8.5 : node.tier === "vp" ? 6.5 : 5;
-      const r     = isHov ? baseR * 1.55 : baseR;
-      const rgb   = node.tier === "ci" ? C.ciRgb : node.tier === "vp" ? C.vpRgb : C.ciRgb;
-      const col   = node.tier === "ci" ? C.ci    : node.tier === "vp" ? C.vp    : C.standard;
+      // ── Member node — focus mode or members-overview ─────────────────
+      const isMembersOv = globeModeRef.current === "members" && !activeCatRef.current;
+      // Tiny dots in members overview; full size in focus mode
+      const baseR = isMembersOv
+        ? (node.tier === "ci" ? 3.0 : node.tier === "vp" ? 2.2 : 1.6)
+        : (node.tier === "ci" ? 8.5 : node.tier === "vp" ? 6.5 : 5);
+      const r   = isHov ? baseR * (isMembersOv ? 2.8 : 1.55) : baseR;
+      const rgb = node.tier === "ci" ? C.ciRgb : node.tier === "vp" ? C.vpRgb : C.ciRgb;
+      const col = node.tier === "ci" ? C.ci    : node.tier === "vp" ? C.vp    : C.standard;
 
-      if (node.tier === "ci" || isHov) {
-        const phase = (node.x ?? 0) * 0.20 + (node.y ?? 0) * 0.13;
-        const pulse = 0.38 + 0.28 * Math.sin(t * 1.9 + phase);
-        const auraR = isHov ? r * 6.5 : r * 5;
-        const grd   = ctx.createRadialGradient(x, y, r * 0.5, x, y, auraR);
-        grd.addColorStop(0, `rgba(${rgb},${(pulse * (isHov ? 0.68 : 0.50)).toFixed(3)})`);
-        grd.addColorStop(0.55, `rgba(${rgb},${(pulse * 0.10).toFixed(3)})`);
-        grd.addColorStop(1,   "rgba(0,0,0,0)");
-        ctx.beginPath(); ctx.arc(x, y, auraR, 0, Math.PI * 2);
-        ctx.fillStyle = grd; ctx.fill();
-      } else if (node.tier === "vp") {
-        const grd = ctx.createRadialGradient(x, y, 0, x, y, r * 3.5);
-        grd.addColorStop(0, `rgba(${rgb},0.28)`);
-        grd.addColorStop(1, "rgba(0,0,0,0)");
-        ctx.beginPath(); ctx.arc(x, y, r * 3.5, 0, Math.PI * 2);
-        ctx.fillStyle = grd; ctx.fill();
+      // Aura/glow: always in focus mode; only on hover in members overview
+      if (!isMembersOv || isHov) {
+        if (node.tier === "ci" || isHov) {
+          const phase = (node.x ?? 0) * 0.20 + (node.y ?? 0) * 0.13;
+          const pulse = 0.38 + 0.28 * Math.sin(t * 1.9 + phase);
+          const auraR = isHov ? r * 6.5 : r * 5;
+          const grd   = ctx.createRadialGradient(x, y, r * 0.5, x, y, auraR);
+          grd.addColorStop(0, `rgba(${rgb},${(pulse * (isHov ? 0.68 : 0.50)).toFixed(3)})`);
+          grd.addColorStop(0.55, `rgba(${rgb},${(pulse * 0.10).toFixed(3)})`);
+          grd.addColorStop(1,   "rgba(0,0,0,0)");
+          ctx.beginPath(); ctx.arc(x, y, auraR, 0, Math.PI * 2);
+          ctx.fillStyle = grd; ctx.fill();
+        } else if (node.tier === "vp") {
+          const grd = ctx.createRadialGradient(x, y, 0, x, y, r * 3.5);
+          grd.addColorStop(0, `rgba(${rgb},0.28)`);
+          grd.addColorStop(1, "rgba(0,0,0,0)");
+          ctx.beginPath(); ctx.arc(x, y, r * 3.5, 0, Math.PI * 2);
+          ctx.fillStyle = grd; ctx.fill();
+        }
       }
 
       ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fillStyle = col; ctx.fill();
+      // In members overview (non-hover) use slightly muted fill so tiers still read
+      ctx.fillStyle = (isMembersOv && !isHov)
+        ? (node.tier === "ci" ? `rgba(${C.ciRgb},0.82)`
+           : node.tier === "vp" ? `rgba(${C.vpRgb},0.72)`
+           : `rgba(${C.ciRgb},0.38)`)
+        : col;
+      ctx.fill();
 
-      if (isHov || node.tier === "ci") {
+      if (isHov) {
+        ctx.beginPath(); ctx.arc(x, y, r + (isMembersOv ? 1.2 : 1.8), 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(${rgb},0.88)`;
+        ctx.lineWidth   = 0.9; ctx.stroke();
+      } else if (!isMembersOv && node.tier === "ci") {
         ctx.beginPath(); ctx.arc(x, y, r + 1.8, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(${rgb},${isHov ? 0.88 : 0.42})`;
+        ctx.strokeStyle = `rgba(${rgb},0.42)`;
         ctx.lineWidth   = 0.9; ctx.stroke();
       }
 
-      const fs  = Math.max(10.5 / globalScale, 1.4);
-      const lbl = node.name.length > 24 ? node.name.slice(0, 22) + "…" : node.name;
-      const tcol = node.tier === "ci" ? `rgba(${C.ciRgb},0.96)` :
-                   node.tier === "vp" ? `rgba(${C.vpRgb},0.96)` :
-                   "rgba(255,255,255,0.83)";
-      drawLabelPill(
-        ctx, lbl, x, y + r + 2.5 / globalScale, fs,
-        isHov ? 0.92 : 0.80,
-        tcol, node.tier === "ci",
-      );
+      // Labels: show in focus mode always; members overview only on hover
+      if (!isMembersOv || isHov) {
+        const fs  = Math.max(10.5 / globalScale, 1.4);
+        const lbl = node.name.length > 24 ? node.name.slice(0, 22) + "…" : node.name;
+        const tcol = node.tier === "ci" ? `rgba(${C.ciRgb},0.96)` :
+                     node.tier === "vp" ? `rgba(${C.vpRgb},0.96)` :
+                     "rgba(255,255,255,0.83)";
+        drawLabelPill(
+          ctx, lbl, x, y + r + 2.5 / globalScale, fs,
+          isHov ? 0.92 : 0.80,
+          tcol, node.tier === "ci",
+        );
+      }
     },
     [catCounts],
   );
@@ -704,11 +778,17 @@ export function MemberGraph({ members }: MemberGraphProps) {
         const count = catCounts.get(node.name) ?? 0;
         return activeCategory ? 220 : Math.max(12, 5 + count * 0.35);
       }
+      // Members overview: tiny values so 500+ dots pack tightly
+      if (!activeCategory && globeMode === "members") {
+        if (node.tier === "ci") return 2;
+        if (node.tier === "vp") return 1.5;
+        return 1;
+      }
       if (node.tier === "ci") return 16;
       if (node.tier === "vp") return 10;
       return 6;
     },
-    [catCounts, activeCategory],
+    [catCounts, activeCategory, globeMode],
   );
 
   // ── Interactions ───────────────────────────────────────────────────────
@@ -1098,7 +1178,13 @@ export function MemberGraph({ members }: MemberGraphProps) {
             backgroundColor="rgba(0,0,0,0)"
             width={dimensions.width}
             height={dimensions.height}
-            warmupTicks={activeCategory ? (isMobile ? 30 : 70) : (isMobile ? 60 : 140)}
+            warmupTicks={
+              activeCategory
+                ? (isMobile ? 30 : 70)
+                : globeMode === "members"
+                  ? (isMobile ? 120 : 260)
+                  : (isMobile ? 60 : 140)
+            }
             cooldownTicks={160}
             cooldownTime={7000}
             d3AlphaDecay={0.038}
@@ -1112,22 +1198,68 @@ export function MemberGraph({ members }: MemberGraphProps) {
           />
         </div>
 
-        {/* Globe mode caption */}
-        <div className="absolute top-5 left-0 right-0 flex justify-center pointer-events-none z-10">
-          <div style={{
-            background:           "rgba(12,27,51,0.62)",
-            backdropFilter:       "blur(10px)",
-            WebkitBackdropFilter: "blur(10px)",
-            border:               "1px solid rgba(131,188,169,0.14)",
-            borderRadius:         20, padding: "5px 16px",
-          }}>
+        {/* Globe mode toggle + caption */}
+        <div className="absolute top-5 left-0 right-0 flex flex-col items-center gap-2 z-10">
+          {/* Toggle pill — overview only, needs pointer events */}
+          {!activeCategory && (
+            <div style={{
+              display:              "flex",
+              background:           "rgba(12,27,51,0.72)",
+              backdropFilter:       "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+              border:               "1px solid rgba(131,188,169,0.18)",
+              borderRadius:         20,
+              padding:              "3px",
+              gap:                  2,
+            }}>
+              {(["categories", "members"] as const).map((mode) => {
+                const active = globeMode === mode;
+                return (
+                  <button
+                    key={mode}
+                    onClick={() => setGlobeMode(mode)}
+                    style={{
+                      padding:       "4px 14px",
+                      borderRadius:  16,
+                      border:        "none",
+                      cursor:        "pointer",
+                      fontFamily:    "inherit",
+                      fontSize:      10,
+                      fontWeight:    700,
+                      letterSpacing: "0.10em",
+                      textTransform: "uppercase" as const,
+                      touchAction:   "manipulation",
+                      transition:    "background 200ms ease, color 200ms ease",
+                      background:    active ? "rgba(131,188,169,0.22)" : "transparent",
+                      color:         active ? "rgba(131,188,169,0.95)" : "rgba(131,188,169,0.38)",
+                    }}
+                  >
+                    {mode === "categories" ? "Industries" : "Members"}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+          {/* Caption */}
+          <div
+            className="pointer-events-none"
+            style={{
+              background:           "rgba(12,27,51,0.62)",
+              backdropFilter:       "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+              border:               "1px solid rgba(131,188,169,0.14)",
+              borderRadius:         20, padding: "5px 16px",
+            }}
+          >
             <p style={{
               margin: 0, fontSize: 10, letterSpacing: "0.13em", fontWeight: 700,
               color: "rgba(131,188,169,0.72)", textTransform: "uppercase", whiteSpace: "nowrap",
             }}>
               {activeCategory
                 ? `${activeCategory} · ${focusMembers.length} members · tap to open`
-                : `Top ${Math.min(TOP_N, sortedCategories.length)} industries · tap to explore`}
+                : globeMode === "members"
+                  ? `${members.length} members · tap to open`
+                  : `Top ${Math.min(TOP_N, sortedCategories.length)} industries · tap to explore`}
             </p>
           </div>
         </div>

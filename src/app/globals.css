@@ -568,8 +568,11 @@ body {
 .fade-in-down.is-visible,
 .fade-in-left.is-visible,
 .fade-in-right.is-visible {
-  opacity: 1;
+  opacity: 1 !important;
   transform: translateY(0) translateX(0);
+  /* Release the compositor layer once animation is done —
+     keeping will-change active causes GPU translucency at rest */
+  will-change: auto;
 }
 
 /* Reduce motion for accessibility */
@@ -1554,6 +1557,16 @@ body {
 .ftr-utility:hover,
 .ftr-utility:focus-visible {
   color: var(--text-primary);
+}
+
+/* ≥44px touch targets on mobile for ftr-link and ftr-utility */
+@media (max-width: 639px) {
+  .ftr-link,
+  .ftr-utility {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
 }
 
 /* Promoted Join CTA pill */

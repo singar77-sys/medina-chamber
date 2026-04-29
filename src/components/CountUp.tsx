@@ -14,8 +14,9 @@ interface CountUpProps {
 }
 
 /**
- * Animated number counter that triggers when scrolled into view.
- * Uses requestAnimationFrame with ease-out for a natural feel.
+ * Animated number counter that triggers once when scrolled into view.
+ * Uses a ref (not state) for the fired flag so the IntersectionObserver
+ * is created exactly once — no re-observation on state changes.
  */
 export function CountUp({
   end,
@@ -26,6 +27,7 @@ export function CountUp({
 }: CountUpProps) {
   const [count, setCount] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
+  const hasAnimated = useRef(false); // ref flag — never causes effect re-run
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -34,7 +36,8 @@ export function CountUp({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !hasStarted) {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true;
           setHasStarted(true);
           observer.unobserve(el);
         }
@@ -44,7 +47,7 @@ export function CountUp({
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [hasStarted]);
+  }, []); // empty — observer created once, fires once
 
   useEffect(() => {
     if (!hasStarted) return;

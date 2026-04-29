@@ -14,7 +14,10 @@ interface FadeInProps {
 /**
  * Scroll-triggered fade-in with directional movement.
  * Uses IntersectionObserver — zero JS animation frames.
- * The element starts invisible and translates in when it enters the viewport.
+ *
+ * rootMargin "+80px" on the bottom pre-fires the animation 80px before
+ * the element enters the viewport, so it is fully opaque by the time
+ * the user's eye reaches it. Never translucent at rest.
  */
 export function FadeIn({ children, className = "", delay = 0, from = "up" }: FadeInProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -34,12 +37,14 @@ export function FadeIn({ children, className = "", delay = 0, from = "up" }: Fad
           observer.unobserve(el);
         }
       },
-      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+      // Positive bottom margin pre-triggers 80px before the element
+      // enters the viewport — animation completes before the eye lands.
+      { threshold: 0.1, rootMargin: "0px 0px 80px 0px" }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [delay]);
+  }, []); // empty — observer created once, never recreated
 
   const directionClass = {
     up: "fade-in-up",

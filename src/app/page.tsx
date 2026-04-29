@@ -119,8 +119,11 @@ export default function HomePage() {
           priority
           quality={85}
         />
-        {/* Gradient overlay — oxford wash in both modes */}
+        {/* Gradient overlay — bottom-up oxford wash */}
         <div className="absolute inset-0 bg-gradient-to-t from-oxford via-oxford/60 to-oxford/15" />
+        {/* Top-down cap — darkens upper third so headline lands on dark sky
+            not lit cupola. from-oxford/50 fades to nothing at 40% height. */}
+        <div className="absolute inset-0 bg-gradient-to-b from-oxford/50 via-oxford/10 to-transparent" />
 
         {/* Content — vertical rhythm: pt-f144 (144px) / pb-f89 (89px) */}
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 pb-f89 lg:pb-f89 pt-f144 w-full">

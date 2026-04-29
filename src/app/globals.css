@@ -1113,7 +1113,7 @@ body {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 10vh 1rem 1rem;
+  padding: 10dvh 1rem 1rem;
   animation: cmdk-backdrop-in 180ms ease-out;
 }
 
@@ -1125,7 +1125,7 @@ body {
 .cmdk-panel {
   width: 100%;
   max-width: 640px;
-  max-height: 70vh;
+  max-height: min(70dvh, calc(100dvh - 100px));
   background: var(--bg-primary);
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-lg);
@@ -2677,33 +2677,41 @@ body {
 .tilt-card {
   position: relative;
   border-radius: var(--radius-lg);
-  transform-style: preserve-3d;
-  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-  transform:
-    perspective(1000px)
-    rotateX(var(--tilt-rx))
-    rotateY(var(--tilt-ry));
-  will-change: transform;
 }
 
-/* Cursor-following spotlight — fades in on hover, tracks mousemove. */
-.tilt-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(
-    500px circle at var(--tilt-cx) var(--tilt-cy),
-    rgba(131, 188, 169, 0.18),
-    transparent 45%
-  );
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
-  z-index: 3;
-}
-.tilt-card:hover::after {
-  opacity: 1;
+/* 3D tilt + spotlight — pointer-capable devices only (real cursor present).
+   On touch-only iPads/iPhones the transform is entirely skipped so iOS
+   sticky-hover can't leave the card frozen mid-tilt. */
+@media (hover: hover) {
+  .tilt-card {
+    transform-style: preserve-3d;
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transform:
+      perspective(1000px)
+      rotateX(var(--tilt-rx))
+      rotateY(var(--tilt-ry));
+    will-change: transform;
+  }
+
+  /* Cursor-following spotlight — fades in on hover, tracks mousemove. */
+  .tilt-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      500px circle at var(--tilt-cx) var(--tilt-cy),
+      rgba(131, 188, 169, 0.18),
+      transparent 45%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .tilt-card:hover::after {
+    opacity: 1;
+  }
 }
 
 /* Reduced motion — keep the glow, drop the drama. */
@@ -2870,6 +2878,10 @@ body {
   display: grid; place-items: center;
   cursor: pointer; transition: all 0.2s ease;
 }
+/* Expand tap target on touch devices to meet 44×44 minimum. */
+@media (pointer: coarse) {
+  .cb-portal .hud-btn { width: 44px; height: 44px; }
+}
 .cb-portal .hud-btn:hover { color: var(--paper); border-color: var(--edge-strong); }
 .cb-portal .hud-btn--close:hover {
   background: rgba(255, 64, 0, 0.12);
@@ -2991,6 +3003,9 @@ body {
   position: absolute; bottom: 12px;
   left: 50%; transform: translateX(-50%);
   text-align: center; z-index: 5; white-space: nowrap;
+}
+@media (max-width: 768px) {
+  .cb-portal .stage-caption { white-space: normal; max-width: min(280px, 90vw); }
 }
 .cb-portal .sc-eyebrow { color: var(--cambridge); margin-bottom: 4px; opacity: 0.85; }
 .cb-portal .sc-title {

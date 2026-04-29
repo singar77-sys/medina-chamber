@@ -71,7 +71,7 @@ export default function MedinaMeansBusinessPage() {
       />
 
       {/* ─── Hero ─────────────────────────────────────────── */}
-      <section className="relative min-h-[80vh] flex items-end overflow-hidden">
+      <section className="relative min-h-[80dvh] flex items-end overflow-hidden">
         {/* Background photos — theme-aware */}
         <Image
           src="/images/photos/gazebo-daytime-flag.jpg"

@@ -113,6 +113,11 @@ export function ParticleField({ state = "idle", className = "", chill = false }:
     };
     window.addEventListener("pointermove", onMove);
 
+    // iOS fires orientationchange before the viewport has redrawn — a short
+    // delay ensures we read post-rotation dimensions for correct canvas sizing.
+    const onOrient = () => setTimeout(resize, 100);
+    window.addEventListener("orientationchange", onOrient);
+
     let t0 = performance.now();
 
     const render = () => {
@@ -243,6 +248,7 @@ export function ParticleField({ state = "idle", className = "", chill = false }:
       cancelAnimationFrame(rafRef.current);
       ro.disconnect();
       window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("orientationchange", onOrient);
     };
   }, [chill]); // chill can toggle at runtime; stateRef handles live scene state
 

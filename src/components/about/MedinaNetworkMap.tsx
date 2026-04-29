@@ -252,6 +252,11 @@ export function MedinaNetworkMap() {
                 prefetchCommunity(c.key);
               }}
               onMouseLeave={() => setHoveredKey((k) => (k === c.key ? null : k))}
+              onTouchStart={() => {
+                setHoveredKey(c.key);
+                prefetchCommunity(c.key);
+              }}
+              onTouchEnd={() => setHoveredKey((k) => (k === c.key ? null : k))}
               onFocus={() => {
                 setHoveredKey(c.key);
                 prefetchCommunity(c.key);
@@ -265,7 +270,7 @@ export function MedinaNetworkMap() {
                   cy={c.y}
                   r={7}
                   fill="none"
-                  stroke={isActive ? "#FF4000" : "rgba(131, 188, 169, 0.75)"}
+                  stroke={isActive ? "#FF4000" : "rgba(131, 188, 169, 0.9)"}
                   strokeWidth={1.4}
                 />
                 <circle

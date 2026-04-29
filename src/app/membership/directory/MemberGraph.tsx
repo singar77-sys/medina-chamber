@@ -145,7 +145,7 @@ export function MemberGraph({ members }: MemberGraphProps) {
   }, []);
 
   // Mobile = container narrower than 640px (all iPhones, not iPads)
-  const isMobile = dimensions.width < 640;
+  const isMobile = dimensions.width < 1024;
 
   // ── Derived data ───────────────────────────────────────────────────────
   const allGraphData = useMemo(() => buildGraphData(members), [members]);

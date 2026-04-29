@@ -99,7 +99,7 @@ export default function HomePage() {
       />
 
       {/* ─── Hero ─────────────────────────────────────────── */}
-      <section className="site-hero relative min-h-[85vh] flex items-end overflow-hidden">
+      <section className="site-hero relative min-h-[85dvh] flex items-end overflow-hidden">
         {/* Background photos — theme-aware */}
         <Image
           src="/images/photos/gazebo-daytime-flag.jpg"

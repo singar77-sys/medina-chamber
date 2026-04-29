@@ -47,7 +47,7 @@ export function BirthdayConfetti() {
   return (
     <div aria-hidden="true">
       {/* Falling emoji particles */}
-      <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 9990, overflow: "hidden" }}>
+      <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 9000, overflow: "hidden" }}>
         {Array.from({ length: COUNT }, (_, i) => ({
           emoji:    EMOJIS[i % EMOJIS.length],
           left:     `${((i * 31.7 + Math.sin(i * 2.1) * 12) % 96 + 2).toFixed(1)}%`,
@@ -75,7 +75,7 @@ export function BirthdayConfetti() {
         bottom:         28,
         left:           "50%",
         transform:      "translateX(-50%)",
-        zIndex:         9991,
+        zIndex:         9001,
         background:     "rgba(12,27,51,0.92)",
         border:         "1px solid rgba(131,188,169,0.45)",
         borderRadius:   12,

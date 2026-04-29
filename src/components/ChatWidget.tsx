@@ -486,7 +486,7 @@ export function ChatWidget() {
       {open && (
         <div className="
           fixed bottom-24 right-4 sm:right-6 z-50
-          w-[calc(100vw-2rem)] sm:w-[420px]
+          w-[min(420px,calc(100dvw-2rem))]
           flex flex-col
           bg-bg-primary border border-border-secondary
           rounded-[var(--radius-lg)]

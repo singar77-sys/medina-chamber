@@ -80,21 +80,21 @@ export function EventGallery({ photos, title = "Photos" }: Props) {
           {/* Close */}
           <button
             onClick={() => setLightbox(null)}
-            className="absolute top-4 right-4 text-white/70 hover:text-white text-2xl leading-none w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors"
+            className="absolute top-4 right-4 text-white/70 hover:text-white text-2xl leading-none w-11 h-11 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors"
           >
             ×
           </button>
 
           {/* Image */}
           <div
-            className="max-w-5xl max-h-[90vh] px-16"
+            className="max-w-5xl max-h-[90dvh] px-4 sm:px-16"
             onClick={(e) => e.stopPropagation()}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={photos[lightbox].url}
               alt={photos[lightbox].alt ?? photos[lightbox].caption ?? photos[lightbox].filename}
-              className="max-w-full max-h-[80vh] object-contain rounded-lg"
+              className="max-w-full max-h-[80dvh] object-contain rounded-lg"
             />
             {photos[lightbox].caption && (
               <p className="text-white/70 text-sm text-center mt-3">

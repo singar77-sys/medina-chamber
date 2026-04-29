@@ -102,11 +102,23 @@ export function RentalSpaceCards() {
       if (e.key === "Escape") closeRoom();
     };
     document.addEventListener("keydown", onKey);
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    // iOS Safari ignores overflow:hidden on <body>. position:fixed is the
+    // reliable cross-platform scroll lock; restore scroll position on close.
+    const y = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${y}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.overflowY = "scroll";
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prevOverflow;
+      const top = document.body.style.top;
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.overflowY = "";
+      if (top) window.scrollTo(0, -parseInt(top, 10));
     };
     // closeRoom intentionally excluded — it only reads refs + setState,
     // reattaching on every render isn't useful and would churn listeners.

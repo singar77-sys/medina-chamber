@@ -120,6 +120,7 @@ export function ApplicationForm() {
           name="website_confirm"
           tabIndex={-1}
           autoComplete="off"
+          inputMode="none"
           value={websiteConfirm}
           onChange={(e) => setWebsiteConfirm(e.target.value)}
         />

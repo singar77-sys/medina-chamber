@@ -391,14 +391,33 @@ export function CommandPalette() {
     if (open) {
       // Delay so focus lands after the modal paints
       setTimeout(() => inputRef.current?.focus(), 20);
-      document.body.style.overflow = "hidden";
+      // iOS Safari ignores overflow:hidden on <body>. position:fixed is the
+      // reliable cross-platform scroll lock; restore scroll position on close.
+      const y = window.scrollY;
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${y}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      document.body.style.overflowY = "scroll";
     } else {
+      const top = document.body.style.top;
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.overflowY = "";
+      if (top) window.scrollTo(0, -parseInt(top, 10));
       setQuery("");
       setActiveIndex(0);
-      document.body.style.overflow = "";
     }
     return () => {
-      document.body.style.overflow = "";
+      const top = document.body.style.top;
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.overflowY = "";
+      if (top) window.scrollTo(0, -parseInt(top, 10));
     };
   }, [open]);
 

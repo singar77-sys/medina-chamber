@@ -1,6 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
+
+/**
+ * Advocacy — φ spatial system applied throughout.
+ *
+ * HERO    pt-f144 pb-f89
+ * FEATURE py-f89 lg:py-f144 — "Your Voice" 2-col + levels cards (open white)
+ * BAND    py-f55 lg:py-f89  — "How We Advocate" 4 activities (bg-secondary)
+ * CLOSER  py-f55 lg:py-f89  — Candidate interview program card
+ */
 
 export const metadata: Metadata = {
   title: "Advocacy",
@@ -76,120 +86,151 @@ export default function AdvocacyPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
-      {/* Hero */}
-      <section className="max-w-3xl">
-        <p className="text-overline text-cambridge mb-4">About</p>
-        <h1 className="text-display">
-          Business
-          <br />
-          <span className="text-accent">Advocacy</span>
-        </h1>
-        <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-          The chamber promotes pro-business, quality government at the local,
-          state, and federal level — mobilizing support for the issues that
-          shape our community and our economy.
-        </p>
-      </section>
 
-      {/* What we do */}
-      <section className="mt-20 grid lg:grid-cols-2 gap-12">
-        <div>
-          <h2 className="text-h2">Your Voice in Government</h2>
-          <p className="text-body text-text-secondary mt-4 leading-relaxed">
-            Businesses don&apos;t have time to track every policy issue — we do
-            it for them. The Greater Medina Chamber of Commerce stays engaged
-            at every level of government so our members can stay focused on
-            running their businesses.
-          </p>
-          <p className="text-body text-text-secondary mt-4 leading-relaxed">
-            Whether it&apos;s a local zoning decision, a state regulatory
-            change, or a federal bill working through Congress, the chamber is
-            watching — and when it matters, we act.
+      {/* ─── HERO ─────────────────────────────────────────────── */}
+      {/* pt-f144 pb-f89 (144/89 = φ) — HERO tier */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
+        <div className="max-w-3xl">
+          {/* mb-f8 (8px) — overline→heading */}
+          <p className="text-overline text-cambridge mb-f8">About</p>
+          <h1 className="text-display">
+            Business
+            <br />
+            <span className="text-accent">Advocacy</span>
+          </h1>
+          {/* mt-f13 (13px) — heading→body */}
+          <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
+            The chamber promotes pro-business, quality government at the local,
+            state, and federal level — mobilizing support for the issues that
+            shape our community and our economy.
           </p>
         </div>
-
-        <div className="space-y-4">
-          {levels.map((item) => (
-            <div
-              key={item.level}
-              className="p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
-            >
-              <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-2">
-                {item.level} Government
-              </p>
-              <p className="text-body-sm text-text-secondary leading-relaxed">
-                {item.description}
-              </p>
-            </div>
-          ))}
-        </div>
       </section>
 
-      {/* How we do it */}
-      <section className="mt-20">
-        <h2 className="text-overline text-cambridge mb-8">How We Advocate</h2>
-        <div className="grid md:grid-cols-2 gap-6">
-          {activities.map((a) => (
-            <div
-              key={a.title}
-              className="p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
-            >
-              <h3 className="text-h4 mb-3">{a.title}</h3>
-              <p className="text-body-sm text-text-secondary leading-relaxed">
-                {a.description}
+      {/* ─── FEATURE — Your Voice in Government ──────────────── */}
+      {/* py-f89/f144 — FEATURE tier, open white, 2-col */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+        <FadeIn>
+          {/* gap-f34/f55 — 2-col layout gap */}
+          <div className="grid lg:grid-cols-2 gap-f34 lg:gap-f55">
+            <div>
+              <h2 className="text-h2">Your Voice in Government</h2>
+              {/* mt-f13 — heading→body */}
+              <p className="text-body text-text-secondary mt-f13 leading-relaxed">
+                Businesses don&apos;t have time to track every policy issue — we
+                do it for them. The Greater Medina Chamber of Commerce stays
+                engaged at every level of government so our members can stay
+                focused on running their businesses.
+              </p>
+              {/* mt-f21 — paragraph gap */}
+              <p className="text-body text-text-secondary mt-f21 leading-relaxed">
+                Whether it&apos;s a local zoning decision, a state regulatory
+                change, or a federal bill working through Congress, the chamber
+                is watching — and when it matters, we act.
               </p>
             </div>
-          ))}
-        </div>
-      </section>
 
-      {/* Candidate interviews highlight */}
-      <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-        <div className="grid lg:grid-cols-2 gap-10 items-center">
-          <div>
-            <p className="text-overline text-cambridge mb-3">Election Season</p>
-            <h2 className="text-h2">Candidate Interview Program</h2>
-            <p className="text-body-lg text-text-secondary mt-4">
-              Every election cycle, the chamber conducts structured candidate
-              interviews and shares the results with the business community.
-              We&apos;ve hosted documented interviews in 2019, 2020, 2021, 2023,
-              2024, and 2025 — giving members consistent, objective information
-              when it matters most.
-            </p>
+            {/* space-y-f21 — between level cards */}
+            <div className="space-y-f21">
+              {levels.map((item) => (
+                <div
+                  key={item.level}
+                  className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
+                >
+                  {/* mb-f8 — label→body */}
+                  <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-f8">
+                    {item.level} Government
+                  </p>
+                  <p className="text-body-sm text-text-secondary leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="space-y-4">
-            <p className="text-body text-text-secondary">
-              Interested in the chamber&apos;s positions on business-related
-              legislation or upcoming candidate interviews? Contact us to get
-              involved.
-            </p>
+        </FadeIn>
+      </section>
+
+      {/* ─── BAND — How We Advocate ───────────────────────────── */}
+      {/* py-f55/f89 — BAND tier, bg-secondary + border-y */}
+      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <FadeIn>
+            {/* mb-f21 — label→grid gap */}
+            <h2 className="text-overline text-cambridge mb-f21">How We Advocate</h2>
+            {/* gap-f21 — activity card grid gap */}
+            <div className="grid md:grid-cols-2 gap-f21">
+              {activities.map((a) => (
+                <div
+                  key={a.title}
+                  className="p-f21 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]"
+                >
+                  {/* mb-f8 — title→body */}
+                  <h3 className="text-h4 mb-f8">{a.title}</h3>
+                  <p className="text-body-sm text-text-secondary leading-relaxed">
+                    {a.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ─── CLOSER — Candidate interview program ─────────────── */}
+      {/* py-f55/f89 — CLOSER taper */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+        <FadeIn>
+          {/* p-f34/f55 card padding, gap-f34 2-col gap */}
+          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+            <div className="grid lg:grid-cols-2 gap-f34 items-center">
+              <div>
+                {/* mb-f8 — overline→heading */}
+                <p className="text-overline text-cambridge mb-f8">Election Season</p>
+                <h2 className="text-h2">Candidate Interview Program</h2>
+                {/* mt-f13 — heading→body */}
+                <p className="text-body-lg text-text-secondary mt-f13">
+                  Every election cycle, the chamber conducts structured candidate
+                  interviews and shares the results with the business community.
+                  We&apos;ve hosted documented interviews in 2019, 2020, 2021,
+                  2023, 2024, and 2025 — giving members consistent, objective
+                  information when it matters most.
+                </p>
+              </div>
+              {/* space-y-f21 — body→CTA stack */}
+              <div className="space-y-f21">
+                <p className="text-body text-text-secondary">
+                  Interested in the chamber&apos;s positions on business-related
+                  legislation or upcoming candidate interviews? Contact us to
+                  get involved.
+                </p>
+                <Link
+                  href="/about/contact"
+                  className="
+                    inline-flex items-center px-f21 py-f13
+                    bg-accent hover:bg-accent-hover
+                    text-white font-bold text-body-sm
+                    rounded-[var(--radius-md)]
+                    transition-colors
+                  "
+                >
+                  Contact the Chamber →
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* mt-f34 — card→back-link gap */}
+          <div className="mt-f34">
             <Link
-              href="/about/contact"
-              className="
-                inline-flex items-center px-6 py-3
-                bg-accent hover:bg-accent-hover
-                text-white font-bold text-body-sm
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
+              href="/about"
+              className="text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
             >
-              Contact the Chamber →
+              ← Back to About
             </Link>
           </div>
-        </div>
+        </FadeIn>
       </section>
-
-      {/* Back link */}
-      <div className="mt-12">
-        <Link
-          href="/about"
-          className="text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
-        >
-          ← Back to About
-        </Link>
-      </div>
-    </div>
     </>
   );
 }

@@ -49,6 +49,30 @@ function forceRadialBoundary(radius: number, strength = 0.12) {
   return force;
 }
 
+// ── Ring force — attracts nodes toward a target orbit radius ─────────────
+// Nodes inside the ring get pushed out; nodes outside get pulled in.
+// Combined with forceRadialBoundary (ceiling) + charge (spread), this
+// packs all category nodes into a tight, visible orbit band.
+function forceRing(targetR: number, strength = 0.10) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let nodes: any[];
+  function force(alpha: number) {
+    nodes.forEach((n) => {
+      const x = n.x ?? 0;
+      const y = n.y ?? 0;
+      const d = Math.sqrt(x * x + y * y);
+      // Nudge nodes at origin outward so they don't get stuck at (0,0)
+      if (d < 0.5) { n.vx = (n.vx ?? 0) + (Math.random() - 0.5) * 2; return; }
+      const delta = (d - targetR) / d;
+      n.vx = (n.vx ?? 0) - x * delta * strength * alpha;
+      n.vy = (n.vy ?? 0) - y * delta * strength * alpha;
+    });
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  force.initialize = (n: any[]) => { nodes = n; };
+  return force;
+}
+
 // ── Label pill — rounded chip drawn behind canvas text ────────────────────
 function drawLabelPill(
   ctx: CanvasRenderingContext2D,
@@ -237,10 +261,15 @@ export function MemberGraph({ members }: MemberGraphProps) {
       fg.d3Force("charge")?.strength((n: GraphNode) => n.type === "category" ? 0 : -140);
       fg.d3Force("link")?.distance(85).strength(0.55);
       fg.d3Force("boundary", forceRadialBoundary(boundaryRRef.current, 0.18));
+      fg.d3Force("ring", null); // ring force not needed in focus mode
     } else {
-      fg.d3Force("charge")?.strength(-320);
+      // Overview: ring force pulls all category nodes toward the outer orbit
+      // band so all 35 industries stay visible in a condensed ring, leaving
+      // the centre clear for the Chamber pupil.
+      fg.d3Force("charge")?.strength(-280);
       fg.d3Force("link")?.strength(0);
-      fg.d3Force("boundary", forceRadialBoundary(boundaryRRef.current, 0.10));
+      fg.d3Force("boundary", forceRadialBoundary(boundaryRRef.current, 0.12));
+      fg.d3Force("ring",     forceRing(boundaryRRef.current * 0.82, 0.10));
     }
 
     engineStoppedRef.current = false;
@@ -301,6 +330,22 @@ export function MemberGraph({ members }: MemberGraphProps) {
     vig.addColorStop(1,   "rgba(0,0,0,0.48)");
     ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2);
     ctx.fillStyle = vig; ctx.fill();
+
+    // Spoke lines — hub-and-spoke visual, drawn under nodes (overview only)
+    if (!activeCatRef.current && fgRef.current) {
+      const nodes = (fgRef.current.graphData()?.nodes ?? []) as GraphNode[];
+      ctx.save();
+      ctx.lineWidth = 0.5;
+      nodes.forEach((n) => {
+        if (n.x === undefined || n.y === undefined) return;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(n.x, n.y);
+        ctx.strokeStyle = "rgba(131,188,169,0.07)";
+        ctx.stroke();
+      });
+      ctx.restore();
+    }
   }, []);
 
   // ── Post-frame: paint page-bg over corners → circle illusion ──────────
@@ -323,6 +368,57 @@ export function MemberGraph({ members }: MemberGraphProps) {
     ctx.strokeStyle = "rgba(131,188,169,0.22)";
     ctx.lineWidth   = 1.5;
     ctx.stroke();
+
+    // ── Chamber pupil — only in overview mode (focus mode has a category hub) ──
+    if (!activeCatRef.current) {
+      const cx = cw / 2;
+      const cy = ch / 2;
+      // Pupil is ~30% of the circle radius — big enough to read, small enough
+      // to leave generous ring space for all 35 industry nodes.
+      const pr = Math.max(32, Math.min(cr * 0.30, 110));
+
+      // Soft outer glow so the pupil floats rather than cuts hard
+      const outerGlow = ctx.createRadialGradient(cx, cy, pr * 0.8, cx, cy, pr * 1.55);
+      outerGlow.addColorStop(0, "rgba(131,188,169,0.13)");
+      outerGlow.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.beginPath(); ctx.arc(cx, cy, pr * 1.55, 0, Math.PI * 2);
+      ctx.fillStyle = outerGlow; ctx.fill();
+
+      // Pupil background — deep navy, slightly lighter at top for depth
+      const pupilBg = ctx.createRadialGradient(cx, cy - pr * 0.18, 0, cx, cy, pr);
+      pupilBg.addColorStop(0,   "rgba(22,45,82,0.97)");
+      pupilBg.addColorStop(0.65,"rgba(14,31,58,0.98)");
+      pupilBg.addColorStop(1,   "rgba(9,20,40,1.0)");
+      ctx.beginPath(); ctx.arc(cx, cy, pr, 0, Math.PI * 2);
+      ctx.fillStyle = pupilBg; ctx.fill();
+
+      // Inner border ring
+      ctx.beginPath(); ctx.arc(cx, cy, pr, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(131,188,169,0.30)";
+      ctx.lineWidth   = 0.9; ctx.stroke();
+
+      // Outer soft ring
+      ctx.beginPath(); ctx.arc(cx, cy, pr * 1.04, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(131,188,169,0.08)";
+      ctx.lineWidth   = 2.5; ctx.stroke();
+
+      // "MEDINA" — cambridge, bold
+      ctx.fillStyle    = "rgba(131,188,169,0.93)";
+      ctx.font         = `700 ${Math.round(pr * 0.26)}px system-ui,-apple-system,sans-serif`;
+      ctx.textAlign    = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("MEDINA", cx, cy - pr * 0.13);
+
+      // "CHAMBER" — muted white, light weight
+      ctx.fillStyle = "rgba(255,255,255,0.48)";
+      ctx.font      = `300 ${Math.round(pr * 0.165)}px system-ui,-apple-system,sans-serif`;
+      ctx.fillText("CHAMBER", cx, cy + pr * 0.13);
+
+      // "EST. 1938" — tiny cambridge caption
+      ctx.fillStyle = "rgba(131,188,169,0.36)";
+      ctx.font      = `${Math.round(pr * 0.105)}px system-ui,-apple-system,sans-serif`;
+      ctx.fillText("EST. 1938", cx, cy + pr * 0.36);
+    }
 
     ctx.restore();
   }, []);

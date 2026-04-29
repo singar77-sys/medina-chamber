@@ -142,6 +142,10 @@ export function MemberGraph({ members }: MemberGraphProps) {
   const engineStoppedRef = useRef(false);
   // Dynamic boundary radius — updated whenever container resizes
   const boundaryRRef     = useRef(230);
+  // Node positions captured from paintNode each frame.
+  // Reading this ref inside render callbacks is safe; calling
+  // fgRef.current.graphData() inside a frame callback is NOT safe in v1.29.1.
+  const nodePositionsRef = useRef<Map<string, { x: number; y: number }>>(new Map());
 
   // Stable refs for canvas callbacks (avoids stale closures)
   const activeCatRef  = useRef<string | null>(null);
@@ -272,6 +276,9 @@ export function MemberGraph({ members }: MemberGraphProps) {
       fg.d3Force("ring",     forceRing(boundaryRRef.current * 0.82, 0.10));
     }
 
+    // Clear stale positions so PRE/POST don't draw spokes from old coords
+    // during the transition frame before paintNode repopulates the map.
+    nodePositionsRef.current.clear();
     engineStoppedRef.current = false;
     fg.d3ReheatSimulation();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -340,6 +347,50 @@ export function MemberGraph({ members }: MemberGraphProps) {
 
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+    // ── Spokes: radial lines from Chamber pupil → each industry node ────────
+    // Drawn before the corner clip (clip masks ends that wander outside the
+    // circle) and before the pupil fill (pupil buries the spoke origins).
+    // Node positions come from nodePositionsRef — populated by paintNode each
+    // frame so we never call fgRef.current.graphData() inside a render callback.
+    if (!activeCatRef.current && nodePositionsRef.current.size > 0) {
+      const dpr = window.devicePixelRatio || 1;
+      const k   = zoomRef.current;
+      // Pupil radius in physical pixels (same formula as the pupil draw below)
+      const pr  = Math.max(32, Math.min(cr * 0.30, 110));
+      const ocx = cw / 2;
+      const ocy = ch / 2;
+
+      nodePositionsRef.current.forEach(({ x, y }) => {
+        // Convert graph coords → physical pixels (assuming pan ≈ 0, i.e. graph
+        // center sits at canvas centre — true after zoomToFit, drifts with pan)
+        const sx = ocx + x * k * dpr;
+        const sy = ocy + y * k * dpr;
+        const dx = sx - ocx;
+        const dy = sy - ocy;
+        const d  = Math.sqrt(dx * dx + dy * dy);
+        if (d < pr + 4) return;          // node inside / touching pupil — skip
+        const nx   = dx / d;
+        const ny   = dy / d;
+        // Start a few px beyond the pupil edge; end a few px before the node
+        const x0   = ocx + nx * (pr + 10);
+        const y0   = ocy + ny * (pr + 10);
+        const x1   = sx  - nx * 7;
+        const y1   = sy  - ny * 7;
+
+        const grad = ctx.createLinearGradient(x0, y0, x1, y1);
+        grad.addColorStop(0,    "rgba(131,188,169,0)");
+        grad.addColorStop(0.2,  "rgba(131,188,169,0.06)");
+        grad.addColorStop(1,    "rgba(131,188,169,0.14)");
+
+        ctx.beginPath();
+        ctx.moveTo(x0, y0);
+        ctx.lineTo(x1, y1);
+        ctx.strokeStyle = grad;
+        ctx.lineWidth   = Math.max(0.5, 0.55 * dpr);
+        ctx.stroke();
+      });
+    }
 
     ctx.beginPath();
     ctx.rect(0, 0, cw, ch);
@@ -412,6 +463,8 @@ export function MemberGraph({ members }: MemberGraphProps) {
     (node: GraphNode, ctx: CanvasRenderingContext2D, globalScale: number) => {
       const x   = node.x ?? 0;
       const y   = node.y ?? 0;
+      // Capture live position so POST can draw spokes without calling graphData()
+      nodePositionsRef.current.set(node.id, { x, y });
       const t   = (Date.now() - startTimeRef.current) / 1000;
       const isGlobeHov  = node.id === hoveredIdRef.current;
       const isSideHov   = node.id === sidebarHovRef.current;

@@ -1,26 +1,27 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { members, getAllCategories, totalCount } from "@/data/members";
-import { DirectoryClient } from "./DirectoryClient";
+import { MemberGraph } from "./MemberGraph";
 import { FadeIn } from "@/components/FadeIn";
 
 /**
  * Member Directory — φ spatial system applied throughout.
  *
  * HERO    pt-f144 pb-f89
- * FEATURE py-f89 lg:py-f144 — DirectoryClient interactive search (open white)
- * CLOSER  py-f55 lg:py-f89  — Join CTA card
+ * GRAPH   full-width, 85vh — neural network primary experience
+ * SEO     sr-only — server-rendered member list for crawlers
+ * CLOSER  py-f55 lg:py-f89  — join CTA card
  */
 
 export const metadata: Metadata = {
   title: "Member Directory",
-  description:
-    `Find local businesses in Medina County. Browse all ${totalCount}+ Greater Medina Chamber of Commerce member businesses by name, category, or keyword.`,
+  description: `Find local businesses in Medina County. Browse all ${totalCount}+ Greater Medina Chamber of Commerce member businesses by name, category, or keyword.`,
   openGraph: {
     title: "Member Directory — Greater Medina Chamber of Commerce",
     description:
       "Find local businesses in Medina County. Search all Chamber member businesses by name, category, or keyword.",
   },
+  alternates: { canonical: "/membership/directory" },
 };
 
 export default function DirectoryPage() {
@@ -29,7 +30,6 @@ export default function DirectoryPage() {
   return (
     <>
       {/* ─── HERO ─────────────────────────────────────────────── */}
-      {/* pt-f144 pb-f89 (144/89 = φ) — HERO tier */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
         <div className="max-w-3xl">
           {/* mb-f8 — overline→heading */}
@@ -41,8 +41,8 @@ export default function DirectoryPage() {
           </h1>
           {/* mt-f13 — heading→body */}
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
-            All {totalCount}+ Greater Medina Chamber member businesses — searchable
-            and filtered, right here. Click any member to see their full profile.
+            {totalCount}+ chamber member businesses — explore by industry, city,
+            or name. Click any node to open their profile.
           </p>
           {/* mt-f21 — body→CTA */}
           <div className="mt-f21">
@@ -62,11 +62,28 @@ export default function DirectoryPage() {
         </div>
       </section>
 
-      {/* ─── FEATURE — Interactive Directory ──────────────────── */}
-      {/* py-f89/f144 — FEATURE tier, open white */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
-        <DirectoryClient members={members} categories={categories} />
+      {/* ─── GRAPH — Neural network directory ─────────────────── */}
+      {/* Full-width, no max-w constraint — graph fills the viewport */}
+      <section className="w-full">
+        <MemberGraph members={members} categories={categories} />
       </section>
+
+      {/* ─── SEO — Server-rendered member list (hidden from users) ─
+          sr-only keeps HTML in the DOM so crawlers index it,
+          while visually hidden from all users.              ────── */}
+      <div className="sr-only" aria-hidden="true">
+        <h2>All Chamber Member Businesses</h2>
+        {members.map((m) => (
+          <div key={m.chamberSlug}>
+            <a href={`/membership/directory/${m.chamberSlug}`}>{m.name}</a>
+            {m.categories.length > 0 && (
+              <span> — {m.categories.join(", ")}</span>
+            )}
+            {m.address && <span> — {m.address}</span>}
+            {m.description && <span> — {m.description}</span>}
+          </div>
+        ))}
+      </div>
 
       {/* ─── CLOSER — Join CTA ────────────────────────────────── */}
       {/* py-f55/f89 — CLOSER taper */}

@@ -95,7 +95,7 @@ export default function SavingsPage() {
     <>
       {/* ─── HERO ─────────────────────────────────────────────── */}
       {/* pt-f144 pb-f89 (144/89 = φ) — HERO tier */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f55">
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
         <div className="max-w-3xl">
           {/* mb-f8 (8px) — overline→heading */}
           <p className="text-overline text-cambridge mb-f8">Membership</p>

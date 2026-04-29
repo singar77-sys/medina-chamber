@@ -25,15 +25,18 @@ const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }) as any;
 
-// ── Boundary force — confines nodes to a circle ───────────────────────────
-const BOUNDARY_R = 260;
-function forceRadialBoundary(radius: number, strength = 0.14) {
+// ── Constants ──────────────────────────────────────────────────────────────
+const BOUNDARY_R = 230;
+const TOP_N      = 35; // categories shown in overview globe
+
+// ── Boundary force — keeps nodes inside circle ────────────────────────────
+function forceRadialBoundary(radius: number, strength = 0.12) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let nodes: any[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function force(alpha: number) {
     nodes.forEach((n) => {
-      const x = n.x ?? 0; const y = n.y ?? 0;
+      const x = n.x ?? 0;
+      const y = n.y ?? 0;
       const d = Math.sqrt(x * x + y * y);
       if (d > radius) {
         const f = ((d - radius) / d) * strength * alpha;
@@ -47,7 +50,7 @@ function forceRadialBoundary(radius: number, strength = 0.14) {
   return force;
 }
 
-// ── Label pill — rounded-rect chip behind canvas text ────────────────────
+// ── Label pill — rounded chip drawn behind canvas text ────────────────────
 function drawLabelPill(
   ctx: CanvasRenderingContext2D,
   text: string,
@@ -59,23 +62,24 @@ function drawLabelPill(
 ) {
   ctx.font = `${bold ? "700 " : ""}${fontSize}px system-ui,-apple-system,sans-serif`;
   const tw  = ctx.measureText(text).width;
-  const ph  = fontSize * 1.55;
-  const px  = fontSize * 0.60;
-  const rad = Math.min(fontSize * 0.38, ph / 2);
-  const bx = cx - tw / 2 - px;
-  const bw = tw + px * 2;
+  const ph  = fontSize * 1.6;
+  const px  = fontSize * 0.65;
+  const rad = Math.min(fontSize * 0.4, ph / 2);
+  const bx  = cx - tw / 2 - px;
+  const bw  = tw + px * 2;
+
   ctx.beginPath();
   ctx.moveTo(bx + rad, ty);
   ctx.lineTo(bx + bw - rad, ty);
-  ctx.arcTo(bx + bw, ty,      bx + bw, ty + rad,  rad);
+  ctx.arcTo(bx + bw, ty,       bx + bw, ty + rad,       rad);
   ctx.lineTo(bx + bw, ty + ph - rad);
-  ctx.arcTo(bx + bw, ty + ph, bx + bw - rad, ty + ph, rad);
+  ctx.arcTo(bx + bw, ty + ph,  bx + bw - rad, ty + ph,  rad);
   ctx.lineTo(bx + rad, ty + ph);
-  ctx.arcTo(bx,        ty + ph, bx, ty + ph - rad, rad);
+  ctx.arcTo(bx,        ty + ph, bx, ty + ph - rad,       rad);
   ctx.lineTo(bx, ty + rad);
-  ctx.arcTo(bx,        ty,      bx + rad, ty, rad);
+  ctx.arcTo(bx,        ty,      bx + rad, ty,             rad);
   ctx.closePath();
-  ctx.fillStyle = `rgba(12,27,51,${bgAlpha})`;
+  ctx.fillStyle    = `rgba(12,27,51,${bgAlpha})`;
   ctx.fill();
   ctx.fillStyle    = textColor;
   ctx.textAlign    = "center";
@@ -83,609 +87,859 @@ function drawLabelPill(
   ctx.fillText(text, cx, ty + ph / 2);
 }
 
-// ── Color palette ─────────────────────────────────────────────────────────
+// ── Palette ───────────────────────────────────────────────────────────────
 const C = {
-  ci:         "#83BCA9",  ciRgb:  "131,188,169",
-  vp:         "#FF6233",  vpRgb:  "255,98,51",
-  standard:   "rgba(131,188,169,0.58)",
-  dimmed:     "rgba(131,188,169,0.022)",
-  cat:        "#00B894",  catRgb: "0,184,148",
-  catDim:     "rgba(0,184,148,0.05)",
-  city:       "#4D8EBA",  cityRgb:"77,142,186",
-  link:       "rgba(131,188,169,0.032)",
-  linkActive: "rgba(0,184,148,0.45)",
+  ci:       "#83BCA9",  ciRgb:  "131,188,169",
+  vp:       "#FF6233",  vpRgb:  "255,98,51",
+  standard: "rgba(131,188,169,0.5)",
+  cat:      "#83BCA9",  catRgb: "131,188,169",
+  link:     "rgba(131,188,169,0.15)",
 } as const;
 
-function resolveColor(node: GraphNode, activeCat: string | null, search: string): string {
-  if (node.type === "category") return activeCat && activeCat !== node.name ? C.catDim : C.cat;
-  if (node.type === "city")     return C.city;
-  const catOk  = !activeCat || node.categories?.includes(activeCat);
-  const termOk = !search    ||
-    node.name.toLowerCase().includes(search.toLowerCase()) ||
-    node.description?.toLowerCase().includes(search.toLowerCase());
-  if (!catOk || !termOk) return C.dimmed;
-  if (node.tier === "ci") return C.ci;
-  if (node.tier === "vp") return C.vp;
-  return C.standard;
+function tierOrder(n: GraphNode) {
+  if (n.tier === "ci") return 0;
+  if (n.tier === "vp") return 1;
+  return 2;
 }
 
-const GLASS = {
-  background:           "rgba(12,27,51,0.88)",
-  backdropFilter:       "blur(16px)",
-  WebkitBackdropFilter: "blur(16px)",
-  border:               "1px solid rgba(131,188,169,0.14)",
-  boxShadow:            "0 4px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(131,188,169,0.07)",
-} as const;
-
+// ── Component ─────────────────────────────────────────────────────────────
 interface MemberGraphProps {
   members:    Member[];
   categories: string[];
 }
 
-export function MemberGraph({ members, categories }: MemberGraphProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const catMenuRef   = useRef<HTMLDivElement>(null);
+export function MemberGraph({ members }: MemberGraphProps) {
+  const containerRef    = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const fgRef        = useRef<any>(null);
-  const startTimeRef = useRef(Date.now());
-  const zoomRef      = useRef(1);        // tracks current zoom for ± buttons
-  const bgColorRef   = useRef("#ffffff"); // page bg — read at mount for canvas mask
+  const fgRef           = useRef<any>(null);
+  const startTimeRef    = useRef(Date.now());
+  const zoomRef         = useRef(1);
+  const bgColorRef      = useRef("#ffffff");
+  const mouseInCircleRef = useRef(false);
+  const engineStoppedRef = useRef(false);
 
-  const [dimensions, setDimensions]         = useState({ width: 800, height: 700 });
+  // Stable refs for use inside canvas callbacks (avoids stale closures)
+  const activeCatRef    = useRef<string | null>(null);
+  const hoveredIdRef    = useRef<string | null>(null);
+  const sidebarHovRef   = useRef<string | null>(null);
+
+  const [dimensions,     setDimensions]     = useState({ width: 800, height: 700 });
   const [selectedMember, setSelectedMember] = useState<GraphNode | null>(null);
-  const [hoveredId, setHoveredId]           = useState<string | null>(null);
-  const [search, setSearch]                 = useState("");
+  const [hoveredId,      setHoveredId]      = useState<string | null>(null);
+  const [sidebarHovId,   setSidebarHovId]   = useState<string | null>(null);
+  const [search,         setSearch]         = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [engineStopped, setEngineStopped]   = useState(false);
-  const [catMenuOpen, setCatMenuOpen]       = useState(false);
-  const [catSearch, setCatSearch]           = useState("");
-  const [mouseInCircle, setMouseInCircle]   = useState(false);
-  const mouseInCircleRef                    = useRef(false);
+  const [mouseInCircle,  setMouseInCircle]  = useState(false);
 
-  const activeCatRef = useRef<string | null>(null);
-  const searchRef    = useRef<string>("");
-  const hoveredIdRef = useRef<string | null>(null);
-  activeCatRef.current = activeCategory;
-  searchRef.current    = search;
-  hoveredIdRef.current = hoveredId;
+  activeCatRef.current  = activeCategory;
+  hoveredIdRef.current  = hoveredId;
+  sidebarHovRef.current = sidebarHovId;
 
-  const graphData    = useMemo(() => buildGraphData(members), [members]);
-  const filteredCats = useMemo(
-    () => categories.filter((c) => c.toLowerCase().includes(catSearch.toLowerCase())),
-    [categories, catSearch],
-  );
-  const catCount = useMemo(
-    () => new Set(members.flatMap((m) => m.categories)).size,
-    [members],
+  // ── Derived data ───────────────────────────────────────────────────────
+  const allGraphData = useMemo(() => buildGraphData(members), [members]);
+
+  const catCounts = useMemo(() => {
+    const map = new Map<string, number>();
+    members.forEach((m) => m.categories.forEach((c) => map.set(c, (map.get(c) ?? 0) + 1)));
+    return map;
+  }, [members]);
+
+  const sortedCategories = useMemo(
+    () => [...catCounts.entries()].sort((a, b) => b[1] - a[1]).map(([name]) => name),
+    [catCounts],
   );
 
-  // ── Read page bg colour for canvas circle mask ────────────────────────
+  const topCatSet = useMemo(
+    () => new Set(sortedCategories.slice(0, TOP_N)),
+    [sortedCategories],
+  );
+
+  const filteredCategories = useMemo(
+    () => sortedCategories.filter((c) => c.toLowerCase().includes(search.toLowerCase())),
+    [sortedCategories, search],
+  );
+
+  const focusMembers = useMemo(() => {
+    if (!activeCategory) return [];
+    return allGraphData.nodes
+      .filter((n) => n.type === "member" && n.categories?.includes(activeCategory))
+      .sort((a, b) => tierOrder(a) - tierOrder(b) || a.name.localeCompare(b.name));
+  }, [activeCategory, allGraphData]);
+
+  // ── Graph data fed to ForceGraph2D ─────────────────────────────────────
+  // Overview: top N category nodes only — a readable constellation
+  // Focus:    selected category (pinned center) + its member nodes
+  const graphData = useMemo<{ nodes: GraphNode[]; links: GraphLink[] }>(() => {
+    if (!activeCategory) {
+      return {
+        nodes: allGraphData.nodes.filter(
+          (n) => n.type === "category" && topCatSet.has(n.name),
+        ),
+        links: [],
+      };
+    }
+    const catNode = allGraphData.nodes.find((n) => n.id === `cat:${activeCategory}`);
+    if (!catNode) return { nodes: [], links: [] };
+
+    const memberNodes = allGraphData.nodes.filter(
+      (n) => n.type === "member" && n.categories?.includes(activeCategory),
+    );
+
+    // Pin the category hub at graph-space origin so members orbit it
+    const pinnedCat: GraphNode = { ...catNode, fx: 0, fy: 0, x: 0, y: 0 };
+
+    return {
+      nodes: [pinnedCat, ...memberNodes],
+      links: memberNodes.map((m) => ({ source: m.id, target: `cat:${activeCategory}` })),
+    };
+  }, [activeCategory, allGraphData, topCatSet]);
+
+  // ── Read page bg colour for canvas mask ────────────────────────────────
   useEffect(() => {
     bgColorRef.current =
       getComputedStyle(document.documentElement).getPropertyValue("--bg-primary").trim() ||
       "#ffffff";
   }, []);
 
-  // ── Responsive sizing ─────────────────────────────────────────────────
+  // ── Responsive sizing — watch the globe container ──────────────────────
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
     const ro = new ResizeObserver(([e]) =>
-      setDimensions({ width: e.contentRect.width, height: e.contentRect.height })
+      setDimensions({ width: e.contentRect.width, height: e.contentRect.height }),
     );
     ro.observe(el);
     setDimensions({ width: el.offsetWidth, height: el.offsetHeight });
     return () => ro.disconnect();
   }, []);
 
-  // ── Close industry dropdown on outside click ──────────────────────────
-  useEffect(() => {
-    if (!catMenuOpen) return;
-    const fn = (e: MouseEvent) => {
-      if (!catMenuRef.current?.contains(e.target as Node)) {
-        setCatMenuOpen(false);
-        setCatSearch("");
-      }
-    };
-    document.addEventListener("mousedown", fn);
-    return () => document.removeEventListener("mousedown", fn);
-  }, [catMenuOpen]);
-
-  // ── Custom D3 forces ──────────────────────────────────────────────────
+  // ── D3 force reconfiguration on mode switch ────────────────────────────
   useEffect(() => {
     const fg = fgRef.current;
     if (!fg) return;
-    fg.d3Force("charge")?.strength((n: GraphNode) =>
-      n.type === "category" ? -800 : n.type === "city" ? -200 : -45
-    );
-    fg.d3Force("link")?.distance(42).strength(0.65);
-    fg.d3Force("boundary", forceRadialBoundary(BOUNDARY_R, 0.14));
+
+    if (activeCategory) {
+      // Focus: hub-and-spoke — members orbit pinned centre
+      fg.d3Force("charge")?.strength((n: GraphNode) => n.type === "category" ? 0 : -140);
+      fg.d3Force("link")?.distance(85).strength(0.55);
+      fg.d3Force("boundary", forceRadialBoundary(BOUNDARY_R, 0.18));
+    } else {
+      // Overview: pure repulsion — categories scatter like a constellation
+      fg.d3Force("charge")?.strength(-320);
+      fg.d3Force("link")?.strength(0);
+      fg.d3Force("boundary", forceRadialBoundary(BOUNDARY_R, 0.10));
+    }
+
+    engineStoppedRef.current = false;
     fg.d3ReheatSimulation();
+  // graphData is the stable signal that the mode changed
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graphData]);
 
-  // ── Zoom to fit once ──────────────────────────────────────────────────
+  // ── Engine settled → zoom to fit ──────────────────────────────────────
   const handleEngineStop = useCallback(() => {
-    if (!engineStopped) {
-      fgRef.current?.zoomToFit(800, 60);
-      setEngineStopped(true);
+    if (!engineStoppedRef.current) {
+      engineStoppedRef.current = true;
+      fgRef.current?.zoomToFit(700, activeCatRef.current ? 50 : 24);
     }
-  }, [engineStopped]);
-
-  // ── Track zoom level for ± buttons ────────────────────────────────────
-  const handleZoom = useCallback(({ k }: { k: number }) => {
-    zoomRef.current = k;
   }, []);
 
-  const zoomIn    = useCallback(() => fgRef.current?.zoom(zoomRef.current * 1.5, 300), []);
-  const zoomOut   = useCallback(() => fgRef.current?.zoom(zoomRef.current / 1.5, 300), []);
-  const zoomReset = useCallback(() => fgRef.current?.zoomToFit(500, 40), []);
+  // ── Zoom helpers ───────────────────────────────────────────────────────
+  const handleZoom    = useCallback(({ k }: { k: number }) => { zoomRef.current = k; }, []);
+  const zoomIn        = useCallback(() => fgRef.current?.zoom(zoomRef.current * 1.5, 300), []);
+  const zoomOut       = useCallback(() => fgRef.current?.zoom(zoomRef.current / 1.5, 300), []);
+  const zoomReset     = useCallback(() => fgRef.current?.zoomToFit(500, 40), []);
 
-  // ── Pre-frame: atmosphere (screen space) + globe ring (graph space) ───
+  // ── Pre-frame: radial atmosphere + pulsing globe ring ─────────────────
   const handleRenderFramePre = useCallback((ctx: CanvasRenderingContext2D) => {
     const cw = ctx.canvas.width;
     const ch = ctx.canvas.height;
     const t  = (Date.now() - startTimeRef.current) / 1000;
     const pulse = 0.5 + 0.5 * Math.sin(t * Math.PI * 2 * 0.18);
 
-    // Dark radial atmosphere — transparent canvas, page bg bleeds in at edges
+    // Atmospheric fill — dark navy core fading to transparent at edges
+    // so the page background bleeds in and makes the circle feel "floating"
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     const maxR = Math.sqrt((cw / 2) ** 2 + (ch / 2) ** 2);
     const atm  = ctx.createRadialGradient(cw / 2, ch / 2, 0, cw / 2, ch / 2, maxR);
     atm.addColorStop(0,    "rgba(12,27,51,0.97)");
-    atm.addColorStop(0.42, "rgba(12,27,51,0.93)");
-    atm.addColorStop(0.70, "rgba(12,27,51,0.52)");
-    atm.addColorStop(0.88, "rgba(12,27,51,0.14)");
+    atm.addColorStop(0.45, "rgba(12,27,51,0.93)");
+    atm.addColorStop(0.72, "rgba(12,27,51,0.48)");
+    atm.addColorStop(0.88, "rgba(12,27,51,0.10)");
     atm.addColorStop(1,    "rgba(12,27,51,0)");
     ctx.fillStyle = atm;
     ctx.fillRect(0, 0, cw, ch);
     ctx.restore();
 
-    // Globe ring + sphere vignette in D3 graph space
-    const r = BOUNDARY_R;
-    const halo = ctx.createRadialGradient(0, 0, r * 0.82, 0, 0, r * 1.28);
-    halo.addColorStop(0, `rgba(131,188,169,${(0.035 + pulse * 0.028).toFixed(3)})`);
+    // Halo + ring drawn in D3 graph-space (centred on origin = globe centre)
+    const r    = BOUNDARY_R;
+    const halo = ctx.createRadialGradient(0, 0, r * 0.78, 0, 0, r * 1.32);
+    halo.addColorStop(0, `rgba(131,188,169,${(0.04 + pulse * 0.03).toFixed(3)})`);
     halo.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.beginPath(); ctx.arc(0, 0, r * 1.28, 0, Math.PI * 2);
+    ctx.beginPath(); ctx.arc(0, 0, r * 1.32, 0, Math.PI * 2);
     ctx.fillStyle = halo; ctx.fill();
 
     ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2);
-    ctx.strokeStyle = `rgba(131,188,169,${(0.07 + pulse * 0.07).toFixed(3)})`;
-    ctx.lineWidth = 0.6; ctx.stroke();
+    ctx.strokeStyle = `rgba(131,188,169,${(0.09 + pulse * 0.07).toFixed(3)})`;
+    ctx.lineWidth   = 0.8;
+    ctx.stroke();
 
-    const vig = ctx.createRadialGradient(0, 0, r * 0.45, 0, 0, r);
-    vig.addColorStop(0,   "rgba(40,68,105,0.08)");
+    // Inner vignette — adds depth to the sphere
+    const vig = ctx.createRadialGradient(0, 0, r * 0.38, 0, 0, r);
+    vig.addColorStop(0,   "rgba(40,68,105,0.05)");
     vig.addColorStop(0.7, "rgba(12,27,51,0)");
-    vig.addColorStop(1,   "rgba(0,0,0,0.42)");
+    vig.addColorStop(1,   "rgba(0,0,0,0.48)");
     ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2);
     ctx.fillStyle = vig; ctx.fill();
   }, []);
 
-  // ── Post-frame: mask canvas corners to circle ─────────────────────────
-  // Paints the page background colour over everything outside the circle
-  // so the canvas looks like a circular widget, not a dark rectangle.
+  // ── Post-frame: paint page-bg over canvas corners → circle illusion ───
   const handleRenderFramePost = useCallback((ctx: CanvasRenderingContext2D) => {
     const cw = ctx.canvas.width;
     const ch = ctx.canvas.height;
-    const cr = Math.min(cw, ch) / 2 - 2;   // circle radius in canvas pixels
+    const cr = Math.min(cw, ch) / 2 - 2;
 
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-    // Draw full canvas, subtract circle (evenodd = hole)
+    // evenodd: full rect minus circle hole = corners only
     ctx.beginPath();
     ctx.rect(0, 0, cw, ch);
-    ctx.arc(cw / 2, ch / 2, cr, 0, Math.PI * 2, true); // anticlockwise = hole
+    ctx.arc(cw / 2, ch / 2, cr, 0, Math.PI * 2, true);
     ctx.fillStyle = bgColorRef.current;
     ctx.fill("evenodd");
 
-    // Subtle ring on the circle edge
+    // Crisp edge ring
     ctx.beginPath();
     ctx.arc(cw / 2, ch / 2, cr, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(131,188,169,0.18)";
-    ctx.lineWidth   = 1;
+    ctx.strokeStyle = "rgba(131,188,169,0.22)";
+    ctx.lineWidth   = 1.5;
     ctx.stroke();
 
     ctx.restore();
   }, []);
 
-  // ── Node renderer ─────────────────────────────────────────────────────
+  // ── Node canvas renderer ───────────────────────────────────────────────
   const paintNode = useCallback(
     (node: GraphNode, ctx: CanvasRenderingContext2D, globalScale: number) => {
-      const x     = node.x ?? 0;
-      const y     = node.y ?? 0;
-      const cat   = activeCatRef.current;
-      const q     = searchRef.current;
-      const hov   = hoveredIdRef.current;
-      const color = resolveColor(node, cat, q);
-      const isHov = node.id === hov;
-      const t     = (Date.now() - startTimeRef.current) / 1000;
+      const x   = node.x ?? 0;
+      const y   = node.y ?? 0;
+      const t   = (Date.now() - startTimeRef.current) / 1000;
+      const isGlobeHov  = node.id === hoveredIdRef.current;
+      const isSideHov   = node.id === sidebarHovRef.current;
+      const isHov       = isGlobeHov || isSideHov;
+      const isFocusMode = !!activeCatRef.current;
 
-      // ── Category hub ─────────────────────────────────────────────────
+      // ── Category node ────────────────────────────────────────────────
       if (node.type === "category") {
-        const r     = 10;
-        const isDim = !!(cat && cat !== node.name);
-        const isAct = cat === node.name;
-        if (!isDim) {
-          const pulse = 0.42 + 0.3 * Math.sin(t * Math.PI * 2 * 0.42);
-          ctx.beginPath(); ctx.arc(x, y, r * 3, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(${C.catRgb},${(pulse * 0.14).toFixed(3)})`;
-          ctx.lineWidth = 1; ctx.stroke();
-          ctx.beginPath(); ctx.arc(x, y, r * 1.8, 0, Math.PI * 2);
-          ctx.strokeStyle = isAct ? `rgba(${C.catRgb},0.8)` : `rgba(${C.catRgb},0.24)`;
-          ctx.lineWidth = isAct ? 1.6 : 0.8; ctx.stroke();
-          const grd = ctx.createRadialGradient(x, y, 0, x, y, r * 4.5);
-          grd.addColorStop(0, isAct ? `rgba(${C.catRgb},0.38)` : `rgba(${C.catRgb},0.12)`);
-          grd.addColorStop(1, "rgba(0,0,0,0)");
-          ctx.beginPath(); ctx.arc(x, y, r * 4.5, 0, Math.PI * 2);
-          ctx.fillStyle = grd; ctx.fill();
+        const count      = catCounts.get(node.name) ?? 0;
+        const isFocusHub = isFocusMode && activeCatRef.current === node.name;
+
+        if (isFocusHub) {
+          // Large pinned hub — the gravitational anchor of the focus view
+          const r     = 15;
+          const pulse = 0.5 + 0.5 * Math.sin(t * Math.PI * 2 * 0.22);
+
+          // Outer nebula
+          const neb = ctx.createRadialGradient(x, y, r, x, y, r * 5);
+          neb.addColorStop(0, `rgba(${C.catRgb},${(0.38 + pulse * 0.22).toFixed(3)})`);
+          neb.addColorStop(1, "rgba(0,0,0,0)");
+          ctx.beginPath(); ctx.arc(x, y, r * 5, 0, Math.PI * 2);
+          ctx.fillStyle = neb; ctx.fill();
+
+          // Pulse ring
+          ctx.beginPath(); ctx.arc(x, y, r + 5, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(${C.catRgb},${(0.55 + pulse * 0.32).toFixed(3)})`;
+          ctx.lineWidth   = 1.8; ctx.stroke();
+
+          // Core fill
+          ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fillStyle = C.cat; ctx.fill();
+
+          // Inner highlight
+          ctx.beginPath(); ctx.arc(x, y, r * 0.34, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(255,255,255,0.92)"; ctx.fill();
+
+          // Label — always visible, prominent
+          const fs  = Math.max(11.5 / globalScale, 1.5);
+          const lbl = node.name.length > 22 ? node.name.slice(0, 20) + "…" : node.name;
+          drawLabelPill(ctx, lbl, x, y + r + 5 / globalScale, fs, 0.93, "rgba(255,255,255,0.96)", true);
+
+          // Member count sub-label
+          const subFs = Math.max(9 / globalScale, 1.1);
+          drawLabelPill(
+            ctx, `${count} members`, x,
+            y + r + (fs * 1.65 + 7) / globalScale,
+            subFs, 0.70, `rgba(${C.catRgb},0.85)`,
+          );
+          return;
         }
-        ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fillStyle = isDim ? C.catDim : C.cat; ctx.fill();
-        if (!isDim) {
-          ctx.beginPath(); ctx.arc(x, y, r * 0.36, 0, Math.PI * 2);
-          ctx.fillStyle = "rgba(255,255,255,0.88)"; ctx.fill();
+
+        // Overview constellation node — size encodes member count
+        const r     = Math.max(5, Math.min(17, 5 + Math.sqrt(count) * 1.05));
+        const phase = x * 0.14 + y * 0.10;
+        const pulse = 0.42 + 0.32 * Math.sin(t * 1.88 + phase);
+
+        // Hover glow burst
+        if (isHov) {
+          const hov = ctx.createRadialGradient(x, y, 0, x, y, r * 5.5);
+          hov.addColorStop(0, `rgba(${C.catRgb},0.55)`);
+          hov.addColorStop(1, "rgba(0,0,0,0)");
+          ctx.beginPath(); ctx.arc(x, y, r * 5.5, 0, Math.PI * 2);
+          ctx.fillStyle = hov; ctx.fill();
         }
-        const fs  = Math.max(10.5 / globalScale, 1.2);
-        const lbl = node.name.length > 20 ? node.name.slice(0, 18) + "…" : node.name;
-        if (isDim) {
-          ctx.font = `700 ${fs}px system-ui,-apple-system,sans-serif`;
-          ctx.fillStyle = "rgba(255,255,255,0.08)";
-          ctx.textAlign = "center"; ctx.textBaseline = "top";
-          ctx.fillText(lbl, x, y + r + 3 / globalScale);
-        } else {
-          drawLabelPill(ctx, lbl, x, y + r + 3 / globalScale, fs,
-            isAct ? 0.90 : 0.75,
-            isAct ? "rgba(0,230,160,0.95)" : "rgba(255,255,255,0.92)",
-            true,
+
+        // Ambient glow
+        const glow = ctx.createRadialGradient(x, y, 0, x, y, r * 3.8);
+        glow.addColorStop(0, `rgba(${C.catRgb},${(pulse * 0.20).toFixed(3)})`);
+        glow.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.beginPath(); ctx.arc(x, y, r * 3.8, 0, Math.PI * 2);
+        ctx.fillStyle = glow; ctx.fill();
+
+        // Core
+        const effectiveR = isHov ? r * 1.28 : r;
+        ctx.beginPath(); ctx.arc(x, y, effectiveR, 0, Math.PI * 2);
+        ctx.fillStyle = isHov ? C.ci : `rgba(${C.catRgb},0.88)`;
+        ctx.fill();
+
+        // Inner dot
+        ctx.beginPath(); ctx.arc(x, y, effectiveR * 0.30, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,255,255,0.88)"; ctx.fill();
+
+        // Always-visible name label (boomers don't have to zoom)
+        const fs  = Math.max(10 / globalScale, 1.2);
+        const lbl = node.name.length > 21 ? node.name.slice(0, 19) + "…" : node.name;
+        drawLabelPill(
+          ctx, lbl, x, y + effectiveR + 3.5 / globalScale, fs,
+          isHov ? 0.92 : 0.74,
+          isHov ? "rgba(255,255,255,0.96)" : "rgba(255,255,255,0.82)",
+          isHov,
+        );
+
+        // Member count badge (shown when zoomed in enough or hovered)
+        if (count > 0 && (globalScale > 0.6 || isHov)) {
+          const cfs = Math.max(8.5 / globalScale, 1.0);
+          drawLabelPill(
+            ctx, `${count}`, x,
+            y + effectiveR + (fs * 1.65 + 4) / globalScale,
+            cfs, 0.60, `rgba(${C.catRgb},0.72)`,
           );
         }
         return;
       }
 
-      // ── City hub ──────────────────────────────────────────────────────
-      if (node.type === "city") {
-        const r = 3.2;
-        ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fillStyle = C.city; ctx.fill();
-        ctx.beginPath(); ctx.arc(x, y, r + 1, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(${C.cityRgb},0.22)`; ctx.lineWidth = 0.5; ctx.stroke();
-        if (globalScale > 2.8) {
-          const fs = Math.max(8 / globalScale, 1);
-          drawLabelPill(ctx, node.name, x, y + r + 1.5 / globalScale, fs, 0.68, `rgba(${C.cityRgb},0.95)`, false);
-        }
-        return;
-      }
-
-      // ── Member node ───────────────────────────────────────────────────
-      const baseR = node.tier === "ci" ? 4.5 : node.tier === "vp" ? 3 : 1.7;
-      const r     = isHov ? baseR * 1.65 : baseR;
-      const isDim = color === C.dimmed;
+      // ── Member node (focus mode) ──────────────────────────────────────
+      const baseR = node.tier === "ci" ? 8.5 : node.tier === "vp" ? 6.5 : 5;
+      const r     = isHov ? baseR * 1.55 : baseR;
       const rgb   = node.tier === "ci" ? C.ciRgb : node.tier === "vp" ? C.vpRgb : C.ciRgb;
+      const col   = node.tier === "ci" ? C.ci    : node.tier === "vp" ? C.vp    : C.standard;
 
-      if (node.tier === "ci" && !isDim) {
-        const phase = (node.x ?? 0) * 0.22 + (node.y ?? 0) * 0.14;
-        const pulse = 0.36 + 0.28 * Math.sin(t * Math.PI * 2 * 0.62 + phase);
-        const grd   = ctx.createRadialGradient(x, y, r * 0.3, x, y, r * 5.5);
-        grd.addColorStop(0,   `rgba(${rgb},${(pulse * 0.52).toFixed(3)})`);
-        grd.addColorStop(0.5, `rgba(${rgb},${(pulse * 0.13).toFixed(3)})`);
+      // Aura — CI always glows, others glow on hover
+      if (node.tier === "ci" || isHov) {
+        const phase = (node.x ?? 0) * 0.20 + (node.y ?? 0) * 0.13;
+        const pulse = 0.38 + 0.28 * Math.sin(t * 1.9 + phase);
+        const auraR = isHov ? r * 6.5 : r * 5;
+        const grd   = ctx.createRadialGradient(x, y, r * 0.5, x, y, auraR);
+        grd.addColorStop(0, `rgba(${rgb},${(pulse * (isHov ? 0.68 : 0.50)).toFixed(3)})`);
+        grd.addColorStop(0.55, `rgba(${rgb},${(pulse * 0.10).toFixed(3)})`);
         grd.addColorStop(1,   "rgba(0,0,0,0)");
-        ctx.beginPath(); ctx.arc(x, y, r * 5.5, 0, Math.PI * 2);
+        ctx.beginPath(); ctx.arc(x, y, auraR, 0, Math.PI * 2);
         ctx.fillStyle = grd; ctx.fill();
-        ctx.beginPath(); ctx.arc(x, y, r + 2.4, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(${rgb},${(pulse * 0.65).toFixed(3)})`;
-        ctx.lineWidth = 1; ctx.stroke();
-      }
-      if (node.tier === "vp" && !isDim) {
-        const grd = ctx.createRadialGradient(x, y, 0, x, y, r * 4);
-        grd.addColorStop(0, `rgba(${rgb},0.38)`);
+      } else if (node.tier === "vp") {
+        const grd = ctx.createRadialGradient(x, y, 0, x, y, r * 3.5);
+        grd.addColorStop(0, `rgba(${rgb},0.28)`);
         grd.addColorStop(1, "rgba(0,0,0,0)");
-        ctx.beginPath(); ctx.arc(x, y, r * 4, 0, Math.PI * 2);
+        ctx.beginPath(); ctx.arc(x, y, r * 3.5, 0, Math.PI * 2);
         ctx.fillStyle = grd; ctx.fill();
       }
-      if (isHov && !isDim) {
-        const grd = ctx.createRadialGradient(x, y, 0, x, y, r * 5);
-        grd.addColorStop(0, `rgba(${rgb},0.55)`);
-        grd.addColorStop(1, "rgba(0,0,0,0)");
-        ctx.beginPath(); ctx.arc(x, y, r * 5, 0, Math.PI * 2);
-        ctx.fillStyle = grd; ctx.fill();
-      }
+
+      // Core
       ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fillStyle = color; ctx.fill();
+      ctx.fillStyle = col; ctx.fill();
 
-      if (isHov || globalScale > 3.5) {
-        const fs  = Math.max(9 / globalScale, 1.4);
-        const lbl = node.name.length > 24 ? node.name.slice(0, 22) + "…" : node.name;
-        if (isDim) {
-          ctx.font = `${fs}px system-ui,-apple-system,sans-serif`;
-          ctx.fillStyle = "rgba(255,255,255,0.2)";
-          ctx.textAlign = "center"; ctx.textBaseline = "top";
-          ctx.fillText(lbl, x, y + r + 2 / globalScale);
-        } else {
-          const tcol = node.tier === "ci" ? `rgba(${C.ciRgb},0.95)` :
-                       node.tier === "vp" ? `rgba(${C.vpRgb},0.95)` :
-                       "rgba(255,255,255,0.88)";
-          drawLabelPill(ctx, lbl, x, y + r + 2 / globalScale, fs, 0.78, tcol, node.tier === "ci");
-        }
+      // Ring for CI / hover
+      if (isHov || node.tier === "ci") {
+        ctx.beginPath(); ctx.arc(x, y, r + 1.8, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(${rgb},${isHov ? 0.88 : 0.42})`;
+        ctx.lineWidth   = 0.9; ctx.stroke();
       }
+
+      // Always-visible label in focus mode — core boomer UX win
+      const fs  = Math.max(10.5 / globalScale, 1.4);
+      const lbl = node.name.length > 24 ? node.name.slice(0, 22) + "…" : node.name;
+      const tcol = node.tier === "ci" ? `rgba(${C.ciRgb},0.96)` :
+                   node.tier === "vp" ? `rgba(${C.vpRgb},0.96)` :
+                   "rgba(255,255,255,0.83)";
+      drawLabelPill(
+        ctx, lbl, x, y + r + 2.5 / globalScale, fs,
+        isHov ? 0.92 : 0.80,
+        tcol, node.tier === "ci",
+      );
     },
-    [],
+    [catCounts],
   );
 
-  // ── Link / node weight ────────────────────────────────────────────────
-  const getLinkColor = useCallback(
-    (link: GraphLink) => {
-      if (!activeCategory) return C.link;
-      const tid = typeof link.target === "object"
-        ? (link.target as GraphNode).id : link.target;
-      return tid === `cat:${activeCategory}` ? C.linkActive : C.link;
-    },
-    [activeCategory],
-  );
-  const getNodeVal = useCallback((node: GraphNode) => {
-    if (node.type === "category") return 100;
-    if (node.type === "city")     return 20;
-    if (node.tier === "ci")       return 10;
-    if (node.tier === "vp")       return 6;
-    return 3;
-  }, []);
+  // ── Link colour ────────────────────────────────────────────────────────
+  const getLinkColor = useCallback(() => C.link, []);
 
-  // ── Click / hover ─────────────────────────────────────────────────────
+  // ── Node value (influences D3 collision area) ──────────────────────────
+  const getNodeVal = useCallback(
+    (node: GraphNode) => {
+      if (node.type === "category") {
+        const count = catCounts.get(node.name) ?? 0;
+        return activeCategory ? 220 : Math.max(12, 5 + count * 0.35);
+      }
+      if (node.tier === "ci") return 16;
+      if (node.tier === "vp") return 10;
+      return 6;
+    },
+    [catCounts, activeCategory],
+  );
+
+  // ── Interactions ───────────────────────────────────────────────────────
   const handleNodeClick = useCallback((node: GraphNode) => {
-    if (node.type === "member") setSelectedMember(node);
-    else if (node.type === "category")
-      setActiveCategory((p) => (p === node.name ? null : node.name));
+    if (node.type === "category") {
+      setActiveCategory((prev) => (prev === node.name ? null : node.name));
+      setSearch("");
+      engineStoppedRef.current = false;
+    } else if (node.type === "member") {
+      setSelectedMember(node);
+    }
   }, []);
+
   const handleNodeHover = useCallback((node: GraphNode | null) => {
     setHoveredId(node?.id ?? null);
-    const c = containerRef.current?.querySelector("canvas") as HTMLElement | null;
-    if (c) c.style.cursor = node?.type === "member" ? "pointer" : "default";
+    const canvas = containerRef.current?.querySelector("canvas") as HTMLElement | null;
+    if (canvas) canvas.style.cursor = node ? "pointer" : "default";
   }, []);
 
-  const clearFilters = () => { setSearch(""); setActiveCategory(null); };
-  const hasFilters   = !!(search || activeCategory);
+  // Geometric mouse-in-circle detection for scroll-zoom gating
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const rect   = e.currentTarget.getBoundingClientRect();
+    const dx     = e.clientX - rect.left  - rect.width  / 2;
+    const dy     = e.clientY - rect.top   - rect.height / 2;
+    const cr     = Math.min(rect.width, rect.height) / 2 - 2;
+    const inside = Math.sqrt(dx * dx + dy * dy) < cr;
+    if (inside !== mouseInCircleRef.current) {
+      mouseInCircleRef.current = inside;
+      setMouseInCircle(inside);
+    }
+  }, []);
 
-  // ── Canvas is a square with side = min(width, height) ─────────────────
-  // We pass this as the ForceGraph2D height so the circle mask aligns.
-  const side = Math.min(dimensions.width, dimensions.height);
+  const handleMouseLeave = useCallback(() => {
+    mouseInCircleRef.current = false;
+    setMouseInCircle(false);
+  }, []);
 
-  // Zoom button style
-  const zBtn = {
-    width: 32, height: 32,
-    display: "flex", alignItems: "center", justifyContent: "center",
-    ...GLASS, borderRadius: 8,
-    color: "rgba(131,188,169,0.75)",
-    fontSize: 18, cursor: "pointer",
-    fontWeight: 700, border: "1px solid rgba(131,188,169,0.18)",
-  } as const;
+  const focusCategory = useCallback((cat: string) => {
+    setActiveCategory(cat);
+    setSearch("");
+    engineStoppedRef.current = false;
+  }, []);
+
+  const clearFocus = useCallback(() => {
+    setActiveCategory(null);
+    setSearch("");
+    engineStoppedRef.current = false;
+  }, []);
+
+  // ── Sidebar member counts ──────────────────────────────────────────────
+  const visibleFocusMembers = useMemo(
+    () => focusMembers.filter(
+      (m) => !search || m.name.toLowerCase().includes(search.toLowerCase()),
+    ),
+    [focusMembers, search],
+  );
+
+  // ── Tier dot for sidebar ───────────────────────────────────────────────
+  function tierDot(tier: string | undefined) {
+    if (tier === "ci") return C.ci;
+    if (tier === "vp") return C.vp;
+    return "rgba(131,188,169,0.5)";
+  }
 
   return (
     <div
-      className="relative w-full select-none"
-      style={{ height: "85vh" }}
-      onMouseMove={(e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const dx = e.clientX - rect.left  - rect.width  / 2;
-        const dy = e.clientY - rect.top   - rect.height / 2;
-        const cr = Math.min(rect.width, rect.height) / 2 - 2;
-        const inside = Math.sqrt(dx * dx + dy * dy) < cr;
-        if (inside !== mouseInCircleRef.current) {
-          mouseInCircleRef.current = inside;
-          setMouseInCircle(inside);
-        }
+      className="flex select-none overflow-hidden rounded-2xl border border-border-primary"
+      style={{
+        height:    "86vh",
+        minHeight: 560,
+        boxShadow: "0 4px 40px rgba(0,0,0,0.10), 0 1px 0 rgba(255,255,255,0.8) inset",
       }}
-      onMouseLeave={() => { mouseInCircleRef.current = false; setMouseInCircle(false); }}
     >
-
-      {/* ── HUD — top left ─────────────────────────────────────────────── */}
-      <div className="absolute top-20 left-5 z-10">
+      {/* ════════════════════════════════════════════════════════════════
+          SIDEBAR — light-themed, scrollable, always readable
+          ════════════════════════════════════════════════════════════════ */}
+      <aside
+        className="flex flex-col flex-shrink-0 overflow-hidden"
+        style={{
+          width:       296,
+          background:  "var(--bg-secondary)",
+          borderRight: "1px solid var(--border-primary)",
+        }}
+      >
+        {/* Header */}
         <div style={{
-          ...GLASS, display: "flex", flexDirection: "column", gap: 8,
-          padding: 14, borderRadius: 12, minWidth: 220,
+          padding:      "18px 18px 14px",
+          borderBottom: "1px solid var(--border-primary)",
+          flexShrink:   0,
         }}>
-          {/* Live count */}
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
             <span style={{
-              width: 5, height: 5, borderRadius: "50%", flexShrink: 0,
-              background: "#00B894", boxShadow: "0 0 7px rgba(0,184,148,0.9)",
+              width:     7, height: 7, borderRadius: "50%",
+              background: "#00B894",
+              boxShadow:  "0 0 8px rgba(0,184,148,0.8)",
+              flexShrink: 0,
             }} />
-            <p style={{
-              fontSize: 9, fontWeight: 700, letterSpacing: "0.15em",
-              color: "rgba(0,184,148,0.65)", textTransform: "uppercase", margin: 0,
+            <h2 style={{
+              margin:      0, fontSize: 14, fontWeight: 700,
+              color:       "var(--text-primary)", letterSpacing: "-0.01em",
             }}>
-              {members.length} members · {catCount} industries
-            </p>
+              Member Network
+            </h2>
           </div>
+          <p style={{ margin: 0, fontSize: 11.5, color: "var(--text-tertiary)" }}>
+            {members.length} members · {sortedCategories.length} industries
+          </p>
+        </div>
 
-          {/* Member search */}
+        {/* Search */}
+        <div style={{ padding: "11px 14px 9px", flexShrink: 0 }}>
           <div style={{ position: "relative" }}>
-            <svg style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", width: 12, height: 12, pointerEvents: "none" }}
-              viewBox="0 0 16 16" fill="rgba(131,188,169,0.38)">
-              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.099zm-5.242 1.156a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11" />
+            <svg style={{
+              position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)",
+              width: 13, height: 13, pointerEvents: "none", color: "var(--text-tertiary)",
+            }} viewBox="0 0 16 16" fill="currentColor">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.116-.099zM6.5 12a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"/>
             </svg>
             <input
-              type="text" value={search} onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search members…"
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder={activeCategory ? "Search members…" : "Search industries…"}
               style={{
-                paddingLeft: 30, paddingRight: 10, paddingTop: 8, paddingBottom: 8,
+                paddingLeft: 32, paddingRight: 10, paddingTop: 8, paddingBottom: 8,
                 width: "100%", boxSizing: "border-box",
-                background: "rgba(131,188,169,0.05)",
-                border: "1px solid rgba(131,188,169,0.16)", borderRadius: 8,
-                color: "rgba(255,255,255,0.88)", fontSize: 13, outline: "none",
+                background:  "var(--bg-tertiary)",
+                border:      "1px solid var(--border-primary)", borderRadius: 8,
+                color:       "var(--text-primary)", fontSize: 13, outline: "none",
+                fontFamily:  "inherit",
+                transition:  "border-color 150ms ease",
               }}
-              onFocus={(e) => (e.target.style.borderColor = "rgba(0,184,148,0.5)")}
-              onBlur={(e)  => (e.target.style.borderColor = "rgba(131,188,169,0.16)")}
             />
           </div>
+        </div>
 
-          {/* Custom industry dropdown */}
-          <div ref={catMenuRef} style={{ position: "relative" }}>
-            <button
-              onClick={() => setCatMenuOpen((v) => !v)}
-              style={{
-                width: "100%", padding: "8px 10px",
-                display: "flex", justifyContent: "space-between", alignItems: "center",
-                background: "rgba(131,188,169,0.05)",
-                border: `1px solid ${activeCategory ? "rgba(0,184,148,0.4)" : "rgba(131,188,169,0.16)"}`,
+        {/* Mode bar */}
+        <div style={{
+          padding:      "0 14px 9px", flexShrink: 0,
+          borderBottom: "1px solid var(--border-primary)",
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+        }}>
+          {activeCategory ? (
+            <>
+              <button
+                onClick={clearFocus}
+                style={{
+                  display: "flex", alignItems: "center", gap: 5,
+                  background: "none", border: "none", cursor: "pointer",
+                  color: "var(--text-accent)", fontSize: 12, fontWeight: 600,
+                  padding: 0, fontFamily: "inherit",
+                }}
+              >
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                  <path d="M8 2.5L3.5 6.5L8 10.5" stroke="currentColor" strokeWidth="1.8"
+                    strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                All industries
+              </button>
+              <span style={{ fontSize: 11, color: "var(--text-tertiary)" }}>
+                {focusMembers.length} members
+              </span>
+            </>
+          ) : (
+            <>
+              <span style={{
+                fontSize: 10, fontWeight: 700, color: "var(--text-tertiary)",
+                textTransform: "uppercase", letterSpacing: "0.12em",
+              }}>
+                Industries
+              </span>
+              <span style={{ fontSize: 11, color: "var(--text-tertiary)" }}>
+                {filteredCategories.length}
+              </span>
+            </>
+          )}
+        </div>
+
+        {/* Scrollable list */}
+        <div style={{ flex: 1, overflowY: "auto", paddingTop: 4, paddingBottom: 4 }}>
+          {activeCategory ? (
+            /* ── Focus mode: member list ── */
+            <>
+              {/* Active category banner */}
+              <div style={{
+                margin:     "6px 12px 6px",
+                padding:    "9px 12px",
                 borderRadius: 8,
-                color: activeCategory ? "#00B894" : "rgba(255,255,255,0.45)",
-                fontSize: 13, cursor: "pointer",
+                background: "rgba(131,188,169,0.09)",
+                border:     "1px solid rgba(131,188,169,0.22)",
+                display:    "flex", alignItems: "center", gap: 8,
+              }}>
+                <span style={{
+                  width: 8, height: 8, borderRadius: "50%",
+                  background: C.cat,
+                  boxShadow:  "0 0 7px rgba(131,188,169,0.6)",
+                  flexShrink: 0,
+                }} />
+                <span style={{
+                  fontSize: 12, fontWeight: 700, color: "var(--text-primary)",
+                  overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                }}>
+                  {activeCategory}
+                </span>
+              </div>
+
+              {visibleFocusMembers.map((m) => {
+                const isHov = m.id === sidebarHovId;
+                const dot   = tierDot(m.tier);
+                return (
+                  <button
+                    key={m.id}
+                    onClick={() => setSelectedMember(m)}
+                    onMouseEnter={() => setSidebarHovId(m.id)}
+                    onMouseLeave={() => setSidebarHovId(null)}
+                    style={{
+                      width: "100%", padding: "8px 16px",
+                      display: "flex", alignItems: "center", gap: 10,
+                      background:  isHov ? "var(--bg-tertiary)" : "transparent",
+                      border:      "none", cursor: "pointer", textAlign: "left",
+                      fontFamily:  "inherit",
+                      transition:  "background 120ms ease",
+                    }}
+                  >
+                    <span style={{
+                      width: 7, height: 7, borderRadius: "50%",
+                      background: dot, flexShrink: 0,
+                      boxShadow:  m.tier !== "standard" ? `0 0 5px ${dot}` : undefined,
+                    }} />
+                    <span style={{
+                      flex: 1, fontSize: 13, color: "var(--text-primary)",
+                      overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                    }}>
+                      {m.name}
+                    </span>
+                    <svg
+                      width="11" height="11" viewBox="0 0 11 11" fill="none"
+                      style={{ flexShrink: 0, opacity: isHov ? 0.5 : 0, transition: "opacity 120ms" }}
+                    >
+                      <path d="M3.5 2L7.5 5.5L3.5 9" stroke="var(--text-primary)"
+                        strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                );
+              })}
+
+              {visibleFocusMembers.length === 0 && (
+                <p style={{
+                  padding: "20px 18px", fontSize: 12,
+                  color: "var(--text-tertiary)", textAlign: "center",
+                }}>
+                  No members match
+                </p>
+              )}
+            </>
+          ) : (
+            /* ── Overview mode: category list sorted by member count ── */
+            filteredCategories.map((cat) => {
+              const count = catCounts.get(cat) ?? 0;
+              const isHov = `cat:${cat}` === sidebarHovId;
+              const inGlobe = topCatSet.has(cat);
+              return (
+                <button
+                  key={cat}
+                  onClick={() => focusCategory(cat)}
+                  onMouseEnter={() => setSidebarHovId(`cat:${cat}`)}
+                  onMouseLeave={() => setSidebarHovId(null)}
+                  style={{
+                    width: "100%", padding: "7px 16px",
+                    display: "flex", alignItems: "center",
+                    justifyContent: "space-between", gap: 8,
+                    background:  isHov ? "var(--bg-tertiary)" : "transparent",
+                    border:      "none", cursor: "pointer", textAlign: "left",
+                    fontFamily:  "inherit",
+                    transition:  "background 120ms ease",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, overflow: "hidden" }}>
+                    <span style={{
+                      width: 6, height: 6, borderRadius: "50%",
+                      background:  inGlobe ? C.cat : "var(--border-primary)",
+                      flexShrink:  0,
+                      boxShadow:   inGlobe && isHov ? "0 0 6px rgba(131,188,169,0.55)" : undefined,
+                      transition:  "box-shadow 120ms",
+                    }} />
+                    <span style={{
+                      fontSize: 13, color: "var(--text-primary)",
+                      overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                    }}>
+                      {cat}
+                    </span>
+                  </div>
+                  <span style={{
+                    fontSize:          11,
+                    color:             isHov ? C.cat : "var(--text-tertiary)",
+                    fontVariantNumeric: "tabular-nums",
+                    flexShrink:        0,
+                    transition:        "color 120ms",
+                  }}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })
+          )}
+        </div>
+
+        {/* Legend */}
+        <div style={{
+          padding:   "11px 16px",
+          borderTop: "1px solid var(--border-primary)",
+          flexShrink: 0,
+        }}>
+          <p style={{
+            margin: "0 0 7px", fontSize: 9, fontWeight: 700,
+            letterSpacing: "0.12em", color: "var(--text-tertiary)",
+            textTransform: "uppercase",
+          }}>
+            Membership tier
+          </p>
+          {([
+            { color: C.ci,    glow: C.ciRgb, label: "Community Investor" },
+            { color: C.vp,    glow: C.vpRgb, label: "Visibility Plus" },
+            { color: "rgba(131,188,169,0.5)", glow: null, label: "Member" },
+          ] as const).map(({ color, glow, label }) => (
+            <span key={label} style={{
+              display: "flex", alignItems: "center", gap: 8,
+              fontSize: 11, color: "var(--text-secondary)", marginBottom: 5,
+            }}>
+              <span style={{
+                width: 6, height: 6, borderRadius: "50%",
+                background: color, flexShrink: 0,
+                boxShadow: glow ? `0 0 5px rgba(${glow},0.6)` : undefined,
+              }} />
+              {label}
+            </span>
+          ))}
+        </div>
+      </aside>
+
+      {/* ════════════════════════════════════════════════════════════════
+          GLOBE — dark atmospheric canvas, rendered as a circle
+          ════════════════════════════════════════════════════════════════ */}
+      <div
+        className="relative flex-1 overflow-hidden"
+        style={{ background: "var(--bg-primary)" }}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      >
+        {/* ForceGraph2D canvas */}
+        <div ref={containerRef} className="w-full h-full">
+          <ForceGraph2D
+            ref={fgRef}
+            graphData={graphData}
+            nodeId="id"
+            nodeLabel={() => ""}
+            nodeVal={getNodeVal}
+            nodeCanvasObject={paintNode}
+            nodeCanvasObjectMode={() => "replace"}
+            onNodeClick={handleNodeClick}
+            onNodeHover={handleNodeHover}
+            onEngineStop={handleEngineStop}
+            onZoom={handleZoom}
+            onRenderFramePre={handleRenderFramePre}
+            onRenderFramePost={handleRenderFramePost}
+            linkColor={getLinkColor}
+            linkWidth={0.45}
+            linkOpacity={0.85}
+            backgroundColor="rgba(0,0,0,0)"
+            width={dimensions.width}
+            height={dimensions.height}
+            warmupTicks={90}
+            cooldownTicks={160}
+            cooldownTime={7000}
+            d3AlphaDecay={0.038}
+            d3VelocityDecay={0.44}
+            minZoom={0.14}
+            maxZoom={14}
+            enableZoomInteraction={mouseInCircle}   /* scroll zoom only inside the circle */
+            enablePanInteraction={true}              /* drag to pan always works */
+          />
+        </div>
+
+        {/* Globe mode caption */}
+        <div className="absolute top-5 left-0 right-0 flex justify-center pointer-events-none z-10">
+          <div style={{
+            background:           "rgba(12,27,51,0.62)",
+            backdropFilter:       "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
+            border:               "1px solid rgba(131,188,169,0.14)",
+            borderRadius:         20, padding: "5px 16px",
+          }}>
+            <p style={{
+              margin: 0, fontSize: 10, letterSpacing: "0.13em", fontWeight: 700,
+              color: "rgba(131,188,169,0.72)", textTransform: "uppercase", whiteSpace: "nowrap",
+            }}>
+              {activeCategory
+                ? `${activeCategory} · ${focusMembers.length} members · click to open`
+                : `Top ${Math.min(TOP_N, sortedCategories.length)} industries · click to explore`}
+            </p>
+          </div>
+        </div>
+
+        {/* Zoom controls */}
+        <div className="absolute bottom-10 right-5 flex flex-col gap-2 z-10">
+          {([
+            { label: "+", fn: zoomIn,    title: "Zoom in" },
+            { label: "−", fn: zoomOut,   title: "Zoom out" },
+            { label: "⊡", fn: zoomReset, title: "Fit to screen" },
+          ] as const).map(({ label, fn, title }) => (
+            <button
+              key={label}
+              onClick={fn}
+              title={title}
+              style={{
+                width: 34, height: 34,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                background:           "rgba(12,27,51,0.78)",
+                backdropFilter:       "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+                border:               "1px solid rgba(131,188,169,0.18)",
+                borderRadius:         8,
+                color:                "rgba(131,188,169,0.78)",
+                fontSize:             label === "⊡" ? 14 : 18,
+                cursor:               "pointer",
+                fontWeight:           700,
               }}
             >
-              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 170 }}>
-                {activeCategory ?? "All industries"}
-              </span>
-              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"
-                style={{ flexShrink: 0, marginLeft: 6, transform: catMenuOpen ? "rotate(180deg)" : "none", transition: "transform 180ms ease" }}>
-                <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-              </svg>
+              {label}
             </button>
-            {catMenuOpen && (
-              <div style={{
-                position: "absolute", top: "calc(100% + 4px)", left: 0, right: 0,
-                ...GLASS, borderRadius: 10, zIndex: 60,
-                maxHeight: 260, display: "flex", flexDirection: "column", overflow: "hidden",
-              }}>
-                <div style={{ padding: "8px 8px 4px", flexShrink: 0 }}>
-                  <input
-                    autoFocus value={catSearch}
-                    onChange={(e) => setCatSearch(e.target.value)}
-                    placeholder="Filter industries…"
-                    style={{
-                      width: "100%", boxSizing: "border-box", padding: "6px 10px",
-                      background: "rgba(131,188,169,0.07)",
-                      border: "1px solid rgba(131,188,169,0.18)", borderRadius: 6,
-                      color: "rgba(255,255,255,0.88)", fontSize: 12, outline: "none",
-                    }}
-                  />
-                </div>
-                <div style={{ overflowY: "auto", flex: 1 }}>
-                  <button onClick={() => { setActiveCategory(null); setCatMenuOpen(false); setCatSearch(""); }}
-                    style={{ width: "100%", padding: "7px 12px", textAlign: "left",
-                      background: !activeCategory ? "rgba(0,184,148,0.12)" : "transparent",
-                      border: "none", borderBottom: "1px solid rgba(131,188,169,0.06)",
-                      cursor: "pointer", color: !activeCategory ? "#00B894" : "rgba(255,255,255,0.55)", fontSize: 12 }}>
-                    All industries
-                  </button>
-                  {filteredCats.map((cat) => (
-                    <button key={cat}
-                      onClick={() => { setActiveCategory(cat); setCatMenuOpen(false); setCatSearch(""); }}
-                      style={{ width: "100%", padding: "7px 12px", textAlign: "left",
-                        background: activeCategory === cat ? "rgba(0,184,148,0.12)" : "transparent",
-                        border: "none", cursor: "pointer",
-                        color: activeCategory === cat ? "#00B894" : "rgba(255,255,255,0.55)", fontSize: 12 }}>
-                      {cat}
-                    </button>
-                  ))}
-                  {filteredCats.length === 0 && (
-                    <p style={{ padding: "10px 12px", fontSize: 12, color: "rgba(255,255,255,0.25)", margin: 0 }}>
-                      No match
-                    </p>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
+          ))}
+        </div>
 
-          {activeCategory && (
-            <div style={{
-              display: "flex", alignItems: "center", justifyContent: "space-between",
-              padding: "5px 9px",
-              background: "rgba(0,184,148,0.1)", border: "1px solid rgba(0,184,148,0.28)", borderRadius: 6,
-            }}>
-              <span style={{ fontSize: 11, color: "#00B894", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {activeCategory}
-              </span>
-              <button onClick={() => setActiveCategory(null)}
-                style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(0,184,148,0.55)", fontSize: 13, padding: "0 0 0 6px", flexShrink: 0 }}>
-                ✕
-              </button>
-            </div>
-          )}
-          {hasFilters && (
-            <button onClick={clearFilters}
-              style={{ fontSize: 11, color: "rgba(255,98,51,0.65)", background: "none", border: "none",
-                cursor: "pointer", textAlign: "left", padding: 0, letterSpacing: "0.05em", fontWeight: 600 }}>
-              ✕ Clear all filters
-            </button>
-          )}
+        {/* Scroll hint */}
+        <div className="absolute bottom-4 left-0 right-0 flex justify-center pointer-events-none">
+          <p style={{
+            margin: 0, fontSize: 9.5, letterSpacing: "0.1em", fontWeight: 600,
+            color: "rgba(131,188,169,0.22)", textTransform: "uppercase", whiteSpace: "nowrap",
+          }}>
+            Scroll inside globe to zoom · drag to pan · click to open
+          </p>
         </div>
       </div>
 
-      {/* ── Legend — bottom left ──────────────────────────────────────── */}
-      <div className="absolute bottom-20 left-5 z-10"
-        style={{ ...GLASS, display: "flex", flexDirection: "column", gap: 6, padding: "12px 14px", borderRadius: 10 }}>
-        {([
-          { color: C.ci,       label: "Community Investor", glow: C.ciRgb   },
-          { color: C.vp,       label: "Visibility Plus",    glow: C.vpRgb   },
-          { color: C.standard, label: "Member",             glow: null      },
-          { color: C.cat,      label: "Industry hub",       glow: C.catRgb  },
-          { color: C.city,     label: "City",               glow: C.cityRgb },
-        ] as const).map(({ color, label, glow }) => (
-          <span key={label} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 10.5, color: "rgba(255,255,255,0.38)" }}>
-            <span style={{
-              width: 7, height: 7, borderRadius: "50%", background: color, flexShrink: 0,
-              boxShadow: glow ? `0 0 6px rgba(${glow},0.65)` : undefined,
-            }} />
-            {label}
-          </span>
-        ))}
-      </div>
-
-      {/* ── Zoom controls — bottom right ──────────────────────────────── */}
-      <div className="absolute bottom-20 right-5 z-10 flex flex-col gap-2">
-        <button onClick={zoomIn}    style={zBtn} title="Zoom in">+</button>
-        <button onClick={zoomOut}   style={zBtn} title="Zoom out">−</button>
-        <button onClick={zoomReset} title="Fit to screen"
-          style={{ ...zBtn, fontSize: 13, letterSpacing: 0, color: "rgba(131,188,169,0.5)" }}>
-          ⊡
-        </button>
-      </div>
-
-      {/* ── Drag hint — bottom center ─────────────────────────────────── */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
-        <p style={{
-          fontSize: 10, letterSpacing: "0.1em", fontWeight: 600,
-          color: "rgba(131,188,169,0.28)", textTransform: "uppercase", margin: 0, whiteSpace: "nowrap",
-        }}>
-          Scroll inside the globe to zoom · drag to pan · click a node to explore
-        </p>
-      </div>
-
-      {/* ── Canvas — rendered as a circle via onRenderFramePost mask ──── */}
-      <div ref={containerRef} className="w-full h-full">
-        <ForceGraph2D
-          ref={fgRef}
-          graphData={graphData}
-          nodeId="id"
-          nodeLabel={() => ""}
-          nodeVal={getNodeVal}
-          nodeCanvasObject={paintNode}
-          nodeCanvasObjectMode={() => "replace"}
-          onNodeClick={handleNodeClick}
-          onNodeHover={handleNodeHover}
-          onEngineStop={handleEngineStop}
-          onZoom={handleZoom}
-          onRenderFramePre={handleRenderFramePre}
-          onRenderFramePost={handleRenderFramePost}
-          linkColor={getLinkColor}
-          linkWidth={0.3}
-          backgroundColor="rgba(0,0,0,0)"
-          width={dimensions.width}
-          height={dimensions.height}
-          warmupTicks={100}
-          cooldownTicks={200}
-          cooldownTime={8000}
-          d3AlphaDecay={0.04}
-          d3VelocityDecay={0.45}
-          minZoom={0.12}
-          maxZoom={14}
-          enableZoomInteraction={mouseInCircle}   /* scroll zooms inside circle, page scrolls outside */
-          enablePanInteraction={true}     /* drag to pan still works */
-        />
-      </div>
-
+      {/* Member detail panel */}
       {selectedMember && (
         <MemberModal member={selectedMember} onClose={() => setSelectedMember(null)} />
       )}

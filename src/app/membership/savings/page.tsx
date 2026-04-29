@@ -1,5 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { FadeIn } from "@/components/FadeIn";
+
+/**
+ * Member Savings Programs — φ spatial system applied throughout.
+ *
+ * HERO    pt-f144 pb-f89
+ * FEATURE py-f89 lg:py-f144 — 5 program cards (open white, space-y-f21)
+ * CLOSER  py-f55 lg:py-f89  — member-only CTA card
+ */
 
 export const metadata: Metadata = {
   title: "Member Savings Programs",
@@ -83,127 +92,150 @@ const programs = [
 
 export default function SavingsPage() {
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
-      {/* Hero */}
-      <section className="max-w-3xl">
-        <p className="text-overline text-cambridge mb-4">Membership</p>
-        <h1 className="text-display">
-          Savings
-          <br />
-          <span className="text-accent">Programs</span>
-        </h1>
-        <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-          Chamber membership includes exclusive access to programs that cut
-          real costs — health insurance, workers' comp, energy bills, HR, and
-          more. Five programs built for small and mid-sized businesses.
-        </p>
-      </section>
-
-      {/* Programs */}
-      <section className="mt-20 space-y-6">
-        {programs.map((p) => (
-          <div
-            key={p.name}
-            className="p-8 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
-          >
-            <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
-              <div>
-                <span className="text-caption text-cambridge font-bold uppercase tracking-wider">
-                  {p.tag}
-                </span>
-                <h2 className="text-h3 mt-1">{p.name}</h2>
-                <p className="text-body-sm text-text-tertiary mt-0.5">
-                  via {p.provider}
-                </p>
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <p className="text-body-sm text-text-secondary leading-relaxed">
-                  {p.description}
-                </p>
-                <div className="mt-4 p-3 bg-bg-primary border border-border-secondary rounded-[var(--radius-md)]">
-                  <p className="text-caption text-text-tertiary uppercase tracking-wider mb-1">
-                    Eligibility
-                  </p>
-                  <p className="text-body-sm text-text-primary">{p.eligibility}</p>
-                </div>
-              </div>
-
-              <div>
-                <p className="text-caption text-text-tertiary uppercase tracking-wider mb-2">
-                  How to Access
-                </p>
-                <p className="text-body-sm text-text-secondary leading-relaxed">
-                  {p.howToAccess}
-                </p>
-                {p.contact && (
-                  <div className="mt-4 space-y-1.5">
-                    <p className="text-body-sm font-bold text-text-primary">
-                      {p.contact.name}
-                    </p>
-                    <a
-                      href={`mailto:${p.contact.email}`}
-                      className="block text-body-sm text-cambridge hover:text-cambridge/80 transition-colors"
-                    >
-                      {p.contact.email}
-                    </a>
-                    <a
-                      href={`tel:${p.contact.phone.replace(/\D/g, "")}`}
-                      className="block text-body-sm text-text-secondary hover:text-text-primary transition-colors"
-                    >
-                      {p.contact.phone}
-                    </a>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        ))}
-      </section>
-
-      {/* Not a member nudge */}
-      <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-        <div className="grid lg:grid-cols-2 gap-10 items-center">
-          <div>
-            <h2 className="text-h2">
-              These are member-only programs.
-            </h2>
-            <p className="text-body-lg text-text-secondary mt-4">
-              The savings programs alone can offset — or exceed — the cost of
-              annual membership. Health insurance savings for even one employee
-              typically covers the full membership investment.
-            </p>
-          </div>
-          <div className="space-y-4">
-            <Link
-              href="/membership/join"
-              className="
-                block w-full text-center py-3 px-6
-                bg-accent hover:bg-accent-hover
-                text-white font-bold text-body-sm
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
-            >
-              Join the Chamber →
-            </Link>
-            <Link
-              href="/membership/benefits"
-              className="
-                block w-full text-center py-3 px-6
-                border border-border-primary hover:border-text-tertiary
-                text-text-primary font-bold text-body-sm
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
-            >
-              See All Member Benefits
-            </Link>
-          </div>
+    <>
+      {/* ─── HERO ─────────────────────────────────────────────── */}
+      {/* pt-f144 pb-f89 (144/89 = φ) — HERO tier */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
+        <div className="max-w-3xl">
+          {/* mb-f8 (8px) — overline→heading */}
+          <p className="text-overline text-cambridge mb-f8">Membership</p>
+          <h1 className="text-display">
+            Savings
+            <br />
+            <span className="text-accent">Programs</span>
+          </h1>
+          {/* mt-f13 (13px) — heading→body */}
+          <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
+            Chamber membership includes exclusive access to programs that cut
+            real costs — health insurance, workers&apos; comp, energy bills, HR, and
+            more. Five programs built for small and mid-sized businesses.
+          </p>
         </div>
       </section>
-    </div>
+
+      {/* ─── FEATURE — Program cards ──────────────────────────── */}
+      {/* py-f89/f144 — FEATURE tier, open white */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+        {/* space-y-f21 — between program cards */}
+        <div className="space-y-f21">
+          {programs.map((p, i) => (
+            <FadeIn key={p.name} delay={i * 60}>
+              <div className="p-f21 lg:p-f34 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+                {/* mb-f13 — card header→content gap */}
+                <div className="flex flex-wrap items-start justify-between gap-f8 mb-f13">
+                  <div>
+                    {/* tag */}
+                    <span className="text-caption text-cambridge font-bold uppercase tracking-wider">
+                      {p.tag}
+                    </span>
+                    {/* mt-f3 — tag→name micro-gap */}
+                    <h2 className="text-h3 mt-f3">{p.name}</h2>
+                    {/* mt-f3 — name→provider micro-gap */}
+                    <p className="text-body-sm text-text-tertiary mt-f3">
+                      via {p.provider}
+                    </p>
+                  </div>
+                </div>
+
+                {/* gap-f21 — 2-col content gap */}
+                <div className="grid md:grid-cols-2 gap-f21">
+                  <div>
+                    <p className="text-body-sm text-text-secondary leading-relaxed">
+                      {p.description}
+                    </p>
+                    {/* mt-f13 — desc→eligibility gap; p-f13 — eligibility box padding */}
+                    <div className="mt-f13 p-f13 bg-bg-primary border border-border-secondary rounded-[var(--radius-md)]">
+                      {/* mb-f3 — label→value micro-gap */}
+                      <p className="text-caption text-text-tertiary uppercase tracking-wider mb-f3">
+                        Eligibility
+                      </p>
+                      <p className="text-body-sm text-text-primary">{p.eligibility}</p>
+                    </div>
+                  </div>
+
+                  <div>
+                    {/* mb-f8 — label→body gap */}
+                    <p className="text-caption text-text-tertiary uppercase tracking-wider mb-f8">
+                      How to Access
+                    </p>
+                    <p className="text-body-sm text-text-secondary leading-relaxed">
+                      {p.howToAccess}
+                    </p>
+                    {p.contact && (
+                      /* mt-f13 — body→contact gap; space-y-f3 — contact rows */
+                      <div className="mt-f13 space-y-f3">
+                        <p className="text-body-sm font-bold text-text-primary">
+                          {p.contact.name}
+                        </p>
+                        <a
+                          href={`mailto:${p.contact.email}`}
+                          className="block text-body-sm text-cambridge hover:text-cambridge/80 transition-colors"
+                        >
+                          {p.contact.email}
+                        </a>
+                        <a
+                          href={`tel:${p.contact.phone.replace(/\D/g, "")}`}
+                          className="block text-body-sm text-text-secondary hover:text-text-primary transition-colors"
+                        >
+                          {p.contact.phone}
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── CLOSER — Member-only CTA ─────────────────────────── */}
+      {/* py-f55/f89 — CLOSER taper */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+        <FadeIn>
+          {/* p-f34/f55 card padding, gap-f34 2-col gap */}
+          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+            <div className="grid lg:grid-cols-2 gap-f34 items-center">
+              <div>
+                <h2 className="text-h2">These are member-only programs.</h2>
+                {/* mt-f13 — heading→body */}
+                <p className="text-body-lg text-text-secondary mt-f13">
+                  The savings programs alone can offset — or exceed — the cost of
+                  annual membership. Health insurance savings for even one employee
+                  typically covers the full membership investment.
+                </p>
+              </div>
+              {/* space-y-f13 — button stack gap */}
+              <div className="space-y-f13">
+                <Link
+                  href="/membership/join"
+                  className="
+                    block w-full text-center py-f13 px-f21
+                    bg-accent hover:bg-accent-hover
+                    text-white font-bold text-body-sm
+                    rounded-[var(--radius-md)]
+                    transition-colors
+                  "
+                >
+                  Join the Chamber →
+                </Link>
+                <Link
+                  href="/membership/benefits"
+                  className="
+                    block w-full text-center py-f13 px-f21
+                    border border-border-primary hover:border-text-tertiary
+                    text-text-primary font-bold text-body-sm
+                    rounded-[var(--radius-md)]
+                    transition-colors
+                  "
+                >
+                  See All Member Benefits
+                </Link>
+              </div>
+            </div>
+          </div>
+        </FadeIn>
+      </section>
+    </>
   );
 }

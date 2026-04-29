@@ -245,8 +245,12 @@ function MobileMenu({
   pathname: string;
 }) {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
-  const [visible, setVisible] = useState(false);
-  const [animating, setAnimating] = useState(false);
+  const [visible,       setVisible]       = useState(false);
+  const [animating,     setAnimating]     = useState(false);
+  // Guards against iOS ghost-click: a synthetic click fires ~300ms after
+  // touchend on the element that opened the menu and can land on the
+  // newly-mounted backdrop, instantly closing it.
+  const [backdropReady, setBackdropReady] = useState(false);
 
   // Animate in/out instead of instant mount/unmount
   useEffect(() => {
@@ -255,8 +259,12 @@ function MobileMenu({
       requestAnimationFrame(() => {
         requestAnimationFrame(() => setAnimating(true));
       });
+      // Activate backdrop after iOS ghost-click window has passed (~300ms).
+      const readyTimer = setTimeout(() => setBackdropReady(true), 350);
+      return () => clearTimeout(readyTimer);
     } else {
       setAnimating(false);
+      setBackdropReady(false);
       const timer = setTimeout(() => setVisible(false), 250);
       return () => clearTimeout(timer);
     }
@@ -265,8 +273,9 @@ function MobileMenu({
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 z-50 lg:hidden">
-      {/* Backdrop — fade. Button for native keyboard support. */}
+    <div className="fixed inset-0 z-50 xl:hidden">
+      {/* Backdrop — fade. Button for native keyboard support.
+          pointerEvents blocked until backdropReady to prevent iOS ghost-click. */}
       <button
         type="button"
         aria-label="Close menu"
@@ -275,7 +284,8 @@ function MobileMenu({
           transition-opacity duration-250 ease-out
           ${animating ? "opacity-100" : "opacity-0"}
         `}
-        onClick={onClose}
+        onClick={backdropReady ? onClose : undefined}
+        style={{ pointerEvents: backdropReady ? undefined : "none" }}
       />
 
       {/* Drawer — slide from right */}
@@ -537,7 +547,7 @@ export function Header() {
                 aria-label="Open Virtual Chamber"
                 title="Virtual Chamber"
                 className="
-                  hidden lg:flex w-f34 h-f34 items-center justify-center
+                  hidden xl:flex w-f34 h-f34 items-center justify-center
                   rounded-full bg-bg-tertiary hover:bg-border-primary
                   transition-colors flex-shrink-0
                 "
@@ -559,7 +569,7 @@ export function Header() {
 
             {/* ── Sacred center: Desktop nav ── */}
             <nav
-              className="hidden lg:flex items-center gap-f5"
+              className="hidden xl:flex items-center gap-f5"
               onPointerLeave={scheduleClose}
             >
               {navigation.map((item) => (
@@ -586,7 +596,7 @@ export function Header() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="
-                  hidden lg:flex items-center px-3 py-2
+                  hidden xl:flex items-center px-3 py-2
                   whitespace-nowrap
                   text-text-secondary hover:text-text-primary
                   font-bold text-body-sm
@@ -600,7 +610,7 @@ export function Header() {
               <Link
                 href={ctaLink.href}
                 className="
-                  hidden lg:flex items-center px-f13 py-f8
+                  hidden xl:flex items-center px-f13 py-f8
                   whitespace-nowrap
                   bg-accent hover:bg-accent-hover
                   text-white font-bold text-body-sm
@@ -614,7 +624,7 @@ export function Header() {
               {/* Mobile hamburger */}
               <button
                 onClick={() => setMobileOpen(true)}
-                className="lg:hidden w-f34 h-f34 flex items-center justify-center rounded-full hover:bg-bg-tertiary cursor-pointer"
+                className="xl:hidden w-f34 h-f34 flex items-center justify-center rounded-full hover:bg-bg-tertiary cursor-pointer"
                 aria-label="Open menu"
               >
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">

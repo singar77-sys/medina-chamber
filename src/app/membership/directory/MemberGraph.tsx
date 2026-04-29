@@ -179,6 +179,8 @@ export function MemberGraph({ members }: MemberGraphProps) {
   // Reading this ref inside render callbacks is safe; calling
   // fgRef.current.graphData() inside a frame callback is NOT safe in v1.29.1.
   const nodePositionsRef = useRef<Map<string, { x: number; y: number }>>(new Map());
+  // Chamber seal image — preloaded once, drawn in POST callback
+  const logoImgRef = useRef<HTMLImageElement | null>(null);
 
   // Stable refs for canvas callbacks (avoids stale closures)
   const activeCatRef  = useRef<string | null>(null);
@@ -269,6 +271,14 @@ export function MemberGraph({ members }: MemberGraphProps) {
     bgColorRef.current =
       getComputedStyle(document.documentElement).getPropertyValue("--bg-primary").trim() ||
       "#ffffff";
+  }, []);
+
+  // ── Preload Chamber seal — drawn in POST callback once loaded ───────────
+  useEffect(() => {
+    const img = new Image();
+    img.src = "/images/chamber%20events/assets/logos/stamp-orange.png";
+    img.onload  = () => { logoImgRef.current = img; };
+    img.onerror = () => { logoImgRef.current = null; }; // text fallback stays active
   }, []);
 
   // ── Responsive sizing — watch the globe container ──────────────────────
@@ -461,9 +471,9 @@ export function MemberGraph({ members }: MemberGraphProps) {
     if (!activeCatRef.current) {
       const cx = cw / 2;
       const cy = ch / 2;
-      // Pupil is ~30% of the circle radius — big enough to read, small enough
-      // to leave generous ring space for all 35 industry nodes.
-      const pr = Math.max(32, Math.min(cr * 0.30, 110));
+      // Pupil is ~36% of the circle radius — big enough to read the seal,
+      // still leaves comfortable ring space for all 35 industry nodes.
+      const pr = Math.max(38, Math.min(cr * 0.36, 130));
 
       // Pulsing outer glow — cambridge halo that breathes with the scene
       const glowR1 = pr * 0.9;
@@ -498,22 +508,41 @@ export function MemberGraph({ members }: MemberGraphProps) {
       ctx.strokeStyle = `rgba(131,188,169,${(0.04 + 0.04 * _pulse).toFixed(3)})`;
       ctx.lineWidth   = 0.8; ctx.stroke();
 
-      // "MEDINA" — cambridge, bold
-      ctx.fillStyle    = "rgba(131,188,169,0.93)";
-      ctx.font         = `700 ${Math.round(pr * 0.26)}px system-ui,-apple-system,sans-serif`;
-      ctx.textAlign    = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText("MEDINA", cx, cy - pr * 0.13);
+      if (logoImgRef.current) {
+        // ── Glowing seal image ──────────────────────────────────────────────
+        // Step 1: coquelicot shadow halo rendered BEFORE the clip so it bleeds
+        // outward past the circle edge for a genuine bloom effect.
+        ctx.beginPath();
+        ctx.arc(cx, cy, pr * 0.90, 0, Math.PI * 2);
+        ctx.shadowColor = `rgba(255,80,0,${(0.70 * _pulse).toFixed(3)})`;
+        ctx.shadowBlur  = Math.round(pr * 0.45);
+        ctx.fillStyle   = `rgba(255,80,0,${(0.06 + 0.08 * _pulse).toFixed(3)})`;
+        ctx.fill();
+        ctx.shadowBlur  = 0;
 
-      // "CHAMBER" — muted white, light weight
-      ctx.fillStyle = "rgba(255,255,255,0.48)";
-      ctx.font      = `300 ${Math.round(pr * 0.165)}px system-ui,-apple-system,sans-serif`;
-      ctx.fillText("CHAMBER", cx, cy + pr * 0.13);
-
-      // "EST. 1938" — tiny cambridge caption
-      ctx.fillStyle = "rgba(131,188,169,0.36)";
-      ctx.font      = `${Math.round(pr * 0.105)}px system-ui,-apple-system,sans-serif`;
-      ctx.fillText("EST. 1938", cx, cy + pr * 0.36);
+        // Step 2: draw seal clipped to pupil circle — keeps corners tidy
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, pr, 0, Math.PI * 2);
+        ctx.clip();
+        ctx.globalAlpha = 0.78 + 0.16 * _pulse;
+        ctx.drawImage(logoImgRef.current, cx - pr, cy - pr, pr * 2, pr * 2);
+        ctx.globalAlpha = 1;
+        ctx.restore();
+      } else {
+        // ── Text fallback while seal loads ──────────────────────────────────
+        ctx.fillStyle    = "rgba(131,188,169,0.93)";
+        ctx.font         = `700 ${Math.round(pr * 0.26)}px system-ui,-apple-system,sans-serif`;
+        ctx.textAlign    = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("MEDINA", cx, cy - pr * 0.13);
+        ctx.fillStyle = "rgba(255,255,255,0.48)";
+        ctx.font      = `300 ${Math.round(pr * 0.165)}px system-ui,-apple-system,sans-serif`;
+        ctx.fillText("CHAMBER", cx, cy + pr * 0.13);
+        ctx.fillStyle = "rgba(131,188,169,0.36)";
+        ctx.font      = `${Math.round(pr * 0.105)}px system-ui,-apple-system,sans-serif`;
+        ctx.fillText("EST. 1938", cx, cy + pr * 0.36);
+      }
     }
 
     ctx.restore();

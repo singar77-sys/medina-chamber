@@ -305,10 +305,20 @@ export function MemberGraph({ members }: MemberGraphProps) {
     return () => ro.disconnect();
   }, []);
 
-  // ── Dynamic boundary radius — 82% of the inscribed circle radius ───────
+  // ── Dynamic boundary radius — Euclidean safe-area constraint ───────────
+  // Find the largest circle centered at the canvas midpoint that avoids the
+  // top UI stack (toggle pill + caption at top-5) and bottom hint bar, then
+  // set the D3 orbit radius to 78% of that circle so nodes stay well inside.
   useEffect(() => {
-    const r = Math.round(Math.min(dimensions.width, dimensions.height) / 2 * 0.82);
-    boundaryRRef.current = Math.max(r, 60);
+    const { width: w, height: h } = dimensions;
+    const topPad  = 110; // toggle + caption + top-5 offset + buffer (CSS px)
+    const botPad  = 32;  // bottom hint + buffer (CSS px)
+    const sidePad = 12;  // aesthetic side clearance (CSS px)
+    const crCss = Math.max(
+      60,
+      Math.floor(Math.min(w / 2 - sidePad, h / 2 - topPad, h / 2 - botPad)) - 2,
+    );
+    boundaryRRef.current = Math.max(Math.round(crCss * 0.78), 60);
   }, [dimensions]);
 
   // ── D3 force reconfiguration on mode switch ────────────────────────────
@@ -411,7 +421,16 @@ export function MemberGraph({ members }: MemberGraphProps) {
   const handleRenderFramePost = useCallback((ctx: CanvasRenderingContext2D) => {
     const cw = ctx.canvas.width;
     const ch = ctx.canvas.height;
-    const cr = Math.min(cw, ch) / 2 - 2;
+    // Euclidean: largest circle centered at (cw/2, ch/2) that clears the
+    // top UI stack (toggle + caption) and bottom hint, in physical pixels.
+    const dpr     = window.devicePixelRatio || 1;
+    const topPad  = Math.round(110 * dpr);
+    const botPad  = Math.round(32  * dpr);
+    const sidePad = Math.round(12  * dpr);
+    const cr = Math.max(
+      60 * dpr,
+      Math.floor(Math.min(cw / 2 - sidePad, ch / 2 - topPad, ch / 2 - botPad)) - 2,
+    );
 
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -527,7 +546,7 @@ export function MemberGraph({ members }: MemberGraphProps) {
       const cy = ch / 2;
       // Pupil is ~36% of the circle radius — big enough to read the seal,
       // still leaves comfortable ring space for all 35 industry nodes.
-      const pr = Math.max(38, Math.min(cr * 0.36, 130));
+      const pr = Math.max(26, Math.min(cr * 0.24, 88));
 
       // Pulsing outer glow — cambridge halo that breathes with the scene
       const glowR1 = pr * 0.9;
@@ -1191,9 +1210,10 @@ export function MemberGraph({ members }: MemberGraphProps) {
             d3VelocityDecay={0.44}
             minZoom={0.14}
             maxZoom={14}
-            // Touch devices: zoom always enabled (pinch ≠ page scroll conflict)
-            // Desktop: zoom only inside the circle (prevents page-scroll hijack)
-            enableZoomInteraction={isTouch ? true : mouseInCircle}
+            // Touch: keep pinch-zoom (natural gesture, no scroll conflict).
+            // Desktop: scroll-zoom disabled — it hijacks page scroll and feels
+            // clunky. Use the +/− buttons or zoomToFit instead.
+            enableZoomInteraction={isTouch}
             enablePanInteraction={true}
           />
         </div>
@@ -1298,19 +1318,6 @@ export function MemberGraph({ members }: MemberGraphProps) {
           ))}
         </div>
 
-        {/* Desktop hint — correct copy, hidden on mobile (browse bar replaces it) */}
-        {!isMobile && (
-          <div className="absolute bottom-4 left-0 right-0 flex justify-center pointer-events-none">
-            <p style={{
-              margin: 0, fontSize: 9.5, letterSpacing: "0.1em", fontWeight: 600,
-              color: "rgba(131,188,169,0.40)", textTransform: "uppercase", whiteSpace: "nowrap",
-            }}>
-              {isTouch
-                ? "Pinch to zoom · drag to pan · tap to open"
-                : "Scroll inside globe to zoom · drag to pan · click to open"}
-            </p>
-          </div>
-        )}
       </div>
 
       {/* ════════════════════════════════════════════════════════════════

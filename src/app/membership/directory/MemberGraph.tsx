@@ -259,10 +259,14 @@ export function MemberGraph({ members }: MemberGraphProps) {
           links: [],
         };
       }
+      // Pre-position nodes near origin so the ring force expands them outward
+      // uniformly — same behaviour as returning from focus mode (nodes start at
+      // the centre hub). Without this, initial load scatters nodes randomly and
+      // the ring forms unevenly.
       return {
-        nodes: allGraphData.nodes.filter(
-          (n) => n.type === "category" && topCatSet.has(n.name),
-        ),
+        nodes: allGraphData.nodes
+          .filter((n) => n.type === "category" && topCatSet.has(n.name))
+          .map((n) => ({ ...n, x: (Math.random() - 0.5) * 8, y: (Math.random() - 0.5) * 8 })),
         links: [],
       };
     }

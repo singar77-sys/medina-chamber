@@ -276,7 +276,7 @@ export function MemberGraph({ members }: MemberGraphProps) {
   // ── Preload Chamber seal — drawn in POST callback once loaded ───────────
   useEffect(() => {
     const img = new Image();
-    img.src = "/images/chamber%20events/assets/logos/stamp-orange.png";
+    img.src = "/images/logos/stamp-orange.png";
     img.onload  = () => { logoImgRef.current = img; };
     img.onerror = () => { logoImgRef.current = null; }; // text fallback stays active
   }, []);

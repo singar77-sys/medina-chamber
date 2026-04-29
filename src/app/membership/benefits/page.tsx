@@ -1,5 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { FadeIn } from "@/components/FadeIn";
+
+/**
+ * Member Benefits — φ spatial system applied throughout.
+ *
+ * HERO    pt-f144 pb-f89
+ * FEATURE py-f89 lg:py-f144 — 8 core benefit cards (open white, md:grid-cols-2 gap-f21)
+ * BAND    py-f55 lg:py-f89  — 4 additional perks (bg-secondary, sm:2/lg:4 col gap-f21)
+ * CLOSER  py-f55 lg:py-f89  — join CTA card
+ */
 
 export const metadata: Metadata = {
   title: "Member Benefits",
@@ -89,134 +99,159 @@ const extraBenefits = [
 
 export default function BenefitsPage() {
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
-      {/* Hero */}
-      <section className="max-w-3xl">
-        <p className="text-overline text-cambridge mb-4">Membership</p>
-        <h1 className="text-display">
-          Member
-          <br />
-          <span className="text-accent">Benefits</span>
-        </h1>
-        <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-          Chamber membership isn&apos;t just a badge — it&apos;s access to the
-          relationships, resources, and advocacy that help Medina County
-          businesses grow.
-        </p>
-        <div className="mt-10 flex flex-wrap gap-4">
-          <Link
-            href="/membership/join"
-            className="
-              inline-flex items-center px-8 py-4
-              bg-accent hover:bg-accent-hover
-              text-white font-bold text-body
-              rounded-[var(--radius-md)]
-              transition-colors
-            "
-          >
-            Join the Chamber →
-          </Link>
-          <Link
-            href="/membership/pricing"
-            className="
-              inline-flex items-center px-6 py-4
-              border border-border-primary hover:border-text-tertiary
-              text-text-primary font-bold text-body-sm
-              rounded-[var(--radius-md)]
-              transition-colors
-            "
-          >
-            View Pricing
-          </Link>
-        </div>
-      </section>
-
-      {/* Core benefits */}
-      <section className="mt-20">
-        <h2 className="text-overline text-cambridge mb-8">What&apos;s Included</h2>
-        <div className="grid md:grid-cols-2 gap-6">
-          {coreBenefits.map((b) => (
-            <div
-              key={b.title}
-              className="flex flex-col p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
-            >
-              <h3 className="text-h4 mb-3">{b.title}</h3>
-              <p className="text-body-sm text-text-secondary leading-relaxed flex-1">
-                {b.description}
-              </p>
-              {b.link && (
-                <Link
-                  href={b.link.href}
-                  className="mt-4 text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
-                >
-                  {b.link.label} →
-                </Link>
-              )}
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Additional perks */}
-      <section className="mt-16">
-        <h2 className="text-overline text-cambridge mb-8">Additional Member Perks</h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {extraBenefits.map((b) => (
-            <div
-              key={b.title}
-              className="p-5 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
-            >
-              <h3 className="text-body font-bold mb-2">{b.title}</h3>
-              <p className="text-body-sm text-text-secondary leading-relaxed">
-                {b.description}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-        <div className="grid lg:grid-cols-2 gap-10 items-center">
-          <div>
-            <h2 className="text-h2">
-              Ready to put these to work?
-            </h2>
-            <p className="text-body-lg text-text-secondary mt-4">
-              Three tiers: Business Essentials at $345/year, Visibility Plus at
-              $575/year, or Community Investor at $1,145/year. Membership pays
-              for itself with one good referral, one saved contract, or one
-              connection made at a mixer.
-            </p>
-          </div>
-          <div className="space-y-4">
+    <>
+      {/* ─── HERO ─────────────────────────────────────────────── */}
+      {/* pt-f144 pb-f89 (144/89 = φ) — HERO tier */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
+        <div className="max-w-3xl">
+          {/* mb-f8 (8px) — overline→heading */}
+          <p className="text-overline text-cambridge mb-f8">Membership</p>
+          <h1 className="text-display">
+            Member
+            <br />
+            <span className="text-accent">Benefits</span>
+          </h1>
+          {/* mt-f13 (13px) — heading→body */}
+          <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
+            Chamber membership isn&apos;t just a badge — it&apos;s access to the
+            relationships, resources, and advocacy that help Medina County
+            businesses grow.
+          </p>
+          {/* mt-f21 — body→CTAs; gap-f13 — between buttons */}
+          <div className="mt-f21 flex flex-wrap gap-f13">
             <Link
               href="/membership/join"
               className="
-                block w-full text-center py-3 px-6
+                inline-flex items-center px-f21 py-f13
                 bg-accent hover:bg-accent-hover
-                text-white font-bold text-body-sm
+                text-white font-bold text-body
                 rounded-[var(--radius-md)]
                 transition-colors
               "
             >
-              Apply for Membership →
+              Join the Chamber →
             </Link>
             <Link
               href="/membership/pricing"
               className="
-                block w-full text-center py-3 px-6
+                inline-flex items-center px-f21 py-f13
                 border border-border-primary hover:border-text-tertiary
                 text-text-primary font-bold text-body-sm
                 rounded-[var(--radius-md)]
                 transition-colors
               "
             >
-              View Pricing Tiers
+              View Pricing
             </Link>
           </div>
         </div>
       </section>
-    </div>
+
+      {/* ─── FEATURE — Core benefits ──────────────────────────── */}
+      {/* py-f89/f144 — FEATURE tier, open white */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+        <FadeIn>
+          {/* mb-f21 — label→grid gap */}
+          <h2 className="text-overline text-cambridge mb-f21">What&apos;s Included</h2>
+          {/* gap-f21 — card grid gap */}
+          <div className="grid md:grid-cols-2 gap-f21">
+            {coreBenefits.map((b, i) => (
+              <FadeIn key={b.title} delay={i * 50}>
+                <div className="flex flex-col p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] h-full">
+                  {/* mb-f8 — title→body */}
+                  <h3 className="text-h4 mb-f8">{b.title}</h3>
+                  <p className="text-body-sm text-text-secondary leading-relaxed flex-1">
+                    {b.description}
+                  </p>
+                  {b.link && (
+                    /* mt-f13 — body→link gap */
+                    <Link
+                      href={b.link.href}
+                      className="mt-f13 text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
+                    >
+                      {b.link.label} →
+                    </Link>
+                  )}
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+        </FadeIn>
+      </section>
+
+      {/* ─── BAND — Additional perks ──────────────────────────── */}
+      {/* py-f55/f89 — BAND tier, bg-secondary + border-y */}
+      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <FadeIn>
+            {/* mb-f21 — label→grid gap */}
+            <h2 className="text-overline text-cambridge mb-f21">Additional Member Perks</h2>
+            {/* gap-f21 — card grid gap */}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-f21">
+              {extraBenefits.map((b, i) => (
+                <FadeIn key={b.title} delay={i * 60}>
+                  <div className="p-f21 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)] h-full">
+                    {/* mb-f8 — title→body */}
+                    <h3 className="text-body font-bold mb-f8">{b.title}</h3>
+                    <p className="text-body-sm text-text-secondary leading-relaxed">
+                      {b.description}
+                    </p>
+                  </div>
+                </FadeIn>
+              ))}
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ─── CLOSER — Join CTA ────────────────────────────────── */}
+      {/* py-f55/f89 — CLOSER taper */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+        <FadeIn>
+          {/* p-f34/f55 card padding, gap-f34 2-col gap */}
+          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+            <div className="grid lg:grid-cols-2 gap-f34 items-center">
+              <div>
+                <h2 className="text-h2">Ready to put these to work?</h2>
+                {/* mt-f13 — heading→body */}
+                <p className="text-body-lg text-text-secondary mt-f13">
+                  Three tiers: Business Essentials at $345/year, Visibility Plus at
+                  $575/year, or Community Investor at $1,145/year. Membership pays
+                  for itself with one good referral, one saved contract, or one
+                  connection made at a mixer.
+                </p>
+              </div>
+              {/* space-y-f13 — button stack gap */}
+              <div className="space-y-f13">
+                <Link
+                  href="/membership/join"
+                  className="
+                    block w-full text-center py-f13 px-f21
+                    bg-accent hover:bg-accent-hover
+                    text-white font-bold text-body-sm
+                    rounded-[var(--radius-md)]
+                    transition-colors
+                  "
+                >
+                  Apply for Membership →
+                </Link>
+                <Link
+                  href="/membership/pricing"
+                  className="
+                    block w-full text-center py-f13 px-f21
+                    border border-border-primary hover:border-text-tertiary
+                    text-text-primary font-bold text-body-sm
+                    rounded-[var(--radius-md)]
+                    transition-colors
+                  "
+                >
+                  View Pricing Tiers
+                </Link>
+              </div>
+            </div>
+          </div>
+        </FadeIn>
+      </section>
+    </>
   );
 }

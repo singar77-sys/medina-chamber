@@ -1,5 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { FadeIn } from "@/components/FadeIn";
+
+/**
+ * Committees & Councils — φ spatial system applied throughout.
+ *
+ * HERO    pt-f144 pb-f89
+ * FEATURE py-f89 lg:py-f144 — 9 committee cards (open white, space-y-f21)
+ * CLOSER  py-f55 lg:py-f89  — get-involved CTA card
+ */
 
 export const metadata: Metadata = {
   title: "Committees & Councils",
@@ -72,85 +81,100 @@ const committees = [
 
 export default function CommitteesPage() {
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
-      {/* Hero */}
-      <section className="max-w-3xl">
-        <p className="text-overline text-cambridge mb-4">Membership</p>
-        <h1 className="text-display">
-          Committees
-          <br />
-          <span className="text-accent">&amp; Councils</span>
-        </h1>
-        <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-          Chamber membership is more than a listing. Committees are where
-          members actually shape the chamber — its programs, advocacy, events,
-          and culture. There&apos;s a place for every kind of contributor.
-        </p>
+    <>
+      {/* ─── HERO ─────────────────────────────────────────────── */}
+      {/* pt-f144 pb-f89 (144/89 = φ) — HERO tier */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
+        <div className="max-w-3xl">
+          {/* mb-f8 (8px) — overline→heading */}
+          <p className="text-overline text-cambridge mb-f8">Membership</p>
+          <h1 className="text-display">
+            Committees
+            <br />
+            <span className="text-accent">&amp; Councils</span>
+          </h1>
+          {/* mt-f13 (13px) — heading→body */}
+          <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
+            Chamber membership is more than a listing. Committees are where
+            members actually shape the chamber — its programs, advocacy, events,
+            and culture. There&apos;s a place for every kind of contributor.
+          </p>
+        </div>
       </section>
 
-      {/* Committees grid */}
-      <section className="mt-20">
-        <div className="space-y-4">
-          {committees.map((c) => (
-            <div
-              key={c.name}
-              className="p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
-            >
-              <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
-                <h2 className="text-h4">{c.name}</h2>
-                {c.tag && (
-                  <span className="shrink-0 px-2.5 py-1 text-caption font-bold bg-cambridge/15 text-cambridge rounded-full">
-                    {c.tag}
-                  </span>
-                )}
+      {/* ─── FEATURE — Committee cards ────────────────────────── */}
+      {/* py-f89/f144 — FEATURE tier, open white */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+        {/* space-y-f21 — between committee cards */}
+        <div className="space-y-f21">
+          {committees.map((c, i) => (
+            <FadeIn key={c.name} delay={i * 40}>
+              <div className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+                {/* mb-f8 — header row→desc gap; gap-f8 — name/badge gap */}
+                <div className="flex flex-wrap items-start justify-between gap-f8 mb-f8">
+                  <h2 className="text-h4">{c.name}</h2>
+                  {c.tag && (
+                    <span className="shrink-0 px-f8 py-f3 text-caption font-bold bg-cambridge/15 text-cambridge rounded-full">
+                      {c.tag}
+                    </span>
+                  )}
+                </div>
+                <p className="text-body-sm text-text-secondary leading-relaxed">
+                  {c.description}
+                </p>
               </div>
-              <p className="text-body-sm text-text-secondary leading-relaxed">
-                {c.description}
-              </p>
-            </div>
+            </FadeIn>
           ))}
         </div>
       </section>
 
-      {/* Get involved CTA */}
-      <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-        <div className="grid lg:grid-cols-2 gap-10 items-center">
-          <div>
-            <h2 className="text-h2">Ready to get involved?</h2>
-            <p className="text-body-lg text-text-secondary mt-4">
-              Most committees are open to any chamber member. Reach out and
-              let the team know where you&apos;d like to contribute — there&apos;s
-              always room for people who want to show up.
-            </p>
+      {/* ─── CLOSER — Get involved CTA ────────────────────────── */}
+      {/* py-f55/f89 — CLOSER taper */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+        <FadeIn>
+          {/* p-f34/f55 card padding, gap-f34 2-col gap */}
+          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+            <div className="grid lg:grid-cols-2 gap-f34 items-center">
+              <div>
+                <h2 className="text-h2">Ready to get involved?</h2>
+                {/* mt-f13 — heading→body */}
+                <p className="text-body-lg text-text-secondary mt-f13">
+                  Most committees are open to any chamber member. Reach out and
+                  let the team know where you&apos;d like to contribute — there&apos;s
+                  always room for people who want to show up.
+                </p>
+              </div>
+              {/* space-y-f13 — button stack gap */}
+              <div className="space-y-f13">
+                <Link
+                  href="/about/contact"
+                  className="
+                    block w-full text-center py-f13 px-f21
+                    bg-accent hover:bg-accent-hover
+                    text-white font-bold text-body-sm
+                    rounded-[var(--radius-md)]
+                    transition-colors
+                  "
+                >
+                  Express Interest →
+                </Link>
+                <Link
+                  href="/membership/join"
+                  className="
+                    block w-full text-center py-f13 px-f21
+                    border border-border-primary hover:border-text-tertiary
+                    text-text-primary font-bold text-body-sm
+                    rounded-[var(--radius-md)]
+                    transition-colors
+                  "
+                >
+                  Not a member yet? Join the Chamber
+                </Link>
+              </div>
+            </div>
           </div>
-          <div className="space-y-4">
-            <Link
-              href="/about/contact"
-              className="
-                block w-full text-center py-3 px-6
-                bg-accent hover:bg-accent-hover
-                text-white font-bold text-body-sm
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
-            >
-              Express Interest →
-            </Link>
-            <Link
-              href="/membership/join"
-              className="
-                block w-full text-center py-3 px-6
-                border border-border-primary hover:border-text-tertiary
-                text-text-primary font-bold text-body-sm
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
-            >
-              Not a member yet? Join the Chamber
-            </Link>
-          </div>
-        </div>
+        </FadeIn>
       </section>
-    </div>
+    </>
   );
 }

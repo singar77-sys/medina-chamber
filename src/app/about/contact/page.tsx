@@ -7,6 +7,24 @@ import { FadeIn } from "@/components/FadeIn";
 import { totalCount } from "@/data/members";
 import { safeJsonLd } from "@/lib/json-ld";
 
+/**
+ * Contact page — φ spatial system applied throughout.
+ *
+ * Section archetypes (Euclidean page formula):
+ *   HERO    pt-f144 pb-f89   — lead, ambient gradient, no photo bg
+ *   BAND    py-f55 lg:py-f89 — bg-secondary + border-y
+ *   FEATURE py-f89 lg:py-f144— open white section, primary content
+ *   CLOSER  py-f55 lg:py-f89 — taper at end; FEATURE weight but lighter close
+ *
+ * Internal rhythm (one tier smaller than the archetype):
+ *   overline → heading  mb-f8  (8px)
+ *   heading  → body     mt-f13 (13px)
+ *   body     → CTA      mt-f21 (21px)
+ *   card padding        p-f21 / p-f34 / p-f55 by section weight
+ *   grid gaps           gap-f21 (cards) / gap-f34 lg:gap-f55 (2-col)
+ *   inline gaps         gap-f13 / gap-f8
+ */
+
 export const metadata: Metadata = {
   title: "Contact Us",
   description:
@@ -72,30 +90,34 @@ export default function ContactPage() {
         dangerouslySetInnerHTML={{ __html: safeJsonLd(contactJsonLd) }}
       />
 
-      {/* ─── Hero — ambient gradient, no bg band ─────────────── */}
+      {/* ─── HERO — ambient gradient, no photo bg ─────────────── */}
+      {/* pt-f144 (144px) pb-f89 (89px) — HERO tier asymmetry = φ ratio */}
       <div className="relative isolate overflow-hidden">
         <div className="slow-gradient" aria-hidden="true">
           <div className="slow-gradient__grid" />
         </div>
 
-        <section className="relative mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+        <section className="relative mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
           <div className="max-w-3xl">
-            <p className="text-overline text-cambridge mb-4">Contact</p>
+            {/* mb-f8 (8px) — overline→heading micro-gap */}
+            <p className="text-overline text-cambridge mb-f8">Contact</p>
             <h1 className="text-display">
               Get in Touch
               <br />
               <span className="text-accent">with the Chamber</span>
             </h1>
-            <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
+            {/* mt-f13 (13px) — heading→body gap */}
+            <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
               We&apos;re the hub of Medina County&apos;s business network —{" "}
               {totalCount}+ members across every community in the area.
               Questions about membership, events, or how we can help?
             </p>
-            <div className="mt-10 flex flex-wrap gap-4">
+            {/* mt-f21 (21px) gap-f13 (13px) — body→CTA and button gap */}
+            <div className="mt-f21 flex flex-wrap gap-f13">
               <a
                 href="tel:+13307238773"
                 className="
-                  inline-flex items-center px-8 py-4
+                  inline-flex items-center px-f21 py-f13
                   bg-accent hover:bg-accent-hover
                   text-white font-bold text-body
                   rounded-[var(--radius-md)]
@@ -107,7 +129,7 @@ export default function ContactPage() {
               <a
                 href="mailto:office@medinaohchamber.com"
                 className="
-                  inline-flex items-center px-6 py-4
+                  inline-flex items-center px-f21 py-f13
                   border border-border-primary hover:border-text-tertiary
                   text-text-primary font-bold text-body-sm
                   rounded-[var(--radius-md)]
@@ -119,7 +141,7 @@ export default function ContactPage() {
               <a
                 href="#contact-form"
                 className="
-                  inline-flex items-center px-4 py-4
+                  inline-flex items-center px-f13 py-f13
                   text-cambridge font-bold text-body-sm
                   hover:text-cambridge/80 transition-colors
                 "
@@ -131,20 +153,23 @@ export default function ContactPage() {
         </section>
       </div>
 
-      {/* ─── Quick-route strip ────────────────────────────────── */}
-      <section className="bg-bg-secondary border-y border-border-secondary py-12 lg:py-16">
+      {/* ─── BAND — quick-route strip ─────────────────────────── */}
+      {/* py-f55/f89 (55/89px) — BAND tier */}
+      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
-            <p className="text-caption text-text-tertiary font-bold uppercase tracking-wider mb-6">
+            {/* mb-f21 (21px) — label→grid gap */}
+            <p className="text-caption text-text-tertiary font-bold uppercase tracking-wider mb-f21">
               Looking for something specific?
             </p>
-            <div className="grid sm:grid-cols-3 gap-4">
+            {/* gap-f21 (21px) — card grid gap */}
+            <div className="grid sm:grid-cols-3 gap-f21">
               {routes.map((r) => (
                 <Link
                   key={r.href}
                   href={r.href}
                   className="
-                    group flex flex-col gap-2 p-6
+                    group flex flex-col gap-f8 p-f21
                     bg-bg-primary border border-border-secondary
                     rounded-[var(--radius-lg)]
                     hover:border-cambridge/40
@@ -164,15 +189,19 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* ─── Form + Stephanie ─────────────────────────────────── */}
-      <section id="contact-form" className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
+      {/* ─── FEATURE — form + Stephanie ───────────────────────── */}
+      {/* py-f89/f144 (89/144px) — FEATURE tier, primary open section */}
+      <section id="contact-form" className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+          {/* gap-f34/f55 (34/55px) — 2-col layout gap */}
+          <div className="grid lg:grid-cols-2 gap-f34 lg:gap-f55 items-start">
             <ContactForm />
 
             <aside>
-              <div className="bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] p-8 lg:p-10">
-                <div className="mb-6 overflow-hidden rounded-[var(--radius-md)]">
+              {/* p-f34/f55 (34/55px) — card interior padding */}
+              <div className="bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] p-f34 lg:p-f55">
+                {/* mb-f21 (21px) — photo→label gap */}
+                <div className="mb-f21 overflow-hidden rounded-[var(--radius-md)]">
                   <Image
                     src="/images/people/staff/stephanie-mueller-membership-events-coordinator-greater-medina-chamber.jpg"
                     alt="Stephanie Mueller, Membership & Events Coordinator at the Greater Medina Chamber of Commerce"
@@ -183,32 +212,35 @@ export default function ContactPage() {
                   />
                 </div>
 
-                <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-1">
+                {/* mb-f3 (3px) — role→name micro-gap */}
+                <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-f3">
                   Membership &amp; Events
                 </p>
                 <p className="text-h4 text-text-primary">Stephanie Mueller</p>
-                <p className="text-body-sm text-text-secondary mt-2 mb-6 leading-relaxed">
+                {/* mt-f8 (8px) heading→body, mb-f21 (21px) body→divider */}
+                <p className="text-body-sm text-text-secondary mt-f8 mb-f21 leading-relaxed">
                   Stephanie is your direct line for membership questions, event
                   sponsorships, and ribbon cuttings. She responds within one
                   business day.
                 </p>
 
-                <div className="space-y-3 border-t border-border-secondary pt-6">
+                {/* space-y-f13 (13px) pt-f21 (21px) — contact list rhythm */}
+                <div className="space-y-f13 border-t border-border-secondary pt-f21">
                   <a
                     href="tel:+13307238773"
-                    className="flex items-center gap-3 text-body-sm text-text-primary hover:text-cambridge transition-colors"
+                    className="flex items-center gap-f13 text-body-sm text-text-primary hover:text-cambridge transition-colors"
                   >
                     <span className="text-cambridge font-bold">→</span>
                     (330) 723-8773
                   </a>
                   <a
                     href="mailto:stephanie@medinaohchamber.com"
-                    className="flex items-center gap-3 text-body-sm text-text-primary hover:text-cambridge transition-colors"
+                    className="flex items-center gap-f13 text-body-sm text-text-primary hover:text-cambridge transition-colors"
                   >
                     <span className="text-cambridge font-bold">→</span>
                     stephanie@medinaohchamber.com
                   </a>
-                  <p className="flex items-center gap-3 text-body-sm text-text-tertiary">
+                  <p className="flex items-center gap-f13 text-body-sm text-text-tertiary">
                     <span className="text-cambridge font-bold">→</span>
                     Mon–Fri · 10:00 AM – 4:00 PM
                   </p>
@@ -219,17 +251,21 @@ export default function ContactPage() {
         </FadeIn>
       </section>
 
-      {/* ─── Network map — banded section ────────────────────── */}
-      <section className="bg-bg-secondary border-y border-border-secondary py-20 lg:py-28">
+      {/* ─── BAND — network map ───────────────────────────────── */}
+      {/* py-f55/f89 (55/89px) — BAND tier, bg-secondary + border-y */}
+      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
-            <div className="max-w-3xl mb-10">
-              <p className="text-overline text-cambridge mb-3">Where we are</p>
+            {/* mb-f34 (34px) — header block→map gap */}
+            <div className="max-w-3xl mb-f34">
+              {/* mb-f8 (8px) — overline→heading micro-gap */}
+              <p className="text-overline text-cambridge mb-f8">Where we are</p>
               <h2 className="text-h2">
                 139 N. Court Street —{" "}
                 <span className="text-text-secondary">and {totalCount}+ members across Medina County</span>
               </h2>
-              <p className="text-body text-text-secondary mt-4">
+              {/* mt-f13 (13px) — heading→body gap */}
+              <p className="text-body text-text-secondary mt-f13">
                 Click the hub to open directions, or explore the network
                 radiating across every community we serve.
               </p>
@@ -245,23 +281,23 @@ export default function ContactPage() {
                   bg-bg-primary backdrop-blur-md
                   border border-cambridge/50
                   rounded-[var(--radius-md)]
-                  p-5 shadow-xl
+                  p-f21 shadow-xl
                 "
               >
-                <p className="text-caption font-bold text-text-primary mb-1">Chamber Headquarters</p>
+                <p className="text-caption font-bold text-text-primary mb-f3">Chamber Headquarters</p>
                 <p className="text-caption text-text-secondary leading-relaxed">
                   139 N. Court Street, Suite A
                   <br />
                   Medina, OH 44256
                 </p>
-                <p className="text-caption text-text-tertiary mt-1.5">
+                <p className="text-caption text-text-tertiary mt-f8">
                   Mon–Fri · 10:00 AM – 4:00 PM
                 </p>
                 <a
                   href="https://maps.google.com/?q=139+N+Court+Street+Suite+A+Medina+OH+44256"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-3 inline-flex text-caption font-bold text-cambridge hover:text-cambridge/80 transition-colors"
+                  className="mt-f13 inline-flex text-caption font-bold text-cambridge hover:text-cambridge/80 transition-colors"
                 >
                   Get directions ↗
                 </a>
@@ -271,26 +307,32 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* ─── Bookend closer — route back to membership ────────── */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-20">
+      {/* ─── CLOSER — membership bookend ──────────────────────── */}
+      {/* py-f55/f89 — CLOSER taper (open section, lighter close weight) */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
-          <div className="p-8 lg:p-10 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-            <div className="grid lg:grid-cols-2 gap-8 items-center">
+          {/* p-f34/f55 (34/55px) — card padding follows section weight */}
+          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+            {/* gap-f34 (34px) — 2-col gap */}
+            <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
-                <p className="text-overline text-cambridge mb-3">Membership</p>
+                {/* mb-f8 (8px) — overline→heading */}
+                <p className="text-overline text-cambridge mb-f8">Membership</p>
                 <h2 className="text-h3">
                   Not sure if membership is right for you?
                 </h2>
-                <p className="text-body text-text-secondary mt-3 leading-relaxed">
+                {/* mt-f13 (13px) — heading→body */}
+                <p className="text-body text-text-secondary mt-f13 leading-relaxed">
                   Stephanie can walk you through the options — no pressure. Or
                   browse the benefits and tiers on your own first.
                 </p>
               </div>
-              <div className="flex flex-col sm:flex-row lg:flex-col gap-3">
+              {/* gap-f13 (13px) — button stack gap */}
+              <div className="flex flex-col sm:flex-row lg:flex-col gap-f13">
                 <Link
                   href="/membership/join"
                   className="
-                    inline-flex items-center justify-center px-6 py-3
+                    inline-flex items-center justify-center px-f21 py-f13
                     bg-accent hover:bg-accent-hover
                     text-white font-bold text-body-sm
                     rounded-[var(--radius-md)]
@@ -302,7 +344,7 @@ export default function ContactPage() {
                 <Link
                   href="/membership/benefits"
                   className="
-                    inline-flex items-center justify-center px-6 py-3
+                    inline-flex items-center justify-center px-f21 py-f13
                     border border-border-primary hover:border-text-tertiary
                     text-text-primary font-bold text-body-sm
                     rounded-[var(--radius-md)]

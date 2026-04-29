@@ -139,6 +139,8 @@ export function MemberGraph({ members, categories }: MemberGraphProps) {
   const [engineStopped, setEngineStopped]   = useState(false);
   const [catMenuOpen, setCatMenuOpen]       = useState(false);
   const [catSearch, setCatSearch]           = useState("");
+  const [mouseInCircle, setMouseInCircle]   = useState(false);
+  const mouseInCircleRef                    = useRef(false);
 
   const activeCatRef = useRef<string | null>(null);
   const searchRef    = useRef<string>("");
@@ -459,7 +461,22 @@ export function MemberGraph({ members, categories }: MemberGraphProps) {
   } as const;
 
   return (
-    <div className="relative w-full select-none" style={{ height: "85vh" }}>
+    <div
+      className="relative w-full select-none"
+      style={{ height: "85vh" }}
+      onMouseMove={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const dx = e.clientX - rect.left  - rect.width  / 2;
+        const dy = e.clientY - rect.top   - rect.height / 2;
+        const cr = Math.min(rect.width, rect.height) / 2 - 2;
+        const inside = Math.sqrt(dx * dx + dy * dy) < cr;
+        if (inside !== mouseInCircleRef.current) {
+          mouseInCircleRef.current = inside;
+          setMouseInCircle(inside);
+        }
+      }}
+      onMouseLeave={() => { mouseInCircleRef.current = false; setMouseInCircle(false); }}
+    >
 
       {/* ── HUD — top left ─────────────────────────────────────────────── */}
       <div className="absolute top-20 left-5 z-10">
@@ -632,7 +649,7 @@ export function MemberGraph({ members, categories }: MemberGraphProps) {
           fontSize: 10, letterSpacing: "0.1em", fontWeight: 600,
           color: "rgba(131,188,169,0.28)", textTransform: "uppercase", margin: 0, whiteSpace: "nowrap",
         }}>
-          Drag to pan · use +/− to zoom · click a node to explore
+          Scroll inside the globe to zoom · drag to pan · click a node to explore
         </p>
       </div>
 
@@ -664,7 +681,7 @@ export function MemberGraph({ members, categories }: MemberGraphProps) {
           d3VelocityDecay={0.45}
           minZoom={0.12}
           maxZoom={14}
-          enableZoomInteraction={false}   /* scroll wheel NEVER captured — page scrolls freely */
+          enableZoomInteraction={mouseInCircle}   /* scroll zooms inside circle, page scrolls outside */
           enablePanInteraction={true}     /* drag to pan still works */
         />
       </div>

@@ -174,6 +174,9 @@ export function MemberGraph({ members }: MemberGraphProps) {
   const engineStoppedRef = useRef(false);
   // Dynamic boundary radius — updated whenever container resizes
   const boundaryRRef     = useRef(230);
+  // CSS-pixel circle radius (no dpr) — used by handleEngineStop to compute
+  // zoomToFit padding so nodes land inside the circle, not the rectangle corners
+  const crCssRef         = useRef(200);
   // Device pixel ratio — cached on resize, never read inside the 60fps loop
   const dprRef           = useRef(typeof window !== "undefined" ? (window.devicePixelRatio || 1) : 1);
   // Node positions captured from paintNode each frame.
@@ -319,6 +322,7 @@ export function MemberGraph({ members }: MemberGraphProps) {
       60,
       Math.floor(Math.min(w / 2 - sidePad, h / 2 - topPad, h / 2 - botPad)) - 2,
     );
+    crCssRef.current     = crCss;
     boundaryRRef.current = Math.max(Math.round(crCss * 0.78), 60);
   }, [dimensions]);
 
@@ -364,10 +368,18 @@ export function MemberGraph({ members }: MemberGraphProps) {
   }, [graphData]);
 
   // ── Engine settled → zoom to fit ──────────────────────────────────────
+  // zoomToFit fits nodes to the full canvas rectangle, but the visible area
+  // is a circle. We pad by the dead rectangular corners (min(W,H)/2 − crCss)
+  // so nodes land inside the circle, plus a label-buffer for text overhang.
   const handleEngineStop = useCallback(() => {
     if (!engineStoppedRef.current) {
       engineStoppedRef.current = true;
-      fgRef.current?.zoomToFit(700, activeCatRef.current ? 50 : 24);
+      const canvas = containerRef.current?.querySelector("canvas");
+      const w = canvas ? canvas.offsetWidth  : 800;
+      const h = canvas ? canvas.offsetHeight : 700;
+      const circleMargin = Math.max(0, Math.round(Math.min(w, h) / 2 - crCssRef.current));
+      const labelBuffer  = activeCatRef.current ? 60 : 40;
+      fgRef.current?.zoomToFit(700, circleMargin + labelBuffer);
     }
   }, []);
 

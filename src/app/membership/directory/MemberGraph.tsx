@@ -73,6 +73,39 @@ function forceRing(targetR: number, strength = 0.10) {
   return force;
 }
 
+// ── Collision force — prevents node overlap, distributes angular spacing ──
+// O(n²) over 35 nodes = 1225 comparisons per tick — negligible cost.
+function forceNodeCollide(radius: number) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let nodes: any[];
+  function force() {
+    const minD = radius * 2;
+    const minD2 = minD * minD;
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a = nodes[i];
+        const b = nodes[j];
+        const dx = (a.x ?? 0) - (b.x ?? 0);
+        const dy = (a.y ?? 0) - (b.y ?? 0);
+        const d2 = dx * dx + dy * dy;
+        if (d2 < minD2 && d2 > 0.01) {
+          const d    = Math.sqrt(d2);
+          const push = (minD - d) / d * 0.45;
+          const fx   = dx * push;
+          const fy   = dy * push;
+          a.vx = (a.vx ?? 0) + fx;
+          a.vy = (a.vy ?? 0) + fy;
+          b.vx = (b.vx ?? 0) - fx;
+          b.vy = (b.vy ?? 0) - fy;
+        }
+      }
+    }
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  force.initialize = (n: any[]) => { nodes = n; };
+  return force;
+}
+
 // ── Label pill — rounded chip drawn behind canvas text ────────────────────
 function drawLabelPill(
   ctx: CanvasRenderingContext2D,
@@ -265,15 +298,20 @@ export function MemberGraph({ members }: MemberGraphProps) {
       fg.d3Force("charge")?.strength((n: GraphNode) => n.type === "category" ? 0 : -140);
       fg.d3Force("link")?.distance(85).strength(0.55);
       fg.d3Force("boundary", forceRadialBoundary(boundaryRRef.current, 0.18));
-      fg.d3Force("ring", null); // ring force not needed in focus mode
+      fg.d3Force("ring",    null); // ring force not needed in focus mode
+      fg.d3Force("collide", null); // collision force not needed in focus mode
     } else {
-      // Overview: ring force pulls all category nodes toward the outer orbit
-      // band so all 35 industries stay visible in a condensed ring, leaving
-      // the centre clear for the Chamber pupil.
-      fg.d3Force("charge")?.strength(-280);
+      // Overview: ring force pulls category nodes toward a target orbit band,
+      // leaving the centre clear for the Chamber pupil.
+      //
+      // Ring target at 0.70 × boundary (was 0.82) gives labels ~30% of the
+      // boundary radius as outward clearance so they don't clip the circle edge.
+      // Stronger boundary (0.22) and collision force prevent nodes from escaping.
+      fg.d3Force("charge")?.strength(-360);
       fg.d3Force("link")?.strength(0);
-      fg.d3Force("boundary", forceRadialBoundary(boundaryRRef.current, 0.12));
-      fg.d3Force("ring",     forceRing(boundaryRRef.current * 0.82, 0.10));
+      fg.d3Force("boundary", forceRadialBoundary(boundaryRRef.current, 0.22));
+      fg.d3Force("ring",     forceRing(boundaryRRef.current * 0.70, 0.14));
+      fg.d3Force("collide",  forceNodeCollide(18));
     }
 
     // Clear stale positions so PRE/POST don't draw spokes from old coords
@@ -348,46 +386,61 @@ export function MemberGraph({ members }: MemberGraphProps) {
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-    // ── Spokes: radial lines from Chamber pupil → each industry node ────────
-    // Drawn before the corner clip (clip masks ends that wander outside the
-    // circle) and before the pupil fill (pupil buries the spoke origins).
-    // Node positions come from nodePositionsRef — populated by paintNode each
-    // frame so we never call fgRef.current.graphData() inside a render callback.
+    // Shared pulse — drives spoke + pupil glow breathing
+    const _t     = (Date.now() - startTimeRef.current) / 1000;
+    const _pulse = 0.55 + 0.45 * Math.sin(_t * Math.PI * 2 * 0.22);
+
+    // ── Spokes: coquelicot radial lines from Chamber pupil → each industry ──
+    // Two-pass (glow + core) gives an orange-red bloom like a hot filament.
+    // Drawn before the corner clip (masked at edge) and before the pupil fill
+    // (pupil buries the origins).
     if (!activeCatRef.current && nodePositionsRef.current.size > 0) {
       const dpr = window.devicePixelRatio || 1;
       const k   = zoomRef.current;
-      // Pupil radius in physical pixels (same formula as the pupil draw below)
       const pr  = Math.max(32, Math.min(cr * 0.30, 110));
       const ocx = cw / 2;
       const ocy = ch / 2;
 
       nodePositionsRef.current.forEach(({ x, y }) => {
-        // Convert graph coords → physical pixels (assuming pan ≈ 0, i.e. graph
-        // center sits at canvas centre — true after zoomToFit, drifts with pan)
         const sx = ocx + x * k * dpr;
         const sy = ocy + y * k * dpr;
         const dx = sx - ocx;
         const dy = sy - ocy;
         const d  = Math.sqrt(dx * dx + dy * dy);
-        if (d < pr + 4) return;          // node inside / touching pupil — skip
-        const nx   = dx / d;
-        const ny   = dy / d;
-        // Start a few px beyond the pupil edge; end a few px before the node
-        const x0   = ocx + nx * (pr + 10);
-        const y0   = ocy + ny * (pr + 10);
-        const x1   = sx  - nx * 7;
-        const y1   = sy  - ny * 7;
+        if (d < pr + 4) return;
+        const nx = dx / d;
+        const ny = dy / d;
+        const x0 = ocx + nx * (pr + 10);
+        const y0 = ocy + ny * (pr + 10);
+        const x1 = sx  - nx * 7;
+        const y1 = sy  - ny * 7;
 
-        const grad = ctx.createLinearGradient(x0, y0, x1, y1);
-        grad.addColorStop(0,    "rgba(131,188,169,0)");
-        grad.addColorStop(0.2,  "rgba(131,188,169,0.06)");
-        grad.addColorStop(1,    "rgba(131,188,169,0.14)");
-
+        // Glow pass — wide soft halo in coquelicot
+        const glowA  = (0.18 * _pulse).toFixed(3);
+        const glowA2 = (0.30 * _pulse).toFixed(3);
+        const glowGrad = ctx.createLinearGradient(x0, y0, x1, y1);
+        glowGrad.addColorStop(0,   "rgba(255,80,0,0)");
+        glowGrad.addColorStop(0.2, `rgba(255,80,0,${glowA})`);
+        glowGrad.addColorStop(1,   `rgba(255,98,33,${glowA2})`);
         ctx.beginPath();
         ctx.moveTo(x0, y0);
         ctx.lineTo(x1, y1);
-        ctx.strokeStyle = grad;
-        ctx.lineWidth   = Math.max(0.5, 0.55 * dpr);
+        ctx.strokeStyle = glowGrad;
+        ctx.lineWidth   = Math.max(3.0, 2.8 * dpr);
+        ctx.stroke();
+
+        // Core pass — tight bright line
+        const coreA  = (0.28 * _pulse).toFixed(3);
+        const coreA2 = (0.60 * _pulse).toFixed(3);
+        const coreGrad = ctx.createLinearGradient(x0, y0, x1, y1);
+        coreGrad.addColorStop(0,    "rgba(255,98,51,0)");
+        coreGrad.addColorStop(0.15, `rgba(255,98,51,${coreA})`);
+        coreGrad.addColorStop(1,    `rgba(255,140,70,${coreA2})`);
+        ctx.beginPath();
+        ctx.moveTo(x0, y0);
+        ctx.lineTo(x1, y1);
+        ctx.strokeStyle = coreGrad;
+        ctx.lineWidth   = Math.max(0.7, 0.65 * dpr);
         ctx.stroke();
       });
     }
@@ -412,11 +465,14 @@ export function MemberGraph({ members }: MemberGraphProps) {
       // to leave generous ring space for all 35 industry nodes.
       const pr = Math.max(32, Math.min(cr * 0.30, 110));
 
-      // Soft outer glow so the pupil floats rather than cuts hard
-      const outerGlow = ctx.createRadialGradient(cx, cy, pr * 0.8, cx, cy, pr * 1.55);
-      outerGlow.addColorStop(0, "rgba(131,188,169,0.13)");
-      outerGlow.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.beginPath(); ctx.arc(cx, cy, pr * 1.55, 0, Math.PI * 2);
+      // Pulsing outer glow — cambridge halo that breathes with the scene
+      const glowR1 = pr * 0.9;
+      const glowR2 = pr * 2.4;
+      const outerGlow = ctx.createRadialGradient(cx, cy, glowR1, cx, cy, glowR2);
+      outerGlow.addColorStop(0,   `rgba(131,188,169,${(0.28 * _pulse).toFixed(3)})`);
+      outerGlow.addColorStop(0.4, `rgba(131,188,169,${(0.10 * _pulse).toFixed(3)})`);
+      outerGlow.addColorStop(1,   "rgba(0,0,0,0)");
+      ctx.beginPath(); ctx.arc(cx, cy, glowR2, 0, Math.PI * 2);
       ctx.fillStyle = outerGlow; ctx.fill();
 
       // Pupil background — deep navy, slightly lighter at top for depth
@@ -427,15 +483,20 @@ export function MemberGraph({ members }: MemberGraphProps) {
       ctx.beginPath(); ctx.arc(cx, cy, pr, 0, Math.PI * 2);
       ctx.fillStyle = pupilBg; ctx.fill();
 
-      // Inner border ring
+      // Inner border ring — cambridge, pulsing
       ctx.beginPath(); ctx.arc(cx, cy, pr, 0, Math.PI * 2);
-      ctx.strokeStyle = "rgba(131,188,169,0.30)";
-      ctx.lineWidth   = 0.9; ctx.stroke();
+      ctx.strokeStyle = `rgba(131,188,169,${(0.22 + 0.18 * _pulse).toFixed(3)})`;
+      ctx.lineWidth   = 1.0; ctx.stroke();
 
-      // Outer soft ring
-      ctx.beginPath(); ctx.arc(cx, cy, pr * 1.04, 0, Math.PI * 2);
-      ctx.strokeStyle = "rgba(131,188,169,0.08)";
-      ctx.lineWidth   = 2.5; ctx.stroke();
+      // Outer accent ring — coquelicot pulse, sits just outside pupil
+      ctx.beginPath(); ctx.arc(cx, cy, pr * 1.06, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(255,98,51,${(0.08 + 0.10 * _pulse).toFixed(3)})`;
+      ctx.lineWidth   = 1.8; ctx.stroke();
+
+      // Far halo ring — soft cambridge at 1.5× radius
+      ctx.beginPath(); ctx.arc(cx, cy, pr * 1.5, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(131,188,169,${(0.04 + 0.04 * _pulse).toFixed(3)})`;
+      ctx.lineWidth   = 0.8; ctx.stroke();
 
       // "MEDINA" — cambridge, bold
       ctx.fillStyle    = "rgba(131,188,169,0.93)";
@@ -544,7 +605,9 @@ export function MemberGraph({ members }: MemberGraphProps) {
           isHov,
         );
 
-        if (count > 0 && (globalScale > 0.6 || isHov)) {
+        // Show count sub-label only on hover (overview) or always in focus mode —
+        // 35 two-line labels in a ring creates too much radial clutter.
+        if (count > 0 && (isHov || isFocusMode)) {
           const cfs = Math.max(8.5 / globalScale, 1.0);
           drawLabelPill(
             ctx, `${count}`, x,
@@ -1006,7 +1069,7 @@ export function MemberGraph({ members }: MemberGraphProps) {
             backgroundColor="rgba(0,0,0,0)"
             width={dimensions.width}
             height={dimensions.height}
-            warmupTicks={isMobile ? 40 : 90}
+            warmupTicks={activeCategory ? (isMobile ? 30 : 70) : (isMobile ? 60 : 140)}
             cooldownTicks={160}
             cooldownTime={7000}
             d3AlphaDecay={0.038}

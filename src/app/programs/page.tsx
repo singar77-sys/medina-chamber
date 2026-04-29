@@ -1,6 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
+
+/**
+ * Programs hub — φ spatial system applied throughout.
+ *
+ * HERO    pt-f144 pb-f89
+ * FEATURE py-f89 lg:py-f144 — 6 program cards (open white, md:grid-cols-2 lg:grid-cols-3)
+ * CLOSER  py-f55 lg:py-f89  — membership CTA card
+ */
 
 export const metadata: Metadata = {
   title: "Programs",
@@ -83,93 +92,114 @@ export default function ProgramsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
-      {/* Hero */}
-      <section className="max-w-3xl">
-        <p className="text-overline text-cambridge mb-4">Membership</p>
-        <h1 className="text-display">
-          Chamber
-          <br />
-          <span className="text-accent">Programs</span>
-        </h1>
-        <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-          More than networking — the chamber runs programs that develop leaders,
-          connect professionals, recognize excellence, and give businesses the
-          space and safety resources they need to grow.
-        </p>
-      </section>
 
-      {/* Programs grid */}
-      <section className="mt-20">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {programs.map((p) => (
-            <Link
-              key={p.href}
-              href={p.href}
-              className="
-                group flex flex-col p-6
-                bg-bg-secondary border border-border-secondary
-                rounded-[var(--radius-lg)]
-                hover:border-border-primary transition-colors
-              "
-            >
-              <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-2">
-                {p.category}
-              </p>
-              <h2 className="text-h4 group-hover:text-cambridge transition-colors">
-                {p.name}
-              </h2>
-              <p className="text-body-sm text-text-secondary mt-3 leading-relaxed flex-1">
-                {p.description}
-              </p>
-              <p className="text-body-sm font-bold text-cambridge mt-4">
-                Learn more →
-              </p>
-            </Link>
-          ))}
+      {/* ─── HERO ─────────────────────────────────────────────── */}
+      {/* pt-f144 pb-f89 (144/89 = φ) — HERO tier */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
+        <div className="max-w-3xl">
+          {/* mb-f8 (8px) — overline→heading */}
+          <p className="text-overline text-cambridge mb-f8">Membership</p>
+          <h1 className="text-display">
+            Chamber
+            <br />
+            <span className="text-accent">Programs</span>
+          </h1>
+          {/* mt-f13 (13px) — heading→body */}
+          <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
+            More than networking — the chamber runs programs that develop leaders,
+            connect professionals, recognize excellence, and give businesses the
+            space and safety resources they need to grow.
+          </p>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-        <div className="grid lg:grid-cols-2 gap-10 items-center">
-          <div>
-            <h2 className="text-h2">Not a member yet?</h2>
-            <p className="text-body-lg text-text-secondary mt-4">
-              Chamber membership unlocks most of these programs — including
-              the Safety Council at no additional cost and member pricing on
-              rental space and events.
-            </p>
+      {/* ─── FEATURE — Program cards ──────────────────────────── */}
+      {/* py-f89/f144 — FEATURE tier, open white */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+        <FadeIn>
+          {/* gap-f21 — card grid gap */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-f21">
+            {programs.map((p, i) => (
+              <FadeIn key={p.href} delay={i * 60}>
+                <Link
+                  href={p.href}
+                  className="
+                    group flex flex-col p-f21
+                    bg-bg-secondary border border-border-secondary
+                    rounded-[var(--radius-lg)]
+                    hover:border-border-primary transition-colors
+                    h-full
+                  "
+                >
+                  {/* mb-f8 — category→name gap */}
+                  <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-f8">
+                    {p.category}
+                  </p>
+                  <h2 className="text-h4 group-hover:text-cambridge transition-colors">
+                    {p.name}
+                  </h2>
+                  {/* mt-f13 — name→desc gap */}
+                  <p className="text-body-sm text-text-secondary mt-f13 leading-relaxed flex-1">
+                    {p.description}
+                  </p>
+                  {/* mt-f13 — desc→CTA gap */}
+                  <p className="text-body-sm font-bold text-cambridge mt-f13 group-hover:translate-x-1 transition-transform">
+                    Learn more →
+                  </p>
+                </Link>
+              </FadeIn>
+            ))}
           </div>
-          <div className="space-y-4">
-            <Link
-              href="/membership/join"
-              className="
-                block w-full text-center py-3 px-6
-                bg-accent hover:bg-accent-hover
-                text-white font-bold text-body-sm
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
-            >
-              Join the Chamber →
-            </Link>
-            <Link
-              href="/about/contact"
-              className="
-                block w-full text-center py-3 px-6
-                border border-border-primary hover:border-text-tertiary
-                text-text-primary font-bold text-body-sm
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
-            >
-              Contact Us
-            </Link>
-          </div>
-        </div>
+        </FadeIn>
       </section>
-    </div>
+
+      {/* ─── CLOSER — Membership CTA ──────────────────────────── */}
+      {/* py-f55/f89 — CLOSER taper */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+        <FadeIn>
+          {/* p-f34/f55 card padding, gap-f34 2-col gap */}
+          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+            <div className="grid lg:grid-cols-2 gap-f34 items-center">
+              <div>
+                <h2 className="text-h2">Not a member yet?</h2>
+                {/* mt-f13 — heading→body */}
+                <p className="text-body-lg text-text-secondary mt-f13">
+                  Chamber membership unlocks most of these programs — including
+                  the Safety Council at no additional cost and member pricing on
+                  rental space and events.
+                </p>
+              </div>
+              {/* space-y-f13 — button stack gap */}
+              <div className="space-y-f13">
+                <Link
+                  href="/membership/join"
+                  className="
+                    block w-full text-center py-f13 px-f21
+                    bg-accent hover:bg-accent-hover
+                    text-white font-bold text-body-sm
+                    rounded-[var(--radius-md)]
+                    transition-colors
+                  "
+                >
+                  Join the Chamber →
+                </Link>
+                <Link
+                  href="/about/contact"
+                  className="
+                    block w-full text-center py-f13 px-f21
+                    border border-border-primary hover:border-text-tertiary
+                    text-text-primary font-bold text-body-sm
+                    rounded-[var(--radius-md)]
+                    transition-colors
+                  "
+                >
+                  Contact Us
+                </Link>
+              </div>
+            </div>
+          </div>
+        </FadeIn>
+      </section>
     </>
   );
 }

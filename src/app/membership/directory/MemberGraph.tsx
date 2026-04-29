@@ -330,22 +330,6 @@ export function MemberGraph({ members }: MemberGraphProps) {
     vig.addColorStop(1,   "rgba(0,0,0,0.48)");
     ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2);
     ctx.fillStyle = vig; ctx.fill();
-
-    // Spoke lines — hub-and-spoke visual, drawn under nodes (overview only)
-    if (!activeCatRef.current && fgRef.current) {
-      const nodes = (fgRef.current.graphData()?.nodes ?? []) as GraphNode[];
-      ctx.save();
-      ctx.lineWidth = 0.5;
-      nodes.forEach((n) => {
-        if (n.x === undefined || n.y === undefined) return;
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(n.x, n.y);
-        ctx.strokeStyle = "rgba(131,188,169,0.07)";
-        ctx.stroke();
-      });
-      ctx.restore();
-    }
   }, []);
 
   // ── Post-frame: paint page-bg over corners → circle illusion ──────────

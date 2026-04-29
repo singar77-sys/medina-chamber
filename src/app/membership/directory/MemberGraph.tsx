@@ -26,8 +26,7 @@ const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
 }) as any;
 
 // ── Constants ──────────────────────────────────────────────────────────────
-const BOUNDARY_R = 230;
-const TOP_N      = 35; // categories shown in overview globe
+const TOP_N = 35; // categories shown in overview globe
 
 // ── Boundary force — keeps nodes inside circle ────────────────────────────
 function forceRadialBoundary(radius: number, strength = 0.12) {
@@ -109,19 +108,21 @@ interface MemberGraphProps {
 }
 
 export function MemberGraph({ members }: MemberGraphProps) {
-  const containerRef    = useRef<HTMLDivElement>(null);
+  const containerRef     = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const fgRef           = useRef<any>(null);
-  const startTimeRef    = useRef(Date.now());
-  const zoomRef         = useRef(1);
-  const bgColorRef      = useRef("#ffffff");
+  const fgRef            = useRef<any>(null);
+  const startTimeRef     = useRef(Date.now());
+  const zoomRef          = useRef(1);
+  const bgColorRef       = useRef("#ffffff");
   const mouseInCircleRef = useRef(false);
   const engineStoppedRef = useRef(false);
+  // Dynamic boundary radius — updated whenever container resizes
+  const boundaryRRef     = useRef(230);
 
-  // Stable refs for use inside canvas callbacks (avoids stale closures)
-  const activeCatRef    = useRef<string | null>(null);
-  const hoveredIdRef    = useRef<string | null>(null);
-  const sidebarHovRef   = useRef<string | null>(null);
+  // Stable refs for canvas callbacks (avoids stale closures)
+  const activeCatRef  = useRef<string | null>(null);
+  const hoveredIdRef  = useRef<string | null>(null);
+  const sidebarHovRef = useRef<string | null>(null);
 
   const [dimensions,     setDimensions]     = useState({ width: 800, height: 700 });
   const [selectedMember, setSelectedMember] = useState<GraphNode | null>(null);
@@ -130,10 +131,21 @@ export function MemberGraph({ members }: MemberGraphProps) {
   const [search,         setSearch]         = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [mouseInCircle,  setMouseInCircle]  = useState(false);
+  const [sheetOpen,      setSheetOpen]      = useState(false);
+  // True on touch-primary devices — pinch zoom works without the circle gate
+  const [isTouch,        setIsTouch]        = useState(false);
 
   activeCatRef.current  = activeCategory;
   hoveredIdRef.current  = hoveredId;
   sidebarHovRef.current = sidebarHovId;
+
+  // Detect touch-primary device once on mount
+  useEffect(() => {
+    setIsTouch(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
+
+  // Mobile = container narrower than 640px (all iPhones, not iPads)
+  const isMobile = dimensions.width < 640;
 
   // ── Derived data ───────────────────────────────────────────────────────
   const allGraphData = useMemo(() => buildGraphData(members), [members]);
@@ -167,8 +179,6 @@ export function MemberGraph({ members }: MemberGraphProps) {
   }, [activeCategory, allGraphData]);
 
   // ── Graph data fed to ForceGraph2D ─────────────────────────────────────
-  // Overview: top N category nodes only — a readable constellation
-  // Focus:    selected category (pinned center) + its member nodes
   const graphData = useMemo<{ nodes: GraphNode[]; links: GraphLink[] }>(() => {
     if (!activeCategory) {
       return {
@@ -185,7 +195,6 @@ export function MemberGraph({ members }: MemberGraphProps) {
       (n) => n.type === "member" && n.categories?.includes(activeCategory),
     );
 
-    // Pin the category hub at graph-space origin so members orbit it
     const pinnedCat: GraphNode = { ...catNode, fx: 0, fy: 0, x: 0, y: 0 };
 
     return {
@@ -213,26 +222,29 @@ export function MemberGraph({ members }: MemberGraphProps) {
     return () => ro.disconnect();
   }, []);
 
+  // ── Dynamic boundary radius — 82% of the inscribed circle radius ───────
+  useEffect(() => {
+    const r = Math.round(Math.min(dimensions.width, dimensions.height) / 2 * 0.82);
+    boundaryRRef.current = Math.max(r, 60);
+  }, [dimensions]);
+
   // ── D3 force reconfiguration on mode switch ────────────────────────────
   useEffect(() => {
     const fg = fgRef.current;
     if (!fg) return;
 
     if (activeCategory) {
-      // Focus: hub-and-spoke — members orbit pinned centre
       fg.d3Force("charge")?.strength((n: GraphNode) => n.type === "category" ? 0 : -140);
       fg.d3Force("link")?.distance(85).strength(0.55);
-      fg.d3Force("boundary", forceRadialBoundary(BOUNDARY_R, 0.18));
+      fg.d3Force("boundary", forceRadialBoundary(boundaryRRef.current, 0.18));
     } else {
-      // Overview: pure repulsion — categories scatter like a constellation
       fg.d3Force("charge")?.strength(-320);
       fg.d3Force("link")?.strength(0);
-      fg.d3Force("boundary", forceRadialBoundary(BOUNDARY_R, 0.10));
+      fg.d3Force("boundary", forceRadialBoundary(boundaryRRef.current, 0.10));
     }
 
     engineStoppedRef.current = false;
     fg.d3ReheatSimulation();
-  // graphData is the stable signal that the mode changed
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graphData]);
 
@@ -245,10 +257,10 @@ export function MemberGraph({ members }: MemberGraphProps) {
   }, []);
 
   // ── Zoom helpers ───────────────────────────────────────────────────────
-  const handleZoom    = useCallback(({ k }: { k: number }) => { zoomRef.current = k; }, []);
-  const zoomIn        = useCallback(() => fgRef.current?.zoom(zoomRef.current * 1.5, 300), []);
-  const zoomOut       = useCallback(() => fgRef.current?.zoom(zoomRef.current / 1.5, 300), []);
-  const zoomReset     = useCallback(() => fgRef.current?.zoomToFit(500, 40), []);
+  const handleZoom  = useCallback(({ k }: { k: number }) => { zoomRef.current = k; }, []);
+  const zoomIn      = useCallback(() => fgRef.current?.zoom(zoomRef.current * 1.5, 300), []);
+  const zoomOut     = useCallback(() => fgRef.current?.zoom(zoomRef.current / 1.5, 300), []);
+  const zoomReset   = useCallback(() => fgRef.current?.zoomToFit(500, 40), []);
 
   // ── Pre-frame: radial atmosphere + pulsing globe ring ─────────────────
   const handleRenderFramePre = useCallback((ctx: CanvasRenderingContext2D) => {
@@ -257,8 +269,6 @@ export function MemberGraph({ members }: MemberGraphProps) {
     const t  = (Date.now() - startTimeRef.current) / 1000;
     const pulse = 0.5 + 0.5 * Math.sin(t * Math.PI * 2 * 0.18);
 
-    // Atmospheric fill — dark navy core fading to transparent at edges
-    // so the page background bleeds in and makes the circle feel "floating"
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     const maxR = Math.sqrt((cw / 2) ** 2 + (ch / 2) ** 2);
@@ -272,8 +282,8 @@ export function MemberGraph({ members }: MemberGraphProps) {
     ctx.fillRect(0, 0, cw, ch);
     ctx.restore();
 
-    // Halo + ring drawn in D3 graph-space (centred on origin = globe centre)
-    const r    = BOUNDARY_R;
+    // Use dynamic boundary radius (synced via ref)
+    const r    = boundaryRRef.current;
     const halo = ctx.createRadialGradient(0, 0, r * 0.78, 0, 0, r * 1.32);
     halo.addColorStop(0, `rgba(131,188,169,${(0.04 + pulse * 0.03).toFixed(3)})`);
     halo.addColorStop(1, "rgba(0,0,0,0)");
@@ -285,7 +295,6 @@ export function MemberGraph({ members }: MemberGraphProps) {
     ctx.lineWidth   = 0.8;
     ctx.stroke();
 
-    // Inner vignette — adds depth to the sphere
     const vig = ctx.createRadialGradient(0, 0, r * 0.38, 0, 0, r);
     vig.addColorStop(0,   "rgba(40,68,105,0.05)");
     vig.addColorStop(0.7, "rgba(12,27,51,0)");
@@ -294,7 +303,7 @@ export function MemberGraph({ members }: MemberGraphProps) {
     ctx.fillStyle = vig; ctx.fill();
   }, []);
 
-  // ── Post-frame: paint page-bg over canvas corners → circle illusion ───
+  // ── Post-frame: paint page-bg over corners → circle illusion ──────────
   const handleRenderFramePost = useCallback((ctx: CanvasRenderingContext2D) => {
     const cw = ctx.canvas.width;
     const ch = ctx.canvas.height;
@@ -303,14 +312,12 @@ export function MemberGraph({ members }: MemberGraphProps) {
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-    // evenodd: full rect minus circle hole = corners only
     ctx.beginPath();
     ctx.rect(0, 0, cw, ch);
     ctx.arc(cw / 2, ch / 2, cr, 0, Math.PI * 2, true);
     ctx.fillStyle = bgColorRef.current;
     ctx.fill("evenodd");
 
-    // Crisp edge ring
     ctx.beginPath();
     ctx.arc(cw / 2, ch / 2, cr, 0, Math.PI * 2);
     ctx.strokeStyle = "rgba(131,188,169,0.22)";
@@ -337,36 +344,29 @@ export function MemberGraph({ members }: MemberGraphProps) {
         const isFocusHub = isFocusMode && activeCatRef.current === node.name;
 
         if (isFocusHub) {
-          // Large pinned hub — the gravitational anchor of the focus view
           const r     = 15;
           const pulse = 0.5 + 0.5 * Math.sin(t * Math.PI * 2 * 0.22);
 
-          // Outer nebula
           const neb = ctx.createRadialGradient(x, y, r, x, y, r * 5);
           neb.addColorStop(0, `rgba(${C.catRgb},${(0.38 + pulse * 0.22).toFixed(3)})`);
           neb.addColorStop(1, "rgba(0,0,0,0)");
           ctx.beginPath(); ctx.arc(x, y, r * 5, 0, Math.PI * 2);
           ctx.fillStyle = neb; ctx.fill();
 
-          // Pulse ring
           ctx.beginPath(); ctx.arc(x, y, r + 5, 0, Math.PI * 2);
           ctx.strokeStyle = `rgba(${C.catRgb},${(0.55 + pulse * 0.32).toFixed(3)})`;
           ctx.lineWidth   = 1.8; ctx.stroke();
 
-          // Core fill
           ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
           ctx.fillStyle = C.cat; ctx.fill();
 
-          // Inner highlight
           ctx.beginPath(); ctx.arc(x, y, r * 0.34, 0, Math.PI * 2);
           ctx.fillStyle = "rgba(255,255,255,0.92)"; ctx.fill();
 
-          // Label — always visible, prominent
           const fs  = Math.max(11.5 / globalScale, 1.5);
           const lbl = node.name.length > 22 ? node.name.slice(0, 20) + "…" : node.name;
           drawLabelPill(ctx, lbl, x, y + r + 5 / globalScale, fs, 0.93, "rgba(255,255,255,0.96)", true);
 
-          // Member count sub-label
           const subFs = Math.max(9 / globalScale, 1.1);
           drawLabelPill(
             ctx, `${count} members`, x,
@@ -376,12 +376,10 @@ export function MemberGraph({ members }: MemberGraphProps) {
           return;
         }
 
-        // Overview constellation node — size encodes member count
         const r     = Math.max(5, Math.min(17, 5 + Math.sqrt(count) * 1.05));
         const phase = x * 0.14 + y * 0.10;
         const pulse = 0.42 + 0.32 * Math.sin(t * 1.88 + phase);
 
-        // Hover glow burst
         if (isHov) {
           const hov = ctx.createRadialGradient(x, y, 0, x, y, r * 5.5);
           hov.addColorStop(0, `rgba(${C.catRgb},0.55)`);
@@ -390,24 +388,20 @@ export function MemberGraph({ members }: MemberGraphProps) {
           ctx.fillStyle = hov; ctx.fill();
         }
 
-        // Ambient glow
         const glow = ctx.createRadialGradient(x, y, 0, x, y, r * 3.8);
         glow.addColorStop(0, `rgba(${C.catRgb},${(pulse * 0.20).toFixed(3)})`);
         glow.addColorStop(1, "rgba(0,0,0,0)");
         ctx.beginPath(); ctx.arc(x, y, r * 3.8, 0, Math.PI * 2);
         ctx.fillStyle = glow; ctx.fill();
 
-        // Core
         const effectiveR = isHov ? r * 1.28 : r;
         ctx.beginPath(); ctx.arc(x, y, effectiveR, 0, Math.PI * 2);
         ctx.fillStyle = isHov ? C.ci : `rgba(${C.catRgb},0.88)`;
         ctx.fill();
 
-        // Inner dot
         ctx.beginPath(); ctx.arc(x, y, effectiveR * 0.30, 0, Math.PI * 2);
         ctx.fillStyle = "rgba(255,255,255,0.88)"; ctx.fill();
 
-        // Always-visible name label (boomers don't have to zoom)
         const fs  = Math.max(10 / globalScale, 1.2);
         const lbl = node.name.length > 21 ? node.name.slice(0, 19) + "…" : node.name;
         drawLabelPill(
@@ -417,7 +411,6 @@ export function MemberGraph({ members }: MemberGraphProps) {
           isHov,
         );
 
-        // Member count badge (shown when zoomed in enough or hovered)
         if (count > 0 && (globalScale > 0.6 || isHov)) {
           const cfs = Math.max(8.5 / globalScale, 1.0);
           drawLabelPill(
@@ -435,7 +428,6 @@ export function MemberGraph({ members }: MemberGraphProps) {
       const rgb   = node.tier === "ci" ? C.ciRgb : node.tier === "vp" ? C.vpRgb : C.ciRgb;
       const col   = node.tier === "ci" ? C.ci    : node.tier === "vp" ? C.vp    : C.standard;
 
-      // Aura — CI always glows, others glow on hover
       if (node.tier === "ci" || isHov) {
         const phase = (node.x ?? 0) * 0.20 + (node.y ?? 0) * 0.13;
         const pulse = 0.38 + 0.28 * Math.sin(t * 1.9 + phase);
@@ -454,18 +446,15 @@ export function MemberGraph({ members }: MemberGraphProps) {
         ctx.fillStyle = grd; ctx.fill();
       }
 
-      // Core
       ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
       ctx.fillStyle = col; ctx.fill();
 
-      // Ring for CI / hover
       if (isHov || node.tier === "ci") {
         ctx.beginPath(); ctx.arc(x, y, r + 1.8, 0, Math.PI * 2);
         ctx.strokeStyle = `rgba(${rgb},${isHov ? 0.88 : 0.42})`;
         ctx.lineWidth   = 0.9; ctx.stroke();
       }
 
-      // Always-visible label in focus mode — core boomer UX win
       const fs  = Math.max(10.5 / globalScale, 1.4);
       const lbl = node.name.length > 24 ? node.name.slice(0, 22) + "…" : node.name;
       const tcol = node.tier === "ci" ? `rgba(${C.ciRgb},0.96)` :
@@ -502,6 +491,7 @@ export function MemberGraph({ members }: MemberGraphProps) {
     if (node.type === "category") {
       setActiveCategory((prev) => (prev === node.name ? null : node.name));
       setSearch("");
+      setSheetOpen(false);
       engineStoppedRef.current = false;
     } else if (node.type === "member") {
       setSelectedMember(node);
@@ -514,7 +504,7 @@ export function MemberGraph({ members }: MemberGraphProps) {
     if (canvas) canvas.style.cursor = node ? "pointer" : "default";
   }, []);
 
-  // Geometric mouse-in-circle detection for scroll-zoom gating
+  // ── Mouse circle detection (desktop) ──────────────────────────────────
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const rect   = e.currentTarget.getBoundingClientRect();
     const dx     = e.clientX - rect.left  - rect.width  / 2;
@@ -532,9 +522,30 @@ export function MemberGraph({ members }: MemberGraphProps) {
     setMouseInCircle(false);
   }, []);
 
+  // ── Touch circle detection (iPhone / iPad) ─────────────────────────────
+  // On touch devices, pinch-to-zoom is always allowed — no scroll conflict
+  // to worry about, so we just enable zoom when any finger is in the circle.
+  const handleTouchStart = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
+    const touch = e.touches[0];
+    if (!touch) return;
+    const rect   = e.currentTarget.getBoundingClientRect();
+    const dx     = touch.clientX - rect.left  - rect.width  / 2;
+    const dy     = touch.clientY - rect.top   - rect.height / 2;
+    const cr     = Math.min(rect.width, rect.height) / 2 - 2;
+    const inside = Math.sqrt(dx * dx + dy * dy) < cr;
+    mouseInCircleRef.current = inside;
+    setMouseInCircle(inside);
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    mouseInCircleRef.current = false;
+    setMouseInCircle(false);
+  }, []);
+
   const focusCategory = useCallback((cat: string) => {
     setActiveCategory(cat);
     setSearch("");
+    setSheetOpen(false);
     engineStoppedRef.current = false;
   }, []);
 
@@ -544,7 +555,7 @@ export function MemberGraph({ members }: MemberGraphProps) {
     engineStoppedRef.current = false;
   }, []);
 
-  // ── Sidebar member counts ──────────────────────────────────────────────
+  // ── Filtered member list ───────────────────────────────────────────────
   const visibleFocusMembers = useMemo(
     () => focusMembers.filter(
       (m) => !search || m.name.toLowerCase().includes(search.toLowerCase()),
@@ -552,297 +563,293 @@ export function MemberGraph({ members }: MemberGraphProps) {
     [focusMembers, search],
   );
 
-  // ── Tier dot for sidebar ───────────────────────────────────────────────
+  // ── Tier dot colour for sidebar rows ──────────────────────────────────
   function tierDot(tier: string | undefined) {
     if (tier === "ci") return C.ci;
     if (tier === "vp") return C.vp;
     return "rgba(131,188,169,0.5)";
   }
 
+  // ── Sidebar inner content — shared between desktop aside + mobile sheet
+  const sidebarContent = (
+    <>
+      {/* Search */}
+      <div style={{ padding: "11px 14px 9px", flexShrink: 0 }}>
+        <div style={{ position: "relative" }}>
+          <svg style={{
+            position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)",
+            width: 13, height: 13, pointerEvents: "none", color: "var(--text-tertiary)",
+          }} viewBox="0 0 16 16" fill="currentColor">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.116-.099zM6.5 12a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"/>
+          </svg>
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={activeCategory ? "Search members…" : "Search industries…"}
+            style={{
+              paddingLeft: 32, paddingRight: 10, paddingTop: 8, paddingBottom: 8,
+              width: "100%", boxSizing: "border-box",
+              background:  "var(--bg-tertiary)",
+              border:      "1px solid var(--border-primary)", borderRadius: 8,
+              color:       "var(--text-primary)", fontSize: 13, outline: "none",
+              fontFamily:  "inherit",
+              transition:  "border-color 150ms ease",
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Mode bar */}
+      <div style={{
+        padding:      "0 14px 9px", flexShrink: 0,
+        borderBottom: "1px solid var(--border-primary)",
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+      }}>
+        {activeCategory ? (
+          <>
+            <button
+              onClick={clearFocus}
+              style={{
+                display: "flex", alignItems: "center", gap: 5,
+                background: "none", border: "none", cursor: "pointer",
+                color: "var(--text-accent)", fontSize: 12, fontWeight: 600,
+                padding: 0, fontFamily: "inherit", touchAction: "manipulation",
+              }}
+            >
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                <path d="M8 2.5L3.5 6.5L8 10.5" stroke="currentColor" strokeWidth="1.8"
+                  strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              All industries
+            </button>
+            <span style={{ fontSize: 11, color: "var(--text-tertiary)" }}>
+              {focusMembers.length} members
+            </span>
+          </>
+        ) : (
+          <>
+            <span style={{
+              fontSize: 10, fontWeight: 700, color: "var(--text-tertiary)",
+              textTransform: "uppercase", letterSpacing: "0.12em",
+            }}>
+              Industries
+            </span>
+            <span style={{ fontSize: 11, color: "var(--text-tertiary)" }}>
+              {filteredCategories.length}
+            </span>
+          </>
+        )}
+      </div>
+
+      {/* Scrollable list */}
+      <div style={{ flex: 1, overflowY: "auto", paddingTop: 4, paddingBottom: 4 }}>
+        {activeCategory ? (
+          <>
+            {/* Active category banner */}
+            <div style={{
+              margin: "6px 12px 6px", padding: "9px 12px", borderRadius: 8,
+              background: "rgba(131,188,169,0.09)", border: "1px solid rgba(131,188,169,0.22)",
+              display: "flex", alignItems: "center", gap: 8,
+            }}>
+              <span style={{
+                width: 8, height: 8, borderRadius: "50%", background: C.cat,
+                boxShadow: "0 0 7px rgba(131,188,169,0.6)", flexShrink: 0,
+              }} />
+              <span style={{
+                fontSize: 12, fontWeight: 700, color: "var(--text-primary)",
+                overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+              }}>
+                {activeCategory}
+              </span>
+            </div>
+
+            {visibleFocusMembers.map((m) => {
+              const isHov = m.id === sidebarHovId;
+              const dot   = tierDot(m.tier);
+              return (
+                <button
+                  key={m.id}
+                  onClick={() => setSelectedMember(m)}
+                  onMouseEnter={() => setSidebarHovId(m.id)}
+                  onMouseLeave={() => setSidebarHovId(null)}
+                  style={{
+                    width: "100%", padding: "10px 16px", minHeight: 44,
+                    display: "flex", alignItems: "center", gap: 10,
+                    background:  isHov ? "var(--bg-tertiary)" : "transparent",
+                    border:      "none", cursor: "pointer", textAlign: "left",
+                    fontFamily:  "inherit", touchAction: "manipulation",
+                    transition:  "background 120ms ease",
+                  }}
+                >
+                  <span style={{
+                    width: 7, height: 7, borderRadius: "50%", background: dot, flexShrink: 0,
+                    boxShadow: m.tier !== "standard" ? `0 0 5px ${dot}` : undefined,
+                  }} />
+                  <span style={{
+                    flex: 1, fontSize: 13, color: "var(--text-primary)",
+                    overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                  }}>
+                    {m.name}
+                  </span>
+                  <svg
+                    width="11" height="11" viewBox="0 0 11 11" fill="none"
+                    style={{ flexShrink: 0, opacity: isHov ? 0.5 : 0, transition: "opacity 120ms" }}
+                  >
+                    <path d="M3.5 2L7.5 5.5L3.5 9" stroke="var(--text-primary)"
+                      strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              );
+            })}
+
+            {visibleFocusMembers.length === 0 && (
+              <p style={{
+                padding: "20px 18px", fontSize: 12,
+                color: "var(--text-tertiary)", textAlign: "center",
+              }}>
+                No members match
+              </p>
+            )}
+          </>
+        ) : (
+          filteredCategories.map((cat) => {
+            const count   = catCounts.get(cat) ?? 0;
+            const isHov   = `cat:${cat}` === sidebarHovId;
+            const inGlobe = topCatSet.has(cat);
+            return (
+              <button
+                key={cat}
+                onClick={() => focusCategory(cat)}
+                onMouseEnter={() => setSidebarHovId(`cat:${cat}`)}
+                onMouseLeave={() => setSidebarHovId(null)}
+                style={{
+                  width: "100%", padding: "10px 16px", minHeight: 44,
+                  display: "flex", alignItems: "center",
+                  justifyContent: "space-between", gap: 8,
+                  background:  isHov ? "var(--bg-tertiary)" : "transparent",
+                  border:      "none", cursor: "pointer", textAlign: "left",
+                  fontFamily:  "inherit", touchAction: "manipulation",
+                  transition:  "background 120ms ease",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 8, overflow: "hidden" }}>
+                  <span style={{
+                    width: 6, height: 6, borderRadius: "50%",
+                    background:  inGlobe ? C.cat : "var(--border-primary)",
+                    flexShrink:  0,
+                    boxShadow:   inGlobe && isHov ? "0 0 6px rgba(131,188,169,0.55)" : undefined,
+                    transition:  "box-shadow 120ms",
+                  }} />
+                  <span style={{
+                    fontSize: 13, color: "var(--text-primary)",
+                    overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                  }}>
+                    {cat}
+                  </span>
+                </div>
+                <span style={{
+                  fontSize: 11, flexShrink: 0, transition: "color 120ms",
+                  color:             isHov ? C.cat : "var(--text-tertiary)",
+                  fontVariantNumeric: "tabular-nums",
+                }}>
+                  {count}
+                </span>
+              </button>
+            );
+          })
+        )}
+      </div>
+
+      {/* Legend */}
+      <div style={{
+        padding: "11px 16px", borderTop: "1px solid var(--border-primary)", flexShrink: 0,
+      }}>
+        <p style={{
+          margin: "0 0 7px", fontSize: 9, fontWeight: 700,
+          letterSpacing: "0.12em", color: "var(--text-tertiary)", textTransform: "uppercase",
+        }}>
+          Membership tier
+        </p>
+        {([
+          { color: C.ci,    glow: C.ciRgb, label: "Community Investor" },
+          { color: C.vp,    glow: C.vpRgb, label: "Visibility Plus" },
+          { color: "rgba(131,188,169,0.5)", glow: null, label: "Member" },
+        ] as const).map(({ color, glow, label }) => (
+          <span key={label} style={{
+            display: "flex", alignItems: "center", gap: 8,
+            fontSize: 11, color: "var(--text-secondary)", marginBottom: 5,
+          }}>
+            <span style={{
+              width: 6, height: 6, borderRadius: "50%", background: color, flexShrink: 0,
+              boxShadow: glow ? `0 0 5px rgba(${glow},0.6)` : undefined,
+            }} />
+            {label}
+          </span>
+        ))}
+      </div>
+    </>
+  );
+
   return (
+    // Mobile: `relative` wrapper (globe = absolute inset-0, no sidebar)
+    // Desktop: `flex` row (296px sidebar | flex-1 globe)
     <div
-      className="flex select-none overflow-hidden rounded-2xl border border-border-primary"
+      className={`select-none overflow-hidden rounded-2xl border border-border-primary${isMobile ? " relative" : " flex"}`}
       style={{
         height:    "86vh",
-        minHeight: 560,
+        minHeight: isMobile ? 360 : 560,
         boxShadow: "0 4px 40px rgba(0,0,0,0.10), 0 1px 0 rgba(255,255,255,0.8) inset",
       }}
     >
       {/* ════════════════════════════════════════════════════════════════
-          SIDEBAR — light-themed, scrollable, always readable
+          DESKTOP SIDEBAR — hidden on mobile
           ════════════════════════════════════════════════════════════════ */}
-      <aside
-        className="flex flex-col flex-shrink-0 overflow-hidden"
-        style={{
-          width:       296,
-          background:  "var(--bg-secondary)",
-          borderRight: "1px solid var(--border-primary)",
-        }}
-      >
-        {/* Header */}
-        <div style={{
-          padding:      "18px 18px 14px",
-          borderBottom: "1px solid var(--border-primary)",
-          flexShrink:   0,
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
-            <span style={{
-              width:     7, height: 7, borderRadius: "50%",
-              background: "#00B894",
-              boxShadow:  "0 0 8px rgba(0,184,148,0.8)",
-              flexShrink: 0,
-            }} />
-            <h2 style={{
-              margin:      0, fontSize: 14, fontWeight: 700,
-              color:       "var(--text-primary)", letterSpacing: "-0.01em",
-            }}>
-              Member Network
-            </h2>
-          </div>
-          <p style={{ margin: 0, fontSize: 11.5, color: "var(--text-tertiary)" }}>
-            {members.length} members · {sortedCategories.length} industries
-          </p>
-        </div>
-
-        {/* Search */}
-        <div style={{ padding: "11px 14px 9px", flexShrink: 0 }}>
-          <div style={{ position: "relative" }}>
-            <svg style={{
-              position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)",
-              width: 13, height: 13, pointerEvents: "none", color: "var(--text-tertiary)",
-            }} viewBox="0 0 16 16" fill="currentColor">
-              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.116-.099zM6.5 12a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"/>
-            </svg>
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={activeCategory ? "Search members…" : "Search industries…"}
-              style={{
-                paddingLeft: 32, paddingRight: 10, paddingTop: 8, paddingBottom: 8,
-                width: "100%", boxSizing: "border-box",
-                background:  "var(--bg-tertiary)",
-                border:      "1px solid var(--border-primary)", borderRadius: 8,
-                color:       "var(--text-primary)", fontSize: 13, outline: "none",
-                fontFamily:  "inherit",
-                transition:  "border-color 150ms ease",
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Mode bar */}
-        <div style={{
-          padding:      "0 14px 9px", flexShrink: 0,
-          borderBottom: "1px solid var(--border-primary)",
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-        }}>
-          {activeCategory ? (
-            <>
-              <button
-                onClick={clearFocus}
-                style={{
-                  display: "flex", alignItems: "center", gap: 5,
-                  background: "none", border: "none", cursor: "pointer",
-                  color: "var(--text-accent)", fontSize: 12, fontWeight: 600,
-                  padding: 0, fontFamily: "inherit",
-                }}
-              >
-                <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-                  <path d="M8 2.5L3.5 6.5L8 10.5" stroke="currentColor" strokeWidth="1.8"
-                    strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                All industries
-              </button>
-              <span style={{ fontSize: 11, color: "var(--text-tertiary)" }}>
-                {focusMembers.length} members
-              </span>
-            </>
-          ) : (
-            <>
-              <span style={{
-                fontSize: 10, fontWeight: 700, color: "var(--text-tertiary)",
-                textTransform: "uppercase", letterSpacing: "0.12em",
-              }}>
-                Industries
-              </span>
-              <span style={{ fontSize: 11, color: "var(--text-tertiary)" }}>
-                {filteredCategories.length}
-              </span>
-            </>
-          )}
-        </div>
-
-        {/* Scrollable list */}
-        <div style={{ flex: 1, overflowY: "auto", paddingTop: 4, paddingBottom: 4 }}>
-          {activeCategory ? (
-            /* ── Focus mode: member list ── */
-            <>
-              {/* Active category banner */}
-              <div style={{
-                margin:     "6px 12px 6px",
-                padding:    "9px 12px",
-                borderRadius: 8,
-                background: "rgba(131,188,169,0.09)",
-                border:     "1px solid rgba(131,188,169,0.22)",
-                display:    "flex", alignItems: "center", gap: 8,
-              }}>
-                <span style={{
-                  width: 8, height: 8, borderRadius: "50%",
-                  background: C.cat,
-                  boxShadow:  "0 0 7px rgba(131,188,169,0.6)",
-                  flexShrink: 0,
-                }} />
-                <span style={{
-                  fontSize: 12, fontWeight: 700, color: "var(--text-primary)",
-                  overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                }}>
-                  {activeCategory}
-                </span>
-              </div>
-
-              {visibleFocusMembers.map((m) => {
-                const isHov = m.id === sidebarHovId;
-                const dot   = tierDot(m.tier);
-                return (
-                  <button
-                    key={m.id}
-                    onClick={() => setSelectedMember(m)}
-                    onMouseEnter={() => setSidebarHovId(m.id)}
-                    onMouseLeave={() => setSidebarHovId(null)}
-                    style={{
-                      width: "100%", padding: "8px 16px",
-                      display: "flex", alignItems: "center", gap: 10,
-                      background:  isHov ? "var(--bg-tertiary)" : "transparent",
-                      border:      "none", cursor: "pointer", textAlign: "left",
-                      fontFamily:  "inherit",
-                      transition:  "background 120ms ease",
-                    }}
-                  >
-                    <span style={{
-                      width: 7, height: 7, borderRadius: "50%",
-                      background: dot, flexShrink: 0,
-                      boxShadow:  m.tier !== "standard" ? `0 0 5px ${dot}` : undefined,
-                    }} />
-                    <span style={{
-                      flex: 1, fontSize: 13, color: "var(--text-primary)",
-                      overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                    }}>
-                      {m.name}
-                    </span>
-                    <svg
-                      width="11" height="11" viewBox="0 0 11 11" fill="none"
-                      style={{ flexShrink: 0, opacity: isHov ? 0.5 : 0, transition: "opacity 120ms" }}
-                    >
-                      <path d="M3.5 2L7.5 5.5L3.5 9" stroke="var(--text-primary)"
-                        strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
-                );
-              })}
-
-              {visibleFocusMembers.length === 0 && (
-                <p style={{
-                  padding: "20px 18px", fontSize: 12,
-                  color: "var(--text-tertiary)", textAlign: "center",
-                }}>
-                  No members match
-                </p>
-              )}
-            </>
-          ) : (
-            /* ── Overview mode: category list sorted by member count ── */
-            filteredCategories.map((cat) => {
-              const count = catCounts.get(cat) ?? 0;
-              const isHov = `cat:${cat}` === sidebarHovId;
-              const inGlobe = topCatSet.has(cat);
-              return (
-                <button
-                  key={cat}
-                  onClick={() => focusCategory(cat)}
-                  onMouseEnter={() => setSidebarHovId(`cat:${cat}`)}
-                  onMouseLeave={() => setSidebarHovId(null)}
-                  style={{
-                    width: "100%", padding: "7px 16px",
-                    display: "flex", alignItems: "center",
-                    justifyContent: "space-between", gap: 8,
-                    background:  isHov ? "var(--bg-tertiary)" : "transparent",
-                    border:      "none", cursor: "pointer", textAlign: "left",
-                    fontFamily:  "inherit",
-                    transition:  "background 120ms ease",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, overflow: "hidden" }}>
-                    <span style={{
-                      width: 6, height: 6, borderRadius: "50%",
-                      background:  inGlobe ? C.cat : "var(--border-primary)",
-                      flexShrink:  0,
-                      boxShadow:   inGlobe && isHov ? "0 0 6px rgba(131,188,169,0.55)" : undefined,
-                      transition:  "box-shadow 120ms",
-                    }} />
-                    <span style={{
-                      fontSize: 13, color: "var(--text-primary)",
-                      overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                    }}>
-                      {cat}
-                    </span>
-                  </div>
-                  <span style={{
-                    fontSize:          11,
-                    color:             isHov ? C.cat : "var(--text-tertiary)",
-                    fontVariantNumeric: "tabular-nums",
-                    flexShrink:        0,
-                    transition:        "color 120ms",
-                  }}>
-                    {count}
-                  </span>
-                </button>
-              );
-            })
-          )}
-        </div>
-
-        {/* Legend */}
-        <div style={{
-          padding:   "11px 16px",
-          borderTop: "1px solid var(--border-primary)",
-          flexShrink: 0,
-        }}>
-          <p style={{
-            margin: "0 0 7px", fontSize: 9, fontWeight: 700,
-            letterSpacing: "0.12em", color: "var(--text-tertiary)",
-            textTransform: "uppercase",
+      {!isMobile && (
+        <aside
+          className="flex flex-col flex-shrink-0 overflow-hidden"
+          style={{
+            width:       296,
+            background:  "var(--bg-secondary)",
+            borderRight: "1px solid var(--border-primary)",
+          }}
+        >
+          {/* Header */}
+          <div style={{
+            padding:      "18px 18px 14px",
+            borderBottom: "1px solid var(--border-primary)",
+            flexShrink:   0,
           }}>
-            Membership tier
-          </p>
-          {([
-            { color: C.ci,    glow: C.ciRgb, label: "Community Investor" },
-            { color: C.vp,    glow: C.vpRgb, label: "Visibility Plus" },
-            { color: "rgba(131,188,169,0.5)", glow: null, label: "Member" },
-          ] as const).map(({ color, glow, label }) => (
-            <span key={label} style={{
-              display: "flex", alignItems: "center", gap: 8,
-              fontSize: 11, color: "var(--text-secondary)", marginBottom: 5,
-            }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
               <span style={{
-                width: 6, height: 6, borderRadius: "50%",
-                background: color, flexShrink: 0,
-                boxShadow: glow ? `0 0 5px rgba(${glow},0.6)` : undefined,
+                width: 7, height: 7, borderRadius: "50%", background: "#00B894",
+                boxShadow: "0 0 8px rgba(0,184,148,0.8)", flexShrink: 0,
               }} />
-              {label}
-            </span>
-          ))}
-        </div>
-      </aside>
+              <h2 style={{
+                margin: 0, fontSize: 14, fontWeight: 700,
+                color: "var(--text-primary)", letterSpacing: "-0.01em",
+              }}>
+                Member Network
+              </h2>
+            </div>
+            <p style={{ margin: 0, fontSize: 11.5, color: "var(--text-tertiary)" }}>
+              {members.length} members · {sortedCategories.length} industries
+            </p>
+          </div>
+          {sidebarContent}
+        </aside>
+      )}
 
       {/* ════════════════════════════════════════════════════════════════
-          GLOBE — dark atmospheric canvas, rendered as a circle
+          GLOBE — full width on mobile, flex-1 on desktop
           ════════════════════════════════════════════════════════════════ */}
       <div
-        className="relative flex-1 overflow-hidden"
+        className={`${isMobile ? "absolute inset-0" : "relative flex-1"} overflow-hidden`}
         style={{ background: "var(--bg-primary)" }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
       >
         {/* ForceGraph2D canvas */}
         <div ref={containerRef} className="w-full h-full">
@@ -866,15 +873,17 @@ export function MemberGraph({ members }: MemberGraphProps) {
             backgroundColor="rgba(0,0,0,0)"
             width={dimensions.width}
             height={dimensions.height}
-            warmupTicks={90}
+            warmupTicks={isMobile ? 40 : 90}
             cooldownTicks={160}
             cooldownTime={7000}
             d3AlphaDecay={0.038}
             d3VelocityDecay={0.44}
             minZoom={0.14}
             maxZoom={14}
-            enableZoomInteraction={mouseInCircle}   /* scroll zoom only inside the circle */
-            enablePanInteraction={true}              /* drag to pan always works */
+            // Touch devices: zoom always enabled (pinch ≠ page scroll conflict)
+            // Desktop: zoom only inside the circle (prevents page-scroll hijack)
+            enableZoomInteraction={isTouch ? true : mouseInCircle}
+            enablePanInteraction={true}
           />
         </div>
 
@@ -892,14 +901,17 @@ export function MemberGraph({ members }: MemberGraphProps) {
               color: "rgba(131,188,169,0.72)", textTransform: "uppercase", whiteSpace: "nowrap",
             }}>
               {activeCategory
-                ? `${activeCategory} · ${focusMembers.length} members · click to open`
-                : `Top ${Math.min(TOP_N, sortedCategories.length)} industries · click to explore`}
+                ? `${activeCategory} · ${focusMembers.length} members · tap to open`
+                : `Top ${Math.min(TOP_N, sortedCategories.length)} industries · tap to explore`}
             </p>
           </div>
         </div>
 
-        {/* Zoom controls */}
-        <div className="absolute bottom-10 right-5 flex flex-col gap-2 z-10">
+        {/* Zoom controls — 44×44 touch targets with touch-action: manipulation */}
+        <div
+          className="absolute flex flex-col gap-2 z-10"
+          style={{ bottom: isMobile ? 68 : 40, right: 20 }}
+        >
           {([
             { label: "+", fn: zoomIn,    title: "Zoom in" },
             { label: "−", fn: zoomOut,   title: "Zoom out" },
@@ -910,7 +922,7 @@ export function MemberGraph({ members }: MemberGraphProps) {
               onClick={fn}
               title={title}
               style={{
-                width: 34, height: 34,
+                width: 44, height: 44,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 background:           "rgba(12,27,51,0.78)",
                 backdropFilter:       "blur(12px)",
@@ -921,6 +933,7 @@ export function MemberGraph({ members }: MemberGraphProps) {
                 fontSize:             label === "⊡" ? 14 : 18,
                 cursor:               "pointer",
                 fontWeight:           700,
+                touchAction:          "manipulation",
               }}
             >
               {label}
@@ -928,16 +941,138 @@ export function MemberGraph({ members }: MemberGraphProps) {
           ))}
         </div>
 
-        {/* Scroll hint */}
-        <div className="absolute bottom-4 left-0 right-0 flex justify-center pointer-events-none">
-          <p style={{
-            margin: 0, fontSize: 9.5, letterSpacing: "0.1em", fontWeight: 600,
-            color: "rgba(131,188,169,0.22)", textTransform: "uppercase", whiteSpace: "nowrap",
-          }}>
-            Scroll inside globe to zoom · drag to pan · click to open
-          </p>
-        </div>
+        {/* Desktop hint — correct copy, hidden on mobile (browse bar replaces it) */}
+        {!isMobile && (
+          <div className="absolute bottom-4 left-0 right-0 flex justify-center pointer-events-none">
+            <p style={{
+              margin: 0, fontSize: 9.5, letterSpacing: "0.1em", fontWeight: 600,
+              color: "rgba(131,188,169,0.40)", textTransform: "uppercase", whiteSpace: "nowrap",
+            }}>
+              {isTouch
+                ? "Pinch to zoom · drag to pan · tap to open"
+                : "Scroll inside globe to zoom · drag to pan · click to open"}
+            </p>
+          </div>
+        )}
       </div>
+
+      {/* ════════════════════════════════════════════════════════════════
+          MOBILE: Browse bar + sliding bottom sheet
+          ════════════════════════════════════════════════════════════════ */}
+      {isMobile && (
+        <>
+          {/* Always-visible browse bar at bottom of globe */}
+          <button
+            onClick={() => setSheetOpen(true)}
+            className="absolute left-0 right-0 z-10 flex items-center justify-between"
+            style={{
+              bottom: 0,
+              padding: "13px 20px",
+              paddingBottom: "max(13px, env(safe-area-inset-bottom))",
+              background:           "rgba(12,27,51,0.92)",
+              backdropFilter:       "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              borderTop:            "1px solid rgba(131,188,169,0.16)",
+              color:                "rgba(131,188,169,0.85)",
+              fontSize:             13,
+              fontWeight:           700,
+              cursor:               "pointer",
+              fontFamily:           "inherit",
+              touchAction:          "manipulation",
+              border:               "none",
+            }}
+          >
+            <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{
+                width: 6, height: 6, borderRadius: "50%", flexShrink: 0,
+                background:  activeCategory ? C.cat : "#00B894",
+                boxShadow:   activeCategory
+                  ? "0 0 6px rgba(131,188,169,0.6)"
+                  : "0 0 8px rgba(0,184,148,0.8)",
+              }} />
+              {activeCategory
+                ? `${activeCategory} — ${focusMembers.length} members`
+                : `${members.length} members · ${sortedCategories.length} industries`}
+            </span>
+            <span style={{ display: "flex", alignItems: "center", gap: 3, opacity: 0.6, fontSize: 11 }}>
+              Browse
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M2 8L6 4L10 8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </span>
+          </button>
+
+          {/* Sheet backdrop */}
+          {sheetOpen && (
+            <div
+              className="fixed inset-0 z-40"
+              style={{
+                background:           "rgba(12,27,51,0.55)",
+                backdropFilter:       "blur(2px)",
+                WebkitBackdropFilter: "blur(2px)",
+              }}
+              onClick={() => setSheetOpen(false)}
+            />
+          )}
+
+          {/* Bottom sheet panel — CSS transform for smooth slide up/down */}
+          <div
+            className="fixed left-0 right-0 bottom-0 z-50 flex flex-col"
+            style={{
+              maxHeight:     "70vh",
+              background:    "var(--bg-secondary)",
+              borderRadius:  "16px 16px 0 0",
+              borderTop:     "1px solid var(--border-primary)",
+              borderLeft:    "1px solid var(--border-primary)",
+              borderRight:   "1px solid var(--border-primary)",
+              boxShadow:     "0 -8px 40px rgba(0,0,0,0.22)",
+              paddingBottom: "env(safe-area-inset-bottom)",
+              transform:     sheetOpen ? "translateY(0)" : "translateY(100%)",
+              transition:    "transform 300ms cubic-bezier(0.16,1,0.3,1)",
+              pointerEvents: sheetOpen ? "auto" : "none",
+            }}
+          >
+            {/* Drag handle + header */}
+            <div style={{
+              padding: "10px 18px 12px",
+              borderBottom: "1px solid var(--border-primary)",
+              flexShrink: 0,
+            }}>
+              {/* Visual drag handle pill */}
+              <div style={{
+                width: 32, height: 3, borderRadius: 2,
+                background: "var(--border-primary)", margin: "0 auto 12px",
+              }} />
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{
+                    width: 7, height: 7, borderRadius: "50%", background: "#00B894",
+                    boxShadow: "0 0 8px rgba(0,184,148,0.8)", flexShrink: 0,
+                  }} />
+                  <h2 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "var(--text-primary)" }}>
+                    Member Network
+                  </h2>
+                </div>
+                <button
+                  onClick={() => setSheetOpen(false)}
+                  aria-label="Close"
+                  style={{
+                    background: "none", border: "none", cursor: "pointer",
+                    color: "var(--text-tertiary)", padding: 8,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    touchAction: "manipulation",
+                  }}
+                >
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <path d="M4 4L14 14M14 4L4 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            {sidebarContent}
+          </div>
+        </>
+      )}
 
       {/* Member detail panel */}
       {selectedMember && (

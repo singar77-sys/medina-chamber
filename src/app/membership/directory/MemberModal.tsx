@@ -31,7 +31,12 @@ export function MemberModal({ member, onClose }: MemberModalProps) {
       />
 
       {/* Slide-in panel */}
-      <div className="fixed right-0 top-0 bottom-0 z-50 w-full max-w-sm bg-bg-primary border-l border-border-secondary shadow-2xl flex flex-col overflow-hidden">
+      <div
+        className="fixed right-0 top-0 bottom-0 z-50 w-full max-w-sm bg-bg-primary border-l border-border-secondary shadow-2xl flex flex-col overflow-hidden"
+        style={{
+          paddingTop: "env(safe-area-inset-top)",
+        }}
+      >
 
         {/* Header */}
         <div className="flex items-start gap-f13 p-f21 border-b border-border-secondary">
@@ -144,7 +149,10 @@ export function MemberModal({ member, onClose }: MemberModalProps) {
         </div>
 
         {/* Footer CTA */}
-        <div className="p-f21 border-t border-border-secondary">
+        <div
+          className="p-f21 border-t border-border-secondary"
+          style={{ paddingBottom: "max(var(--spacing-f21), env(safe-area-inset-bottom))" }}
+        >
           <Link
             href={`/membership/directory/${member.chamberSlug}`}
             className="

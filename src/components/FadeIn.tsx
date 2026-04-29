@@ -18,9 +18,15 @@ interface FadeInProps {
  * rootMargin "+80px" on the bottom pre-fires the animation 80px before
  * the element enters the viewport, so it is fully opaque by the time
  * the user's eye reaches it. Never translucent at rest.
+ *
+ * delay is stored in a ref so the IntersectionObserver effect can have
+ * empty deps (created once) without a stale closure on delay.
  */
 export function FadeIn({ children, className = "", delay = 0, from = "up" }: FadeInProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const delayRef = useRef(delay);
+  // Keep ref current on every render (sync, not in an effect)
+  delayRef.current = delay;
 
   useEffect(() => {
     const el = ref.current;
@@ -29,8 +35,9 @@ export function FadeIn({ children, className = "", delay = 0, from = "up" }: Fad
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          if (delay) {
-            setTimeout(() => el.classList.add("is-visible"), delay);
+          const d = delayRef.current;
+          if (d) {
+            setTimeout(() => el.classList.add("is-visible"), d);
           } else {
             el.classList.add("is-visible");
           }
@@ -44,7 +51,7 @@ export function FadeIn({ children, className = "", delay = 0, from = "up" }: Fad
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, []); // empty — observer created once, never recreated
+  }, []); // empty — delay read from ref at fire time, observer created once
 
   const directionClass = {
     up: "fade-in-up",

@@ -1,14 +1,24 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
+
+/**
+ * Chamber Ambassadors — φ spatial system applied throughout.
+ *
+ * HERO    pt-f144 pb-f89
+ * FEATURE py-f89 lg:py-f144 — What Ambassadors Do (4 role cards, open white)
+ * BAND    py-f55 lg:py-f89  — Ambassador grid (12 cards, bg-secondary)
+ * CLOSER  py-f55 lg:py-f89  — Become an Ambassador CTA card
+ */
 
 export const metadata: Metadata = {
   title: "Chamber Ambassadors",
   description:
-    "Meet the Greater Medina Chamber of Commerce Ambassadors — volunteer member business representatives who welcome new members, attend ribbon cuttings, and represent the chamber at events throughout Medina County.",
+    "Meet the 12 volunteer Chamber Ambassadors of the Greater Medina Chamber of Commerce. Member business representatives who welcome new members, attend ribbon cuttings, and represent the chamber across Medina County, Ohio.",
   openGraph: {
-    title: "Chamber Ambassadors — Greater Medina Chamber of Commerce",
+    title: "Chamber Ambassadors | Greater Medina Chamber of Commerce",
     description:
       "Volunteer member representatives who welcome new businesses and represent the chamber across Medina County.",
   },
@@ -22,7 +32,8 @@ const ambassadors = [
     company: "First Federal of Lakewood",
     email: "kdeeks@ffl.net",
     website: "https://www.ffl.bank/",
-    photo: "/images/people/ambassadors/medina-chamber-ambassador-03.jpg",
+    photo:
+      "/images/people/ambassadors/kari-deeks-first-federal-medina-chamber-ambassador.jpg",
   },
   {
     name: "Brittney Esser",
@@ -30,7 +41,8 @@ const ambassadors = [
     company: "Title Select",
     email: "brittney@titleselect.net",
     website: "https://www.titleselect.net",
-    photo: "/images/people/ambassadors/a-woman-with-curly-shoulder-length-gray-hair-wearing-clear-glasses-and-a-sleeveless-light-purple-top-medina-chamber.jpg",
+    photo:
+      "/images/people/ambassadors/brittney-esser-title-select-medina-chamber-ambassador.jpg",
   },
   {
     name: "Tania Grant",
@@ -38,31 +50,35 @@ const ambassadors = [
     company: "TAG Studio",
     email: "taniagrantstudio@gmail.com",
     website: "https://www.tagvoiceover.com/",
-    photo: "/images/people/ambassadors/tania-grant-medina-chamber-ambassador.jpg",
+    photo:
+      "/images/people/ambassadors/tania-grant-tag-studio-medina-chamber-ambassador.jpg",
   },
   {
     name: "Don Hicks",
-    title: "Area Vice President – Midwest Region",
+    title: "Area Vice President, Midwest Region",
     company: "Vensure",
     email: "don.hicks@vensure.com",
-    website: null,
-    photo: "/images/people/ambassadors/don-hicks-medina-chamber-ambassador.jpg",
+    website: "https://www.vensure.com/",
+    photo:
+      "/images/people/ambassadors/don-hicks-vensure-medina-chamber-ambassador.jpg",
   },
   {
     name: "Laurin Jeffers",
     title: "Events and Community Manager",
-    company: "Foundry Social / High Voltage Karting",
+    company: "Foundry Social / High Voltage Karting / MAD Brewing",
     email: "laurinj@highvoltagekarting.com",
     website: "https://thefoundrysocial.com/",
-    photo: "/images/people/ambassadors/a-smiling-woman-with-dark-brown-hair-and-a-beige-button-up-shirt-indoors-with-blurred-background-medina-chamber.jpg",
+    photo:
+      "/images/people/ambassadors/laurin-jeffers-foundry-social-medina-chamber-ambassador.jpg",
   },
   {
     name: "Danielle Litton",
     title: "MRO Midwest Sales Manager",
     company: "National Process Systems",
     email: "Danielle.Litton@National-Process.com",
-    website: null,
-    photo: "/images/people/ambassadors/medina-chamber-ambassador-08.jpg",
+    website: "https://national-process.com/",
+    photo:
+      "/images/people/ambassadors/danielle-litton-national-process-systems-medina-chamber-ambassador.jpg",
   },
   {
     name: "Claus Meyer",
@@ -70,7 +86,18 @@ const ambassadors = [
     company: "Raymond James",
     email: "claus.meyer@raymondjames.com",
     website: "https://www.raymondjames.com/clausmeyer",
-    photo: "/images/people/ambassadors/portrait-of-a-smiling-man-in-a-business-suit-outdoors-with-trees-in-the-background-medina-chamber.jpg",
+    photo:
+      "/images/people/ambassadors/claus-meyer-raymond-james-medina-chamber-ambassador.jpg",
+  },
+  {
+    name: "Tom Muntean",
+    title: "Owner",
+    company: "Thomas Muntean Agency / American Family Insurance",
+    email: "TMUNTEAN@amfam.com",
+    website:
+      "https://www.amfam.com/agents/ohio/medina/thomas-muntean",
+    photo:
+      "/images/people/ambassadors/tom-muntean-american-family-insurance-medina-chamber-ambassador.jpg",
   },
   {
     name: "Cindy Phillips",
@@ -78,7 +105,8 @@ const ambassadors = [
     company: "Huntington Bank",
     email: "cindy.k.phillips@huntington.com",
     website: "https://www.huntington.com/",
-    photo: "/images/people/ambassadors/a-woman-with-long-gray-hair-smiling-wearing-a-black-blazer-and-patterned-blouse-standing-in-front-of-a-brick-wall-medina-chamber.jpg",
+    photo:
+      "/images/people/ambassadors/cindy-phillips-huntington-bank-medina-chamber-ambassador.jpg",
   },
   {
     name: "Sam Pietrangelo",
@@ -86,7 +114,8 @@ const ambassadors = [
     company: "Armstrong",
     email: "spietrangelo@agoc.com",
     website: "https://armstrongonewire.com",
-    photo: "/images/people/ambassadors/smiling-man-with-short-dark-hair-wearing-a-light-gray-collared-shirt-face-close-up-against-a-dark-cloudy-background-medina-chamber.jpg",
+    photo:
+      "/images/people/ambassadors/sam-pietrangelo-armstrong-medina-chamber-ambassador.jpg",
   },
   {
     name: "Tori Toth",
@@ -94,7 +123,8 @@ const ambassadors = [
     company: "Alzheimer's Association",
     email: "tjtoth@alz.org",
     website: "https://www.alz.org",
-    photo: "/images/people/ambassadors/tori-toth-medina-chamber-ambassador.jpeg",
+    photo:
+      "/images/people/ambassadors/tori-toth-alzheimers-association-medina-chamber-ambassador.jpg",
   },
   {
     name: "Kimberly Valco",
@@ -102,7 +132,8 @@ const ambassadors = [
     company: "Western Reserve Masonic Community",
     email: "kvalco@ohiomasonichome.org",
     website: "https://wrmcoh.org",
-    photo: "/images/people/ambassadors/medina-chamber-ambassador-13.jpg",
+    photo:
+      "/images/people/ambassadors/kimberly-valco-western-reserve-masonic-community-medina-chamber-ambassador.jpg",
   },
 ];
 
@@ -110,7 +141,7 @@ const roles = [
   {
     title: "Welcome New Members",
     description:
-      "Ambassadors personally greet businesses when they join the chamber — a handshake and a face that says \"you made a good call.\"",
+      "Ambassadors personally greet businesses when they join the chamber. A handshake and a face that says \"you made a good call.\"",
   },
   {
     title: "Ribbon Cuttings",
@@ -120,12 +151,12 @@ const roles = [
   {
     title: "Event Representation",
     description:
-      "Ambassadors attend chamber events, mixers, and community functions as the face of the organization.",
+      "Ambassadors attend chamber events, mixers, and community functions as the friendly face of the organization.",
   },
   {
     title: "Member Retention",
     description:
-      "They check in with members throughout the year — making sure businesses are getting value from their membership.",
+      "They check in with members throughout the year to make sure businesses are getting real value from their membership.",
   },
 ];
 
@@ -133,26 +164,25 @@ export default function AmbassadorsPage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "AboutPage",
-    name: "Chamber Ambassadors — Greater Medina Chamber of Commerce",
+    name: "Chamber Ambassadors | Greater Medina Chamber of Commerce",
     description:
-      "Meet the Greater Medina Chamber of Commerce Ambassadors — volunteer member business representatives who welcome new members, attend ribbon cuttings, and represent the chamber throughout Medina County.",
+      "Meet the volunteer Chamber Ambassadors of the Greater Medina Chamber of Commerce. Member business representatives who welcome new members, attend ribbon cuttings, and represent the chamber throughout Medina County.",
     url: "https://medinachamber.com/about/ambassadors",
     mainEntity: {
       "@type": "Organization",
       name: "Greater Medina Chamber of Commerce",
-      member: [
-        { "@type": "Person", name: "Kari Deeks", jobTitle: "Treasury Management Officer", worksFor: { "@type": "Organization", name: "First Federal of Lakewood" } },
-        { "@type": "Person", name: "Brittney Esser", jobTitle: "Escrow Processor", worksFor: { "@type": "Organization", name: "Title Select" } },
-        { "@type": "Person", name: "Tania Grant", jobTitle: "Owner", worksFor: { "@type": "Organization", name: "TAG Studio" } },
-        { "@type": "Person", name: "Don Hicks", jobTitle: "Area Vice President – Midwest Region", worksFor: { "@type": "Organization", name: "Vensure" } },
-        { "@type": "Person", name: "Laurin Jeffers", jobTitle: "Events and Community Manager", worksFor: { "@type": "Organization", name: "Foundry Social" } },
-        { "@type": "Person", name: "Danielle Litton", jobTitle: "MRO Midwest Sales Manager", worksFor: { "@type": "Organization", name: "National Process Systems" } },
-        { "@type": "Person", name: "Claus Meyer", jobTitle: "Certified Financial Planner", worksFor: { "@type": "Organization", name: "Raymond James" } },
-        { "@type": "Person", name: "Cindy Phillips", jobTitle: "Vice President, Wealth Advisor", worksFor: { "@type": "Organization", name: "Huntington Bank" } },
-        { "@type": "Person", name: "Sam Pietrangelo", jobTitle: "Community Marketing Manager", worksFor: { "@type": "Organization", name: "Armstrong" } },
-        { "@type": "Person", name: "Tori Toth", jobTitle: "Walk Manager", worksFor: { "@type": "Organization", name: "Alzheimer's Association" } },
-        { "@type": "Person", name: "Kimberly Valco", jobTitle: "Community Relations", worksFor: { "@type": "Organization", name: "Western Reserve Masonic Community" } },
-      ],
+      member: ambassadors.map((a) => ({
+        "@type": "Person",
+        name: a.name,
+        jobTitle: a.title,
+        email: a.email,
+        image: `https://medinachamber.com${a.photo}`,
+        worksFor: {
+          "@type": "Organization",
+          name: a.company,
+          ...(a.website ? { url: a.website } : {}),
+        },
+      })),
     },
   };
 
@@ -162,116 +192,212 @@ export default function AmbassadorsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
-      {/* Hero */}
-      <section className="max-w-3xl">
-        <p className="text-overline text-cambridge mb-4">Volunteers</p>
-        <h1 className="text-display">
-          Chamber
-          <br />
-          <span className="text-accent">Ambassadors</span>
-        </h1>
-        <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-          Ambassadors are volunteer chamber members who serve as the friendly
-          face of the Greater Medina Chamber. They welcome new businesses,
-          attend ribbon cuttings, and make sure every member feels at home in
-          the community.
-        </p>
-      </section>
 
-      {/* What they do */}
-      <section className="mt-20">
-        <h2 className="text-overline text-cambridge mb-8">What Ambassadors Do</h2>
-        <div className="grid md:grid-cols-2 gap-6">
-          {roles.map((r) => (
-            <div
-              key={r.title}
-              className="p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
-            >
-              <h3 className="text-h4 mb-3">{r.title}</h3>
-              <p className="text-body-sm text-text-secondary">{r.description}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Ambassador grid */}
-      <section className="mt-20">
-        <h2 className="text-overline text-cambridge mb-8">
-          Meet the Ambassadors — {ambassadors.length} Members
-        </h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {ambassadors.map((a) => (
-            <figure
-              key={a.name}
-              className="overflow-hidden bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] m-0"
-            >
-              <div className="relative w-full aspect-[4/3]">
-                <Image
-                  src={a.photo}
-                  alt={`${a.name}, Chamber Ambassador${a.company ? ` from ${a.company}` : ""}`}
-                  fill
-                  className="object-cover object-top"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                />
-              </div>
-              <figcaption className="sr-only">
-                {a.name}{a.title ? `, ${a.title}` : ""}{a.company ? ` at ${a.company}` : ""} — Greater Medina Chamber of Commerce Ambassador, Medina, Ohio
-              </figcaption>
-              <div className="p-5">
-                <h3 className="text-body font-bold text-text-primary">{a.name}</h3>
-                <p className="text-body-sm text-text-secondary mt-0.5">{a.title}</p>
-                <p className="text-caption font-semibold text-cambridge mt-0.5">{a.company}</p>
-                <div className="mt-3 flex flex-col gap-1">
-                  <a
-                    href={`mailto:${a.email}`}
-                    className="text-caption text-text-tertiary hover:text-cambridge transition-colors truncate"
-                  >
-                    {a.email}
-                  </a>
-                  {a.website && (
-                    <a
-                      href={a.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-caption text-text-tertiary hover:text-cambridge transition-colors truncate"
-                    >
-                      {a.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
-                    </a>
-                  )}
-                </div>
-              </div>
-            </figure>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="mt-24 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-        <div className="max-w-2xl">
-          <h2 className="text-h2">Become an Ambassador</h2>
-          <p className="text-body-lg text-text-secondary mt-4">
-            Ambassadors are active chamber members who want to give back and
-            expand their network. If you&apos;re a member and interested in
-            volunteering, reach out to Stephanie Mueller.
+      {/* ─── HERO ─────────────────────────────────────────────── */}
+      {/* pt-f144 pb-f89 (144/89 = φ) — HERO tier */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
+        <div className="max-w-3xl">
+          {/* mb-f8 (8px) — overline→heading */}
+          <p className="text-overline text-cambridge mb-f8">Volunteers</p>
+          <h1 className="text-display">
+            Chamber
+            <br />
+            <span className="text-accent">Ambassadors</span>
+          </h1>
+          {/* mt-f13 (13px) — heading→body */}
+          <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
+            Ambassadors are volunteer chamber members who serve as the friendly
+            face of the Greater Medina Chamber of Commerce. They welcome new
+            businesses, cut ribbons, and make sure every member feels at home
+            in the Medina County business community.
           </p>
-          <div className="mt-8">
+        </div>
+      </section>
+
+      {/* ─── FEATURE — What Ambassadors Do ────────────────────── */}
+      {/* py-f89/f144 — FEATURE tier, open white */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+        <FadeIn>
+          {/* gap-f34/f55 — 2-col layout gap */}
+          <div className="grid lg:grid-cols-2 gap-f34 lg:gap-f55">
+            <div>
+              {/* mb-f8 — overline→heading */}
+              <p className="text-overline text-cambridge mb-f8">The Role</p>
+              <h2 className="text-h2">What Ambassadors Do</h2>
+              {/* mt-f13 — heading→body */}
+              <p className="text-body text-text-secondary mt-f13 leading-relaxed">
+                Every chamber needs the people who show up. Ambassadors are the
+                ones in the room when a new restaurant cuts its ribbon, the
+                ones reaching out to first-time members, the ones bridging
+                introductions at networking events.
+              </p>
+              {/* mt-f21 — paragraph gap */}
+              <p className="text-body text-text-secondary mt-f21 leading-relaxed">
+                It&apos;s a volunteer role. The ambassadors below put in real
+                time on top of running their own businesses because they
+                believe in what a strong chamber does for Medina.
+              </p>
+            </div>
+
+            {/* space-y-f21 — between role cards */}
+            <div className="space-y-f21">
+              {roles.map((r) => (
+                <div
+                  key={r.title}
+                  className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
+                >
+                  {/* mb-f8 — title→body */}
+                  <h3 className="text-h4 mb-f8">{r.title}</h3>
+                  <p className="text-body-sm text-text-secondary leading-relaxed">
+                    {r.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </FadeIn>
+      </section>
+
+      {/* ─── BAND — Meet the Ambassadors grid ─────────────────── */}
+      {/* py-f55/f89 — BAND tier, bg-secondary + border-y */}
+      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <FadeIn>
+            {/* mb-f21 — header→grid gap */}
+            <div className="mb-f21 flex items-end justify-between gap-f21 flex-wrap">
+              <div>
+                {/* mb-f8 — overline→heading */}
+                <p className="text-overline text-cambridge mb-f8">
+                  Meet the Team
+                </p>
+                <h2 className="text-h2">{ambassadors.length} Ambassadors</h2>
+              </div>
+              <p className="text-body-sm text-text-tertiary">
+                Volunteer chamber members serving Medina County, Ohio.
+              </p>
+            </div>
+
+            {/* gap-f21 — ambassador card grid gap */}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-f21">
+              {ambassadors.map((a) => (
+                <figure
+                  key={a.name}
+                  className="overflow-hidden bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)] m-0 hover:border-cambridge/40 transition-colors"
+                >
+                  <div className="relative w-full aspect-[4/3]">
+                    <Image
+                      src={a.photo}
+                      alt={`${a.name}, ${a.title} at ${a.company} — Greater Medina Chamber of Commerce Ambassador, Medina, Ohio`}
+                      fill
+                      className="object-cover object-top"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
+                  </div>
+                  <figcaption className="sr-only">
+                    {a.name}, {a.title} at {a.company}. Greater Medina Chamber
+                    of Commerce Ambassador, Medina County, Ohio.
+                  </figcaption>
+                  {/* p-f21 — card interior padding */}
+                  <div className="p-f21">
+                    <h3 className="text-body font-bold text-text-primary">
+                      {a.name}
+                    </h3>
+                    {/* mt-f3 — name→title micro-gap */}
+                    <p className="text-body-sm text-text-secondary mt-f3">
+                      {a.title}
+                    </p>
+                    <p className="text-caption font-semibold text-cambridge mt-f3">
+                      {a.company}
+                    </p>
+                    {/* mt-f13 — body→links gap */}
+                    <div className="mt-f13 flex flex-col gap-1">
+                      <a
+                        href={`mailto:${a.email}`}
+                        className="text-caption text-text-tertiary hover:text-cambridge transition-colors truncate"
+                      >
+                        {a.email}
+                      </a>
+                      {a.website && (
+                        <a
+                          href={a.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-caption text-text-tertiary hover:text-cambridge transition-colors truncate"
+                        >
+                          {a.website
+                            .replace(/^https?:\/\//, "")
+                            .replace(/\/$/, "")}
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </figure>
+              ))}
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ─── CLOSER — Become an Ambassador CTA ─────────────────── */}
+      {/* py-f55/f89 — CLOSER taper */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+        <FadeIn>
+          {/* p-f34/f55 card padding, gap-f34 2-col gap */}
+          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+            <div className="grid lg:grid-cols-2 gap-f34 items-center">
+              <div>
+                {/* mb-f8 — overline→heading */}
+                <p className="text-overline text-cambridge mb-f8">Get Involved</p>
+                <h2 className="text-h2">Become an Ambassador</h2>
+                {/* mt-f13 — heading→body */}
+                <p className="text-body-lg text-text-secondary mt-f13">
+                  Ambassadors are active chamber members who want to give back
+                  and grow their network at the same time. If you&apos;re a
+                  member and the role sounds like you, reach out to Stephanie
+                  Mueller and she&apos;ll walk you through what&apos;s involved.
+                </p>
+              </div>
+              {/* space-y-f13 — button stack gap */}
+              <div className="space-y-f13">
+                <Link
+                  href="/about/contact"
+                  className="
+                    block w-full text-center py-f13 px-f21
+                    bg-accent hover:bg-accent-hover
+                    text-white font-bold text-body-sm
+                    rounded-[var(--radius-md)]
+                    transition-colors
+                  "
+                >
+                  Contact the Chamber →
+                </Link>
+                <a
+                  href="mailto:stephanie@medinaohchamber.com?subject=Becoming%20a%20Chamber%20Ambassador"
+                  className="
+                    block w-full text-center py-f13 px-f21
+                    border border-border-primary hover:border-text-tertiary
+                    text-text-primary font-bold text-body-sm
+                    rounded-[var(--radius-md)]
+                    transition-colors
+                  "
+                >
+                  Email Stephanie Directly
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* mt-f34 — card→back-link gap */}
+          <div className="mt-f34">
             <Link
-              href="/about/contact"
-              className="
-                inline-flex items-center px-6 py-3
-                bg-accent hover:bg-accent-hover
-                text-white font-bold text-body-sm
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
+              href="/about"
+              className="text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
             >
-              Get in Touch →
+              ← Back to About
             </Link>
           </div>
-        </div>
+        </FadeIn>
       </section>
-    </div>
     </>
   );
 }

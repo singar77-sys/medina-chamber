@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-29T11:22:51.732Z",
+  "generatedAt": "2026-04-30T11:22:10.359Z",
   "totalJobs": 2,
   "jobs": [
     {
@@ -16,7 +16,7 @@
       "dateRaw": "3/25/2026",
       "dateISO": "2026-03-25",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/dance-theate-music-and-art-teachers-321116",
-      "scrapedAt": "2026-04-29T11:22:51.226Z"
+      "scrapedAt": "2026-04-30T11:22:09.328Z"
     },
     {
       "slug": "music-teacher",
@@ -32,7 +32,7 @@
       "dateRaw": "3/6/2026",
       "dateISO": "2026-03-06",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/music-teacher-317454",
-      "scrapedAt": "2026-04-29T11:22:51.721Z"
+      "scrapedAt": "2026-04-30T11:22:10.348Z"
     }
   ]
 }

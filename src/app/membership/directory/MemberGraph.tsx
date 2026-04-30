@@ -259,14 +259,19 @@ export function MemberGraph({ members }: MemberGraphProps) {
           links: [],
         };
       }
-      // Pre-position nodes near origin so the ring force expands them outward
-      // uniformly — same behaviour as returning from focus mode (nodes start at
-      // the centre hub). Without this, initial load scatters nodes randomly and
-      // the ring forms unevenly.
+      // Pre-position nodes at evenly distributed angles on a small inner circle.
+      // The ring force expands them radially to the target orbit while the preset
+      // angles enforce Euclidean symmetry — D3 charge alone can't guarantee even
+      // angular spacing, so we seed it here. vx/vy=0 prevents random kick-off.
+      const catNodes = allGraphData.nodes.filter(
+        (n) => n.type === "category" && topCatSet.has(n.name),
+      );
       return {
-        nodes: allGraphData.nodes
-          .filter((n) => n.type === "category" && topCatSet.has(n.name))
-          .map((n) => ({ ...n, x: (Math.random() - 0.5) * 8, y: (Math.random() - 0.5) * 8 })),
+        nodes: catNodes.map((n, i) => {
+          const angle = (i / catNodes.length) * Math.PI * 2 - Math.PI / 2;
+          const r = 12;
+          return { ...n, x: Math.cos(angle) * r, y: Math.sin(angle) * r, vx: 0, vy: 0 };
+        }),
         links: [],
       };
     }

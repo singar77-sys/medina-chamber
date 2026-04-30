@@ -284,12 +284,16 @@ export default function AmbassadorsPage() {
                   key={a.name}
                   className="overflow-hidden bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)] m-0 hover:border-cambridge/40 transition-colors"
                 >
-                  <div className="relative w-full aspect-[4/3]">
+                  {/* Portrait card matches source orientation (every headshot is
+                      portrait, ratios 0.67–1.0). object-[center_25%] anchors
+                      the focal point to the upper quarter so eye-lines align
+                      across a grid of varied source crops. */}
+                  <div className="relative w-full aspect-[3/4]">
                     <Image
                       src={a.photo}
                       alt={`${a.name}, ${a.title} at ${a.company} — Greater Medina Chamber of Commerce Ambassador, Medina, Ohio`}
                       fill
-                      className="object-cover object-top"
+                      className="object-cover object-[center_25%]"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                   </div>

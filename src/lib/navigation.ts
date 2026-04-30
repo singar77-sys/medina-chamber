@@ -97,6 +97,16 @@ export const navigation: NavItem[] = [
         description: "Connecting businesses since 1938",
       },
       {
+        label: "Board of Directors",
+        href: "/about/board",
+        description: "Volunteer leaders guiding the Chamber",
+      },
+      {
+        label: "Chamber Ambassadors",
+        href: "/about/ambassadors",
+        description: "Volunteers who welcome new members",
+      },
+      {
         label: "Advocacy",
         href: "/about/advocacy",
         description: "How we fight for your business",
@@ -159,7 +169,8 @@ export const searchablePages: { label: string; href: string; keywords: string }[
   { label: "About the Chamber", href: "/about", keywords: "about history mission" },
   { label: "Advocacy", href: "/about/advocacy", keywords: "advocacy government policy legislation" },
   { label: "Hall of Fame", href: "/about/hall-of-fame", keywords: "hall fame honor legacy" },
-  { label: "Ambassadors", href: "/about/ambassadors", keywords: "ambassador volunteer welcome" },
+  { label: "Board of Directors", href: "/about/board", keywords: "board directors leadership president julie mcnabb governance" },
+  { label: "Chamber Ambassadors", href: "/about/ambassadors", keywords: "ambassador ambassadors volunteer welcome ribbon cutting new member" },
   { label: "Contact", href: "/about/contact", keywords: "contact phone email address location" },
   // Brand
   { label: "Medina Means Business", href: "/medina-means-business", keywords: "medina means business tagline brand magazine statement slogan" },

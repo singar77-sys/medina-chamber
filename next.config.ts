@@ -58,6 +58,17 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  // Legacy Squarespace URLs — preserve old bookmarks and SEO equity by
+  // permanently redirecting to the canonical Next.js route.
+  async redirects() {
+    return [
+      {
+        source: "/chamber-ambassadors",
+        destination: "/about/ambassadors",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 // Sentry build-time wrapper. Uploads source maps when SENTRY_AUTH_TOKEN

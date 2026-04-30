@@ -39,7 +39,15 @@ export function BirthdayConfetti() {
     if (!document.getElementById("bd-keyframes")) {
       document.head.appendChild(style);
     }
-    return () => document.getElementById("bd-keyframes")?.remove();
+
+    // Auto-dismiss after 7s — long enough to read the toast, short enough
+    // to stop being a distraction on the rest of the page.
+    const dismiss = window.setTimeout(() => setActive(false), 7000);
+
+    return () => {
+      window.clearTimeout(dismiss);
+      document.getElementById("bd-keyframes")?.remove();
+    };
   }, []);
 
   if (!active) return null;

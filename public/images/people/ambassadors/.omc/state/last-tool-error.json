@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"cd \\\"C:\\\\Users\\\\Mark\\\\Documents\\\\Hunter Systems\\\\medina-chamber\\\\medina-chamber-site\\\" && git add src/app/about/ambassadors/page.tsx && git commit -m \\\"$(cat <<'EOF'\\nfix(ambassadors): por...",
+  "error": "Exit code 128\nwarning: in the working copy of 'src/app/about/ambassadors/page.tsx', LF will be replaced by CRLF the next time Git touches it\n[main cd7babe] fix(ambassadors): portrait cards + eye-line anchor for consistent grid framing\n 1 file changed, 6 insertions(+), 2 deletions(-)\nerror: cannot pull with rebase: You have unstaged changes.\nerror: Please commit or stash them.",
+  "timestamp": "2026-04-30T18:59:10.129Z",
+  "retry_count": 1
+}

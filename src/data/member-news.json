@@ -1,7 +1,45 @@
 {
-  "generatedAt": "2026-04-30T11:22:08.125Z",
-  "totalArticles": 11,
+  "generatedAt": "2026-05-01T10:59:43.659Z",
+  "totalArticles": 8,
   "articles": [
+    {
+      "slug": "bike-nite",
+      "articleId": "321881",
+      "title": "Bike Nite!",
+      "subtitle": "Don't miss this weekly fun night!",
+      "body": "Every Thursday from 5pm-8pm, Bike Nite is back! Motorcycles of all shapes and sizes are welcome. $3 off Custom Built Combos as well as Happy Hour deals until 6pm",
+      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/q_auto/v1774648661/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/3a832ed2ecad43549e26159be4e0be4a/QS-L-Color-Logo-2.png",
+      "tags": [
+        "By\r\n                            Quaker Steak and Lube",
+        "5/1/2026"
+      ],
+      "memberName": "Quaker Steak and Lube",
+      "memberSlug": "30693401",
+      "dateRaw": "5/1/2026",
+      "dateISO": "2026-05-01",
+      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774648661/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/3a832ed2ecad43549e26159be4e0be4a/QS-L-Color-Logo-2.png",
+      "detailUrl": "https://business.medinachamber.com/news/Details/bike-nite-321881",
+      "scrapedAt": "2026-05-01T10:59:39.609Z"
+    },
+    {
+      "slug": "mother-s-day-vehicle-maintenance-package-offer",
+      "articleId": "328142",
+      "title": "Mother's Day Vehicle Maintenance Package offer!",
+      "subtitle": "Treat Mom to something special",
+      "body": "Van's Tire Pros is offering a Vehicle Maintenance Package for $129.95 for Mother's Day!  Purchase a Gift Certificate online or in the store.",
+      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1500,w_1500,x_0,y_0/q_auto/f_auto/q_auto/v1777323105/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/dbdaa171697f4e8ea6828a564cd88182/Vans.jpg",
+      "tags": [
+        "By\r\n                            Van's Auto Service & Tire Pros",
+        "5/1/2026"
+      ],
+      "memberName": "Van's Auto Service & Tire Pros",
+      "memberSlug": "22529888",
+      "dateRaw": "5/1/2026",
+      "dateISO": "2026-05-01",
+      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1500,w_1500,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1777323105/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/dbdaa171697f4e8ea6828a564cd88182/Vans.jpg",
+      "detailUrl": "https://business.medinachamber.com/news/Details/mother-s-day-vehicle-maintenance-package-offer-328142",
+      "scrapedAt": "2026-05-01T10:59:40.170Z"
+    },
     {
       "slug": "retail-is-thriving-in-the-micro-fulfillment-on-demand-delivery-era",
       "articleId": "321828",
@@ -19,7 +57,7 @@
       "dateISO": "2026-04-27",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1099,w_1576,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774642882/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/a2e854606d43486a9adcb973b00f0576/Fractional-CRO.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/retail-is-thriving-in-the-micro-fulfillment-on-demand-delivery-era-321828",
-      "scrapedAt": "2026-04-30T11:22:02.587Z"
+      "scrapedAt": "2026-05-01T10:59:40.753Z"
     },
     {
       "slug": "live-the-lube",
@@ -38,7 +76,7 @@
       "dateISO": "2026-04-06",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775437199/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/ca1644f1072a40ab8a6f809c5ede0e6d/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/live-the-lube-323361",
-      "scrapedAt": "2026-04-30T11:22:03.143Z"
+      "scrapedAt": "2026-05-01T10:59:41.332Z"
     },
     {
       "slug": "car-cruise-in",
@@ -57,26 +95,7 @@
       "dateISO": "2026-04-06",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775437512/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/62aa1d5146da4ab78eb0def384a2a8ee/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/car-cruise-in-323364",
-      "scrapedAt": "2026-04-30T11:22:03.678Z"
-    },
-    {
-      "slug": "medina-lifestyle",
-      "articleId": "323463",
-      "title": "Medina Lifestyle",
-      "subtitle": "Check out the latest issue!",
-      "body": "",
-      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_200,w_200,x_0,y_0/q_auto/f_auto/q_auto/v1775492816/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/a6bd201182304080a550016f8fbeef6d/facebook-logo.jpg",
-      "tags": [
-        "By\r\n                            Medina County Lifestyle",
-        "4/6/2026"
-      ],
-      "memberName": "Medina County Lifestyle",
-      "memberSlug": "23489284",
-      "dateRaw": "4/6/2026",
-      "dateISO": "2026-04-06",
-      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_200,w_200,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775492816/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/a6bd201182304080a550016f8fbeef6d/facebook-logo.jpg",
-      "detailUrl": "https://business.medinachamber.com/news/Details/medina-lifestyle-323463",
-      "scrapedAt": "2026-04-30T11:22:04.207Z"
+      "scrapedAt": "2026-05-01T10:59:41.905Z"
     },
     {
       "slug": "apex-skin-melanoma-monday-free-skin-cancer-spot-checks",
@@ -95,45 +114,7 @@
       "dateISO": "2026-04-02",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1500,w_1500,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775157414/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/f59f64bba07c46318d5d64715a968237/APEX-SKIN-Logo-STK.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/apex-skin-melanoma-monday-free-skin-cancer-spot-checks-323038",
-      "scrapedAt": "2026-04-30T11:22:04.782Z"
-    },
-    {
-      "slug": "bike-nite",
-      "articleId": "321880",
-      "title": "Bike Nite",
-      "subtitle": "Don't miss this weekly fun night!",
-      "body": "Starting April 23rd, every Thursday from 5pm-8pm, Bike Nite is back! All motorcycles of any shape and size welcome. Live Entertainment is scheduled for each one. Come show off your ride!",
-      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/q_auto/v1774648438/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/e08d0c37302f4d648ab30ebb100e7704/QS-L-Color-Logo-2.png",
-      "tags": [
-        "By\r\n                            Quaker Steak and Lube",
-        "4/1/2026"
-      ],
-      "memberName": "Quaker Steak and Lube",
-      "memberSlug": "30693401",
-      "dateRaw": "4/1/2026",
-      "dateISO": "2026-04-01",
-      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774648438/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/e08d0c37302f4d648ab30ebb100e7704/QS-L-Color-Logo-2.png",
-      "detailUrl": "https://business.medinachamber.com/news/Details/bike-nite-321880",
-      "scrapedAt": "2026-04-30T11:22:05.325Z"
-    },
-    {
-      "slug": "april-art-workshops-at-bella-moxie-gallery-boutique",
-      "articleId": "322856",
-      "title": "April Art Workshops at Bella Moxie Gallery & Boutique",
-      "subtitle": "Looking to get creative? Check out these upcoming classes!",
-      "body": "Join us for a variety of artistic creativity through the month of April! To sign up, visit: https://linktr.ee/bellamoxiestudio",
-      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1328,w_1501,x_0,y_0/q_auto/f_auto/q_auto/v1775157304/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/7d6820ad746a44a1abbd9dc4c1bbb110/Bella-Moxie.jpg",
-      "tags": [
-        "By\r\n                            Bella Moxie Company",
-        "4/1/2026"
-      ],
-      "memberName": "Bella Moxie Company",
-      "memberSlug": "22529517",
-      "dateRaw": "4/1/2026",
-      "dateISO": "2026-04-01",
-      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1328,w_1501,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775157304/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/7d6820ad746a44a1abbd9dc4c1bbb110/Bella-Moxie.jpg",
-      "detailUrl": "https://business.medinachamber.com/news/Details/april-art-workshops-at-bella-moxie-gallery-boutique-322856",
-      "scrapedAt": "2026-04-30T11:22:05.903Z"
+      "scrapedAt": "2026-05-01T10:59:42.496Z"
     },
     {
       "slug": "office-space-for-lease-in-brunswick-medina-area",
@@ -152,7 +133,7 @@
       "dateISO": "2026-03-30",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_173,w_622,x_19,y_17/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774884260/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/01c3e1965c7f43d38cba8aa81b32ede7/st-mark-logo-for-web.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/office-space-for-lease-in-brunswick-medina-area-322021",
-      "scrapedAt": "2026-04-30T11:22:06.470Z"
+      "scrapedAt": "2026-05-01T10:59:43.046Z"
     },
     {
       "slug": "4-70-home-equity-loan",
@@ -171,45 +152,7 @@
       "dateISO": "2026-03-05",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_102,w_329,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1772744802/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/67b2db200e8d45f8a690794e3d701c2e/PSE-Credit-Union.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/4-70-home-equity-loan-317280",
-      "scrapedAt": "2026-04-30T11:22:07.011Z"
-    },
-    {
-      "slug": "200-cash-bonus",
-      "articleId": "317282",
-      "title": "$200 Cash Bonus",
-      "subtitle": "Check out this promotion!",
-      "body": "Receive a $200 Cash Bonus for opening a new Deluxe Checking Account!",
-      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_102,w_329,x_0,y_0/q_auto/f_auto/q_auto/v1772744846/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/31bfffc7383c4077a2e0726ec4b96f2a/PSE-Credit-Union.png",
-      "tags": [
-        "By\r\n                            PSE Credit Union, Inc.",
-        "3/5/2026"
-      ],
-      "memberName": "PSE Credit Union, Inc.",
-      "memberSlug": "22530064",
-      "dateRaw": "3/5/2026",
-      "dateISO": "2026-03-05",
-      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_102,w_329,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1772744846/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/31bfffc7383c4077a2e0726ec4b96f2a/PSE-Credit-Union.png",
-      "detailUrl": "https://business.medinachamber.com/news/Details/200-cash-bonus-317282",
-      "scrapedAt": "2026-04-30T11:22:07.546Z"
-    },
-    {
-      "slug": "sgt-clean-car-wash-scholarship",
-      "articleId": "315697",
-      "title": "Sgt. Clean Car Wash Scholarship",
-      "subtitle": "Check out this great opportunity for graduating students!",
-      "body": "Sgt. Clean Car Wash is recognizing 8 students, with 4 being internal team members, with a $1,000 scholarship. This scholarship awards eight (8) one-time scholarships of $1,000 each to qualifying students in Medina, Portage, Cuyahoga, Stark, or Summit County to be applied toward school tuition and fees in support of vocational trades, business, and or entrepreneurship.\nHow to Apply & Deadline: Submit an essay no longer than 300 words answering, &ldquo;What does servant leadership mean to you? How will you show servant leadership in your life?&rdquo; Submissions must be completed online at Sgtclean.com/scholarship by April 30, 2026.\nAwards and Disbursement: All winners will be notified by May 12, 2026. Winners will be invited to a group luncheon with our Senior Executive Team for a check presentation. Funds will then be disbursed directly to the educational institution in the student&rsquo;s name. Winners will have the opportunity to ask leadership and business questions over lunch.\nCriteria: Must be a citizen, national, or legal permanent resident of the U.S. Must be a current (or recently graduated) high school senior planning to enroll full-time at an accredited U.S. vocational, junior college, or four-year college/university. Completed online application in full, submitted by the deadline.",
-      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_299,w_1051,x_0,y_0/q_auto/f_auto/q_auto/v1772481718/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/18156c5dff35405aa3a24cfb434a3dd5/Sgt-Clean-Car-Wash.png",
-      "tags": [
-        "By\r\n                            Sgt. Clean Car Wash",
-        "2/26/2026"
-      ],
-      "memberName": "Sgt. Clean Car Wash",
-      "memberSlug": "22530002",
-      "dateRaw": "2/26/2026",
-      "dateISO": "2026-02-26",
-      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_299,w_1051,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1772481718/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/18156c5dff35405aa3a24cfb434a3dd5/Sgt-Clean-Car-Wash.png",
-      "detailUrl": "https://business.medinachamber.com/news/Details/sgt-clean-car-wash-scholarship-315697",
-      "scrapedAt": "2026-04-30T11:22:08.118Z"
+      "scrapedAt": "2026-05-01T10:59:43.652Z"
     }
   ]
 }

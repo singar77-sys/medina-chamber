@@ -1,23 +1,7 @@
 {
-  "generatedAt": "2026-04-30T11:22:10.359Z",
-  "totalJobs": 2,
+  "generatedAt": "2026-05-01T10:59:44.624Z",
+  "totalJobs": 1,
   "jobs": [
-    {
-      "slug": "dance-theate-music-and-art-teachers",
-      "jobId": "321116",
-      "title": "Dance, Theate, Music and Art Teachers",
-      "subtitle": "",
-      "body": "Davis Parks School of Arts is growing rapidly, with over 500 students enrolled, and we are expanding our team! We are currently hiring for multiple positions, including:\nDance TeachersArt CoordinatorArt TeachersMusic TeachersTheater CoachesWe are looking for positive, reliable, and passionate educators who love working with students and want to be part of a supportive, high-energy arts community.\n \nWhat We Offer:\nCompetitive payContinuing education opportunities401(k) optionsSupportive team cultureGrowth opportunities within the organizationIf you are passionate about the arts and want to be part of a growing school and strong community, we would love to hear from you.\n\nTo Apply:\nSend your resume and cover letter to jobs@davisparksarts.com",
-      "tags": [],
-      "location": "",
-      "applyUrl": "",
-      "companyName": "Davis-Parks School of Arts",
-      "companySlug": "",
-      "dateRaw": "3/25/2026",
-      "dateISO": "2026-03-25",
-      "detailUrl": "https://business.medinachamber.com/jobs/Details/dance-theate-music-and-art-teachers-321116",
-      "scrapedAt": "2026-04-30T11:22:09.328Z"
-    },
     {
       "slug": "music-teacher",
       "jobId": "317454",
@@ -32,7 +16,7 @@
       "dateRaw": "3/6/2026",
       "dateISO": "2026-03-06",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/music-teacher-317454",
-      "scrapedAt": "2026-04-30T11:22:10.348Z"
+      "scrapedAt": "2026-05-01T10:59:44.621Z"
     }
   ]
 }

@@ -4,9 +4,9 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Medina Matters Podcast",
   description:
-    "The Medina Matters Podcast — conversations with local business owners, community leaders, and Chamber members about business, community, and what makes Medina County special.",
+    "The Medina Matters Podcast, conversations with local business owners, community leaders, and Chamber members about business, community, and what makes Medina County special.",
   openGraph: {
-    title: "Medina Matters Podcast — Greater Medina Chamber of Commerce",
+    title: "Medina Matters Podcast | Greater Medina Chamber of Commerce",
     description:
       "Conversations with local business owners and community leaders in Medina County.",
   },
@@ -29,7 +29,7 @@ export default function PodcastPage() {
         </h1>
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
           Conversations with local business owners, community leaders, and
-          Chamber members — about business, growth, and what makes Medina County
+          Chamber members, about business, growth, and what makes Medina County
           worth investing in.
         </p>
       </section>

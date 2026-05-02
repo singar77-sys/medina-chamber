@@ -46,7 +46,7 @@ export default async function ContentEditorPage() {
         </p>
       </div>
 
-      {/* ── Membership Pricing ── */}
+      {/* Membership Pricing */}
       <section>
         <h2 className="text-xs uppercase tracking-widest font-semibold text-gray-400 mb-4">
           Membership Pricing
@@ -59,7 +59,7 @@ export default async function ContentEditorPage() {
         />
       </section>
 
-      {/* ── Page Copy ── */}
+      {/* Page Copy */}
       <section>
         <h2 className="text-xs uppercase tracking-widest font-semibold text-gray-400 mb-3">
           Page Copy

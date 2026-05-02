@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "The Greater Medina Chamber of Commerce is committed to digital accessibility. Our website targets WCAG 2.1 Level AA, the standard referenced by the Americans with Disabilities Act.",
   openGraph: {
-    title: "Accessibility Statement — Greater Medina Chamber of Commerce",
+    title: "Accessibility Statement | Greater Medina Chamber of Commerce",
     description:
       "Our commitment to making medinachamber.com accessible to everyone, including people with disabilities.",
   },
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 const whatWeveDone = [
   {
     title: "Keyboard navigation",
-    body: "Every interactive element — links, buttons, forms, the ChamberBot chat widget, the mobile menu, search overlay — works with keyboard alone. A skip-to-main-content link is the first focusable element on every page.",
+    body: "Every interactive element, links, buttons, forms, the ChamberBot chat widget, the mobile menu, search overlay, works with keyboard alone. A skip-to-main-content link is the first focusable element on every page.",
   },
   {
     title: "Screen reader support",
@@ -28,7 +28,7 @@ const whatWeveDone = [
   },
   {
     title: "Dark mode parity",
-    body: "Every contrast, focus, and readability standard applies in both light and dark themes. We audited each page in both modes and fixed inherited dark-mode regressions — no invisible text, no broken hierarchies.",
+    body: "Every contrast, focus, and readability standard applies in both light and dark themes. We audited each page in both modes and fixed inherited dark-mode regressions, no invisible text, no broken hierarchies.",
   },
   {
     title: "Focus indicators",
@@ -44,7 +44,7 @@ const whatWeveDone = [
   },
   {
     title: "Forms",
-    body: "Every form input — membership application, contact form, search — has an associated label, clear error messages, and visible required-field indicators. Forms are rate-limited and validate before submission.",
+    body: "Every form input, membership application, contact form, search, has an associated label, clear error messages, and visible required-field indicators. Forms are rate-limited and validate before submission.",
   },
   {
     title: "ChamberBot chat",
@@ -63,7 +63,7 @@ const knownLimitations = [
   },
   {
     title: "AI-generated responses",
-    body: "ChamberBot answers are generated in real time by an AI language model. While the interface is accessible, the content of individual responses may occasionally use phrasing we would refine — let us know if a specific answer is unclear.",
+    body: "ChamberBot answers are generated in real time by an AI language model. While the interface is accessible, the content of individual responses may occasionally use phrasing we would refine, let us know if a specific answer is unclear.",
   },
 ];
 
@@ -78,7 +78,7 @@ export default function AccessibilityPage() {
           The Greater Medina Chamber of Commerce is committed to making our
           website and programs accessible to everyone, including people with
           disabilities. The businesses we champion and the community we serve
-          include people of all abilities — accessibility is core to how we
+          include people of all abilities, accessibility is core to how we
           work, not an afterthought.
         </p>
       </section>
@@ -210,7 +210,7 @@ export default function AccessibilityPage() {
             >
               Web Content Accessibility Guidelines (WCAG) 2.1
             </a>{" "}
-            — published by the World Wide Web Consortium (W3C)
+           , published by the World Wide Web Consortium (W3C)
           </li>
           <li>
             <a
@@ -221,7 +221,7 @@ export default function AccessibilityPage() {
             >
               Americans with Disabilities Act (ADA)
             </a>{" "}
-            — U.S. federal civil rights law
+           , U.S. federal civil rights law
           </li>
           <li>
             <a
@@ -232,7 +232,7 @@ export default function AccessibilityPage() {
             >
               Section 508 of the Rehabilitation Act
             </a>{" "}
-            — U.S. federal accessibility standard
+           , U.S. federal accessibility standard
           </li>
         </ul>
       </section>

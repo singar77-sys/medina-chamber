@@ -7,9 +7,9 @@ import { safeJsonLd } from "@/lib/json-ld";
 export const metadata: Metadata = {
   title: "Your First 30 Days",
   description:
-    "New to the Greater Medina Chamber of Commerce? Here's a 7-step onboarding checklist to get the most out of your membership in your first month — build your profile, attend your first event, join a committee, and more.",
+    "New to the Greater Medina Chamber of Commerce? Here's a 7-step onboarding checklist to get the most out of your membership in your first month, build your profile, attend your first event, join a committee, and more.",
   openGraph: {
-    title: "Your First 30 Days — Medina Chamber Onboarding Checklist",
+    title: "Your First 30 Days, Medina Chamber Onboarding Checklist",
     description:
       "7-step checklist for new Chamber members. Build your profile, meet the community, and turn membership into momentum in your first month.",
   },
@@ -69,12 +69,12 @@ const steps: Step[] = [
     time: "1–2 hours",
     title: "Attend your first event",
     why:
-      "Most members make their first meaningful connection at their first event. Don't wait — the longer you delay, the easier it gets to put off. Pick any upcoming event and just show up.",
+      "Most members make their first meaningful connection at their first event. Don't wait, the longer you delay, the easier it gets to put off. Pick any upcoming event and just show up.",
     actions: [
       "Check the upcoming events calendar",
       "Pick one that fits your schedule (Networking WOW, Chamber Chat, and mixers are great starters)",
       "Register online",
-      "Mention at check-in that you're a new member — we'll help introduce you around",
+      "Mention at check-in that you're a new member, we'll help introduce you around",
     ],
     link: { label: "Browse Upcoming Events", href: "/events" },
   },
@@ -84,7 +84,7 @@ const steps: Step[] = [
     time: "2 minutes",
     title: "Follow the Chamber on social",
     why:
-      "Events, member spotlights, and Chamber announcements go out on social first. Following keeps you in the loop without relying on email alone — and it's how you start getting seen in the community.",
+      "Events, member spotlights, and Chamber announcements go out on social first. Following keeps you in the loop without relying on email alone, and it's how you start getting seen in the community.",
     actions: [
       "Follow @medinachamber on Facebook and Instagram",
       "Connect with Greater Medina Chamber on LinkedIn",
@@ -112,7 +112,7 @@ const steps: Step[] = [
     time: "60–90 minutes",
     title: "Register for a workshop",
     why:
-      "Chamber workshops are built for fast wins. Come in at 9, leave with something you can use by lunch. Topics rotate — marketing, leadership, workforce, compliance — all taught by experts from the Medina business community.",
+      "Chamber workshops are built for fast wins. Come in at 9, leave with something you can use by lunch. Topics rotate, marketing, leadership, workforce, compliance, all taught by experts from the Medina business community.",
     actions: [
       "Check the events calendar for upcoming workshops",
       "Register at the member rate",
@@ -126,7 +126,7 @@ const steps: Step[] = [
     time: "15 minutes",
     title: "Explore sponsorships and visibility options",
     why:
-      "Your membership tier sets your baseline visibility. Sponsorships and ad placements compound that — they're how growing businesses stay top of mind across the Chamber network. Even small sponsorships get your name in front of every member.",
+      "Your membership tier sets your baseline visibility. Sponsorships and ad placements compound that, they're how growing businesses stay top of mind across the Chamber network. Even small sponsorships get your name in front of every member.",
     actions: [
       "Review sponsorship opportunities at events you care about",
       "Ask about newsletter ads and digital placements",
@@ -152,7 +152,7 @@ const breadcrumbJsonLd = {
 const howToJsonLd = {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  name: "First 30 Days — Greater Medina Chamber of Commerce Onboarding",
+  name: "First 30 Days | Greater Medina Chamber of Commerce Onboarding",
   description:
     "A 7-step checklist for new Chamber members to get the most out of membership in their first month.",
   totalTime: "P30D",
@@ -201,7 +201,7 @@ export default function First30DaysPage() {
           </h1>
           <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
             Seven steps to turn membership into momentum. Written for
-            time-starved business owners — everything here is optimized for
+            time-starved business owners, everything here is optimized for
             fast wins and real connections, not busywork.
           </p>
         </section>
@@ -217,7 +217,7 @@ export default function First30DaysPage() {
                 </p>
                 <p className="text-h3">
                   Follow this checklist in your first month and your
-                  membership will pay for itself — often in one referral, one
+                  membership will pay for itself, often in one referral, one
                   saved contract, or one introduction at a mixer.
                 </p>
               </div>
@@ -361,7 +361,7 @@ export default function First30DaysPage() {
                   She&apos;s walked hundreds of new members through exactly
                   this checklist. If anything on this page feels unclear, or
                   you want to skip straight to the 1:1 orientation, just
-                  reach out — she&apos;ll handle the rest.
+                  reach out, she&apos;ll handle the rest.
                 </p>
               </div>
               <div className="flex flex-col gap-3 md:w-56">

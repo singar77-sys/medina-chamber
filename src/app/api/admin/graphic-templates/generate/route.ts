@@ -24,18 +24,18 @@ Given an event type and a style prompt, return a JSON GraphicConfig object that 
 The graphic renders at 1200×630px (social), 1080×1080 (square), or 1080×1920 (story).
 All positions use a 0-100 scale (percentage of canvas dimensions).
 
-BRAND CONSTRAINTS — non-negotiable:
+BRAND CONSTRAINTS, non-negotiable:
 - Brand colors: oxford "#0C1B33", cambridge "#83BCA9", coquelicot "#FF4000", emerald "#005450", cream "#F4EFE6"
 - Headlines must use a brand color, white "#ffffff", or cream "#F4EFE6"
-- The logo MUST appear — place it clearly and legibly
+- The logo MUST appear, place it clearly and legibly
 - Logo variants: "white" (dark backgrounds), "orange" (medium/mixed), "green" (light/cream backgrounds)
 - Font "sans" = BN Bergen (brand sans-serif, bold/industrial feel)
 - Font "script" = Mistrully (brand script, handwritten feel)
-- Leave the bottom ~18% of height empty — that's where event date/time renders
+- Leave the bottom ~18% of height empty, that's where event date/time renders
 
-GRAPHIC CONFIG SCHEMA — return ONLY this JSON object, no markdown:
+GRAPHIC CONFIG SCHEMA, return ONLY this JSON object, no markdown:
 {
-  "name": string,           // e.g. "Chamber Chat — Star Wars Edition"
+  "name": string,           // e.g. "Chamber Chat, Star Wars Edition"
   "eventTypeSlug": string,  // same as provided
   "stylePrompt": string,    // same as provided
 
@@ -44,7 +44,7 @@ GRAPHIC CONFIG SCHEMA — return ONLY this JSON object, no markdown:
     "pattern": "none"|"grid"|"honeycomb"|"stars"|"scanlines"|"dots",
     "patternColor": string, // hex
     "patternOpacity": number, // 0.0-1.0
-    "gradient": {           // optional — overrides solid color
+    "gradient": {           // optional, overrides solid color
       "type": "radial"|"linear",
       "from": string, "to": string,
       "angle": number,      // degrees (linear only)
@@ -106,7 +106,7 @@ DESIGN GUIDANCE:
 - Style prompts like "Retro 80s" → scanlines, gradient, cambridge/coquelicot palette
 - Style prompts like "Nature/Organic" → honeycomb or dots, emerald base, script font accent
 - Always include a subtitle with "GREATER MEDINA CHAMBER" or the event type name
-- Shapes add depth — rings, lines, and rectangles work well as geometric accents
+- Shapes add depth, rings, lines, and rectangles work well as geometric accents
 - Keep headline y position between 20-60 (leaves room for subtitle above and plinth below)
 
 Return ONLY the JSON object. No code fences, no explanation.`;
@@ -130,7 +130,7 @@ export async function POST(req: Request): Promise<Response> {
   const userPrompt = `Event type: "${eventTypeSlug}"
 Style prompt: "${stylePrompt.trim()}"
 
-Generate a GraphicConfig for this chamber event in the described style. Remember brand constraints — oxford, cambridge, coquelicot, cream are the brand colors. Be creative with the style but stay on-brand.`;
+Generate a GraphicConfig for this chamber event in the described style. Remember brand constraints, oxford, cambridge, coquelicot, cream are the brand colors. Be creative with the style but stay on-brand.`;
 
   let draft: GraphicConfigDraft;
   try {

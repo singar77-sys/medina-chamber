@@ -2,20 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 
-/**
- * Member Savings Programs — φ spatial system applied throughout.
- *
- * HERO    pt-f144 pb-f89
- * FEATURE py-f89 lg:py-f144 — 5 program cards (open white, space-y-f21)
- * CLOSER  py-f55 lg:py-f89  — member-only CTA card
- */
-
 export const metadata: Metadata = {
   title: "Member Savings Programs",
   description:
     "Greater Medina Chamber members get exclusive access to group health insurance, workers' compensation discounts, energy savings programs, HR solutions, and recreation center memberships.",
   openGraph: {
-    title: "Member Savings Programs — Greater Medina Chamber of Commerce",
+    title: "Member Savings Programs | Greater Medina Chamber of Commerce",
     description:
       "Five member-exclusive savings programs covering health insurance, workers' comp, energy, HR, and recreation.",
   },
@@ -28,7 +20,7 @@ const programs = [
     provider: "Anthem / Blue Access PPO",
     tag: "Healthcare",
     description:
-      "A group health insurance plan specifically designed for small businesses in Medina, Ohio with 2–49 employees. Medically underwritten plans through the Blue Access PPO Network — includes Cleveland Clinic, Summa Health System, and University Hospitals. HSA and 80/20 options available.",
+      "A group health insurance plan specifically designed for small businesses in Medina, Ohio with 2–49 employees. Medically underwritten plans through the Blue Access PPO Network, includes Cleveland Clinic, Summa Health System, and University Hospitals. HSA and 80/20 options available.",
     eligibility: "Medina-based businesses with fewer than 50 full-time employees",
     howToAccess:
       "Contact the chamber for the list of participating brokers and agents. Applications are submitted via the Form Fire system.",
@@ -43,7 +35,7 @@ const programs = [
     eligibility: "All chamber members with Ohio employees",
     howToAccess: "Contact Jeff Price directly to learn about your options.",
     contact: {
-      name: "Jeff Price — Hunter Consulting",
+      name: "Jeff Price, Hunter Consulting",
       email: "jprice@hunterconsulting.com",
       phone: "(513) 372-8718",
     },
@@ -53,7 +45,7 @@ const programs = [
     provider: "CEA (Chamber Energy Program)",
     tag: "Energy",
     description:
-      "Energy supply solutions and efficiency improvements with access to federal, state, and local rebates and incentives. Start with a complimentary bill review — no obligation.",
+      "Energy supply solutions and efficiency improvements with access to federal, state, and local rebates and incentives. Start with a complimentary bill review, no obligation.",
     eligibility: "Open to all chamber members",
     howToAccess:
       "Email your utility bills to billreview@ceateam.com for a free review, or enroll online at chamberenergyprogram.com.",
@@ -68,11 +60,11 @@ const programs = [
     provider: "VensureHR",
     tag: "Human Resources",
     description:
-      "Full-service HR support including payroll, benefits administration, risk management, and HR compliance — built for businesses that need professional HR without a full in-house team.",
+      "Full-service HR support including payroll, benefits administration, risk management, and HR compliance, built for businesses that need professional HR without a full in-house team.",
     eligibility: "Open to all chamber members",
     howToAccess: "Contact Don Hicks directly for a consultation.",
     contact: {
-      name: "Don Hicks — VensureHR",
+      name: "Don Hicks, VensureHR",
       email: "don.hicks@vensure.com",
       phone: "(216) 303-6756",
     },
@@ -82,7 +74,7 @@ const programs = [
     provider: "Medina Community Recreation Center",
     tag: "Wellness",
     description:
-      "20% discount on MCRC resident-rate membership fees for all employees of member businesses — regardless of where they live. Includes access to pools, fitness facilities, group classes, and youth programs.",
+      "20% discount on MCRC resident-rate membership fees for all employees of member businesses, regardless of where they live. Includes access to pools, fitness facilities, group classes, and youth programs.",
     eligibility: "All employees of chamber member businesses",
     howToAccess:
       "Mention your employer's chamber membership at the MCRC Front Desk. No paperwork required.",
@@ -93,59 +85,48 @@ const programs = [
 export default function SavingsPage() {
   return (
     <>
-      {/* ─── HERO ─────────────────────────────────────────────── */}
-      {/* pt-f144 pb-f89 (144/89 = φ) — HERO tier */}
+      
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
         <div className="max-w-3xl">
-          {/* mb-f8 (8px) — overline→heading */}
           <p className="text-overline text-cambridge mb-f8">Membership</p>
           <h1 className="text-display">
             Savings
             <br />
             <span className="text-accent">Programs</span>
           </h1>
-          {/* mt-f13 (13px) — heading→body */}
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             Chamber membership includes exclusive access to programs that cut
-            real costs — health insurance, workers&apos; comp, energy bills, HR, and
+            real costs, health insurance, workers&apos; comp, energy bills, HR, and
             more. Five programs built for small and mid-sized businesses.
           </p>
         </div>
       </section>
 
-      {/* ─── FEATURE — Program cards ──────────────────────────── */}
-      {/* py-f89/f144 — FEATURE tier, open white */}
+      {/* Program cards */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
-        {/* space-y-f21 — between program cards */}
         <div className="space-y-f21">
           {programs.map((p, i) => (
             <FadeIn key={p.name} delay={i * 60}>
               <div className="p-f21 lg:p-f34 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-                {/* mb-f13 — card header→content gap */}
                 <div className="flex flex-wrap items-start justify-between gap-f8 mb-f13">
                   <div>
                     {/* tag */}
                     <span className="text-caption text-cambridge font-bold uppercase tracking-wider">
                       {p.tag}
                     </span>
-                    {/* mt-f3 — tag→name micro-gap */}
                     <h2 className="text-h3 mt-f3">{p.name}</h2>
-                    {/* mt-f3 — name→provider micro-gap */}
                     <p className="text-body-sm text-text-tertiary mt-f3">
                       via {p.provider}
                     </p>
                   </div>
                 </div>
 
-                {/* gap-f21 — 2-col content gap */}
                 <div className="grid md:grid-cols-2 gap-f21">
                   <div>
                     <p className="text-body-sm text-text-secondary leading-relaxed">
                       {p.description}
                     </p>
-                    {/* mt-f13 — desc→eligibility gap; p-f13 — eligibility box padding */}
                     <div className="mt-f13 p-f13 bg-bg-primary border border-border-secondary rounded-[var(--radius-md)]">
-                      {/* mb-f3 — label→value micro-gap */}
                       <p className="text-caption text-text-tertiary uppercase tracking-wider mb-f3">
                         Eligibility
                       </p>
@@ -154,7 +135,6 @@ export default function SavingsPage() {
                   </div>
 
                   <div>
-                    {/* mb-f8 — label→body gap */}
                     <p className="text-caption text-text-tertiary uppercase tracking-wider mb-f8">
                       How to Access
                     </p>
@@ -189,23 +169,19 @@ export default function SavingsPage() {
         </div>
       </section>
 
-      {/* ─── CLOSER — Member-only CTA ─────────────────────────── */}
-      {/* py-f55/f89 — CLOSER taper */}
+      {/* Member-only CTA */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
-          {/* p-f34/f55 card padding, gap-f34 2-col gap */}
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
                 <h2 className="text-h2">These are member-only programs.</h2>
-                {/* mt-f13 — heading→body */}
                 <p className="text-body-lg text-text-secondary mt-f13">
-                  The savings programs alone can offset — or exceed — the cost of
+                  The savings programs alone can offset, or exceed, the cost of
                   annual membership. Health insurance savings for even one employee
                   typically covers the full membership investment.
                 </p>
               </div>
-              {/* space-y-f13 — button stack gap */}
               <div className="space-y-f13">
                 <Link
                   href="/membership/join"

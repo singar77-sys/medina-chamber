@@ -36,7 +36,7 @@ const ROOMS: Room[] = [
     chip: "Private",
     seats: 16,
     description:
-      "A private, closed-door meeting space featuring the chamber's distinctive vault door — professional, memorable, and perfectly sized for focused collaboration.",
+      "A private, closed-door meeting space featuring the chamber's distinctive vault door, professional, memorable, and perfectly sized for focused collaboration.",
     bestFor:
       "Board meetings, client presentations, team strategy sessions.",
     features: [
@@ -52,7 +52,7 @@ const ROOMS: Room[] = [
     chip: "Flexible",
     seats: 50,
     description:
-      "A spacious, flexible room with configurable table arrangements to fit your event — from classroom-style training to panel discussions to all-hands meetings.",
+      "A spacious, flexible room with configurable table arrangements to fit your event, from classroom-style training to panel discussions to all-hands meetings.",
     bestFor:
       "Workshops, seminars, training sessions, and larger team meetings.",
     features: [
@@ -138,7 +138,7 @@ export function RentalSpaceCards() {
               onClick={() => openRoom(i)}
               className="rsc-card"
               aria-haspopup="dialog"
-              aria-label={`View ${room.name} details — seats ${room.seats}`}
+              aria-label={`View ${room.name} details, seats ${room.seats}`}
             >
               <span className="rsc-card__chip">{room.chip}</span>
 

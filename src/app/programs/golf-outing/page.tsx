@@ -3,21 +3,12 @@ import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
 
-/**
- * Golf Outing — φ spatial system applied throughout.
- *
- * HERO    pt-f144 pb-f89
- * FEATURE py-f89 lg:py-f144 — info strip (3 cards) + schedule/included 2-col (open white)
- * BAND    py-f55 lg:py-f89  — pricing cards + refund note (bg-secondary)
- * CLOSER  py-f55 lg:py-f89  — sponsorship CTA card
- */
-
 export const metadata: Metadata = {
   title: "Annual Chamber Golf Outing",
   description:
-    "The Greater Medina Chamber of Commerce Annual Golf Outing — Monday, July 20, 2026 at Westfield Country Club. 18-hole scramble with lunch, on-course games, cocktail hour, and dinner. Chamber members $230, non-members $260.",
+    "The Greater Medina Chamber of Commerce Annual Golf Outing, Monday, July 20, 2026 at Westfield Country Club. 18-hole scramble with lunch, on-course games, cocktail hour, and dinner. Chamber members $230, non-members $260.",
   openGraph: {
-    title: "Annual Chamber Golf Outing 2026 — Greater Medina Chamber of Commerce",
+    title: "Annual Chamber Golf Outing 2026 | Greater Medina Chamber of Commerce",
     description:
       "July 20, 2026 at Westfield Country Club. 18-hole scramble, lunch, dinner, and networking with Medina County's business community.",
   },
@@ -95,24 +86,20 @@ export default function GolfOutingPage() {
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
 
-      {/* ─── HERO ─────────────────────────────────────────────── */}
-      {/* pt-f144 pb-f89 (144/89 = φ) — HERO tier */}
+      
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
         <div className="max-w-3xl">
-          {/* mb-f8 (8px) — overline→heading */}
           <p className="text-overline text-cambridge mb-f8">Annual Event</p>
           <h1 className="text-display">
             Chamber
             <br />
             <span className="text-accent">Golf Outing</span>
           </h1>
-          {/* mt-f13 (13px) — heading→body */}
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             The premier networking event on the Medina County business calendar.
             18 holes, great food, on-course games, and a room full of people worth
             knowing.
           </p>
-          {/* mt-f21 — body→CTAs; gap-f13 — between buttons */}
           <div className="mt-f21 flex flex-wrap gap-f13">
             <a
               href="https://business.medinachamber.com/ap/Events/Register/07FA922CxCwCR"
@@ -144,8 +131,7 @@ export default function GolfOutingPage() {
         </div>
       </section>
 
-      {/* ─── FEATURE — Event details ───────────────────────────── */}
-      {/* py-f89/f144 — FEATURE tier, open white */}
+      {/* Event details */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
           {/* Info strip — gap-f21 between 3 cards */}
@@ -159,7 +145,6 @@ export default function GolfOutingPage() {
                 key={item.label}
                 className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] text-center"
               >
-                {/* mb-f8 — label→value gap */}
                 <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-f8">
                   {item.label}
                 </p>
@@ -170,13 +155,10 @@ export default function GolfOutingPage() {
             ))}
           </div>
 
-          {/* mt-f34 — strip→2-col gap; gap-f34 — schedule/included columns */}
           <div className="mt-f34 grid lg:grid-cols-2 gap-f34">
             {/* Schedule */}
             <div>
-              {/* mb-f21 — label→schedule rows */}
               <h2 className="text-overline text-cambridge mb-f21">Day-of Schedule</h2>
-              {/* space-y-f13 — between schedule rows */}
               <div className="space-y-f13">
                 {schedule.map((s, i) => (
                   <div key={i} className="flex items-start gap-f13">
@@ -189,7 +171,6 @@ export default function GolfOutingPage() {
                   </div>
                 ))}
               </div>
-              {/* mt-f13 — schedule→note gap */}
               <p className="text-body-sm text-text-tertiary mt-f13">
                 Note: Dinner and cocktail hour will be held at Blair Center this
                 year due to clubhouse construction at Westfield Country Club.
@@ -198,9 +179,7 @@ export default function GolfOutingPage() {
 
             {/* What's Included */}
             <div>
-              {/* mb-f21 — label→list gap */}
               <h2 className="text-overline text-cambridge mb-f21">What&apos;s Included</h2>
-              {/* space-y-f8 — between list items */}
               <ul className="space-y-f8">
                 {included.map((item) => (
                   <li key={item} className="flex items-start gap-f8 text-body text-text-primary">
@@ -216,14 +195,11 @@ export default function GolfOutingPage() {
         </FadeIn>
       </section>
 
-      {/* ─── BAND — Pricing ───────────────────────────────────── */}
-      {/* py-f55/f89 — BAND tier, bg-secondary + border-y */}
+      {/* Pricing */}
       <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
-            {/* mb-f21 — label→grid gap */}
             <h2 className="text-overline text-cambridge mb-f21">Pricing</h2>
-            {/* gap-f21 — between pricing cards */}
             <div className="grid sm:grid-cols-2 gap-f21 max-w-2xl">
               {pricing.map((p) => (
                 <div
@@ -233,15 +209,12 @@ export default function GolfOutingPage() {
                   <p className="text-caption text-text-tertiary uppercase tracking-wider">
                     {p.tier}
                   </p>
-                  {/* mt-f8 — label→price gap */}
                   <p className="text-display mt-f8">{p.price}</p>
-                  {/* mt-f3 — price→desc micro-gap */}
                   <p className="text-body-sm text-text-secondary mt-f3">{p.description}</p>
                 </div>
               ))}
             </div>
 
-            {/* mt-f21 — cards→refund note gap; p-f13 — note box padding */}
             <div className="mt-f21 max-w-2xl p-f13 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]">
               <p className="text-body-sm text-text-secondary leading-relaxed">
                 <span className="font-semibold text-text-primary">Refund policy: </span>
@@ -254,32 +227,26 @@ export default function GolfOutingPage() {
         </div>
       </section>
 
-      {/* ─── CLOSER — Sponsorship CTA ─────────────────────────── */}
-      {/* py-f55/f89 — CLOSER taper */}
+      {/* Sponsorship CTA */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
-          {/* p-f34/f55 card padding, gap-f34 2-col gap */}
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
-                {/* mb-f8 — overline→heading */}
                 <p className="text-overline text-cambridge mb-f8">Sponsorship</p>
                 <h2 className="text-h2">Put Your Brand on the Course</h2>
-                {/* mt-f13 — heading→body */}
                 <p className="text-body-lg text-text-secondary mt-f13">
-                  Sponsorship packages are available at a range of investment levels —
+                  Sponsorship packages are available at a range of investment levels, 
                   from hole sponsorships to presenting sponsorship. Maximum visibility
                   with Medina County&apos;s business community in one room.
                 </p>
               </div>
               <div>
-                {/* mt-f8 — body→contact name */}
                 <p className="text-body text-text-secondary">
                   Contact{" "}
                   <span className="font-semibold text-text-primary">Stephanie Mueller</span>{" "}
                   to learn about available packages.
                 </p>
-                {/* mt-f13 — text→buttons; gap-f13 — between buttons */}
                 <div className="mt-f13 flex flex-wrap gap-f13">
                   <a
                     href="mailto:stephanie@medinaohchamber.com"

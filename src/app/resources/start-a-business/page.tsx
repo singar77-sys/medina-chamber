@@ -4,11 +4,11 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "How to Start a Business in Medina County, Ohio",
   description:
-    "Step-by-step guide to starting a business in Medina County, Ohio. Register your LLC, get your EIN, obtain licenses, and connect with local resources — from the Greater Medina Chamber of Commerce.",
+    "Step-by-step guide to starting a business in Medina County, Ohio. Register your LLC, get your EIN, obtain licenses, and connect with local resources, from the Greater Medina Chamber of Commerce.",
   openGraph: {
-    title: "How to Start a Business in Medina County — Greater Medina Chamber",
+    title: "How to Start a Business in Medina County, Greater Medina Chamber",
     description:
-      "Everything you need to launch a business in Medina County, Ohio — structure, registration, licenses, taxes, and local resources.",
+      "Everything you need to launch a business in Medina County, Ohio, structure, registration, licenses, taxes, and local resources.",
   },
   alternates: { canonical: "/resources/start-a-business" },
 };
@@ -17,9 +17,9 @@ const steps = [
   {
     number: "01",
     title: "Choose your business structure",
-    body: "Your structure determines liability, taxation, and paperwork. Most Medina County small businesses choose between sole proprietorship, LLC, S-Corp, or C-Corp. An LLC is the most common starting point — it separates personal and business liability without the complexity of a corporation.",
+    body: "Your structure determines liability, taxation, and paperwork. Most Medina County small businesses choose between sole proprietorship, LLC, S-Corp, or C-Corp. An LLC is the most common starting point, it separates personal and business liability without the complexity of a corporation.",
     resource: {
-      label: "Ohio Business Structures Overview — Ohio SOS",
+      label: "Ohio Business Structures Overview, Ohio SOS",
       href: "https://www.ohiosos.gov/businesses/",
     },
   },
@@ -28,16 +28,16 @@ const steps = [
     title: "Register with the Ohio Secretary of State",
     body: "LLCs, corporations, and partnerships must register with the Ohio Secretary of State. Sole proprietors operating under their own name don't need to register, but if you're using a trade name (DBA) you'll need to file a Fictitious Name Registration. Filing fees start at $99 for an LLC.",
     resource: {
-      label: "File Online — Ohio Secretary of State",
+      label: "File Online, Ohio Secretary of State",
       href: "https://www.ohiosos.gov/businesses/",
     },
   },
   {
     number: "03",
     title: "Get your federal EIN",
-    body: "An Employer Identification Number (EIN) is your business's federal tax ID — required for hiring employees, opening a business bank account, and filing taxes. It's free and takes about 5 minutes to get online through the IRS.",
+    body: "An Employer Identification Number (EIN) is your business's federal tax ID, required for hiring employees, opening a business bank account, and filing taxes. It's free and takes about 5 minutes to get online through the IRS.",
     resource: {
-      label: "Apply for an EIN — IRS",
+      label: "Apply for an EIN, IRS",
       href: "https://www.irs.gov/businesses/small-businesses-self-employed/apply-for-an-employer-identification-number-ein-online",
     },
   },
@@ -46,43 +46,43 @@ const steps = [
     title: "Register for Ohio taxes",
     body: "If you're selling taxable goods or services, you need a vendor's license from the Ohio Department of Taxation (free to obtain). If you'll have employees, you'll also need to register for Ohio employer withholding. Both are handled through the Ohio Business Gateway.",
     resource: {
-      label: "Ohio Business Gateway — Tax Registration",
+      label: "Ohio Business Gateway, Tax Registration",
       href: "https://tax.ohio.gov/",
     },
   },
   {
     number: "05",
     title: "Obtain local and industry-specific licenses",
-    body: "Medina City and Medina County may require a local business license depending on your type of business and location. Certain industries — contractors, food service, childcare, healthcare, real estate — require state-level professional licenses. Check with the Ohio Department of Commerce and your specific licensing board.",
+    body: "Medina City and Medina County may require a local business license depending on your type of business and location. Certain industries, contractors, food service, childcare, healthcare, real estate, require state-level professional licenses. Check with the Ohio Department of Commerce and your specific licensing board.",
     resource: {
-      label: "Ohio License Center — Ohio Dept. of Commerce",
+      label: "Ohio License Center, Ohio Dept. of Commerce",
       href: "https://com.ohio.gov/",
     },
   },
   {
     number: "06",
     title: "Set up workers' compensation if you're hiring",
-    body: "Ohio is a state-fund workers' comp state — most employers are required to carry coverage through the Ohio BWC. Coverage must be in place before your first employee's first day. Chamber members get access to BWC group discount programs that can significantly reduce your premiums.",
+    body: "Ohio is a state-fund workers' comp state, most employers are required to carry coverage through the Ohio BWC. Coverage must be in place before your first employee's first day. Chamber members get access to BWC group discount programs that can significantly reduce your premiums.",
     resource: {
-      label: "Get Coverage — Ohio BWC",
+      label: "Get Coverage, Ohio BWC",
       href: "https://www.bwc.ohio.gov/",
     },
   },
   {
     number: "07",
     title: "Open a business bank account",
-    body: "Keep personal and business finances separate from day one. You'll need your EIN and business registration documents. Several banks and credit unions in Medina County offer small business checking accounts — shop for fee structure and online banking capabilities that match how you'll operate.",
+    body: "Keep personal and business finances separate from day one. You'll need your EIN and business registration documents. Several banks and credit unions in Medina County offer small business checking accounts, shop for fee structure and online banking capabilities that match how you'll operate.",
     resource: null,
   },
   {
     number: "08",
     title: "Connect with local business resources",
-    body: "You don't have to figure this out alone. Medina County has free and low-cost resources specifically for new business owners — from one-on-one consulting to financing tools.",
+    body: "You don't have to figure this out alone. Medina County has free and low-cost resources specifically for new business owners, from one-on-one consulting to financing tools.",
     resource: null,
     localResources: [
       {
         name: "Ohio Small Business Development Center (SBDC)",
-        description: "Free one-on-one consulting for startups and existing businesses. The SBDC helps with business plans, financial projections, licensing, and funding — at no cost.",
+        description: "Free one-on-one consulting for startups and existing businesses. The SBDC helps with business plans, financial projections, licensing, and funding, at no cost.",
       },
       {
         name: "Medina County Economic Development",
@@ -90,7 +90,7 @@ const steps = [
       },
       {
         name: "Team NEO",
-        description: "Northeast Ohio's regional economic development organization — labor market data, site selection, and industry intelligence for the region.",
+        description: "Northeast Ohio's regional economic development organization, labor market data, site selection, and industry intelligence for the region.",
         href: "https://www.teamneo.org/",
       },
       {
@@ -105,7 +105,7 @@ const steps = [
     title: "Join the Greater Medina Chamber of Commerce",
     body: "Membership gives you an online directory listing seen by every business in the county, access to networking events, advocacy at the local and state level, and savings programs that often more than cover the membership cost. Plus a dedicated onboarding session with Chamber staff.",
     resource: {
-      label: "Apply for Membership — from $345/year",
+      label: "Apply for Membership, from $345/year",
       href: "/membership/join",
       internal: true,
     },
@@ -115,7 +115,7 @@ const steps = [
 const faqs = [
   {
     q: "Do I need a business license in Medina, Ohio?",
-    a: "Medina City requires a business registration for businesses operating within city limits. Requirements vary by township and village — check with your local municipality. Some industries (contractors, food service, childcare) also require state licenses regardless of location.",
+    a: "Medina City requires a business registration for businesses operating within city limits. Requirements vary by township and village, check with your local municipality. Some industries (contractors, food service, childcare) also require state licenses regardless of location.",
   },
   {
     q: "How long does it take to start an LLC in Ohio?",
@@ -123,11 +123,11 @@ const faqs = [
   },
   {
     q: "Do I need a lawyer to start a business in Ohio?",
-    a: "Not required, but often worth it for partnerships, complex structures, or any business with significant liability exposure. The Ohio SBDC can help you understand your options — for free — before you decide whether to engage an attorney.",
+    a: "Not required, but often worth it for partnerships, complex structures, or any business with significant liability exposure. The Ohio SBDC can help you understand your options, for free, before you decide whether to engage an attorney.",
   },
   {
     q: "What's the difference between an LLC and sole proprietorship?",
-    a: "A sole proprietorship is the default if you do business without registering — simple, but your personal assets are exposed to business liability. An LLC creates a legal separation between you and the business. Most small business advisors recommend starting as an LLC.",
+    a: "A sole proprietorship is the default if you do business without registering, simple, but your personal assets are exposed to business liability. An LLC creates a legal separation between you and the business. Most small business advisors recommend starting as an LLC.",
   },
 ];
 
@@ -153,7 +153,7 @@ export default function StartABusinessPage() {
         </h1>
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
           A practical step-by-step guide to launching a business in Medina
-          County, Ohio — from choosing a structure to getting your first
+          County, Ohio, from choosing a structure to getting your first
           customer.
         </p>
       </section>
@@ -254,7 +254,7 @@ export default function StartABusinessPage() {
             <p className="text-body-lg text-text-secondary mt-4">
               The Chamber is your first connection to the Medina County business
               community. Directory listing, networking events, savings programs,
-              and a dedicated onboarding session — from $345 a year.
+              and a dedicated onboarding session, from $345 a year.
             </p>
           </div>
           <div className="space-y-4">

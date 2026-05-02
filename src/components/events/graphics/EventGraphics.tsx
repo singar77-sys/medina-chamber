@@ -1309,12 +1309,12 @@ export function BusinessBrewGraphic({
     may:"05",     june:"06",     july:"07",      august:"08",
     september:"09", october:"10", november:"11", december:"12",
   };
-  const issueNo  = eventInfo?.month ? (MONTH_NUM[eventInfo.month.toLowerCase()] ?? "—") : "—";
-  const issueYr  = eventInfo?.year  ? String(eventInfo.year) : "—";
+  const issueNo  = eventInfo?.month ? (MONTH_NUM[eventInfo.month.toLowerCase()] ?? ", ") : ", ";
+  const issueYr  = eventInfo?.year  ? String(eventInfo.year) : ", ";
   const dayShort = eventInfo?.dayOfWeek?.substring(0, 3).toUpperCase() ?? "";
   const monShort = eventInfo?.month?.substring(0, 3).toUpperCase() ?? "";
   const whenDate = [dayShort, (monShort && eventInfo?.day) ? `${monShort} ${eventInfo.day}` : ""]
-    .filter(Boolean).join(" · ") || "—";
+    .filter(Boolean).join(" · ") || ", ";
   const timeLine = eventInfo?.time ?? "";
   const hasVenue = !!eventInfo?.venue;
 
@@ -1465,7 +1465,7 @@ export function BusinessBrewGraphic({
           paddingBottom: Y(40), borderBottom: `${S(3)}px solid ${BRAND.oxford}`,
         }}>
           <span>GREATER MEDINA CHAMBER · MONTHLY NETWORKING</span>
-          <span style={{ color: BRAND.coquelicot }}>NO. {issueNo} — {issueYr}</span>
+          <span style={{ color: BRAND.coquelicot }}>NO. {issueNo}, {issueYr}</span>
         </div>
         {/* Bee-mug */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1571,7 +1571,7 @@ export function GetToKnowGraphic({
     <div style={containerStyle({ background: BRAND.oxford, color: BRAND.cream })}>
       <svg viewBox={`0 0 ${W} ${H}`} style={svgFillStyle}>
         <defs>
-          {/* ── Background: Castle airbrush warm glow ── */}
+          {/* Background: Castle airbrush warm glow */}
           {/* A soft cream halo centred on the medallion bleeds across the canvas
               like the signature Castle spotlight — warmth emanating from a single
               source, the dark field pressing in from the edges. */}
@@ -1585,7 +1585,7 @@ export function GetToKnowGraphic({
             <stop offset="100%" stopColor={BRAND.oxford}    stopOpacity="0"    />
           </radialGradient>
 
-          {/* ── "KNOW" text gradient ── */}
+          {/* "KNOW" text gradient */}
           {/* Cream at cap-height → cambridge at baseline: simulates a top-lit
               airbrush pass, as if the word has weight and is lit from above. */}
           <linearGradient
@@ -1599,12 +1599,12 @@ export function GetToKnowGraphic({
             <stop offset="100%" stopColor={BRAND.cambridge} stopOpacity="0.72" />
           </linearGradient>
 
-          {/* ── Circle clip path for photo ── */}
+          {/* Circle clip path for photo */}
           <clipPath id={`${uid}-clip`}>
             <circle cx={cCx} cy={cCy} r={cR} />
           </clipPath>
 
-          {/* ── Circle edge vignette ── */}
+          {/* Circle edge vignette */}
           {/* Darkens the perimeter of the photo, keeping the painted look
               — Castle always lost the photo into the dark at the edges. */}
           <radialGradient
@@ -1617,14 +1617,14 @@ export function GetToKnowGraphic({
             <stop offset="100%" stopColor={BRAND.oxford} stopOpacity="0.60" />
           </radialGradient>
 
-          {/* ── Outer bloom filter ── */}
+          {/* Outer bloom filter */}
           {/* Low-pass blur applied to the coquelicot outer ring to create
               the halation effect Castle got with real airbrush overspray. */}
           <filter id={`${uid}-bloom`} x="-30%" y="-30%" width="160%" height="160%">
             <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur" />
           </filter>
 
-          {/* ── "KNOW" text shadow ── */}
+          {/* "KNOW" text shadow */}
           {/* Ensures contrast when the text overlaps the photo substrate. */}
           <filter id={`${uid}-tshadow`} x="-4%" y="-15%" width="108%" height="130%">
             <feDropShadow
@@ -1634,13 +1634,13 @@ export function GetToKnowGraphic({
           </filter>
         </defs>
 
-        {/* ── Layer 1: Base field ───────────────────────────────────────────── */}
+        {/* Layer 1: Base field */}
         <rect x={0} y={0} width={W} height={H} fill={BRAND.oxford} />
 
-        {/* ── Layer 2: Airbrush warm spotlight ─────────────────────────────── */}
+        {/* Layer 2: Airbrush warm spotlight */}
         <rect x={0} y={0} width={W} height={H} fill={`url(#${uid}-bg)`} />
 
-        {/* ── Layer 3: Outer coquelicot bloom halo ─────────────────────────── */}
+        {/* Layer 3: Outer coquelicot bloom halo */}
         {/* The blurred ring at full opacity 0.09 reads as a soft chromatic
             aura — Castle's coquelicot was never flat, always luminous. */}
         <circle
@@ -1650,7 +1650,7 @@ export function GetToKnowGraphic({
           filter={`url(#${uid}-bloom)`}
         />
 
-        {/* ── Layer 4: Precision structural rings ──────────────────────────── */}
+        {/* Layer 4: Precision structural rings */}
         {/* Two clean concentric rings — the retrofuturist precision that
             anchors the softness of the airbrush work. */}
         <circle
@@ -1666,7 +1666,7 @@ export function GetToKnowGraphic({
           opacity={0.38}
         />
 
-        {/* ── Layer 5: Photo substrate ──────────────────────────────────────── */}
+        {/* Layer 5: Photo substrate */}
         {/* The photographic base Castle would paint over — real people,
             real warmth, real event — barely glimpsed beneath the wash. */}
         <image
@@ -1677,7 +1677,7 @@ export function GetToKnowGraphic({
           preserveAspectRatio="xMidYMid slice"
         />
 
-        {/* ── Layer 6: Cambridge airbrush color wash ────────────────────────── */}
+        {/* Layer 6: Cambridge airbrush color wash */}
         {/* Castle's signature move: lay a flat chromatic wash over the photo
             to unify it with the surrounding palette. The photo still breathes
             through — warm faces under cool teal light. */}
@@ -1687,10 +1687,10 @@ export function GetToKnowGraphic({
           clipPath={`url(#${uid}-clip)`}
         />
 
-        {/* ── Layer 7: Edge vignette ────────────────────────────────────────── */}
+        {/* Layer 7: Edge vignette */}
         <circle cx={cCx} cy={cCy} r={cR} fill={`url(#${uid}-vig)`} />
 
-        {/* ── Layer 8: Centre reticle — retrofuturist precision mark ───────── */}
+        {/* Layer 8: Centre reticle — retrofuturist precision mark */}
         {/* A sighting-ring + 8-ray starburst at the medallion's heart.
             Lifts the whole piece into the graphic-design-as-architecture space
             Castle inhabited. Coquelicot at partial opacity — noticed, not forced. */}
@@ -1720,7 +1720,7 @@ export function GetToKnowGraphic({
           );
         })}
 
-        {/* ── Layer 9: Typography ───────────────────────────────────────────── */}
+        {/* Layer 9: Typography */}
 
         {/* "GET TO" — small, tracked, warm cream. The setup before the reveal. */}
         <text
@@ -1764,7 +1764,7 @@ export function GetToKnowGraphic({
           THE CHAMBER
         </text>
 
-        {/* ── Layer 10: Event info ──────────────────────────────────────────── */}
+        {/* Layer 10: Event info */}
         {eventInfo && (
           <>
             <text
@@ -1787,7 +1787,7 @@ export function GetToKnowGraphic({
           </>
         )}
 
-        {/* ── Story-only: Mistrully ghost in the lower void ─────────────────── */}
+        {/* Story-only: Mistrully ghost in the lower void */}
         {/* Story format is tall — a whispered script "know" at the bottom
             fills the negative space without competing with the medallion. */}
         {isStory && (

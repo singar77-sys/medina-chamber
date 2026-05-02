@@ -49,6 +49,6 @@ export function formatArticleDate(article: MemberNewsArticle): string {
 /** Meta description for an article page */
 export function articleMetaDescription(article: MemberNewsArticle): string {
   const teaser = article.subtitle || article.body.substring(0, 140);
-  const member = article.memberName ? ` — ${article.memberName}` : "";
+  const member = article.memberName ? `, ${article.memberName}` : "";
   return `${teaser}${member}`.substring(0, 160);
 }

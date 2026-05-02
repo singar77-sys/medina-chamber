@@ -97,7 +97,7 @@ export default function AdminLoginPage() {
         </div>
 
         <p className="text-center text-xs mt-6" style={{ color: "#475569" }}>
-          Restricted access — authorized personnel only
+          Restricted access, authorized personnel only
         </p>
       </div>
     </div>

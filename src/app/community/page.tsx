@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description:
     "Explore business resources and Chamber member businesses in Medina, Brunswick, Wadsworth, Lodi, Seville, Valley City, Hinckley, Rittman, and Lafayette Township. The Greater Medina Chamber serves all of Medina County.",
   openGraph: {
-    title: "Medina County Business Communities — Greater Medina Chamber",
+    title: "Medina County Business Communities, Greater Medina Chamber",
     description:
       "Business resources for every community in Medina County, Ohio.",
   },
@@ -30,7 +30,7 @@ export default function CommunityHubPage() {
         </h1>
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
           The Greater Medina Chamber of Commerce serves businesses in every
-          corner of Medina County — from the Square to the southern townships.
+          corner of Medina County, from the Square to the southern townships.
           {totalCount}+ member businesses across {activeCommunities.length} communities.
         </p>
       </section>
@@ -82,7 +82,7 @@ export default function CommunityHubPage() {
               Your community. Your chamber.
             </h2>
             <p className="text-body-lg text-text-secondary mt-4">
-              From the Square to the southern townships — same advocacy,
+              From the Square to the southern townships, same advocacy,
               same directory, same networking events, same savings programs.
               The chamber works for every zip code in the county.
             </p>

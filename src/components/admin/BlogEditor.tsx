@@ -166,7 +166,7 @@ export function BlogEditor({ post, adminToken, mode }: Props) {
         </Field>
       </div>
 
-      <Field label="Excerpt (optional — auto-generated from body if blank)">
+      <Field label="Excerpt (optional, auto-generated from body if blank)">
         <textarea
           value={excerpt}
           onChange={(e) => setExcerpt(e.target.value)}

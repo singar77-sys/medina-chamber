@@ -261,7 +261,7 @@ function PortalCaptureCard({
           name: name.trim(),
           email: email.trim(),
           topic: "membership",
-          note: "ChamberBot lead — expressed interest via chat",
+          note: "ChamberBot lead, expressed interest via chat",
           website_confirm: "",
           formLoadedAt: formLoadedAt.current,
         }),
@@ -276,7 +276,7 @@ function PortalCaptureCard({
   if (status === "sent") {
     return (
       <div className="cb-capture cb-capture--sent">
-        <span className="mono">✓ CONFIRMED —</span> Stephanie will be in touch.
+        <span className="mono">✓ CONFIRMED, </span> Stephanie will be in touch.
       </div>
     );
   }
@@ -285,10 +285,10 @@ function PortalCaptureCard({
     <div className="cb-capture">
       <div className="cb-capture__head mono">STEPHANIE WILL REACH OUT</div>
       <p className="cb-capture__body">
-        Drop your name and email — she&apos;ll follow up directly.
+        Drop your name and email, she&apos;ll follow up directly.
       </p>
       {status === "error" && (
-        <p className="cb-capture__error mono">Send failed — try again.</p>
+        <p className="cb-capture__error mono">Send failed, try again.</p>
       )}
       <form className="cb-capture__form" onSubmit={handleSubmit}>
         <input
@@ -340,7 +340,7 @@ const EXIT_MS = 800;
 const TAGLINES = [
   "I know this town.",
   `${totalCount} members at your fingertips.`,
-  "Events, businesses, membership — ask away.",
+  "Events, businesses, membership, ask away.",
   "What are you looking for today?",
   "Your holographic concierge is ready.",
 ];
@@ -675,15 +675,15 @@ export function ChamberBotPortal({
       data-state={sceneState}
       role="dialog"
       aria-modal="true"
-      aria-label="ChamberBot — Medina County Chamber concierge"
+      aria-label="ChamberBot, Medina County Chamber concierge"
     >
-      {/* ── Atmospheric backdrop layers ── */}
+      {/* Atmospheric backdrop layers */}
       <div className="chamber-sky" aria-hidden="true" />
       <div className="chamber-vignette" aria-hidden="true" />
       <div className="chamber-grid" aria-hidden="true" />
       <div className="chamber-scanlines" aria-hidden="true" />
 
-      {/* ── HUD — 56px top grid row ── */}
+      {/* HUD — 56px top grid row */}
       <header className="hud">
         <div className="hud-left">
           <div className="hud-wordmark">
@@ -762,7 +762,7 @@ export function ChamberBotPortal({
         </div>
       </header>
 
-      {/* ── Scene — 1fr middle grid row ── */}
+      {/* Scene — 1fr middle grid row */}
       <main className="scene">
         {/* Stage: mascot + rings centered, caption at bottom */}
         <section className="stage">
@@ -918,7 +918,7 @@ export function ChamberBotPortal({
             </form>
           </div>
           <p className="cb-disclaimer mono" aria-hidden="true">
-            AI — responses may be inaccurate · verify with{" "}
+            AI, responses may be inaccurate · verify with{" "}
             <a href="/about/contact" tabIndex={-1}>office@medinaohchamber.com</a>
             {" · "}
             <a href="/privacy" tabIndex={-1}>Privacy</a>
@@ -928,7 +928,7 @@ export function ChamberBotPortal({
         </section>
       </main>
 
-      {/* ── Rail — 36px bottom grid row ── */}
+      {/* Rail — 36px bottom grid row */}
       <footer className="rail mono">
         <div className="rail-item" aria-hidden="true">
           <span className="rail-dot ok" /> {totalCount} MEMBERS INDEXED
@@ -940,7 +940,7 @@ export function ChamberBotPortal({
           className="rail-item rail-toggle"
           onClick={() => setChillMode((c) => !c)}
           aria-pressed={chillMode}
-          aria-label={chillMode ? "Chill mode on — click to resume animations" : "Pause animations (chill mode)"}
+          aria-label={chillMode ? "Chill mode on, click to resume animations" : "Pause animations (chill mode)"}
         >
           <span className={`rail-dot ${chillMode ? "ok" : "off"}`} />
           CHILL
@@ -948,7 +948,7 @@ export function ChamberBotPortal({
         <div className="rail-spacer" aria-hidden="true" />
         <div className="rail-item" aria-hidden="true">VECTOR INDEX · v4.2.1</div>
         <div className="rail-item" aria-hidden="true">
-          LATENCY <span className="rail-val">—</span>
+          LATENCY <span className="rail-val">, </span>
         </div>
       </footer>
     </div>,

@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Business Grants & Funding — Medina County, Ohio",
+  title: "Business Grants & Funding, Medina County, Ohio",
   description:
-    "Business grants, loans, and funding programs available to Medina County, Ohio businesses — SBA loans, JobsOhio incentives, USDA programs, Ohio SBDC, and Chamber savings programs.",
+    "Business grants, loans, and funding programs available to Medina County, Ohio businesses, SBA loans, JobsOhio incentives, USDA programs, Ohio SBDC, and Chamber savings programs.",
   openGraph: {
-    title: "Business Grants & Funding in Medina County — Greater Medina Chamber",
+    title: "Business Grants & Funding in Medina County, Greater Medina Chamber",
     description:
-      "State, federal, and local funding programs for Medina County small businesses — grants, loans, incentives, and free consulting.",
+      "State, federal, and local funding programs for Medina County small businesses, grants, loans, incentives, and free consulting.",
   },
   alternates: { canonical: "/resources/business-grants" },
 };
@@ -20,7 +20,7 @@ const programs = [
       {
         name: "JobsOhio Economic Development Grant",
         description:
-          "Grants and loans for projects that create or retain jobs in Ohio. JobsOhio focuses on specific industries — advanced manufacturing, technology, financial services, logistics, and healthcare. Best suited for growth-stage businesses adding significant headcount.",
+          "Grants and loans for projects that create or retain jobs in Ohio. JobsOhio focuses on specific industries, advanced manufacturing, technology, financial services, logistics, and healthcare. Best suited for growth-stage businesses adding significant headcount.",
         eligibility: "Job creation/retention projects in targeted industries",
         href: "https://www.jobsohio.com/",
         cta: "JobsOhio.com",
@@ -44,7 +44,7 @@ const programs = [
       {
         name: "Ohio Third Frontier",
         description:
-          "Grant programs targeting Ohio technology companies and research commercialization — particularly for startups and companies with a tech or manufacturing R&D component.",
+          "Grant programs targeting Ohio technology companies and research commercialization, particularly for startups and companies with a tech or manufacturing R&D component.",
         eligibility: "Ohio tech and innovation-focused businesses",
         href: "https://thirdfrontier.com/",
         cta: "Ohio Third Frontier",
@@ -57,7 +57,7 @@ const programs = [
       {
         name: "SBA 7(a) Loan Program",
         description:
-          "The most common SBA loan — up to $5 million for working capital, equipment, real estate, and debt refinancing. Government-guaranteed through local lenders. Rates and terms are more favorable than conventional small business loans.",
+          "The most common SBA loan, up to $5 million for working capital, equipment, real estate, and debt refinancing. Government-guaranteed through local lenders. Rates and terms are more favorable than conventional small business loans.",
         eligibility: "For-profit small businesses meeting SBA size standards",
         href: "https://www.sba.gov/funding-programs/loans/7a-loans",
         cta: "SBA 7(a) Details",
@@ -65,15 +65,15 @@ const programs = [
       {
         name: "SBA 504 Loan Program",
         description:
-          "Long-term, fixed-rate financing for major fixed assets — real estate and heavy equipment. Typically structured as 50% conventional lender / 40% SBA / 10% borrower. Designed for expansion projects.",
+          "Long-term, fixed-rate financing for major fixed assets, real estate and heavy equipment. Typically structured as 50% conventional lender / 40% SBA / 10% borrower. Designed for expansion projects.",
         eligibility: "Businesses with tangible net worth under $15M and net income under $5M",
         href: "https://www.sba.gov/funding-programs/loans/504-loans",
         cta: "SBA 504 Details",
       },
       {
-        name: "USDA Rural Development — Business Programs",
+        name: "USDA Rural Development, Business Programs",
         description:
-          "USDA offers several programs for businesses in rural areas of Ohio, including the Business & Industry (B&I) Loan Guarantee and the Rural Energy for America Program (REAP) — energy efficiency grants for agricultural and rural businesses.",
+          "USDA offers several programs for businesses in rural areas of Ohio, including the Business & Industry (B&I) Loan Guarantee and the Rural Energy for America Program (REAP), energy efficiency grants for agricultural and rural businesses.",
         eligibility: "Businesses in rural areas (population under 50,000); parts of Medina County qualify",
         href: "https://www.rd.usda.gov/about-rd/state-offices/ohio",
         cta: "USDA Rural Development Ohio",
@@ -151,11 +151,11 @@ export default function BusinessGrantsPage() {
           A note on grants vs. loans
         </p>
         <p className="text-body-sm text-text-secondary leading-relaxed">
-          True grants — money you don&apos;t repay — are rare for general small
+          True grants, money you don&apos;t repay, are rare for general small
           businesses. Most &ldquo;business funding&rdquo; programs are
           government-backed loans with favorable rates, tax credits, or
           workforce incentives. The programs below are legitimate and worth
-          pursuing. A good first step is contacting the Ohio SBDC — they&apos;ll
+          pursuing. A good first step is contacting the Ohio SBDC, they&apos;ll
           help you figure out what you actually qualify for before you spend time
           on applications.
         </p>
@@ -215,7 +215,7 @@ export default function BusinessGrantsPage() {
               Chamber membership includes access to group health insurance,
               workers&apos; comp discount programs, energy savings, and HR
               solutions. For many small businesses, the savings on these programs
-              outweigh any grant they&apos;d qualify for — and there&apos;s no
+              outweigh any grant they&apos;d qualify for, and there&apos;s no
               competitive application.
             </p>
             <div className="mt-8 space-y-4">
@@ -229,7 +229,7 @@ export default function BusinessGrantsPage() {
                 href="/membership/join"
                 className="block w-full text-center py-3 px-6 border border-border-primary hover:border-text-tertiary text-text-primary font-bold text-body-sm rounded-[var(--radius-md)] transition-colors"
               >
-                Join the Chamber — from $345/year →
+                Join the Chamber, from $345/year →
               </Link>
             </div>
           </div>

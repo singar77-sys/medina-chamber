@@ -130,7 +130,7 @@ function DirectoryClientInner({ members, categories }: DirectoryClientProps) {
 
   return (
     <div>
-      {/* ── Search + Filter Bar ── */}
+      {/* Search + Filter Bar */}
       <div className="flex flex-col sm:flex-row gap-3">
         {/* Search Input */}
         <div className="relative flex-1">
@@ -145,7 +145,7 @@ function DirectoryClientInner({ members, categories }: DirectoryClientProps) {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Ask in plain English — e.g. “leaky roof after storm, takes insurance”"
+            placeholder="Ask in plain English, e.g. “leaky roof after storm, takes insurance”"
             className="
               w-full pl-10 pr-10 py-3
               bg-bg-primary border border-border-primary
@@ -196,7 +196,7 @@ function DirectoryClientInner({ members, categories }: DirectoryClientProps) {
         </div>
       </div>
 
-      {/* ── Results bar ── */}
+      {/* Results bar */}
       <div className="mt-6 flex items-center justify-between">
         <p className="text-caption text-text-tertiary">
           {isFiltered ? (
@@ -243,7 +243,7 @@ function DirectoryClientInner({ members, categories }: DirectoryClientProps) {
         )}
       </div>
 
-      {/* ── Member Grid ── */}
+      {/* Member Grid */}
       {filtered.length > 0 ? (
         <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {filtered.map((member) => (
@@ -254,7 +254,7 @@ function DirectoryClientInner({ members, categories }: DirectoryClientProps) {
         <div className="mt-16 text-center">
           <p className="text-h4 text-text-secondary">No members found</p>
           <p className="text-body-sm text-text-tertiary mt-2">
-            Try rephrasing — e.g. describe the service you need, not a category.
+            Try rephrasing, e.g. describe the service you need, not a category.
           </p>
           <button
             onClick={reset}

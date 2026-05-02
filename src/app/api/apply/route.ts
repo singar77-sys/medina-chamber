@@ -114,7 +114,7 @@ export async function POST(req: NextRequest) {
       from: "Greater Medina Chamber Membership <chamber@huntersystems.dev>",
       replyTo: email,
       to: CHAMBER_NOTIFY_EMAIL,
-      subject: `Membership Application — ${businessName}`,
+      subject: `Membership Application, ${businessName}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #1a1a1a;">
           <h2 style="color: #1b3a5c; margin-bottom: 4px;">New Membership Application</h2>

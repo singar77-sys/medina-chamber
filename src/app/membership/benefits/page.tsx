@@ -2,23 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 
-/**
- * Member Benefits — φ spatial system applied throughout.
- *
- * HERO    pt-f144 pb-f89
- * FEATURE py-f89 lg:py-f144 — 8 core benefit cards (open white, md:grid-cols-2 gap-f21)
- * BAND    py-f55 lg:py-f89  — 4 additional perks (bg-secondary, sm:2/lg:4 col gap-f21)
- * CLOSER  py-f55 lg:py-f89  — join CTA card
- */
-
 export const metadata: Metadata = {
   title: "Member Benefits",
   description:
-    "Greater Medina Chamber of Commerce member benefits — directory listing, networking events, business advocacy, exclusive savings programs, free notary services, and more for Medina County businesses.",
+    "Greater Medina Chamber of Commerce member benefits, directory listing, networking events, business advocacy, exclusive savings programs, free notary services, and more for Medina County businesses.",
   openGraph: {
-    title: "Member Benefits — Greater Medina Chamber of Commerce",
+    title: "Member Benefits | Greater Medina Chamber of Commerce",
     description:
-      "What you get as a Greater Medina Chamber member — advocacy, networking, visibility, savings programs, and more.",
+      "What you get as a Greater Medina Chamber member, advocacy, networking, visibility, savings programs, and more.",
   },
   alternates: { canonical: "/membership/benefits" },
 };
@@ -27,13 +18,13 @@ const coreBenefits = [
   {
     title: "Business Directory Listing",
     description:
-      "Your business appears in our searchable online member directory — one of the first places people in Medina County look when they need a local service or product. Full profile with contact info, website, categories, and description.",
+      "Your business appears in our searchable online member directory, one of the first places people in Medina County look when they need a local service or product. Full profile with contact info, website, categories, and description.",
     link: { label: "Browse the directory", href: "/membership/directory" },
   },
   {
     title: "Advocacy & Policy Voice",
     description:
-      "The chamber is your voice at the table — representing member interests in local, state, and federal policy discussions. From candidate interview programs to issue mobilization, we fight for a pro-business environment so you can focus on your business.",
+      "The chamber is your voice at the table, representing member interests in local, state, and federal policy discussions. From candidate interview programs to issue mobilization, we fight for a pro-business environment so you can focus on your business.",
     link: { label: "About our advocacy", href: "/about/advocacy" },
   },
   {
@@ -63,13 +54,13 @@ const coreBenefits = [
   {
     title: "Committee Participation",
     description:
-      "Nine committees and councils where members actively shape chamber programs, events, advocacy, and culture. From the Marketing Committee to the Ambassador Committee — there's a role for every kind of contributor.",
+      "Nine committees and councils where members actively shape chamber programs, events, advocacy, and culture. From the Marketing Committee to the Ambassador Committee, there's a role for every kind of contributor.",
     link: { label: "Explore committees", href: "/membership/committees" },
   },
   {
     title: "Safety Council Access",
     description:
-      "Chamber members participate in the Medina County Safety Council at no additional charge — monthly workplace safety education meetings and eligibility for the Ohio BWC Group Rebate Program.",
+      "Chamber members participate in the Medina County Safety Council at no additional charge, monthly workplace safety education meetings and eligibility for the Ohio BWC Group Rebate Program.",
     link: { label: "About the Safety Council", href: "/programs/safety-council" },
   },
 ];
@@ -100,24 +91,20 @@ const extraBenefits = [
 export default function BenefitsPage() {
   return (
     <>
-      {/* ─── HERO ─────────────────────────────────────────────── */}
-      {/* pt-f144 pb-f89 (144/89 = φ) — HERO tier */}
+      
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
         <div className="max-w-3xl">
-          {/* mb-f8 (8px) — overline→heading */}
           <p className="text-overline text-cambridge mb-f8">Membership</p>
           <h1 className="text-display">
             Member
             <br />
             <span className="text-accent">Benefits</span>
           </h1>
-          {/* mt-f13 (13px) — heading→body */}
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
-            Chamber membership isn&apos;t just a badge — it&apos;s access to the
+            Chamber membership isn&apos;t just a badge, it&apos;s access to the
             relationships, resources, and advocacy that help Medina County
             businesses grow.
           </p>
-          {/* mt-f21 — body→CTAs; gap-f13 — between buttons */}
           <div className="mt-f21 flex flex-wrap gap-f13">
             <Link
               href="/membership/join"
@@ -147,18 +134,14 @@ export default function BenefitsPage() {
         </div>
       </section>
 
-      {/* ─── FEATURE — Core benefits ──────────────────────────── */}
-      {/* py-f89/f144 — FEATURE tier, open white */}
+      {/* Core benefits */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
-          {/* mb-f21 — label→grid gap */}
           <h2 className="text-overline text-cambridge mb-f21">What&apos;s Included</h2>
-          {/* gap-f21 — card grid gap */}
           <div className="grid md:grid-cols-2 gap-f21">
             {coreBenefits.map((b, i) => (
               <FadeIn key={b.title} delay={i * 50}>
                 <div className="flex flex-col p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] h-full">
-                  {/* mb-f8 — title→body */}
                   <h3 className="text-h4 mb-f8">{b.title}</h3>
                   <p className="text-body-sm text-text-secondary leading-relaxed flex-1">
                     {b.description}
@@ -179,19 +162,15 @@ export default function BenefitsPage() {
         </FadeIn>
       </section>
 
-      {/* ─── BAND — Additional perks ──────────────────────────── */}
-      {/* py-f55/f89 — BAND tier, bg-secondary + border-y */}
+      {/* Additional perks */}
       <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
-            {/* mb-f21 — label→grid gap */}
             <h2 className="text-overline text-cambridge mb-f21">Additional Member Perks</h2>
-            {/* gap-f21 — card grid gap */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-f21">
               {extraBenefits.map((b, i) => (
                 <FadeIn key={b.title} delay={i * 60}>
                   <div className="p-f21 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)] h-full">
-                    {/* mb-f8 — title→body */}
                     <h3 className="text-body font-bold mb-f8">{b.title}</h3>
                     <p className="text-body-sm text-text-secondary leading-relaxed">
                       {b.description}
@@ -204,16 +183,13 @@ export default function BenefitsPage() {
         </div>
       </section>
 
-      {/* ─── CLOSER — Join CTA ────────────────────────────────── */}
-      {/* py-f55/f89 — CLOSER taper */}
+      {/* Join CTA */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
-          {/* p-f34/f55 card padding, gap-f34 2-col gap */}
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
                 <h2 className="text-h2">Ready to put these to work?</h2>
-                {/* mt-f13 — heading→body */}
                 <p className="text-body-lg text-text-secondary mt-f13">
                   Three tiers: Business Essentials at $345/year, Visibility Plus at
                   $575/year, or Community Investor at $1,145/year. Membership pays
@@ -221,7 +197,6 @@ export default function BenefitsPage() {
                   connection made at a mixer.
                 </p>
               </div>
-              {/* space-y-f13 — button stack gap */}
               <div className="space-y-f13">
                 <Link
                   href="/membership/join"

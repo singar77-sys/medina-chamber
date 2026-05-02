@@ -68,7 +68,7 @@ export function formatShortDate(event: ChamberEvent): string {
 export function shortenEventTitle(title: string): string {
   return title
     .replace(
-      /\s*[-—–:·]\s*(?:january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{4}\s*$/i,
+      /\s*[-, –:·]\s*(?:january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{4}\s*$/i,
       "",
     )
     .trim();
@@ -79,5 +79,5 @@ export function eventMetaDescription(event: ChamberEvent): string {
   const date = `${event.dayOfWeek}, ${event.month} ${event.day}, ${event.year}`;
   const time = `${event.startTime}–${event.endTime}`;
   const loc = event.city ? `in ${event.city}, OH` : "at the Chamber office";
-  return `${event.title} — ${date} from ${time} ${loc}. Hosted by the Greater Medina Chamber of Commerce.`;
+  return `${event.title}, ${date} from ${time} ${loc}. Hosted by the Greater Medina Chamber of Commerce.`;
 }

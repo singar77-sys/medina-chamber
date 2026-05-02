@@ -65,7 +65,7 @@ export default async function ChatLogPage({
       <div className="mb-5">
         <h1 className="text-xl font-semibold text-gray-900">Chat Log</h1>
         <p className="text-sm text-gray-500 mt-0.5">
-          ChamberBot conversations — 90-day retention
+          ChamberBot conversations, 90-day retention
         </p>
       </div>
 
@@ -179,7 +179,7 @@ export default async function ChatLogPage({
                         {conv.topic.replace(/-/g, " ")}
                       </span>
                     ) : (
-                      <span className="text-xs text-gray-300">—</span>
+                      <span className="text-xs text-gray-300">, </span>
                     )}
                   </td>
                   <td className="px-4 py-2.5 text-xs text-gray-500 hidden sm:table-cell">

@@ -19,7 +19,7 @@ import { CommunityInvestors } from "@/components/CommunityInvestors";
 
 import { safeJsonLd } from "@/lib/json-ld";
 export const metadata: Metadata = {
-  title: "Greater Medina Chamber of Commerce — Medina County, Ohio",
+  title: "Greater Medina Chamber of Commerce, Medina County, Ohio",
   description: `The Greater Medina Chamber of Commerce connects and champions businesses across Medina County, Ohio. ${totalCount}+ member businesses, networking events, advocacy, and programs since 1938.`,
   openGraph: {
     title: "Greater Medina Chamber of Commerce",
@@ -98,7 +98,7 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: safeJsonLd(organizationJsonLd) }}
       />
 
-      {/* ─── Hero ─────────────────────────────────────────── */}
+      
       <section className="site-hero relative min-h-[85dvh] flex items-end overflow-hidden">
         {/* Background photos — theme-aware */}
         <Image
@@ -141,13 +141,11 @@ export default function HomePage() {
                 business
               </span>
             </h1>
-            {/* mt-f21 = 21px — Fibonacci; replaces arbitrary mt-6 (24px) */}
             <p className="text-body-lg text-white/80 mt-f21 max-w-2xl">
               Championing Medina&apos;s business community since 1938. Advocacy
               that moves policy. Connections that open doors. Resources that
               drive growth.
             </p>
-            {/* mt-f34 (34px) gap-f21 (21px) — both Fibonacci nodes */}
             <div className="mt-f34 flex flex-wrap gap-f21">
               <Link
                 href="/membership/join"
@@ -179,7 +177,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── Stats Strip — py-f55 (55px) ─────────────────── */}
+      {/* Stats Strip — py-f55 (55px) */}
       <MouseGradient
         className="bg-bg-secondary border-y border-border-secondary overflow-hidden"
         color="rgba(92, 149, 183, 0.22)"
@@ -208,12 +206,11 @@ export default function HomePage() {
         </div>
       </MouseGradient>
 
-      {/* ─── Upcoming Events — py-f89 lg:py-f144 ─────────── */}
+      {/* Upcoming Events — py-f89 lg:py-f144 */}
       {upcomingEvents.length > 0 && (
         <section className="relative overflow-hidden mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
           <VesicaPiscisWatermark className="tp-vesica" />
           <FadeIn>
-            {/* mb-f34 (34px) gap-f21 (21px) — Fibonacci header rhythm */}
             <div className="flex items-end justify-between mb-f34 gap-f21 flex-wrap">
               <div>
                 <p className="text-overline text-cambridge mb-2">Upcoming Events</p>
@@ -277,7 +274,6 @@ export default function HomePage() {
             />
           ))}
 
-          {/* gap-f21 (21px) — Fibonacci card gap */}
           <div className="grid md:grid-cols-3 gap-f21">
             {upcomingEvents.map((event, i) => {
               const Graphic = getEventGraphicRenderer(event);
@@ -389,7 +385,7 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* ─── Rental Space — py-f89 lg:py-f144 ────────────── */}
+      {/* Rental Space — py-f89 lg:py-f144 */}
       <section className="relative bg-bg-secondary border-y border-border-secondary py-f89 lg:py-f144 overflow-hidden">
         {/* Ghosted meeting-room photo backdrop */}
         <div
@@ -421,7 +417,6 @@ export default function HomePage() {
                   Medina. Free parking, Wi-Fi, and AV included. Member pricing
                   available.
                 </p>
-                {/* mt-f34 (34px) gap-f13 (13px) — Fibonacci button rhythm */}
                 <div className="mt-f34 flex flex-wrap gap-f13">
                   <Link
                     href="/programs/rental-space"
@@ -456,16 +451,16 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── Three Pillars (Your Voice / Network / Growth) ── */}
+      {/* Three Pillars (Your Voice / Network / Growth) */}
       <ThreePillars />
 
-      {/* ─── Member Voice ──────────────────────────────────── */}
+      {/* Member Voice */}
       <MemberVoice />
 
-      {/* ─── Community Investors ──────────────────────────── */}
+      {/* Community Investors */}
       <CommunityInvestors />
 
-      {/* ─── Join CTA — py-f89 lg:py-f144 ────────────────── */}
+      {/* Join CTA — py-f89 lg:py-f144 */}
       <section className="relative py-f89 lg:py-f144 overflow-hidden">
         {/* Ghosted Medina industry backdrop across the whole band */}
         <div
@@ -484,9 +479,7 @@ export default function HomePage() {
 
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <FadeIn>
-          {/* p-f34 lg:p-f55 — Fibonacci interior padding (34px / 55px) */}
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-            {/* gap-f34 (34px) — Fibonacci column gap */}
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
                 <p className="text-overline text-cambridge mb-4">Membership</p>
@@ -496,10 +489,9 @@ export default function HomePage() {
                 <p className="text-body-lg text-text-secondary mt-4">
                   Three tiers starting at $345 a year. The savings programs
                   alone typically cover that in the first month. Stephanie
-                  will walk you through everything — no pressure.
+                  will walk you through everything, no pressure.
                 </p>
               </div>
-              {/* space-y-f21 (21px) — Fibonacci vertical rhythm between links */}
               <div className="space-y-f21">
                 <Link
                   href="/membership/join"
@@ -544,7 +536,7 @@ export default function HomePage() {
 
       <BeeFly />
 
-      {/* ─── Partners & Sponsors ──────────────────────────── */}
+      {/* Partners & Sponsors */}
       <PartnersMarquee />
     </div>
   );

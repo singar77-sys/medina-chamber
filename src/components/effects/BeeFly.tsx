@@ -67,7 +67,7 @@ export function BeeFly() {
                 </clipPath>
               </defs>
 
-              {/* ── Wings (teal, behind body) ── */}
+              {/* Wings (teal, behind body) */}
               {/* Rear/upper wing — larger, swept back */}
               <ellipse
                 className="bee-wing-l"
@@ -85,7 +85,7 @@ export function BeeFly() {
                 stroke="#0C1B33" strokeWidth="1"
               />
 
-              {/* ── Body ── */}
+              {/* Body */}
               <ellipse
                 cx="36" cy="42" rx="28" ry="17"
                 fill="#FF4000" stroke="#0C1B33" strokeWidth="1.5"
@@ -96,13 +96,13 @@ export function BeeFly() {
                 <rect x="37" y="25" width="5" height="34" fill="#0C1B33" />
               </g>
 
-              {/* ── Head (small, at front/right end) ── */}
+              {/* Head (small, at front/right end) */}
               <circle
                 cx="60" cy="40" r="9"
                 fill="#FF4000" stroke="#0C1B33" strokeWidth="1.4"
               />
 
-              {/* ── Antennae (short, from top of head) ── */}
+              {/* Antennae (short, from top of head) */}
               <path
                 d="M 57 32 C 55 27 53 24 51 20"
                 stroke="#0C1B33" strokeWidth="1.1" fill="none" strokeLinecap="round"
@@ -114,7 +114,7 @@ export function BeeFly() {
               <circle cx="51" cy="20" r="2" fill="#0C1B33" />
               <circle cx="67" cy="20" r="2" fill="#0C1B33" />
 
-              {/* ── Stinger (rear/left tip) ── */}
+              {/* Stinger (rear/left tip) */}
               <path d="M 8 40 L 3 42 L 8 44" fill="#0C1B33" />
             </svg>
           </div>

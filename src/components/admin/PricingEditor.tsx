@@ -80,7 +80,7 @@ export function PricingEditor({ adminToken, initialPricing, isOverridden, update
             </span>
           )}
           {!isOverridden && (
-            <span className="text-xs text-gray-400">Using compiled defaults — no overrides saved</span>
+            <span className="text-xs text-gray-400">Using compiled defaults, no overrides saved</span>
           )}
         </div>
         <div className="flex items-center gap-2">
@@ -111,7 +111,7 @@ export function PricingEditor({ adminToken, initialPricing, isOverridden, update
       )}
 
       <div className="rounded-lg border border-amber-100 bg-amber-50 px-4 py-2.5 text-xs text-amber-800">
-        Saving updates both the pricing page and ChamberBot simultaneously — the bot picks up new prices within seconds.
+        Saving updates both the pricing page and ChamberBot simultaneously, the bot picks up new prices within seconds.
       </div>
 
       {/* Tier cards */}
@@ -241,7 +241,7 @@ function TierCard({
             /* Essentials — edit the full base benefits list */
             <div>
               <label className="text-[10px] uppercase tracking-widest text-gray-400 block mb-1">
-                Base Benefits (one per line — shared across all tiers)
+                Base Benefits (one per line, shared across all tiers)
               </label>
               <textarea
                 value={tier.benefits.join("\n")}

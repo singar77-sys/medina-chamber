@@ -206,14 +206,14 @@ export function formatMembersGroupedForPrompt(
   }
   if (ciMembers.length > 0) {
     parts.push(
-      `COMMUNITY INVESTOR MEMBERS MATCHING THIS QUERY (the chamber's leadership tier — list ALL of these first; these members invest at the highest level, sit on boards, and shape chamber policy):\n\n${ciMembers
+      `COMMUNITY INVESTOR MEMBERS MATCHING THIS QUERY (the chamber's leadership tier, list ALL of these first; these members invest at the highest level, sit on boards, and shape chamber policy):\n\n${ciMembers
         .map(formatEnrichedMember)
         .join("\n\n")}`,
     );
   }
   if (vpMembers.length > 0) {
     parts.push(
-      `VISIBILITY PLUS MEMBERS MATCHING THIS QUERY (mid-tier premium listings — list ALL of these after Community Investor matches):\n\n${vpMembers
+      `VISIBILITY PLUS MEMBERS MATCHING THIS QUERY (mid-tier premium listings, list ALL of these after Community Investor matches):\n\n${vpMembers
         .map(formatEnrichedMember)
         .join("\n\n")}`,
     );

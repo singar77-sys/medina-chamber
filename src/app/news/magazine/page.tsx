@@ -4,11 +4,11 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Medina Means Business Magazine",
   description:
-    "Medina Means Business — the official quarterly magazine of the Greater Medina Chamber of Commerce. Featuring local business profiles, community stories, Chamber updates, and advertising opportunities for Medina County.",
+    "Medina Means Business, the official quarterly magazine of the Greater Medina Chamber of Commerce. Featuring local business profiles, community stories, Chamber updates, and advertising opportunities for Medina County.",
   openGraph: {
-    title: "Medina Means Business Magazine — Greater Medina Chamber of Commerce",
+    title: "Medina Means Business Magazine | Greater Medina Chamber of Commerce",
     description:
-      "The official quarterly magazine of the Greater Medina Chamber of Commerce — business profiles, community stories, and chamber updates.",
+      "The official quarterly magazine of the Greater Medina Chamber of Commerce, business profiles, community stories, and chamber updates.",
   },
   alternates: { canonical: "/news/magazine" },
 };
@@ -51,7 +51,7 @@ export default function MagazinePage() {
           <span className="text-accent">Business</span>
         </h1>
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-          The Chamber&apos;s official quarterly magazine — local business
+          The Chamber&apos;s official quarterly magazine, local business
           profiles, community stories, Chamber updates, and the people driving
           Medina County forward.
         </p>
@@ -88,7 +88,7 @@ export default function MagazinePage() {
             width="100%"
             height="600"
             allowFullScreen
-            title={`Medina Means Business — ${latestIssue.title} ${latestIssue.quarter}`}
+            title={`Medina Means Business, ${latestIssue.title} ${latestIssue.quarter}`}
             className="block"
           />
         </div>
@@ -160,7 +160,7 @@ export default function MagazinePage() {
             {
               title: "Business Profiles",
               description:
-                "In-depth features on member businesses — their story, their people, and what makes them run.",
+                "In-depth features on member businesses, their story, their people, and what makes them run.",
             },
             {
               title: "Chamber Updates",
@@ -191,7 +191,7 @@ export default function MagazinePage() {
           <p className="text-body-lg text-text-secondary mt-4">
             Chamber members are eligible for business profiles and member-rate
             advertising. The magazine reaches thousands of readers across Medina
-            County — business owners, residents, and community leaders.
+            County, business owners, residents, and community leaders.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <Link

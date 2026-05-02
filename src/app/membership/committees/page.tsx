@@ -2,20 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 
-/**
- * Committees & Councils — φ spatial system applied throughout.
- *
- * HERO    pt-f144 pb-f89
- * FEATURE py-f89 lg:py-f144 — 9 committee cards (open white, space-y-f21)
- * CLOSER  py-f55 lg:py-f89  — get-involved CTA card
- */
-
 export const metadata: Metadata = {
   title: "Committees & Councils",
   description:
-    "Get involved in the Greater Medina Chamber of Commerce through our committees and councils — from business advocacy and marketing to the Safety Council and Ambassador program.",
+    "Get involved in the Greater Medina Chamber of Commerce through our committees and councils, from business advocacy and marketing to the Safety Council and Ambassador program.",
   openGraph: {
-    title: "Committees & Councils — Greater Medina Chamber of Commerce",
+    title: "Committees & Councils | Greater Medina Chamber of Commerce",
     description:
       "Nine ways to get involved and lead in Medina County's business community.",
   },
@@ -27,7 +19,7 @@ const committees = [
     name: "Business Advocacy Committee",
     tag: "By Invitation",
     description:
-      "Serves as the trusted voice of the local business community — building relationships with elected officials and local organizations to foster a pro-business environment. Focuses on economic development, key business issues, and promoting pro-business policy. Seats are by invitation; interested members may express interest to the chamber.",
+      "Serves as the trusted voice of the local business community, building relationships with elected officials and local organizations to foster a pro-business environment. Focuses on economic development, key business issues, and promoting pro-business policy. Seats are by invitation; interested members may express interest to the chamber.",
   },
   {
     name: "Member Services Committee",
@@ -45,13 +37,13 @@ const committees = [
     name: "Golf Committee",
     tag: null,
     description:
-      "Plans and executes the chamber's annual golf outing — the largest fundraiser of the year. Responsible for fostering community connections and creating a great experience for every participant.",
+      "Plans and executes the chamber's annual golf outing, the largest fundraiser of the year. Responsible for fostering community connections and creating a great experience for every participant.",
   },
   {
     name: "Athena Leadership Awards Committee",
     tag: null,
     description:
-      "Organizes the annual Athena Awards alongside the Medina County Women's Journal — including speaker recruitment, sponsorships, vendor coordination, and full event logistics.",
+      "Organizes the annual Athena Awards alongside the Medina County Women's Journal, including speaker recruitment, sponsorships, vendor coordination, and full event logistics.",
   },
   {
     name: "Safety Council",
@@ -69,48 +61,42 @@ const committees = [
     name: "Ambassador Committee",
     tag: null,
     description:
-      "The welcoming face of the chamber. Ambassadors attend ribbon cuttings, welcome new members, and provide support at meetings and events — fostering genuine connections across the membership.",
+      "The welcoming face of the chamber. Ambassadors attend ribbon cuttings, welcome new members, and provide support at meetings and events, fostering genuine connections across the membership.",
   },
   {
     name: "Hall of Fame Committee",
     tag: "Non-Annual",
     description:
-      "Oversees inductee selection and event planning for the Hall of Fame dinner — honoring individuals and organizations whose contributions have shaped Medina County. Convenes approximately every five years.",
+      "Oversees inductee selection and event planning for the Hall of Fame dinner, honoring individuals and organizations whose contributions have shaped Medina County. Convenes approximately every five years.",
   },
 ];
 
 export default function CommitteesPage() {
   return (
     <>
-      {/* ─── HERO ─────────────────────────────────────────────── */}
-      {/* pt-f144 pb-f89 (144/89 = φ) — HERO tier */}
+      
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
         <div className="max-w-3xl">
-          {/* mb-f8 (8px) — overline→heading */}
           <p className="text-overline text-cambridge mb-f8">Membership</p>
           <h1 className="text-display">
             Committees
             <br />
             <span className="text-accent">&amp; Councils</span>
           </h1>
-          {/* mt-f13 (13px) — heading→body */}
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             Chamber membership is more than a listing. Committees are where
-            members actually shape the chamber — its programs, advocacy, events,
+            members actually shape the chamber, its programs, advocacy, events,
             and culture. There&apos;s a place for every kind of contributor.
           </p>
         </div>
       </section>
 
-      {/* ─── FEATURE — Committee cards ────────────────────────── */}
-      {/* py-f89/f144 — FEATURE tier, open white */}
+      {/* Committee cards */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
-        {/* space-y-f21 — between committee cards */}
         <div className="space-y-f21">
           {committees.map((c, i) => (
             <FadeIn key={c.name} delay={i * 40}>
               <div className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-                {/* mb-f8 — header row→desc gap; gap-f8 — name/badge gap */}
                 <div className="flex flex-wrap items-start justify-between gap-f8 mb-f8">
                   <h2 className="text-h4">{c.name}</h2>
                   {c.tag && (
@@ -128,23 +114,19 @@ export default function CommitteesPage() {
         </div>
       </section>
 
-      {/* ─── CLOSER — Get involved CTA ────────────────────────── */}
-      {/* py-f55/f89 — CLOSER taper */}
+      {/* Get involved CTA */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
-          {/* p-f34/f55 card padding, gap-f34 2-col gap */}
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
                 <h2 className="text-h2">Ready to get involved?</h2>
-                {/* mt-f13 — heading→body */}
                 <p className="text-body-lg text-text-secondary mt-f13">
                   Most committees are open to any chamber member. Reach out and
-                  let the team know where you&apos;d like to contribute — there&apos;s
+                  let the team know where you&apos;d like to contribute, there&apos;s
                   always room for people who want to show up.
                 </p>
               </div>
-              {/* space-y-f13 — button stack gap */}
               <div className="space-y-f13">
                 <Link
                   href="/about/contact"

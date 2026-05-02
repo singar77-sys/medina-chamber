@@ -72,7 +72,7 @@ export function HandoffForm({ sessionId, onBack }: HandoffFormProps) {
         </div>
         <p className="text-body font-bold text-text-primary">We&apos;ll be in touch.</p>
         <p className="text-body-sm text-text-secondary max-w-xs">
-          Your message — along with this conversation — went to the right chamber team member.
+          Your message, along with this conversation, went to the right chamber team member.
           Expect a reply within one business day.
         </p>
         <button
@@ -177,7 +177,7 @@ export function HandoffForm({ sessionId, onBack }: HandoffFormProps) {
           id="handoff-note"
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          placeholder="Helpful context — best time to reach you, urgency, specifics the bot missed..."
+          placeholder="Helpful context, best time to reach you, urgency, specifics the bot missed..."
           rows={3}
           maxLength={2000}
           disabled={status === "sending"}

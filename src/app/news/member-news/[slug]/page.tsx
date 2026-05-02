@@ -81,7 +81,7 @@ export default async function MemberNewsArticlePage(
         url: article.image.startsWith("http")
           ? article.image
           : `https://medinachamber.com${article.image}`,
-        caption: `${article.title} — ${article.memberName ? `${article.memberName} — ` : ""}Greater Medina Chamber of Commerce member news`,
+        caption: `${article.title}, ${article.memberName ? `${article.memberName}, ` : ""}Greater Medina Chamber of Commerce member news`,
       },
     }),
   };
@@ -118,7 +118,7 @@ export default async function MemberNewsArticlePage(
         </nav>
 
         <div className="grid lg:grid-cols-[1fr_320px] gap-12 lg:gap-16">
-          {/* ── Main column ── */}
+          {/* Main column */}
           <div>
             {/* Meta */}
             <p className="text-overline text-cambridge mb-4">{dateDisplay}</p>
@@ -136,7 +136,7 @@ export default async function MemberNewsArticlePage(
               <div className="mt-8 rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary">
                 <Image
                   src={article.image}
-                  alt={`${article.title} — Greater Medina Chamber of Commerce member news announcement`}
+                  alt={`${article.title}, Greater Medina Chamber of Commerce member news announcement`}
                   width={720}
                   height={400}
                   className="object-contain w-full max-h-80 bg-bg-secondary"
@@ -157,7 +157,7 @@ export default async function MemberNewsArticlePage(
 
           </div>
 
-          {/* ── Sidebar ── */}
+          {/* Sidebar */}
           <aside className="space-y-6">
             {/* Member card */}
             {article.memberName && (

@@ -109,7 +109,7 @@ export function PartnersMarquee() {
                   >
                     <Image
                       src={p.logo}
-                      alt={`${p.name} logo — Medina Chamber partner`}
+                      alt={`${p.name} logo, Medina Chamber partner`}
                       width={140}
                       height={140}
                       className="pm-tile__img"
@@ -128,7 +128,7 @@ export function PartnersMarquee() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="pm-tile"
-                  title={`${p.name} — ${p.tagline}`}
+                  title={`${p.name}, ${p.tagline}`}
                 >
                   {inner}
                 </a>
@@ -137,7 +137,7 @@ export function PartnersMarquee() {
                   key={p.name}
                   href={p.href}
                   className="pm-tile"
-                  title={`${p.name} — ${p.tagline}`}
+                  title={`${p.name}, ${p.tagline}`}
                 >
                   {inner}
                 </Link>

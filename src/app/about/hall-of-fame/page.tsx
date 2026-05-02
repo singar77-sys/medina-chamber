@@ -3,21 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 
-/**
- * Hall of Fame — φ spatial system applied throughout.
- *
- * HERO    pt-f144 pb-f89  — page lead
- * FEATURE py-f89 lg:py-f144 — About + Categories (open white)
- * BAND    py-f55 lg:py-f89  — Inductees grid (bg-secondary + border-y)
- * CLOSER  py-f55 lg:py-f89  — CTA cards taper
- */
-
 export const metadata: Metadata = {
   title: "Hall of Fame",
   description:
     "The Greater Medina Chamber of Commerce Hall of Fame, established in 1979, honors individuals and organizations who have made extraordinary contributions to Medina County's business community and quality of life.",
   openGraph: {
-    title: "Hall of Fame — Greater Medina Chamber of Commerce",
+    title: "Hall of Fame | Greater Medina Chamber of Commerce",
     description:
       "Established in 1979, honoring the people and organizations that shaped Medina County into an exceptional place to live and work.",
   },
@@ -87,18 +78,15 @@ const categories = [
 export default function HallOfFamePage() {
   return (
     <>
-      {/* ─── HERO ─────────────────────────────────────────────── */}
-      {/* pt-f144 pb-f89 (144/89 = φ) — HERO tier */}
+      
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
         <div className="max-w-3xl">
-          {/* mb-f8 (8px) — overline→heading */}
           <p className="text-overline text-cambridge mb-f8">About</p>
           <h1 className="text-display">
             Hall of
             <br />
             <span className="text-accent">Fame</span>
           </h1>
-          {/* mt-f13 (13px) — heading→body */}
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             Established in 1979, the Hall of Fame honors the people and
             organizations who have shaped Medina County into an exceptional
@@ -107,15 +95,12 @@ export default function HallOfFamePage() {
         </div>
       </section>
 
-      {/* ─── FEATURE — About + Categories ────────────────────── */}
-      {/* py-f89/f144 — FEATURE tier, open white */}
+      {/* About + Categories */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
-          {/* gap-f34/f55 — 2-col layout gap */}
           <div className="grid lg:grid-cols-2 gap-f34 lg:gap-f55 items-start">
             <div>
               <h2 className="text-h2">About the Program</h2>
-              {/* mt-f13 — heading→body */}
               <p className="text-body text-text-secondary mt-f13 leading-relaxed">
                 The Greater Medina Chamber of Commerce Hall of Fame was
                 established in 1979 as a way to recognize those who have given
@@ -123,7 +108,6 @@ export default function HallOfFamePage() {
                 years, bringing together the business community to celebrate its
                 most distinguished contributors.
               </p>
-              {/* mt-f21 — paragraph gap */}
               <p className="text-body text-text-secondary mt-f21 leading-relaxed">
                 In 1981, eligibility was broadened to include anyone who has
                 strengthened the socioeconomic foundation of the Medina area. By
@@ -143,7 +127,6 @@ export default function HallOfFamePage() {
                   key={c.title}
                   className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
                 >
-                  {/* mb-f8 — title→body */}
                   <h3 className="text-h4 mb-f8">{c.title}</h3>
                   <p className="text-body-sm text-text-secondary leading-relaxed">
                     {c.description}
@@ -155,16 +138,13 @@ export default function HallOfFamePage() {
         </FadeIn>
       </section>
 
-      {/* ─── BAND — Inductees grid ────────────────────────────── */}
-      {/* py-f55/f89 — BAND tier, bg-secondary + border-y */}
+      {/* Inductees grid */}
       <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
-            {/* mb-f21 (21px) — label→grid gap */}
             <h2 className="text-overline text-cambridge mb-f21">
-              Inductees — {inductees.length} Honorees
+              Inductees, {inductees.length} Honorees
             </h2>
-            {/* gap-f13/f21 — portrait grid gap */}
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-f13 lg:gap-f21">
               {inductees.map((inductee) => (
                 <figure key={inductee.name} className="flex flex-col items-center gap-f8 m-0">
@@ -181,7 +161,7 @@ export default function HallOfFamePage() {
                     {inductee.name}
                   </p>
                   <figcaption className="sr-only">
-                    {inductee.name} — Greater Medina Chamber of Commerce Hall of Fame inductee, Medina County, Ohio business leader
+                    {inductee.name}, Greater Medina Chamber of Commerce Hall of Fame inductee, Medina County, Ohio business leader
                   </figcaption>
                 </figure>
               ))}
@@ -190,23 +170,18 @@ export default function HallOfFamePage() {
         </div>
       </section>
 
-      {/* ─── CLOSER — CTA cards ───────────────────────────────── */}
-      {/* py-f55/f89 — CLOSER taper */}
+      {/* CTA cards */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
-          {/* gap-f21 (21px) — card row gap */}
           <div className="grid md:grid-cols-2 gap-f21">
-            {/* p-f34 (34px) — card interior padding */}
             <div className="p-f34 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
               <h2 className="text-h3">Know a nominee?</h2>
-              {/* mt-f13 — heading→body */}
               <p className="text-body text-text-secondary mt-f13 leading-relaxed">
                 The Hall of Fame convenes approximately every five years. If you
                 know someone whose contributions to Medina County deserve
                 recognition, reach out to the chamber to learn about the
                 nomination process.
               </p>
-              {/* mt-f21 px-f21 py-f13 — body→CTA and button padding */}
               <Link
                 href="/about/contact"
                 className="
@@ -243,7 +218,6 @@ export default function HallOfFamePage() {
             </div>
           </div>
 
-          {/* mt-f34 — card→back-link gap */}
           <div className="mt-f34">
             <Link
               href="/about"

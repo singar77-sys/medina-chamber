@@ -60,7 +60,7 @@ export function GraphicPanel({
         {/* Live preview */}
         <div>
           <p className="text-xs text-gray-400 mb-2">
-            Preview — Social (1200×630)
+            Preview, Social (1200×630)
             <span className="ml-2" style={{ color: "#83BCA9" }}>· {previewLabel}</span>
           </p>
           <div className="border border-gray-200 rounded-xl overflow-hidden bg-white">
@@ -119,12 +119,12 @@ export function GraphicPanel({
                     value={
                       currentInfo.dayOfWeek && currentInfo.month && currentInfo.day
                         ? `${currentInfo.dayOfWeek}, ${currentInfo.month} ${currentInfo.day}${currentInfo.year ? `, ${currentInfo.year}` : ""}`
-                        : "—"
+                        : ", "
                     }
                   />
-                  <InfoRow label="Time" value={currentInfo.time ?? "—"} />
-                  <InfoRow label="Venue" value={currentInfo.venue ?? "—"} />
-                  <InfoRow label="Note" value={currentInfo.note ?? "—"} />
+                  <InfoRow label="Time" value={currentInfo.time ?? ", "} />
+                  <InfoRow label="Venue" value={currentInfo.venue ?? ", "} />
+                  <InfoRow label="Note" value={currentInfo.note ?? ", "} />
                 </div>
               </div>
             </>

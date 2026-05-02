@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 const EMPLOYEE_OPTIONS = [
-  { value: "1", label: "1 — Sole proprietor / just me" },
+  { value: "1", label: "1, Sole proprietor / just me" },
   { value: "2-5", label: "2–5 employees" },
   { value: "6-10", label: "6–10 employees" },
   { value: "11-25", label: "11–25 employees" },

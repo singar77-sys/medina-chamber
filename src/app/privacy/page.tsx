@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Privacy",
   description:
-    "How the Greater Medina Chamber of Commerce website handles information — what we collect, how long we keep it, and how to request deletion.",
+    "How the Greater Medina Chamber of Commerce website handles information, what we collect, how long we keep it, and how to request deletion.",
   alternates: { canonical: "/privacy" },
 };
 
@@ -50,8 +50,8 @@ export default function PrivacyPage() {
         </ul>
         <p className="text-body text-text-secondary mt-3">
           Conversations are kept for <strong>90 days</strong>, then automatically
-          deleted. If you share your name or email in the chat — for example
-          when asking to talk to a team member — that information sits in the
+          deleted. If you share your name or email in the chat, for example
+          when asking to talk to a team member, that information sits in the
           conversation log with the same 90-day retention.
         </p>
 
@@ -74,11 +74,11 @@ export default function PrivacyPage() {
         </p>
         <p className="text-body text-text-secondary mt-3">
           We also use PostHog to understand how visitors interact with specific
-          features — for example, whether you open the ChamberBot, which
+          features, for example, whether you open the ChamberBot, which
           programs you view, and how you navigate the site. PostHog stores this
           data in your browser&apos;s local storage (not cookies) and does not
           build cross-site profiles. Session recording is disabled. You can opt
-          out by enabling Do Not Track in your browser — we honor the DNT
+          out by enabling Do Not Track in your browser, we honor the DNT
           signal.
         </p>
 

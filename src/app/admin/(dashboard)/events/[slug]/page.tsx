@@ -57,7 +57,7 @@ export default async function AdminEventPage({ params }: Props) {
         </p>
       </div>
 
-      {/* ── Event details editor ── */}
+      {/* Event details editor */}
       <EventEditor
         slug={slug}
         event={event}
@@ -65,7 +65,7 @@ export default async function AdminEventPage({ params }: Props) {
         adminToken={adminToken}
       />
 
-      {/* ── Social graphic editor (client component — preview updates live) ── */}
+      {/* Social graphic editor (client component — preview updates live) */}
       {Graphic || customTemplate || graphicImageUrl ? (
         <GraphicPanel
           event={event}
@@ -86,7 +86,7 @@ export default async function AdminEventPage({ params }: Props) {
         </div>
       )}
 
-      {/* ── Event photo uploader ── */}
+      {/* Event photo uploader */}
       <div className="rounded-xl border border-gray-100 bg-white px-6 py-5">
         <EventPhotoUploader
           eventSlug={slug}

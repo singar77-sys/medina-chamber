@@ -105,7 +105,7 @@ export default async function MemberPage(
 
       <div className="mx-auto max-w-5xl px-6 lg:px-8 py-12 lg:py-20">
 
-        {/* ── Breadcrumb ── */}
+        {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-caption text-text-tertiary mb-10">
           <Link href="/membership/directory" className="hover:text-text-primary transition-colors">
             Member Directory
@@ -114,7 +114,7 @@ export default async function MemberPage(
           <span className="text-text-secondary truncate">{member.name}</span>
         </nav>
 
-        {/* ── Header card ── */}
+        {/* card */}
         <div className="
           flex flex-col sm:flex-row gap-8
           p-8 lg:p-10
@@ -132,7 +132,7 @@ export default async function MemberPage(
             {member.logoUrl ? (
               <Image
                 src={member.logoUrl}
-                alt={`${member.name} logo — Greater Medina Chamber of Commerce member business in Medina, Ohio`}
+                alt={`${member.name} logo, Greater Medina Chamber of Commerce member business in Medina, Ohio`}
                 fill
                 className="object-contain p-3"
                 unoptimized
@@ -259,7 +259,7 @@ export default async function MemberPage(
           </div>
         </div>
 
-        {/* ── About ── */}
+        {/* About */}
         {member.description && (
           <section className="mt-10">
             <h2 className="text-h3 mb-4">About {member.name}</h2>
@@ -269,7 +269,7 @@ export default async function MemberPage(
           </section>
         )}
 
-        {/* ── Social Links ── */}
+        {/* Social Links */}
         {hasSocial && (
           <section className="mt-10">
             <h2 className="text-overline text-cambridge mb-4">Connect Online</h2>
@@ -293,7 +293,7 @@ export default async function MemberPage(
           </section>
         )}
 
-        {/* ── Chamber badge ── */}
+        {/* Chamber badge */}
         <div className="mt-14 pt-8 border-t border-border-secondary flex items-center justify-between flex-wrap gap-4">
           <div>
             <p className="text-caption text-text-tertiary">

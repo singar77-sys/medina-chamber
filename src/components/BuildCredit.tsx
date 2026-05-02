@@ -14,7 +14,7 @@ export function BuildCredit() {
       target="_blank"
       rel="noopener noreferrer"
       className="hs-credit inline-flex items-center gap-2 group"
-      aria-label="Designed by Hunter Systems — opens huntersystems.dev in a new tab"
+      aria-label="Designed by Hunter Systems, opens huntersystems.dev in a new tab"
     >
       <span className="text-caption text-text-tertiary">Built by</span>
       <span className="hs-mark inline-flex items-center gap-1.5">

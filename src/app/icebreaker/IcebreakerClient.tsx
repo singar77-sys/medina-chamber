@@ -98,7 +98,7 @@ export function IcebreakerClient({ questions }: { questions: string[] }) {
         select-none
       "
     >
-      {/* ─── Frozen Cube Phase ──────────────────────── */}
+      {/* Frozen Cube Phase */}
       {phase === "frozen" && (
         <button
           onClick={startShatter}
@@ -134,7 +134,7 @@ export function IcebreakerClient({ questions }: { questions: string[] }) {
         </button>
       )}
 
-      {/* ─── Shatter Phase ──────────────────────────── */}
+      {/* Shatter Phase */}
       {phase === "shatter" && (
         <div className="relative w-48 h-48 md:w-64 md:h-64">
           {Array.from({ length: 20 }).map((_, i) => (
@@ -143,7 +143,7 @@ export function IcebreakerClient({ questions }: { questions: string[] }) {
         </div>
       )}
 
-      {/* ─── Character Phase ────────────────────────── */}
+      {/* Character Phase */}
       {phase === "character" && (
         <div className="flex flex-col items-center animate-[character-enter_0.6s_cubic-bezier(0.34,1.56,0.64,1)_forwards]">
           <div className="text-[5rem] md:text-[8rem] leading-none">🧊</div>
@@ -153,7 +153,7 @@ export function IcebreakerClient({ questions }: { questions: string[] }) {
         </div>
       )}
 
-      {/* ─── Game Phase ─────────────────────────────── */}
+      {/* Game Phase */}
       {phase === "game" && (
         <div className="flex flex-col items-center w-full max-w-2xl animate-[card-deal_0.5s_ease-out_forwards]">
           {/* Question Card */}

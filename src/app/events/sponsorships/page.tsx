@@ -2,21 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 
-/**
- * Sponsorships & Ribbon Cuttings — φ spatial system applied throughout.
- *
- * HERO    pt-f144 pb-f89
- * FEATURE py-f89 lg:py-f144 — 4 sponsorship cards (open white, space-y-f21)
- * BAND    py-f55 lg:py-f89  — Ribbon Cuttings 3-col grid (bg-secondary)
- * CLOSER  py-f55 lg:py-f89  — "Get in the room" CTA card
- */
-
 export const metadata: Metadata = {
   title: "Sponsorships & Ribbon Cuttings",
   description:
-    "Sponsor Greater Medina Chamber events to reach Medina County's business community — Golf Outing, Athena Awards, Member Meetings, and Safety Council. Ribbon cuttings celebrate member milestones.",
+    "Sponsor Greater Medina Chamber events to reach Medina County's business community, Golf Outing, Athena Awards, Member Meetings, and Safety Council. Ribbon cuttings celebrate member milestones.",
   openGraph: {
-    title: "Sponsorships & Ribbon Cuttings — Greater Medina Chamber of Commerce",
+    title: "Sponsorships & Ribbon Cuttings | Greater Medina Chamber of Commerce",
     description:
       "Put your brand in front of Medina County's business community. Sponsorship packages for every budget.",
   },
@@ -71,7 +62,7 @@ const sponsorships = [
     tag: "Monthly",
     href: "/programs/safety-council",
     description:
-      "Monthly workplace safety meetings at Williams on the Lake. Sponsors get a display table, podium time, and logo placement on the Safety Council website and promotional materials — reaching Medina County's employer community every month.",
+      "Monthly workplace safety meetings at Williams on the Lake. Sponsors get a display table, podium time, and logo placement on the Safety Council website and promotional materials, reaching Medina County's employer community every month.",
     contact: "safety@medinaohchamber.com",
     options: [
       "Display table at the meeting",
@@ -115,24 +106,20 @@ const ribbonCuttingDetails = [
 export default function SponsorshipsPage() {
   return (
     <>
-      {/* ─── HERO ─────────────────────────────────────────────── */}
-      {/* pt-f144 pb-f89 (144/89 = φ) — HERO tier */}
+      
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
         <div className="max-w-3xl">
-          {/* mb-f8 (8px) — overline→heading */}
           <p className="text-overline text-cambridge mb-f8">Events</p>
           <h1 className="text-display">
             Sponsorships &amp;
             <br />
             <span className="text-accent">Ribbon Cuttings</span>
           </h1>
-          {/* mt-f13 (13px) — heading→body */}
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
-            Put your brand in front of Medina County&apos;s business community —
+            Put your brand in front of Medina County&apos;s business community, 
             at the events they actually attend. Or celebrate your business
             milestone with a chamber ribbon cutting.
           </p>
-          {/* mt-f21 — body→CTA */}
           <div className="mt-f21">
             <a
               href="mailto:stephanie@medinaohchamber.com"
@@ -150,24 +137,19 @@ export default function SponsorshipsPage() {
         </div>
       </section>
 
-      {/* ─── FEATURE — Sponsorship cards ──────────────────────── */}
-      {/* py-f89/f144 — FEATURE tier, open white */}
+      {/* Sponsorship cards */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
-          {/* mb-f21 — label→cards gap */}
           <h2 className="text-overline text-cambridge mb-f21">Sponsorship Opportunities</h2>
-          {/* space-y-f21 — between sponsorship cards */}
           <div className="space-y-f21">
             {sponsorships.map((s, i) => (
               <FadeIn key={s.event} delay={i * 60}>
                 <div className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-                  {/* mb-f13 — card header→content gap; gap-f8 — header elements */}
                   <div className="flex flex-wrap items-start justify-between gap-f8 mb-f13">
                     <div>
                       <span className="text-caption text-cambridge font-bold uppercase tracking-wider">
                         {s.tag}
                       </span>
-                      {/* mt-f3 — tag→name micro-gap */}
                       <h2 className="text-h3 mt-f3">{s.event}</h2>
                     </div>
                     <Link
@@ -178,17 +160,14 @@ export default function SponsorshipsPage() {
                     </Link>
                   </div>
 
-                  {/* gap-f21 — 2-col content gap */}
                   <div className="grid md:grid-cols-2 gap-f21">
                     <p className="text-body-sm text-text-secondary leading-relaxed">
                       {s.description}
                     </p>
                     <div>
-                      {/* mb-f8 — label→list gap */}
                       <p className="text-caption text-text-tertiary uppercase tracking-wider mb-f8">
                         Sponsorship Options
                       </p>
-                      {/* space-y-f3 — between option rows */}
                       <ul className="space-y-f3">
                         {s.options.map((o) => (
                           <li key={o} className="flex items-center gap-f8 text-body-sm text-text-secondary">
@@ -199,7 +178,6 @@ export default function SponsorshipsPage() {
                           </li>
                         ))}
                       </ul>
-                      {/* mt-f13 — list→contact link gap */}
                       <a
                         href={`mailto:${s.contact}`}
                         className="inline-block mt-f13 text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
@@ -215,29 +193,23 @@ export default function SponsorshipsPage() {
         </FadeIn>
       </section>
 
-      {/* ─── BAND — Ribbon Cuttings ───────────────────────────── */}
-      {/* py-f55/f89 — BAND tier, bg-secondary + border-y */}
+      {/* Ribbon Cuttings */}
       <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
-            {/* mb-f8 — overline→heading */}
             <p className="text-overline text-cambridge mb-f8">Ribbon Cuttings</p>
             <h2 className="text-h2">Celebrate Your Milestone</h2>
-            {/* mt-f13 — heading→body; mb-f21 — body→grid */}
             <p className="text-body text-text-secondary max-w-2xl leading-relaxed mt-f13 mb-f21">
               The chamber shows up for your big moments. Grand openings, new
               locations, renovations, and expansions all qualify for a ribbon
-              cutting — with chamber staff, ambassadors, and social media coverage
+              cutting, with chamber staff, ambassadors, and social media coverage
               included.
             </p>
-            {/* gap-f21 — 3-col card grid gap */}
             <div className="grid md:grid-cols-3 gap-f21">
               {ribbonCuttingDetails.map((section, i) => (
                 <FadeIn key={section.title} delay={i * 80}>
                   <div className="p-f21 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]">
-                    {/* mb-f8 — title→list */}
                     <h4 className="text-h4 mb-f8">{section.title}</h4>
-                    {/* space-y-f8 — between list items */}
                     <ul className="space-y-f8">
                       {section.items.map((item) => (
                         <li key={item} className="flex items-start gap-f8 text-body-sm text-text-secondary">
@@ -256,23 +228,19 @@ export default function SponsorshipsPage() {
         </div>
       </section>
 
-      {/* ─── CLOSER — CTA ─────────────────────────────────────── */}
-      {/* py-f55/f89 — CLOSER taper */}
+      {/* Cta */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
-          {/* p-f34/f55 card padding, gap-f34 2-col gap */}
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
                 <h2 className="text-h2">Ready to get in the room?</h2>
-                {/* mt-f13 — heading→body */}
                 <p className="text-body-lg text-text-secondary mt-f13">
                   Contact Stephanie Mueller to learn about available sponsorship
                   packages, pricing, and how to schedule your ribbon cutting.
                   She knows every event inside and out.
                 </p>
               </div>
-              {/* space-y-f13 — button stack gap */}
               <div className="space-y-f13">
                 <a
                   href="mailto:stephanie@medinaohchamber.com"

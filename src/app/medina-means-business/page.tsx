@@ -10,9 +10,9 @@ import { safeJsonLd } from "@/lib/json-ld";
 export const metadata: Metadata = {
   title: "Medina Means Business",
   description:
-    `Medina Means Business is the official tagline of the Greater Medina Chamber of Commerce — and a statement of fact. ${totalCount}+ member businesses, ${new Date().getFullYear() - 1938}+ years of chamber work, and a manufacturing economy that outperforms. Here's what it actually means.`,
+    `Medina Means Business is the official tagline of the Greater Medina Chamber of Commerce, and a statement of fact. ${totalCount}+ member businesses, ${new Date().getFullYear() - 1938}+ years of chamber work, and a manufacturing economy that outperforms. Here's what it actually means.`,
   openGraph: {
-    title: "Medina Means Business — Greater Medina Chamber of Commerce",
+    title: "Medina Means Business | Greater Medina Chamber of Commerce",
     description: `The tagline, the magazine, and the reality. ${totalCount}+ businesses, ${new Date().getFullYear() - 1938}+ years of Chamber work, and what Medina County's business community looks like today.`,
   },
   alternates: { canonical: "/medina-means-business" },
@@ -70,7 +70,7 @@ export default function MedinaMeansBusinessPage() {
         dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
 
-      {/* ─── Hero ─────────────────────────────────────────── */}
+      
       <section className="relative min-h-[80dvh] flex items-end overflow-hidden">
         {/* Background photos — theme-aware */}
         <Image
@@ -108,14 +108,14 @@ export default function MedinaMeansBusinessPage() {
             </h1>
             <p className="text-body-lg text-text-secondary [[data-theme=dark]_&]:text-white/80 mt-8 max-w-2xl">
               Three words the Greater Medina Chamber of Commerce has been
-              earning since 1938. A tagline, yes — but also a statement of
+              earning since 1938. A tagline, yes, but also a statement of
               fact about what Medina County actually is.
             </p>
           </div>
         </div>
       </section>
 
-      {/* ─── It's not a slogan. It's a statement of fact. ── */}
+      {/* It's not a slogan. It's a statement of fact. */}
       <section className="bg-bg-secondary border-y border-border-secondary">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
           <FadeIn>
@@ -134,7 +134,7 @@ export default function MedinaMeansBusinessPage() {
                 </p>
                 <p>
                   The Chamber didn&apos;t invent that. We built a {totalCount}-member
-                  network around it — connecting the businesses, advocating
+                  network around it, connecting the businesses, advocating
                   for the policies, and creating the programs that keep
                   Medina&apos;s economy compounding year after year.
                 </p>
@@ -148,7 +148,7 @@ export default function MedinaMeansBusinessPage() {
         </div>
       </section>
 
-      {/* ─── Stats Strip ──────────────────────────────────── */}
+      {/* Stats Strip */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
         <FadeIn>
           <div className="max-w-2xl mb-12">
@@ -179,7 +179,7 @@ export default function MedinaMeansBusinessPage() {
         </div>
       </section>
 
-      {/* ─── Anchor Companies ────────────────────────────── */}
+      {/* Anchor Companies */}
       <section className="bg-bg-secondary border-y border-border-secondary">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28 relative overflow-hidden">
           <div className="absolute -top-32 -right-32 w-96 h-96 bg-cambridge/10 rounded-full blur-3xl" />
@@ -214,7 +214,7 @@ export default function MedinaMeansBusinessPage() {
 
           <FadeIn>
             <p className="relative text-body-sm text-text-tertiary mt-10 max-w-2xl">
-              And {totalCount}+ member businesses across every sector — retail,
+              And {totalCount}+ member businesses across every sector, retail,
               healthcare, professional services, construction, hospitality,
               food and beverage, technology, agriculture, and the trades.
             </p>
@@ -222,7 +222,7 @@ export default function MedinaMeansBusinessPage() {
         </div>
       </section>
 
-      {/* ─── Where Medina Means Business ──────────────────── */}
+      {/* Where Medina Means Business */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
         <FadeIn>
           <div className="max-w-2xl mb-12">
@@ -272,7 +272,7 @@ export default function MedinaMeansBusinessPage() {
         </div>
       </section>
 
-      {/* ─── The Magazine ─────────────────────────────────── */}
+      {/* The Magazine */}
       <section className="bg-bg-secondary border-y border-border-secondary">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
           <div className="grid lg:grid-cols-[1fr_auto] gap-10 items-center">
@@ -324,7 +324,7 @@ export default function MedinaMeansBusinessPage() {
         </div>
       </section>
 
-      {/* ─── Explore the Chamber ──────────────────────────── */}
+      {/* Explore the Chamber */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
         <FadeIn>
           <div className="max-w-2xl mb-12">
@@ -364,7 +364,7 @@ export default function MedinaMeansBusinessPage() {
             },
             {
               title: "First 30 Days",
-              desc: "A new member onboarding checklist — turn membership into momentum.",
+              desc: "A new member onboarding checklist, turn membership into momentum.",
               href: "/membership/first-30-days",
             },
           ].map((link, i) => (
@@ -390,7 +390,7 @@ export default function MedinaMeansBusinessPage() {
         </div>
       </section>
 
-      {/* ─── Closing CTA ──────────────────────────────────── */}
+      {/* Closing CTA */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pb-20 lg:pb-28">
         <FadeIn>
           <div className="p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] relative overflow-hidden">
@@ -402,7 +402,7 @@ export default function MedinaMeansBusinessPage() {
                   Add your name to the list
                 </p>
                 <h2 className="text-h2">
-                  Medina Means Business — including yours.
+                  Medina Means Business, including yours.
                 </h2>
                 <p className="text-body-lg text-text-secondary mt-4">
                   Join {totalCount}+ businesses across Medina County. Three

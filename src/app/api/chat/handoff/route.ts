@@ -133,7 +133,7 @@ export async function POST(req: Request) {
     ? recentTurns
         .map((t) => `${t.role === "user" ? "User" : "ChamberBot"}: ${t.content}`)
         .join("\n\n")
-    : "(No prior conversation — user opened the handoff form without chatting first.)";
+    : "(No prior conversation, user opened the handoff form without chatting first.)";
 
   // HTML transcript with turn-by-turn styling.
   const transcriptHtml = recentTurns.length
@@ -149,14 +149,14 @@ export async function POST(req: Request) {
       `,
         )
         .join("")
-    : `<p style="color: #666; font-style: italic;">No prior conversation — user opened the handoff form directly.</p>`;
+    : `<p style="color: #666; font-style: italic;">No prior conversation, user opened the handoff form directly.</p>`;
 
   try {
     await resend.emails.send({
       from: "Greater Medina Chamber ChamberBot <chamber@huntersystems.dev>",
       to,
       replyTo: email,
-      subject: `ChamberBot handoff — ${escHtml(name)} (${topicLabel})`,
+      subject: `ChamberBot handoff, ${escHtml(name)} (${topicLabel})`,
       text: [
         `A ChamberBot user asked to talk to a real person.`,
         ``,

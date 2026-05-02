@@ -3,22 +3,14 @@ import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
 
-/**
- * Programs hub — φ spatial system applied throughout.
- *
- * HERO    pt-f144 pb-f89
- * FEATURE py-f89 lg:py-f144 — 6 program cards (open white, md:grid-cols-2 lg:grid-cols-3)
- * CLOSER  py-f55 lg:py-f89  — membership CTA card
- */
-
 export const metadata: Metadata = {
   title: "Programs",
   description:
-    "Greater Medina Chamber of Commerce programs — leadership development, networking events, workplace safety, and professional meeting space for Medina County businesses.",
+    "Greater Medina Chamber of Commerce programs, leadership development, networking events, workplace safety, and professional meeting space for Medina County businesses.",
   openGraph: {
-    title: "Programs — Greater Medina Chamber of Commerce",
+    title: "Programs | Greater Medina Chamber of Commerce",
     description:
-      "Compass leadership, Social Connect, Golf Outing, Athena Awards, Safety Council, and rental space — programs that power Medina County's business community.",
+      "Compass leadership, Social Connect, Golf Outing, Athena Awards, Safety Council, and rental space, programs that power Medina County's business community.",
   },
   alternates: { canonical: "/programs" },
 };
@@ -36,7 +28,7 @@ const programs = [
     category: "Networking",
     href: "/programs/social-connect",
     description:
-      "The chamber's signature networking event at Foundry Social — early access networking, the Foundry Faceoff competition, and a public Business Circuit Expo.",
+      "The chamber's signature networking event at Foundry Social, early access networking, the Foundry Faceoff competition, and a public Business Circuit Expo.",
   },
   {
     name: "Golf Outing",
@@ -57,14 +49,14 @@ const programs = [
     category: "Workplace Safety",
     href: "/programs/safety-council",
     description:
-      "Monthly safety education meetings in partnership with the Ohio BWC — enrollment free for chamber members, with BWC group rebate eligibility for participating employers.",
+      "Monthly safety education meetings in partnership with the Ohio BWC, enrollment free for chamber members, with BWC group rebate eligibility for participating employers.",
   },
   {
     name: "Rental Space",
     category: "Meeting Space",
     href: "/programs/rental-space",
     description:
-      "Two professional meeting spaces in downtown Medina — The Vault (up to 16) and the Main Room (up to 50). Free parking, Wi-Fi, and AV included.",
+      "Two professional meeting spaces in downtown Medina, The Vault (up to 16) and the Main Room (up to 50). Free parking, Wi-Fi, and AV included.",
   },
 ];
 
@@ -72,9 +64,9 @@ export default function ProgramsPage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: "Chamber Programs — Greater Medina Chamber of Commerce",
+    name: "Chamber Programs | Greater Medina Chamber of Commerce",
     description:
-      "Greater Medina Chamber programs — leadership development, networking events, workplace safety, and professional meeting space for Medina County businesses.",
+      "Greater Medina Chamber programs, leadership development, networking events, workplace safety, and professional meeting space for Medina County businesses.",
     url: "https://medinachamber.com/programs",
     hasPart: [
       { "@type": "WebPage", name: "Compass Leadership Program", url: "https://medinachamber.com/programs/compass" },
@@ -93,31 +85,26 @@ export default function ProgramsPage() {
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
 
-      {/* ─── HERO ─────────────────────────────────────────────── */}
-      {/* pt-f144 pb-f89 (144/89 = φ) — HERO tier */}
+      
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
         <div className="max-w-3xl">
-          {/* mb-f8 (8px) — overline→heading */}
           <p className="text-overline text-cambridge mb-f8">Membership</p>
           <h1 className="text-display">
             Chamber
             <br />
             <span className="text-accent">Programs</span>
           </h1>
-          {/* mt-f13 (13px) — heading→body */}
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
-            More than networking — the chamber runs programs that develop leaders,
+            More than networking, the chamber runs programs that develop leaders,
             connect professionals, recognize excellence, and give businesses the
             space and safety resources they need to grow.
           </p>
         </div>
       </section>
 
-      {/* ─── FEATURE — Program cards ──────────────────────────── */}
-      {/* py-f89/f144 — FEATURE tier, open white */}
+      {/* Program cards */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
-          {/* gap-f21 — card grid gap */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-f21">
             {programs.map((p, i) => (
               <FadeIn key={p.href} delay={i * 60}>
@@ -131,18 +118,15 @@ export default function ProgramsPage() {
                     h-full
                   "
                 >
-                  {/* mb-f8 — category→name gap */}
                   <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-f8">
                     {p.category}
                   </p>
                   <h2 className="text-h4 group-hover:text-cambridge transition-colors">
                     {p.name}
                   </h2>
-                  {/* mt-f13 — name→desc gap */}
                   <p className="text-body-sm text-text-secondary mt-f13 leading-relaxed flex-1">
                     {p.description}
                   </p>
-                  {/* mt-f13 — desc→CTA gap */}
                   <p className="text-body-sm font-bold text-cambridge mt-f13 group-hover:translate-x-1 transition-transform">
                     Learn more →
                   </p>
@@ -153,23 +137,19 @@ export default function ProgramsPage() {
         </FadeIn>
       </section>
 
-      {/* ─── CLOSER — Membership CTA ──────────────────────────── */}
-      {/* py-f55/f89 — CLOSER taper */}
+      {/* Membership CTA */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
-          {/* p-f34/f55 card padding, gap-f34 2-col gap */}
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
                 <h2 className="text-h2">Not a member yet?</h2>
-                {/* mt-f13 — heading→body */}
                 <p className="text-body-lg text-text-secondary mt-f13">
-                  Chamber membership unlocks most of these programs — including
+                  Chamber membership unlocks most of these programs, including
                   the Safety Council at no additional cost and member pricing on
                   rental space and events.
                 </p>
               </div>
-              {/* space-y-f13 — button stack gap */}
               <div className="space-y-f13">
                 <Link
                   href="/membership/join"

@@ -5,9 +5,9 @@ import { safeJsonLd } from "@/lib/json-ld";
 export const metadata: Metadata = {
   title: "Rental Space",
   description:
-    "The Greater Medina Chamber of Commerce offers two professional meeting spaces for rent in downtown Medina — The Vault conference room (up to 16) and the Main Room training space (up to 50). Free parking, Wi-Fi, and AV included.",
+    "The Greater Medina Chamber of Commerce offers two professional meeting spaces for rent in downtown Medina, The Vault conference room (up to 16) and the Main Room training space (up to 50). Free parking, Wi-Fi, and AV included.",
   openGraph: {
-    title: "Rental Space — Greater Medina Chamber of Commerce",
+    title: "Rental Space | Greater Medina Chamber of Commerce",
     description:
       "Professional meeting and event space in the heart of downtown Medina. The Vault seats 16, the Main Room seats 50.",
   },
@@ -21,7 +21,7 @@ const rooms = [
     capacity: "Up to 16",
     best: "Board meetings, client presentations, team strategy sessions",
     description:
-      "A private, closed-door meeting space featuring the chamber's distinctive vault door — professional, memorable, and perfectly sized for focused collaboration.",
+      "A private, closed-door meeting space featuring the chamber's distinctive vault door, professional, memorable, and perfectly sized for focused collaboration.",
     features: ["Private room with vault door", "Flat screen TV", "Whiteboard", "Seats up to 16"],
   },
   {
@@ -30,7 +30,7 @@ const rooms = [
     capacity: "Up to 50",
     best: "Workshops, seminars, training sessions, larger team meetings",
     description:
-      "A spacious, flexible room with configurable table arrangements to fit your event — from classroom-style training to panel discussions to all-hands meetings.",
+      "A spacious, flexible room with configurable table arrangements to fit your event, from classroom-style training to panel discussions to all-hands meetings.",
     features: ["Flexible table configurations", "Flat screen TV", "Presentation-ready setup", "Seats up to 50"],
   },
 ];
@@ -50,7 +50,7 @@ export default function RentalSpacePage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    name: "Greater Medina Chamber of Commerce — Meeting & Event Space",
+    name: "Greater Medina Chamber of Commerce, Meeting & Event Space",
     description:
       "Professional meeting and event space in downtown Medina. The Vault conference room seats up to 16. The Main Room training space seats up to 50. Free parking, Wi-Fi, and AV included.",
     url: "https://medinachamber.com/programs/rental-space",

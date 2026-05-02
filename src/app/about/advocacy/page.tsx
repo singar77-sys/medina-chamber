@@ -3,21 +3,12 @@ import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
 
-/**
- * Advocacy — φ spatial system applied throughout.
- *
- * HERO    pt-f144 pb-f89
- * FEATURE py-f89 lg:py-f144 — "Your Voice" 2-col + levels cards (open white)
- * BAND    py-f55 lg:py-f89  — "How We Advocate" 4 activities (bg-secondary)
- * CLOSER  py-f55 lg:py-f89  — Candidate interview program card
- */
-
 export const metadata: Metadata = {
   title: "Advocacy",
   description:
-    "The Greater Medina Chamber of Commerce advocates for pro-business policies at the local, state, and federal level — mobilizing the business community on issues that matter.",
+    "The Greater Medina Chamber of Commerce advocates for pro-business policies at the local, state, and federal level, mobilizing the business community on issues that matter.",
   openGraph: {
-    title: "Advocacy — Greater Medina Chamber of Commerce",
+    title: "Advocacy | Greater Medina Chamber of Commerce",
     description:
       "Pro-business advocacy at every level of government. The chamber fights for Medina County's business community.",
   },
@@ -28,7 +19,7 @@ const levels = [
   {
     level: "Local",
     description:
-      "We engage with city and county government to ensure local policy supports a thriving business environment — from zoning and infrastructure to economic development.",
+      "We engage with city and county government to ensure local policy supports a thriving business environment, from zoning and infrastructure to economic development.",
   },
   {
     level: "State",
@@ -38,7 +29,7 @@ const levels = [
   {
     level: "Federal",
     description:
-      "We stay connected to federal legislative issues that affect small and mid-sized businesses, including tax policy, healthcare, and trade — and make sure Medina's voice is heard.",
+      "We stay connected to federal legislative issues that affect small and mid-sized businesses, including tax policy, healthcare, and trade, and make sure Medina's voice is heard.",
   },
 ];
 
@@ -51,7 +42,7 @@ const activities = [
   {
     title: "Voter Education",
     description:
-      "We equip chamber members with the information they need to make informed decisions — on candidates, issues, and referendums affecting business.",
+      "We equip chamber members with the information they need to make informed decisions, on candidates, issues, and referendums affecting business.",
   },
   {
     title: "Government Relations",
@@ -69,9 +60,9 @@ export default function AdvocacyPage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    name: "Business Advocacy — Greater Medina Chamber of Commerce",
+    name: "Business Advocacy | Greater Medina Chamber of Commerce",
     description:
-      "The Greater Medina Chamber of Commerce advocates for pro-business policies at the local, state, and federal level — mobilizing Medina County's business community on issues that matter.",
+      "The Greater Medina Chamber of Commerce advocates for pro-business policies at the local, state, and federal level, mobilizing Medina County's business community on issues that matter.",
     url: "https://medinachamber.com/about/advocacy",
     about: {
       "@type": "Organization",
@@ -87,57 +78,48 @@ export default function AdvocacyPage() {
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
 
-      {/* ─── HERO ─────────────────────────────────────────────── */}
-      {/* pt-f144 pb-f89 (144/89 = φ) — HERO tier */}
+      
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
         <div className="max-w-3xl">
-          {/* mb-f8 (8px) — overline→heading */}
           <p className="text-overline text-cambridge mb-f8">About</p>
           <h1 className="text-display">
             Business
             <br />
             <span className="text-accent">Advocacy</span>
           </h1>
-          {/* mt-f13 (13px) — heading→body */}
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             The chamber promotes pro-business, quality government at the local,
-            state, and federal level — mobilizing support for the issues that
+            state, and federal level, mobilizing support for the issues that
             shape our community and our economy.
           </p>
         </div>
       </section>
 
-      {/* ─── FEATURE — Your Voice in Government ──────────────── */}
-      {/* py-f89/f144 — FEATURE tier, open white, 2-col */}
+      {/* Your Voice in Government */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
-          {/* gap-f34/f55 — 2-col layout gap */}
           <div className="grid lg:grid-cols-2 gap-f34 lg:gap-f55">
             <div>
               <h2 className="text-h2">Your Voice in Government</h2>
-              {/* mt-f13 — heading→body */}
               <p className="text-body text-text-secondary mt-f13 leading-relaxed">
-                Businesses don&apos;t have time to track every policy issue — we
+                Businesses don&apos;t have time to track every policy issue, we
                 do it for them. The Greater Medina Chamber of Commerce stays
                 engaged at every level of government so our members can stay
                 focused on running their businesses.
               </p>
-              {/* mt-f21 — paragraph gap */}
               <p className="text-body text-text-secondary mt-f21 leading-relaxed">
                 Whether it&apos;s a local zoning decision, a state regulatory
                 change, or a federal bill working through Congress, the chamber
-                is watching — and when it matters, we act.
+                is watching, and when it matters, we act.
               </p>
             </div>
 
-            {/* space-y-f21 — between level cards */}
             <div className="space-y-f21">
               {levels.map((item) => (
                 <div
                   key={item.level}
                   className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
                 >
-                  {/* mb-f8 — label→body */}
                   <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-f8">
                     {item.level} Government
                   </p>
@@ -151,21 +133,17 @@ export default function AdvocacyPage() {
         </FadeIn>
       </section>
 
-      {/* ─── BAND — How We Advocate ───────────────────────────── */}
-      {/* py-f55/f89 — BAND tier, bg-secondary + border-y */}
+      {/* How We Advocate */}
       <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
-            {/* mb-f21 — label→grid gap */}
             <h2 className="text-overline text-cambridge mb-f21">How We Advocate</h2>
-            {/* gap-f21 — activity card grid gap */}
             <div className="grid md:grid-cols-2 gap-f21">
               {activities.map((a) => (
                 <div
                   key={a.title}
                   className="p-f21 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]"
                 >
-                  {/* mb-f8 — title→body */}
                   <h3 className="text-h4 mb-f8">{a.title}</h3>
                   <p className="text-body-sm text-text-secondary leading-relaxed">
                     {a.description}
@@ -177,27 +155,22 @@ export default function AdvocacyPage() {
         </div>
       </section>
 
-      {/* ─── CLOSER — Candidate interview program ─────────────── */}
-      {/* py-f55/f89 — CLOSER taper */}
+      {/* Candidate interview program */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
-          {/* p-f34/f55 card padding, gap-f34 2-col gap */}
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
-                {/* mb-f8 — overline→heading */}
                 <p className="text-overline text-cambridge mb-f8">Election Season</p>
                 <h2 className="text-h2">Candidate Interview Program</h2>
-                {/* mt-f13 — heading→body */}
                 <p className="text-body-lg text-text-secondary mt-f13">
                   Every election cycle, the chamber conducts structured candidate
                   interviews and shares the results with the business community.
                   We&apos;ve hosted documented interviews in 2019, 2020, 2021,
-                  2023, 2024, and 2025 — giving members consistent, objective
+                  2023, 2024, and 2025, giving members consistent, objective
                   information when it matters most.
                 </p>
               </div>
-              {/* space-y-f21 — body→CTA stack */}
               <div className="space-y-f21">
                 <p className="text-body text-text-secondary">
                   Interested in the chamber&apos;s positions on business-related
@@ -220,7 +193,6 @@ export default function AdvocacyPage() {
             </div>
           </div>
 
-          {/* mt-f34 — card→back-link gap */}
           <div className="mt-f34">
             <Link
               href="/about"

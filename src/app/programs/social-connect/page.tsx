@@ -5,9 +5,9 @@ import { safeJsonLd } from "@/lib/json-ld";
 export const metadata: Metadata = {
   title: "Social Connect",
   description:
-    "Social Connect is the Greater Medina Chamber of Commerce's signature networking event — combining professional networking, friendly competition, and a Business Circuit Expo open to the public. Held at Foundry Social in Medina, Ohio.",
+    "Social Connect is the Greater Medina Chamber of Commerce's signature networking event, combining professional networking, friendly competition, and a Business Circuit Expo open to the public. Held at Foundry Social in Medina, Ohio.",
   openGraph: {
-    title: "Social Connect — Greater Medina Chamber of Commerce",
+    title: "Social Connect | Greater Medina Chamber of Commerce",
     description:
       "Professional networking meets friendly competition at Foundry Social in Medina, Ohio. The Business Circuit Expo is open to the public.",
   },
@@ -20,7 +20,7 @@ const components = [
     time: "3:00 – 5:00 PM",
     ticketed: true,
     description:
-      "Ticket holders get exclusive early access — dedicated networking time before the doors open to the public. Make meaningful connections without the crowd.",
+      "Ticket holders get exclusive early access, dedicated networking time before the doors open to the public. Make meaningful connections without the crowd.",
   },
   {
     title: "Foundry Faceoff",
@@ -34,7 +34,7 @@ const components = [
     time: "4:00 – 6:00 PM",
     ticketed: false,
     description:
-      "Local businesses showcase their offerings to the broader community. Open to the public at no charge — no ticket required.",
+      "Local businesses showcase their offerings to the broader community. Open to the public at no charge, no ticket required.",
   },
 ];
 
@@ -44,7 +44,7 @@ export default function SocialConnectPage() {
     "@type": "Event",
     name: "Social Connect",
     description:
-      "The Greater Medina Chamber's signature networking event — professional networking, the Foundry Faceoff competition, and a public Business Circuit Expo at Foundry Social in Medina, Ohio.",
+      "The Greater Medina Chamber's signature networking event, professional networking, the Foundry Faceoff competition, and a public Business Circuit Expo at Foundry Social in Medina, Ohio.",
     organizer: {
       "@type": "Organization",
       name: "Greater Medina Chamber of Commerce",
@@ -84,7 +84,7 @@ export default function SocialConnectPage() {
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
           Networking that doesn&apos;t feel like networking. Social Connect
           blends professional connection, friendly competition, and a public
-          business expo — all under one roof at Foundry Social.
+          business expo, all under one roof at Foundry Social.
         </p>
         <div className="mt-10 flex flex-wrap gap-4">
           <Link
@@ -179,7 +179,7 @@ export default function SocialConnectPage() {
           <p className="text-body text-text-secondary mt-4 leading-relaxed">
             Whether you&apos;re a chamber member looking to expand your network,
             a business owner who wants to showcase your services, or a community
-            member curious about what Medina County businesses have to offer —
+            member curious about what Medina County businesses have to offer, 
             Social Connect has a place for you.
           </p>
           <p className="text-body text-text-secondary mt-4 leading-relaxed">

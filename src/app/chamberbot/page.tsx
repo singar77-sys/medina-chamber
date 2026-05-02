@@ -14,9 +14,9 @@ import { totalCount } from "@/data/members";
  * the homepage if there's no history).
  */
 export const metadata: Metadata = {
-  title: "ChamberBot — Immersive Experience",
+  title: "ChamberBot, Immersive Experience",
   description:
-    `Talk to the Greater Medina Chamber's AI assistant. Ask about members, events, programs, advocacy, or anything Medina-business — backed by ${totalCount}+ live member records and the full chamber calendar.`,
+    `Talk to the Greater Medina Chamber's AI assistant. Ask about members, events, programs, advocacy, or anything Medina-business, backed by ${totalCount}+ live member records and the full chamber calendar.`,
   alternates: { canonical: "/chamberbot" },
   robots: { index: true, follow: true },
 };

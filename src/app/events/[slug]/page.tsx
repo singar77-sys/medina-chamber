@@ -89,7 +89,7 @@ export default async function EventPage(
         url: event.image.startsWith("http")
           ? event.image
           : `https://medinachamber.com${event.image}`,
-        caption: `${event.title} — Greater Medina Chamber of Commerce event in Medina, Ohio`,
+        caption: `${event.title}, Greater Medina Chamber of Commerce event in Medina, Ohio`,
       },
     }),
     ...(event.pricing && {
@@ -140,7 +140,7 @@ export default async function EventPage(
         </nav>
 
         <div className="grid lg:grid-cols-[1fr_360px] gap-12 lg:gap-16">
-          {/* ── Main column ── */}
+          {/* Main column */}
           <div>
             {/* Event label */}
             <p className="text-overline text-cambridge mb-4">
@@ -164,20 +164,20 @@ export default async function EventPage(
                   <Graphic mode="social" />
                 </FluidGraphicFrame>
                 <figcaption className="sr-only">
-                  {event.title} — Greater Medina Chamber of Commerce event on {event.dayOfWeek}, {event.month} {event.day}, {event.year} in Medina, Ohio
+                  {event.title}, Greater Medina Chamber of Commerce event on {event.dayOfWeek}, {event.month} {event.day}, {event.year} in Medina, Ohio
                 </figcaption>
               </figure>
             ) : event.image ? (
               <figure className="mt-8 rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary m-0">
                 <Image
                   src={event.image}
-                  alt={`${event.title} — ${event.dayOfWeek}, ${event.month} ${event.day}, ${event.year} at the Greater Medina Chamber of Commerce in Medina, Ohio`}
+                  alt={`${event.title}, ${event.dayOfWeek}, ${event.month} ${event.day}, ${event.year} at the Greater Medina Chamber of Commerce in Medina, Ohio`}
                   width={720}
                   height={360}
                   className="object-contain w-full max-h-72 bg-bg-secondary"
                 />
                 <figcaption className="sr-only">
-                  {event.title} — Greater Medina Chamber of Commerce event on {event.dayOfWeek}, {event.month} {event.day}, {event.year} in Medina, Ohio
+                  {event.title}, Greater Medina Chamber of Commerce event on {event.dayOfWeek}, {event.month} {event.day}, {event.year} in Medina, Ohio
                 </figcaption>
               </figure>
             ) : null}
@@ -244,7 +244,7 @@ export default async function EventPage(
             )}
           </div>
 
-          {/* ── Sidebar ── */}
+          {/* Sidebar */}
           <aside className="space-y-6">
             {/* Register CTA card */}
             <div className="sticky top-8 p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">

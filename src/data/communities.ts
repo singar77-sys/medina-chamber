@@ -41,7 +41,7 @@ const allCommunities: Community[] = [
     description:
       "Brunswick is the most populated city in Medina County with a strong retail, healthcare, and service economy along Route 303 and Pearl Road. The city's proximity to I-71 makes it a strategic location for businesses serving both Medina and Cuyahoga counties.",
     chamberPitch:
-      `Brunswick businesses gain county-wide visibility through the Medina Chamber's ${totalCount}+ member directory, networking events, and advocacy — connecting you to the broader Medina County market.`,
+      `Brunswick businesses gain county-wide visibility through the Medina Chamber's ${totalCount}+ member directory, networking events, and advocacy, connecting you to the broader Medina County market.`,
   },
   {
     slug: "wadsworth",
@@ -53,7 +53,7 @@ const allCommunities: Community[] = [
     description:
       "Wadsworth is a manufacturing and agricultural hub in southwestern Medina County with a charming downtown district along Main Street. Home to Swagelok, the Blue Tip Match Company heritage, and a growing small business scene.",
     chamberPitch:
-      "Wadsworth businesses connect to the full Medina County network through chamber membership — advocacy at the county and state level, plus access to programs, events, and savings that serve the entire region.",
+      "Wadsworth businesses connect to the full Medina County network through chamber membership, advocacy at the county and state level, plus access to programs, events, and savings that serve the entire region.",
   },
   {
     slug: "lodi",
@@ -65,7 +65,7 @@ const allCommunities: Community[] = [
     description:
       "Lodi is a village in Harrisville Township with a tight-knit business community, known for its walkable downtown, annual Sweet Corn Festival, and proximity to agricultural operations throughout southern Medina County.",
     chamberPitch:
-      "Lodi businesses punch above their weight through chamber membership — the same directory visibility, networking access, and advocacy as any business in the county.",
+      "Lodi businesses punch above their weight through chamber membership, the same directory visibility, networking access, and advocacy as any business in the county.",
   },
   {
     slug: "seville",
@@ -77,7 +77,7 @@ const allCommunities: Community[] = [
     description:
       "Seville straddles Medina and Wayne counties along Route 3 with a mix of retail, agricultural, and service businesses. Its location at the intersection of Routes 3 and 224 gives businesses access to southern Medina County and the Wooster corridor.",
     chamberPitch:
-      `Seville's position between Medina and Wayne counties makes chamber membership especially valuable — tap into a ${totalCount}+ member network that stretches across the region.`,
+      `Seville's position between Medina and Wayne counties makes chamber membership especially valuable, tap into a ${totalCount}+ member network that stretches across the region.`,
   },
   {
     slug: "valley-city",
@@ -89,7 +89,7 @@ const allCommunities: Community[] = [
     description:
       "Valley City is a community in Liverpool Township known for its Frog Jump Festival, rural character, and growing base of home-based and small businesses. Located along Route 303, it connects Brunswick to the west and the Cuyahoga Valley to the east.",
     chamberPitch:
-      "Home-based and small businesses in Valley City get the same chamber benefits as any storefront on the Square — directory listing, networking, advocacy, and savings programs.",
+      "Home-based and small businesses in Valley City get the same chamber benefits as any storefront on the Square, directory listing, networking, advocacy, and savings programs.",
   },
   {
     slug: "hinckley",
@@ -97,11 +97,11 @@ const allCommunities: Community[] = [
     cityMatch: "Hinckley",
     county: "Medina County",
     zip: ["44233"],
-    tagline: "Where the buzzards come home — and businesses thrive",
+    tagline: "Where the buzzards come home, and businesses thrive",
     description:
       "Hinckley Township is famous for the annual Buzzard Day celebration and Hinckley Reservation. The community supports a growing base of contractors, professional services, and specialty businesses serving both Medina and Summit counties.",
     chamberPitch:
-      "Hinckley businesses gain visibility across Medina County through the chamber's directory, events, and advocacy — connecting you beyond the township line.",
+      "Hinckley businesses gain visibility across Medina County through the chamber's directory, events, and advocacy, connecting you beyond the township line.",
   },
   {
     slug: "rittman",
@@ -125,7 +125,7 @@ const allCommunities: Community[] = [
     description:
       "Lafayette Township is one of Medina County's fastest-growing areas, with new residential development driving demand for local services, retail, and professional businesses along the Route 18 corridor.",
     chamberPitch:
-      "Lafayette's growth means opportunity — chamber membership puts your business in front of every established and new business owner in the county.",
+      "Lafayette's growth means opportunity, chamber membership puts your business in front of every established and new business owner in the county.",
   },
   {
     slug: "granger",
@@ -135,9 +135,9 @@ const allCommunities: Community[] = [
     zip: ["44256"],
     tagline: "Rural character, Medina proximity, countywide reach",
     description:
-      "Granger Township sits just northeast of Medina city — a largely residential community where local trades, professional services, and agricultural-adjacent businesses serve the township and the surrounding corridor between Medina and Brunswick.",
+      "Granger Township sits just northeast of Medina city, a largely residential community where local trades, professional services, and agricultural-adjacent businesses serve the township and the surrounding corridor between Medina and Brunswick.",
     chamberPitch:
-      `Granger businesses gain a countywide stage through the chamber — membership connects your operation to Medina, Brunswick, and the full ${totalCount}-member network without leaving the township.`,
+      `Granger businesses gain a countywide stage through the chamber, membership connects your operation to Medina, Brunswick, and the full ${totalCount}-member network without leaving the township.`,
   },
   {
     slug: "montville",
@@ -145,11 +145,11 @@ const allCommunities: Community[] = [
     cityMatch: "Montville",
     county: "Medina County",
     zip: ["44256"],
-    tagline: "The township that wraps Medina — residential, commercial, and everything between",
+    tagline: "The township that wraps Medina, residential, commercial, and everything between",
     description:
       "Montville Township surrounds Medina city on three sides, blending established neighborhoods, professional corridors along Route 18 and I-71, and light-industrial pockets that serve the county's daily commerce.",
     chamberPitch:
-      "Montville businesses operate at the heart of Medina County — chamber membership gives you access to the downtown core's foot traffic and the countywide network at the same time.",
+      "Montville businesses operate at the heart of Medina County, chamber membership gives you access to the downtown core's foot traffic and the countywide network at the same time.",
   },
 ];
 

@@ -26,7 +26,7 @@ function buildBlock(pricing: Omit<PricingConfig, "updatedAt">): string {
   if (!e || !p || !i) return "";
 
   return [
-    "CURRENT MEMBERSHIP PRICING (authoritative — these values override any pricing mentioned earlier in this prompt):",
+    "CURRENT MEMBERSHIP PRICING (authoritative, these values override any pricing mentioned earlier in this prompt):",
     `- ${e.name}: $${e.price.toLocaleString("en-US")}/year`,
     `- ${p.name}: $${p.price.toLocaleString("en-US")}/year`,
     `- ${i.name}: $${i.price.toLocaleString("en-US")}/year`,

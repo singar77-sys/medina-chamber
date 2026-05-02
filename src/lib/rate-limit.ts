@@ -106,7 +106,7 @@ export async function applyRateLimit(
 ): Promise<Response | null> {
   const { success } = await limiter.limit(getRequestIp(req));
   if (!success) {
-    return new Response("Too many requests — please slow down.", {
+    return new Response("Too many requests, please slow down.", {
       status: 429,
     });
   }

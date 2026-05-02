@@ -202,18 +202,18 @@ export function formatConnectionContext(
   const memberLines = connMembers
     .map((m) => {
       const cat = m.categories[0] ?? "Chamber member";
-      return `- ${m.name} (${cat}) — https://medinachamber.com/membership/directory/${m.chamberSlug}`;
+      return `- ${m.name} (${cat}), https://medinachamber.com/membership/directory/${m.chamberSlug}`;
     })
     .join("\n");
 
   return (
-    `PROACTIVE CONNECTIONS — USER INDUSTRY CONTEXT:\n` +
+    `PROACTIVE CONNECTIONS, USER INDUSTRY CONTEXT:\n` +
     `This user has identified themselves as: ${industry}.\n` +
     `These chamber members are in complementary industries that commonly exchange referrals with ${industry} businesses:\n` +
     `${memberLines}\n\n` +
-    `INSTRUCTION: At a natural moment in this or a future response, mention 1–2 of these members if it would genuinely help — ` +
+    `INSTRUCTION: At a natural moment in this or a future response, mention 1–2 of these members if it would genuinely help, ` +
     `for example, if the user describes a challenge these businesses could address, or if the conversation opens a relevant door. ` +
     `Do NOT list them in response to this turn unless it fits organically. ` +
-    `Do NOT use this block when the user is already asking to find a specific type of business — the directory path handles that.`
+    `Do NOT use this block when the user is already asking to find a specific type of business, the directory path handles that.`
   );
 }

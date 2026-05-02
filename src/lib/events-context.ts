@@ -40,5 +40,5 @@ export function formatEventsForPrompt(): string {
     return `- ${day} ${date}: ${e.title} | ${time}${price ? ` | ${price}` : ""} | [Details & Registration](${url})`;
   });
 
-  return `UPCOMING CHAMBER EVENTS (live from calendar — ${upcoming.length} scheduled):\n${lines.join("\n")}`;
+  return `UPCOMING CHAMBER EVENTS (live from calendar, ${upcoming.length} scheduled):\n${lines.join("\n")}`;
 }

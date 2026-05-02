@@ -21,7 +21,7 @@ export async function generateMetadata(
   const description = `${job.title} at ${job.companyName} in Medina County, Ohio. ${job.body.substring(0, 120).replace(/\n/g, " ")}`;
 
   return {
-    title: `${job.title} — ${job.companyName}`,
+    title: `${job.title}, ${job.companyName}`,
     description,
     openGraph: {
       title: `${job.title} at ${job.companyName} | Medina Chamber Jobs`,
@@ -154,7 +154,7 @@ export default async function JobDetailPage(
         </nav>
 
         <div className="grid lg:grid-cols-[1fr_320px] gap-12 lg:gap-16">
-          {/* ── Main column ── */}
+          {/* Main column */}
           <div>
             <p className="text-overline text-cambridge mb-4">
               Posted {dateDisplay}
@@ -188,7 +188,7 @@ export default async function JobDetailPage(
 
           </div>
 
-          {/* ── Sidebar ── */}
+          {/* Sidebar */}
           <aside className="space-y-6">
             {/* Company card */}
             <div className="sticky top-8 space-y-4">

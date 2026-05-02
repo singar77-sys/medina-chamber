@@ -565,8 +565,8 @@ export function ChamberBotMascot({
       role="button"
       aria-label={
         mood === "sleeping"
-          ? "ChamberBot is asleep — click to wake and see a jump"
-          : "ChamberBot — click to make it jump"
+          ? "ChamberBot is asleep, click to wake and see a jump"
+          : "ChamberBot, click to make it jump"
       }
       className={`cbm-mascot robot-float robot-fly-in ${className}`}
     >

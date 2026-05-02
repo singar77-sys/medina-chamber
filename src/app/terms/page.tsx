@@ -42,8 +42,8 @@ export default function TermsPage() {
             of any AI-generated response.
           </p>
           <p className="text-body text-text-secondary mt-3">
-            When ChamberBot mentions a specific member business — hours,
-            services, pricing, contact details — that information comes from
+            When ChamberBot mentions a specific member business, hours,
+            services, pricing, contact details, that information comes from
             the member&apos;s public directory listing. Verify directly with
             the business before acting on it. The Chamber is not responsible
             for errors in member-supplied information.
@@ -73,7 +73,7 @@ export default function TermsPage() {
         <div>
           <h2 className="text-h2 mb-4">Site content</h2>
           <p className="text-body text-text-secondary">
-            All content on this Site — text, graphics, logos, photographs —
+            All content on this Site, text, graphics, logos, photographs, 
             is the property of the Greater Medina Chamber of Commerce or its
             members and partners, and is protected by copyright. You may
             share links to pages on this Site. You may not reproduce, copy,

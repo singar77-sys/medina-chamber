@@ -6,22 +6,12 @@ import { getEventGraphicRenderer } from "@/components/events/graphics/registry";
 import { FluidGraphicFrame } from "@/components/events/graphics/FluidGraphicFrame";
 import { FadeIn } from "@/components/FadeIn";
 
-/**
- * Events — φ spatial system applied throughout.
- *
- * HERO    pt-f144 pb-f89
- * FEATURE py-f89 lg:py-f144 — Upcoming Events grid (open white)
- * BAND    py-f55 lg:py-f89  — Monthly Programs 5 cards (bg-secondary)
- * FEATURE py-f89 lg:py-f144 — Workshops + Annual Signature (open white, mt-f34 divider)
- * CLOSER  py-f55 lg:py-f89  — Members priority CTA card
- */
-
 export const metadata: Metadata = {
   title: "Events",
   description:
     "Upcoming networking events, workshops, and community gatherings from the Greater Medina Chamber of Commerce. Chamber Chat, Networking WOW, Member Meetings, Golf Outing, and more.",
   openGraph: {
-    title: "Events — Greater Medina Chamber of Commerce",
+    title: "Events | Greater Medina Chamber of Commerce",
     description:
       "Upcoming networking events and community gatherings in Medina County, Ohio.",
   },
@@ -53,7 +43,7 @@ function EventCard({ event }: { event: ReturnType<typeof getUpcomingEvents>[numb
         <div className="border-b border-border-secondary aspect-[1200/630] bg-bg-tertiary">
           <Image
             src={event.image}
-            alt={`${event.title} — Greater Medina Chamber of Commerce event in Medina, Ohio`}
+            alt={`${event.title}, Greater Medina Chamber of Commerce event in Medina, Ohio`}
             width={1200}
             height={630}
             className="object-contain w-full h-full"
@@ -61,7 +51,6 @@ function EventCard({ event }: { event: ReturnType<typeof getUpcomingEvents>[numb
         </div>
       ) : null}
 
-      {/* gap-f13 — badge→content; p-f21 — card padding */}
       <div className="flex gap-f13 p-f21">
         {/* Date badge */}
         <div className="flex-shrink-0 w-16 text-center">
@@ -72,7 +61,6 @@ function EventCard({ event }: { event: ReturnType<typeof getUpcomingEvents>[numb
             <p className="text-2xl font-bold leading-tight mt-0.5">{event.day}</p>
             <p className="text-[10px] text-text-tertiary leading-none">{event.year}</p>
           </div>
-          {/* mt-f8 — badge→day-of-week */}
           <p className="text-[10px] text-text-tertiary mt-f8 font-medium">
             {event.dayOfWeek.substring(0, 3).toUpperCase()}
           </p>
@@ -83,7 +71,6 @@ function EventCard({ event }: { event: ReturnType<typeof getUpcomingEvents>[numb
           <h3 className="text-h4 group-hover:text-accent transition-colors line-clamp-2">
             {event.title}
           </h3>
-          {/* mt-f3 — title→time micro-gap */}
           <p className="text-body-sm text-text-secondary mt-f3">
             {event.startTime}–{event.endTime}
           </p>
@@ -117,18 +104,15 @@ export default function EventsPage() {
 
   return (
     <>
-      {/* ─── HERO ─────────────────────────────────────────────── */}
-      {/* pt-f144 pb-f89 (144/89 = φ) — HERO tier */}
+      
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
         <div className="max-w-3xl">
-          {/* mb-f8 — overline→heading */}
           <p className="text-overline text-cambridge mb-f8">Events</p>
           <h1 className="text-display">
             Medina Means
             <br />
             <span className="text-accent">Business</span>
           </h1>
-          {/* mt-f13 — heading→body */}
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             From monthly mixers to signature award ceremonies, Chamber events are
             where relationships start and deals happen. Real connections between
@@ -137,11 +121,9 @@ export default function EventsPage() {
         </div>
       </section>
 
-      {/* ─── FEATURE — Upcoming Events ────────────────────────── */}
-      {/* py-f89/f144 — FEATURE tier, open white */}
+      {/* Upcoming Events */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
-          {/* mb-f21 — header→grid gap */}
           <div className="flex items-end justify-between mb-f21">
             <h2 className="text-h2">Upcoming Events</h2>
             {hasEvents && (
@@ -162,10 +144,9 @@ export default function EventsPage() {
             <div className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] text-center">
               <p className="text-body-lg text-text-secondary">
                 No upcoming events on the calendar right now. New events are added
-                regularly — check back soon, or join the chamber newsletter for
+                regularly, check back soon, or join the chamber newsletter for
                 early notice.
               </p>
-              {/* mt-f21 — body→CTA */}
               <Link
                 href="/membership/join"
                 className="
@@ -184,7 +165,7 @@ export default function EventsPage() {
           {allUpcoming.length > 6 && (
             /* mt-f21 — grid→trailing note */
             <p className="mt-f21 text-caption text-text-tertiary text-center">
-              Plus {allUpcoming.length - 6} more upcoming events — new events roll
+              Plus {allUpcoming.length - 6} more upcoming events, new events roll
               onto this list as they approach. Check back weekly or follow the
               chamber for announcements.
             </p>
@@ -192,19 +173,15 @@ export default function EventsPage() {
         </FadeIn>
       </section>
 
-      {/* ─── BAND — Monthly Programs ──────────────────────────── */}
-      {/* py-f55/f89 — BAND tier, bg-secondary + border-y */}
+      {/* Monthly Programs */}
       <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
-            {/* mb-f8 — heading→subhead */}
             <h2 className="text-h2 mb-f8">Monthly Programs</h2>
-            {/* mb-f21 — subhead→grid */}
             <p className="text-body-lg text-text-secondary mb-f21">
-              Five reliable rhythms across the month — show up to one, all five, or
+              Five reliable rhythms across the month, show up to one, all five, or
               rotate. Members and prospective members welcome.
             </p>
-            {/* gap-f21 — card grid gap */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-f21">
               {[
                 {
@@ -212,45 +189,42 @@ export default function EventsPage() {
                   freq: "1st Tuesday",
                   time: "11:30 AM – 1:00 PM",
                   price: "$25 members / $30 non-members",
-                  desc: "The chamber's flagship lunch program. Featured speakers on regional business topics — recent: Cleveland Browns Stadium development, leadership and human connection, State of the City. Lunch included.",
+                  desc: "The chamber's flagship lunch program. Featured speakers on regional business topics, recent: Cleveland Browns Stadium development, leadership and human connection, State of the City. Lunch included.",
                 },
                 {
                   name: "Networking WOW",
                   freq: "3rd Wednesday",
                   time: "8:30 – 10:00 AM",
                   price: "$14 members / $20 prospective",
-                  desc: "Watch Opportunities Work — structured morning networking with elevator pitches, group discussion, coffee and pastries. Advance registration required, no walk-ins.",
+                  desc: "Watch Opportunities Work, structured morning networking with elevator pitches, group discussion, coffee and pastries. Advance registration required, no walk-ins.",
                 },
                 {
                   name: "Safety Council",
                   freq: "3rd Tuesday",
                   time: "11:30 AM – 1:00 PM",
                   price: "$20 per person",
-                  desc: "Monthly OSHA-aligned safety training with rotating expert speakers — PPE, AI in hazard prediction, workplace risk assessment. Counts toward BWC group rebate eligibility.",
+                  desc: "Monthly OSHA-aligned safety training with rotating expert speakers, PPE, AI in hazard prediction, workplace risk assessment. Counts toward BWC group rebate eligibility.",
                 },
                 {
                   name: "Chamber Chat",
                   freq: "Last Friday",
                   time: "9:00 – 10:00 AM",
                   price: "Free",
-                  desc: "Your monthly Friday networking boost. Casual coffee, no agenda — celebrate wins, swap ideas, and meet new members in a relaxed setting. Bring your own beverage.",
+                  desc: "Your monthly Friday networking boost. Casual coffee, no agenda, celebrate wins, swap ideas, and meet new members in a relaxed setting. Bring your own beverage.",
                 },
                 {
                   name: "Business Brew",
                   freq: "Monthly happy hour",
                   time: "4:00 – 6:00 PM",
                   price: "Free (food/drink on your own)",
-                  desc: "After-hours mixer at rotating member venues — recently Buffalo Wild Wings, with industrial and hospitality hosts ahead. Open-house format, drop in any time.",
+                  desc: "After-hours mixer at rotating member venues, recently Buffalo Wild Wings, with industrial and hospitality hosts ahead. Open-house format, drop in any time.",
                 },
               ].map((p, i) => (
                 <FadeIn key={p.name} delay={i * 60}>
                   <div className="p-f21 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)] h-full">
                     <p className="text-caption text-cambridge font-bold">{p.freq}</p>
-                    {/* mt-f3 — freq→time micro-gap */}
                     <p className="text-caption text-text-tertiary mt-f3">{p.time}</p>
-                    {/* mt-f8 — time→name; mb-f8 — name→price */}
                     <h3 className="text-h4 mt-f8 mb-f8">{p.name}</h3>
-                    {/* mb-f13 — price→desc */}
                     <p className="text-caption text-cambridge font-medium mb-f13">{p.price}</p>
                     <p className="text-body-sm text-text-secondary">{p.desc}</p>
                   </div>
@@ -261,18 +235,14 @@ export default function EventsPage() {
         </div>
       </section>
 
-      {/* ─── FEATURE — Workshops + Annual Signature ───────────── */}
-      {/* py-f89/f144 — FEATURE tier, open white */}
+      {/* Workshops + Annual Signature */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
-          {/* ── Workshops & Orientation ── */}
-          {/* mb-f8 — heading→subhead */}
+          {/* Workshops & Orientation */}
           <h2 className="text-h2 mb-f8">Workshops &amp; Orientation</h2>
-          {/* mb-f21 — subhead→grid */}
           <p className="text-body-lg text-text-secondary mb-f21">
-            Hands-on learning and onboarding — outside the monthly mix.
+            Hands-on learning and onboarding, outside the monthly mix.
           </p>
-          {/* gap-f21 — card grid gap */}
           <div className="grid md:grid-cols-2 gap-f21">
             {nextGetToKnow && (
               <Link
@@ -286,17 +256,15 @@ export default function EventsPage() {
                 "
               >
                 <p className="text-caption text-cambridge font-bold">Quarterly orientation · Free</p>
-                {/* mt-f3 — tag→date micro-gap */}
                 <p className="text-caption text-text-tertiary mt-f3">
                   Next: {fmtLongDate(nextGetToKnow)} · {nextGetToKnow.startTime}
                 </p>
-                {/* mt-f8 — date→heading; mb-f13 — heading→body */}
                 <h3 className="text-h4 mt-f8 mb-f13 group-hover:text-accent transition-colors">
                   Get to Know the Chamber
                 </h3>
                 <p className="text-body-sm text-text-secondary">
                   A guided tour of membership benefits, committees, advocacy, and
-                  resources — over coffee and pastries. Built for prospective
+                  resources, over coffee and pastries. Built for prospective
                   members, brand-new members, and longtime supporters who want a
                   refresher. Runs four times a year. RSVP required.
                 </p>
@@ -322,7 +290,7 @@ export default function EventsPage() {
                 </h3>
                 <p className="text-body-sm text-text-secondary">
                   Hands-on morning workshop over a Chick-fil-A breakfast. June&apos;s
-                  session: Canva 101 with Emily Grimm — practical graphic design
+                  session: Canva 101 with Emily Grimm, practical graphic design
                   for social posts, flyers, and marketing materials, with brand
                   consistency tactics built in.
                 </p>
@@ -330,16 +298,12 @@ export default function EventsPage() {
             )}
           </div>
 
-          {/* mt-f34 — subsection divider */}
-          {/* ── Annual Signature Events ── */}
+          {/* Annual Signature Events */}
           <div className="mt-f34">
-            {/* mb-f8 — heading→subhead */}
             <h2 className="text-h2 mb-f8">Annual Signature Events</h2>
-            {/* mb-f21 — subhead→grid */}
             <p className="text-body-lg text-text-secondary mb-f21">
-              The events that anchor the chamber year — plan ahead and register early.
+              The events that anchor the chamber year, plan ahead and register early.
             </p>
-            {/* gap-f21 — card grid gap */}
             <div className="grid md:grid-cols-3 gap-f21">
               {(() => {
                 const golfDate = nextGolf
@@ -350,12 +314,12 @@ export default function EventsPage() {
                     name: "Annual Chamber Golf Outing",
                     date: golfDate,
                     description:
-                      "A luxurious day at Westfield Country Club — 18 holes (North & South courses), shotgun start, cart, boxed lunch, on-course beer tickets, and post-round dinner. The chamber's signature outdoor event. $230 members / $260 non-members.",
+                      "A luxurious day at Westfield Country Club, 18 holes (North & South courses), shotgun start, cart, boxed lunch, on-course beer tickets, and post-round dinner. The chamber's signature outdoor event. $230 members / $260 non-members.",
                     href: nextGolf ? `/events/${nextGolf.slug}` : null,
                   },
                   {
                     name: "ATHENA Awards",
-                    date: "Annual — Fall",
+                    date: "Annual, Fall",
                     description:
                       "Honoring women who demonstrate excellence in leadership, community service, and mentorship across Medina County.",
                     href: "/programs/athena-awards",
@@ -382,7 +346,6 @@ export default function EventsPage() {
                       "
                     >
                       <p className="text-caption text-cambridge font-bold">{event.date}</p>
-                      {/* mt-f8 — date→heading; mb-f13 — heading→body */}
                       <h3 className="text-h4 mt-f8 mb-f13 group-hover:text-accent transition-colors">
                         {event.name}
                       </h3>
@@ -405,20 +368,16 @@ export default function EventsPage() {
         </FadeIn>
       </section>
 
-      {/* ─── CLOSER — Members CTA ─────────────────────────────── */}
-      {/* py-f55/f89 — CLOSER taper */}
+      {/* Members CTA */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
-          {/* p-f34/f55 — card padding */}
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="max-w-2xl">
               <h2 className="text-h2">Members get priority access</h2>
-              {/* mt-f13 — heading→body */}
               <p className="text-body-lg text-text-secondary mt-f13">
                 Early registration, member pricing, and exclusive invitations to
                 private events. Membership pays for itself with one good connection.
               </p>
-              {/* mt-f21 — body→buttons; gap-f13 — between buttons */}
               <div className="mt-f21 flex flex-wrap gap-f13">
                 <Link
                   href="/membership/join"

@@ -60,13 +60,10 @@ export function Footer() {
 
   return (
     <footer className="ftr bg-bg-secondary border-t border-border-primary">
-      {/* pt-f55/f89 (55/89px) pb-f34/f55 (34/55px) — Fibonacci vertical rhythm */}
       <div className="mx-auto max-w-5xl px-6 lg:px-8 pt-f55 lg:pt-f89 pb-f34 lg:pb-f55">
 
-        {/* ─── Band 0: Closing statement — bookends the hero ──── */}
-        {/* mb-f55 (55px) — Fibonacci separation to brand rail */}
+        {/* 0: Closing statement — bookends the hero */}
         <div className="text-center mb-f55">
-          {/* mb-f3 (3px) — Fibonacci micro-gap, exact F2 */}
           <p className="text-overline text-cambridge mb-f3 tracking-[0.2em]">
             Since 1938
           </p>
@@ -85,12 +82,10 @@ export function Footer() {
               business
             </div>
           </div>
-          {/* mt-f21 (21px) — F8 */}
           <p className="text-body-sm text-text-secondary mt-f21 max-w-lg mx-auto">
-            A century of local advocacy, connection, and growth — and
+            A century of local advocacy, connection, and growth, and
             we&apos;re just getting started.
           </p>
-          {/* mt-f13 (13px) px-f21 (21px) py-f13 (13px) — F7/F8/F7 */}
           <Link
             href="/membership/join"
             className="
@@ -109,11 +104,9 @@ export function Footer() {
         {/* Accent stripe */}
         <div className="ftr__rule" aria-hidden="true" />
 
-        {/* ─── Band 1: Brand rail (centered) ──────────────────── */}
-        {/* mt-f34 (34px) — F9 */}
+        {/* 1: Brand rail (centered) */}
         <div className="flex flex-col items-center text-center mt-f34">
           <FooterStamp />
-          {/* mt-f3 (3px) — F2, tight sub-label rhythm */}
           <p className="text-body-sm text-text-secondary max-w-md leading-relaxed mt-f3">
             Greater Medina Chamber of Commerce.
             <br />
@@ -190,8 +183,7 @@ export function Footer() {
         {/* Accent stripe — mt-f34 (34px) — F9 */}
         <div className="ftr__rule mt-f34" aria-hidden="true" />
 
-        {/* ─── Band 2: Quick links ─────────────────────────────── */}
-        {/* mt-f34 (34px) gap-x-f21 (21px) gap-y-f13 (13px) — F9/F8/F7 */}
+        {/* 2: Quick links */}
         {/* 8 links = F6 — fills 2 rows × 4 cols exactly */}
         <nav aria-label="Footer quick links" className="mt-f34">
           <ul className="grid grid-cols-2 sm:grid-cols-4 gap-x-f21 gap-y-f13 text-body-sm text-center">
@@ -208,8 +200,7 @@ export function Footer() {
         {/* Accent stripe — mt-f34 (34px) — F9 */}
         <div className="ftr__rule mt-f34" aria-hidden="true" />
 
-        {/* ─── Band 3: Bottom bar ──────────────────────────────── */}
-        {/* mt-f21 (21px) gap-f13 (13px) — F8/F7 */}
+        {/* 3: Bottom bar */}
         <div className="mt-f21 flex flex-col items-center gap-f13">
           <p className="text-caption text-text-tertiary text-center">
             © {year} Greater Medina Chamber of Commerce.

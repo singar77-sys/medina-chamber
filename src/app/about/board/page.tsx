@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     "Meet the volunteer board of directors leading the Greater Medina Chamber of Commerce. Local business leaders guiding the chamber's strategy and advocacy for Medina County.",
   openGraph: {
-    title: "Board of Directors — Greater Medina Chamber of Commerce",
+    title: "Board of Directors | Greater Medina Chamber of Commerce",
     description:
       "Local business leaders guiding the chamber's strategy and advocacy.",
   },
@@ -45,9 +45,9 @@ export default function BoardPage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "AboutPage",
-    name: "Board of Directors — Greater Medina Chamber of Commerce",
+    name: "Board of Directors | Greater Medina Chamber of Commerce",
     description:
-      "Meet the volunteer board of directors leading the Greater Medina Chamber of Commerce — local business leaders guiding strategy and advocacy for Medina County.",
+      "Meet the volunteer board of directors leading the Greater Medina Chamber of Commerce, local business leaders guiding strategy and advocacy for Medina County.",
     url: "https://medinachamber.com/about/board",
     mainEntity: {
       "@type": "Organization",

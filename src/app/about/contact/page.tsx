@@ -7,30 +7,12 @@ import { FadeIn } from "@/components/FadeIn";
 import { totalCount } from "@/data/members";
 import { safeJsonLd } from "@/lib/json-ld";
 
-/**
- * Contact page — φ spatial system applied throughout.
- *
- * Section archetypes (Euclidean page formula):
- *   HERO    pt-f144 pb-f89   — lead, ambient gradient, no photo bg
- *   BAND    py-f55 lg:py-f89 — bg-secondary + border-y
- *   FEATURE py-f89 lg:py-f144— open white section, primary content
- *   CLOSER  py-f55 lg:py-f89 — taper at end; FEATURE weight but lighter close
- *
- * Internal rhythm (one tier smaller than the archetype):
- *   overline → heading  mb-f8  (8px)
- *   heading  → body     mt-f13 (13px)
- *   body     → CTA      mt-f21 (21px)
- *   card padding        p-f21 / p-f34 / p-f55 by section weight
- *   grid gaps           gap-f21 (cards) / gap-f34 lg:gap-f55 (2-col)
- *   inline gaps         gap-f13 / gap-f8
- */
-
 export const metadata: Metadata = {
   title: "Contact Us",
   description:
     "Get in touch with the Greater Medina Chamber of Commerce. Located at 139 N. Court Street, Suite A, Medina, OH 44256. Call (330) 723-8773 or send us a message.",
   openGraph: {
-    title: "Contact — Greater Medina Chamber of Commerce",
+    title: "Contact | Greater Medina Chamber of Commerce",
     description:
       "Reach out with questions about membership, events, or anything else. We're here to help.",
   },
@@ -90,8 +72,7 @@ export default function ContactPage() {
         dangerouslySetInnerHTML={{ __html: safeJsonLd(contactJsonLd) }}
       />
 
-      {/* ─── HERO — ambient gradient, no photo bg ─────────────── */}
-      {/* pt-f144 (144px) pb-f89 (89px) — HERO tier asymmetry = φ ratio */}
+      {/* ambient gradient, no photo bg */}
       <div className="relative isolate overflow-hidden">
         <div className="slow-gradient" aria-hidden="true">
           <div className="slow-gradient__grid" />
@@ -99,20 +80,17 @@ export default function ContactPage() {
 
         <section className="relative mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
           <div className="max-w-3xl">
-            {/* mb-f8 (8px) — overline→heading micro-gap */}
             <p className="text-overline text-cambridge mb-f8">Contact</p>
             <h1 className="text-display">
               Get in Touch
               <br />
               <span className="text-accent">with the Chamber</span>
             </h1>
-            {/* mt-f13 (13px) — heading→body gap */}
             <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
-              We&apos;re the hub of Medina County&apos;s business network —{" "}
+              We&apos;re the hub of Medina County&apos;s business network, {" "}
               {totalCount}+ members across every community in the area.
               Questions about membership, events, or how we can help?
             </p>
-            {/* mt-f21 (21px) gap-f13 (13px) — body→CTA and button gap */}
             <div className="mt-f21 flex flex-wrap gap-f13">
               <a
                 href="tel:+13307238773"
@@ -153,16 +131,13 @@ export default function ContactPage() {
         </section>
       </div>
 
-      {/* ─── BAND — quick-route strip ─────────────────────────── */}
-      {/* py-f55/f89 (55/89px) — BAND tier */}
+      {/* quick-route strip */}
       <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
-            {/* mb-f21 (21px) — label→grid gap */}
             <p className="text-caption text-text-tertiary font-bold uppercase tracking-wider mb-f21">
               Looking for something specific?
             </p>
-            {/* gap-f21 (21px) — card grid gap */}
             <div className="grid sm:grid-cols-3 gap-f21">
               {routes.map((r) => (
                 <Link
@@ -189,18 +164,14 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* ─── FEATURE — form + Stephanie ───────────────────────── */}
-      {/* py-f89/f144 (89/144px) — FEATURE tier, primary open section */}
+      {/* form + Stephanie */}
       <section id="contact-form" className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
-          {/* gap-f34/f55 (34/55px) — 2-col layout gap */}
           <div className="grid lg:grid-cols-2 gap-f34 lg:gap-f55 items-start">
             <ContactForm />
 
             <aside>
-              {/* p-f34/f55 (34/55px) — card interior padding */}
               <div className="bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] p-f34 lg:p-f55">
-                {/* mb-f21 (21px) — photo→label gap */}
                 <div className="mb-f21 overflow-hidden rounded-[var(--radius-md)]">
                   <Image
                     src="/images/people/staff/stephanie-mueller-membership-events-coordinator-greater-medina-chamber.jpg"
@@ -212,19 +183,16 @@ export default function ContactPage() {
                   />
                 </div>
 
-                {/* mb-f3 (3px) — role→name micro-gap */}
                 <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-f3">
                   Membership &amp; Events
                 </p>
                 <p className="text-h4 text-text-primary">Stephanie Mueller</p>
-                {/* mt-f8 (8px) heading→body, mb-f21 (21px) body→divider */}
                 <p className="text-body-sm text-text-secondary mt-f8 mb-f21 leading-relaxed">
                   Stephanie is your direct line for membership questions, event
                   sponsorships, and ribbon cuttings. She responds within one
                   business day.
                 </p>
 
-                {/* space-y-f13 (13px) pt-f21 (21px) — contact list rhythm */}
                 <div className="space-y-f13 border-t border-border-secondary pt-f21">
                   <a
                     href="tel:+13307238773"
@@ -251,20 +219,16 @@ export default function ContactPage() {
         </FadeIn>
       </section>
 
-      {/* ─── BAND — network map ───────────────────────────────── */}
-      {/* py-f55/f89 (55/89px) — BAND tier, bg-secondary + border-y */}
+      {/* network map */}
       <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
-            {/* mb-f34 (34px) — header block→map gap */}
             <div className="max-w-3xl mb-f34">
-              {/* mb-f8 (8px) — overline→heading micro-gap */}
               <p className="text-overline text-cambridge mb-f8">Where we are</p>
               <h2 className="text-h2">
-                139 N. Court Street —{" "}
+                139 N. Court Street, {" "}
                 <span className="text-text-secondary">and {totalCount}+ members across Medina County</span>
               </h2>
-              {/* mt-f13 (13px) — heading→body gap */}
               <p className="text-body text-text-secondary mt-f13">
                 Click the hub to open directions, or explore the network
                 radiating across every community we serve.
@@ -307,27 +271,21 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* ─── CLOSER — membership bookend ──────────────────────── */}
-      {/* py-f55/f89 — CLOSER taper (open section, lighter close weight) */}
+      {/* membership bookend */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
-          {/* p-f34/f55 (34/55px) — card padding follows section weight */}
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-            {/* gap-f34 (34px) — 2-col gap */}
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
-                {/* mb-f8 (8px) — overline→heading */}
                 <p className="text-overline text-cambridge mb-f8">Membership</p>
                 <h2 className="text-h3">
                   Not sure if membership is right for you?
                 </h2>
-                {/* mt-f13 (13px) — heading→body */}
                 <p className="text-body text-text-secondary mt-f13 leading-relaxed">
-                  Stephanie can walk you through the options — no pressure. Or
+                  Stephanie can walk you through the options, no pressure. Or
                   browse the benefits and tiers on your own first.
                 </p>
               </div>
-              {/* gap-f13 (13px) — button stack gap */}
               <div className="flex flex-col sm:flex-row lg:flex-col gap-f13">
                 <Link
                   href="/membership/join"

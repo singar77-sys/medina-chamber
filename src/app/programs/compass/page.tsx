@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     "The Compass Program is a professional leadership development initiative by the Greater Medina Chamber of Commerce, in partnership with the Center for Immersive Leadership. Five interactive sessions covering self-awareness, communication, well-being, and community citizenship.",
   openGraph: {
-    title: "Compass Leadership Program — Greater Medina Chamber of Commerce",
+    title: "Compass Leadership Program | Greater Medina Chamber of Commerce",
     description:
       "Five-session leadership development program for professionals at every career stage. Presented by the Greater Medina Chamber and the Center for Immersive Leadership.",
   },
@@ -67,7 +67,7 @@ const audience = [
   },
   {
     title: "Employer-Sponsored",
-    description: "Team members your organization wants to invest in — Compass is a retention and development tool.",
+    description: "Team members your organization wants to invest in, Compass is a retention and development tool.",
   },
 ];
 
@@ -130,7 +130,7 @@ export default function CompassPage() {
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
           A five-session professional development program designed to help
           Medina County professionals grow in self-awareness, leadership
-          skills, and community engagement — at every stage of their career.
+          skills, and community engagement, at every stage of their career.
         </p>
         <p className="text-body-sm text-text-tertiary mt-4">
           Presented by the{" "}

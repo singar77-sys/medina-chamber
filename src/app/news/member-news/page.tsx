@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description:
     "News and announcements from Greater Medina Chamber of Commerce member businesses. Job postings, events, promotions, and milestones from the Medina County business community.",
   openGraph: {
-    title: "Member News — Greater Medina Chamber of Commerce",
+    title: "Member News | Greater Medina Chamber of Commerce",
     description:
       "News and announcements from Medina County businesses.",
   },
@@ -29,7 +29,7 @@ export default function MemberNewsPage() {
           <span className="text-accent">in Medina Business</span>
         </h1>
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-          Member businesses share their news directly through the Chamber —
+          Member businesses share their news directly through the Chamber, 
           events, promotions, milestones, job openings, and more. This is the
           pulse of Medina County&apos;s business community.
         </p>
@@ -56,7 +56,7 @@ export default function MemberNewsPage() {
                   <div className="relative h-44 bg-bg-secondary shrink-0">
                     <Image
                       src={article.thumbnail}
-                      alt={`${article.title} — Greater Medina Chamber of Commerce member news`}
+                      alt={`${article.title}, Greater Medina Chamber of Commerce member news`}
                       fill
                       className="object-contain p-4"
                     />
@@ -103,7 +103,7 @@ export default function MemberNewsPage() {
           <h2 className="text-h2">Want to post your news?</h2>
           <p className="text-body-lg text-text-secondary mt-4">
             Chamber members can submit news directly through the member portal.
-            Your announcement reaches the entire Chamber network — other
+            Your announcement reaches the entire Chamber network, other
             business owners, community leaders, and potential customers.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">

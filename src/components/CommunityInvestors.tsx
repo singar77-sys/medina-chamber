@@ -52,7 +52,7 @@ export function CommunityInvestors() {
                 The businesses leading<br />Medina County.
               </h2>
               <p className="text-body-sm text-text-secondary mt-3 max-w-md leading-relaxed">
-                Our highest-tier members — investing in Medina County&apos;s
+                Our highest-tier members, investing in Medina County&apos;s
                 business community at the top level.
               </p>
             </div>

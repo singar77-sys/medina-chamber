@@ -516,7 +516,7 @@ export function Header() {
           {/* h-f89 (89px) nav / logo h-f55 (55px) → ratio 55:89 = F10:F11 = φ⁻¹ = 0.618 */}
           <div className="grid grid-cols-[1fr_auto_1fr] items-center h-f89">
 
-            {/* ── Left wing: Logo + bee mark ── */}
+            {/* Left wing: Logo + bee mark */}
             <div className="flex items-center gap-2">
               {/* Logo pair: CSS-driven by data-theme to avoid hydration flash.
                   JS reads theme AFTER hydration → logo briefly shows the
@@ -567,7 +567,7 @@ export function Header() {
               </Link>
             </div>
 
-            {/* ── Sacred center: Desktop nav ── */}
+            {/* Sacred center: Desktop nav */}
             <nav
               className="hidden xl:flex items-center gap-f5"
               onPointerLeave={scheduleClose}
@@ -585,7 +585,7 @@ export function Header() {
               ))}
             </nav>
 
-            {/* ── Right wing: Controls ── */}
+            {/* Right wing: Controls */}
             <div className="flex items-center justify-end gap-f8 col-start-3">
               <CommandPaletteTrigger />
               <ThemeToggle />

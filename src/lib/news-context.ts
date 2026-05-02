@@ -29,7 +29,7 @@ export function formatNewsForPrompt(count = 6): string {
     const teaser = a.subtitle || a.body.substring(0, 100);
     const member = a.memberName ? ` (${a.memberName})` : "";
     const url = `https://medinachamber.com/news/member-news/${a.slug}`;
-    return `- ${a.dateISO}: [${a.title}](${url})${member}${teaser ? ` — ${teaser}` : ""}`;
+    return `- ${a.dateISO}: [${a.title}](${url})${member}${teaser ? `, ${teaser}` : ""}`;
   });
 
   return `RECENT MEMBER NEWS (${recent.length} latest posts from member businesses):\n${lines.join("\n")}`;

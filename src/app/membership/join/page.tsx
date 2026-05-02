@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description:
     "Join the Greater Medina Chamber of Commerce. Membership benefits include networking events, business directory listing, advocacy, savings programs, and community visibility.",
   openGraph: {
-    title: "Join — Greater Medina Chamber of Commerce",
+    title: "Join | Greater Medina Chamber of Commerce",
     description:
       "Networking, directory listing, advocacy, savings programs, and community visibility for Medina County businesses.",
   },
@@ -19,7 +19,7 @@ const benefits = [
   {
     title: "Business Directory Listing",
     description:
-      "Your business appears in the Chamber's searchable member directory — one of the first places customers look for local services.",
+      "Your business appears in the Chamber's searchable member directory, one of the first places customers look for local services.",
   },
   {
     title: "Networking Events",
@@ -59,7 +59,7 @@ const faqs = [
   },
   {
     q: "Can I attend events before joining?",
-    a: "Yes. Most events are open to prospective members. Come to a Chamber Chat or mixer first — see if it's your kind of room.",
+    a: "Yes. Most events are open to prospective members. Come to a Chamber Chat or mixer first, see if it's your kind of room.",
   },
   {
     q: "How do I get listed in the member directory?",
@@ -95,7 +95,7 @@ export default function JoinPage() {
         </h1>
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
           The Greater Medina Chamber of Commerce has been connecting businesses
-          since 1938. Membership means your business has a seat at the table —
+          since 1938. Membership means your business has a seat at the table, 
           networking, advocacy, visibility, and the relationships that actually
           drive growth in a county this size.
         </p>

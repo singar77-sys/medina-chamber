@@ -30,7 +30,7 @@ function Swatch({
 export default function FoundationPage() {
   return (
     <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24 space-y-24">
-      {/* ─── Hero / Intro ─────────────────────────────── */}
+      {/* / Intro */}
       <section className="relative">
         <p className="text-overline text-cambridge mb-4">Foundation Specimen</p>
         <h1 className="text-display max-w-3xl">
@@ -40,7 +40,7 @@ export default function FoundationPage() {
         </h1>
         <p className="text-body-lg text-text-secondary max-w-2xl mt-6">
           Typography, color palette, and foundational tokens for the new
-          medinachamber.com — built on Next.js 16, BN Bergen, and a four-color
+          medinachamber.com, built on Next.js 16, BN Bergen, and a four-color
           brand palette rooted in Oxford Blue.
         </p>
 
@@ -50,33 +50,33 @@ export default function FoundationPage() {
         </div>
       </section>
 
-      {/* ─── Typography Scale ─────────────────────────── */}
+      {/* Typography Scale */}
       <section>
         <h2 className="text-overline text-cambridge mb-8">Typography Scale</h2>
 
         <div className="space-y-8">
           <div>
-            <p className="text-caption mb-2">Display — Hero headlines</p>
+            <p className="text-caption mb-2">Display, Hero headlines</p>
             <p className="text-display">The Square</p>
           </div>
 
           <div>
-            <p className="text-caption mb-2">H1 — Page titles</p>
+            <p className="text-caption mb-2">H1, Page titles</p>
             <h1>Connecting Medina Since 1938</h1>
           </div>
 
           <div>
-            <p className="text-caption mb-2">H2 — Section headers</p>
+            <p className="text-caption mb-2">H2, Section headers</p>
             <h2>Membership Benefits</h2>
           </div>
 
           <div>
-            <p className="text-caption mb-2">H3 — Subsection</p>
+            <p className="text-caption mb-2">H3, Subsection</p>
             <h3>Chamber Programs &amp; Events</h3>
           </div>
 
           <div>
-            <p className="text-caption mb-2">H4 — Card titles</p>
+            <p className="text-caption mb-2">H4, Card titles</p>
             <h4>Annual Golf Outing</h4>
           </div>
 
@@ -121,23 +121,23 @@ export default function FoundationPage() {
         </div>
       </section>
 
-      {/* ─── Font Weights ─────────────────────────────── */}
+      {/* Font Weights */}
       <section>
         <h2 className="text-overline text-cambridge mb-8">BN Bergen Weights</h2>
         <div className="space-y-4">
           <p className="text-h2 font-light">
-            Light 300 — Medina Means Business
+            Light 300, Medina Means Business
           </p>
           <p className="text-h2 font-regular">
-            Regular 400 — Medina Means Business
+            Regular 400, Medina Means Business
           </p>
           <p className="text-h2 font-bold">
-            Bold 700 — Medina Means Business
+            Bold 700, Medina Means Business
           </p>
         </div>
       </section>
 
-      {/* ─── Color Palette ────────────────────────────── */}
+      {/* Color Palette */}
       <section>
         <h2 className="text-overline text-cambridge mb-8">Brand Palette</h2>
 
@@ -165,7 +165,7 @@ export default function FoundationPage() {
         </div>
       </section>
 
-      {/* ─── Semantic Colors ──────────────────────────── */}
+      {/* Semantic Colors */}
       <section>
         <h2 className="text-overline text-cambridge mb-8">
           Semantic Tokens (theme-aware)
@@ -205,23 +205,23 @@ export default function FoundationPage() {
             <h3 className="text-h4 mb-4">Text</h3>
             <div className="space-y-3">
               <p className="text-body text-text-primary font-bold">
-                text-primary — Headlines and body
+                text-primary, Headlines and body
               </p>
               <p className="text-body text-text-secondary">
-                text-secondary — Supporting copy
+                text-secondary, Supporting copy
               </p>
               <p className="text-body text-text-tertiary">
-                text-tertiary — Captions and meta
+                text-tertiary, Captions and meta
               </p>
               <p className="text-body text-text-accent font-bold">
-                text-accent — Links and emphasis
+                text-accent, Links and emphasis
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ─── Component Samples ────────────────────────── */}
+      {/* Component Samples */}
       <section>
         <h2 className="text-overline text-cambridge mb-8">Component Tokens</h2>
 
@@ -337,12 +337,12 @@ export default function FoundationPage() {
         </div>
       </section>
 
-      {/* ─── Photo Grid ───────────────────────────────── */}
+      {/* Photo Grid */}
       <section>
         <h2 className="text-overline text-cambridge mb-8">Photography</h2>
         <p className="text-body text-text-secondary mb-8 max-w-2xl">
           Real Medina. No stock photos. The town square, the gazebo, downtown
-          storefronts — this is the brand&apos;s visual bedrock.
+          storefronts, this is the brand&apos;s visual bedrock.
         </p>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -370,7 +370,7 @@ export default function FoundationPage() {
         </div>
       </section>
 
-      {/* ─── Logo Marks ───────────────────────────────── */}
+      {/* Logo Marks */}
       <section>
         <h2 className="text-overline text-cambridge mb-8">Logo System</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -413,7 +413,7 @@ export default function FoundationPage() {
         </div>
       </section>
 
-      {/* ─── Architecture Summary ─────────────────────── */}
+      {/* Architecture Summary */}
       <section className="pb-8">
         <h2 className="text-overline text-cambridge mb-8">Stack</h2>
         <div className="grid md:grid-cols-2 gap-8">

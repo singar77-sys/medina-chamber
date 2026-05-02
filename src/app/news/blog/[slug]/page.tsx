@@ -97,7 +97,7 @@ export default async function BlogPostPage(
         url: post.image.startsWith("http")
           ? post.image
           : `https://medinachamber.com${post.image}`,
-        caption: `${post.title} — Greater Medina Chamber of Commerce blog post`,
+        caption: `${post.title}, Greater Medina Chamber of Commerce blog post`,
       },
     }),
   };
@@ -134,7 +134,7 @@ export default async function BlogPostPage(
         </nav>
 
         <div className="grid lg:grid-cols-[1fr_280px] gap-12 lg:gap-16">
-          {/* ── Main ── */}
+          {/* Main */}
           <article>
             <p className="text-overline text-cambridge mb-4">{dateDisplay}</p>
             <h1 className="text-display leading-tight">{post.title}</h1>
@@ -144,7 +144,7 @@ export default async function BlogPostPage(
               <div className="mt-8 rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary">
                 <Image
                   src={post.image}
-                  alt={`${post.title} — Greater Medina Chamber of Commerce blog post`}
+                  alt={`${post.title}, Greater Medina Chamber of Commerce blog post`}
                   width={800}
                   height={450}
                   className="object-cover w-full max-h-96"
@@ -164,7 +164,7 @@ export default async function BlogPostPage(
             )}
           </article>
 
-          {/* ── Sidebar ── */}
+          {/* Sidebar */}
           <aside className="space-y-6">
             <div className="sticky top-8 space-y-4">
               {/* Join CTA */}

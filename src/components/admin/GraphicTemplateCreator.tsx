@@ -145,7 +145,7 @@ export function GraphicTemplateCreator({ adminToken, onSaved, onCancel }: Props)
             </button>
           </div>
           <p className="text-xs text-gray-400 mt-1.5">
-            Describe any visual style — brand colors and logo are always enforced.
+            Describe any visual style, brand colors and logo are always enforced.
           </p>
         </div>
       </div>
@@ -165,7 +165,7 @@ export function GraphicTemplateCreator({ adminToken, onSaved, onCancel }: Props)
             style={{ borderColor: "#83BCA9", borderTopColor: "transparent" }}
           />
           <span className="text-sm text-gray-500">
-            Claude is designing your template — this takes 10–20 seconds…
+            Claude is designing your template, this takes 10–20 seconds…
           </span>
         </div>
       )}
@@ -175,7 +175,7 @@ export function GraphicTemplateCreator({ adminToken, onSaved, onCancel }: Props)
         <div className="grid grid-cols-[1fr_320px] gap-6 items-start">
           {/* Preview */}
           <div>
-            <p className="text-xs text-gray-400 mb-2">Preview — Social (1200×630)</p>
+            <p className="text-xs text-gray-400 mb-2">Preview, Social (1200×630)</p>
             <div className="border border-gray-200 rounded-xl overflow-hidden">
               <FluidGraphicFrame mode="social">
                 <DynamicGraphic config={draft as GraphicConfig} mode="social" />

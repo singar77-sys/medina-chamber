@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Business Resources — Medina County, Ohio",
+  title: "Business Resources, Medina County, Ohio",
   description:
-    "Practical resources for Medina County, Ohio businesses — how to start a business, funding and grants, and workforce hiring programs.",
+    "Practical resources for Medina County, Ohio businesses, how to start a business, funding and grants, and workforce hiring programs.",
   openGraph: {
-    title: "Business Resources — Greater Medina Chamber of Commerce",
+    title: "Business Resources | Greater Medina Chamber of Commerce",
     description:
       "Start a business, find funding, and build your team in Medina County, Ohio.",
   },
@@ -19,7 +19,7 @@ const resources = [
     label: "Starting Up",
     title: "Start a Business in Medina County",
     description:
-      "Step-by-step guide to launching — business structure, Ohio registration, EIN, licenses, taxes, and the local resources that help new businesses get off the ground.",
+      "Step-by-step guide to launching, business structure, Ohio registration, EIN, licenses, taxes, and the local resources that help new businesses get off the ground.",
     cta: "Read the guide",
   },
   {
@@ -27,7 +27,7 @@ const resources = [
     label: "Funding",
     title: "Business Grants & Funding",
     description:
-      "State, federal, and local programs for Medina County businesses — SBA loans, JobsOhio incentives, USDA Rural Development, Ohio TechCred, and Chamber savings programs.",
+      "State, federal, and local programs for Medina County businesses, SBA loans, JobsOhio incentives, USDA Rural Development, Ohio TechCred, and Chamber savings programs.",
     cta: "Explore funding",
   },
   {
@@ -35,7 +35,7 @@ const resources = [
     label: "Hiring",
     title: "Hire & Grow Your Team",
     description:
-      "Post jobs, access OhioMeansJobs, find on-the-job training subsidies, and connect your team with safety and credentials programs — all available to Medina County employers.",
+      "Post jobs, access OhioMeansJobs, find on-the-job training subsidies, and connect your team with safety and credentials programs, all available to Medina County employers.",
     cta: "Workforce resources",
   },
 ];
@@ -86,7 +86,7 @@ export default function ResourcesPage() {
             <h2 className="text-h2">The Chamber is your first resource</h2>
             <p className="text-body-lg text-text-secondary mt-4">
               Membership connects you to every other business owner in Medina
-              County — and to the staff who know which programs actually apply to
+              County, and to the staff who know which programs actually apply to
               your situation. From $345/year.
             </p>
           </div>

@@ -69,7 +69,7 @@ const FRAG = /* glsl */ `
 
     float t = u_time * 0.12;
 
-    // Two drifting centers — independent lissajous curves.
+    // Two drifting centers, independent lissajous curves.
     vec2 c1 = vec2(
       0.28 * aspect + 0.22 * aspect * sin(t * 0.9 + 1.2),
       0.38 + 0.14 * cos(t * 0.7)
@@ -100,7 +100,7 @@ const FRAG = /* glsl */ `
     vec3 baseLight = mix(cream, cambridge, 0.04);
     vec3 base = mix(baseDark, baseLight, u_theme);
 
-    // Primary wash — cambridge-weighted in both themes, but a touch
+    // Primary wash, cambridge-weighted in both themes, but a touch
     // more saturated on dark to keep the glow readable.
     vec3 wash = mix(
       mix(oxford, cambridge, 0.55),
@@ -108,14 +108,14 @@ const FRAG = /* glsl */ `
       u_theme
     );
 
-    // Secondary wash — a cooler blue-ish sibling for depth.
+    // Secondary wash, a cooler blue-ish sibling for depth.
     vec3 wash2 = mix(
       mix(oxford, cambridge, 0.25) + vec3(0.00, 0.03, 0.08),
       mix(cream,  cambridge, 0.15) + vec3(0.02, 0.04, 0.08),
       u_theme
     );
 
-    // Mouse blob — tiny kiss of coquelicot, stays subtle.
+    // Mouse blob, tiny kiss of coquelicot, stays subtle.
     vec3 spark = mix(
       mix(oxford, coquelicot, 0.55),
       mix(cream,  coquelicot, 0.35),

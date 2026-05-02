@@ -1334,7 +1334,7 @@ export function MemberGraph({ members }: MemberGraphProps) {
                   : "0 0 8px rgba(0,184,148,0.8)",
               }} />
               {activeCategory
-                ? `${activeCategory} — ${focusMembers.length} members`
+                ? `${activeCategory}, ${focusMembers.length} members`
                 : `${members.length} members · ${sortedCategories.length} industries`}
             </span>
             <span style={{ display: "flex", alignItems: "center", gap: 3, opacity: 0.6, fontSize: 11 }}>

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description:
     "Business tips, strategy, and resources from the Greater Medina Chamber of Commerce. Practical advice for small business owners in Medina County, Ohio.",
   openGraph: {
-    title: "Business Blog — Greater Medina Chamber of Commerce",
+    title: "Business Blog | Greater Medina Chamber of Commerce",
     description:
       "Practical business tips and strategy for Medina County business owners.",
   },
@@ -29,7 +29,7 @@ export default function BlogListingPage() {
           <span className="text-accent">for Business Owners</span>
         </h1>
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-          Tips, strategy, and resources to help Medina County businesses grow —
+          Tips, strategy, and resources to help Medina County businesses grow, 
           published weekly by the Greater Medina Chamber of Commerce.
         </p>
       </section>
@@ -50,7 +50,7 @@ export default function BlogListingPage() {
               <div className="relative h-60 lg:h-auto bg-oxford/10">
                 <Image
                   src={featured.image}
-                  alt={`${featured.title} — featured Greater Medina Chamber of Commerce blog post`}
+                  alt={`${featured.title}, featured Greater Medina Chamber of Commerce blog post`}
                   fill
                   className="object-cover"
                   priority
@@ -96,7 +96,7 @@ export default function BlogListingPage() {
                   <div className="relative h-44 bg-oxford/10 shrink-0">
                     <Image
                       src={post.image}
-                      alt={`${post.title} — Greater Medina Chamber of Commerce blog post`}
+                      alt={`${post.title}, Greater Medina Chamber of Commerce blog post`}
                       fill
                       className="object-cover"
                     />

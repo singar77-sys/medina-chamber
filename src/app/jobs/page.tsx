@@ -3,20 +3,12 @@ import Link from "next/link";
 import { jobs, formatJobDate, totalJobsCount } from "@/data/jobs";
 import { FadeIn } from "@/components/FadeIn";
 
-/**
- * Job Board — φ spatial system applied throughout.
- *
- * HERO    pt-f144 pb-f89
- * FEATURE py-f89 lg:py-f144 — job listings (open white)
- * CLOSER  py-f55 lg:py-f89  — post-a-job CTA card
- */
-
 export const metadata: Metadata = {
   title: "Job Board",
   description:
     "Job openings posted by Greater Medina Chamber of Commerce member businesses. Find local employment opportunities in Medina County, Ohio.",
   openGraph: {
-    title: "Job Board — Greater Medina Chamber of Commerce",
+    title: "Job Board | Greater Medina Chamber of Commerce",
     description:
       "Local job openings posted by Medina County Chamber member businesses.",
   },
@@ -26,21 +18,18 @@ export const metadata: Metadata = {
 export default function JobsPage() {
   return (
     <>
-      {/* ─── HERO ─────────────────────────────────────────────── */}
-      {/* pt-f144 pb-f89 (144/89 = φ) — HERO tier */}
+      
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
         <div className="max-w-3xl">
-          {/* mb-f8 (8px) — overline→heading */}
           <p className="text-overline text-cambridge mb-f8">Member Resources</p>
           <h1 className="text-display">
             Local
             <br />
             <span className="text-accent">Job Board</span>
           </h1>
-          {/* mt-f13 (13px) — heading→body */}
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             Job openings posted by Greater Medina Chamber member businesses.
-            These are real positions from employers in Medina County — hiring
+            These are real positions from employers in Medina County, hiring
             locally, through the Chamber network.
           </p>
           {totalJobsCount > 0 && (
@@ -52,8 +41,7 @@ export default function JobsPage() {
         </div>
       </section>
 
-      {/* ─── FEATURE — Job listings ───────────────────────────── */}
-      {/* py-f89/f144 — FEATURE tier, primary open section */}
+      {/* Job listings */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
           {jobs.length === 0 ? (
@@ -61,7 +49,7 @@ export default function JobsPage() {
             <div className="py-f89 text-center">
               <p className="text-h3 text-text-tertiary">No open positions right now</p>
               <p className="text-body text-text-tertiary mt-f8">
-                Check back soon — member businesses post new openings regularly.
+                Check back soon, member businesses post new openings regularly.
               </p>
               <p className="text-body-sm text-text-tertiary mt-f21">
                 Member businesses can post jobs through the{" "}
@@ -92,7 +80,6 @@ export default function JobsPage() {
                 >
                   {/* Left: job info */}
                   <div className="flex-1 min-w-0">
-                    {/* gap-f8 mb-f3 — tags row and tag→title gap */}
                     <div className="flex flex-wrap items-center gap-f8 mb-f3">
                       {job.tags.map((tag) => (
                         <span
@@ -137,23 +124,19 @@ export default function JobsPage() {
         </FadeIn>
       </section>
 
-      {/* ─── CLOSER — Post a job CTA ──────────────────────────── */}
-      {/* py-f55/f89 — CLOSER taper */}
+      {/* Post a job CTA */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
-          {/* p-f34/f55 card padding, gap-f34 2-col gap */}
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
                 <h2 className="text-h2">Hiring? Post to the board.</h2>
-                {/* mt-f13 — heading→body */}
                 <p className="text-body-lg text-text-secondary mt-f13">
                   Chamber members can post job openings directly through the
                   Member Portal. Reach the Medina County business community and
                   connect with local talent.
                 </p>
               </div>
-              {/* space-y-f21 — button stack gap */}
               <div className="space-y-f21">
                 <a
                   href="https://greatermedinachamberofcommerce.growthzoneapp.com"

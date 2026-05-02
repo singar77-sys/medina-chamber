@@ -35,7 +35,7 @@ export async function generateMetadata(
     title,
     description,
     openGraph: {
-      title: `${community.name}, OH — Greater Medina Chamber of Commerce`,
+      title: `${community.name}, OH | Greater Medina Chamber of Commerce`,
       description,
     },
     alternates: { canonical: `/community/${slug}` },

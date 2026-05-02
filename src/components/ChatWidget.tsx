@@ -54,7 +54,7 @@ function contextForPath(pathname: string): PageContext {
     return {
       greeting: "Looking for something specific?",
       subtitle:
-        "I can shortcut the directory — tell me a trade, a neighborhood, or a name.",
+        "I can shortcut the directory, tell me a trade, a neighborhood, or a name.",
       prompts: [
         "Find a local plumber",
         "Who does commercial printing?",
@@ -155,7 +155,7 @@ function contextForPath(pathname: string): PageContext {
   // Default — homepage / everything else.
   return {
     greeting: "Your Medina Chamber concierge.",
-    subtitle: `${totalCount}+ members, live events, every program — ask me anything.`,
+    subtitle: `${totalCount}+ members, live events, every program, ask me anything.`,
     prompts: [...DEFAULT_PROMPTS],
     showPortalCta: true,
   };
@@ -306,7 +306,7 @@ function StephanieCaptureCard({
           name: name.trim(),
           email: email.trim(),
           topic: "membership",
-          note: "ChamberBot lead — expressed interest via chat",
+          note: "ChamberBot lead, expressed interest via chat",
           website_confirm: "",
           formLoadedAt,
         }),
@@ -341,7 +341,7 @@ function StephanieCaptureCard({
         <input type="text" required placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} disabled={status === "sending"} className={fieldCls} />
         <input type="email" required placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} disabled={status === "sending"} className={fieldCls} />
       </div>
-      {status === "error" && <p className="text-[10px] text-red-500">Something went wrong — try again.</p>}
+      {status === "error" && <p className="text-[10px] text-red-500">Something went wrong, try again.</p>}
       <div className="flex items-center gap-3">
         <button
           type="submit"
@@ -482,7 +482,7 @@ export function ChatWidget() {
 
   return (
     <div>
-      {/* ── Chat Panel ── */}
+      {/* Chat Panel */}
       {open && (
         <div className="
           fixed bottom-24 right-4 sm:right-6 z-50
@@ -725,7 +725,7 @@ export function ChatWidget() {
             </button>
           </form>
           <p className="px-4 pb-2 pt-1 text-[10px] text-text-tertiary leading-snug text-center">
-            AI — verify important info with the{" "}
+            AI, verify important info with the{" "}
             <a href="/about/contact" className="underline hover:text-text-secondary transition-colors">office</a>.{" "}
             <a href="/privacy" className="underline hover:text-text-secondary transition-colors">Privacy</a>
             {" · "}
@@ -736,7 +736,7 @@ export function ChatWidget() {
         </div>
       )}
 
-      {/* ── Proactive preview bubble ── */}
+      {/* Proactive preview bubble */}
       {previewText && !open && (
         <div
           className="
@@ -783,7 +783,7 @@ export function ChatWidget() {
         </div>
       )}
 
-      {/* ── Floating Button ── */}
+      {/* Floating Button */}
       <button
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? "Close chat" : "Open chamber assistant"}

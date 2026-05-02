@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "Member Benefits",
@@ -89,9 +90,28 @@ const extraBenefits = [
 ];
 
 export default function BenefitsPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Greater Medina Chamber of Commerce Member Benefits",
+    description:
+      "What you get as a Greater Medina Chamber member. Directory listing, networking, advocacy, savings programs, and more.",
+    url: "https://medinachamber.com/membership/benefits",
+    numberOfItems: coreBenefits.length + extraBenefits.length,
+    itemListElement: [...coreBenefits, ...extraBenefits].map((b, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: { "@type": "Thing", name: b.title, description: b.description },
+    })),
+  };
+
   return (
     <>
-      
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+      />
+
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
         <div className="max-w-3xl">
           <p className="text-overline text-cambridge mb-f8">Membership</p>
@@ -146,7 +166,6 @@ export default function BenefitsPage() {
                     {b.description}
                   </p>
                   {b.link && (
-                    /* mt-f13 — body→link gap */
                     <Link
                       href={b.link.href}
                       className="mt-f13 text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
@@ -223,6 +242,15 @@ export default function BenefitsPage() {
                 </Link>
               </div>
             </div>
+          </div>
+
+          <div className="mt-f34">
+            <Link
+              href="/membership"
+              className="text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
+            >
+              ← Back to Membership
+            </Link>
           </div>
         </FadeIn>
       </section>

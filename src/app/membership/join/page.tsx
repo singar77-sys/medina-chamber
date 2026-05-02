@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { FadeIn } from "@/components/FadeIn";
 import { ApplicationForm } from "./ApplicationForm";
-
 import { safeJsonLd } from "@/lib/json-ld";
+
 export const metadata: Metadata = {
   title: "Join the Chamber",
   description:
@@ -84,97 +85,123 @@ export default function JoinPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(faqJsonLd) }}
       />
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+
       {/* Hero */}
-      <section className="max-w-3xl">
-        <p className="text-overline text-cambridge mb-4">Join</p>
-        <h1 className="text-display">
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
+        <div className="max-w-3xl">
+          <p className="text-overline text-cambridge mb-f8">Join</p>
+          <h1 className="text-display">
             <span className="block">Grow With</span>
             <span className="block text-accent">Medina</span>
           </h1>
-        <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-          The Greater Medina Chamber of Commerce has been connecting businesses
-          since 1938. Membership means your business has a seat at the table, 
-          networking, advocacy, visibility, and the relationships that actually
-          drive growth in a county this size.
-        </p>
+          <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
+            The Greater Medina Chamber of Commerce has been connecting
+            businesses since 1938. Membership means your business has a seat
+            at the table, networking, advocacy, visibility, and the
+            relationships that actually drive growth in a county this size.
+          </p>
 
-        <div className="mt-10 flex flex-wrap gap-4">
-          <a
-            href="#apply"
-            className="
-              inline-flex items-center px-8 py-4
-              bg-accent hover:bg-accent-hover
-              text-white font-bold text-body
-              rounded-[var(--radius-md)]
-              transition-colors
-            "
-          >
-            Start Your Application →
-          </a>
-          <Link
-            href="/membership/pricing"
-            className="
-              inline-flex items-center px-6 py-4
-              bg-bg-tertiary hover:bg-border-primary
-              text-text-primary font-bold text-body-sm
-              rounded-[var(--radius-md)]
-              transition-colors
-            "
-          >
-            View Pricing
-          </Link>
+          <div className="mt-f34 flex flex-wrap gap-f13">
+            <a
+              href="#apply"
+              className="
+                inline-flex items-center px-8 py-4
+                bg-accent hover:bg-accent-hover
+                text-white font-bold text-body
+                rounded-[var(--radius-md)]
+                transition-colors
+              "
+            >
+              Start Your Application →
+            </a>
+            <Link
+              href="/membership/pricing"
+              className="
+                inline-flex items-center px-6 py-4
+                bg-bg-tertiary hover:bg-border-primary
+                text-text-primary font-bold text-body-sm
+                rounded-[var(--radius-md)]
+                transition-colors
+              "
+            >
+              View Pricing
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Benefits Grid */}
-      <section className="mt-24">
-        <h2 className="text-overline text-cambridge mb-8">
-          What Membership Gets You
-        </h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {benefits.map((b) => (
-            <div
-              key={b.title}
-              className="
-                p-6
-                bg-bg-secondary border border-border-secondary
-                rounded-[var(--radius-lg)]
-              "
-            >
-              <h3 className="text-h4 mb-3">{b.title}</h3>
-              <p className="text-body-sm text-text-secondary">
-                {b.description}
-              </p>
-            </div>
-          ))}
-        </div>
+      {/* Benefits */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+        <FadeIn>
+          <div className="mb-f21">
+            <p className="text-overline text-cambridge mb-f8">Why Join</p>
+            <h2 className="text-h2">What Membership Gets You</h2>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-f21">
+            {benefits.map((b) => (
+              <div
+                key={b.title}
+                className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
+              >
+                <h3 className="text-h4 mb-f8">{b.title}</h3>
+                <p className="text-body-sm text-text-secondary leading-relaxed">
+                  {b.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </FadeIn>
       </section>
 
       {/* FAQ */}
-      <section className="mt-24 max-w-3xl">
-        <h2 className="text-overline text-cambridge mb-8">
-          Common Questions
-        </h2>
-        <div className="space-y-8">
-          {faqs.map((faq) => (
-            <div key={faq.q}>
-              <h3 className="text-h4">{faq.q}</h3>
-              <p className="text-body text-text-secondary mt-2">{faq.a}</p>
+      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <FadeIn>
+            <div className="mb-f21 max-w-3xl">
+              <p className="text-overline text-cambridge mb-f8">
+                Common Questions
+              </p>
+              <h2 className="text-h2">Before You Apply</h2>
             </div>
-          ))}
+            <div className="grid md:grid-cols-2 gap-f21 max-w-5xl">
+              {faqs.map((faq) => (
+                <div
+                  key={faq.q}
+                  className="p-f21 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]"
+                >
+                  <h3 className="text-h4">{faq.q}</h3>
+                  <p className="text-body-sm text-text-secondary mt-f13 leading-relaxed">
+                    {faq.a}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </FadeIn>
         </div>
       </section>
 
       {/* Application form */}
-      <section id="apply" className="mt-24 scroll-mt-24">
-        <h2 className="text-overline text-cambridge mb-2">Apply</h2>
-        <h3 className="text-h2 mb-8">Membership Application</h3>
-        <div className="max-w-3xl">
-          <ApplicationForm />
-        </div>
+      <section
+        id="apply"
+        className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89 scroll-mt-24"
+      >
+        <FadeIn>
+          <div className="max-w-3xl">
+            <p className="text-overline text-cambridge mb-f8">Apply</p>
+            <h2 className="text-h2 mb-f21">Membership Application</h2>
+            <ApplicationForm />
+          </div>
+
+          <div className="mt-f34">
+            <Link
+              href="/membership"
+              className="text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
+            >
+              ← Back to Membership
+            </Link>
+          </div>
+        </FadeIn>
       </section>
-    </div>
     </>
   );
 }

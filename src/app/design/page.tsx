@@ -34,9 +34,8 @@ export default function FoundationPage() {
       <section className="relative">
         <p className="text-overline text-cambridge mb-4">Foundation Specimen</p>
         <h1 className="text-display max-w-3xl">
-          Medina Chamber
-          <br />
-          <span className="text-accent">Design System</span>
+          <span className="block">Medina Chamber</span>
+          <span className="block text-accent">Design System</span>
         </h1>
         <p className="text-body-lg text-text-secondary max-w-2xl mt-6">
           Typography, color palette, and foundational tokens for the new

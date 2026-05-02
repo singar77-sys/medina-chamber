@@ -20,14 +20,13 @@ export default function DirectoryPage() {
 
   return (
     <>
-      
+      {/* Hero */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
         <div className="max-w-3xl">
           <p className="text-overline text-cambridge mb-f8">Member Directory</p>
           <h1 className="text-display leading-none">
-            Find a Local
-            <br />
-            <span className="text-accent">Medina Business</span>
+            <span className="block">Find a Local</span>
+            <span className="block text-accent">Medina Business</span>
           </h1>
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             {totalCount}+ chamber member businesses, explore by industry, city,

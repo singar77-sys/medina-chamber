@@ -100,11 +100,9 @@ export default function MedinaMeansBusinessPage() {
               The Tagline. The Magazine. The Reality.
             </p>
             <h1 className="text-display text-oxford [[data-theme=dark]_&]:text-white leading-[0.95]">
-              Medina
-              <br />
-              Means
-              <br />
-              <span className="text-emerald [[data-theme=dark]_&]:text-cambridge">Business.</span>
+              <span className="block">Medina</span>
+              <span className="block">Means</span>
+              <span className="block text-emerald [[data-theme=dark]_&]:text-cambridge">Business.</span>
             </h1>
             <p className="text-body-lg text-text-secondary [[data-theme=dark]_&]:text-white/80 mt-8 max-w-2xl">
               Three words the Greater Medina Chamber of Commerce has been

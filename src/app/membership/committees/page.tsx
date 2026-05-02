@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "Committees & Councils",
   description:
-    "Get involved in the Greater Medina Chamber of Commerce through our committees and councils, from business advocacy and marketing to the Safety Council and Ambassador program.",
+    "Get involved in the Greater Medina Chamber of Commerce through our committees and councils. Business advocacy, marketing, the Safety Council, the Ambassador program, and more.",
   openGraph: {
     title: "Committees & Councils | Greater Medina Chamber of Commerce",
     description:
@@ -14,7 +15,13 @@ export const metadata: Metadata = {
   alternates: { canonical: "/membership/committees" },
 };
 
-const committees = [
+interface Committee {
+  name: string;
+  tag: string | null;
+  description: string;
+}
+
+const committees: Committee[] = [
   {
     name: "Business Advocacy Committee",
     tag: "By Invitation",
@@ -72,9 +79,37 @@ const committees = [
 ];
 
 export default function CommitteesPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Greater Medina Chamber of Commerce Committees & Councils",
+    description:
+      "Volunteer committees and councils where chamber members shape programs, advocacy, events, and culture.",
+    url: "https://medinachamber.com/membership/committees",
+    numberOfItems: committees.length,
+    itemListElement: committees.map((c, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "Organization",
+        name: c.name,
+        description: c.description,
+        parentOrganization: {
+          "@type": "Organization",
+          name: "Greater Medina Chamber of Commerce",
+        },
+      },
+    })),
+  };
+
   return (
     <>
-      
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+      />
+
+      {/* Hero */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
         <div className="max-w-3xl">
           <p className="text-overline text-cambridge mb-f8">Membership</p>
@@ -84,32 +119,48 @@ export default function CommitteesPage() {
           </h1>
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             Chamber membership is more than a listing. Committees are where
-            members actually shape the chamber, its programs, advocacy, events,
-            and culture. There&apos;s a place for every kind of contributor.
+            members actually shape the chamber, its programs, advocacy,
+            events, and culture. There&apos;s a place for every kind of
+            contributor.
           </p>
         </div>
       </section>
 
       {/* Committee cards */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
-        <div className="space-y-f21">
-          {committees.map((c, i) => (
-            <FadeIn key={c.name} delay={i * 40}>
-              <div className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-                <div className="flex flex-wrap items-start justify-between gap-f8 mb-f8">
-                  <h2 className="text-h4">{c.name}</h2>
-                  {c.tag && (
-                    <span className="shrink-0 px-f8 py-f3 text-caption font-bold bg-cambridge/15 text-cambridge rounded-full">
-                      {c.tag}
-                    </span>
-                  )}
-                </div>
-                <p className="text-body-sm text-text-secondary leading-relaxed">
-                  {c.description}
+      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <FadeIn>
+            <div className="mb-f21 flex items-end justify-between gap-f21 flex-wrap">
+              <div>
+                <p className="text-overline text-cambridge mb-f8">
+                  The Committees
                 </p>
+                <h2 className="text-h2">{committees.length} Ways to Lead</h2>
               </div>
-            </FadeIn>
-          ))}
+              <p className="text-body-sm text-text-tertiary">
+                Most are open to any chamber member.
+              </p>
+            </div>
+            <div className="space-y-f21">
+              {committees.map((c, i) => (
+                <FadeIn key={c.name} delay={i * 40}>
+                  <article className="p-f21 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]">
+                    <div className="flex flex-wrap items-start justify-between gap-f8 mb-f8">
+                      <h3 className="text-h4">{c.name}</h3>
+                      {c.tag && (
+                        <span className="shrink-0 px-f8 py-f3 text-caption font-bold bg-cambridge/15 text-cambridge rounded-full">
+                          {c.tag}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-body-sm text-text-secondary leading-relaxed">
+                      {c.description}
+                    </p>
+                  </article>
+                </FadeIn>
+              ))}
+            </div>
+          </FadeIn>
         </div>
       </section>
 
@@ -119,11 +170,12 @@ export default function CommitteesPage() {
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
-                <h2 className="text-h2">Ready to get involved?</h2>
+                <p className="text-overline text-cambridge mb-f8">Get Involved</p>
+                <h2 className="text-h2">Ready to contribute?</h2>
                 <p className="text-body-lg text-text-secondary mt-f13">
-                  Most committees are open to any chamber member. Reach out and
-                  let the team know where you&apos;d like to contribute, there&apos;s
-                  always room for people who want to show up.
+                  Most committees are open to any chamber member. Reach out
+                  and let the team know where you&apos;d like to contribute.
+                  There&apos;s always room for people who want to show up.
                 </p>
               </div>
               <div className="space-y-f13">
@@ -153,6 +205,15 @@ export default function CommitteesPage() {
                 </Link>
               </div>
             </div>
+          </div>
+
+          <div className="mt-f34">
+            <Link
+              href="/membership"
+              className="text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
+            >
+              ← Back to Membership
+            </Link>
           </div>
         </FadeIn>
       </section>

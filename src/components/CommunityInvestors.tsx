@@ -1,19 +1,21 @@
+import type { CSSProperties } from "react";
 import { readdirSync } from "fs";
 import { join } from "path";
 import Link from "next/link";
-import { members, isCommunityInvestor } from "@/data/members";
+import { members, isCommunityInvestor, type Member } from "@/data/members";
 import { FadeIn } from "@/components/FadeIn";
 
 /**
- * CommunityInvestors — homepage showcase of Chamber top-tier members.
+ * CommunityInvestors — three-row infinite marquee of top-tier member logos.
  *
- * All light/dark theming is handled by [data-theme] rules in globals.css
- * (.ci-section, .ci-card). The [[data-theme=dark]_&]: Tailwind variant
- * applies in both themes due to @layer cascade ordering, so globals.css
- * unlayered rules are the correct override mechanism for this section.
+ * Rows 1 & 3 scroll right; row 2 scrolls left.
+ * The marquee is contained within the site's max-w-7xl frame (not full-bleed).
+ * Keyframe definitions live in globals.css (.ci-marquee-track).
  *
- * Logos are served from /public/images/members/logos/{chamberSlug}.{ext}.
- * Directory is scanned at module load — any extension works.
+ * Accessibility:
+ *   - Ghost (duplicate) tiles carry aria-hidden + tabIndex=-1.
+ *   - prefers-reduced-motion disables animation and hides duplicates via CSS.
+ * Logos served from /public/images/members/logos/{chamberSlug}.{ext}.
  */
 
 function buildLogoMap(): Map<string, string> {
@@ -31,6 +33,49 @@ function buildLogoMap(): Map<string, string> {
 
 const MEMBER_LOGOS = buildLogoMap();
 
+// Row 2 runs slightly slower to give the three tracks a natural rhythm.
+const ROW_DURATIONS = [30, 37, 30] as const;
+const ROW_DIRECTIONS = ["right", "left", "right"] as const;
+
+interface LogoTileProps {
+  m: Member;
+  ghost?: boolean;
+}
+
+function LogoTile({ m, ghost = false }: LogoTileProps) {
+  const logoPath = MEMBER_LOGOS.get(m.chamberSlug);
+  return (
+    <Link
+      href={`/membership/directory/${m.chamberSlug}`}
+      aria-hidden={ghost || undefined}
+      tabIndex={ghost ? -1 : undefined}
+      className={`
+        ci-card
+        flex-shrink-0 flex items-center justify-center
+        w-36 h-[4.5rem] px-3
+        border border-border-secondary hover:border-cambridge/40
+        rounded-[var(--radius-md)]
+        transition-colors duration-200
+        ${ghost ? "ci-marquee-dupe" : ""}
+      `}
+    >
+      {logoPath ? (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img
+          src={logoPath}
+          alt={ghost ? "" : `${m.name} logo`}
+          className="max-h-10 max-w-full w-auto object-contain"
+          loading="lazy"
+        />
+      ) : (
+        <span className="text-caption text-text-secondary text-center leading-tight font-medium line-clamp-2">
+          {m.name}
+        </span>
+      )}
+    </Link>
+  );
+}
+
 export function CommunityInvestors() {
   const investors = members
     .filter(isCommunityInvestor)
@@ -38,9 +83,17 @@ export function CommunityInvestors() {
 
   if (investors.length === 0) return null;
 
+  const rowSize = Math.ceil(investors.length / 3);
+  const rows = [
+    investors.slice(0, rowSize),
+    investors.slice(rowSize, rowSize * 2),
+    investors.slice(rowSize * 2),
+  ].filter((r) => r.length > 0);
+
   return (
     <section className="ci-section bg-bg-secondary py-20 lg:py-28">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
+
         {/* Header */}
         <FadeIn>
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12 lg:mb-16">
@@ -73,54 +126,37 @@ export function CommunityInvestors() {
           </div>
         </FadeIn>
 
-        {/* Grid — 3 cols (11 rows × 3 = 33) */}
+        {/* Marquee — three tracks, contained within site framing */}
         <FadeIn delay={100}>
-          <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {investors.map((m) => {
-              const logoPath = MEMBER_LOGOS.get(m.chamberSlug);
+          <div className="space-y-3 overflow-hidden">
+            {rows.map((row, ri) => {
+              const direction = ROW_DIRECTIONS[ri] ?? "right";
+              const dur = ROW_DURATIONS[ri] ?? 30;
               return (
-                <li key={m.chamberSlug}>
-                  <Link
-                    href={`/membership/directory/${m.chamberSlug}`}
-                    className="
-                      ci-card group
-                      flex flex-col justify-between
-                      h-full min-h-[7rem]
-                      p-4 lg:p-5
-                      bg-white hover:bg-bg-tertiary
-                      border border-border-secondary hover:border-border-primary
-                      rounded-[var(--radius-md)]
-                      transition-all duration-200
-                    "
+                <div
+                  key={ri}
+                  className="overflow-hidden"
+                  role="region"
+                  aria-label={`Community investor logos, row ${ri + 1}`}
+                >
+                  <div
+                    className="ci-marquee-track flex gap-3"
+                    data-direction={direction}
+                    style={{ "--ci-dur": `${dur}s` } as CSSProperties}
                   >
-                    {logoPath ? (
-                      /* eslint-disable-next-line @next/next/no-img-element */
-                      <img
-                        src={logoPath}
-                        alt={`${m.name} logo`}
-                        className="h-10 w-auto object-contain object-left mb-3 transition-opacity"
-                      />
-                    ) : null}
-
-                    <div className="flex-1 flex flex-col justify-end">
-                      <p className="text-body-sm font-semibold text-text-primary leading-snug">
-                        {m.name}
-                      </p>
-                      {m.categories[0] && (
-                        <p className="text-caption text-text-tertiary mt-1 leading-tight line-clamp-1">
-                          {m.categories[0]}
-                        </p>
-                      )}
-                    </div>
-
-                    <p className="text-caption text-text-tertiary group-hover:text-text-primary mt-3 font-bold transition-colors">
-                      View profile →
-                    </p>
-                  </Link>
-                </li>
+                    {/* Primary — keyboard-accessible links */}
+                    {row.map((m) => (
+                      <LogoTile key={m.chamberSlug} m={m} />
+                    ))}
+                    {/* Ghost duplicates — seamless loop; hidden from assistive tech */}
+                    {row.map((m) => (
+                      <LogoTile key={`${m.chamberSlug}--dupe`} m={m} ghost />
+                    ))}
+                  </div>
+                </div>
               );
             })}
-          </ul>
+          </div>
         </FadeIn>
 
         {/* Footer note */}
@@ -135,6 +171,7 @@ export function CommunityInvestors() {
             </Link>
           </p>
         </FadeIn>
+
       </div>
     </section>
   );

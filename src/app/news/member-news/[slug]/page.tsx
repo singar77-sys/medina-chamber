@@ -107,9 +107,9 @@ export default async function MemberNewsArticlePage(
         dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f89 pb-f89 lg:pb-f144">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-caption text-text-tertiary mb-10">
+        <nav className="flex items-center gap-2 text-caption text-text-tertiary mb-f21">
           <Link href="/news/member-news" className="hover:text-text-primary transition-colors">
             Member News
           </Link>
@@ -117,23 +117,18 @@ export default async function MemberNewsArticlePage(
           <span className="text-text-secondary truncate">{article.title}</span>
         </nav>
 
-        <div className="grid lg:grid-cols-[1fr_320px] gap-12 lg:gap-16">
+        <div className="grid lg:grid-cols-[1fr_320px] gap-f34 lg:gap-f55">
           {/* Main column */}
-          <div>
-            {/* Meta */}
-            <p className="text-overline text-cambridge mb-4">{dateDisplay}</p>
-
-            {/* Title */}
+          <article>
+            <p className="text-overline text-cambridge mb-f8">{dateDisplay}</p>
             <h1 className="text-display leading-tight">{article.title}</h1>
 
-            {/* Subtitle / teaser */}
             {article.subtitle && (
-              <p className="text-h4 text-text-secondary mt-4">{article.subtitle}</p>
+              <p className="text-h4 text-text-secondary mt-f8">{article.subtitle}</p>
             )}
 
-            {/* Image */}
             {article.image && (
-              <div className="mt-8 rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary">
+              <div className="mt-f21 rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary">
                 <Image
                   src={article.image}
                   alt={`${article.title}, Greater Medina Chamber of Commerce member news announcement`}
@@ -144,9 +139,8 @@ export default async function MemberNewsArticlePage(
               </div>
             )}
 
-            {/* Body */}
             {bodyParagraphs.length > 0 && (
-              <div className="mt-10 space-y-4">
+              <div className="mt-f34 space-y-f13">
                 {bodyParagraphs.map((p, i) => (
                   <p key={i} className="text-body text-text-primary leading-relaxed">
                     {p}
@@ -154,27 +148,25 @@ export default async function MemberNewsArticlePage(
                 ))}
               </div>
             )}
-
-          </div>
+          </article>
 
           {/* Sidebar */}
-          <aside className="space-y-6">
-            {/* Member card */}
+          <aside className="space-y-f21">
             {article.memberName && (
-              <div className="sticky top-8 p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-                <p className="text-caption text-cambridge mb-2 font-bold uppercase tracking-wider">
+              <div className="sticky top-f21 p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+                <p className="text-caption text-cambridge mb-f8 font-bold uppercase tracking-wider">
                   Posted by
                 </p>
                 <p className="text-body font-semibold text-text-primary leading-snug">
                   {article.memberName}
                 </p>
-                <p className="text-caption text-text-tertiary mt-1">{dateDisplay}</p>
+                <p className="text-caption text-text-tertiary mt-f3">{dateDisplay}</p>
 
                 {memberDirectorySlug && (
                   <Link
                     href={`/membership/directory/${memberDirectorySlug}`}
                     className="
-                      block mt-5 w-full text-center py-2.5 px-4
+                      block mt-f13 w-full text-center py-2.5 px-4
                       bg-cambridge/20 hover:bg-cambridge/30
                       text-cambridge font-bold text-body-sm
                       rounded-[var(--radius-md)]
@@ -187,7 +179,6 @@ export default async function MemberNewsArticlePage(
               </div>
             )}
 
-            {/* Back link */}
             <Link
               href="/news/member-news"
               className="
@@ -202,7 +193,7 @@ export default async function MemberNewsArticlePage(
             </Link>
           </aside>
         </div>
-      </div>
+      </section>
     </>
   );
 }

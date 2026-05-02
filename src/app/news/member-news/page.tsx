@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { FadeIn } from "@/components/FadeIn";
 import { memberNewsArticles, formatArticleDate } from "@/data/member-news";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "Member News",
@@ -9,8 +11,7 @@ export const metadata: Metadata = {
     "News and announcements from Greater Medina Chamber of Commerce member businesses. Job postings, events, promotions, and milestones from the Medina County business community.",
   openGraph: {
     title: "Member News | Greater Medina Chamber of Commerce",
-    description:
-      "News and announcements from Medina County businesses.",
+    description: "News and announcements from Medina County businesses.",
   },
   alternates: { canonical: "/news/member-news" },
 };
@@ -18,121 +19,198 @@ export const metadata: Metadata = {
 export default function MemberNewsPage() {
   const articles = memberNewsArticles;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Greater Medina Chamber of Commerce Member News",
+    description:
+      "News and announcements from Greater Medina Chamber of Commerce member businesses.",
+    url: "https://medinachamber.com/news/member-news",
+    numberOfItems: articles.length,
+    itemListElement: articles.slice(0, 20).map((a, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "NewsArticle",
+        headline: a.title,
+        url: `https://medinachamber.com/news/member-news/${a.slug}`,
+        ...(a.thumbnail
+          ? { image: `https://medinachamber.com${a.thumbnail}` }
+          : {}),
+        ...(a.memberName
+          ? {
+              author: { "@type": "Organization", name: a.memberName },
+            }
+          : {}),
+      },
+    })),
+  };
+
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+      />
+
       {/* Hero */}
-      <section className="max-w-3xl">
-        <p className="text-overline text-cambridge mb-4">Member News</p>
-        <h1 className="text-display">
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
+        <div className="max-w-3xl">
+          <p className="text-overline text-cambridge mb-f8">Member News</p>
+          <h1 className="text-display">
             <span className="block">What&apos;s Happening</span>
             <span className="block text-accent">in Medina Business</span>
           </h1>
-        <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-          Member businesses share their news directly through the Chamber, 
-          events, promotions, milestones, job openings, and more. This is the
-          pulse of Medina County&apos;s business community.
-        </p>
+          <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
+            Member businesses share their news directly through the chamber.
+            Events, promotions, milestones, job openings. The pulse of Medina
+            County&apos;s business community.
+          </p>
+        </div>
       </section>
 
       {/* Article grid */}
-      {articles.length > 0 && (
-        <section className="mt-16">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {articles.map((article) => (
-              <Link
-                key={`${article.slug}-${article.articleId}`}
-                href={`/news/member-news/${article.slug}`}
-                className="
-                  group flex flex-col
-                  bg-bg-secondary border border-border-secondary
-                  rounded-[var(--radius-lg)]
-                  overflow-hidden
-                  hover:border-border-primary transition-colors
-                "
-              >
-                {/* Thumbnail */}
-                {article.thumbnail ? (
-                  <div className="relative h-44 bg-bg-secondary shrink-0">
-                    <Image
-                      src={article.thumbnail}
-                      alt={`${article.title}, Greater Medina Chamber of Commerce member news`}
-                      fill
-                      className="object-contain p-4"
-                    />
-                  </div>
-                ) : (
-                  <div className="h-44 bg-oxford/10 flex items-center justify-center shrink-0">
-                    <svg className="w-10 h-10 text-text-tertiary" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-                    </svg>
-                  </div>
-                )}
+      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <FadeIn>
+            <div className="mb-f21 flex items-end justify-between gap-f21 flex-wrap">
+              <div>
+                <p className="text-overline text-cambridge mb-f8">Latest</p>
+                <h2 className="text-h2">
+                  {articles.length} {articles.length === 1 ? "Story" : "Stories"}
+                </h2>
+              </div>
+              <p className="text-body-sm text-text-tertiary">
+                Direct from chamber members.
+              </p>
+            </div>
 
-                {/* Content */}
-                <div className="flex flex-col flex-1 p-5">
-                  <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-2">
-                    {formatArticleDate(article)}
-                    {article.memberName && (
-                      <span className="text-text-tertiary font-normal normal-case tracking-normal ml-2">
-                        · {article.memberName}
-                      </span>
-                    )}
-                  </p>
-                  <h2 className="text-h4 group-hover:text-cambridge transition-colors leading-snug mb-2">
-                    {article.title}
-                  </h2>
-                  {article.subtitle && (
-                    <p className="text-body-sm text-text-secondary line-clamp-2 flex-1">
-                      {article.subtitle}
-                    </p>
-                  )}
-                  <p className="text-body-sm text-cambridge font-bold mt-4">
-                    Read more →
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
+            {articles.length === 0 ? (
+              <p className="text-body text-text-tertiary">
+                No member news yet. Check back soon.
+              </p>
+            ) : (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-f21">
+                {articles.map((article, i) => (
+                  <FadeIn
+                    key={`${article.slug}-${article.articleId}`}
+                    delay={i * 30}
+                  >
+                    <Link
+                      href={`/news/member-news/${article.slug}`}
+                      className="
+                        group flex flex-col h-full
+                        bg-bg-primary border border-border-secondary
+                        rounded-[var(--radius-lg)]
+                        overflow-hidden
+                        hover:border-cambridge/40 transition-colors
+                      "
+                    >
+                      {article.thumbnail ? (
+                        <div className="relative h-44 bg-bg-secondary shrink-0">
+                          <Image
+                            src={article.thumbnail}
+                            alt={`${article.title}, Greater Medina Chamber of Commerce member news`}
+                            fill
+                            className="object-contain p-4"
+                          />
+                        </div>
+                      ) : (
+                        <div className="h-44 bg-oxford/10 flex items-center justify-center shrink-0">
+                          <svg
+                            className="w-10 h-10 text-text-tertiary"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                          >
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
+                          </svg>
+                        </div>
+                      )}
 
-      {/* CTA */}
-      <section className="mt-24 p-10 lg:p-16 bg-bg-secondary rounded-[var(--radius-lg)] border border-border-secondary">
-        <div className="max-w-2xl">
-          <h2 className="text-h2">Want to post your news?</h2>
-          <p className="text-body-lg text-text-secondary mt-4">
-            Chamber members can submit news directly through the member portal.
-            Your announcement reaches the entire Chamber network, other
-            business owners, community leaders, and potential customers.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-4">
-            <Link
-              href="/membership/join"
-              className="
-                inline-flex items-center px-6 py-3
-                bg-accent hover:bg-accent-hover
-                text-white font-bold text-body-sm
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
-            >
-              Join the Chamber →
-            </Link>
-            <Link
-              href="/news"
-              className="
-                inline-flex items-center px-6 py-3
-                border border-border-primary hover:border-text-tertiary
-                text-text-primary font-bold text-body-sm
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
-            >
-              Chamber News
-            </Link>
-          </div>
+                      <div className="flex flex-col flex-1 p-f21">
+                        <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-f8">
+                          {formatArticleDate(article)}
+                          {article.memberName && (
+                            <span className="text-text-tertiary font-normal normal-case tracking-normal ml-2">
+                              · {article.memberName}
+                            </span>
+                          )}
+                        </p>
+                        <h3 className="text-h4 group-hover:text-cambridge transition-colors leading-snug mb-f8">
+                          {article.title}
+                        </h3>
+                        {article.subtitle && (
+                          <p className="text-body-sm text-text-secondary line-clamp-2 flex-1">
+                            {article.subtitle}
+                          </p>
+                        )}
+                        <p className="text-body-sm text-cambridge font-bold mt-f13">
+                          Read more →
+                        </p>
+                      </div>
+                    </Link>
+                  </FadeIn>
+                ))}
+              </div>
+            )}
+          </FadeIn>
         </div>
       </section>
-    </div>
+
+      {/* CTA */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+        <FadeIn>
+          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+            <div className="grid lg:grid-cols-2 gap-f34 items-center">
+              <div>
+                <p className="text-overline text-cambridge mb-f8">Members</p>
+                <h2 className="text-h2">Want to post your news?</h2>
+                <p className="text-body-lg text-text-secondary mt-f13">
+                  Chamber members can submit news directly through the member
+                  portal. Your announcement reaches the entire chamber
+                  network: other business owners, community leaders, and
+                  potential customers.
+                </p>
+              </div>
+              <div className="space-y-f13">
+                <Link
+                  href="/membership/join"
+                  className="
+                    block w-full text-center py-f13 px-f21
+                    bg-accent hover:bg-accent-hover
+                    text-white font-bold text-body-sm
+                    rounded-[var(--radius-md)]
+                    transition-colors
+                  "
+                >
+                  Join the Chamber →
+                </Link>
+                <Link
+                  href="/news"
+                  className="
+                    block w-full text-center py-f13 px-f21
+                    border border-border-primary hover:border-text-tertiary
+                    text-text-primary font-bold text-body-sm
+                    rounded-[var(--radius-md)]
+                    transition-colors
+                  "
+                >
+                  Chamber News
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-f34">
+            <Link
+              href="/news"
+              className="text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
+            >
+              ← Back to News
+            </Link>
+          </div>
+        </FadeIn>
+      </section>
+    </>
   );
 }

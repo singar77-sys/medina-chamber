@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { FadeIn } from "@/components/FadeIn";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "Medina Matters Podcast",
   description:
-    "The Medina Matters Podcast, conversations with local business owners, community leaders, and Chamber members about business, community, and what makes Medina County special.",
+    "The Medina Matters Podcast. Conversations with local business owners, community leaders, and Chamber members about business, community, and what makes Medina County special.",
   openGraph: {
     title: "Medina Matters Podcast | Greater Medina Chamber of Commerce",
     description:
@@ -17,82 +19,123 @@ const TELVUE_URL =
   "https://videoplayer.telvue.com/player/bjF2_CaOyvFqx0n0Wp4DVGakWmOU3Nb9/categories/2576?autostart=false&showtabssearch=true&fullscreen=false&show_title_description_summary=true";
 
 export default function PodcastPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "PodcastSeries",
+    name: "Medina Matters",
+    description:
+      "Conversations with local business owners, community leaders, and Chamber members about business, growth, and Medina County.",
+    url: "https://medinachamber.com/news/podcast",
+    publisher: {
+      "@type": "Organization",
+      name: "Greater Medina Chamber of Commerce",
+      url: "https://medinachamber.com",
+    },
+  };
+
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+      />
+
       {/* Hero */}
-      <section className="max-w-3xl">
-        <p className="text-overline text-cambridge mb-4">Podcast</p>
-        <h1 className="text-display">
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
+        <div className="max-w-3xl">
+          <p className="text-overline text-cambridge mb-f8">Podcast</p>
+          <h1 className="text-display">
             <span className="block">Medina</span>
             <span className="block text-accent">Matters</span>
           </h1>
-        <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-          Conversations with local business owners, community leaders, and
-          Chamber members, about business, growth, and what makes Medina County
-          worth investing in.
-        </p>
+          <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
+            Conversations with local business owners, community leaders, and
+            Chamber members. Business, growth, and what makes Medina County
+            worth investing in.
+          </p>
+        </div>
       </section>
 
       {/* Embedded player */}
-      <section className="mt-16">
-        <div className="rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary bg-bg-secondary">
-          <iframe
-            src={TELVUE_URL}
-            width="100%"
-            height="600"
-            allowFullScreen
-            title="Medina Matters Podcast"
-            className="block"
-          />
+      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <FadeIn>
+            <div className="rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary bg-bg-primary">
+              <iframe
+                src={TELVUE_URL}
+                width="100%"
+                height="600"
+                allowFullScreen
+                title="Medina Matters Podcast"
+                className="block"
+              />
+            </div>
+          </FadeIn>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="mt-16 grid md:grid-cols-2 gap-6">
-        <div className="p-8 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-          <h2 className="text-h3">Want to be a guest?</h2>
-          <p className="text-text-secondary text-body mt-3">
-            Chamber members and Medina County business owners are welcome to
-            share their story on Medina Matters. Reach out to get started.
-          </p>
-          <Link
-            href="/about/contact"
-            className="
-              inline-flex items-center mt-6 px-5 py-2.5
-              bg-accent hover:bg-accent-hover
-              text-white font-bold text-body-sm
-              rounded-[var(--radius-md)]
-              transition-colors
-            "
-          >
-            Get in Touch →
-          </Link>
-        </div>
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+        <FadeIn>
+          <div className="grid md:grid-cols-2 gap-f21">
+            <div className="p-f34 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+              <p className="text-overline text-cambridge mb-f8">Be a Guest</p>
+              <h2 className="text-h3">Want to share your story?</h2>
+              <p className="text-text-secondary text-body mt-f13">
+                Chamber members and Medina County business owners are welcome
+                to share their story on Medina Matters. Reach out to get
+                started.
+              </p>
+              <Link
+                href="/about/contact"
+                className="
+                  inline-flex items-center mt-f21 px-5 py-2.5
+                  bg-accent hover:bg-accent-hover
+                  text-white font-bold text-body-sm
+                  rounded-[var(--radius-md)]
+                  transition-colors
+                "
+              >
+                Get in Touch →
+              </Link>
+            </div>
 
-        <div className="p-8 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-          <h2 className="text-h3">More from the Chamber</h2>
-          <div className="mt-4 space-y-3">
+            <div className="p-f34 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+              <p className="text-overline text-cambridge mb-f8">Explore</p>
+              <h2 className="text-h3">More from the Chamber</h2>
+              <div className="mt-f13 space-y-f8">
+                <Link
+                  href="/news/blog"
+                  className="flex items-center gap-3 text-body text-text-primary hover:text-cambridge transition-colors"
+                >
+                  <span className="text-cambridge">→</span> Business Blog
+                </Link>
+                <Link
+                  href="/news/member-news"
+                  className="flex items-center gap-3 text-body text-text-primary hover:text-cambridge transition-colors"
+                >
+                  <span className="text-cambridge">→</span> Member News
+                </Link>
+                <Link
+                  href="/news/magazine"
+                  className="flex items-center gap-3 text-body text-text-primary hover:text-cambridge transition-colors"
+                >
+                  <span className="text-cambridge">→</span> Medina Means Business Magazine
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-f34">
             <Link
-              href="/news/blog"
-              className="flex items-center gap-3 text-body text-text-primary hover:text-cambridge transition-colors"
+              href="/news"
+              className="text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
             >
-              <span className="text-cambridge">→</span> Business Blog
-            </Link>
-            <Link
-              href="/news/member-news"
-              className="flex items-center gap-3 text-body text-text-primary hover:text-cambridge transition-colors"
-            >
-              <span className="text-cambridge">→</span> Member News
-            </Link>
-            <Link
-              href="/news/magazine"
-              className="flex items-center gap-3 text-body text-text-primary hover:text-cambridge transition-colors"
-            >
-              <span className="text-cambridge">→</span> Medina Means Business Magazine
+              ← Back to News
             </Link>
           </div>
-        </div>
+        </FadeIn>
       </section>
-    </div>
+    </>
   );
 }

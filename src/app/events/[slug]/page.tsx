@@ -129,9 +129,9 @@ export default async function EventPage(
         dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f89 pb-f89 lg:pb-f144">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-caption text-text-tertiary mb-10">
+        <nav className="flex items-center gap-2 text-caption text-text-tertiary mb-f21">
           <Link href="/events" className="hover:text-text-primary transition-colors">
             Events
           </Link>
@@ -139,19 +139,16 @@ export default async function EventPage(
           <span className="text-text-secondary truncate">{event.title}</span>
         </nav>
 
-        <div className="grid lg:grid-cols-[1fr_360px] gap-12 lg:gap-16">
+        <div className="grid lg:grid-cols-[1fr_360px] gap-f34 lg:gap-f55">
           {/* Main column */}
-          <div>
-            {/* Event label */}
-            <p className="text-overline text-cambridge mb-4">
+          <article>
+            <p className="text-overline text-cambridge mb-f8">
               {event.dayOfWeek}, {event.month} {event.day}, {event.year}
             </p>
 
-            {/* Title */}
             <h1 className="text-display leading-tight">{event.title}</h1>
 
-            {/* Time */}
-            <p className="text-h4 text-text-secondary mt-4">
+            <p className="text-h4 text-text-secondary mt-f8">
               {event.startTime} – {event.endTime}
             </p>
 
@@ -159,7 +156,7 @@ export default async function EventPage(
                 cloudinary event image only if the slug doesn't map to one
                 of the 11 graphic templates. */}
             {Graphic ? (
-              <figure className="mt-8 rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary m-0">
+              <figure className="mt-f21 rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary m-0">
                 <FluidGraphicFrame mode="social">
                   <Graphic mode="social" />
                 </FluidGraphicFrame>
@@ -168,7 +165,7 @@ export default async function EventPage(
                 </figcaption>
               </figure>
             ) : event.image ? (
-              <figure className="mt-8 rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary m-0">
+              <figure className="mt-f21 rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary m-0">
                 <Image
                   src={event.image}
                   alt={`${event.title}, ${event.dayOfWeek}, ${event.month} ${event.day}, ${event.year} at the Greater Medina Chamber of Commerce in Medina, Ohio`}
@@ -183,16 +180,20 @@ export default async function EventPage(
             ) : null}
 
             {/* Location */}
-            <div className="mt-10">
-              <h2 className="text-h3 mb-4">Location</h2>
-              <div className="p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-                <p className="text-body font-semibold">{event.venue ?? "Greater Medina Chamber of Commerce"}</p>
-                <p className="text-body-sm text-text-secondary mt-1">{event.street}</p>
+            <div className="mt-f34">
+              <h2 className="text-h3 mb-f13">Location</h2>
+              <div className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+                <p className="text-body font-semibold">
+                  {event.venue ?? "Greater Medina Chamber of Commerce"}
+                </p>
+                <p className="text-body-sm text-text-secondary mt-f3">
+                  {event.street}
+                </p>
                 <p className="text-body-sm text-text-secondary">
                   {event.city}, {event.state} {event.zip}
                 </p>
                 {event.locationDesc && (
-                  <p className="text-body-sm text-text-tertiary mt-3 border-t border-border-secondary pt-3">
+                  <p className="text-body-sm text-text-tertiary mt-f13 border-t border-border-secondary pt-f13">
                     {event.locationDesc}
                   </p>
                 )}
@@ -201,9 +202,9 @@ export default async function EventPage(
 
             {/* Pricing */}
             {pricingLines.length > 0 && (
-              <div className="mt-10">
-                <h2 className="text-h3 mb-4">Pricing & Registration</h2>
-                <div className="p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+              <div className="mt-f34">
+                <h2 className="text-h3 mb-f13">Pricing & Registration</h2>
+                <div className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
                   {pricingLines.map((line, i) => (
                     <p
                       key={i}
@@ -211,8 +212,8 @@ export default async function EventPage(
                         i === 0
                           ? "text-body font-semibold"
                           : i <= 1
-                          ? "text-body-sm text-text-secondary mt-1"
-                          : "text-caption text-text-tertiary mt-3 border-t border-border-secondary pt-3"
+                          ? "text-body-sm text-text-secondary mt-f3"
+                          : "text-caption text-text-tertiary mt-f13 border-t border-border-secondary pt-f13"
                       }
                     >
                       {line}
@@ -224,8 +225,8 @@ export default async function EventPage(
 
             {/* Contact */}
             {event.contactName && (
-              <div className="mt-10">
-                <h2 className="text-h3 mb-4">Questions?</h2>
+              <div className="mt-f34">
+                <h2 className="text-h3 mb-f13">Questions?</h2>
                 <p className="text-body-sm text-text-secondary">
                   Contact{" "}
                   <span className="font-semibold text-text-primary">
@@ -238,21 +239,22 @@ export default async function EventPage(
 
             {/* Photo gallery */}
             {photos.length > 0 && (
-              <div className="mt-10">
+              <div className="mt-f34">
                 <EventGallery photos={photos} title="Event Photos" />
               </div>
             )}
-          </div>
+          </article>
 
           {/* Sidebar */}
-          <aside className="space-y-6">
-            {/* Register CTA card */}
-            <div className="sticky top-8 p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-              <div className="text-center mb-5">
-                <div className="inline-block bg-cambridge/20 px-3 py-1 rounded-full text-cambridge text-caption font-bold mb-3">
+          <aside className="space-y-f21">
+            <div className="sticky top-f21 p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+              <div className="text-center mb-f13">
+                <div className="inline-block bg-cambridge/20 px-3 py-1 rounded-full text-cambridge text-caption font-bold mb-f8">
                   {event.month.substring(0, 3)} {event.day}
                 </div>
-                <p className="text-body font-semibold text-text-primary">{event.startTime} – {event.endTime}</p>
+                <p className="text-body font-semibold text-text-primary">
+                  {event.startTime} – {event.endTime}
+                </p>
               </div>
 
               <a
@@ -270,18 +272,17 @@ export default async function EventPage(
                 Register Now →
               </a>
 
-              <p className="text-caption text-text-tertiary text-center mt-3">
+              <p className="text-caption text-text-tertiary text-center mt-f8">
                 Registration handled securely via GrowthZone
               </p>
 
               {pricingLines[0] && (
-                <p className="text-caption text-cambridge text-center mt-2 font-bold">
+                <p className="text-caption text-cambridge text-center mt-f3 font-bold">
                   {pricingLines[0]}
                 </p>
               )}
             </div>
 
-            {/* Back to all events */}
             <Link
               href="/events"
               className="
@@ -294,10 +295,9 @@ export default async function EventPage(
             >
               ← All Events
             </Link>
-
           </aside>
         </div>
-      </div>
+      </section>
     </>
   );
 }

@@ -123,9 +123,9 @@ export default async function BlogPostPage(
         dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f89 pb-f89 lg:pb-f144">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-caption text-text-tertiary mb-10">
+        <nav className="flex items-center gap-2 text-caption text-text-tertiary mb-f21">
           <Link href="/news/blog" className="hover:text-text-primary transition-colors">
             Blog
           </Link>
@@ -133,15 +133,15 @@ export default async function BlogPostPage(
           <span className="text-text-secondary truncate">{post.title}</span>
         </nav>
 
-        <div className="grid lg:grid-cols-[1fr_280px] gap-12 lg:gap-16">
+        <div className="grid lg:grid-cols-[1fr_280px] gap-f34 lg:gap-f55">
           {/* Main */}
           <article>
-            <p className="text-overline text-cambridge mb-4">{dateDisplay}</p>
+            <p className="text-overline text-cambridge mb-f8">{dateDisplay}</p>
             <h1 className="text-display leading-tight">{post.title}</h1>
-            <p className="text-body-sm text-text-tertiary mt-3">By {post.author}</p>
+            <p className="text-body-sm text-text-tertiary mt-f3">By {post.author}</p>
 
             {post.image && (
-              <div className="mt-8 rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary">
+              <div className="mt-f21 rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary">
                 <Image
                   src={post.image}
                   alt={`${post.title}, Greater Medina Chamber of Commerce blog post`}
@@ -154,7 +154,7 @@ export default async function BlogPostPage(
             )}
 
             {bodyParagraphs.length > 0 && (
-              <div className="mt-10 space-y-4 max-w-2xl">
+              <div className="mt-f34 space-y-f13 max-w-2xl">
                 {bodyParagraphs.map((p, i) => (
                   <p key={i} className="text-body text-text-primary leading-relaxed">
                     {p}
@@ -165,21 +165,21 @@ export default async function BlogPostPage(
           </article>
 
           {/* Sidebar */}
-          <aside className="space-y-6">
-            <div className="sticky top-8 space-y-4">
+          <aside className="space-y-f21">
+            <div className="sticky top-f21 space-y-f13">
               {/* Join CTA */}
-              <div className="p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+              <div className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
                 <p className="text-body font-semibold text-text-primary leading-snug">
                   Want resources like this for your business?
                 </p>
-                <p className="text-text-secondary text-body-sm mt-2">
+                <p className="text-text-secondary text-body-sm mt-f8">
                   Chamber members get access to networking, tools, and support
                   built for Medina County businesses.
                 </p>
                 <Link
                   href="/membership/join"
                   className="
-                    block mt-5 w-full text-center py-2.5 px-4
+                    block mt-f13 w-full text-center py-2.5 px-4
                     bg-accent hover:bg-accent-hover
                     text-white font-bold text-body-sm
                     rounded-[var(--radius-md)]
@@ -205,7 +205,7 @@ export default async function BlogPostPage(
             </div>
           </aside>
         </div>
-      </div>
+      </section>
     </>
   );
 }

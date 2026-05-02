@@ -18,8 +18,10 @@ import { BeeFly } from "@/components/effects/BeeFly";
 import { CommunityInvestors } from "@/components/CommunityInvestors";
 
 import { safeJsonLd } from "@/lib/json-ld";
+import { chamberOffice, memberServices, stephanie } from "@/data/staff";
+import { mailto } from "@/lib/format";
 export const metadata: Metadata = {
-  title: "Greater Medina Chamber of Commerce, Medina County, Ohio",
+  title: "Greater Medina Chamber of Commerce | Medina County, Ohio",
   description: `The Greater Medina Chamber of Commerce connects and champions businesses across Medina County, Ohio. ${totalCount}+ member businesses, networking events, advocacy, and programs since 1938.`,
   openGraph: {
     title: "Greater Medina Chamber of Commerce",
@@ -42,7 +44,7 @@ const organizationJsonLd = {
     `The Greater Medina Chamber of Commerce connects and champions businesses across Medina County, Ohio. ${totalCount}+ member businesses, networking events, advocacy, and programs since 1938.`,
   foundingDate: "1938",
   telephone: "+1-330-723-8773",
-  email: "office@medinaohchamber.com",
+  email: chamberOffice.email,
   address: {
     "@type": "PostalAddress",
     streetAddress: "139 N. Court Street, Suite A",
@@ -431,7 +433,7 @@ export default function HomePage() {
                     See Availability →
                   </Link>
                   <a
-                    href="mailto:memberservices@medinaohchamber.com?subject=Meeting%20space%20inquiry"
+                    href={mailto(memberServices.email, "Meeting space inquiry")}
                     className="
                       inline-flex items-center px-6 py-3
                       border border-border-primary hover:border-text-tertiary
@@ -518,7 +520,7 @@ export default function HomePage() {
                   See All Benefits
                 </Link>
                 <a
-                  href="mailto:stephanie@medinaohchamber.com"
+                  href={mailto(stephanie.email)}
                   className="
                     block w-full text-center py-3 px-6
                     text-cambridge font-bold text-body-sm

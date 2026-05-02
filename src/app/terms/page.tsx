@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { chamberOffice } from "@/data/staff";
+import { mailto } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Terms of Use",
@@ -140,11 +142,9 @@ export default function TermsPage() {
             Greater Medina Chamber of Commerce · 139 N. Court Street, Suite
             A, Medina, OH 44256 · (330) 723-8773 ·{" "}
             <a
-              href="mailto:office@medinaohchamber.com"
+              href={mailto(chamberOffice.email)}
               className="text-cambridge hover:underline"
-            >
-              office@medinaohchamber.com
-            </a>
+            >{chamberOffice.email}</a>
           </p>
         </div>
 

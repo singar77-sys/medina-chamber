@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { safeJsonLd } from "@/lib/json-ld";
+import { memberServices } from "@/data/staff";
+import { mailto } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Rental Space",
@@ -63,7 +65,7 @@ export default function RentalSpacePage() {
       addressCountry: "US",
     },
     telephone: "+13307238773",
-    email: "memberservices@medinaohchamber.com",
+    email: memberServices.email,
     openingHours: "Mo-Fr 07:30-17:30",
     amenityFeature: [
       { "@type": "LocationFeatureSpecification", name: "High-Speed Wi-Fi", value: true },
@@ -96,7 +98,7 @@ export default function RentalSpacePage() {
 
         <div className="mt-10 flex flex-wrap gap-4">
           <a
-            href="mailto:memberservices@medinaohchamber.com"
+            href={mailto(memberServices.email)}
             className="
               inline-flex items-center px-8 py-4
               bg-accent hover:bg-accent-hover
@@ -251,7 +253,7 @@ export default function RentalSpacePage() {
             </p>
             <div className="mt-6 space-y-3">
               <a
-                href="mailto:memberservices@medinaohchamber.com"
+                href={mailto(memberServices.email)}
                 className="
                   block w-full text-center py-3 px-6
                   bg-accent hover:bg-accent-hover

@@ -31,6 +31,8 @@ import { renderMarkdown } from "@/lib/markdown";
 import { usePortalAudio } from "@/hooks/usePortalAudio";
 import { totalCount } from "@/data/members";
 import { getUpcomingEvents } from "@/data/events";
+import { chamberOffice, jaclyn, stephanie } from "@/data/staff";
+import { mailto } from "@/lib/format";
 
 // ── Types ─────────────────────────────────────────────────────────
 
@@ -204,9 +206,9 @@ function ContactPanel({ onBack }: { onBack: () => void }) {
           <div className="contact-k mono">PHONE</div>
           <div className="contact-v">(330) 723-8773</div>
         </a>
-        <a className="contact-row" href="mailto:office@medinaohchamber.com">
+        <a className="contact-row" href={mailto(chamberOffice.email)}>
           <div className="contact-k mono">EMAIL</div>
-          <div className="contact-v">office@medinaohchamber.com</div>
+          <div className="contact-v">{chamberOffice.email}</div>
         </a>
         <div className="contact-row">
           <div className="contact-k mono">HOURS</div>
@@ -215,16 +217,16 @@ function ContactPanel({ onBack }: { onBack: () => void }) {
         <div className="contact-divider" />
         <a
           className="contact-row"
-          href="mailto:stephanie@medinaohchamber.com"
+          href={mailto(stephanie.email)}
         >
           <div className="contact-k mono">MEMBERSHIP &amp; EVENTS</div>
           <div className="contact-v">Stephanie Mueller</div>
-          <div className="contact-sub">stephanie@medinaohchamber.com</div>
+          <div className="contact-sub">{stephanie.email}</div>
         </a>
-        <a className="contact-row" href="mailto:jaclyn@medinaohchamber.com">
+        <a className="contact-row" href={mailto(jaclyn.email)}>
           <div className="contact-k mono">EXECUTIVE DIRECTOR</div>
           <div className="contact-v">Jaclyn Ringstmeier</div>
-          <div className="contact-sub">jaclyn@medinaohchamber.com</div>
+          <div className="contact-sub">{jaclyn.email}</div>
         </a>
       </div>
       <button type="button" className="back-btn" onClick={onBack}>
@@ -919,7 +921,7 @@ export function ChamberBotPortal({
           </div>
           <p className="cb-disclaimer mono" aria-hidden="true">
             AI, responses may be inaccurate · verify with{" "}
-            <a href="/about/contact" tabIndex={-1}>office@medinaohchamber.com</a>
+            <a href="/about/contact" tabIndex={-1}>{chamberOffice.email}</a>
             {" · "}
             <a href="/privacy" tabIndex={-1}>Privacy</a>
             {" · "}

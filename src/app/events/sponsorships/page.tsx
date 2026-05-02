@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
+import { jaclyn, stephanie } from "@/data/staff";
+import { mailto } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Sponsorships & Ribbon Cuttings",
@@ -21,7 +23,7 @@ const sponsorships = [
     href: "/programs/golf-outing",
     description:
       "The chamber's largest fundraiser of the year. Sponsorship options include hole/tee sponsors, Par 3 \"spend the day\" sponsors, comfort station sponsors, and raffle prize donations. Maximum exposure with Medina County's business community in one afternoon.",
-    contact: "stephanie@medinaohchamber.com",
+    contact: stephanie.email,
     options: [
       "Hole / Tee Sponsor",
       "Spend the Day at a Par 3",
@@ -35,7 +37,7 @@ const sponsorships = [
     href: "/programs/athena-awards",
     description:
       "Annual awards ceremony co-hosted with the Medina County Women's Journal. Various sponsorship tiers available to put your brand in front of Medina County's most influential business and community leaders.",
-    contact: "jaclyn@medinaohchamber.com",
+    contact: jaclyn.email,
     options: [
       "Presenting Sponsor",
       "Event Sponsor",
@@ -49,7 +51,7 @@ const sponsorships = [
     href: "/events",
     description:
       "Monthly member meetings bring together the chamber's business community for programming, networking, and updates. Table sponsorships include a display table, a 30-second podium commercial, and logo placement on the event registration page and all promotional emails and social media.",
-    contact: "stephanie@medinaohchamber.com",
+    contact: stephanie.email,
     options: [
       "Display table at the event",
       "30-second podium commercial",
@@ -122,7 +124,7 @@ export default function SponsorshipsPage() {
           </p>
           <div className="mt-f21">
             <a
-              href="mailto:stephanie@medinaohchamber.com"
+              href={mailto(stephanie.email)}
               className="
                 inline-flex items-center px-f21 py-f13
                 bg-accent hover:bg-accent-hover
@@ -243,7 +245,7 @@ export default function SponsorshipsPage() {
               </div>
               <div className="space-y-f13">
                 <a
-                  href="mailto:stephanie@medinaohchamber.com"
+                  href={mailto(stephanie.email)}
                   className="
                     block w-full text-center py-f13 px-f21
                     bg-accent hover:bg-accent-hover

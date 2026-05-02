@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
+import { stephanie } from "@/data/staff";
+import { mailto } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Annual Chamber Golf Outing",
@@ -249,7 +251,7 @@ export default function GolfOutingPage() {
                 </p>
                 <div className="mt-f13 flex flex-wrap gap-f13">
                   <a
-                    href="mailto:stephanie@medinaohchamber.com"
+                    href={mailto(stephanie.email)}
                     className="
                       inline-flex items-center px-f21 py-f13
                       bg-accent hover:bg-accent-hover

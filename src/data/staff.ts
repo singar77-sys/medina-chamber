@@ -25,7 +25,13 @@ export const jaclyn: StaffMember = {
   email: "jaclyn@medinaohchamber.com",
 };
 
+/** General chamber inbox. Phone is the chamber's main line. */
 export const chamberOffice = {
   email: "office@medinaohchamber.com",
   phone: "(330) 723-8773",
+} as const;
+
+/** Routed inbox for meeting-room rentals. */
+export const memberServices = {
+  email: "memberservices@medinaohchamber.com",
 } as const;

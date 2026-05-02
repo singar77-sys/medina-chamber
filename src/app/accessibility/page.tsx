@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { chamberOffice } from "@/data/staff";
+import { mailto } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Accessibility Statement",
@@ -161,11 +163,9 @@ export default function AccessibilityPage() {
               <p className="text-body text-text-secondary">
                 <span className="font-bold text-text-primary">Email:</span>{" "}
                 <a
-                  href="mailto:office@medinaohchamber.com?subject=Website%20Accessibility%20Feedback"
+                  href={mailto(chamberOffice.email, "Website Accessibility Feedback")}
                   className="text-cambridge hover:text-cambridge/80 underline underline-offset-2 transition-colors"
-                >
-                  office@medinaohchamber.com
-                </a>
+                >{chamberOffice.email}</a>
               </p>
               <p className="text-body text-text-secondary">
                 <span className="font-bold text-text-primary">Phone:</span>{" "}

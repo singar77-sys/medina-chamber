@@ -3,6 +3,8 @@ import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
 import { getCmsPricing, DEFAULT_PRICING } from "@/lib/cms-store";
+import { stephanie } from "@/data/staff";
+import { mailto } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -73,7 +75,7 @@ export default async function PricingPage() {
               Apply for Membership →
             </Link>
             <a
-              href="mailto:stephanie@medinaohchamber.com"
+              href={mailto(stephanie.email)}
               className="
                 inline-flex items-center px-f21 py-f13
                 border border-border-primary hover:border-text-tertiary
@@ -340,7 +342,7 @@ export default async function PricingPage() {
               </div>
               <div className="space-y-f13">
                 <a
-                  href="mailto:stephanie@medinaohchamber.com"
+                  href={mailto(stephanie.email)}
                   className="
                     block w-full text-center py-f13 px-f21
                     bg-accent hover:bg-accent-hover

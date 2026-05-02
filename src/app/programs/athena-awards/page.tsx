@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
+import { jaclyn } from "@/data/staff";
+import { mailto } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Athena Awards",
@@ -210,7 +212,7 @@ export default function AthenaAwardsPage() {
                 available opportunities.
               </p>
               <a
-                href="mailto:jaclyn@medinaohchamber.com"
+                href={mailto(jaclyn.email)}
                 className="
                   inline-flex items-center mt-f21 px-f21 py-f13
                   bg-accent hover:bg-accent-hover

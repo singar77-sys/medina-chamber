@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { totalCount } from "@/data/members";
+import { chamberOffice, stephanie } from "@/data/staff";
+import { mailto } from "@/lib/format";
 
 /**
  * CommandPalette — global intent layer. ⌘K / Ctrl+K / "/" from anywhere
@@ -265,7 +267,7 @@ const COMMANDS: Command[] = [
     id: "email-stephanie",
     label: "Email Stephanie (Membership)",
     group: "Contact & Tools",
-    href: "mailto:stephanie@medinaohchamber.com",
+    href: mailto(stephanie.email),
     keywords: ["stephanie", "membership", "join questions"],
     external: true,
   },
@@ -273,7 +275,7 @@ const COMMANDS: Command[] = [
     id: "email-office",
     label: "Email the Chamber Office",
     group: "Contact & Tools",
-    href: "mailto:office@medinaohchamber.com",
+    href: mailto(chamberOffice.email),
     keywords: ["general", "office"],
     external: true,
   },

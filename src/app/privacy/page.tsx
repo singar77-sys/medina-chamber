@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { chamberOffice, stephanie } from "@/data/staff";
+import { mailto } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Privacy",
@@ -28,9 +30,7 @@ export default function PrivacyPage() {
           <li>When you chat with ChamberBot, your conversation is kept for 90 days so we can improve how it answers questions. It&apos;s not tied to your name unless you volunteer that information.</li>
           <li>When you fill out a contact or membership form, we use your info to reply to you and nothing else.</li>
           <li>You can ask us to delete anything we have about you. Email{" "}
-            <a href="mailto:office@medinaohchamber.com" className="text-cambridge hover:underline">
-              office@medinaohchamber.com
-            </a>.</li>
+            <a href={mailto(chamberOffice.email)} className="text-cambridge hover:underline">{chamberOffice.email}</a>.</li>
         </ul>
 
         <h2 className="text-h2 mt-12 mb-4">What we collect and why</h2>
@@ -89,7 +89,7 @@ export default function PrivacyPage() {
           phone numbers, and descriptions that those businesses have
           chosen to publish. If you&apos;re a member and want to change or
           remove your listing, contact{" "}
-          <a href="mailto:stephanie@medinaohchamber.com" className="text-cambridge hover:underline">
+          <a href={mailto(stephanie.email)} className="text-cambridge hover:underline">
             Stephanie
           </a>.
         </p>
@@ -114,9 +114,7 @@ export default function PrivacyPage() {
         <p className="text-body text-text-secondary">
           You can ask us to show you what we have about you, correct it,
           or delete it. Email{" "}
-          <a href="mailto:office@medinaohchamber.com" className="text-cambridge hover:underline">
-            office@medinaohchamber.com
-          </a>{" "}
+          <a href={mailto(chamberOffice.email)} className="text-cambridge hover:underline">{chamberOffice.email}</a>{" "}
           with the subject line &quot;Privacy request&quot; and we&apos;ll respond
           within one business day.
         </p>
@@ -132,9 +130,7 @@ export default function PrivacyPage() {
         <p className="text-body text-text-secondary">
           The Greater Medina Chamber of Commerce is located at 139 N. Court
           Street, Suite A, Medina, OH 44256. Reach us at (330) 723-8773 or{" "}
-          <a href="mailto:office@medinaohchamber.com" className="text-cambridge hover:underline">
-            office@medinaohchamber.com
-          </a>.
+          <a href={mailto(chamberOffice.email)} className="text-cambridge hover:underline">{chamberOffice.email}</a>.
         </p>
       </section>
 

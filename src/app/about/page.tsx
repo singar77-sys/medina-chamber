@@ -4,6 +4,8 @@ import Link from "next/link";
 import { totalCount } from "@/data/members";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
+import { chamberOffice, jaclyn, stephanie } from "@/data/staff";
+import { mailto } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "About the Chamber",
@@ -54,14 +56,14 @@ const staff = [
   {
     name: "Jaclyn Ringstmeier, IOM",
     title: "Executive Director",
-    email: "jaclyn@medinaohchamber.com",
+    email: jaclyn.email,
     photo:
       "/images/people/staff/jaclyn-ringstmeier-executive-director-greater-medina-chamber.jpg",
   },
   {
     name: "Stephanie Mueller",
     title: "Membership & Events Coordinator",
-    email: "stephanie@medinaohchamber.com",
+    email: stephanie.email,
     photo:
       "/images/people/staff/stephanie-mueller-membership-events-coordinator-greater-medina-chamber.jpg",
   },
@@ -121,20 +123,20 @@ export default function AboutPage() {
         addressCountry: "US",
       },
       telephone: "+13307238773",
-      email: "office@medinaohchamber.com",
+      email: chamberOffice.email,
       employee: [
         {
           "@type": "Person",
           name: "Jaclyn Ringstmeier IOM",
           jobTitle: "Executive Director",
-          email: "jaclyn@medinaohchamber.com",
+          email: jaclyn.email,
           worksFor: { "@type": "Organization", name: "Greater Medina Chamber of Commerce" },
         },
         {
           "@type": "Person",
           name: "Stephanie Mueller",
           jobTitle: "Membership & Events Coordinator",
-          email: "stephanie@medinaohchamber.com",
+          email: stephanie.email,
           worksFor: { "@type": "Organization", name: "Greater Medina Chamber of Commerce" },
         },
       ],
@@ -417,11 +419,9 @@ export default function AboutPage() {
                       General inquiries:{" "}
                     </span>
                     <a
-                      href="mailto:office@medinaohchamber.com"
+                      href={mailto(chamberOffice.email)}
                       className="hover:text-cambridge transition-colors"
-                    >
-                      office@medinaohchamber.com
-                    </a>
+                    >{chamberOffice.email}</a>
                   </p>
                 </div>
               </div>

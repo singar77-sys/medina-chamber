@@ -4,6 +4,8 @@ import { totalCount } from "@/data/members";
 import { FadeIn } from "@/components/FadeIn";
 
 import { safeJsonLd } from "@/lib/json-ld";
+import { stephanie } from "@/data/staff";
+import { mailto } from "@/lib/format";
 export const metadata: Metadata = {
   title: "Your First 30 Days",
   description:
@@ -60,7 +62,7 @@ const steps: Step[] = [
     ],
     link: {
       label: "Email Stephanie",
-      href: "mailto:stephanie@medinaohchamber.com",
+      href: mailto(stephanie.email),
     },
   },
   {
@@ -366,7 +368,7 @@ export default function First30DaysPage() {
               </div>
               <div className="flex flex-col gap-3 md:w-56">
                 <a
-                  href="mailto:stephanie@medinaohchamber.com"
+                  href={mailto(stephanie.email)}
                   className="
                     inline-flex items-center justify-center px-5 py-3
                     bg-accent hover:bg-accent-hover

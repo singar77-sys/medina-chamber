@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { safeJsonLd } from "@/lib/json-ld";
+import { jaclyn, stephanie } from "@/data/staff";
 
 export const metadata: Metadata = {
   title: "Board of Directors",
@@ -70,13 +71,13 @@ export default function BoardPage() {
           "@type": "Person",
           name: "Jaclyn Ringstmeier IOM",
           jobTitle: "Executive Director",
-          email: "jaclyn@medinaohchamber.com",
+          email: jaclyn.email,
         },
         {
           "@type": "Person",
           name: "Stephanie Mueller",
           jobTitle: "Membership & Events Coordinator",
-          email: "stephanie@medinaohchamber.com",
+          email: stephanie.email,
         },
       ],
     },

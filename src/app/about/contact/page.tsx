@@ -6,6 +6,8 @@ import { MedinaNetworkMap } from "@/components/about/MedinaNetworkMap";
 import { FadeIn } from "@/components/FadeIn";
 import { totalCount } from "@/data/members";
 import { safeJsonLd } from "@/lib/json-ld";
+import { chamberOffice, stephanie } from "@/data/staff";
+import { mailto } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -25,7 +27,7 @@ const contactJsonLd = {
   "@id": "https://medinachamber.com/#organization",
   name: "Greater Medina Chamber of Commerce",
   telephone: "+1-330-723-8773",
-  email: "office@medinaohchamber.com",
+  email: chamberOffice.email,
   url: "https://medinachamber.com",
   address: {
     "@type": "PostalAddress",
@@ -105,7 +107,7 @@ export default function ContactPage() {
                 Call (330) 723-8773 →
               </a>
               <a
-                href="mailto:office@medinaohchamber.com"
+                href={mailto(chamberOffice.email)}
                 className="
                   inline-flex items-center px-f21 py-f13
                   border border-border-primary hover:border-text-tertiary
@@ -202,12 +204,10 @@ export default function ContactPage() {
                     (330) 723-8773
                   </a>
                   <a
-                    href="mailto:stephanie@medinaohchamber.com"
+                    href={mailto(stephanie.email)}
                     className="flex items-center gap-f13 text-body-sm text-text-primary hover:text-cambridge transition-colors"
                   >
-                    <span className="text-cambridge font-bold">→</span>
-                    stephanie@medinaohchamber.com
-                  </a>
+                    <span className="text-cambridge font-bold">→</span>{stephanie.email}</a>
                   <p className="flex items-center gap-f13 text-body-sm text-text-tertiary">
                     <span className="text-cambridge font-bold">→</span>
                     Mon–Fri · 10:00 AM – 4:00 PM

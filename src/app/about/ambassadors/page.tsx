@@ -2,14 +2,19 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
-import { ambassadors, ambassadorRoles } from "@/data/ambassadors";
+import {
+  ambassadors,
+  ambassadorRoles,
+  ambassadorsJsonLd,
+  ambassadorsPageDescription,
+} from "@/data/ambassadors";
+import { stephanie } from "@/data/staff";
 import { domainOnly, mailto } from "@/lib/format";
 import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "Chamber Ambassadors",
-  description:
-    "Meet the 12 volunteer Chamber Ambassadors of the Greater Medina Chamber of Commerce. Member business representatives who welcome new members, attend ribbon cuttings, and represent the chamber across Medina County, Ohio.",
+  description: ambassadorsPageDescription,
   openGraph: {
     title: "Chamber Ambassadors | Greater Medina Chamber of Commerce",
     description:
@@ -19,30 +24,7 @@ export const metadata: Metadata = {
 };
 
 export default function AmbassadorsPage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "AboutPage",
-    name: "Chamber Ambassadors | Greater Medina Chamber of Commerce",
-    description:
-      "Meet the volunteer Chamber Ambassadors of the Greater Medina Chamber of Commerce. Member business representatives who welcome new members, attend ribbon cuttings, and represent the chamber throughout Medina County.",
-    url: "https://medinachamber.com/about/ambassadors",
-    mainEntity: {
-      "@type": "Organization",
-      name: "Greater Medina Chamber of Commerce",
-      member: ambassadors.map((a) => ({
-        "@type": "Person",
-        name: a.name,
-        jobTitle: a.title,
-        email: a.email,
-        image: `https://medinachamber.com${a.photo}`,
-        worksFor: {
-          "@type": "Organization",
-          name: a.company,
-          ...(a.website ? { url: a.website } : {}),
-        },
-      })),
-    },
-  };
+  const jsonLd = ambassadorsJsonLd("https://medinachamber.com");
 
   return (
     <>
@@ -56,9 +38,8 @@ export default function AmbassadorsPage() {
         <div className="max-w-3xl">
           <p className="text-overline text-cambridge mb-f8">Volunteers</p>
           <h1 className="text-display">
-            Chamber
-            <br />
-            <span className="text-accent">Ambassadors</span>
+            <span className="block">Chamber</span>
+            <span className="block text-accent">Ambassadors</span>
           </h1>
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             Ambassadors are volunteer chamber members who serve as the friendly
@@ -115,17 +96,25 @@ export default function AmbassadorsPage() {
                 <p className="text-overline text-cambridge mb-f8">
                   Meet the Team
                 </p>
-                <h2 className="text-h2">{ambassadors.length} Ambassadors</h2>
+                <h2 className="text-h2">
+                  {ambassadors.length} Ambassador{ambassadors.length === 1 ? "" : "s"}
+                </h2>
               </div>
               <p className="text-body-sm text-text-tertiary">
                 Volunteer chamber members serving Medina County, Ohio.
               </p>
             </div>
 
+            {ambassadors.length === 0 ? (
+              <p className="text-body text-text-tertiary">
+                The ambassador roster is being refreshed. Check back soon.
+              </p>
+            ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-f21">
               {ambassadors.map((a) => (
                 <article
                   key={a.slug}
+                  style={{ contentVisibility: "auto", containIntrinsicSize: "0 480px" }}
                   className="group overflow-hidden bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)] hover:border-cambridge/40 transition-colors"
                 >
                   <div className="relative w-full aspect-[3/4] overflow-hidden">
@@ -133,7 +122,7 @@ export default function AmbassadorsPage() {
                       src={a.photo}
                       alt={`${a.name}, ${a.title} at ${a.company}`}
                       fill
-                      className="object-cover object-[center_25%] transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                      className="object-cover object-[center_25%] motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:group-hover:scale-[1.03]"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                   </div>
@@ -169,6 +158,7 @@ export default function AmbassadorsPage() {
                 </article>
               ))}
             </div>
+            )}
           </FadeIn>
         </div>
       </section>
@@ -184,8 +174,9 @@ export default function AmbassadorsPage() {
                 <p className="text-body-lg text-text-secondary mt-f13">
                   Ambassadors are active chamber members who want to give back
                   and grow their network at the same time. If you&apos;re a
-                  member and the role sounds like you, reach out to Stephanie
-                  Mueller and she&apos;ll walk you through what&apos;s involved.
+                  member and the role sounds like you, reach out to{" "}
+                  {stephanie.name} and she&apos;ll walk you through what&apos;s
+                  involved.
                 </p>
               </div>
               <div className="space-y-f13">
@@ -202,7 +193,7 @@ export default function AmbassadorsPage() {
                   Contact the Chamber →
                 </Link>
                 <a
-                  href={mailto("stephanie@medinaohchamber.com", "Becoming a Chamber Ambassador")}
+                  href={mailto(stephanie.email, "Becoming a Chamber Ambassador")}
                   className="
                     block w-full text-center py-f13 px-f21
                     border border-border-primary hover:border-text-tertiary
@@ -211,7 +202,7 @@ export default function AmbassadorsPage() {
                     transition-colors
                   "
                 >
-                  Email Stephanie Directly
+                  Email {stephanie.shortName} Directly
                 </a>
               </div>
             </div>

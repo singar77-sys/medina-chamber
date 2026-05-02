@@ -4,7 +4,7 @@
  */
 
 export interface Ambassador {
-  /** Stable slug used as the React key — must be unique. */
+  /** Stable slug used as the React key. Must be unique. */
   slug: string;
   name: string;
   title: string;
@@ -15,6 +15,11 @@ export interface Ambassador {
   photo: string;
 }
 
+export interface AmbassadorRole {
+  title: string;
+  description: string;
+}
+
 export const ambassadors: Ambassador[] = [
   {
     slug: "kari-deeks",
@@ -22,7 +27,7 @@ export const ambassadors: Ambassador[] = [
     title: "Treasury Management Officer",
     company: "First Federal of Lakewood",
     email: "kdeeks@ffl.net",
-    website: "https://www.ffl.bank/",
+    website: "https://www.ffl.bank",
     photo: "/images/people/ambassadors/kari-deeks-first-federal-medina-chamber-ambassador.jpg",
   },
   {
@@ -40,7 +45,7 @@ export const ambassadors: Ambassador[] = [
     title: "Owner",
     company: "TAG Studio",
     email: "taniagrantstudio@gmail.com",
-    website: "https://www.tagvoiceover.com/",
+    website: "https://www.tagvoiceover.com",
     photo: "/images/people/ambassadors/tania-grant-tag-studio-medina-chamber-ambassador.jpg",
   },
   {
@@ -49,7 +54,7 @@ export const ambassadors: Ambassador[] = [
     title: "Area Vice President, Midwest Region",
     company: "Vensure",
     email: "don.hicks@vensure.com",
-    website: "https://www.vensure.com/",
+    website: "https://www.vensure.com",
     photo: "/images/people/ambassadors/don-hicks-vensure-medina-chamber-ambassador.jpg",
   },
   {
@@ -58,7 +63,7 @@ export const ambassadors: Ambassador[] = [
     title: "Events and Community Manager",
     company: "Foundry Social / High Voltage Karting / MAD Brewing",
     email: "laurinj@highvoltagekarting.com",
-    website: "https://thefoundrysocial.com/",
+    website: "https://thefoundrysocial.com",
     photo: "/images/people/ambassadors/laurin-jeffers-foundry-social-medina-chamber-ambassador.jpg",
   },
   {
@@ -66,8 +71,8 @@ export const ambassadors: Ambassador[] = [
     name: "Danielle Litton",
     title: "MRO Midwest Sales Manager",
     company: "National Process Systems",
-    email: "Danielle.Litton@National-Process.com",
-    website: "https://national-process.com/",
+    email: "danielle.litton@national-process.com",
+    website: "https://national-process.com",
     photo: "/images/people/ambassadors/danielle-litton-national-process-systems-medina-chamber-ambassador.jpg",
   },
   {
@@ -84,7 +89,7 @@ export const ambassadors: Ambassador[] = [
     name: "Tom Muntean",
     title: "Owner",
     company: "Thomas Muntean Agency / American Family Insurance",
-    email: "TMUNTEAN@amfam.com",
+    email: "tmuntean@amfam.com",
     website: "https://www.amfam.com/agents/ohio/medina/thomas-muntean",
     photo: "/images/people/ambassadors/tom-muntean-american-family-insurance-medina-chamber-ambassador.jpg",
   },
@@ -94,7 +99,7 @@ export const ambassadors: Ambassador[] = [
     title: "Vice President, Wealth Advisor",
     company: "Huntington Bank",
     email: "cindy.k.phillips@huntington.com",
-    website: "https://www.huntington.com/",
+    website: "https://www.huntington.com",
     photo: "/images/people/ambassadors/cindy-phillips-huntington-bank-medina-chamber-ambassador.jpg",
   },
   {
@@ -126,7 +131,40 @@ export const ambassadors: Ambassador[] = [
   },
 ];
 
-export const ambassadorRoles = [
+export const ambassadorsPageDescription =
+  "Meet the volunteer Chamber Ambassadors of the Greater Medina Chamber of Commerce. Member business representatives who welcome new members, attend ribbon cuttings, and represent the chamber across Medina County, Ohio.";
+
+/**
+ * Build the JSON-LD AboutPage schema. `origin` lets the same shape be
+ * used for prod, preview, and local builds without hardcoding the host.
+ */
+export function ambassadorsJsonLd(origin: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: "Chamber Ambassadors | Greater Medina Chamber of Commerce",
+    description: ambassadorsPageDescription,
+    url: `${origin}/about/ambassadors`,
+    mainEntity: {
+      "@type": "Organization",
+      name: "Greater Medina Chamber of Commerce",
+      member: ambassadors.map((a) => ({
+        "@type": "Person",
+        name: a.name,
+        jobTitle: a.title,
+        ...(a.email ? { email: a.email } : {}),
+        image: `${origin}${a.photo}`,
+        worksFor: {
+          "@type": "Organization",
+          name: a.company,
+          ...(a.website ? { url: a.website } : {}),
+        },
+      })),
+    },
+  };
+}
+
+export const ambassadorRoles: AmbassadorRole[] = [
   {
     title: "Welcome New Members",
     description:

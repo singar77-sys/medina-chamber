@@ -91,8 +91,17 @@ export function CommunityInvestors() {
   ].filter((r) => r.length > 0);
 
   return (
-    <section className="ci-section bg-bg-secondary py-20 lg:py-28">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section className="ci-section bg-bg-secondary py-20 lg:py-28 relative overflow-hidden">
+      {/* Ghosted background photo — 5% opacity, both themes */}
+      <div
+        className="absolute inset-0 bg-cover bg-center pointer-events-none select-none"
+        style={{
+          backgroundImage: "url('/images/photos/backgrounds/boardroom-discussion.webp')",
+          opacity: 0.05,
+        }}
+        aria-hidden="true"
+      />
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
 
         {/* Header */}
         <FadeIn>

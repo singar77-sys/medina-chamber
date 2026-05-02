@@ -36,9 +36,9 @@ export default function BlogListingPage() {
       "@type": "BlogPosting",
       headline: p.title,
       url: `https://medinachamber.com/news/blog/${p.slug}`,
-      datePublished: p.publishedAt ?? undefined,
-      author: p.author ? { "@type": "Person", name: p.author } : undefined,
-      image: p.image ? `https://medinachamber.com${p.image}` : undefined,
+      ...(p.dateISO ? { datePublished: p.dateISO } : {}),
+      ...(p.author ? { author: { "@type": "Person", name: p.author } } : {}),
+      ...(p.image ? { image: `https://medinachamber.com${p.image}` } : {}),
     })),
   };
 

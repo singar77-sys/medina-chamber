@@ -1,7 +1,23 @@
 {
-  "generatedAt": "2026-05-01T10:59:44.624Z",
-  "totalJobs": 1,
+  "generatedAt": "2026-05-02T10:39:30.710Z",
+  "totalJobs": 2,
   "jobs": [
+    {
+      "slug": "catering-event-staff",
+      "jobId": "328997",
+      "title": "Catering Event Staff",
+      "subtitle": "",
+      "body": "Provide great service at off site events. Ensure quality of products is up to standard throughout events. Load and set up events of many types including weddings, corporate picnics, graduation parties, etc. \n\nFlexible schedule, staffing needs dependent on number of events booked with the restaurant. \n\n18+ only for catering.\n\nHourly wage starts at $12-$13 plus tips from deliveries and events. \n\nApply online at mission-bbq.com/join-our-team, make sure to select the Brunswick, Ohio location.",
+      "tags": [],
+      "location": "",
+      "applyUrl": "",
+      "companyName": "Mission BBQ",
+      "companySlug": "",
+      "dateRaw": "4/30/2026",
+      "dateISO": "2026-04-30",
+      "detailUrl": "https://business.medinachamber.com/jobs/Details/catering-event-staff-328997",
+      "scrapedAt": "2026-05-02T10:39:30.158Z"
+    },
     {
       "slug": "music-teacher",
       "jobId": "317454",
@@ -16,7 +32,7 @@
       "dateRaw": "3/6/2026",
       "dateISO": "2026-03-06",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/music-teacher-317454",
-      "scrapedAt": "2026-05-01T10:59:44.621Z"
+      "scrapedAt": "2026-05-02T10:39:30.699Z"
     }
   ]
 }

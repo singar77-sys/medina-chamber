@@ -83,9 +83,8 @@ export default function AdvocacyPage() {
         <div className="max-w-3xl">
           <p className="text-overline text-cambridge mb-f8">About</p>
           <h1 className="text-display">
-            Business
-            <br />
-            <span className="text-accent">Advocacy</span>
+            <span className="block">Business</span>
+            <span className="block text-accent">Advocacy</span>
           </h1>
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             The chamber promotes pro-business, quality government at the local,

@@ -83,9 +83,8 @@ export default function SafetyCouncilPage() {
         <div className="max-w-3xl">
           <p className="text-overline text-cambridge mb-f8">Programs</p>
           <h1 className="text-display">
-            Safety
-            <br />
-            <span className="text-accent">Council</span>
+            <span className="block">Safety</span>
+            <span className="block text-accent">Council</span>
           </h1>
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             Workplace safety education for every business in Medina County, 

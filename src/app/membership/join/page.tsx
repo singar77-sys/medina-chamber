@@ -89,10 +89,9 @@ export default function JoinPage() {
       <section className="max-w-3xl">
         <p className="text-overline text-cambridge mb-4">Join</p>
         <h1 className="text-display">
-          Grow With
-          <br />
-          <span className="text-accent">Medina</span>
-        </h1>
+            <span className="block">Grow With</span>
+            <span className="block text-accent">Medina</span>
+          </h1>
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
           The Greater Medina Chamber of Commerce has been connecting businesses
           since 1938. Membership means your business has a seat at the table, 

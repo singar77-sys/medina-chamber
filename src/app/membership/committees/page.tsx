@@ -79,9 +79,8 @@ export default function CommitteesPage() {
         <div className="max-w-3xl">
           <p className="text-overline text-cambridge mb-f8">Membership</p>
           <h1 className="text-display">
-            Committees
-            <br />
-            <span className="text-accent">&amp; Councils</span>
+            <span className="block">Committees</span>
+            <span className="block text-accent">&amp; Councils</span>
           </h1>
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             Chamber membership is more than a listing. Committees are where

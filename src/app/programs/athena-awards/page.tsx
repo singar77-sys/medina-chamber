@@ -83,9 +83,8 @@ export default function AthenaAwardsPage() {
         <div className="max-w-3xl">
           <p className="text-overline text-cambridge mb-f8">Annual Program</p>
           <h1 className="text-display">
-            Athena
-            <br />
-            <span className="text-accent">Awards</span>
+            <span className="block">Athena</span>
+            <span className="block text-accent">Awards</span>
           </h1>
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             Honoring exceptional women leaders who have made remarkable

@@ -90,9 +90,8 @@ export default function ProgramsPage() {
         <div className="max-w-3xl">
           <p className="text-overline text-cambridge mb-f8">Membership</p>
           <h1 className="text-display">
-            Chamber
-            <br />
-            <span className="text-accent">Programs</span>
+            <span className="block">Chamber</span>
+            <span className="block text-accent">Programs</span>
           </h1>
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             More than networking, the chamber runs programs that develop leaders,

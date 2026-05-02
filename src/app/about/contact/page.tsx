@@ -84,10 +84,9 @@ export default function ContactPage() {
           <div className="max-w-3xl">
             <p className="text-overline text-cambridge mb-f8">Contact</p>
             <h1 className="text-display">
-              Get in Touch
-              <br />
-              <span className="text-accent">with the Chamber</span>
-            </h1>
+            <span className="block">Get in Touch</span>
+            <span className="block text-accent">with the Chamber</span>
+          </h1>
             <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
               We&apos;re the hub of Medina County&apos;s business network, {" "}
               {totalCount}+ members across every community in the area.

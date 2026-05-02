@@ -23,10 +23,9 @@ export default function PodcastPage() {
       <section className="max-w-3xl">
         <p className="text-overline text-cambridge mb-4">Podcast</p>
         <h1 className="text-display">
-          Medina
-          <br />
-          <span className="text-accent">Matters</span>
-        </h1>
+            <span className="block">Medina</span>
+            <span className="block text-accent">Matters</span>
+          </h1>
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
           Conversations with local business owners, community leaders, and
           Chamber members, about business, growth, and what makes Medina County

@@ -46,10 +46,9 @@ export default function MagazinePage() {
       <section className="max-w-3xl">
         <p className="text-overline text-cambridge mb-4">Magazine</p>
         <h1 className="text-display">
-          Medina Means
-          <br />
-          <span className="text-accent">Business</span>
-        </h1>
+            <span className="block">Medina Means</span>
+            <span className="block text-accent">Business</span>
+          </h1>
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
           The Chamber&apos;s official quarterly magazine, local business
           profiles, community stories, Chamber updates, and the people driving

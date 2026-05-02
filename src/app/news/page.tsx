@@ -55,9 +55,8 @@ export default function NewsPage() {
         <div className="max-w-3xl">
           <p className="text-overline text-cambridge mb-f8">News</p>
           <h1 className="text-display">
-            What&apos;s Happening
-            <br />
-            <span className="text-accent">in Medina</span>
+            <span className="block">What&apos;s Happening</span>
+            <span className="block text-accent">in Medina</span>
           </h1>
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             Business resources, member announcements, podcast conversations, and

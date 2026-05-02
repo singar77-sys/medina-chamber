@@ -93,9 +93,8 @@ export default function GolfOutingPage() {
         <div className="max-w-3xl">
           <p className="text-overline text-cambridge mb-f8">Annual Event</p>
           <h1 className="text-display">
-            Chamber
-            <br />
-            <span className="text-accent">Golf Outing</span>
+            <span className="block">Chamber</span>
+            <span className="block text-accent">Golf Outing</span>
           </h1>
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             The premier networking event on the Medina County business calendar.

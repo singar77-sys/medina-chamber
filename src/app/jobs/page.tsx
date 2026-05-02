@@ -23,9 +23,8 @@ export default function JobsPage() {
         <div className="max-w-3xl">
           <p className="text-overline text-cambridge mb-f8">Member Resources</p>
           <h1 className="text-display">
-            Local
-            <br />
-            <span className="text-accent">Job Board</span>
+            <span className="block">Local</span>
+            <span className="block text-accent">Job Board</span>
           </h1>
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             Job openings posted by Greater Medina Chamber member businesses.

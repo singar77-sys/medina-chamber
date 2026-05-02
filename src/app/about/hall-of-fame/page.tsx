@@ -83,9 +83,8 @@ export default function HallOfFamePage() {
         <div className="max-w-3xl">
           <p className="text-overline text-cambridge mb-f8">About</p>
           <h1 className="text-display">
-            Hall of
-            <br />
-            <span className="text-accent">Fame</span>
+            <span className="block">Hall of</span>
+            <span className="block text-accent">Fame</span>
           </h1>
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             Established in 1979, the Hall of Fame honors the people and

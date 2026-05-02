@@ -147,10 +147,9 @@ export default function StartABusinessPage() {
       <section className="max-w-3xl">
         <p className="text-overline text-cambridge mb-4">Business Resources</p>
         <h1 className="text-display">
-          Start a Business in
-          <br />
-          <span className="text-accent">Medina County</span>
-        </h1>
+            <span className="block">Start a Business in</span>
+            <span className="block text-accent">Medina County</span>
+          </h1>
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
           A practical step-by-step guide to launching a business in Medina
           County, Ohio, from choosing a structure to getting your first

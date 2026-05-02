@@ -90,9 +90,8 @@ export default function SavingsPage() {
         <div className="max-w-3xl">
           <p className="text-overline text-cambridge mb-f8">Membership</p>
           <h1 className="text-display">
-            Savings
-            <br />
-            <span className="text-accent">Programs</span>
+            <span className="block">Savings</span>
+            <span className="block text-accent">Programs</span>
           </h1>
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             Chamber membership includes exclusive access to programs that cut

@@ -135,10 +135,9 @@ export default function BusinessGrantsPage() {
       <section className="max-w-3xl">
         <p className="text-overline text-cambridge mb-4">Business Resources</p>
         <h1 className="text-display">
-          Business Grants &amp;
-          <br />
-          <span className="text-accent">Funding in Medina County</span>
-        </h1>
+            <span className="block">Business Grants &amp;</span>
+            <span className="block text-accent">Funding in Medina County</span>
+          </h1>
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
           State, federal, and local programs that help Medina County businesses
           start, grow, and hire.

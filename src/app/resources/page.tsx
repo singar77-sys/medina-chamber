@@ -47,10 +47,9 @@ export default function ResourcesPage() {
       <section className="max-w-3xl">
         <p className="text-overline text-cambridge mb-4">Greater Medina Chamber</p>
         <h1 className="text-display">
-          Business Resources
-          <br />
-          <span className="text-accent">for Medina County</span>
-        </h1>
+            <span className="block">Business Resources</span>
+            <span className="block text-accent">for Medina County</span>
+          </h1>
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
           Practical guides to the programs, registrations, and funding sources
           available to businesses starting or growing in Medina County, Ohio.

@@ -197,9 +197,8 @@ export default function First30DaysPage() {
             New Member Onboarding
           </p>
           <h1 className="text-display">
-            Your First
-            <br />
-            <span className="text-accent">30 Days.</span>
+            <span className="block">Your First</span>
+            <span className="block text-accent">30 Days.</span>
           </h1>
           <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
             Seven steps to turn membership into momentum. Written for

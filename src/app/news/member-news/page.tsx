@@ -24,10 +24,9 @@ export default function MemberNewsPage() {
       <section className="max-w-3xl">
         <p className="text-overline text-cambridge mb-4">Member News</p>
         <h1 className="text-display">
-          What&apos;s Happening
-          <br />
-          <span className="text-accent">in Medina Business</span>
-        </h1>
+            <span className="block">What&apos;s Happening</span>
+            <span className="block text-accent">in Medina Business</span>
+          </h1>
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
           Member businesses share their news directly through the Chamber, 
           events, promotions, milestones, job openings, and more. This is the

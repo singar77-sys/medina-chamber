@@ -24,10 +24,9 @@ export default function CommunityHubPage() {
           Medina County, Ohio
         </p>
         <h1 className="text-display">
-          Business Communities
-          <br />
-          <span className="text-accent">Across the County</span>
-        </h1>
+            <span className="block">Business Communities</span>
+            <span className="block text-accent">Across the County</span>
+          </h1>
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
           The Greater Medina Chamber of Commerce serves businesses in every
           corner of Medina County, from the Square to the southern townships.

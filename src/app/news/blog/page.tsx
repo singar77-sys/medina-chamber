@@ -24,10 +24,9 @@ export default function BlogListingPage() {
       <section className="max-w-3xl">
         <p className="text-overline text-cambridge mb-4">Business Blog</p>
         <h1 className="text-display">
-          Practical Advice
-          <br />
-          <span className="text-accent">for Business Owners</span>
-        </h1>
+            <span className="block">Practical Advice</span>
+            <span className="block text-accent">for Business Owners</span>
+          </h1>
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
           Tips, strategy, and resources to help Medina County businesses grow, 
           published weekly by the Greater Medina Chamber of Commerce.

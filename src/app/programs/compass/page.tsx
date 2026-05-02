@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
@@ -67,8 +68,14 @@ const audience = [
   },
   {
     title: "Employer-Sponsored",
-    description: "Team members your organization wants to invest in, Compass is a retention and development tool.",
+    description: "Team members your organization wants to invest in. Compass is a retention and development tool.",
   },
+];
+
+const overview = [
+  { label: "Format", value: "5 interactive sessions\nFebruary – May" },
+  { label: "Location", value: "Chamber Office\n139 N. Court Street, Medina" },
+  { label: "Investment", value: "$995 per participant" },
 ];
 
 export default function CompassPage() {
@@ -118,154 +125,191 @@ export default function CompassPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
-      {/* Hero */}
-      <section className="max-w-3xl">
-        <p className="text-overline text-cambridge mb-4">Leadership Development</p>
-        <h1 className="text-display">
-          Compass
-          <br />
-          <span className="text-accent">Program</span>
-        </h1>
-        <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-          A five-session professional development program designed to help
-          Medina County professionals grow in self-awareness, leadership
-          skills, and community engagement, at every stage of their career.
-        </p>
-        <p className="text-body-sm text-text-tertiary mt-4">
-          Presented by the{" "}
-          <span className="text-text-secondary font-semibold">
-            Greater Medina Chamber of Commerce
-          </span>{" "}
-          in partnership with the{" "}
-          <span className="text-text-secondary font-semibold">
-            Center for Immersive Leadership
-          </span>
-        </p>
 
-        <div className="mt-10 flex flex-wrap gap-4">
-          <Link
-            href="/about/contact"
-            className="
-              inline-flex items-center px-8 py-4
-              bg-accent hover:bg-accent-hover
-              text-white font-bold text-body
-              rounded-[var(--radius-md)]
-              transition-colors
-            "
-          >
-            Get Notified for Next Cohort →
-          </Link>
+      {/* Hero */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
+        <div className="max-w-3xl">
+          <p className="text-overline text-cambridge mb-f8">
+            Leadership Development
+          </p>
+          <h1 className="text-display">
+            <span className="block">Compass</span>
+            <span className="block text-accent">Program</span>
+          </h1>
+          <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
+            A five-session professional development program designed to help
+            Medina County professionals grow in self-awareness, leadership
+            skills, and community engagement at every stage of their career.
+          </p>
+          <p className="text-body-sm text-text-tertiary mt-f13">
+            Presented by the{" "}
+            <span className="text-text-secondary font-semibold">
+              Greater Medina Chamber of Commerce
+            </span>{" "}
+            in partnership with the{" "}
+            <span className="text-text-secondary font-semibold">
+              Center for Immersive Leadership
+            </span>
+            .
+          </p>
+
+          <div className="mt-f34 flex flex-wrap gap-f13">
+            <Link
+              href="/about/contact"
+              className="
+                inline-flex items-center px-8 py-4
+                bg-accent hover:bg-accent-hover
+                text-white font-bold text-body
+                rounded-[var(--radius-md)]
+                transition-colors
+              "
+            >
+              Get Notified for Next Cohort →
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Program overview */}
-      <section className="mt-20 grid lg:grid-cols-3 gap-6">
-        {[
-          { label: "Format", value: "5 interactive sessions\nFebruary – May" },
-          { label: "Location", value: "Chamber Office\n139 N. Court Street, Medina" },
-          { label: "Investment", value: "$995 per participant" },
-        ].map((item) => (
-          <div
-            key={item.label}
-            className="p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
-          >
-            <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-2">
-              {item.label}
-            </p>
-            <p className="text-body font-semibold text-text-primary whitespace-pre-line">{item.value}</p>
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+        <FadeIn>
+          <div className="grid lg:grid-cols-3 gap-f21">
+            {overview.map((item) => (
+              <div
+                key={item.label}
+                className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
+              >
+                <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-f8">
+                  {item.label}
+                </p>
+                <p className="text-body font-semibold text-text-primary whitespace-pre-line">
+                  {item.value}
+                </p>
+              </div>
+            ))}
           </div>
-        ))}
+        </FadeIn>
       </section>
 
-      {/* Sessions */}
-      <section className="mt-20">
-        <h2 className="text-overline text-cambridge mb-8">The Five Sessions</h2>
-        <div className="space-y-4">
-          {sessions.map((s) => (
-            <div
-              key={s.number}
-              className="grid sm:grid-cols-[64px_1fr_1fr] gap-4 p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
-            >
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-oxford/10 [[data-theme=dark]_&]:bg-cambridge/15 text-oxford [[data-theme=dark]_&]:text-cambridge font-bold text-h4 shrink-0">
-                {s.number}
-              </div>
-              <div>
-                <h3 className="text-h4 leading-snug">{s.title}</h3>
-                <p className="text-caption text-cambridge font-bold mt-1">{s.duration}</p>
-                <p className="text-caption text-text-tertiary mt-0.5">{s.includes}</p>
-              </div>
-              <div className="flex flex-wrap gap-2 content-start">
-                {s.topics.map((t) => (
-                  <span
-                    key={t}
-                    className="px-2.5 py-1 text-caption bg-bg-primary border border-border-secondary rounded-full text-text-secondary"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
+      {/* The five sessions */}
+      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <FadeIn>
+            <div className="mb-f21">
+              <p className="text-overline text-cambridge mb-f8">The Curriculum</p>
+              <h2 className="text-h2">Five Sessions, One Cohort</h2>
             </div>
-          ))}
+            <div className="space-y-f13">
+              {sessions.map((s) => (
+                <div
+                  key={s.number}
+                  className="grid sm:grid-cols-[64px_1fr_1fr] gap-f13 p-f21 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]"
+                >
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full bg-oxford/10 [[data-theme=dark]_&]:bg-cambridge/15 text-oxford [[data-theme=dark]_&]:text-cambridge font-bold text-h4 shrink-0">
+                    {s.number}
+                  </div>
+                  <div>
+                    <h3 className="text-h4 leading-snug">{s.title}</h3>
+                    <p className="text-caption text-cambridge font-bold mt-f3">
+                      {s.duration}
+                    </p>
+                    <p className="text-caption text-text-tertiary mt-f3">
+                      {s.includes}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2 content-start">
+                    {s.topics.map((t) => (
+                      <span
+                        key={t}
+                        className="px-2.5 py-1 text-caption bg-bg-secondary border border-border-secondary rounded-full text-text-secondary"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </FadeIn>
         </div>
       </section>
 
-      {/* Who it's for */}
-      <section className="mt-20">
-        <h2 className="text-overline text-cambridge mb-8">Who Should Apply</h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {audience.map((a) => (
-            <div
-              key={a.title}
-              className="p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
-            >
-              <h3 className="text-h4 mb-3">{a.title}</h3>
-              <p className="text-body-sm text-text-secondary">{a.description}</p>
-            </div>
-          ))}
-        </div>
+      {/* Who should apply */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+        <FadeIn>
+          <div className="mb-f21">
+            <p className="text-overline text-cambridge mb-f8">Who It&apos;s For</p>
+            <h2 className="text-h2">Who Should Apply</h2>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-f21">
+            {audience.map((a) => (
+              <div
+                key={a.title}
+                className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
+              >
+                <h3 className="text-h4 mb-f8">{a.title}</h3>
+                <p className="text-body-sm text-text-secondary leading-relaxed">
+                  {a.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </FadeIn>
       </section>
 
       {/* CTA */}
-      <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-        <div className="grid lg:grid-cols-2 gap-10 items-center">
-          <div>
-            <h2 className="text-h2">Ready to invest in your leadership?</h2>
-            <p className="text-body-lg text-text-secondary mt-4">
-              Compass runs annually. Each cohort is limited in size to keep
-              the experience intentional and the connections real. Contact the
-              Chamber to learn about the next cohort.
-            </p>
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+        <FadeIn>
+          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+            <div className="grid lg:grid-cols-2 gap-f34 items-center">
+              <div>
+                <p className="text-overline text-cambridge mb-f8">Apply</p>
+                <h2 className="text-h2">Ready to invest in your leadership?</h2>
+                <p className="text-body-lg text-text-secondary mt-f13">
+                  Compass runs annually. Each cohort is limited in size to keep
+                  the experience intentional and the connections real. Contact
+                  the chamber to learn about the next cohort.
+                </p>
+              </div>
+              <div className="space-y-f13">
+                <Link
+                  href="/about/contact"
+                  className="
+                    block w-full text-center py-f13 px-f21
+                    bg-accent hover:bg-accent-hover
+                    text-white font-bold text-body-sm
+                    rounded-[var(--radius-md)]
+                    transition-colors
+                  "
+                >
+                  Contact the Chamber →
+                </Link>
+                <a
+                  href="tel:+13307238773"
+                  className="
+                    block w-full text-center py-f13 px-f21
+                    border border-border-primary hover:border-text-tertiary
+                    text-text-primary font-bold text-body-sm
+                    rounded-[var(--radius-md)]
+                    transition-colors
+                  "
+                >
+                  (330) 723-8773
+                </a>
+              </div>
+            </div>
           </div>
-          <div className="space-y-4">
+
+          <div className="mt-f34">
             <Link
-              href="/about/contact"
-              className="
-                block w-full text-center py-3 px-6
-                bg-accent hover:bg-accent-hover
-                text-white font-bold text-body-sm
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
+              href="/programs"
+              className="text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
             >
-              Contact the Chamber →
+              ← Back to Programs
             </Link>
-            <a
-              href="tel:+13307238773"
-              className="
-                block w-full text-center py-3 px-6
-                border border-border-primary hover:border-text-tertiary
-                text-text-primary font-bold text-body-sm
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
-            >
-              (330) 723-8773
-            </a>
           </div>
-        </div>
+        </FadeIn>
       </section>
-    </div>
     </>
   );
 }

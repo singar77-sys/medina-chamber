@@ -105,10 +105,9 @@ export default function WorkforcePage() {
       <section className="max-w-3xl">
         <p className="text-overline text-cambridge mb-4">Business Resources</p>
         <h1 className="text-display">
-          Hire &amp; Grow Your Team
-          <br />
-          <span className="text-accent">in Medina County</span>
-        </h1>
+            <span className="block">Hire &amp; Grow Your Team</span>
+            <span className="block text-accent">in Medina County</span>
+          </h1>
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
           Programs to find candidates, subsidize training, and build a safer,
           better-equipped workforce, from the Chamber and Ohio&apos;s state

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
@@ -20,7 +21,7 @@ const components = [
     time: "3:00 – 5:00 PM",
     ticketed: true,
     description:
-      "Ticket holders get exclusive early access, dedicated networking time before the doors open to the public. Make meaningful connections without the crowd.",
+      "Ticket holders get exclusive early access. Dedicated networking time before the doors open to the public. Make meaningful connections without the crowd.",
   },
   {
     title: "Foundry Faceoff",
@@ -38,13 +39,28 @@ const components = [
   },
 ];
 
+const audience = [
+  {
+    audience: "Chamber Members",
+    benefit: "Early access networking + Foundry Faceoff competition with your team",
+  },
+  {
+    audience: "Local Businesses",
+    benefit: "Showcase your products and services at the Business Circuit Expo",
+  },
+  {
+    audience: "The Community",
+    benefit: "Free public access to the Business Circuit Expo (4–6 PM)",
+  },
+];
+
 export default function SocialConnectPage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Event",
     name: "Social Connect",
     description:
-      "The Greater Medina Chamber's signature networking event, professional networking, the Foundry Faceoff competition, and a public Business Circuit Expo at Foundry Social in Medina, Ohio.",
+      "The Greater Medina Chamber's signature networking event. Professional networking, the Foundry Faceoff competition, and a public Business Circuit Expo at Foundry Social in Medina, Ohio.",
     organizer: {
       "@type": "Organization",
       name: "Greater Medina Chamber of Commerce",
@@ -72,178 +88,213 @@ export default function SocialConnectPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+
       {/* Hero */}
-      <section className="max-w-3xl">
-        <p className="text-overline text-cambridge mb-4">Networking Event</p>
-        <h1 className="text-display">
-          Social
-          <br />
-          <span className="text-accent">Connect</span>
-        </h1>
-        <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-          Networking that doesn&apos;t feel like networking. Social Connect
-          blends professional connection, friendly competition, and a public
-          business expo, all under one roof at Foundry Social.
-        </p>
-        <div className="mt-10 flex flex-wrap gap-4">
-          <Link
-            href="/events"
-            className="
-              inline-flex items-center px-8 py-4
-              bg-accent hover:bg-accent-hover
-              text-white font-bold text-body
-              rounded-[var(--radius-md)]
-              transition-colors
-            "
-          >
-            See Upcoming Events →
-          </Link>
-          <Link
-            href="/about/contact"
-            className="
-              inline-flex items-center px-6 py-4
-              border border-border-primary hover:border-text-tertiary
-              text-text-primary font-bold text-body-sm
-              rounded-[var(--radius-md)]
-              transition-colors
-            "
-          >
-            Sponsorship Info
-          </Link>
-        </div>
-      </section>
-
-      {/* Venue callout */}
-      <section className="mt-16 p-8 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] flex flex-col sm:flex-row sm:items-center gap-6">
-        <div className="flex-1">
-          <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-1">
-            Presenting Sponsor & Venue
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
+        <div className="max-w-3xl">
+          <p className="text-overline text-cambridge mb-f8">Networking Event</p>
+          <h1 className="text-display">
+            <span className="block">Social</span>
+            <span className="block text-accent">Connect</span>
+          </h1>
+          <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
+            Networking that doesn&apos;t feel like networking. Social Connect
+            blends professional connection, friendly competition, and a public
+            business expo, all under one roof at Foundry Social.
           </p>
-          <p className="text-h3">Foundry Social</p>
-          <p className="text-text-secondary text-body mt-1">
-            333 Foundry Street, Medina, OH 44256
-          </p>
-        </div>
-        <a
-          href="https://maps.google.com/?q=333+Foundry+Street+Medina+OH+44256"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="
-            shrink-0 inline-flex items-center px-5 py-2.5
-            border border-border-primary hover:border-text-tertiary
-            text-text-primary font-bold text-body-sm
-            rounded-[var(--radius-md)]
-            transition-colors
-          "
-        >
-          Get Directions ↗
-        </a>
-      </section>
-
-      {/* Event components */}
-      <section className="mt-20">
-        <h2 className="text-overline text-cambridge mb-8">How It Works</h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          {components.map((c) => (
-            <div
-              key={c.title}
-              className="flex flex-col p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
-            >
-              <div className="flex items-start justify-between gap-3 mb-4">
-                <h3 className="text-h4 leading-snug">{c.title}</h3>
-                {!c.ticketed && (
-                  <span className="shrink-0 px-2 py-0.5 bg-cambridge/20 text-cambridge text-caption font-bold rounded-full">
-                    Free
-                  </span>
-                )}
-              </div>
-              <p className="text-caption text-cambridge font-bold mb-3">{c.time}</p>
-              <p className="text-body-sm text-text-secondary leading-relaxed flex-1">
-                {c.description}
-              </p>
-              {c.ticketed && (
-                <p className="text-caption text-text-tertiary mt-4 pt-4 border-t border-border-secondary">
-                  Ticket required for access
-                </p>
-              )}
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Who it's for */}
-      <section className="mt-20 grid md:grid-cols-2 gap-12">
-        <div>
-          <h2 className="text-h2">Built for Everyone</h2>
-          <p className="text-body text-text-secondary mt-4 leading-relaxed">
-            Whether you&apos;re a chamber member looking to expand your network,
-            a business owner who wants to showcase your services, or a community
-            member curious about what Medina County businesses have to offer, 
-            Social Connect has a place for you.
-          </p>
-          <p className="text-body text-text-secondary mt-4 leading-relaxed">
-            The Business Circuit Expo is free and open to the public. Ticket
-            holders get early access, the competitive Foundry Faceoff, and
-            dedicated networking time before the crowds arrive.
-          </p>
-        </div>
-
-        <div className="space-y-4">
-          {[
-            { audience: "Chamber Members", benefit: "Early access networking + Foundry Faceoff competition with your team" },
-            { audience: "Local Businesses", benefit: "Showcase your products and services at the Business Circuit Expo" },
-            { audience: "The Community", benefit: "Free public access to the Business Circuit Expo (4–6 PM)" },
-          ].map((item) => (
-            <div
-              key={item.audience}
-              className="p-5 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
-            >
-              <p className="text-body-sm font-bold text-text-primary">{item.audience}</p>
-              <p className="text-body-sm text-text-secondary mt-1">{item.benefit}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-        <div className="max-w-2xl">
-          <h2 className="text-h2">Want to exhibit or sponsor?</h2>
-          <p className="text-body-lg text-text-secondary mt-4">
-            Exhibitor spots and sponsorship packages are available. Get your
-            business in front of the chamber network and the broader Medina
-            community in one afternoon.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-4">
+          <div className="mt-f34 flex flex-wrap gap-f13">
             <Link
-              href="/about/contact"
+              href="/events"
               className="
-                inline-flex items-center px-6 py-3
+                inline-flex items-center px-8 py-4
                 bg-accent hover:bg-accent-hover
-                text-white font-bold text-body-sm
+                text-white font-bold text-body
                 rounded-[var(--radius-md)]
                 transition-colors
               "
             >
-              Get in Touch →
+              See Upcoming Events →
             </Link>
             <Link
-              href="/events"
+              href="/about/contact"
               className="
-                inline-flex items-center px-6 py-3
+                inline-flex items-center px-6 py-4
                 border border-border-primary hover:border-text-tertiary
                 text-text-primary font-bold text-body-sm
                 rounded-[var(--radius-md)]
                 transition-colors
               "
             >
-              View Upcoming Events
+              Sponsorship Info
             </Link>
           </div>
         </div>
       </section>
-    </div>
+
+      {/* Venue callout */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+        <FadeIn>
+          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] flex flex-col sm:flex-row sm:items-center gap-f21">
+            <div className="flex-1">
+              <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-f8">
+                Presenting Sponsor & Venue
+              </p>
+              <p className="text-h3">Foundry Social</p>
+              <p className="text-text-secondary text-body mt-f3">
+                333 Foundry Street, Medina, OH 44256
+              </p>
+            </div>
+            <a
+              href="https://maps.google.com/?q=333+Foundry+Street+Medina+OH+44256"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="
+                shrink-0 inline-flex items-center px-5 py-2.5
+                border border-border-primary hover:border-text-tertiary
+                text-text-primary font-bold text-body-sm
+                rounded-[var(--radius-md)]
+                transition-colors
+              "
+            >
+              Get Directions ↗
+            </a>
+          </div>
+        </FadeIn>
+      </section>
+
+      {/* How it works */}
+      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <FadeIn>
+            <div className="mb-f21">
+              <p className="text-overline text-cambridge mb-f8">The Format</p>
+              <h2 className="text-h2">How It Works</h2>
+            </div>
+            <div className="grid md:grid-cols-3 gap-f21">
+              {components.map((c) => (
+                <div
+                  key={c.title}
+                  className="flex flex-col p-f21 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]"
+                >
+                  <div className="flex items-start justify-between gap-3 mb-f13">
+                    <h3 className="text-h4 leading-snug">{c.title}</h3>
+                    {!c.ticketed && (
+                      <span className="shrink-0 px-2 py-0.5 bg-cambridge/20 text-cambridge text-caption font-bold rounded-full">
+                        Free
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-caption text-cambridge font-bold mb-f13">
+                    {c.time}
+                  </p>
+                  <p className="text-body-sm text-text-secondary leading-relaxed flex-1">
+                    {c.description}
+                  </p>
+                  {c.ticketed && (
+                    <p className="text-caption text-text-tertiary mt-f21 pt-f13 border-t border-border-secondary">
+                      Ticket required for access
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* Built for everyone */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+        <FadeIn>
+          <div className="grid md:grid-cols-2 gap-f34 lg:gap-f55">
+            <div>
+              <p className="text-overline text-cambridge mb-f8">Audience</p>
+              <h2 className="text-h2">Built for Everyone</h2>
+              <p className="text-body text-text-secondary mt-f13 leading-relaxed">
+                Whether you&apos;re a chamber member looking to expand your
+                network, a business owner who wants to showcase your services,
+                or a community member curious about what Medina County
+                businesses have to offer, Social Connect has a place for you.
+              </p>
+              <p className="text-body text-text-secondary mt-f21 leading-relaxed">
+                The Business Circuit Expo is free and open to the public.
+                Ticket holders get early access, the competitive Foundry
+                Faceoff, and dedicated networking time before the crowds
+                arrive.
+              </p>
+            </div>
+
+            <div className="space-y-f13">
+              {audience.map((item) => (
+                <div
+                  key={item.audience}
+                  className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
+                >
+                  <p className="text-body-sm font-bold text-text-primary">
+                    {item.audience}
+                  </p>
+                  <p className="text-body-sm text-text-secondary mt-f3">
+                    {item.benefit}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </FadeIn>
+      </section>
+
+      {/* CTA */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+        <FadeIn>
+          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+            <div className="grid lg:grid-cols-2 gap-f34 items-center">
+              <div>
+                <p className="text-overline text-cambridge mb-f8">Get Involved</p>
+                <h2 className="text-h2">Want to exhibit or sponsor?</h2>
+                <p className="text-body-lg text-text-secondary mt-f13">
+                  Exhibitor spots and sponsorship packages are available. Get
+                  your business in front of the chamber network and the
+                  broader Medina community in one afternoon.
+                </p>
+              </div>
+              <div className="space-y-f13">
+                <Link
+                  href="/about/contact"
+                  className="
+                    block w-full text-center py-f13 px-f21
+                    bg-accent hover:bg-accent-hover
+                    text-white font-bold text-body-sm
+                    rounded-[var(--radius-md)]
+                    transition-colors
+                  "
+                >
+                  Get in Touch →
+                </Link>
+                <Link
+                  href="/events"
+                  className="
+                    block w-full text-center py-f13 px-f21
+                    border border-border-primary hover:border-text-tertiary
+                    text-text-primary font-bold text-body-sm
+                    rounded-[var(--radius-md)]
+                    transition-colors
+                  "
+                >
+                  View Upcoming Events
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-f34">
+            <Link
+              href="/programs"
+              className="text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
+            >
+              ← Back to Programs
+            </Link>
+          </div>
+        </FadeIn>
+      </section>
     </>
   );
 }

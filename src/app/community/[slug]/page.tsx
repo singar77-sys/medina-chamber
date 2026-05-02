@@ -104,9 +104,8 @@ export default async function CommunityPage(
         <section className="max-w-3xl">
           <p className="text-overline text-cambridge mb-4">{community.county}</p>
           <h1 className="text-display">
-            {community.name}
-            <br />
-            <span className="text-accent">Business Community</span>
+            <span className="block">{community.name}</span>
+            <span className="block text-accent">Business Community</span>
           </h1>
           <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
             {community.description}

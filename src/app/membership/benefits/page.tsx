@@ -96,9 +96,8 @@ export default function BenefitsPage() {
         <div className="max-w-3xl">
           <p className="text-overline text-cambridge mb-f8">Membership</p>
           <h1 className="text-display">
-            Member
-            <br />
-            <span className="text-accent">Benefits</span>
+            <span className="block">Member</span>
+            <span className="block text-accent">Benefits</span>
           </h1>
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             Chamber membership isn&apos;t just a badge, it&apos;s access to the

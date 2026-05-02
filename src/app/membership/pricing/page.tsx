@@ -52,9 +52,8 @@ export default async function PricingPage() {
         <div className="max-w-3xl">
           <p className="text-overline text-cambridge mb-f8">Membership</p>
           <h1 className="text-display">
-            Three Tiers.
-            <br />
-            <span className="text-accent">One Community.</span>
+            <span className="block">Three Tiers.</span>
+            <span className="block text-accent">One Community.</span>
           </h1>
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             Pick the tier that fits your goals, from first-year essentials to

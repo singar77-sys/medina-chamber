@@ -1332,7 +1332,7 @@ export function BusinessBrewGraphic({
             MEDINA CHAMBER · MONTHLY NETWORKING
           </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/events/business-brew/bee-mug.png" alt="" width={320}
+          <img src="/images/events/business-brew/business-brew-networking-medina-chamber-009.webp" alt="" width={320}
             style={{ position: "absolute", top: 140, right: 90, height: "auto", display: "block" }} />
           <div style={{ position: "absolute", top: 320, left: 70, right: 450 }}>
             <div style={{ fontFamily: SCRIPT_STACK, color: BRAND.coquelicot, fontSize: 76, lineHeight: 0.9, marginBottom: 4 }}>
@@ -1396,7 +1396,7 @@ export function BusinessBrewGraphic({
             · MONTHLY NETWORKING ·
           </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/events/business-brew/bee-mug.png" alt="" width={440}
+          <img src="/images/events/business-brew/business-brew-networking-medina-chamber-009.webp" alt="" width={440}
             style={{ position: "absolute", top: 230, left: "50%", transform: "translateX(-50%)", height: "auto", display: "block" }} />
           <div style={{ position: "absolute", top: 1080, left: 0, right: 0, textAlign: "center" }}>
             <div style={{ fontFamily: SCRIPT_STACK, color: BRAND.cambridge, fontSize: 104, lineHeight: 0.9, marginBottom: -10 }}>
@@ -1469,7 +1469,7 @@ export function BusinessBrewGraphic({
         </div>
         {/* Bee-mug */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/events/business-brew/bee-mug.png" alt=""
+        <img src="/images/events/business-brew/business-brew-networking-medina-chamber-009.webp" alt=""
           width={S(640)}
           style={{ position: "absolute", top: Y(380), right: S(320), height: "auto", display: "block" }} />
         {/* Headline stack */}

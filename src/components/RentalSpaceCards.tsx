@@ -45,7 +45,7 @@ const ROOMS: Room[] = [
       "Whiteboard for working sessions",
       "Conference seating for up to 16",
     ],
-    photo: "/images/programs/rental-space/rental-space-06-medina-chamber.jpg",
+    photo: "/images/programs/rental-space/chamber-rental-space-medina-004.webp",
   },
   {
     name: "Main Room",
@@ -61,7 +61,7 @@ const ROOMS: Room[] = [
       "Presentation-ready setup",
       "Seats up to 50 people",
     ],
-    photo: "/images/programs/rental-space/rental-space-03-medina-chamber.jpg",
+    photo: "/images/programs/rental-space/chamber-rental-space-medina-001.webp",
   },
 ];
 

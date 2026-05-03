@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
+import { getMergedStaticPhotos } from "@/lib/static-media";
+import { EventGallery } from "@/components/events/EventGallery";
 
 export const metadata: Metadata = {
   title: "Compass Leadership Program",
@@ -78,7 +80,19 @@ const overview = [
   { label: "Investment", value: "$995 per participant" },
 ];
 
-export default function CompassPage() {
+export default async function CompassPage() {
+  const classPhotos = await getMergedStaticPhotos([
+    {
+      folder: "programs/compass/class-day-2",
+      alt: "Compass Leadership Program participants during a session at the Greater Medina Chamber of Commerce in Medina, Ohio",
+      limit: 12,
+    },
+    {
+      folder: "programs/compass/class-day-3",
+      alt: "Compass Leadership Program participants at a workshop session in Medina, Ohio",
+    },
+  ]);
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Course",
@@ -233,6 +247,17 @@ export default function CompassPage() {
           </FadeIn>
         </div>
       </section>
+
+      {/* Session photos */}
+      {classPhotos.length > 0 && (
+        <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+          <FadeIn>
+            <p className="text-overline text-cambridge mb-f8">Inside a Session</p>
+            <h2 className="text-h2 mb-f21">See Compass in Action</h2>
+            <EventGallery photos={classPhotos} title="" />
+          </FadeIn>
+        </section>
+      )}
 
       {/* Who should apply */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">

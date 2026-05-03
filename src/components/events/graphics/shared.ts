@@ -42,14 +42,14 @@ export const ASSETS = {
   networking:      "/images/events/networking.webp",
   networkingPeople:"/images/events/networking-people.png",
   getToKnow:       "/images/events/get-to-know.jpg",
-  golf01:          "/images/events/golf-outing/golf-01.jpg",
-  golf03:          "/images/events/golf-outing/golf-03.jpg",
-  golfFoursome:    "/images/events/golf-outing/golf-foursome.png",
-  athena04:        "/images/events/athena-awards/athena-04.jpg",
-  social03:        "/images/events/social-connect/social-03.jpg",
+  golf01:          "/images/events/golf-outing/golf-outing-medina-chamber-001.webp",
+  golf03:          "/images/events/golf-outing/golf-outing-medina-chamber-002.webp",
+  golfFoursome:    "/images/events/golf-outing/golf-outing-medina-chamber-003.webp",
+  athena04:        "/images/events/athena-awards/athena-awards-medina-ohio-extra-001.webp",
+  social03:        "/images/events/social-connect/social-connect-networking-medina-chamber-013.webp",
   chamberBuilding: "/images/events/chamber-building.webp",
   industryMedina:  "/images/events/industry-medina.jpg",
-  businessBrewLogo:"/images/events/business-brew/business-brew-logo.png",
+  businessBrewLogo:"/images/events/business-brew/business-brew-networking-medina-chamber-013.webp",
 } as const;
 
 export const FONT_STACK = '"BN Bergen", system-ui, -apple-system, sans-serif';

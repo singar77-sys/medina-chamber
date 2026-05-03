@@ -96,6 +96,38 @@ export async function getEventPhotos(slug: string): Promise<MediaItem[]> {
   return (await redis.get<MediaItem[]>(`cms:media:event:${slug}`)) ?? [];
 }
 
+/**
+ * Strip a trailing month-year suffix to get the recurring event type slug.
+ *   "business-brew-may-2026"  → "business-brew"
+ *   "annual-chamber-golf-outing" → "annual-chamber-golf-outing" (unchanged)
+ */
+function toTypeSlug(slug: string): string {
+  return slug
+    .replace(
+      /-(?:january|february|march|april|may|june|july|august|september|october|november|december)-\d{4}$/i,
+      "",
+    )
+    .replace(/-\d{4}$/, "");
+}
+
+/**
+ * Like getEventPhotos, but falls back to the recurring event type slug when
+ * no instance-specific photos exist. This lets seeded galleries (stored once
+ * under e.g. "business-brew") serve every dated instance automatically
+ * ("business-brew-may-2026", "business-brew-june-2026", …).
+ *
+ * CMS uploads to the exact slug always take precedence — the fallback only
+ * fires when the instance key is empty.
+ */
+export async function getEventPhotosWithFallback(slug: string): Promise<MediaItem[]> {
+  const photos = await getEventPhotos(slug);
+  if (photos.length > 0) return photos;
+
+  const typeSlug = toTypeSlug(slug);
+  if (typeSlug === slug) return photos; // already at type level, no fallback needed
+  return getEventPhotos(typeSlug);
+}
+
 export async function deleteEventPhoto(slug: string, url: string): Promise<void> {
   const redis = getRedis();
 

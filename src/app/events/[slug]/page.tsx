@@ -6,7 +6,7 @@ import { events, getEventBySlug, eventMetaDescription } from "@/data/events";
 import { getCmsEventData } from "@/lib/cms-store";
 import { getEventGraphicRenderer } from "@/components/events/graphics/registry";
 import { FluidGraphicFrame } from "@/components/events/graphics/FluidGraphicFrame";
-import { getEventPhotos } from "@/lib/media-store";
+import { getEventPhotosWithFallback } from "@/lib/media-store";
 import { EventGallery } from "@/components/events/EventGallery";
 
 import { safeJsonLd } from "@/lib/json-ld";
@@ -52,7 +52,7 @@ export default async function EventPage(
   if (!base) notFound();
   const [override, photos] = await Promise.all([
     getCmsEventData(slug),
-    getEventPhotos(slug),
+    getEventPhotosWithFallback(slug),
   ]);
   const event = override ? { ...base, ...override } : base;
 

@@ -21,7 +21,12 @@
     "scrape:blog": "node scripts/scrape-blog.mjs",
     "scrape:blog:test": "node scripts/scrape-blog.mjs --test",
     "scrape:jobs": "node scripts/scrape-jobs.mjs",
-    "scrape:jobs:test": "node scripts/scrape-jobs.mjs --test"
+    "scrape:jobs:test": "node scripts/scrape-jobs.mjs --test",
+    "seed:photos": "node scripts/seed-event-photos.mjs",
+    "seed:photos:dry": "node scripts/seed-event-photos.mjs --dry-run",
+    "transcode": "bash scripts/transcode-videos.sh",
+    "transcode:dry": "bash scripts/transcode-videos.sh --dry-run",
+    "transcode:short": "bash scripts/transcode-videos.sh --max-duration=60"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.68",

@@ -6,6 +6,8 @@ import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
 import { chamberOffice, jaclyn, stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
+import { getStaticPhotos } from "@/lib/static-media";
+import { EventGallery } from "@/components/events/EventGallery";
 
 export const metadata: Metadata = {
   title: "About the Chamber",
@@ -102,7 +104,13 @@ const quickLinks = [
   },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const communityPhotos = await getStaticPhotos(
+    "photos/sneak-peeks",
+    "Chamber community event, Greater Medina Chamber of Commerce, Medina Ohio",
+    12,
+  );
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "AboutPage",
@@ -265,6 +273,19 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Community photos — proof we live our story */}
+      {communityPhotos.length > 0 && (
+        <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <FadeIn>
+              <p className="text-overline text-cambridge mb-f8">Community</p>
+              <h2 className="text-h2 mb-f21">Chamber life in pictures.</h2>
+              <EventGallery photos={communityPhotos} title="" />
+            </FadeIn>
+          </div>
+        </section>
+      )}
 
       {/* Core Values */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">

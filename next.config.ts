@@ -48,6 +48,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.squarespace-cdn.com",
       },
+      {
+        // Vercel Blob — CMS-uploaded event photos and media
+        protocol: "https",
+        hostname: "*.public.blob.vercel-storage.com",
+      },
     ],
   },
   async headers() {

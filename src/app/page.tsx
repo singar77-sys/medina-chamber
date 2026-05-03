@@ -16,6 +16,7 @@ import { TiltCard } from "@/components/events/TiltCard";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { BeeFly } from "@/components/effects/BeeFly";
 import { CommunityInvestors } from "@/components/CommunityInvestors";
+import { RecentPhotoStrip } from "@/components/RecentPhotoStrip";
 
 import { safeJsonLd } from "@/lib/json-ld";
 import { chamberOffice, memberServices, stephanie } from "@/data/staff";
@@ -455,6 +456,9 @@ export default function HomePage() {
 
       {/* Three Pillars (Your Voice / Network / Growth) */}
       <ThreePillars />
+
+      {/* Life at the Chamber — recent event photos from Vercel Blob */}
+      <RecentPhotoStrip />
 
       {/* Member Voice */}
       <MemberVoice />

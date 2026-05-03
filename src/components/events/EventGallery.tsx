@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import type { MediaItem } from "@/lib/media-store";
 
 interface Props {
@@ -20,44 +21,64 @@ export function EventGallery({ photos, title = "Photos" }: Props) {
     setLightbox((i) => (i === null ? null : (i + 1) % photos.length));
   }
 
-  return (
-    <section>
-      <h2 className="text-lg font-semibold text-[#0C1B33] mb-4">{title}</h2>
+  // Keyboard nav for lightbox
+  function handleKey(e: React.KeyboardEvent) {
+    if (e.key === "ArrowLeft") prev();
+    if (e.key === "ArrowRight") next();
+    if (e.key === "Escape") setLightbox(null);
+  }
 
-      {/* Masonry grid via CSS columns */}
-      <div
-        style={{
-          columns: photos.length === 1 ? 1 : photos.length === 2 ? 2 : 3,
-          columnGap: "12px",
-        }}
-      >
+  const cols =
+    photos.length === 1 ? "grid-cols-1" :
+    photos.length === 2 ? "grid-cols-2" :
+    "grid-cols-2 sm:grid-cols-3";
+
+  return (
+    <section aria-label={title || "Photo gallery"}>
+      {title && (
+        <h2 className="text-lg font-semibold text-[#0C1B33] [[data-theme=dark]_&]:text-white mb-4">
+          {title}
+        </h2>
+      )}
+
+      {/* Responsive grid — fixed 4:3 aspect, object-cover */}
+      <div className={`grid ${cols} gap-3`}>
         {photos.map((photo, i) => (
-          <div
+          <button
             key={photo.url}
-            className="mb-3 break-inside-avoid cursor-pointer rounded-lg overflow-hidden group relative"
+            className="relative aspect-[4/3] rounded-lg overflow-hidden cursor-pointer group focus-visible:ring-2 focus-visible:ring-cambridge focus-visible:outline-none"
             onClick={() => setLightbox(i)}
+            aria-label={`View photo ${i + 1} of ${photos.length}${photo.caption ? `: ${photo.caption}` : ""}`}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={photo.url}
               alt={photo.alt ?? photo.caption ?? photo.filename}
-              className="w-full block transition-transform duration-300 group-hover:scale-[1.02]"
-              style={{ display: "block" }}
+              fill
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px"
+              className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+              loading={i < 6 ? "eager" : "lazy"}
             />
             {photo.caption && (
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                 <p className="text-xs text-white">{photo.caption}</p>
               </div>
             )}
-          </div>
+          </button>
         ))}
       </div>
 
       {/* Lightbox */}
       {lightbox !== null && (
+        // eslint-disable-next-line jsx-a11y/no-static-element-interactions
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
           onClick={() => setLightbox(null)}
+          onKeyDown={handleKey}
+          // biome-ignore lint/a11y/noNoninteractiveTabindex: lightbox overlay needs focus for keyboard nav
+          tabIndex={-1}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Photo lightbox"
         >
           {/* Prev / Next */}
           {photos.length > 1 && (
@@ -65,12 +86,14 @@ export function EventGallery({ photos, title = "Photos" }: Props) {
               <button
                 onClick={(e) => { e.stopPropagation(); prev(); }}
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl font-light px-3 py-2 rounded-lg hover:bg-white/10 transition-colors"
+                aria-label="Previous photo"
               >
                 ‹
               </button>
               <button
                 onClick={(e) => { e.stopPropagation(); next(); }}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl font-light px-3 py-2 rounded-lg hover:bg-white/10 transition-colors"
+                aria-label="Next photo"
               >
                 ›
               </button>
@@ -81,20 +104,25 @@ export function EventGallery({ photos, title = "Photos" }: Props) {
           <button
             onClick={() => setLightbox(null)}
             className="absolute top-4 right-4 text-white/70 hover:text-white text-2xl leading-none w-11 h-11 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors"
+            aria-label="Close lightbox"
           >
             ×
           </button>
 
-          {/* Image */}
+          {/* Image — explicit width/height let next/image size the optimization
+              pipeline; CSS max-constraints control the actual display size.   */}
           <div
-            className="max-w-5xl max-h-[90dvh] px-4 sm:px-16"
+            className="max-w-5xl w-full px-4 sm:px-16"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={photos[lightbox].url}
               alt={photos[lightbox].alt ?? photos[lightbox].caption ?? photos[lightbox].filename}
-              className="max-w-full max-h-[80dvh] object-contain rounded-lg"
+              width={1920}
+              height={1440}
+              className="max-w-full max-h-[80dvh] w-auto h-auto object-contain rounded-lg mx-auto block"
+              sizes="90vw"
+              quality={85}
             />
             {photos[lightbox].caption && (
               <p className="text-white/70 text-sm text-center mt-3">

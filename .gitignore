@@ -41,6 +41,7 @@ scripts/_debug-raw.html
 scripts/image-catalog.json
 scripts/link-audit-report.json
 scripts/logo-scrape-report.json
+scripts/*.log
 
 # Designer scratch — HTML mockups, .jsx design files, pasted-screenshot
 # uploads, and the unused asset tree under "public/images/chamber events/"
@@ -48,3 +49,14 @@ scripts/logo-scrape-report.json
 # public/images/chamber-logos/, public/images/events/, etc). ~32 MB of
 # reference material that nothing in src/ imports; keeping it local only.
 public/images/chamber events/
+
+# Video files — source .mov and transcoded .mp4 are too large for git;
+# they live in Vercel Blob / YouTube. Poster .webp frames are committed.
+*.mov
+*.mp4
+
+# Local tool/agent configs
+.agents/
+.aidesigner/
+.mcp.json
+.omc/

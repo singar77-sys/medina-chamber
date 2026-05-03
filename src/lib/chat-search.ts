@@ -30,6 +30,56 @@ const STOPWORDS = new Set([
   "me","please","thanks","thank",
 ]);
 
+// Expand natural-language query terms to their directory-relevant equivalents.
+// "barbecue" won't appear in any member category — "restaurant" will.
+// Keys are lowercased query words; values are added to the scoring term set.
+const TERM_EXPANSIONS: Record<string, string[]> = {
+  // Food types → restaurant / food service
+  barbecue:  ["restaurant", "food"],
+  bbq:       ["restaurant", "food", "barbecue"],
+  pizza:     ["restaurant", "food"],
+  burger:    ["restaurant", "food"],
+  burgers:   ["restaurant", "food"],
+  sandwich:  ["restaurant", "food", "deli"],
+  sandwiches:["restaurant", "food", "deli"],
+  coffee:    ["cafe", "coffee", "restaurant", "food"],
+  cafe:      ["restaurant", "coffee", "food"],
+  breakfast: ["restaurant", "food"],
+  brunch:    ["restaurant", "food"],
+  lunch:     ["restaurant", "food"],
+  dinner:    ["restaurant", "food"],
+  sushi:     ["restaurant", "food"],
+  tacos:     ["restaurant", "food", "mexican"],
+  wings:     ["restaurant", "food"],
+  beer:      ["brewery", "bar", "restaurant"],
+  brewery:   ["restaurant", "bar"],
+  wine:      ["winery", "restaurant"],
+  eat:       ["restaurant", "food"],
+  eating:    ["restaurant", "food"],
+  dining:    ["restaurant", "food"],
+  takeout:   ["restaurant", "food"],
+  // Common intent phrases the stopword filter preserves as categories
+  gym:       ["fitness", "health", "wellness"],
+  workout:   ["fitness", "health", "gym"],
+  haircut:   ["salon", "barber", "hair"],
+  hair:      ["salon", "barber"],
+  nails:     ["salon", "spa"],
+  flowers:   ["florist", "floral"],
+  printing:  ["print", "marketing", "signs"],
+  storage:   ["self-storage", "storage"],
+  movers:    ["moving", "relocation"],
+  moving:    ["relocation", "movers"],
+};
+
+function expandTerms(terms: string[]): string[] {
+  const expanded = new Set(terms);
+  for (const t of terms) {
+    const extras = TERM_EXPANSIONS[t];
+    if (extras) extras.forEach((s) => expanded.add(s));
+  }
+  return [...expanded];
+}
+
 // For very short terms (likely acronyms or brand names like "3m", "ge",
 // "bp", "cms"), require word-boundary match — otherwise "ge" would
 // false-positive on "agency" or "manage". Longer terms use plain
@@ -95,11 +145,13 @@ function scoreMatch(member: Member, terms: string[]): number {
  * Website content boosts scoring separately inside formatEnrichedMember.
  */
 export function searchMembersForContext(query: string, limit = 8): Member[] {
-  const terms = query
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, " ")
-    .split(/\s+/)
-    .filter((t) => t.length >= 2 && !STOPWORDS.has(t));
+  const terms = expandTerms(
+    query
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, " ")
+      .split(/\s+/)
+      .filter((t) => t.length >= 2 && !STOPWORDS.has(t)),
+  );
 
   if (terms.length === 0) return [];
 
@@ -142,11 +194,13 @@ export function searchMembersWithTierPriority(
   vpLimit = 20,
   otherLimit = 3,
 ): { ciMembers: Member[]; vpMembers: Member[]; otherMembers: Member[]; totalMatchCount: number } {
-  const terms = query
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, " ")
-    .split(/\s+/)
-    .filter((t) => t.length >= 2 && !STOPWORDS.has(t));
+  const terms = expandTerms(
+    query
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, " ")
+      .split(/\s+/)
+      .filter((t) => t.length >= 2 && !STOPWORDS.has(t)),
+  );
 
   if (terms.length === 0) {
     return { ciMembers: [], vpMembers: [], otherMembers: [], totalMatchCount: 0 };

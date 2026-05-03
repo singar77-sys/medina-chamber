@@ -17,7 +17,7 @@ import { FadeIn } from "@/components/FadeIn";
 
 export async function RecentPhotoStrip() {
   const photos = await getStaticPhotos(
-    "photos",
+    "photos/gallery",
     "Chamber members at a community event, Greater Medina Chamber of Commerce, Medina Ohio",
     8,
   );

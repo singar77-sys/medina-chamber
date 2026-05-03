@@ -49,7 +49,7 @@ function toBuffer(s: string): ArrayBuffer {
 
 export async function signSession(): Promise<string> {
   const secret = process.env.CHAT_ADMIN_TOKEN;
-  if (!secret || secret.length < 16) throw new Error("CHAT_ADMIN_TOKEN not configured");
+  if (!secret) throw new Error("CHAT_ADMIN_TOKEN not configured");
 
   const payload: Payload = { iat: Date.now(), exp: Date.now() + TTL_MS };
   const payloadB64 = toB64u(toBuffer(JSON.stringify(payload)));
@@ -62,7 +62,7 @@ export async function signSession(): Promise<string> {
 
 export async function verifySession(token: string): Promise<boolean> {
   const secret = process.env.CHAT_ADMIN_TOKEN;
-  if (!secret || secret.length < 16) return false;
+  if (!secret) return false;
 
   const dot = token.lastIndexOf(".");
   if (dot === -1) return false;

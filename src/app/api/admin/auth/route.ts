@@ -36,7 +36,7 @@ export async function POST(req: Request): Promise<Response> {
 
   // Login
   const expected = process.env.CHAT_ADMIN_TOKEN;
-  if (!expected || expected.length < 16) {
+  if (!expected) {
     return NextResponse.json({ error: "Admin access not configured." }, { status: 503 });
   }
 

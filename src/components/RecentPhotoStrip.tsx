@@ -12,11 +12,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { getRecentMedia } from "@/lib/media-store";
+import { getStaticPhotos } from "@/lib/static-media";
 import { FadeIn } from "@/components/FadeIn";
 
 export async function RecentPhotoStrip() {
-  const photos = await getRecentMedia(8);
+  const photos = await getStaticPhotos(
+    "photos/sneak-peeks",
+    "Chamber members at a community event, Greater Medina Chamber of Commerce, Medina Ohio",
+    8,
+  );
   if (photos.length < 4) return null;
 
   return (

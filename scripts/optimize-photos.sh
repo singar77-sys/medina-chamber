@@ -86,12 +86,13 @@ for entry in "${CONFIG[@]}"; do
     # Safety: don't overwrite if dest already exists with content
     if [[ -f "$dest" && -s "$dest" ]]; then
       echo "  SKIP (dest exists): $(basename "$dest")" | tee -a "$LOG"
-      ((total_skipped++))
-      ((idx++))
+      total_skipped=$((total_skipped + 1))
+      idx=$((idx + 1))
       continue
     fi
 
     if magick "$src" \
+        -auto-orient \
         -quality "$quality" \
         -resize "${max_px}x${max_px}>" \
         -strip \
@@ -99,13 +100,13 @@ for entry in "${CONFIG[@]}"; do
       rm "$src"
       size_kb=$(( $(wc -c < "$dest") / 1024 ))
       echo "  ✓ $(basename "$src")  →  ${prefix}-${padded}.webp  (${size_kb}KB)" | tee -a "$LOG"
-      ((total_converted++))
-      ((idx++))
+      total_converted=$((total_converted + 1))
+      idx=$((idx + 1))
     else
       echo "  ✗ FAILED: $(basename "$src")" | tee -a "$LOG"
       # Remove potentially incomplete output
       [[ -f "$dest" ]] && rm -f "$dest"
-      ((total_errors++))
+      total_errors=$((total_errors + 1))
     fi
   done
 done

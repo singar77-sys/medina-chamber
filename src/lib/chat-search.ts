@@ -58,17 +58,31 @@ const TERM_EXPANSIONS: Record<string, string[]> = {
   eating:    ["restaurant", "food"],
   dining:    ["restaurant", "food"],
   takeout:   ["restaurant", "food"],
+  // Colloquial profession names → formal directory terms
+  // Confirmed zero-hit via gap analysis against the real member DB.
+  lawyer:       ["attorney", "attorneys", "legal"],
+  lawyers:      ["attorney", "attorneys", "legal"],
+  hvac:         ["heating", "cooling", "air conditioning"],
+  electrician:  ["electrical", "contractor"],
+  electricians: ["electrical", "contractor"],
+  babysitter:   ["child care", "childcare", "children"],
+  babysitters:  ["child care", "childcare", "children"],
+  nanny:        ["child care", "childcare", "children"],
+  // "vet" is ≤3 chars → word-boundary regex misses "Veterinary";
+  // "veterinarian" ≠ substring of "veterinary" — both need expansion.
+  vet:          ["veterinary", "animal"],
+  veterinarian: ["veterinary", "veterinarians"],
   // Common intent phrases the stopword filter preserves as categories
-  gym:       ["fitness", "health", "wellness"],
-  workout:   ["fitness", "health", "gym"],
-  haircut:   ["salon", "barber", "hair"],
-  hair:      ["salon", "barber"],
-  nails:     ["salon", "spa"],
-  flowers:   ["florist", "floral"],
-  printing:  ["print", "marketing", "signs"],
-  storage:   ["self-storage", "storage"],
-  movers:    ["moving", "relocation"],
-  moving:    ["relocation", "movers"],
+  gym:          ["fitness", "health", "wellness"],
+  workout:      ["fitness", "health", "gym"],
+  haircut:      ["salon", "barber", "hair"],
+  hair:         ["salon", "barber"],
+  nails:        ["salon", "spa"],
+  flowers:      ["florist", "floral"],
+  printing:     ["print", "marketing", "signs"],
+  storage:      ["self-storage", "storage"],
+  movers:       ["moving", "relocation"],
+  moving:       ["relocation", "movers"],
 };
 
 function expandTerms(terms: string[]): string[] {

@@ -1,10 +1,10 @@
 /**
  * /api/admin/media
  *
- * GET    ?eventSlug=xxx   — list photos for an event
- * GET    ?recent=1        — list recent media (global feed)
- * DELETE ?url=xxx&eventSlug=xxx — delete a photo
- * PATCH  { url, eventSlug, caption } — update caption
+ * GET    ?eventSlug=xxx          — list photos for an event
+ * GET    ?recent=1               — list recent media (global feed)
+ * DELETE ?url=xxx[&eventSlug=x]  — delete a photo (eventSlug optional)
+ * PATCH  { url, eventSlug?, alt?, filename?, caption? } — update metadata
  */
 
 import { NextResponse } from "next/server";
@@ -12,8 +12,9 @@ import { requireAdminToken } from "@/lib/admin-auth";
 import {
   getEventPhotos,
   getRecentMedia,
-  deleteEventPhoto,
+  deleteMediaItem,
   updateEventPhotoCaption,
+  updateMediaItemMeta,
 } from "@/lib/media-store";
 
 export const dynamic = "force-dynamic";
@@ -45,13 +46,13 @@ export async function DELETE(req: Request): Promise<Response> {
 
   const { searchParams } = new URL(req.url);
   const url = searchParams.get("url");
-  const eventSlug = searchParams.get("eventSlug");
+  const eventSlug = searchParams.get("eventSlug") ?? undefined;
 
-  if (!url || !eventSlug) {
-    return NextResponse.json({ error: "Missing url or eventSlug." }, { status: 400 });
+  if (!url) {
+    return NextResponse.json({ error: "Missing url." }, { status: 400 });
   }
 
-  await deleteEventPhoto(eventSlug, url);
+  await deleteMediaItem(url, eventSlug);
   return NextResponse.json({ ok: true });
 }
 
@@ -59,18 +60,29 @@ export async function PATCH(req: Request): Promise<Response> {
   const authErr = requireAdminToken(req);
   if (authErr) return authErr;
 
-  let body: { url?: string; eventSlug?: string; caption?: string };
+  let body: { url?: string; eventSlug?: string; alt?: string; filename?: string; caption?: string };
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON." }, { status: 400 });
   }
 
-  const { url, eventSlug, caption } = body;
-  if (!url || !eventSlug || caption === undefined) {
-    return NextResponse.json({ error: "Missing url, eventSlug, or caption." }, { status: 400 });
+  const { url, eventSlug, alt, filename, caption } = body;
+  if (!url) {
+    return NextResponse.json({ error: "Missing url." }, { status: 400 });
   }
 
-  await updateEventPhotoCaption(eventSlug, url, caption);
-  return NextResponse.json({ ok: true });
+  // Legacy caption-only update (event photos)
+  if (caption !== undefined && eventSlug) {
+    await updateEventPhotoCaption(eventSlug, url, caption);
+    return NextResponse.json({ ok: true });
+  }
+
+  // General metadata update (alt text, filename)
+  if (alt !== undefined || filename !== undefined) {
+    await updateMediaItemMeta(url, { alt, filename }, eventSlug);
+    return NextResponse.json({ ok: true });
+  }
+
+  return NextResponse.json({ error: "Provide alt, filename, or caption to update." }, { status: 400 });
 }

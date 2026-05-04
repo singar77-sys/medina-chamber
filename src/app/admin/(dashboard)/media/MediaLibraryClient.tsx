@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { MediaItem } from "@/lib/media-store";
@@ -84,6 +84,18 @@ export function MediaLibraryClient({ items: initialItems, adminToken }: Props) {
     });
 
     setItems((prev) => prev.filter((i) => i.url !== url));
+  }
+
+  async function updateAlt(url: string, eventSlug: string | undefined, alt: string) {
+    await fetch("/api/admin/media", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${adminToken}`,
+      },
+      body: JSON.stringify({ url, eventSlug, alt }),
+    });
+    setItems((prev) => prev.map((i) => (i.url === url ? { ...i, alt } : i)));
   }
 
   function formatBytes(bytes: number) {
@@ -219,6 +231,7 @@ export function MediaLibraryClient({ items: initialItems, adminToken }: Props) {
               key={item.url}
               item={item}
               onDelete={() => deleteItem(item.url, item.eventSlug)}
+              onUpdateAlt={(alt) => updateAlt(item.url, item.eventSlug, alt)}
               formatBytes={formatBytes}
               formatDate={formatDate}
             />
@@ -258,21 +271,54 @@ export function MediaLibraryClient({ items: initialItems, adminToken }: Props) {
 function MediaCard({
   item,
   onDelete,
+  onUpdateAlt,
   formatBytes,
   formatDate,
 }: {
   item: MediaItem;
   onDelete: () => void;
+  onUpdateAlt: (alt: string) => Promise<void>;
   formatBytes: (n: number) => string;
   formatDate: (s: string) => string;
 }) {
   const [hovered, setHovered] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [altDraft, setAltDraft] = useState(item.alt ?? "");
+  const [saving, setSaving] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Sync draft when parent updates the item (e.g. after save)
+  useEffect(() => {
+    setAltDraft(item.alt ?? "");
+  }, [item.alt]);
+
+  // Focus input when entering edit mode
+  useEffect(() => {
+    if (editing) inputRef.current?.focus();
+  }, [editing]);
+
+  async function saveAlt() {
+    const trimmed = altDraft.trim();
+    if (trimmed === (item.alt ?? "")) {
+      setEditing(false);
+      return;
+    }
+    setSaving(true);
+    await onUpdateAlt(trimmed);
+    setSaving(false);
+    setEditing(false);
+  }
+
+  function cancelEdit() {
+    setAltDraft(item.alt ?? "");
+    setEditing(false);
+  }
 
   return (
     <div
       className="relative rounded-xl overflow-hidden border border-gray-100 bg-gray-50 group"
       onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseLeave={() => { if (!editing) setHovered(false); }}
     >
       <div className="relative w-full aspect-video">
         <Image
@@ -287,7 +333,7 @@ function MediaCard({
 
       <div
         className="absolute inset-0 flex flex-col justify-between p-2 transition-opacity"
-        style={{ opacity: hovered ? 1 : 0, background: "rgba(0,0,0,0.55)" }}
+        style={{ opacity: hovered || editing ? 1 : 0, background: "rgba(0,0,0,0.55)" }}
       >
         <div className="flex justify-end">
           <button
@@ -297,17 +343,49 @@ function MediaCard({
             Delete
           </button>
         </div>
+
         <div>
           {item.eventSlug && (
             <Link
               href={`/admin/events/${item.eventSlug}`}
-              className="block text-[10px] text-[#83BCA9] hover:underline truncate"
+              className="block text-[10px] text-[#83BCA9] hover:underline truncate mb-0.5"
             >
               {item.eventSlug}
             </Link>
           )}
-          {item.alt && (
-            <p className="text-[10px] text-white/60 truncate">{item.alt}</p>
+          {editing ? (
+            <input
+              ref={inputRef}
+              value={altDraft}
+              onChange={(e) => setAltDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") { e.preventDefault(); saveAlt(); }
+                if (e.key === "Escape") cancelEdit();
+              }}
+              onBlur={saveAlt}
+              placeholder="Add alt text…"
+              disabled={saving}
+              className="w-full text-[10px] bg-white/10 text-white placeholder:text-white/40 border border-white/20 rounded px-1.5 py-0.5 focus:outline-none focus:border-[#83BCA9] disabled:opacity-50"
+            />
+          ) : (
+            <button
+              onClick={() => setEditing(true)}
+              title="Edit alt text"
+              className="flex items-center gap-1 w-full text-left group/alt"
+            >
+              <span className="text-[10px] text-white/60 truncate group-hover/alt:text-white/90 transition-colors">
+                {item.alt || "Add alt text…"}
+              </span>
+              {/* pencil icon */}
+              <svg
+                className="shrink-0 w-2.5 h-2.5 text-white/40 group-hover/alt:text-white/80 transition-colors"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12z" />
+              </svg>
+            </button>
           )}
         </div>
       </div>

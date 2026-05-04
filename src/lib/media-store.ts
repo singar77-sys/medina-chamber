@@ -129,6 +129,14 @@ export async function getEventPhotosWithFallback(slug: string): Promise<MediaIte
 }
 
 export async function deleteEventPhoto(slug: string, url: string): Promise<void> {
+  return deleteMediaItem(url, slug);
+}
+
+/**
+ * Delete a media item from Blob storage and Redis.
+ * Works for both event-tagged photos and global-feed-only items.
+ */
+export async function deleteMediaItem(url: string, eventSlug?: string): Promise<void> {
   const redis = getRedis();
 
   // Delete from Blob storage
@@ -138,22 +146,60 @@ export async function deleteEventPhoto(slug: string, url: string): Promise<void>
     // Blob may already be gone — proceed to clean Redis
   }
 
-  // Remove from Redis
   if (!redis) return;
-  const existing = (await redis.get<MediaItem[]>(`cms:media:event:${slug}`)) ?? [];
-  await redis.set(
-    `cms:media:event:${slug}`,
-    existing.filter((i) => i.url !== url),
-    { ex: TTL },
-  );
+
+  const ops: Promise<unknown>[] = [];
 
   // Remove from recent feed
   const recent = (await redis.get<MediaItem[]>("cms:media:recent")) ?? [];
-  await redis.set(
-    "cms:media:recent",
-    recent.filter((i) => i.url !== url),
-    { ex: TTL },
+  ops.push(
+    redis.set("cms:media:recent", recent.filter((i) => i.url !== url), { ex: TTL }),
   );
+
+  // Remove from event photos if tagged
+  if (eventSlug) {
+    const existing = (await redis.get<MediaItem[]>(`cms:media:event:${eventSlug}`)) ?? [];
+    ops.push(
+      redis.set(
+        `cms:media:event:${eventSlug}`,
+        existing.filter((i) => i.url !== url),
+        { ex: TTL },
+      ),
+    );
+  }
+
+  await Promise.all(ops);
+}
+
+/**
+ * Update alt text and/or display filename in Redis metadata.
+ * Touches both the recent feed and the event list (if eventSlug provided).
+ * The Blob URL is immutable — this is purely metadata.
+ */
+export async function updateMediaItemMeta(
+  url: string,
+  meta: { alt?: string; filename?: string },
+  eventSlug?: string,
+): Promise<void> {
+  const redis = getRedis();
+  if (!redis) return;
+
+  const applyMeta = (item: MediaItem): MediaItem =>
+    item.url === url ? { ...item, ...meta } : item;
+
+  const ops: Promise<unknown>[] = [];
+
+  const recent = (await redis.get<MediaItem[]>("cms:media:recent")) ?? [];
+  ops.push(redis.set("cms:media:recent", recent.map(applyMeta), { ex: TTL }));
+
+  if (eventSlug) {
+    const existing = (await redis.get<MediaItem[]>(`cms:media:event:${eventSlug}`)) ?? [];
+    ops.push(
+      redis.set(`cms:media:event:${eventSlug}`, existing.map(applyMeta), { ex: TTL }),
+    );
+  }
+
+  await Promise.all(ops);
 }
 
 export async function updateEventPhotoCaption(

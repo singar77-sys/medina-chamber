@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-03T10:42:14.476Z",
+  "generatedAt": "2026-05-04T11:30:34.628Z",
   "totalJobs": 2,
   "jobs": [
     {
@@ -16,7 +16,7 @@
       "dateRaw": "4/30/2026",
       "dateISO": "2026-04-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/catering-event-staff-328997",
-      "scrapedAt": "2026-05-03T10:42:13.964Z"
+      "scrapedAt": "2026-05-04T11:30:34.102Z"
     },
     {
       "slug": "music-teacher",
@@ -32,7 +32,7 @@
       "dateRaw": "3/6/2026",
       "dateISO": "2026-03-06",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/music-teacher-317454",
-      "scrapedAt": "2026-05-03T10:42:14.464Z"
+      "scrapedAt": "2026-05-04T11:30:34.616Z"
     }
   ]
 }

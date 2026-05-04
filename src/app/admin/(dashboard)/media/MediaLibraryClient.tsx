@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import type { MediaItem } from "@/lib/media-store";
 import { NamingModal } from "@/components/admin/NamingModal";
@@ -273,12 +274,16 @@ function MediaCard({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={item.url}
-        alt={item.alt ?? item.caption ?? item.filename}
-        className="w-full aspect-video object-cover"
-      />
+      <div className="relative w-full aspect-video">
+        <Image
+          src={item.url}
+          alt={item.alt ?? item.caption ?? item.filename}
+          fill
+          className="object-cover"
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          unoptimized={item.url.endsWith(".gif")}
+        />
+      </div>
 
       <div
         className="absolute inset-0 flex flex-col justify-between p-2 transition-opacity"

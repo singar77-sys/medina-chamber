@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-05T11:08:38.299Z",
-  "totalArticles": 9,
+  "generatedAt": "2026-05-06T11:42:02.908Z",
+  "totalArticles": 8,
   "articles": [
     {
       "slug": "bike-nite",
@@ -19,7 +19,7 @@
       "dateISO": "2026-05-01",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774648661/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/3a832ed2ecad43549e26159be4e0be4a/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/bike-nite-321881",
-      "scrapedAt": "2026-05-05T11:08:33.671Z"
+      "scrapedAt": "2026-05-06T11:41:59.434Z"
     },
     {
       "slug": "mother-s-day-vehicle-maintenance-package-offer",
@@ -38,7 +38,7 @@
       "dateISO": "2026-05-01",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1500,w_1500,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1777323105/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/dbdaa171697f4e8ea6828a564cd88182/Vans.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/mother-s-day-vehicle-maintenance-package-offer-328142",
-      "scrapedAt": "2026-05-05T11:08:34.220Z"
+      "scrapedAt": "2026-05-06T11:41:59.921Z"
     },
     {
       "slug": "now-booking-for-our-2027-town-planner-calendars",
@@ -57,7 +57,7 @@
       "dateISO": "2026-05-01",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_137,w_495,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1777649072/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/5839b4ff6a654c71a6acb408fdbee735/ED3DE58B-561A-4CED-B24A-9D52A9B39CDD.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/now-booking-for-our-2027-town-planner-calendars-329180",
-      "scrapedAt": "2026-05-05T11:08:34.779Z"
+      "scrapedAt": "2026-05-06T11:42:00.414Z"
     },
     {
       "slug": "retail-is-thriving-in-the-micro-fulfillment-on-demand-delivery-era",
@@ -76,7 +76,7 @@
       "dateISO": "2026-04-27",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1099,w_1576,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774642882/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/a2e854606d43486a9adcb973b00f0576/Fractional-CRO.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/retail-is-thriving-in-the-micro-fulfillment-on-demand-delivery-era-321828",
-      "scrapedAt": "2026-05-05T11:08:35.363Z"
+      "scrapedAt": "2026-05-06T11:42:00.924Z"
     },
     {
       "slug": "live-the-lube",
@@ -95,7 +95,7 @@
       "dateISO": "2026-04-06",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775437199/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/ca1644f1072a40ab8a6f809c5ede0e6d/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/live-the-lube-323361",
-      "scrapedAt": "2026-05-05T11:08:35.929Z"
+      "scrapedAt": "2026-05-06T11:42:01.413Z"
     },
     {
       "slug": "car-cruise-in",
@@ -114,26 +114,7 @@
       "dateISO": "2026-04-06",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775437512/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/62aa1d5146da4ab78eb0def384a2a8ee/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/car-cruise-in-323364",
-      "scrapedAt": "2026-05-05T11:08:36.470Z"
-    },
-    {
-      "slug": "apex-skin-melanoma-monday-free-skin-cancer-spot-checks",
-      "articleId": "323038",
-      "title": "Apex Skin Melanoma Monday | Free Skin Cancer Spot Checks",
-      "subtitle": "Make the time and check your free skin cancer checks!",
-      "body": "Did you know 1 in 5 Americans will get skin cancer in their lifetime? Early detection is key to staying healthy and skin cancer free.On Melanoma Monday, May 4th, 2026, Apex Skin, is offering free skin cancer spot checks all day at all locations.\n\nOffered at all 15 Apex Skin Locations: Ashtabula | Avon | Canton Building A | Canton Building B | Concord | Cuyahoga Falls | Hudson | Lorain | Madison-(offered on May 6th) | Mayfield Heights | Medina | Mentor | Parma | Solon | Westlake |  \n\n Free Community Event: Book your free spot check at http://apexskin.com/melanoma or call us at 833-279-SKIN (7564).",
-      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1500,w_1500,x_0,y_0/q_auto/f_auto/q_auto/v1775157414/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/f59f64bba07c46318d5d64715a968237/APEX-SKIN-Logo-STK.png",
-      "tags": [
-        "By\r\n                            Apex Skin | Dermatology & Aesthetics",
-        "4/2/2026"
-      ],
-      "memberName": "Apex Skin | Dermatology & Aesthetics",
-      "memberSlug": "22529538",
-      "dateRaw": "4/2/2026",
-      "dateISO": "2026-04-02",
-      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1500,w_1500,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775157414/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/f59f64bba07c46318d5d64715a968237/APEX-SKIN-Logo-STK.png",
-      "detailUrl": "https://business.medinachamber.com/news/Details/apex-skin-melanoma-monday-free-skin-cancer-spot-checks-323038",
-      "scrapedAt": "2026-05-05T11:08:37.075Z"
+      "scrapedAt": "2026-05-06T11:42:01.900Z"
     },
     {
       "slug": "office-space-for-lease-in-brunswick-medina-area",
@@ -152,7 +133,7 @@
       "dateISO": "2026-03-30",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_173,w_622,x_19,y_17/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774884260/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/01c3e1965c7f43d38cba8aa81b32ede7/st-mark-logo-for-web.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/office-space-for-lease-in-brunswick-medina-area-322021",
-      "scrapedAt": "2026-05-05T11:08:37.712Z"
+      "scrapedAt": "2026-05-06T11:42:02.390Z"
     },
     {
       "slug": "4-70-home-equity-loan",
@@ -171,7 +152,7 @@
       "dateISO": "2026-03-05",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_102,w_329,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1772744802/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/67b2db200e8d45f8a690794e3d701c2e/PSE-Credit-Union.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/4-70-home-equity-loan-317280",
-      "scrapedAt": "2026-05-05T11:08:38.291Z"
+      "scrapedAt": "2026-05-06T11:42:02.897Z"
     }
   ]
 }

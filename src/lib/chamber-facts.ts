@@ -1,35 +1,25 @@
 /**
  * Formats live chamber facts for injection into ChamberBot's system prompt.
  *
- * This is the bridge between the admin CMS and the bot. When pricing or
- * hours change in the admin, this function reads the updated values from
- * Redis and builds a small system block the bot treats as authoritative.
- *
  * Architecture:
- *   Admin saves pricing → Redis cms:pricing → this function → bot system prompt
- *   Same Redis key also feeds pricing/page.tsx → site shows correct price
+ *   membership_tiers table (DB) → getActiveTiers() → this function → bot system prompt
+ *   Same data feeds pricing/page.tsx — one source of truth.
  *
  * Caching: module-level, 5-min TTL. Works per edge isolate — acceptable for
- * data that changes at most a few times per year. Admin saves are reflected
- * within 5 minutes at worst.
+ * data that changes at most a few times per year.
  */
 
-import { getCmsPricing, DEFAULT_PRICING, type PricingConfig } from "@/lib/cms-store";
+import { getActiveTiers, type TierDisplay } from "@/lib/membership-tiers";
 
 const FACTS_TTL_MS = 5 * 60 * 1000;
 let cached: { value: string | null; expiresAt: number } | null = null;
 
-function buildBlock(pricing: Omit<PricingConfig, "updatedAt">): string {
-  const e = pricing.tiers.find((t) => t.key === "essentials");
-  const p = pricing.tiers.find((t) => t.key === "plus");
-  const i = pricing.tiers.find((t) => t.key === "investor");
-  if (!e || !p || !i) return "";
-
+function buildBlock(tiers: TierDisplay[]): string {
+  if (tiers.length < 3) return "";
+  // Tiers are sorted by sortOrder: standard, visibility_plus, community_investor
   return [
     "CURRENT MEMBERSHIP PRICING (authoritative, these values override any pricing mentioned earlier in this prompt):",
-    `- ${e.name}: $${e.price.toLocaleString("en-US")}/year`,
-    `- ${p.name}: $${p.price.toLocaleString("en-US")}/year`,
-    `- ${i.name}: $${i.price.toLocaleString("en-US")}/year`,
+    ...tiers.map((t) => `- ${t.name}: $${t.price.toLocaleString("en-US")}/year`),
     "Full tier comparison: medinachamber.com/membership/pricing",
   ].join("\n");
 }
@@ -44,15 +34,13 @@ export async function formatChamberFactsForPrompt(): Promise<string | null> {
   if (cached && cached.expiresAt > now) return cached.value;
 
   try {
-    const cmsPricing = await getCmsPricing();
-    const pricing = cmsPricing ?? DEFAULT_PRICING;
-    const value = buildBlock(pricing);
+    const tiers = await getActiveTiers();
+    const value = buildBlock(tiers);
     cached = { value: value || null, expiresAt: now + FACTS_TTL_MS };
     return cached.value;
   } catch {
-    // Redis unavailable — serve default facts without caching
-    // so the next request tries Redis again.
-    return buildBlock(DEFAULT_PRICING);
+    // DB unavailable — don't cache so the next request retries.
+    return null;
   }
 }
 

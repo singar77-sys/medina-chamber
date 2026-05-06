@@ -2,32 +2,58 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
-import { getCmsPricing, DEFAULT_PRICING } from "@/lib/cms-store";
+import { getActiveTiers } from "@/lib/membership-tiers";
 import { stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
+
+const PRICING_FAQS = [
+  {
+    q: "Do I qualify for group health insurance?",
+    a: "Available for employers with 2–49 employees. Details provided during onboarding.",
+  },
+  {
+    q: "What's included in member spotlights?",
+    a: "Visibility Plus spotlights run on social and email. Community Investor spotlights run on social, email, and the chamber website.",
+  },
+  {
+    q: "Do Investors get ongoing event perks?",
+    a: "Yes, two free luncheon tickets every month plus recognition at all events.",
+  },
+  {
+    q: "What's the Certificate of Origin benefit?",
+    a: "Free for non-freight forwarders on Visibility Plus and Community Investor tiers.",
+  },
+  {
+    q: "How do I upgrade later?",
+    a: "Contact Stephanie Mueller at any time. Upgrades are prorated based on where you are in your membership year.",
+  },
+] as const;
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const pricing = (await getCmsPricing()) ?? DEFAULT_PRICING;
-  const [e, p, i] = pricing.tiers;
-  const desc = `Three Greater Medina Chamber of Commerce membership tiers: ${e.name} ($${e.price}/year), ${p.name} ($${p.price}/year), and ${i.name} ($${i.price}/year). Choose the level that fits your goals.`;
+  const tiers = await getActiveTiers();
+  const [e, p, i] = tiers;
+  const desc = e && p && i
+    ? `Three Greater Medina Chamber of Commerce membership tiers: ${e.name} ($${e.price}/year), ${p.name} ($${p.price}/year), and ${i.name} ($${i.price}/year). Choose the level that fits your goals.`
+    : "Greater Medina Chamber of Commerce membership tiers. Choose the level that fits your goals.";
   return {
     title: "Membership Pricing",
     description: desc,
     openGraph: {
       title: "Membership Pricing | Greater Medina Chamber of Commerce",
-      description: `Three tiers: ${e.name} ($${e.price}), ${p.name} ($${p.price}), ${i.name} ($${i.price}). Pick the level that fits your business.`,
+      description: e && p && i
+        ? `Three tiers: ${e.name} ($${e.price}), ${p.name} ($${p.price}), ${i.name} ($${i.price}). Pick the level that fits your business.`
+        : desc,
     },
     alternates: { canonical: "/membership/pricing" },
   };
 }
 
 export default async function PricingPage() {
-  const pricing = (await getCmsPricing()) ?? DEFAULT_PRICING;
-  const tiers = pricing.tiers;
-  const faqs = pricing.faqs;
-  const essentialsTier = tiers.find((t) => t.key === "essentials");
+  const tiers = await getActiveTiers();
+  const faqs = PRICING_FAQS;
+  const essentialsTier = tiers.find((t) => t.key === "standard");
   const essentialsBenefits = essentialsTier?.benefits ?? [];
 
   const faqJsonLd = {
@@ -172,7 +198,7 @@ export default async function PricingPage() {
                       }`}
                     >
                       <p className="text-caption font-bold text-cambridge mb-f8">
-                        {tier.key === "investor"
+                        {tier.key === "community_investor"
                           ? "Everything in Visibility Plus, plus"
                           : "Everything in Essentials, plus"}
                       </p>

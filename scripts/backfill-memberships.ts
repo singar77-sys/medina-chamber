@@ -48,7 +48,7 @@ void (async () => {
     ORDER BY o.name
   `);
 
-  const orgs = unlinkedOrgs as Array<{ id: string; name: string; membership_tier: string }>;
+  const orgs = unlinkedOrgs as unknown as Array<{ id: string; name: string; membership_tier: string }>;
   console.log(`Orgs needing a membership row: ${orgs.length}\n`);
 
   if (orgs.length === 0) {

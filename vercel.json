@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/gz-sync",
       "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/renewal",
+      "schedule": "0 8 * * *"
     }
   ]
 }

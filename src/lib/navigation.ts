@@ -71,6 +71,11 @@ export const navigation: NavItem[] = [
         description: "Investment levels based on company size",
       },
       {
+        label: "Community Investor",
+        href: "/membership/community-investor",
+        description: "Chamber membership at the leadership level",
+      },
+      {
         label: "Programs",
         href: "/programs",
         description: "Mentorship, networking, safety, and Compass",

@@ -180,7 +180,7 @@ export default function EventsPage() {
             <p className="text-body-lg text-text-secondary mb-f21">
               Variety programs on a variety of dates — stay as busy as you want to be.
             </p>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-f21">
+            <div className="grid sm:grid-cols-2 gap-f21">
               {[
                 {
                   name: "Networking WOW",

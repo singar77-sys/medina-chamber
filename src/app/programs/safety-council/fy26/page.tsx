@@ -63,11 +63,18 @@ const requirements = [
   },
 ];
 
+const benefits = [
+  "Learn techniques for increasing safety, health, and wellness in your workplace.",
+  "Network and collaborate with other employers in your community to share best practices.",
+  "Learn about resources that can assist you in your accident prevention efforts.",
+  "Discover new and innovative safety techniques.",
+];
+
 const additionalCredits = [
   {
     title: "External Training Credits",
     max: "2 credits max",
-    desc: "Attending in-person safety training from industry associations, third-party administrators, or other BWC-approved external sources. Note: BWC online e-courses and webinars do not qualify.",
+    desc: "Attending virtual or in-person training including BWC safety training courses (BWC online e-courses and webinars do not qualify), or in-person safety training provided by external sources such as industry associations or third-party administrators that is approved by BWC.",
   },
   {
     title: "BWC Onsite Consultation",
@@ -155,6 +162,21 @@ export default function SafetyCouncilFY26Page() {
       {/* Rebate stat + pillars */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f89 pb-f55 lg:pt-f144 lg:pb-f89">
         <FadeIn>
+          {/* Benefits */}
+          <div className="mb-f55">
+            <p className="text-overline text-cambridge mb-f13">How participating benefits you</p>
+            <ul className="grid sm:grid-cols-2 gap-f13">
+              {benefits.map((b) => (
+                <li key={b} className="flex items-start gap-f13 text-body text-text-primary">
+                  <svg className="w-5 h-5 text-cambridge mt-f3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M20 6L9 17l-5-5" />
+                  </svg>
+                  {b}
+                </li>
+              ))}
+            </ul>
+          </div>
+
           <div className="grid lg:grid-cols-2 gap-f34 lg:gap-f55 items-center mb-f55">
             {/* Big stat */}
             <div>

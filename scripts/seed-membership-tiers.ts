@@ -16,38 +16,34 @@ import { sql } from "drizzle-orm";
 // ── Benefits ───────────────────────────────────────────────────────────────────
 
 const essentials = [
-  "Online directory listing",
-  "Ribbon cutting ceremony",
-  "Member mailing address list",
-  "Post sharing on Chamber socials",
-  "Business advocacy & economic development support",
-  "Access to coworking space",
-  "Member Portal account",
-  "Custom digital membership badge",
-  "Free job postings",
-  "Share company announcements in Member Portal",
-  "Referral network access",
-  "Personalized onboarding with Chamber staff",
-  "Free notary service",
-  "Group health insurance (2–49 employees)",
-  "20% discount at Medina Recreation Center",
-  "Workers' compensation program",
-  "Member-only event pricing",
+  "Online Directory Listing",
+  "Share Member News",
+  "Member Mailing Address List",
+  "Post Sharing on Chamber Socials",
+  "Referral Network Access",
+  "Info Hub Member Portal Access",
+  "Monthly Complimentary Networking Events",
+  "Member-Only Pricing on Chamber Events",
+  "Post Jobs on Chamber Website",
+  "Personalized Onboarding",
+  "Subscription to Quarterly Magazine",
+  "Advertising & Sponsorship Opportunities",
+  "Complimentary Notary Service",
+  "Savings Programs (Health Insurance, Rec Center, Energy Discounts, etc.)",
 ];
 
 const plusAdded = [
-  "Directory listing enhanced with logo",
-  "Member spotlight (social & email)",
-  "Custom digital membership sticker video",
-  "E-newsletter ad placement (4 per year)",
-  "Free certificate of origin (non-freight forwarders)",
+  "E-Newsletter Ad Placement (4/year)",
+  "Free Certificate of Origin (Non-Freight Forwarders Only)",
+  "Enhanced Online Directory Listing",
+  "Custom Digital Membership Sticker Video",
 ];
 
 const investorAdded = [
-  "Investor member spotlight (social, email, & website)",
-  "2 free tickets to monthly luncheons",
-  "Access to local & state legislator events & introductions",
-  "Recognition at all events as Investor",
+  "Exclusive Special Events Invitations",
+  "Investor Member Spotlight (Social, Email, & Website)",
+  "Anytime Access to Member Mailing List",
+  "2 Complimentary Tickets to Member Luncheons",
 ];
 
 // ── Tiers ──────────────────────────────────────────────────────────────────────

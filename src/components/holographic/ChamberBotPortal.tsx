@@ -545,7 +545,6 @@ export function ChamberBotPortal({
     if (shouldEnter) {
       setPhase("entering");
       audio.enter();
-      audio.startAmbient();
       posthog?.capture("chamberbot_opened");
       phaseTimerRef.current = setTimeout(() => {
         setPhase("open");
@@ -554,7 +553,6 @@ export function ChamberBotPortal({
     } else {
       setPhase("exiting");
       audio.exit();
-      audio.stopAmbient();
       posthog?.capture("chamberbot_closed", { message_count: messages.length });
       phaseTimerRef.current = setTimeout(() => {
         setPhase("closed");

@@ -6,11 +6,11 @@ import { getMergedStaticPhotos } from "@/lib/static-media";
 import { EventGallery } from "@/components/events/EventGallery";
 
 export const metadata: Metadata = {
-  title: "Compass Leadership Program",
+  title: "Compass Professional Development Program",
   description:
     "The Compass Program is a professional leadership development initiative by the Greater Medina Chamber of Commerce, in partnership with the Center for Immersive Leadership. Five interactive sessions covering self-awareness, communication, well-being, and community citizenship.",
   openGraph: {
-    title: "Compass Leadership Program | Greater Medina Chamber of Commerce",
+    title: "Compass Professional Development Program | Greater Medina Chamber of Commerce",
     description:
       "Five-session leadership development program for professionals at every career stage. Presented by the Greater Medina Chamber and the Center for Immersive Leadership.",
   },
@@ -84,19 +84,19 @@ export default async function CompassPage() {
   const classPhotos = await getMergedStaticPhotos([
     {
       folder: "programs/compass/class-day-2",
-      alt: "Compass Leadership Program participants during a session at the Greater Medina Chamber of Commerce in Medina, Ohio",
+      alt: "Compass Professional Development Program participants during a session at the Greater Medina Chamber of Commerce in Medina, Ohio",
       limit: 12,
     },
     {
       folder: "programs/compass/class-day-3",
-      alt: "Compass Leadership Program participants at a workshop session in Medina, Ohio",
+      alt: "Compass Professional Development Program participants at a workshop session in Medina, Ohio",
     },
   ]);
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Course",
-    name: "Compass Leadership Program",
+    name: "Compass Professional Development Program",
     description:
       "A five-session professional leadership development program covering self-awareness, communication, well-being, and community citizenship. Presented by the Greater Medina Chamber of Commerce and the Center for Immersive Leadership.",
     provider: [

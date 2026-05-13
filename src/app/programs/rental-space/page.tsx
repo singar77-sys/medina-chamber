@@ -25,7 +25,7 @@ const rooms = [
     best: "Board meetings, client presentations, team strategy sessions",
     description:
       "A private, closed-door meeting space featuring the chamber's distinctive vault door. Professional, memorable, and perfectly sized for focused collaboration.",
-    features: ["Private room with vault door", "Flat screen TV", "Whiteboard", "Seats up to 16"],
+    features: ["Private room with vault door", "98 inch flat screen", "Whiteboard", "Seats up to 16"],
   },
   {
     name: "Main Room",
@@ -34,15 +34,15 @@ const rooms = [
     best: "Workshops, seminars, training sessions, larger team meetings",
     description:
       "A spacious, flexible room with configurable table arrangements to fit your event. Classroom-style training, panel discussions, all-hands meetings.",
-    features: ["Flexible table configurations", "Flat screen TV", "Presentation-ready setup", "Seats up to 50"],
+    features: ["Flexible table configurations", "98 inch flat screen", "Presentation-ready setup", "Seats up to 50"],
   },
 ];
 
 const amenities = [
   "Tables and chairs",
-  "Flat screen TV / display",
+  "98 inch flat screen / display",
   "High-speed Wi-Fi",
-  "Coffee station",
+  "Coffee maker",
   "Free on-site parking",
   "City Hall garage nearby",
   "First-floor access",

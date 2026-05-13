@@ -158,10 +158,10 @@ const COMMANDS: Command[] = [
   },
   {
     id: "compass",
-    label: "Compass Mentorship",
+    label: "Compass Professional Development Program",
     group: "Events & Programs",
     href: "/programs/compass",
-    keywords: ["leadership", "mentor", "training", "development"],
+    keywords: ["professional", "development", "training", "compass"],
   },
   {
     id: "safety-council",

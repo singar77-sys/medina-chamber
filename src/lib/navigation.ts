@@ -76,6 +76,11 @@ export const navigation: NavItem[] = [
         description: "Mentorship, networking, safety, and space rental",
       },
       {
+        label: "Rental Space",
+        href: "/programs/rental-space",
+        description: "Book a meeting room in downtown Medina",
+      },
+      {
         label: "Committees & Councils",
         href: "/membership/committees",
         description: "Get involved in Chamber leadership",
@@ -162,7 +167,7 @@ export const searchablePages: { label: string; href: string; keywords: string }[
   { label: "ROI Calculator", href: "/membership/roi", keywords: "roi calculator savings cost value return investment payback breakeven" },
   { label: "Committees & Councils", href: "/membership/committees", keywords: "committee council volunteer leadership board" },
   // Programs
-  { label: "Compass Program", href: "/programs/compass", keywords: "leadership development professional program compass" },
+  { label: "Compass Professional Development Program", href: "/programs/compass", keywords: "professional development program compass" },
   { label: "Social Connect", href: "/programs/social-connect", keywords: "social networking casual meetup" },
   { label: "Safety Council", href: "/programs/safety-council", keywords: "osha safety compliance workplace" },
   { label: "Rental Space", href: "/programs/rental-space", keywords: "rent room venue space building event" },

@@ -1818,7 +1818,7 @@ body {
 .rsc-modal {
   position: relative;
   width: min(1040px, 100%);
-  max-height: min(92vh, 760px);
+  height: min(92vh, 760px);
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 38vh minmax(0, 1fr);

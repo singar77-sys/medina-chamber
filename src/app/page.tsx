@@ -17,6 +17,7 @@ import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermar
 import { BeeFly } from "@/components/effects/BeeFly";
 import { CommunityInvestors } from "@/components/CommunityInvestors";
 import { RecentPhotoStrip } from "@/components/RecentPhotoStrip";
+import { MagazineDropIn } from "@/components/MagazineDropIn";
 
 import { safeJsonLd } from "@/lib/json-ld";
 import { chamberOffice, memberServices, stephanie } from "@/data/staff";
@@ -69,8 +70,6 @@ const organizationJsonLd = {
     "https://www.facebook.com/medinachamber",
     "https://www.linkedin.com/company/greatermedinachamberofcommerce",
     "https://www.instagram.com/medinachamber/",
-    "https://twitter.com/grmedinachamber",
-    "https://www.youtube.com/channel/UCS_V2kgS_GxkOFV1n8iuHSw",
   ],
   areaServed: [
     { "@type": "AdministrativeArea", name: "Medina County, OH" },
@@ -188,8 +187,8 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8 py-f55">
           <div className="grid grid-cols-3 gap-4 md:gap-8">
             {[
-              { end: totalCount, label: "Member Businesses", suffix: "+" },
-              { end: 30, label: "Events Per Year", suffix: "+" },
+              { end: 500, label: "Member Businesses", suffix: "+" },
+              { end: 40, label: "Events Per Year", suffix: "+" },
               { end: new Date().getFullYear() - 1938, label: "Years Serving", suffix: "+" },
             ].map((s) => (
               <div key={s.label} className="text-center">
@@ -388,6 +387,12 @@ export default function HomePage() {
         </section>
       )}
 
+      {/* Three Pillars (Your Voice / Network / Growth) */}
+      <ThreePillars />
+
+      {/* Community Investors */}
+      <CommunityInvestors />
+
       {/* Rental Space — py-f89 lg:py-f144 */}
       <section className="relative bg-bg-secondary border-y border-border-secondary py-f89 lg:py-f144 overflow-hidden">
         {/* Ghosted meeting-room photo backdrop */}
@@ -454,17 +459,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Three Pillars (Your Voice / Network / Growth) */}
-      <ThreePillars />
-
-      {/* Life at the Chamber — recent event photos from Vercel Blob */}
-      <RecentPhotoStrip />
-
       {/* Member Voice */}
       <MemberVoice />
 
-      {/* Community Investors */}
-      <CommunityInvestors />
+      {/* Life at the Chamber — recent event photos from Vercel Blob */}
+      <RecentPhotoStrip />
 
       {/* Join CTA — py-f89 lg:py-f144 */}
       <section className="relative py-f89 lg:py-f144 overflow-hidden">
@@ -541,6 +540,7 @@ export default function HomePage() {
       </section>
 
       <BeeFly />
+      <MagazineDropIn />
 
       {/* Partners & Sponsors */}
       <PartnersMarquee />

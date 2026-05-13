@@ -41,7 +41,8 @@ const ROOMS: Room[] = [
       "Board meetings, client presentations, team strategy sessions.",
     features: [
       "Private room with original vault door",
-      "Flat-screen TV for presentations",
+      "Soundproof acoustics inside the vault",
+      "98 inch flat screen for presentations",
       "Whiteboard for working sessions",
       "Conference seating for up to 16",
     ],
@@ -57,7 +58,7 @@ const ROOMS: Room[] = [
       "Workshops, seminars, training sessions, and larger team meetings.",
     features: [
       "Reconfigurable tables and chairs",
-      "Flat-screen TV / AV display",
+      "98 inch flat screen / AV display",
       "Presentation-ready setup",
       "Seats up to 50 people",
     ],

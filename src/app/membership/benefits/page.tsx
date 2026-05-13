@@ -39,7 +39,7 @@ const coreBenefits = [
   {
     title: "Education & Resources",
     description:
-      "Business development programming, workshops, and committee involvement that sharpen skills and expand perspective. The Compass Leadership Program offers a full five-session professional development experience.",
+      "Business development programming, workshops, and committee involvement that sharpen skills and expand perspective. The Compass Professional Development Program offers a full five-session professional development experience.",
     link: { label: "View programs", href: "/programs" },
   },
   {

@@ -230,123 +230,126 @@ export default function EventsPage() {
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
           {/* Workshops & Orientation */}
-          <h2 className="text-h2 mb-f8">Workshops &amp; Orientation</h2>
-          <p className="text-body-lg text-text-secondary mb-f21">
-            Hands-on learning and onboarding, outside the monthly mix.
-          </p>
+          <p className="text-overline text-cambridge mb-f8">Learning &amp; Onboarding</p>
+          <h2 className="text-h2 mb-f21">Workshops &amp; Orientation</h2>
           <div className="grid md:grid-cols-2 gap-f21">
             {nextGetToKnow && (
               <Link
                 href={`/events/${nextGetToKnow.slug}`}
-                className="
-                  group p-f21
-                  bg-bg-secondary border border-border-secondary
-                  rounded-[var(--radius-lg)]
-                  hover:border-border-primary hover:shadow-[var(--shadow-md)]
-                  transition-all
-                "
+                className="group relative overflow-hidden flex flex-col bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] hover:border-cambridge/50 hover:shadow-[0_8px_32px_rgba(0,0,0,0.1)] transition-all"
               >
-                <p className="text-caption text-cambridge font-bold">Quarterly orientation · Free</p>
-                <p className="text-caption text-text-tertiary mt-f3">
-                  Next: {fmtLongDate(nextGetToKnow)} · {nextGetToKnow.startTime}
-                </p>
-                <h3 className="text-h4 mt-f8 mb-f13 group-hover:text-accent transition-colors">
-                  Get to Know the Chamber
-                </h3>
-                <p className="text-body-sm text-text-secondary">
-                  A guided tour of membership benefits, committees, advocacy, and
-                  resources, over coffee and pastries. Built for prospective
-                  members, brand-new members, and longtime supporters who want a
-                  refresher. Runs four times a year. RSVP required.
-                </p>
+                <div className="h-[3px] bg-gradient-to-r from-transparent via-cambridge to-transparent" />
+                <div className="p-f21 flex flex-col flex-1">
+                  <div className="flex items-center justify-between gap-f8 mb-f8">
+                    <span className="text-caption font-bold text-cambridge uppercase tracking-wider">Quarterly Orientation</span>
+                    <span className="text-caption font-bold text-emerald">Free</span>
+                  </div>
+                  <p className="text-caption text-text-tertiary mb-f13">
+                    Next: {fmtLongDate(nextGetToKnow)} · {nextGetToKnow.startTime}
+                  </p>
+                  <h3 className="text-h4 group-hover:text-cambridge transition-colors mb-f13">
+                    Get to Know the Chamber
+                  </h3>
+                  <p className="text-body-sm text-text-secondary leading-relaxed flex-1">
+                    A guided tour of membership benefits, committees, advocacy, and
+                    resources, over coffee and pastries. Built for prospective
+                    members, brand-new members, and longtime supporters who want a
+                    refresher. Runs four times a year. RSVP required.
+                  </p>
+                  <p className="mt-f13 text-body-sm font-bold text-cambridge group-hover:translate-x-1 transition-transform">
+                    Register →
+                  </p>
+                </div>
               </Link>
             )}
             {nextEggs && (
               <Link
                 href={`/events/${nextEggs.slug}`}
-                className="
-                  group p-f21
-                  bg-bg-secondary border border-border-secondary
-                  rounded-[var(--radius-lg)]
-                  hover:border-border-primary hover:shadow-[var(--shadow-md)]
-                  transition-all
-                "
+                className="group relative overflow-hidden flex flex-col bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] hover:border-cambridge/50 hover:shadow-[0_8px_32px_rgba(0,0,0,0.1)] transition-all"
               >
-                <p className="text-caption text-cambridge font-bold">Workshop series · $25 / $30</p>
-                <p className="text-caption text-text-tertiary mt-f3">
-                  Next: {fmtLongDate(nextEggs)} · {nextEggs.startTime}
-                </p>
-                <h3 className="text-h4 mt-f8 mb-f13 group-hover:text-accent transition-colors">
-                  {nextEggs.title}
-                </h3>
-                <p className="text-body-sm text-text-secondary">
-                  Hands-on morning workshop over a Chick-fil-A breakfast. June&apos;s
-                  session: Canva 101 with Emily Grimm, practical graphic design
-                  for social posts, flyers, and marketing materials, with brand
-                  consistency tactics built in.
-                </p>
+                <div className="h-[3px] bg-gradient-to-r from-transparent via-cambridge to-transparent" />
+                <div className="p-f21 flex flex-col flex-1">
+                  <div className="flex items-center justify-between gap-f8 mb-f8">
+                    <span className="text-caption font-bold text-cambridge uppercase tracking-wider">Workshop Series</span>
+                    <span className="text-caption font-bold text-text-tertiary">$25 members · $30 non</span>
+                  </div>
+                  <p className="text-caption text-text-tertiary mb-f13">
+                    Next: {fmtLongDate(nextEggs)} · {nextEggs.startTime}
+                  </p>
+                  <h3 className="text-h4 group-hover:text-cambridge transition-colors mb-f13">
+                    {nextEggs.title}
+                  </h3>
+                  <p className="text-body-sm text-text-secondary leading-relaxed flex-1">
+                    Hands-on morning workshop over a Chick-fil-A breakfast. June&apos;s
+                    session: Canva 101 with Emily Grimm — practical graphic design
+                    for social posts, flyers, and marketing materials.
+                  </p>
+                  <p className="mt-f13 text-body-sm font-bold text-cambridge group-hover:translate-x-1 transition-transform">
+                    Register →
+                  </p>
+                </div>
               </Link>
             )}
           </div>
 
           {/* Annual Signature Events */}
-          <div className="mt-f34">
-            <h2 className="text-h2 mb-f8">Annual Signature Events</h2>
-            <p className="text-body-lg text-text-secondary mb-f21">
-              The events that anchor the chamber year, plan ahead and register early.
-            </p>
-            <div className="grid md:grid-cols-3 gap-f21">
-              {(() => {
-                const golfDate = nextGolf
-                  ? `${nextGolf.month} ${nextGolf.day}, ${nextGolf.year}`
-                  : "July 2026";
-                const cards = [
-                  {
-                    name: "Annual Chamber Golf Outing",
-                    date: golfDate,
-                    description:
-                      "A luxurious day at Westfield Country Club, 18 holes (North & South courses), shotgun start, cart, boxed lunch, on-course beer tickets, and post-round dinner. The chamber's signature outdoor event. $230 members / $260 non-members.",
-                    href: nextGolf ? `/events/${nextGolf.slug}` : null,
-                  },
-                  {
-                    name: "ATHENA Awards",
-                    date: "Annual, Fall",
-                    description:
-                      "Honoring women who demonstrate excellence in leadership, community service, and mentorship across Medina County.",
-                    href: "/programs/athena-awards",
-                  },
-                ];
-                return cards.map((event) =>
-                  event.href ? (
-                    <Link
-                      key={event.name}
-                      href={event.href}
-                      className="
-                        group p-f21
-                        bg-bg-secondary border border-border-secondary
-                        rounded-[var(--radius-lg)]
-                        hover:border-border-primary hover:shadow-[var(--shadow-md)]
-                        transition-all
-                      "
-                    >
-                      <p className="text-caption text-cambridge font-bold">{event.date}</p>
-                      <h3 className="text-h4 mt-f8 mb-f13 group-hover:text-accent transition-colors">
-                        {event.name}
-                      </h3>
-                      <p className="text-body-sm text-text-secondary">{event.description}</p>
-                    </Link>
-                  ) : (
-                    <div
-                      key={event.name}
-                      className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
-                    >
-                      <p className="text-caption text-cambridge font-bold">{event.date}</p>
-                      <h3 className="text-h4 mt-f8 mb-f13">{event.name}</h3>
-                      <p className="text-body-sm text-text-secondary">{event.description}</p>
-                    </div>
-                  ),
-                );
-              })()}
+          <div className="mt-f55">
+            <p className="text-overline text-cambridge mb-f8">Mark Your Calendar</p>
+            <h2 className="text-h2 mb-f21">Annual Signature Events</h2>
+            <div className="grid md:grid-cols-2 gap-f21">
+              {/* Golf Outing */}
+              {nextGolf ? (
+                <Link
+                  href={`/events/${nextGolf.slug}`}
+                  className="group relative overflow-hidden bg-oxford [[data-theme=dark]_&]:bg-bg-tertiary rounded-[var(--radius-lg)] p-f21 flex flex-col min-h-[260px]"
+                >
+                  <span aria-hidden className="absolute -bottom-3 -right-1 text-[8rem] font-black leading-none text-white/[0.045] select-none pointer-events-none tabular-nums">
+                    {nextGolf.day}
+                  </span>
+                  <p className="text-caption font-bold text-cambridge uppercase tracking-wider">
+                    {nextGolf.month} {nextGolf.day}, {nextGolf.year} · Westfield Country Club
+                  </p>
+                  <h3 className="text-h3 text-white mt-f8 leading-tight">Annual Chamber<br />Golf Outing</h3>
+                  <p className="text-white/55 text-body-sm mt-f13 leading-relaxed flex-1">
+                    18-hole shotgun scramble on the North &amp; South courses. Cart, boxed lunch,
+                    on-course beer tickets, and post-round dinner. The chamber&apos;s signature
+                    outdoor event.
+                  </p>
+                  <div className="mt-f21 flex items-center justify-between">
+                    <span className="text-caption text-white/35 font-medium">$230 members · $260 non-members</span>
+                    <span className="text-body-sm font-bold text-cambridge group-hover:translate-x-1 transition-transform">Register →</span>
+                  </div>
+                </Link>
+              ) : (
+                <div className="relative overflow-hidden bg-oxford rounded-[var(--radius-lg)] p-f21 flex flex-col min-h-[260px]">
+                  <span aria-hidden className="absolute -bottom-3 -right-1 text-[8rem] font-black leading-none text-white/[0.045] select-none pointer-events-none tabular-nums">20</span>
+                  <p className="text-caption font-bold text-cambridge uppercase tracking-wider">July 2026 · Westfield Country Club</p>
+                  <h3 className="text-h3 text-white mt-f8 leading-tight">Annual Chamber<br />Golf Outing</h3>
+                  <p className="text-white/55 text-body-sm mt-f13 leading-relaxed flex-1">
+                    18-hole shotgun scramble. Cart, boxed lunch, on-course beer tickets, and post-round dinner.
+                  </p>
+                </div>
+              )}
+
+              {/* ATHENA Awards */}
+              <Link
+                href="/programs/athena-awards"
+                className="group relative overflow-hidden bg-oxford [[data-theme=dark]_&]:bg-bg-tertiary rounded-[var(--radius-lg)] p-f21 flex flex-col min-h-[260px]"
+              >
+                <span aria-hidden className="absolute -bottom-4 -right-2 text-[5.5rem] font-black leading-none text-cambridge/[0.13] select-none pointer-events-none uppercase tracking-tight">
+                  FALL
+                </span>
+                <p className="text-caption font-bold text-cambridge uppercase tracking-wider">Annual · Fall</p>
+                <h3 className="text-h3 text-white mt-f8 leading-tight">ATHENA Awards</h3>
+                <p className="text-white/55 text-body-sm mt-f13 leading-relaxed flex-1">
+                  Honoring women who demonstrate excellence in leadership, community
+                  service, and mentorship across Medina County. Co-hosted with the
+                  Medina County Women&apos;s Journal.
+                </p>
+                <p className="mt-f21 text-body-sm font-bold text-cambridge group-hover:translate-x-1 transition-transform">
+                  Learn more →
+                </p>
+              </Link>
             </div>
           </div>
         </FadeIn>

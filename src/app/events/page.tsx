@@ -323,13 +323,6 @@ export default function EventsPage() {
                       "Honoring women who demonstrate excellence in leadership, community service, and mentorship across Medina County.",
                     href: "/programs/athena-awards",
                   },
-                  {
-                    name: "EmpowHER",
-                    date: "Annual",
-                    description:
-                      "Awards honoring women leaders in Medina County, co-hosted with the Medina County Women's Journal.",
-                    href: null,
-                  },
                 ];
                 return cards.map((event) =>
                   event.href ? (

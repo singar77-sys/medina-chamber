@@ -176,20 +176,12 @@ export default function EventsPage() {
       <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
-            <h2 className="text-h2 mb-f8">Monthly Programs</h2>
+            <h2 className="text-h2 mb-f8">Regular Programming</h2>
             <p className="text-body-lg text-text-secondary mb-f21">
-              Recurring programs throughout the month — open to members and
-              prospective members.
+              Variety programs on a variety of dates — stay as busy as you want to be.
             </p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-f21">
               {[
-                {
-                  name: "Chamber Member Meeting",
-                  freq: "1st Tuesday",
-                  time: "11:30 AM – 1:00 PM",
-                  price: "$25 members / $30 non-members",
-                  desc: "The chamber's flagship lunch program. Featured speakers on regional business topics, recent: Cleveland Browns Stadium development, leadership and human connection, State of the City. Lunch included.",
-                },
                 {
                   name: "Networking WOW",
                   freq: "3rd Wednesday",

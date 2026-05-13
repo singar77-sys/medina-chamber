@@ -76,7 +76,7 @@ export default function RoiPage() {
                 </p>
               </div>
               <div>
-                <p className="text-h3 text-cambridge mb-f8">511</p>
+                <p className="text-h3 text-cambridge mb-f8">500+</p>
                 <p className="text-body font-semibold text-text-primary mb-f5">Members currently accessing these programs</p>
                 <p className="text-body-sm text-text-secondary leading-relaxed">
                   Every one of them made the same calculation you&apos;re running

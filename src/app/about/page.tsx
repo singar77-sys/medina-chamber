@@ -194,7 +194,7 @@ export default async function AboutPage() {
             {[
               { stat: "1938", label: "Founded" },
               { stat: `${totalCount}+`, label: "Member Businesses" },
-              { stat: "30+", label: "Events Per Year" },
+              { stat: "40+", label: "Events Per Year" },
               { stat: "9", label: "Committees" },
             ].map((item) => (
               <div

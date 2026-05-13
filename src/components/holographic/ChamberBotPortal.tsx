@@ -156,7 +156,7 @@ function Welcome({ onMode }: { onMode: (m: PortalMode) => void }) {
             ◈
           </span>
           <span className="mode-head">Find a business</span>
-          <span className="mode-sub mono">SEARCH {totalCount} MEMBERS</span>
+          <span className="mode-sub mono">SEARCH 500+ MEMBERS</span>
         </button>
         <button
           type="button"
@@ -341,7 +341,7 @@ const EXIT_MS = 800;
 
 const TAGLINES = [
   "I know this town.",
-  `${totalCount} members at your fingertips.`,
+  "500+ members at your fingertips.",
   "Events, businesses, membership, ask away.",
   "What are you looking for today?",
   "Your holographic concierge is ready.",
@@ -931,7 +931,7 @@ export function ChamberBotPortal({
       {/* Rail — 36px bottom grid row */}
       <footer className="rail mono">
         <div className="rail-item" aria-hidden="true">
-          <span className="rail-dot ok" /> {totalCount} MEMBERS INDEXED
+          <span className="rail-dot ok" /> 500+ MEMBERS INDEXED
         </div>
         <div className="rail-item" aria-hidden="true">
           <span className="rail-dot ok" /> {upcomingEventCount} UPCOMING EVENTS

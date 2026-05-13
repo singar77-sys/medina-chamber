@@ -178,8 +178,8 @@ export default function EventsPage() {
           <FadeIn>
             <h2 className="text-h2 mb-f8">Monthly Programs</h2>
             <p className="text-body-lg text-text-secondary mb-f21">
-              Five reliable rhythms across the month, show up to one, all five, or
-              rotate. Members and prospective members welcome.
+              Recurring programs throughout the month — open to members and
+              prospective members.
             </p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-f21">
               {[
@@ -216,7 +216,7 @@ export default function EventsPage() {
                   freq: "Monthly happy hour",
                   time: "4:00 – 6:00 PM",
                   price: "Free (food/drink on your own)",
-                  desc: "After-hours mixer at rotating member venues, recently Buffalo Wild Wings, with industrial and hospitality hosts ahead. Open-house format, drop in any time.",
+                  desc: "After-hours mixer at rotating venues, recently Buffalo Wild Wings, with industrial and hospitality hosts ahead. Open-house format, drop in any time.",
                 },
               ].map((p, i) => (
                 <FadeIn key={p.name} delay={i * 60}>

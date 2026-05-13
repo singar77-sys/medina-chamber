@@ -97,6 +97,21 @@ export default async function SafetyCouncilPage() {
             Workplace safety education for every business in Medina County, 
             and a path to meaningful BWC rebates for companies that participate.
           </p>
+          <div className="mt-f21">
+            <Link
+              href="/programs/safety-council/attendance"
+              className="
+                inline-flex items-center px-f21 py-f13
+                bg-accent hover:bg-accent-hover
+                text-white font-bold text-body
+                rounded-[var(--radius-md)]
+                transition-colors
+              "
+            >
+              Check FY26 Attendance →
+            </Link>
+          </div>
+
           <p className="text-body-sm text-text-tertiary mt-f8">
             A partnership between the{" "}
             <span className="text-text-secondary font-semibold">

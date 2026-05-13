@@ -393,6 +393,9 @@ export default function HomePage() {
       {/* Community Investors */}
       <CommunityInvestors />
 
+      {/* Life at the Chamber — recent event photos from Vercel Blob */}
+      <RecentPhotoStrip />
+
       {/* Rental Space — py-f89 lg:py-f144 */}
       <section className="relative bg-bg-secondary border-y border-border-secondary py-f89 lg:py-f144 overflow-hidden">
         {/* Ghosted meeting-room photo backdrop */}
@@ -461,9 +464,6 @@ export default function HomePage() {
 
       {/* Member Voice */}
       <MemberVoice />
-
-      {/* Life at the Chamber — recent event photos from Vercel Blob */}
-      <RecentPhotoStrip />
 
       {/* Join CTA — py-f89 lg:py-f144 */}
       <section className="relative py-f89 lg:py-f144 overflow-hidden">

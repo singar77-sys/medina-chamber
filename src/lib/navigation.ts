@@ -73,7 +73,7 @@ export const navigation: NavItem[] = [
       {
         label: "Programs",
         href: "/programs",
-        description: "Mentorship, networking, safety, and space rental",
+        description: "Mentorship, networking, safety, and Compass",
       },
       {
         label: "Rental Space",

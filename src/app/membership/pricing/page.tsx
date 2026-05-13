@@ -335,26 +335,10 @@ export default async function PricingPage() {
         </FadeIn>
       </section>
 
-      {/* Safety note + bottom CTA */}
+      {/* Bottom CTA */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
-          {/* Safety Council note — p-f21 */}
-          <div className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-            <p className="text-body-sm text-text-secondary leading-relaxed">
-              <span className="font-bold text-text-primary">Safety Council note: </span>
-              Medina County Safety Council participation is available to chamber
-              members at no additional charge. If your business wants BWC rebate
-              eligibility, chamber membership is the most cost-effective path.{" "}
-              <Link
-                href="/programs/safety-council"
-                className="text-cambridge hover:text-cambridge/80 underline underline-offset-2 transition-colors"
-              >
-                Learn about the Safety Council →
-              </Link>
-            </p>
-          </div>
-
-          <div className="mt-f21 p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
                 <h2 className="text-h2">Questions before you commit?</h2>

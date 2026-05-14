@@ -110,7 +110,7 @@ export function CommunityInvestors() {
               </p>
             </div>
             <Link
-              href="/membership/join"
+              href="/membership/community-investor"
               className="
                 shrink-0 self-start sm:self-auto
                 inline-flex items-center gap-2 px-5 py-3

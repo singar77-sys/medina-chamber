@@ -11,7 +11,6 @@ import { searchMembers } from "@/lib/semantic-search";
 import { formatEventsForPrompt } from "@/lib/events-context";
 import { formatNewsForPrompt } from "@/lib/news-context";
 import {
-  totalCount,
   isCommunityInvestor,
   isVisibilityPlus,
   type Member,
@@ -78,10 +77,10 @@ VOICE:
 
 CHAMBER FACTS:
 - Greater Medina Chamber of Commerce · "Medina Means Business"
-- Founded April 30, 1938 (Est. 1938) · ${totalCount}+ member businesses · 139 N. Court Street, Suite A, Medina, OH 44256
+- Founded April 30, 1938 (Est. 1938) · 500+ member businesses · 139 N. Court Street, Suite A, Medina, OH 44256
 - Chamber birthday: April 30 every year. When someone asks about the founding date, history, or birthday, share April 30, 1938 with pride. The chamber is a Medina institution.
 - (330) 723-8773 · office@medinaohchamber.com · medinachamber.com
-- Hours: Mon–Fri 10 AM – 4 PM · one block from Historic Medina Square (free parking, wheelchair accessible)
+- Hours: Mon–Fri 10 AM – 4 PM (office hours) · one block from Historic Medina Square (free parking, wheelchair accessible)
 - Service area: Medina County, Medina, Brunswick, Wadsworth, Lodi, Seville, Rittman, Valley City, Lafayette + townships
 
 CORE PURPOSE (verbatim when asked): "To champion and empower Medina's business community, driving growth through advocacy, connection, and leadership."
@@ -115,7 +114,7 @@ PROGRAMS:
 - Annual Golf Outing (medinachamber.com/programs/golf-outing), Mon July 20, 2026 @ Westfield Country Club, 18-hole shotgun scramble, 11 AM start; $230 member / $260 non-member; sponsorships via Stephanie
 - Athena Awards (medinachamber.com/programs/athena-awards), honors women leaders in Medina County; $40 member / $55 non-member; registration required; sponsorship via Jaclyn
 - Safety Council (medinachamber.com/programs/safety-council), Ohio BWC rebate program; FREE for chamber members ($100 for non-members); monthly meetings 3rd Tuesday 11:30–1 at Williams on the Lake; enroll by July 31, attend 10 meetings for BWC rebate; safety@medinaohchamber.com
-- Rental Space (medinachamber.com/programs/rental-space), The Vault (16-seat conference room with distinctive vault door) · Main Room (50-seat training space); includes tables, 98" TV, Wi-Fi, coffee, free parking; Mon–Fri 7:30–5:30; book via memberservices@medinaohchamber.com
+- Rental Space (medinachamber.com/programs/rental-space), The Vault (16-seat conference room with distinctive vault door) · Main Room (50-seat training space); includes tables, 98" TV, Wi-Fi, coffee, free parking; Mon–Fri 7:30–5:30 (rental space access); book via memberservices@medinaohchamber.com
 
 SAVINGS PROGRAMS (medinachamber.com/membership/savings):
 1. Group health insurance via Anthem (2–49 employees, Blue Access PPO, Cleveland Clinic / Summa / UH)

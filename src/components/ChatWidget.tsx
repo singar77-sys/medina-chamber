@@ -22,7 +22,6 @@ import { AnimatedMascotHead } from "@/components/holographic/AnimatedMascotHead"
 import { HandoffForm } from "@/components/chat/HandoffForm";
 import { renderMarkdown } from "@/lib/markdown";
 import { DEFAULT_PROMPTS } from "@/lib/chamberbot-prompts";
-import { totalCount } from "@/data/members";
 
 /**
  * Delay before the proactive preview bubble pops on a content-specific
@@ -155,7 +154,7 @@ function contextForPath(pathname: string): PageContext {
   // Default — homepage / everything else.
   return {
     greeting: "Your Medina Chamber concierge.",
-    subtitle: `${totalCount}+ members, live events, every program, ask me anything.`,
+    subtitle: "500+ members, live events, every program, ask me anything.",
     prompts: [...DEFAULT_PROMPTS],
     showPortalCta: true,
   };

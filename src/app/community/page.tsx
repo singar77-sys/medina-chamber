@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { activeCommunities, getMembersByCity } from "@/data/communities";
-import { totalCount } from "@/data/members";
 
 export const metadata: Metadata = {
   title: "Medina County Business Communities",
@@ -30,7 +29,7 @@ export default function CommunityHubPage() {
         <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
           The Greater Medina Chamber of Commerce serves businesses in every
           corner of Medina County, from the Square to the southern townships.
-          {totalCount}+ member businesses across {activeCommunities.length} communities.
+          500+ member businesses across {activeCommunities.length} communities.
         </p>
       </section>
 

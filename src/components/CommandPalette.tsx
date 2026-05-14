@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { totalCount } from "@/data/members";
 import { chamberOffice, stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
 
@@ -94,7 +93,7 @@ const COMMANDS: Command[] = [
     group: "Membership",
     href: "/membership/directory",
     keywords: ["find", "search", "business", "company", "members"],
-    hint: `Search ${totalCount}+ member businesses`,
+    hint: "Search 500+ member businesses",
   },
   {
     id: "join",

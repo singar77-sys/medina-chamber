@@ -33,9 +33,12 @@ export default function DirectoryPage() {
       />
 
       {/* SEO — server-rendered member list (hidden from users) ─
-          sr-only keeps HTML in the DOM so crawlers index it,
-          while visually hidden from sighted users. */}
-      <div className="sr-only" aria-hidden="true">
+          sr-only keeps HTML in the DOM so crawlers index it
+          and screen readers can still announce it, while visually
+          hidden from sighted users. (aria-hidden was wrong here —
+          sr-only's whole purpose is to expose content to AT, so
+          marking it aria-hidden contradicted itself.) */}
+      <div className="sr-only">
         <h2>All Chamber Member Businesses</h2>
         {members.map((m) => (
           <div key={m.chamberSlug}>

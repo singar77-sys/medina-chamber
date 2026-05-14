@@ -1,7 +1,7 @@
 /**
  * Semantic member search — Upstash Vector hybrid query.
  *
- * The chamber's directory of 511 members is indexed in Upstash Vector
+ * The chamber's directory of 500+ members is indexed in Upstash Vector
  * as a HYBRID index: BAAI/bge-large-en-v1.5 dense (1024 dims, cosine) +
  * BM25 sparse, both managed server-side. We send raw query text; Upstash
  * embeds, runs both vector and sparse search, fuses results, and returns

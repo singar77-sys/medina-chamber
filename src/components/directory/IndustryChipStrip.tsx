@@ -2,12 +2,11 @@
 
 /**
  * Horizontal strip of top industry chips. Tapping a chip filters the
- * directory by that category (via the onSelect callback). Tapping an
- * already-active chip clears the filter.
+ * directory by that category via the onSelect callback (client-side
+ * filter state in DirectoryClient).
  *
- * Phase 1: chips control client-side filter state via onSelect. In a
- * later plan they'll switch to linking to /membership/directory/industry/[slug]
- * pages once those exist.
+ * Future enhancement: switch chips to <Link> elements pointing at
+ * /membership/directory/industry/[slug] once those static pages are built.
  */
 interface IndustryChipStripProps {
   /** Top industries by member count: [{ category, count }, …]. */

@@ -83,7 +83,7 @@ function DirectoryClientInner({
         const res = await fetch("/api/search", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ q, topK: 48, categoryFilter: activeCategory }),
+          body: JSON.stringify({ q, topK: 20, categoryFilter: activeCategory }),
           signal: controller.signal,
         });
         if (!res.ok) throw new Error(`${res.status}`);

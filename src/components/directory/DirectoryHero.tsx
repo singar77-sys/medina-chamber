@@ -83,6 +83,7 @@ export function DirectoryHero({
               {isSearching && (
                 <div className="absolute right-5 top-1/2 -translate-y-1/2">
                   <span
+                    role="status"
                     aria-label="Searching"
                     className="block w-5 h-5 border-2 border-border-primary border-t-cambridge rounded-full animate-spin"
                   />
@@ -92,8 +93,12 @@ export function DirectoryHero({
           )}
         </RotatingPlaceholder>
 
-        {!query && (
-          <div className="mt-f13 flex flex-wrap items-center justify-center gap-f8">
+        {!query.trim() && (
+          <div
+            role="group"
+            aria-label="Suggested searches"
+            className="mt-f13 flex flex-wrap items-center justify-center gap-f8"
+          >
             <span className="text-caption text-text-tertiary">Try:</span>
             {SUGGESTION_CHIPS.map((s) => (
               <button

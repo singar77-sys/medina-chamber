@@ -140,7 +140,7 @@ export async function POST(req: Request) {
     ? recentTurns
         .map(
           (t) => `
-        <div style="margin: 12px 0; padding: 10px 14px; border-left: 3px solid ${t.role === "user" ? "#4a7c7e" : "#1b3a5c"}; background: ${t.role === "user" ? "#f0f4f8" : "#fafafa"};">
+        <div style="margin: 12px 0; padding: 10px 14px; border-left: 3px solid ${t.role === "user" ? "#4a7c7e" : "#0C1B33"}; background: ${t.role === "user" ? "#f0f4f8" : "#fafafa"};">
           <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #666; margin-bottom: 4px;">
             ${t.role === "user" ? "User" : "ChamberBot"}
           </div>
@@ -174,7 +174,7 @@ export async function POST(req: Request) {
         .join("\n"),
       html: `
         <div style="font-family: sans-serif; max-width: 640px; margin: 0 auto; color: #1a1a1a;">
-          <h2 style="color: #1b3a5c; margin-bottom: 4px;">ChamberBot Handoff</h2>
+          <h2 style="color: #0C1B33; margin-bottom: 4px;">ChamberBot Handoff</h2>
           <p style="color: #666; margin-top: 0;">A visitor chatting with the bot asked to speak with a team member.</p>
 
           <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
@@ -205,7 +205,7 @@ export async function POST(req: Request) {
               : ""
           }
 
-          <h3 style="margin-top: 28px; color: #1b3a5c; font-size: 15px;">Conversation transcript</h3>
+          <h3 style="margin-top: 28px; color: #0C1B33; font-size: 15px;">Conversation transcript</h3>
           ${transcriptHtml}
 
           <div style="margin-top: 28px; padding: 14px; background: #f0f4f8; border-radius: 6px; font-size: 13px; color: #555;">

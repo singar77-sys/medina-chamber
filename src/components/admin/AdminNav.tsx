@@ -46,10 +46,10 @@ export function AdminNav() {
   return (
     <aside
       className="flex flex-col w-56 shrink-0 border-r"
-      style={{ background: "#0C1B33", borderColor: "#1a2d4a" }}
+      style={{ background: "var(--oxford-blue)", borderColor: "var(--border-primary)" }}
     >
       {/* Logo */}
-      <div className="flex items-center gap-2 px-5 py-5 border-b" style={{ borderColor: "#1a2d4a" }}>
+      <div className="flex items-center gap-2 px-5 py-5 border-b" style={{ borderColor: "var(--border-primary)" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/images/chamber-logos/icon-white.png" alt="" className="w-7 h-7" />
         <div>
@@ -84,7 +84,7 @@ export function AdminNav() {
       </nav>
 
       {/* Footer */}
-      <div className="px-3 py-4 border-t" style={{ borderColor: "#1a2d4a" }}>
+      <div className="px-3 py-4 border-t" style={{ borderColor: "var(--border-primary)" }}>
         <a
           href="/admin/notify"
           className="flex items-center gap-2 px-3 py-2 rounded-md text-xs mb-1 transition-colors"

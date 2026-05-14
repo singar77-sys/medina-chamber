@@ -180,7 +180,7 @@ function DirectoryClientInner({
             <button
               onClick={reset}
               type="button"
-              className="text-caption text-text-tertiary hover:text-accent underline underline-offset-2 transition-colors duration-200"
+              className="text-caption text-text-tertiary hover:text-accent focus-visible:outline-none focus-visible:text-accent focus-visible:ring-2 focus-visible:ring-cambridge/40 focus-visible:rounded underline underline-offset-2 transition-colors duration-200"
             >
               Clear filters
             </button>
@@ -206,6 +206,7 @@ function DirectoryClientInner({
                   bg-bg-secondary border border-border-primary
                   text-text-primary text-body-sm font-bold
                   rounded-[var(--radius-md)] hover:border-cambridge
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge focus-visible:ring-offset-2 focus-visible:ring-offset-bg-primary
                   transition-colors duration-200
                 "
               >

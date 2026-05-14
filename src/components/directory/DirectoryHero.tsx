@@ -110,7 +110,8 @@ export function DirectoryHero({
                   bg-bg-secondary border border-border-secondary
                   rounded-full
                   text-text-secondary hover:text-text-primary hover:border-border-primary
-                  transition-colors
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge focus-visible:ring-offset-2 focus-visible:ring-offset-bg-primary
+                  transition-colors duration-200
                 "
               >
                 {s}

@@ -41,7 +41,11 @@ export function AlphabeticalMemberList() {
             <li key={m.chamberSlug} className="mb-f5 break-inside-avoid">
               <Link
                 href={`/membership/directory/${m.chamberSlug}`}
-                className="text-text-secondary hover:text-accent transition-colors duration-200"
+                className="
+                  text-text-secondary hover:text-accent
+                  focus-visible:outline-none focus-visible:text-accent focus-visible:underline focus-visible:underline-offset-2
+                  transition-colors duration-200
+                "
               >
                 <span className="font-medium">{m.name}</span>
                 {city && <span className="text-text-tertiary"> · {city}</span>}

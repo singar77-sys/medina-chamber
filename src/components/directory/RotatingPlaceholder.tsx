@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 /**
  * Rotates through example placeholder strings on a timer.
@@ -12,14 +12,17 @@ import { useEffect, useState } from "react";
  * accepts natural-language queries by showing real example searches.
  */
 interface RotatingPlaceholderProps {
-  /** Example prompts to cycle through. Cycles in order, loops on overflow. */
+  /** Example prompts to cycle through. Cycles in order, loops on overflow.
+   *  Should be a stable reference (defined outside the render function or
+   *  wrapped in useMemo) — replacing the array inline will not reset the
+   *  current index unless its length also changes. */
   prompts: readonly string[];
   /** Milliseconds between rotations. Default 4000. */
   intervalMs?: number;
   /** Pause rotation (e.g., while input is focused). */
   paused?: boolean;
   /** Render hook — receives the current prompt. */
-  children: (current: string) => React.ReactNode;
+  children: (current: string) => ReactNode;
 }
 
 export function RotatingPlaceholder({
@@ -31,6 +34,7 @@ export function RotatingPlaceholder({
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
+    // Also handles empty array (length 0) — renders "" and never starts the timer.
     if (paused || prompts.length <= 1) return;
     const id = setInterval(() => {
       setIndex((i) => (i + 1) % prompts.length);

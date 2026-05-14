@@ -72,6 +72,7 @@ function CityCard({
         bg-bg-primary border border-border-secondary
         rounded-[var(--radius-lg)] p-f21
         hover:border-cambridge hover:shadow-[var(--shadow-md)]
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge focus-visible:ring-offset-2 focus-visible:ring-offset-bg-primary
         transition-all duration-200
       "
     >

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { members, getTopIndustries, getAllCategories } from "@/data/members";
 import { DirectoryClient } from "./DirectoryClient";
+import { CommunityInvestors } from "@/components/CommunityInvestors";
+import { CityTeaserCards } from "@/components/directory/CityTeaserCards";
 import { FadeIn } from "@/components/FadeIn";
 
 export const metadata: Metadata = {
@@ -26,6 +28,8 @@ export default function DirectoryPage() {
         members={members}
         topIndustries={topIndustries}
         totalIndustries={totalIndustries}
+        investorsSlot={<CommunityInvestors />}
+        citiesSlot={<CityTeaserCards />}
       />
 
       {/* SEO — server-rendered member list (hidden from users) ─

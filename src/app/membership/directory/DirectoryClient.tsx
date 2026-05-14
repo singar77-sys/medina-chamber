@@ -1,18 +1,20 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef, Suspense } from "react";
+import { useState, useMemo, useEffect, useRef, Suspense, type ReactNode } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { MemberCard } from "@/components/MemberCard";
 import { DirectoryHero } from "@/components/directory/DirectoryHero";
 import { IndustryChipStrip } from "@/components/directory/IndustryChipStrip";
-import { CommunityInvestors } from "@/components/CommunityInvestors";
-import { CityTeaserCards } from "@/components/directory/CityTeaserCards";
 import { type Member } from "@/data/members";
 
 interface DirectoryClientProps {
   members: Member[];
   topIndustries: ReadonlyArray<{ category: string; count: number }>;
   totalIndustries: number;
+  /** Server-rendered Community Investor showcase (passed in via page.tsx). */
+  investorsSlot: ReactNode;
+  /** Server-rendered City teaser cards (passed in via page.tsx). */
+  citiesSlot: ReactNode;
 }
 
 // ── Client-side keyword fallback (used if /api/search errors out) ───
@@ -32,6 +34,8 @@ function DirectoryClientInner({
   members,
   topIndustries,
   totalIndustries,
+  investorsSlot,
+  citiesSlot,
 }: DirectoryClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -140,14 +144,14 @@ function DirectoryClientInner({
       {!isFiltered ? (
         // ── BROWSE MODE ──────────────────────────────
         <>
-          <CommunityInvestors />
+          {investorsSlot}
           <IndustryChipStrip
             industries={topIndustries}
             totalCount={totalIndustries}
             active={activeCategory}
             onSelect={setActiveCategory}
           />
-          <CityTeaserCards />
+          {citiesSlot}
         </>
       ) : (
         // ── RESULTS MODE ─────────────────────────────

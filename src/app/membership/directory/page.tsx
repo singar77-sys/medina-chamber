@@ -1,78 +1,49 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { members, getAllCategories, totalCount } from "@/data/members";
-import { MemberGraph } from "./MemberGraph";
+import { members, getTopIndustries, getAllCategories } from "@/data/members";
+import { DirectoryClient } from "./DirectoryClient";
 import { FadeIn } from "@/components/FadeIn";
 
 export const metadata: Metadata = {
   title: "Member Directory",
-  description: `Find local businesses in Medina County. Browse all ${totalCount}+ Greater Medina Chamber of Commerce member businesses by name, category, or keyword.`,
+  description:
+    "Find local businesses in Medina County. Search Greater Medina Chamber of Commerce member businesses by name, service, industry, or city.",
   openGraph: {
     title: "Member Directory | Greater Medina Chamber of Commerce",
     description:
-      "Find local businesses in Medina County. Search all Chamber member businesses by name, category, or keyword.",
+      "Find local businesses in Medina County. Search Chamber member businesses by name, service, industry, or city.",
   },
   alternates: { canonical: "/membership/directory" },
 };
 
 export default function DirectoryPage() {
-  const categories = getAllCategories();
+  const topIndustries = getTopIndustries(10);
+  const totalIndustries = getAllCategories().length;
 
   return (
     <>
-      {/* Hero */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
-        <div className="max-w-3xl">
-          <p className="text-overline text-cambridge mb-f8">Member Directory</p>
-          <h1 className="text-display leading-none">
-            <span className="block">Find a Local</span>
-            <span className="block text-accent">Medina Business</span>
-          </h1>
-          <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
-            {totalCount}+ chamber member businesses, explore by industry, city,
-            or name. Click any node to open their profile.
-          </p>
-          <div className="mt-f21">
-            <Link
-              href="/membership/join"
-              className="
-                inline-flex items-center gap-f8 px-f21 py-f13
-                border border-border-primary hover:border-text-tertiary
-                text-text-primary font-bold text-body-sm
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
-            >
-              Get Your Business Listed
-            </Link>
-          </div>
-        </div>
+      <DirectoryClient
+        members={members}
+        topIndustries={topIndustries}
+        totalIndustries={totalIndustries}
+      />
+
+      {/* Network View easter egg */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pb-f55">
+        <Link
+          href="/membership/directory/network"
+          className="
+            inline-flex items-center gap-f8
+            text-caption text-text-tertiary hover:text-accent
+            focus-visible:outline-none focus-visible:text-accent focus-visible:ring-2 focus-visible:ring-cambridge/40 focus-visible:rounded
+            transition-colors duration-200
+          "
+        >
+          Explore the network view <span aria-hidden="true">→</span>
+        </Link>
       </section>
 
-      {/* GRAPH — Neural network directory */}
-      {/* Full-width, no max-w constraint — graph fills the viewport */}
-      <section className="w-full">
-        <MemberGraph members={members} categories={categories} />
-      </section>
-
-      {/* SEO — Server-rendered member list (hidden from users) ─
-          sr-only keeps HTML in the DOM so crawlers index it,
-          while visually hidden from all users. */}
-      <div className="sr-only" aria-hidden="true">
-        <h2>All Chamber Member Businesses</h2>
-        {members.map((m) => (
-          <div key={m.chamberSlug}>
-            <a href={`/membership/directory/${m.chamberSlug}`}>{m.name}</a>
-            {m.categories.length > 0 && (
-              <span>, {m.categories.join(", ")}</span>
-            )}
-            {m.address && <span>, {m.address}</span>}
-            {m.description && <span>, {m.description}</span>}
-          </div>
-        ))}
-      </div>
-
-      {/* Join CTA */}
+      {/* Join CTA (preserved from previous implementation) */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
@@ -91,10 +62,11 @@ export default function DirectoryPage() {
                     bg-accent hover:bg-accent-hover
                     text-white font-bold text-body-sm
                     rounded-[var(--radius-md)]
-                    transition-colors
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge focus-visible:ring-offset-2 focus-visible:ring-offset-bg-primary
+                    transition-colors duration-200
                   "
                 >
-                  Join the Chamber →
+                  Join the Chamber <span aria-hidden="true">→</span>
                 </Link>
                 <Link
                   href="/membership/benefits"
@@ -103,7 +75,8 @@ export default function DirectoryPage() {
                     border border-border-primary hover:border-text-tertiary
                     text-text-primary font-bold text-body-sm
                     rounded-[var(--radius-md)]
-                    transition-colors
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge focus-visible:ring-offset-2 focus-visible:ring-offset-bg-primary
+                    transition-colors duration-200
                   "
                 >
                   See All Benefits

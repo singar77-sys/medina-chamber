@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { type Member, extractCity, getInitials } from "@/data/members";
+import { type Member, extractCity, getInitials, isCommunityInvestor } from "@/data/members";
 
 interface MemberCardProps {
   member: Member;
@@ -10,18 +10,22 @@ export function MemberCard({ member }: MemberCardProps) {
   const city = extractCity(member.address);
   const initials = getInitials(member.name);
   const primaryCategory = member.categories[0] ?? "";
+  const isCi = isCommunityInvestor(member);
 
   return (
     <Link
       href={`/membership/directory/${member.chamberSlug}`}
-      className="
+      className={`
         group flex flex-col
-        bg-bg-primary border border-border-secondary
+        bg-bg-primary border
         rounded-[var(--radius-lg)]
-        hover:border-border-primary hover:shadow-[var(--shadow-md)]
+        hover:shadow-[var(--shadow-md)]
         transition-all duration-200
         overflow-hidden
-      "
+        ${isCi
+          ? "border-cambridge/40 hover:border-cambridge"
+          : "border-border-secondary hover:border-border-primary"}
+      `}
     >
       {/* Logo / Initials */}
       <div className="
@@ -51,6 +55,9 @@ export function MemberCard({ member }: MemberCardProps) {
 
       {/* Content */}
       <div className="flex flex-col flex-1 p-5">
+        {isCi && (
+          <p className="text-overline text-cambridge mb-f5">Community Investor</p>
+        )}
         <h3 className="
           text-body font-bold text-text-primary leading-snug
           group-hover:text-accent transition-colors

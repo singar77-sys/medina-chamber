@@ -243,7 +243,7 @@ export default async function CommunityInvestorPage() {
               </div>
 
               {/* CI exclusive adds */}
-              <div className="p-f21 bg-oxford [[data-theme=dark]_&]:bg-bg-tertiary border border-cambridge/30 rounded-[var(--radius-lg)]">
+              <div className="p-f21 bg-oxford border border-cambridge/30 rounded-[var(--radius-lg)]">
                 <p className="text-caption font-bold text-cambridge uppercase tracking-wider mb-f13">
                   Community Investor adds (4)
                 </p>
@@ -324,7 +324,7 @@ export default async function CommunityInvestorPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-oxford [[data-theme=dark]_&]:bg-bg-tertiary border-t border-white/10 py-f55 lg:py-f89">
+      <section className="bg-oxford border-t border-white/10 py-f55 lg:py-f89">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
             <div className="grid lg:grid-cols-2 gap-f34 items-center">

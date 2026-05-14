@@ -13,6 +13,7 @@ export const metadata: Metadata = {
       "Explore chamber members as an interactive network graph.",
   },
   alternates: { canonical: "/membership/directory/network" },
+  robots: { index: false },
 };
 
 export default function MemberNetworkPage() {

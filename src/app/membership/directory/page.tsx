@@ -29,7 +29,7 @@ export default function DirectoryPage() {
       />
 
       {/* Network View easter egg */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pb-f55">
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f21 pb-f55">
         <Link
           href="/membership/directory/network"
           className="

@@ -54,7 +54,7 @@ function EventCard({ event }: { event: ReturnType<typeof getUpcomingEvents>[numb
       <div className="flex gap-f13 p-f21">
         {/* Date badge */}
         <div className="flex-shrink-0 w-16 text-center">
-          <div className="bg-oxford [[data-theme=dark]_&]:bg-bg-tertiary text-white rounded-[var(--radius-md)] py-2 px-1">
+          <div className="bg-oxford text-white rounded-[var(--radius-md)] py-2 px-1">
             <p className="text-[10px] font-bold uppercase tracking-widest text-cambridge leading-none">
               {event.month.substring(0, 3)}
             </p>
@@ -301,7 +301,7 @@ export default function EventsPage() {
               {nextGolf ? (
                 <Link
                   href={`/events/${nextGolf.slug}`}
-                  className="group relative overflow-hidden bg-oxford [[data-theme=dark]_&]:bg-bg-tertiary rounded-[var(--radius-lg)] p-f21 flex flex-col min-h-[260px]"
+                  className="group relative overflow-hidden bg-oxford rounded-[var(--radius-lg)] p-f21 flex flex-col min-h-[260px]"
                 >
                   <span aria-hidden className="absolute -bottom-3 -right-1 text-[8rem] font-black leading-none text-white/[0.045] select-none pointer-events-none tabular-nums">
                     {nextGolf.day}
@@ -334,7 +334,7 @@ export default function EventsPage() {
               {/* ATHENA Awards */}
               <Link
                 href="/programs/athena-awards"
-                className="group relative overflow-hidden bg-oxford [[data-theme=dark]_&]:bg-bg-tertiary rounded-[var(--radius-lg)] p-f21 flex flex-col min-h-[260px]"
+                className="group relative overflow-hidden bg-oxford rounded-[var(--radius-lg)] p-f21 flex flex-col min-h-[260px]"
               >
                 <span aria-hidden className="absolute -bottom-4 -right-2 text-[5.5rem] font-black leading-none text-cambridge/[0.13] select-none pointer-events-none uppercase tracking-tight">
                   FALL

@@ -316,7 +316,7 @@ export default function HomePage() {
                   {/* Date badge header */}
                   <div className="flex items-center gap-3 p-5 border-b border-border-secondary">
                     <div className="flex-shrink-0 w-14 text-center">
-                      <div className="bg-oxford [[data-theme=dark]_&]:bg-bg-tertiary text-white rounded-[var(--radius-md)] py-1.5 px-1">
+                      <div className="bg-oxford text-white rounded-[var(--radius-md)] py-1.5 px-1">
                         <p className="text-[10px] font-bold uppercase tracking-widest text-cambridge leading-none">
                           {event.month.substring(0, 3)}
                         </p>

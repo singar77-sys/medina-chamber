@@ -190,7 +190,7 @@ export default async function SafetyCouncilPage() {
                   key={t.label}
                   className={`p-f21 rounded-[var(--radius-lg)] border ${
                     t.highlight
-                      ? "bg-oxford [[data-theme=dark]_&]:bg-bg-tertiary text-white border-oxford [[data-theme=dark]_&]:border-cambridge"
+                      ? "bg-oxford text-white border-oxford [[data-theme=dark]_&]:border-cambridge"
                       : "bg-bg-primary border-border-secondary"
                   }`}
                 >

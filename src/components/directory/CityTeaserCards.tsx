@@ -86,7 +86,7 @@ function CityCard({
           <div
             key={m.chamberSlug}
             className="
-              relative w-10 h-10
+              relative w-f34 h-f34
               bg-bg-secondary border-2 border-bg-primary
               rounded-full overflow-hidden
               flex items-center justify-center

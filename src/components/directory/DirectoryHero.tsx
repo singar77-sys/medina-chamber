@@ -55,7 +55,7 @@ export function DirectoryHero({
             {(current) => (
               <div className="relative">
                 <svg
-                  className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary pointer-events-none"
+                  className="absolute left-f21 top-1/2 -translate-y-1/2 w-f21 h-f21 text-text-tertiary pointer-events-none"
                   viewBox="0 0 16 16"
                   fill="currentColor"
                   aria-hidden="true"
@@ -71,7 +71,7 @@ export function DirectoryHero({
                   placeholder={current}
                   aria-label="Search chamber members"
                   className="
-                    w-full pl-14 pr-14 py-f21
+                    w-full pl-f55 pr-f55 py-f21
                     bg-bg-primary border-2 border-border-primary
                     rounded-[var(--radius-lg)]
                     text-body text-text-primary placeholder:text-text-tertiary
@@ -80,11 +80,11 @@ export function DirectoryHero({
                   "
                 />
                 {isSearching && (
-                  <div className="absolute right-5 top-1/2 -translate-y-1/2">
+                  <div className="absolute right-f21 top-1/2 -translate-y-1/2">
                     <span
                       role="status"
                       aria-label="Searching"
-                      className="block w-5 h-5 border-2 border-border-primary border-t-cambridge rounded-full animate-spin"
+                      className="block w-f21 h-f21 border-2 border-border-primary border-t-cambridge rounded-full animate-spin"
                     />
                   </div>
                 )}

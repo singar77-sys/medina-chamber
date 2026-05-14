@@ -28,6 +28,23 @@ export default function DirectoryPage() {
         totalIndustries={totalIndustries}
       />
 
+      {/* SEO — server-rendered member list (hidden from users) ─
+          sr-only keeps HTML in the DOM so crawlers index it,
+          while visually hidden from sighted users. */}
+      <div className="sr-only" aria-hidden="true">
+        <h2>All Chamber Member Businesses</h2>
+        {members.map((m) => (
+          <div key={m.chamberSlug}>
+            <a href={`/membership/directory/${m.chamberSlug}`}>{m.name}</a>
+            {m.categories.length > 0 && (
+              <span>, {m.categories.join(", ")}</span>
+            )}
+            {m.address && <span>, {m.address}</span>}
+            {m.description && <span>, {m.description}</span>}
+          </div>
+        ))}
+      </div>
+
       {/* Network View easter egg */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f21 pb-f55">
         <Link

@@ -5,9 +5,8 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { MemberCard } from "@/components/MemberCard";
 import { DirectoryHero } from "@/components/directory/DirectoryHero";
 import { IndustryChipStrip } from "@/components/directory/IndustryChipStrip";
-import { InvestorShowcase } from "@/components/directory/InvestorShowcase";
+import { CommunityInvestors } from "@/components/CommunityInvestors";
 import { CityTeaserCards } from "@/components/directory/CityTeaserCards";
-import { AlphabeticalMemberList } from "@/components/directory/AlphabeticalMemberList";
 import { type Member } from "@/data/members";
 
 interface DirectoryClientProps {
@@ -141,7 +140,7 @@ function DirectoryClientInner({
       {!isFiltered ? (
         // ── BROWSE MODE ──────────────────────────────
         <>
-          <InvestorShowcase />
+          <CommunityInvestors />
           <IndustryChipStrip
             industries={topIndustries}
             totalCount={totalIndustries}
@@ -149,7 +148,6 @@ function DirectoryClientInner({
             onSelect={setActiveCategory}
           />
           <CityTeaserCards />
-          <AlphabeticalMemberList />
         </>
       ) : (
         // ── RESULTS MODE ─────────────────────────────

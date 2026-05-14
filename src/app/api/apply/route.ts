@@ -117,7 +117,7 @@ export async function POST(req: NextRequest) {
       subject: `Membership Application, ${businessName}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #1a1a1a;">
-          <h2 style="color: #1b3a5c; margin-bottom: 4px;">New Membership Application</h2>
+          <h2 style="color: #0C1B33; margin-bottom: 4px;">New Membership Application</h2>
           <p style="color: #666; margin-top: 0;">Submitted via medinachamber.com</p>
 
           <table style="width: 100%; border-collapse: collapse; margin-top: 24px;">

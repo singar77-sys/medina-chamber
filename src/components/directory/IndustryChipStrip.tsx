@@ -43,7 +43,7 @@ export function IndustryChipStrip({
       </header>
 
       <div
-        role="list"
+        role="group"
         aria-label="Industry filters"
         className="
           flex gap-f8 overflow-x-auto pb-f8
@@ -64,8 +64,9 @@ export function IndustryChipStrip({
                 px-f13 py-f8
                 rounded-full
                 border transition-colors duration-200
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge focus-visible:ring-offset-2 focus-visible:ring-offset-bg-primary
                 ${isActive
-                  ? "bg-cambridge text-bg-primary border-cambridge"
+                  ? "bg-cambridge text-bg-primary border-cambridge hover:bg-cambridge/85"
                   : "bg-bg-primary text-text-secondary border-border-primary hover:border-cambridge hover:text-text-primary"}
               `}
             >

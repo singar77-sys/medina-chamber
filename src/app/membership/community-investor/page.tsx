@@ -109,8 +109,9 @@ export default async function CommunityInvestorPage() {
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
 
-      {/* Hero — oxford background signals premium tier */}
-      <section className="bg-oxford [[data-theme=dark]_&]:bg-bg-tertiary border-b border-white/10">
+      {/* Hero — oxford background signals premium tier; same in both themes
+          to avoid a brighter shade leaking in dark mode. */}
+      <section className="bg-oxford border-b border-white/10">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
           <div className="max-w-3xl">
             <p className="text-overline text-cambridge mb-f8">Membership · Top Tier</p>

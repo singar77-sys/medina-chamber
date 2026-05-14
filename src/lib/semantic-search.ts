@@ -42,13 +42,15 @@ const MEMBERS_BY_SLUG: Map<string, Member> = new Map(
 /**
  * Keep results within this fraction of the top match's score. Drops the
  * long tail of weak vector-space neighbors that aren't actually relevant
- * (e.g., "roofer" → manufacturing company). Tuned empirically: 0.65 keeps
- * the strong matches while cutting noise. Lower = more inclusive.
+ * (e.g., "roofer" → manufacturing company). Lower = more inclusive. Upstash
+ * hybrid scores often land in the 0.2–0.6 range, so the relative cutoff is
+ * usually what does the real work; the absolute floor only protects against
+ * genuinely empty queries.
  */
-const RELATIVE_SCORE_CUTOFF = 0.65;
+const RELATIVE_SCORE_CUTOFF = 0.5;
 
 /** Absolute floor regardless of top-score relative cutoff. */
-const ABSOLUTE_SCORE_FLOOR = 0.4;
+const ABSOLUTE_SCORE_FLOOR = 0.15;
 
 export async function searchMembers(
   query: string,

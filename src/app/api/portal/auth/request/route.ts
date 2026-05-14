@@ -80,7 +80,7 @@ function buildEmail(firstName: string, link: string): string {
                  alt="Medina Chamber" width="48" height="48"
                  style="display:block;margin:0 auto 12px">
             <p style="margin:0;color:#83BCA9;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600">
-              Medina Area Chamber of Commerce
+              Greater Medina Chamber of Commerce
             </p>
           </td>
         </tr>
@@ -111,8 +111,8 @@ function buildEmail(firstName: string, link: string): string {
         <tr>
           <td style="padding:16px 32px 24px;border-top:1px solid #f1f5f9;text-align:center">
             <p style="margin:0;font-size:12px;color:#94a3b8">
-              Medina Area Chamber of Commerce &middot;
-              145 N. Court St., Medina, OH 44256
+              Greater Medina Chamber of Commerce &middot;
+              139 N. Court Street, Suite A, Medina, OH 44256
             </p>
           </td>
         </tr>

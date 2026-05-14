@@ -948,7 +948,7 @@ export function ChamberBotPortal({
         <div className="rail-spacer" aria-hidden="true" />
         <div className="rail-item" aria-hidden="true">VECTOR INDEX · v4.2.1</div>
         <div className="rail-item" aria-hidden="true">
-          LATENCY <span className="rail-val">, </span>
+          LATENCY <span className="rail-val">—</span>
         </div>
       </footer>
     </div>,

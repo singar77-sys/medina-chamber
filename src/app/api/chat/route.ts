@@ -42,6 +42,12 @@ import { formatChamberFactsForPrompt } from "@/lib/chamber-facts";
 
 export const runtime = "edge";
 
+// Max output tokens for the streamed model response. 750 ≈ 560 words —
+// enough for a full insurance/contractor member listing (10+ entries with
+// descriptions + phones) while still blocking essay-length abuse. 500 was
+// cutting off mid-phone-number on category queries with many CI/VP members.
+const MAX_OUTPUT_TOKENS = 750;
+
 const CHAMBER_SYSTEM_PROMPT = `You are the ChamberBot, the Greater Medina Chamber of Commerce's official AI assistant for Medina County, Ohio. Warm, knowledgeable, community-proud, direct. When asked your name, say "the ChamberBot" (or "the chamber's AI assistant").
 
 CONFIDENTIALITY, STRICT:
@@ -548,15 +554,28 @@ export async function POST(req: Request) {
     ...messages,
   ];
 
+  // Hoisted ABOVE streamText so the onFinish closure captures them safely.
+  // (Declaring after the streamText call left the closure referencing a TDZ
+  // const if the stream errored before reaching the declaration site.)
+  const memberSlugsHeader = [...ciMembers, ...vpMembers, ...otherMembers]
+    .slice(0, 8)
+    .map((m) => m.chamberSlug)
+    .join(",");
+  const cbSource = memberSlugsHeader
+    ? "directory"
+    : /\bevent|events\b/i.test(searchContext)
+    ? "events"
+    : "general";
+  const cbIntent = classifyMascotIntent(
+    userMessageContent,
+    ciMembers.length + vpMembers.length + otherMembers.length,
+  );
+
   try {
     const result = streamText({
       model: provider.model,
       messages: allMessages,
-      // 750 tokens ≈ 560 words — enough for a full insurance/contractor
-      // member listing (10+ entries with descriptions + phones) while still
-      // blocking essay-length abuse. 500 was cutting off mid-phone-number on
-      // category queries with many CI/VP members.
-      maxOutputTokens: 750,
+      maxOutputTokens: MAX_OUTPUT_TOKENS,
       temperature: 0.45,
       // Three post-stream jobs:
       //   1. Record token usage against the global daily spend cap.
@@ -627,7 +646,7 @@ export async function POST(req: Request) {
                     provider.provider === "anthropic"
                       ? "claude-haiku-4-5"
                       : "gpt-4o-mini",
-                  modelParameters: { maxOutputTokens: 500, temperature: 0.45 },
+                  modelParameters: { maxOutputTokens: MAX_OUTPUT_TOKENS, temperature: 0.45 },
                   // input/output intentionally omitted — see LangfuseGenerationParams
                   usage: {
                     input: totalUsage.inputTokens ?? 0,
@@ -647,20 +666,8 @@ export async function POST(req: Request) {
     // Tell the client which members surfaced and where the answer came from.
     // The client renders profile cards from x-cb-members slugs (it has the
     // full member list in-bundle) and shows a provenance tag from x-cb-source.
-    const memberSlugsHeader = [...ciMembers, ...vpMembers, ...otherMembers]
-      .slice(0, 8)
-      .map((m) => m.chamberSlug)
-      .join(",");
-    const cbSource = memberSlugsHeader
-      ? "directory"
-      : /\bevent|events\b/i.test(searchContext)
-      ? "events"
-      : "general";
-    const cbIntent = classifyMascotIntent(
-      userMessageContent,
-      ciMembers.length + vpMembers.length + otherMembers.length,
-    );
-
+    // (memberSlugsHeader / cbSource / cbIntent are declared above streamText
+    // so the onFinish closure captures them safely.)
     return createTextStreamResponse({
       textStream: safeStream(result.textStream),
       headers: {

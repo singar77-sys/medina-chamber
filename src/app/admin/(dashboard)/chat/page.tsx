@@ -179,7 +179,7 @@ export default async function ChatLogPage({
                         {conv.topic.replace(/-/g, " ")}
                       </span>
                     ) : (
-                      <span className="text-xs text-gray-300">, </span>
+                      <span className="text-xs text-gray-300">—</span>
                     )}
                   </td>
                   <td className="px-4 py-2.5 text-xs text-gray-500 hidden sm:table-cell">

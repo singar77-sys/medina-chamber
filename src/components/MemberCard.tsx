@@ -56,7 +56,7 @@ export function MemberCard({ member }: MemberCardProps) {
       {/* Content */}
       <div className="flex flex-col flex-1 p-5">
         {isCi && (
-          <p className="text-overline text-cambridge mb-f5">Community Investor</p>
+          <p className="text-overline text-accent mb-f5">Community Investor</p>
         )}
         <h3 className="
           text-body font-bold text-text-primary leading-snug

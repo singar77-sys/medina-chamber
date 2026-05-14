@@ -30,7 +30,7 @@ export function InvestorShowcase() {
           href="/membership/community-investor"
           className="text-caption text-text-tertiary hover:text-accent underline underline-offset-4"
         >
-          About this tier →
+          About this tier <span aria-hidden="true">→</span>
         </Link>
       </header>
 
@@ -46,7 +46,7 @@ export function InvestorShowcase() {
                   bg-bg-primary border border-border-secondary
                   rounded-[var(--radius-md)]
                   hover:border-cambridge hover:shadow-[var(--shadow-md)]
-                  transition-all duration-[200ms]
+                  transition-all duration-200
                   overflow-hidden
                 "
               >
@@ -57,7 +57,7 @@ export function InvestorShowcase() {
                       alt={`${m.name} logo`}
                       fill
                       className="object-contain p-f8"
-                      sizes="(max-width: 640px) 33vw, (max-width: 1024px) 25vw, 16vw"
+                      sizes="(max-width: 639px) 33vw, (max-width: 1023px) 25vw, 16vw"
                       unoptimized
                     />
                   ) : (

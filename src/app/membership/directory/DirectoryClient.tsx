@@ -1,13 +1,20 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef, Suspense } from "react";
+import { useState, useMemo, useEffect, useRef, Suspense, type ReactNode } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { MemberCard } from "@/components/MemberCard";
+import { DirectoryHero } from "@/components/directory/DirectoryHero";
+import { IndustryChipStrip } from "@/components/directory/IndustryChipStrip";
 import { type Member } from "@/data/members";
 
 interface DirectoryClientProps {
   members: Member[];
-  categories: string[];
+  topIndustries: ReadonlyArray<{ category: string; count: number }>;
+  totalIndustries: number;
+  /** Server-rendered Community Investor showcase (passed in via page.tsx). */
+  investorsSlot: ReactNode;
+  /** Server-rendered City teaser cards (passed in via page.tsx). */
+  citiesSlot: ReactNode;
 }
 
 // ── Client-side keyword fallback (used if /api/search errors out) ───
@@ -23,7 +30,13 @@ function keywordFilter(members: Member[], q: string): Member[] {
   );
 }
 
-function DirectoryClientInner({ members, categories }: DirectoryClientProps) {
+function DirectoryClientInner({
+  members,
+  topIndustries,
+  totalIndustries,
+  investorsSlot,
+  citiesSlot,
+}: DirectoryClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -33,7 +46,6 @@ function DirectoryClientInner({ members, categories }: DirectoryClientProps) {
     searchParams.get("category") ?? null,
   );
 
-  // Semantic search state
   const [semanticSlugs, setSemanticSlugs] = useState<string[] | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [searchError, setSearchError] = useState(false);
@@ -53,14 +65,13 @@ function DirectoryClientInner({ members, categories }: DirectoryClientProps) {
   useEffect(() => {
     const q = search.trim();
     if (!q) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSemanticSlugs(null);
       setIsSearching(false);
       setSearchError(false);
       abortRef.current?.abort();
       return;
     }
-
-    // Abort any in-flight request
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
@@ -72,7 +83,7 @@ function DirectoryClientInner({ members, categories }: DirectoryClientProps) {
         const res = await fetch("/api/search", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ q, topK: 48, categoryFilter: activeCategory }),
+          body: JSON.stringify({ q, topK: 20, categoryFilter: activeCategory }),
           signal: controller.signal,
         });
         if (!res.ok) throw new Error(`${res.status}`);
@@ -80,7 +91,6 @@ function DirectoryClientInner({ members, categories }: DirectoryClientProps) {
         setSemanticSlugs(data.results.map((r) => r.slug));
       } catch (e) {
         if (e instanceof Error && e.name === "AbortError") return;
-        // Fall back to client-side keyword filter
         setSemanticSlugs(null);
         setSearchError(true);
       } finally {
@@ -95,17 +105,12 @@ function DirectoryClientInner({ members, categories }: DirectoryClientProps) {
   }, [search, activeCategory]);
 
   const filtered = useMemo(() => {
-    // Path 1: semantic search returned ranked slugs — use that order
     if (semanticSlugs && search.trim()) {
       const bySlug = new Map(members.map((m) => [m.chamberSlug, m]));
-      const ordered = semanticSlugs
+      return semanticSlugs
         .map((slug) => bySlug.get(slug))
         .filter((m): m is Member => !!m);
-      // semantic API already respects category filter — return as-is
-      return ordered;
     }
-
-    // Path 2: either no query, or semantic failed → client filter
     let result = members;
     if (activeCategory) {
       result = result.filter((m) => m.categories.includes(activeCategory));
@@ -113,8 +118,7 @@ function DirectoryClientInner({ members, categories }: DirectoryClientProps) {
     if (search.trim()) {
       result = keywordFilter(result, search);
     }
-    // When no query, Visibility Plus members sort to top
-    if (!search.trim()) {
+    if (!search.trim() && !activeCategory) {
       return [...result].sort((a, b) => a.membershipTier - b.membershipTier);
     }
     return result;
@@ -129,148 +133,92 @@ function DirectoryClientInner({ members, categories }: DirectoryClientProps) {
   }
 
   return (
-    <div>
-      {/* Search + Filter Bar */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        {/* Search Input */}
-        <div className="relative flex-1">
-          <svg
-            className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-tertiary pointer-events-none"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-          >
-            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.099zm-5.242 1.156a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11" />
-          </svg>
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Ask in plain English, e.g. “leaky roof after storm, takes insurance”"
-            className="
-              w-full pl-10 pr-10 py-3
-              bg-bg-primary border border-border-primary
-              rounded-[var(--radius-md)]
-              text-body-sm text-text-primary placeholder:text-text-tertiary
-              focus:outline-none focus:ring-2 focus:ring-cambridge/40 focus:border-cambridge
-              transition-colors
-            "
+    <>
+      <DirectoryHero
+        query={search}
+        onQueryChange={setSearch}
+        onSuggestionClick={(s) => setSearch(s)}
+        isSearching={isSearching}
+      />
+
+      {!isFiltered ? (
+        // ── BROWSE MODE ──────────────────────────────
+        <>
+          {investorsSlot}
+          <IndustryChipStrip
+            industries={topIndustries}
+            totalCount={totalIndustries}
+            active={activeCategory}
+            onSelect={setActiveCategory}
           />
-          {/* Loading spinner */}
-          {isSearching && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2">
-              <span className="block w-4 h-4 border-2 border-border-primary border-t-cambridge rounded-full animate-spin" />
-            </div>
-          )}
-        </div>
+          {citiesSlot}
+        </>
+      ) : (
+        // ── RESULTS MODE ─────────────────────────────
+        <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f34">
+          <IndustryChipStrip
+            industries={topIndustries}
+            totalCount={totalIndustries}
+            active={activeCategory}
+            onSelect={setActiveCategory}
+          />
 
-        {/* Category Select */}
-        <div className="relative sm:w-72">
-          <select
-            aria-label="Filter by category"
-            value={activeCategory ?? ""}
-            onChange={(e) => setActiveCategory(e.target.value || null)}
-            className="
-              w-full appearance-none
-              pl-4 pr-10 py-3
-              bg-bg-primary border border-border-primary
-              rounded-[var(--radius-md)]
-              text-body-sm text-text-primary
-              focus:outline-none focus:ring-2 focus:ring-cambridge/40 focus:border-cambridge
-              transition-colors cursor-pointer
-            "
-          >
-            <option value="">All Categories</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-          <svg
-            className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-tertiary pointer-events-none"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-          >
-            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
-          </svg>
-        </div>
-      </div>
-
-      {/* Results bar */}
-      <div className="mt-6 flex items-center justify-between">
-        <p className="text-caption text-text-tertiary">
-          {isFiltered ? (
-            <>
-              <span className="font-bold text-text-primary">
-                {filtered.length}
-              </span>{" "}
+          <div className="mt-f21 flex items-center justify-between">
+            <p className="text-caption text-text-tertiary">
+              <span className="font-bold text-text-primary">{filtered.length}</span>{" "}
               of {members.length} members
               {activeCategory && (
                 <>
-                  {" "}
-                  in <span className="text-cambridge">{activeCategory}</span>
+                  {" "}in <span className="text-cambridge">{activeCategory}</span>
                 </>
               )}
               {search.trim() && !searchError && semanticSlugs && (
                 <span className="ml-2 text-cambridge">· semantic match</span>
               )}
               {searchError && (
-                <span className="ml-2 text-text-tertiary">
-                  · keyword fallback
-                </span>
+                <span className="ml-2 text-text-tertiary">· keyword fallback</span>
               )}
-            </>
+            </p>
+            <button
+              onClick={reset}
+              type="button"
+              className="text-caption text-text-tertiary hover:text-accent focus-visible:outline-none focus-visible:text-accent focus-visible:ring-2 focus-visible:ring-cambridge/40 focus-visible:rounded underline underline-offset-2 transition-colors duration-200"
+            >
+              Clear filters
+            </button>
+          </div>
+
+          {filtered.length > 0 ? (
+            <div className="mt-f13 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-f13">
+              {filtered.map((member) => (
+                <MemberCard key={member.chamberSlug} member={member} />
+              ))}
+            </div>
           ) : (
-            <>
-              <span className="font-bold text-text-primary">
-                {members.length}
-              </span>{" "}
-              member businesses
-            </>
+            <div className="mt-f55 text-center">
+              <p className="text-h4 text-text-secondary">No members found</p>
+              <p className="text-body-sm text-text-tertiary mt-f8">
+                Try rephrasing — describe the service you need.
+              </p>
+              <button
+                onClick={reset}
+                type="button"
+                className="
+                  mt-f21 inline-flex items-center px-f21 py-f13
+                  bg-bg-secondary border border-border-primary
+                  text-text-primary text-body-sm font-bold
+                  rounded-[var(--radius-md)] hover:border-cambridge
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge focus-visible:ring-offset-2 focus-visible:ring-offset-bg-primary
+                  transition-colors duration-200
+                "
+              >
+                Show all members
+              </button>
+            </div>
           )}
-        </p>
-
-        {isFiltered && (
-          <button
-            onClick={reset}
-            className="
-              text-caption text-text-tertiary hover:text-accent
-              underline underline-offset-2 transition-colors
-            "
-          >
-            Clear filters
-          </button>
-        )}
-      </div>
-
-      {/* Member Grid */}
-      {filtered.length > 0 ? (
-        <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {filtered.map((member) => (
-            <MemberCard key={member.chamberSlug} member={member} />
-          ))}
-        </div>
-      ) : (
-        <div className="mt-16 text-center">
-          <p className="text-h4 text-text-secondary">No members found</p>
-          <p className="text-body-sm text-text-tertiary mt-2">
-            Try rephrasing, e.g. describe the service you need, not a category.
-          </p>
-          <button
-            onClick={reset}
-            className="
-              mt-6 inline-flex items-center px-5 py-2.5
-              bg-bg-secondary border border-border-primary
-              text-text-primary text-body-sm font-bold
-              rounded-[var(--radius-md)] hover:border-border-primary
-              transition-colors
-            "
-          >
-            Show all members
-          </button>
-        </div>
+        </section>
       )}
-    </div>
+    </>
   );
 }
 

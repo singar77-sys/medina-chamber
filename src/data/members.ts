@@ -100,3 +100,28 @@ export function getInitials(name: string): string {
   if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
   return (words[0][0] + words[1][0]).toUpperCase();
 }
+
+/** All members in a given city (case-insensitive match against the parsed address city). */
+export function getMembersByCity(city: string): Member[] {
+  const target = city.toLowerCase();
+  return members.filter((m) => extractCity(m.address).toLowerCase() === target);
+}
+
+/** Top N industries by member count, sorted descending. */
+export function getTopIndustries(limit = 10): Array<{ category: string; count: number }> {
+  const counts = new Map<string, number>();
+  members.forEach((m) => {
+    m.categories.forEach((c) => {
+      counts.set(c, (counts.get(c) ?? 0) + 1);
+    });
+  });
+  return [...counts.entries()]
+    .map(([category, count]) => ({ category, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, limit);
+}
+
+/** All Community Investor members, derived from the authoritative slug set. */
+export function getCommunityInvestors(): Member[] {
+  return members.filter(isCommunityInvestor);
+}

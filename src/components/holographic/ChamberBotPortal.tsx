@@ -29,7 +29,6 @@ import { usePostHog } from "posthog-js/react";
 import { ChamberBotMascot, type MascotIntent } from "./ChamberBotMascot";
 import { renderMarkdown } from "@/lib/markdown";
 import { usePortalAudio } from "@/hooks/usePortalAudio";
-import { totalCount } from "@/data/members";
 import { getUpcomingEvents } from "@/data/events";
 import { chamberOffice, jaclyn, stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
@@ -143,7 +142,13 @@ function HoloRings({ state }: { state: string }) {
 }
 
 /** Mode selection grid — shown when no messages and not in contact mode. */
-function Welcome({ onMode }: { onMode: (m: PortalMode) => void }) {
+function Welcome({
+  onMode,
+  calendarRange,
+}: {
+  onMode: (m: PortalMode) => void;
+  calendarRange: string;
+}) {
   return (
     <div className="welcome">
       <div className="mode-grid">
@@ -167,7 +172,7 @@ function Welcome({ onMode }: { onMode: (m: PortalMode) => void }) {
             ◉
           </span>
           <span className="mode-head">Upcoming events</span>
-          <span className="mode-sub mono">CALENDAR · APR – JUN</span>
+          <span className="mode-sub mono">CALENDAR · {calendarRange}</span>
         </button>
         <button
           type="button"
@@ -202,9 +207,12 @@ function ContactPanel({ onBack }: { onBack: () => void }) {
     <div className="contact-panel">
       <div className="welcome-eyebrow mono">CHAMBER STAFF · DIRECT LINE</div>
       <div className="contact-rows">
-        <a className="contact-row" href="tel:+13307238773">
+        <a
+          className="contact-row"
+          href={`tel:+1${chamberOffice.phone.replace(/\D/g, "")}`}
+        >
           <div className="contact-k mono">PHONE</div>
-          <div className="contact-v">(330) 723-8773</div>
+          <div className="contact-v">{chamberOffice.phone}</div>
         </a>
         <a className="contact-row" href={mailto(chamberOffice.email)}>
           <div className="contact-k mono">EMAIL</div>
@@ -373,6 +381,18 @@ export function ChamberBotPortal({
   });
 
   const upcomingEventCount = useMemo(() => getUpcomingEvents().length, []);
+
+  // Calendar mode subtitle — current month + 2 months out, dynamic so the
+  // "APR – JUN" range slides forward as the year progresses instead of going
+  // stale and forcing a manual edit every quarter.
+  const calendarRange = useMemo(() => {
+    const monthShort = (d: Date) =>
+      d.toLocaleDateString("en-US", { month: "short" }).toUpperCase();
+    const now = new Date();
+    const end = new Date(now);
+    end.setMonth(now.getMonth() + 2);
+    return `${monthShort(now)} – ${monthShort(end)}`;
+  }, []);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const justSubmittedRef = useRef(false);
@@ -855,7 +875,7 @@ export function ChamberBotPortal({
                   <div ref={transcriptEndRef} />
                 </div>
               ) : (
-                <Welcome onMode={handleMode} />
+                <Welcome onMode={handleMode} calendarRange={calendarRange} />
               )}
             </div>
 
@@ -917,13 +937,13 @@ export function ChamberBotPortal({
               </button>
             </form>
           </div>
-          <p className="cb-disclaimer mono" aria-hidden="true">
+          <p className="cb-disclaimer mono">
             AI, responses may be inaccurate · verify with{" "}
-            <a href="/about/contact" tabIndex={-1}>{chamberOffice.email}</a>
+            <a href="/about/contact">{chamberOffice.email}</a>
             {" · "}
-            <a href="/privacy" tabIndex={-1}>Privacy</a>
+            <a href="/privacy">Privacy</a>
             {" · "}
-            <a href="/terms" tabIndex={-1}>Terms</a>
+            <a href="/terms">Terms</a>
           </p>
         </section>
       </main>
@@ -948,7 +968,7 @@ export function ChamberBotPortal({
         <div className="rail-spacer" aria-hidden="true" />
         <div className="rail-item" aria-hidden="true">VECTOR INDEX · v4.2.1</div>
         <div className="rail-item" aria-hidden="true">
-          LATENCY <span className="rail-val">, </span>
+          LATENCY <span className="rail-val">—</span>
         </div>
       </footer>
     </div>,

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { totalCount } from "@/data/members";
 import { activeCommunities, getMembersByCity } from "@/data/communities";
 import { FadeIn } from "@/components/FadeIn";
 import { CountUp } from "@/components/CountUp";
@@ -10,10 +9,10 @@ import { safeJsonLd } from "@/lib/json-ld";
 export const metadata: Metadata = {
   title: "Medina Means Business",
   description:
-    `Medina Means Business is the official tagline of the Greater Medina Chamber of Commerce, and a statement of fact. ${totalCount}+ member businesses, ${new Date().getFullYear() - 1938}+ years of chamber work, and a manufacturing economy that outperforms. Here's what it actually means.`,
+    `Medina Means Business is the official tagline of the Greater Medina Chamber of Commerce, and a statement of fact. 500+ member businesses, ${new Date().getFullYear() - 1938}+ years of chamber work, and a manufacturing economy that outperforms. Here's what it actually means.`,
   openGraph: {
     title: "Medina Means Business | Greater Medina Chamber of Commerce",
-    description: `The tagline, the magazine, and the reality. ${totalCount}+ businesses, ${new Date().getFullYear() - 1938}+ years of Chamber work, and what Medina County's business community looks like today.`,
+    description: `The tagline, the magazine, and the reality. 500+ businesses, ${new Date().getFullYear() - 1938}+ years of Chamber work, and what Medina County's business community looks like today.`,
   },
   alternates: { canonical: "/medina-means-business" },
 };
@@ -131,7 +130,7 @@ export default function MedinaMeansBusinessPage() {
                   storefronts on the Square.
                 </p>
                 <p>
-                  The Chamber didn&apos;t invent that. We built a {totalCount}-member
+                  The Chamber didn&apos;t invent that. We built a 500+ member
                   network around it, connecting the businesses, advocating
                   for the policies, and creating the programs that keep
                   Medina&apos;s economy compounding year after year.
@@ -159,7 +158,7 @@ export default function MedinaMeansBusinessPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
             { end: 1938, label: "Chamber Founded", suffix: "" },
-            { end: totalCount, label: "Chamber Members", suffix: "+" },
+            { end: 500, label: "Chamber Members", suffix: "+" },
             { end: new Date().getFullYear() - 1938, label: "Years of Advocacy", suffix: "+" },
             { end: 9, label: "Active Committees", suffix: "" },
           ].map((s, i) => (
@@ -212,7 +211,7 @@ export default function MedinaMeansBusinessPage() {
 
           <FadeIn>
             <p className="relative text-body-sm text-text-tertiary mt-10 max-w-2xl">
-              And {totalCount}+ member businesses across every sector, retail,
+              And 500+ member businesses across every sector, retail,
               healthcare, professional services, construction, hospitality,
               food and beverage, technology, agriculture, and the trades.
             </p>
@@ -337,7 +336,7 @@ export default function MedinaMeansBusinessPage() {
           {[
             {
               title: "The Member Directory",
-              desc: `All ${totalCount}+ member businesses in one searchable directory.`,
+              desc: "All 500+ member businesses in one searchable directory.",
               href: "/membership/directory",
             },
             {
@@ -403,7 +402,7 @@ export default function MedinaMeansBusinessPage() {
                   Medina Means Business, including yours.
                 </h2>
                 <p className="text-body-lg text-text-secondary mt-4">
-                  Join {totalCount}+ businesses across Medina County. Three
+                  Join 500+ businesses across Medina County. Three
                   membership tiers starting at $345/year. Apply online in
                   under ten minutes, or talk to Stephanie and get the
                   personal tour first.

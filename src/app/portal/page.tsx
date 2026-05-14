@@ -53,7 +53,7 @@ export default function PortalLoginPage({
           />
           <h1 className="text-white text-xl font-semibold">Member Portal</h1>
           <p className="text-sm mt-1" style={{ color: "#83BCA9" }}>
-            Medina Area Chamber of Commerce
+            Greater Medina Chamber of Commerce
           </p>
         </div>
 

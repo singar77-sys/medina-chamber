@@ -392,6 +392,6 @@ export const CONTENT_FIELD_DEFS: ContentFieldDef[] = [
     label: "Office Hours",
     type: "text",
     maxLength: 100,
-    defaultValue: "Monday–Friday, 8:30 AM – 4:30 PM",
+    defaultValue: "Monday–Friday, 10:00 AM – 4:00 PM",
   },
 ];

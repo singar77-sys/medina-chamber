@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { ChamberBotRoute } from "./ChamberBotRoute";
-import { totalCount } from "@/data/members";
 
 /**
  * /chamberbot — direct entry to the ChamberBot full-viewport portal.
@@ -16,7 +15,7 @@ import { totalCount } from "@/data/members";
 export const metadata: Metadata = {
   title: "ChamberBot, Immersive Experience",
   description:
-    `Talk to the Greater Medina Chamber's AI assistant. Ask about members, events, programs, advocacy, or anything Medina-business, backed by ${totalCount}+ live member records and the full chamber calendar.`,
+    "Talk to the Greater Medina Chamber's AI assistant. Ask about members, events, programs, advocacy, or anything Medina-business, backed by 500+ live member records and the full chamber calendar.",
   alternates: { canonical: "/chamberbot" },
   robots: { index: true, follow: true },
 };

@@ -413,7 +413,7 @@ export default async function PortalDashboardPage() {
         {/* ── Quick links ────────────────────────────────────────────────── */}
         <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
           <a
-            href="/directory"
+            href="/membership/directory"
             className="flex items-center gap-3 bg-white rounded-xl px-5 py-4 shadow-sm border border-gray-100 hover:border-gray-200 transition-colors group"
           >
             <span className="text-xl">🗂️</span>
@@ -456,7 +456,7 @@ export default async function PortalDashboardPage() {
       {/* ── Footer ─────────────────────────────────────────────────────────── */}
       <footer className="text-center py-6 mt-4">
         <p className="text-xs text-gray-400">
-          Medina Area Chamber of Commerce &middot; 145 N. Court St., Medina, OH 44256
+          Greater Medina Chamber of Commerce &middot; 139 N. Court Street, Suite A, Medina, OH 44256
         </p>
       </footer>
     </div>

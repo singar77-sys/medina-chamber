@@ -24,7 +24,7 @@ import { chamberOffice, memberServices, stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
 export const metadata: Metadata = {
   title: "Greater Medina Chamber of Commerce | Medina County, Ohio",
-  description: `The Greater Medina Chamber of Commerce connects and champions businesses across Medina County, Ohio. ${totalCount}+ member businesses, networking events, advocacy, and programs since 1938.`,
+  description: "The Greater Medina Chamber of Commerce connects and champions businesses across Medina County, Ohio. 500+ member businesses, networking events, advocacy, and programs since 1938.",
   openGraph: {
     title: "Greater Medina Chamber of Commerce",
     description:
@@ -43,7 +43,7 @@ const organizationJsonLd = {
   logo: "https://medinachamber.com/images/logos/logo-full-blue.png",
   image: "https://medinachamber.com/images/photos/chamber-building-exterior.jpg",
   description:
-    `The Greater Medina Chamber of Commerce connects and champions businesses across Medina County, Ohio. ${totalCount}+ member businesses, networking events, advocacy, and programs since 1938.`,
+    "The Greater Medina Chamber of Commerce connects and champions businesses across Medina County, Ohio. 500+ member businesses, networking events, advocacy, and programs since 1938.",
   foundingDate: "1938",
   telephone: "+1-330-723-8773",
   email: chamberOffice.email,

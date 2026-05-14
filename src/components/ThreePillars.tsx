@@ -4,7 +4,6 @@ import { useEffect, useRef, type CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
-import { totalCount } from "@/data/members";
 
 /**
  * ThreePillars — the "Why Members Join" section on the homepage.
@@ -50,7 +49,7 @@ const PILLARS: Pillar[] = [
     label: "Your Network",
     title: "Connections that open doors.",
     desc:
-      `Networking events, leadership awards, the Safety Council, the Annual Golf Outing, plus ${totalCount}+ member businesses in a searchable directory.`,
+      "Networking events, leadership awards, the Safety Council, the Annual Golf Outing, plus 500+ member businesses in a searchable directory.",
     href: "/events",
     cta: "Browse Events →",
     variant: "network",

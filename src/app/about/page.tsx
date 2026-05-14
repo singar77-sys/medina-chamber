@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { totalCount } from "@/data/members";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
 import { chamberOffice, jaclyn, stephanie } from "@/data/staff";
@@ -193,7 +192,7 @@ export default async function AboutPage() {
           <div className="mt-f21 grid grid-cols-2 md:grid-cols-4 gap-f21">
             {[
               { stat: "1938", label: "Founded" },
-              { stat: `${totalCount}+`, label: "Member Businesses" },
+              { stat: "500+", label: "Member Businesses" },
               { stat: "40+", label: "Events Per Year" },
               { stat: "9", label: "Committees" },
             ].map((item) => (
@@ -241,7 +240,7 @@ export default async function AboutPage() {
                   </p>
                   <p>
                     {new Date().getFullYear() - 1938} years later, that dual approach still defines us.
-                    Today, {totalCount}+ Medina County businesses stand taller,
+                    Today, 500+ Medina County businesses stand taller,
                     better connected, and better represented, shaping a thriving
                     future together. We&apos;re not a networking club. We&apos;re
                     the infrastructure that makes Medina a place where businesses
@@ -492,7 +491,7 @@ export default async function AboutPage() {
                   Ready to be part of what&apos;s building Medina?
                 </h2>
                 <p className="text-body-lg text-text-secondary mt-f13">
-                  Join {totalCount}+ businesses in the Chamber network. Three
+                  Join 500+ businesses in the Chamber network. Three
                   tiers, one community, a shared commitment to making Medina
                   County the best place in Ohio to run a business.
                 </p>

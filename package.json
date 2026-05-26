@@ -24,6 +24,10 @@
     "scrape:jobs:test": "node scripts/scrape-jobs.mjs --test",
     "seed:photos": "node scripts/seed-event-photos.mjs",
     "seed:photos:dry": "node scripts/seed-event-photos.mjs --dry-run",
+    "sync:sharepoint": "node scripts/sync-sharepoint-photos.mjs",
+    "sync:sharepoint:dry": "node scripts/sync-sharepoint-photos.mjs --dry-run",
+    "logos:audit": "node scripts/audit-community-investor-logos.mjs",
+    "logos:audit:report": "node scripts/audit-community-investor-logos.mjs --no-download",
     "transcode": "bash scripts/transcode-videos.sh",
     "transcode:dry": "bash scripts/transcode-videos.sh --dry-run",
     "transcode:short": "bash scripts/transcode-videos.sh --max-duration=60"

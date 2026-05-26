@@ -1,7 +1,140 @@
 {
-  "generatedAt": "2026-05-06T11:42:02.908Z",
-  "totalArticles": 8,
+  "generatedAt": "2026-05-26T00:17:58.992Z",
+  "totalArticles": 15,
   "articles": [
+    {
+      "slug": "medina-lifestyle-may-issue",
+      "articleId": "333590",
+      "title": "Medina Lifestyle May Issue",
+      "subtitle": "Check out the latest issue!",
+      "body": "Don't miss the latest issue!",
+      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_469,w_2275,x_0,y_-2/q_auto/f_auto/q_auto/v1779460019/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/d84aeba0f6b74caa935959de7dd283f1/Medina-County-Lifestyle2.jpg",
+      "tags": [
+        "By\r\n                            Medina County Lifestyle",
+        "5/21/2026"
+      ],
+      "memberName": "Medina County Lifestyle",
+      "memberSlug": "23489284",
+      "dateRaw": "5/21/2026",
+      "dateISO": "2026-05-21",
+      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_469,w_2275,x_0,y_-2/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1779460019/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/d84aeba0f6b74caa935959de7dd283f1/Medina-County-Lifestyle2.jpg",
+      "detailUrl": "https://business.medinachamber.com/news/Details/medina-lifestyle-may-issue-333590",
+      "scrapedAt": "2026-05-26T00:17:51.947Z"
+    },
+    {
+      "slug": "windfall-industries-dine-to-donate",
+      "articleId": "333342",
+      "title": "Windfall Industries Dine to Donate",
+      "subtitle": "Make plans to support this cause!",
+      "body": "Support Windfall Industries as we support people with disabilities with a Dine to Donate June 10th at Nuestra Casa in Rittman.",
+      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_249,w_1023,x_0,y_0/q_auto/f_auto/q_auto/v1779459960/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/90e08a6e15f94ce2aaae0b477f0f4d8c/Windfall-Industries.png",
+      "tags": [
+        "By\r\n                            Windfall Industries",
+        "5/20/2026"
+      ],
+      "memberName": "Windfall Industries",
+      "memberSlug": "22529851",
+      "dateRaw": "5/20/2026",
+      "dateISO": "2026-05-20",
+      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_249,w_1023,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1779459960/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/90e08a6e15f94ce2aaae0b477f0f4d8c/Windfall-Industries.png",
+      "detailUrl": "https://business.medinachamber.com/news/Details/windfall-industries-dine-to-donate-333342",
+      "scrapedAt": "2026-05-26T00:17:52.430Z"
+    },
+    {
+      "slug": "mhrb-the-scoop-quarterly-newsletter",
+      "articleId": "333125",
+      "title": "MHRB, The Scoop quarterly newsletter",
+      "subtitle": "Check it out!",
+      "body": "Please see Volume 3, Quarter 4 of the Medina County Mental Health & Recovery Board&rsquo;s quarterly newsletter, The Scoop.\nhttps://medinamentalhealth.com/wp-content/uploads/2026/05/The-Scoop-V3-Q1-FINAL.pdf\nThis issue focuses on our provider agency, Hope Recovery Community.\n\nThank you for your support, and please enjoy our newsletter.",
+      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_131,w_235,x_0,y_0/q_auto/f_auto/q_auto/v1779221884/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/0fda756f21514230a1893051af2601b6/Small-logo-for-email-signature.png",
+      "tags": [
+        "By\r\n                            Medina County Mental Health and Recovery Board",
+        "5/19/2026"
+      ],
+      "memberName": "Medina County Mental Health and Recovery Board",
+      "memberSlug": "22529184",
+      "dateRaw": "5/19/2026",
+      "dateISO": "2026-05-19",
+      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_131,w_235,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1779221884/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/0fda756f21514230a1893051af2601b6/Small-logo-for-email-signature.png",
+      "detailUrl": "https://business.medinachamber.com/news/Details/mhrb-the-scoop-quarterly-newsletter-333125",
+      "scrapedAt": "2026-05-26T00:17:52.971Z"
+    },
+    {
+      "slug": "hope-healing-annual-golf-outing-at-bunker-hill-june-16-2026",
+      "articleId": "332775",
+      "title": "Hope & Healing Annual Golf Outing at Bunker Hill - June 16, 2026",
+      "subtitle": "Support a great cause!",
+      "body": "Get ready to tee off for a day that&rsquo;s equal parts fun, flexibility, and philanthropy!\nJoin Hope & Healing Survivor Resource Center for an unforgettable experience.\n\nHope & Healing Annual Golf Outing📅 Tuesday, June 16\n📍 Bunker Hill Golf Club, Medina\n⏰ 8:00 AM Tee Time - 9:00 AM Virtual Golf - 1:00 PM Dinner\n\nRegister Here:https://birdease.com/33855\n\nPlay Your Way⛳ Option 1: Hit the Course + Dinner\nEnjoy a full round of 18-holes of golf packed with:\nRaffles & silent auction prizesPutting contestMargarita holeBall launcherAnd more games throughout the course!\n\n⛳ Option 2: Virtual Golf + Dinner\nNot a golfer? No problem. Keep it casual with a virtual golf experience! All the fun, and none of the run-around:\nPlay a few virtual rounds at your own paceEnjoy the delicious dinner experienceAccess to raffles, auction items, and games galore!\n\nWhy It MattersEvery swing (or swing simulation) supports the life-saving work of Hope & Healing, serving thousands of survivors and their families across Summit and Medina Counties, through our 24/7 crisis hotline, emergency shelters, housing and legal advocacy, as well as prevention education and community outreach.\n\nGet Involved Another WayDonate: If you can't make it, but still want to support.Sponsor: Gain visibility while making a meaningful impact.Want to double your visibility? Sponsor both the Swing for Survivors Golf Outing and the Night of Hope and Healing Gala here.\n\nHowever you choose to participate, you&rsquo;ll be helping bring safety, hope, and healing to those who need it most.\n\nWe hope to see you there, whether you&rsquo;re on the greens or on a screen! \n\nRegister Here:https://birdease.com/33855",
+      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_351,w_1200,x_0,y_0/q_auto/f_auto/q_auto/v1779135701/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/3ba8e54abeed447e9742b3dd69870ea3/hh-logo-full-color-rgb-1200px-300ppi-2.png",
+      "tags": [
+        "By\r\n                            Hope & Healing Survivor Resource Center (Battered Women's Shelter and Rape Crisi",
+        "5/18/2026"
+      ],
+      "memberName": "Hope & Healing Survivor Resource Center (Battered Women's Shelter and Rape Crisi",
+      "memberSlug": "22529292",
+      "dateRaw": "5/18/2026",
+      "dateISO": "2026-05-18",
+      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_351,w_1200,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1779135701/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/3ba8e54abeed447e9742b3dd69870ea3/hh-logo-full-color-rgb-1200px-300ppi-2.png",
+      "detailUrl": "https://business.medinachamber.com/news/Details/hope-healing-annual-golf-outing-at-bunker-hill-june-16-2026-332775",
+      "scrapedAt": "2026-05-26T00:17:53.468Z"
+    },
+    {
+      "slug": "bella-moxie-boutique-june-workshops",
+      "articleId": "329749",
+      "title": "Bella Moxie Boutique June Workshops",
+      "subtitle": "Check out these creative workshops!",
+      "body": "To learn more & sign up: https://linktr.ee/bellamoxiestudio\n\n*Spoil your Staff! Private customizable events are always welcome! Reach out to Mishalene directly to get an amazing event set up: m14dufrene@yahoo.com or 615-238-4532",
+      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1328,w_1501,x_0,y_0/q_auto/f_auto/q_auto/v1778099608/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/25fb66bb107f42c08f0d7fda5b91d5a9/Bella-Moxie.jpg",
+      "tags": [
+        "By\r\n                            Bella Moxie Company",
+        "5/15/2026"
+      ],
+      "memberName": "Bella Moxie Company",
+      "memberSlug": "22529517",
+      "dateRaw": "5/15/2026",
+      "dateISO": "2026-05-15",
+      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1328,w_1501,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1778099608/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/25fb66bb107f42c08f0d7fda5b91d5a9/Bella-Moxie.jpg",
+      "detailUrl": "https://business.medinachamber.com/news/Details/bella-moxie-boutique-june-workshops-329749",
+      "scrapedAt": "2026-05-26T00:17:53.990Z"
+    },
+    {
+      "slug": "join-us-to-tee-off-for-a-good-cause-for-the-jobs-for-ohio-s-graduates-golf-outing",
+      "articleId": "329677",
+      "title": "Join Us To Tee Off For a Good Cause for the Jobs for Ohio's Graduates Golf Outing",
+      "subtitle": "Support a great organization!",
+      "body": "Enjoy a Day on the Green while Supporting JOG Youth!Join us for a day of golf, networking, and community impact. Join us for our Annual Golf Outing and help support local youth gain invaluable work readiness skills and real-world work experiences. All proceeds support JOG&rsquo;s continuing programming throughout Northeast Ohio.\nDate: Monday, June 22, 2026\nLocation: Weymouth Country Club\nTime: Registration at 8 am \nShotgun Start 9 am\nSponsorships Available\nRegister to Golf Today!\nContact Mike at 330-801-9588",
+      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1091,w_3000,x_0,y_0/q_auto/f_auto/q_auto/v1778099117/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/1eddc83232c645c1b2573adbbe5a4a73/Jobs-for-Ohios-Graduates.png",
+      "tags": [
+        "By\r\n                            Jobs for Ohio's Graduates",
+        "5/4/2026"
+      ],
+      "memberName": "Jobs for Ohio's Graduates",
+      "memberSlug": "22529261",
+      "dateRaw": "5/4/2026",
+      "dateISO": "2026-05-04",
+      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1091,w_3000,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1778099117/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/1eddc83232c645c1b2573adbbe5a4a73/Jobs-for-Ohios-Graduates.png",
+      "detailUrl": "https://business.medinachamber.com/news/Details/join-us-to-tee-off-for-a-good-cause-for-the-jobs-for-ohio-s-graduates-golf-outing-329677",
+      "scrapedAt": "2026-05-26T00:17:54.490Z"
+    },
+    {
+      "slug": "bella-moxie-boutique-may-workshops",
+      "articleId": "329747",
+      "title": "Bella Moxie Boutique May Workshops",
+      "subtitle": "Don't miss these opportunities to get creative!",
+      "body": "To learn more and sign up: https://linktr.ee/bellamoxiestudio\n\n*Spoil your Staff! Private Workshop are always available and can be customized for your budget, type of workshop & theme! Reach out to Mishalene directly to arrange - m14dufrene@yahoo.com or 615-238-4532",
+      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1328,w_1501,x_0,y_0/q_auto/f_auto/q_auto/v1778099658/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/a1ce0c2194f14e218412128d7579d16c/Bella-Moxie.jpg",
+      "tags": [
+        "By\r\n                            Bella Moxie Company",
+        "5/4/2026"
+      ],
+      "memberName": "Bella Moxie Company",
+      "memberSlug": "22529517",
+      "dateRaw": "5/4/2026",
+      "dateISO": "2026-05-04",
+      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1328,w_1501,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1778099658/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/a1ce0c2194f14e218412128d7579d16c/Bella-Moxie.jpg",
+      "detailUrl": "https://business.medinachamber.com/news/Details/bella-moxie-boutique-may-workshops-329747",
+      "scrapedAt": "2026-05-26T00:17:54.983Z"
+    },
     {
       "slug": "bike-nite",
       "articleId": "321881",
@@ -19,7 +152,7 @@
       "dateISO": "2026-05-01",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774648661/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/3a832ed2ecad43549e26159be4e0be4a/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/bike-nite-321881",
-      "scrapedAt": "2026-05-06T11:41:59.434Z"
+      "scrapedAt": "2026-05-26T00:17:55.496Z"
     },
     {
       "slug": "mother-s-day-vehicle-maintenance-package-offer",
@@ -38,7 +171,7 @@
       "dateISO": "2026-05-01",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1500,w_1500,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1777323105/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/dbdaa171697f4e8ea6828a564cd88182/Vans.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/mother-s-day-vehicle-maintenance-package-offer-328142",
-      "scrapedAt": "2026-05-06T11:41:59.921Z"
+      "scrapedAt": "2026-05-26T00:17:55.984Z"
     },
     {
       "slug": "now-booking-for-our-2027-town-planner-calendars",
@@ -57,7 +190,7 @@
       "dateISO": "2026-05-01",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_137,w_495,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1777649072/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/5839b4ff6a654c71a6acb408fdbee735/ED3DE58B-561A-4CED-B24A-9D52A9B39CDD.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/now-booking-for-our-2027-town-planner-calendars-329180",
-      "scrapedAt": "2026-05-06T11:42:00.414Z"
+      "scrapedAt": "2026-05-26T00:17:56.473Z"
     },
     {
       "slug": "retail-is-thriving-in-the-micro-fulfillment-on-demand-delivery-era",
@@ -76,7 +209,7 @@
       "dateISO": "2026-04-27",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1099,w_1576,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774642882/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/a2e854606d43486a9adcb973b00f0576/Fractional-CRO.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/retail-is-thriving-in-the-micro-fulfillment-on-demand-delivery-era-321828",
-      "scrapedAt": "2026-05-06T11:42:00.924Z"
+      "scrapedAt": "2026-05-26T00:17:56.972Z"
     },
     {
       "slug": "live-the-lube",
@@ -95,7 +228,7 @@
       "dateISO": "2026-04-06",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775437199/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/ca1644f1072a40ab8a6f809c5ede0e6d/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/live-the-lube-323361",
-      "scrapedAt": "2026-05-06T11:42:01.413Z"
+      "scrapedAt": "2026-05-26T00:17:57.487Z"
     },
     {
       "slug": "car-cruise-in",
@@ -114,7 +247,7 @@
       "dateISO": "2026-04-06",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775437512/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/62aa1d5146da4ab78eb0def384a2a8ee/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/car-cruise-in-323364",
-      "scrapedAt": "2026-05-06T11:42:01.900Z"
+      "scrapedAt": "2026-05-26T00:17:57.983Z"
     },
     {
       "slug": "office-space-for-lease-in-brunswick-medina-area",
@@ -133,7 +266,7 @@
       "dateISO": "2026-03-30",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_173,w_622,x_19,y_17/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774884260/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/01c3e1965c7f43d38cba8aa81b32ede7/st-mark-logo-for-web.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/office-space-for-lease-in-brunswick-medina-area-322021",
-      "scrapedAt": "2026-05-06T11:42:02.390Z"
+      "scrapedAt": "2026-05-26T00:17:58.480Z"
     },
     {
       "slug": "4-70-home-equity-loan",
@@ -152,7 +285,7 @@
       "dateISO": "2026-03-05",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_102,w_329,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1772744802/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/67b2db200e8d45f8a690794e3d701c2e/PSE-Credit-Union.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/4-70-home-equity-loan-317280",
-      "scrapedAt": "2026-05-06T11:42:02.897Z"
+      "scrapedAt": "2026-05-26T00:17:58.986Z"
     }
   ]
 }

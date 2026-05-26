@@ -16,7 +16,6 @@ import {
   AthenaAwardsGraphic,
   BusinessBrewGraphic,
   ChamberChatGraphic,
-  ComingSoonGraphic,
   EggsExpertiseGraphic,
   GetToKnowGraphic,
   GolfOutingGraphic,

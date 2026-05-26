@@ -7,6 +7,11 @@ export const metadata: Metadata = {
   title: "Terms of Use",
   description:
     "Terms governing use of the Greater Medina Chamber of Commerce website, including the AI assistant, member directory, and all site content.",
+  openGraph: {
+    title: "Terms of Use | Greater Medina Chamber of Commerce",
+    description:
+      "Terms governing use of medinachamber.com, the AI assistant, and the member directory.",
+  },
   alternates: { canonical: "/terms" },
 };
 

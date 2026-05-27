@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-27T18:48:26.878Z",
+  "generatedAt": "2026-05-27T18:52:17.299Z",
   "totalJobs": 5,
   "jobs": [
     {
@@ -16,7 +16,7 @@
       "dateRaw": "5/21/2026",
       "dateISO": "2026-05-21",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/domestic-violence-shelter-manager-medina-county-333559",
-      "scrapedAt": "2026-05-27T18:48:24.577Z"
+      "scrapedAt": "2026-05-27T18:52:15.082Z"
     },
     {
       "slug": "domestic-violence-crisis-specialist",
@@ -32,7 +32,7 @@
       "dateRaw": "5/21/2026",
       "dateISO": "2026-05-21",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/domestic-violence-crisis-specialist-333565",
-      "scrapedAt": "2026-05-27T18:48:25.126Z"
+      "scrapedAt": "2026-05-27T18:52:15.652Z"
     },
     {
       "slug": "public-health-nurse",
@@ -48,7 +48,7 @@
       "dateRaw": "5/18/2026",
       "dateISO": "2026-05-18",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/public-health-nurse-332753",
-      "scrapedAt": "2026-05-27T18:48:25.708Z"
+      "scrapedAt": "2026-05-27T18:52:16.169Z"
     },
     {
       "slug": "catering-event-staff",
@@ -64,7 +64,7 @@
       "dateRaw": "4/30/2026",
       "dateISO": "2026-04-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/catering-event-staff-328997",
-      "scrapedAt": "2026-05-27T18:48:26.296Z"
+      "scrapedAt": "2026-05-27T18:52:16.730Z"
     },
     {
       "slug": "music-teacher",
@@ -80,7 +80,7 @@
       "dateRaw": "3/6/2026",
       "dateISO": "2026-03-06",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/music-teacher-317454",
-      "scrapedAt": "2026-05-27T18:48:26.868Z"
+      "scrapedAt": "2026-05-27T18:52:17.292Z"
     }
   ]
 }

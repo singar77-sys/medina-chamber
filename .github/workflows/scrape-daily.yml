@@ -14,8 +14,13 @@ name: Daily data refresh
 
 on:
   schedule:
-    # 10:00 UTC = 6:00 AM ET (5 AM during DST). Runs every day.
-    - cron: "0 10 * * *"
+    # 05:00 UTC = 1 AM ET / midnight CDT. Deep off-peak window — well
+    # away from the 12:30–13:00 UTC slot where GitHub's receive-pack
+    # was rejecting our pushes with "fatal error in commit_refs" (runs
+    # #36, #38, #39 all died there). GH Actions cron is best-effort
+    # and can drift 2+ hours during peak, so picking 05:00 UTC keeps
+    # the actual firing comfortably outside the bad window.
+    - cron: "0 5 * * *"
   workflow_dispatch: {}
 
 permissions:
@@ -95,7 +100,33 @@ jobs:
 
           Auto-refresh of events, member news, and jobs from GrowthZone.
           Triggered by .github/workflows/scrape-daily.yml."
-          git push origin main
+
+          # GitHub's git-receive-pack has been intermittently returning
+          # "fatal error in commit_refs" on this repo during peak hours
+          # (see runs #36/#38/#39 — every one died here while off-peak
+          # dispatches pushed cleanly). Retry with exponential backoff
+          # before giving up, and rebase against origin/main between
+          # attempts so we don't get stuck behind anything that landed
+          # during the wait.
+          for attempt in 1 2 3; do
+            if git push origin main; then
+              echo "✓ Push succeeded on attempt $attempt"
+              exit 0
+            fi
+            case "$attempt" in
+              1) delay=10 ;;
+              2) delay=30 ;;
+              *) delay=0 ;;
+            esac
+            if [ "$delay" -gt 0 ]; then
+              echo "Push attempt $attempt failed; sleeping ${delay}s before retry"
+              sleep "$delay"
+              echo "Rebasing against origin/main in case anything landed during the wait"
+              git pull --rebase origin main || { echo "❌ Rebase failed; aborting"; exit 1; }
+            fi
+          done
+          echo "❌ Push failed after 3 attempts. See receive-pack errors above."
+          exit 1
 
       # Email Mark if anything in the workflow above failed. Skips
       # silently if the notify secrets aren't configured.

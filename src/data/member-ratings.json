@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-04-26T11:39:24.765Z",
-  "totalFetched": 515,
-  "foundCount": 512,
-  "notFoundCount": 1,
+  "generatedAt": "2026-05-31T12:11:21.358Z",
+  "totalFetched": 527,
+  "foundCount": 498,
+  "notFoundCount": 2,
   "members": [
     {
       "chamberSlug": "3m-company",
@@ -5854,6 +5854,136 @@
       "businessStatus": "OPERATIONAL",
       "hours": null,
       "googleAddress": "1046 N Jefferson St, Medina, OH 44256"
+    },
+    {
+      "chamberSlug": "adventurous-souls",
+      "fetchedAt": "2026-05-31T12:11:14.661Z",
+      "found": false
+    },
+    {
+      "chamberSlug": "dees-heating-and-cooling",
+      "fetchedAt": "2026-05-31T12:11:15.267Z",
+      "found": true,
+      "placeId": "ChIJ1RxvytXNMIgRl2y0Fq-VoYI",
+      "googleName": "Dee's Heating and Cooling",
+      "rating": 5,
+      "reviewCount": 439,
+      "businessStatus": "OPERATIONAL",
+      "hours": null,
+      "googleAddress": "2203 Greenwich Rd, Wadsworth, OH 44281"
+    },
+    {
+      "chamberSlug": "equitable-advisors",
+      "fetchedAt": "2026-05-31T12:11:15.821Z",
+      "found": true,
+      "placeId": "ChIJtyDmcHvaMIgRuwO1lG0yviQ",
+      "googleName": "Equitable Advisors",
+      "rating": 5,
+      "reviewCount": 1,
+      "businessStatus": "OPERATIONAL",
+      "hours": null,
+      "googleAddress": "3570 Executive Dr Suite 111, Uniontown, OH 44685"
+    },
+    {
+      "chamberSlug": "lopresti-financial-group-llc",
+      "fetchedAt": "2026-05-31T12:11:16.384Z",
+      "found": true,
+      "placeId": "ChIJ5fW9CWXIMIgR8MOfW7hZg10",
+      "googleName": "LoPresti Financial Group",
+      "rating": null,
+      "reviewCount": null,
+      "businessStatus": "OPERATIONAL",
+      "hours": null,
+      "googleAddress": "3745 Medina Rd Suite G, Medina, OH 44256"
+    },
+    {
+      "chamberSlug": "new-day-counseling-services",
+      "fetchedAt": "2026-05-31T12:11:17.072Z",
+      "found": true,
+      "placeId": "ChIJ--iNQdG3MIgR-rZ0rk7AFlk",
+      "googleName": "New Day Counseling Services LLC",
+      "rating": 5,
+      "reviewCount": 4,
+      "businessStatus": "OPERATIONAL",
+      "hours": null,
+      "googleAddress": "120 N East St, Medina, OH 44256"
+    },
+    {
+      "chamberSlug": "plum-creek-assisted-living",
+      "fetchedAt": "2026-05-31T12:11:17.724Z",
+      "found": true,
+      "placeId": "ChIJI50j3EK_MIgRHhClzsVoPg0",
+      "googleName": "Plum Creek Assisted Living",
+      "rating": 4,
+      "reviewCount": 50,
+      "businessStatus": "OPERATIONAL",
+      "hours": null,
+      "googleAddress": "891 Marks Rd, Brunswick, OH 44212"
+    },
+    {
+      "chamberSlug": "reichwein-pest-specialists-llc",
+      "fetchedAt": "2026-05-31T12:11:18.235Z",
+      "found": false
+    },
+    {
+      "chamberSlug": "staley-technologies",
+      "fetchedAt": "2026-05-31T12:11:18.785Z",
+      "found": true,
+      "placeId": "ChIJBUbydGXaNogRB8Zbl1RticM",
+      "googleName": "Staley Technologies",
+      "rating": 4.9,
+      "reviewCount": 30,
+      "businessStatus": "OPERATIONAL",
+      "hours": null,
+      "googleAddress": "4013 Applegrove St NW, North Canton, OH 44720"
+    },
+    {
+      "chamberSlug": "traditions-of-medina",
+      "fetchedAt": "2026-05-31T12:11:19.354Z",
+      "found": true,
+      "placeId": "ChIJf8dL3iq2MIgRSRMuhIOZZXk",
+      "googleName": "Traditions of Medina",
+      "rating": 4.4,
+      "reviewCount": 36,
+      "businessStatus": "OPERATIONAL",
+      "hours": null,
+      "googleAddress": "100 High Point Dr, Medina, OH 44256"
+    },
+    {
+      "chamberSlug": "thrive-foot-and-ankle",
+      "fetchedAt": "2026-05-31T12:11:19.889Z",
+      "found": true,
+      "placeId": "ChIJMyTSTtnLMIgRFqqf0kvlCWU",
+      "googleName": "Thrive Foot and Ankle",
+      "rating": 5,
+      "reviewCount": 2,
+      "businessStatus": "OPERATIONAL",
+      "hours": null,
+      "googleAddress": "221 Center St, Seville, OH 44273"
+    },
+    {
+      "chamberSlug": "the-place-4-hot-tubs-fireplaces-inc",
+      "fetchedAt": "2026-05-31T12:11:20.517Z",
+      "found": true,
+      "placeId": "ChIJkZXDG07PMIgREp6rLoUjQNA",
+      "googleName": "The Place",
+      "rating": 4.8,
+      "reviewCount": 742,
+      "businessStatus": "OPERATIONAL",
+      "hours": null,
+      "googleAddress": "2377 Medina Rd, Medina, OH 44256"
+    },
+    {
+      "chamberSlug": "vensure-employer-solutions",
+      "fetchedAt": "2026-05-31T12:11:21.107Z",
+      "found": true,
+      "placeId": "ChIJ02tg1yavK4cRPmSwZna0948",
+      "googleName": "Vensure Employer Solutions",
+      "rating": 4.1,
+      "reviewCount": 125,
+      "businessStatus": "OPERATIONAL",
+      "hours": null,
+      "googleAddress": "1475 S Price Rd, Chandler, AZ 85286"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-04-26T11:39:18.906Z",
-  "totalScraped": 470,
-  "successCount": 466,
-  "failCount": 2,
+  "generatedAt": "2026-05-31T12:11:12.765Z",
+  "totalScraped": 478,
+  "successCount": 454,
+  "failCount": 0,
   "members": [
     {
       "chamberSlug": "3m-company",
@@ -12114,6 +12114,274 @@
       "website": "http://sinceriseniorliving.com/medina-pointe",
       "scrapedAt": "2026-04-26T11:39:18.306Z",
       "ok": false
+    },
+    {
+      "chamberSlug": "dees-heating-and-cooling",
+      "website": "http://deesheatingandcooling.com/",
+      "scrapedAt": "2026-05-31T12:10:56.948Z",
+      "title": "Dee's Heating and Cooling - Wadworth's Most Trusted HVAC BUsiness",
+      "metaDescription": "Dee’s Heating & Cooling delivers reliable HVAC repair, installation, and maintenance for homes across Northeast Ohio. Honest service, upfront pricing, and guaranteed comfort.",
+      "h1": [
+        "Heating and Cooling Services"
+      ],
+      "services": [
+        "Fast, reliable heating & cooling service from a local, family‑owned team you can trust.",
+        "Service Area",
+        "Our Complete Residential HVAC Services",
+        "5‑Star Service Homeowners Depend On",
+        "Get Started",
+        "We Serve These Counties:",
+        "Emergency HVAC Repair",
+        "HVAC System Services",
+        "Repair & Maintenance",
+        "Water Heater Services",
+        "Indoor Air Quality"
+      ],
+      "listItems": [
+        "Trane Comfort Specialist with 70+ years of experience",
+        "Round-the-clock emergency services you can rely on",
+        "Individualized HVAC solutions that fit your needs",
+        "Cuyahoga County",
+        "Medina County",
+        "Portage County",
+        "Summit County",
+        "Stark County",
+        "Wayne County",
+        "Family‑owned & locally operated Licensed, insured, and highly trained technicians",
+        "Honest, upfront pricing with no surprises",
+        "Fast response times and reliable service",
+        "5‑star reviews from homeowners across Northeast Ohio",
+        "Full‑service heating & cooling: repair, install, tune‑ups, and more",
+        "NATE-certified technicians."
+      ],
+      "homeText": "Cuyahoga County",
+      "aboutText": "",
+      "pagesScraped": [
+        "home"
+      ]
+    },
+    {
+      "chamberSlug": "lopresti-financial-group-llc",
+      "website": "http://www.loprestifinancial.com/",
+      "scrapedAt": "2026-05-31T12:10:58.562Z",
+      "title": "LoPresti Financial Group – Private Wealth Management",
+      "metaDescription": "",
+      "h1": [
+        "Private Wealth Management"
+      ],
+      "services": [
+        "We Work For You",
+        "It Always Starts With Trust",
+        "We are an Independent Fiduciary Investment Advisory Group.",
+        "Meet Our Team"
+      ],
+      "listItems": [
+        "Licensed Series 65 Fiduciary Investment Advisor",
+        "Licensed in Annuity and Insurance Products",
+        "Previously employed by one of the largest Wall Street Investment Firms",
+        "Author: Intelligent Investing, Know What They Don’t Want You To Know",
+        "Capital University",
+        "University of Akron, Cleveland State University",
+        "Certified Public Accountant",
+        "American Institute of Certified Public Accountants",
+        "Graduate James Madison University, Wharton Business School"
+      ],
+      "homeText": "Skip to content Private Wealth Management We Work For You It Always Starts With Trust How we begin every client relationship. We feel we can best present ourselves face-to-face. We do not have “virtual meetings”, “on-line chats” or “zoom calls”. Our client relationships are handled the old fashion way, face-to-face. You ask us questions and we ask you questions. We thoroughly explain everything in easy-to-understand terms. In this manner every detail is covered and nothing is left to chance. This allows us to get to know you better and you to get to know us better. If we are a good fit, we can move forward helping you achieve your investment goals. Click here to set up a meeting We are an Independent Fiduciary Investment Advisory Group. What does that mean to you? Being totally independent means, we are not stuck with big corporate investment firm sales quota that makes us force-feed investments to clients. It is not unusual that investments recommended by some firms and banks may at t",
+      "aboutText": "",
+      "pagesScraped": [
+        "home"
+      ]
+    },
+    {
+      "chamberSlug": "new-day-counseling-services",
+      "website": "http://www.newdaycounselingmedina.com/",
+      "scrapedAt": "2026-05-31T12:10:59.735Z",
+      "title": "Home | New Day Counseling",
+      "metaDescription": "Compassionate therapy in Medina, Ohio for anxiety, trauma, and narcissistic abuse. In-person and virtual counseling for individuals and couples.",
+      "h1": [
+        "Welcome To New Day Counseling"
+      ],
+      "services": [],
+      "listItems": [],
+      "homeText": "Welcome To New Day CounselingStart your journey towards healing and personal growth with New Day Counseling in Medina, Ohio. Start Now",
+      "aboutText": "",
+      "pagesScraped": [
+        "home"
+      ]
+    },
+    {
+      "chamberSlug": "staley-technologies",
+      "website": "http://staleytech.com/",
+      "scrapedAt": "2026-05-31T12:11:00.831Z",
+      "title": "Communication and Security Systems | Staley Technologies",
+      "metaDescription": "Staley Technologies provides integrated communication and security systems to Ohio schools, first responders, agencies & businesses.",
+      "h1": [
+        "Smarter. Safer. Connected."
+      ],
+      "services": [
+        "Communication and security systems for Northeast Ohio.",
+        "Be more effective with trusted brands that work together.",
+        "Customize technologies for your unique needs.",
+        "Experience reliable, on-site support.",
+        "Let's Connect."
+      ],
+      "listItems": [],
+      "homeText": "Smarter. Safer. Connected.You know the challenges of managing your facilities and operations. We know the technologies that can help. Learn About Our ServicesAs a Motorola Solutions channel partner, we are experts in advanced communication solutions that connect customers with critical information in moments that matter.Communication and security systems for Northeast Ohio.Organizations across Ohio partner with us for technologies that put them in control – two-way radios, surveillance cameras, access control systems, emergency response, and business communications.Be more effective with trusted brands that work together.Staley brings proven brands together—integrating communication, safety, and security into one simple platform. When it’s time to act, everything works seamlessly so you can respond with confidence. Explore Our BrandsCustomize technologies for your unique needs.From rugged two-way radios to AI-powered surveillance tools, explore a diverse line of safety, security, and c",
+      "aboutText": "",
+      "pagesScraped": [
+        "home"
+      ]
+    },
+    {
+      "chamberSlug": "traditions-of-medina",
+      "website": "https://www.brookdale.com/en/communities/brookdale-medina-south.html",
+      "scrapedAt": "2026-05-31T12:11:02.732Z",
+      "title": "Find a Community",
+      "metaDescription": "Find a Community",
+      "h1": [
+        "Find A Location"
+      ],
+      "services": [],
+      "listItems": [
+        "Emergency Alert System",
+        "Pet Friendly",
+        "Fitness Center/ Therapy Room",
+        "Transportation",
+        "Library",
+        "Concierge Service",
+        "Outings",
+        "Café/Bistro",
+        "Beauty/Barber Shop",
+        "Courtyard and Garden",
+        "Gardening/Greenhouse",
+        "Porch",
+        "Game Room",
+        "Private Dining Room",
+        "Arts & Crafts"
+      ],
+      "homeText": "Find A Location SHOW ONLY: Locations Articles Blogs Stories All Levels of Care Assisted Living Continuing Care Retirement Community Independent Living Memory Care Skilled Nursing Brookdale at Home Filter by: Amenities Select up to five. Emergency Alert System Pet Friendly Fitness Center/ Therapy Room Transportation Library Concierge Service Outings Café/Bistro Beauty/Barber Shop Courtyard and Garden Gardening/Greenhouse Porch Game Room Private Dining Room Arts & Crafts Walking Paths Pool Theater Housekeeping Laundry Clear Apply Within: 250 miles 200 miles 150 miles 100 miles 50 miles 25 miles Loading Results",
+      "aboutText": "",
+      "pagesScraped": [
+        "home"
+      ]
+    },
+    {
+      "chamberSlug": "thrive-foot-and-ankle",
+      "website": "http://www.thrivefootankle.com/",
+      "scrapedAt": "2026-05-31T12:11:03.894Z",
+      "title": "Thrive Foot and Ankle: Exceptional Podiatry Services",
+      "metaDescription": "Discover top-tier foot care with our concierge podiatry services at Thrive Foot and Ankle.",
+      "h1": [
+        "Experience Premier Foot Care",
+        "Services and Pricing",
+        "Services Diabetic Foot Care Corns & Calluses Ingrown Toenails Heel & Arch Pain Nail & Skin Conditions Foot Pain & Injuries Fat Pad Atrophy Pain"
+      ],
+      "services": [
+        "Your Trusted Partner in Foot Care",
+        "Meet Your Doctor",
+        "Why Choose Thrive Foot and Ankle?",
+        "Get in touch",
+        "Compassionate and Convenient Podiatry Services",
+        "In-Office Care",
+        "At-Home Services",
+        "Video Health Chat",
+        "Medical Pedicure",
+        "Nail Restoration"
+      ],
+      "listItems": [
+        "Transparent & Affordable Pricing- No hassle with insurance and surprise bills months later.",
+        "Personalized Care- We take the time to listen, treat, and get you back on your feet faster."
+      ],
+      "homeText": "Experience Premier Foot CareAt Thrive Foot and Ankle, we offer personalized podiatry care in the office, and the comfort of your home. Providing you with the time, attention, and compassion you deserve. Your comfort and health are our top priorities. This is healthcare, as it should be. Book Your AppointmentYour Trusted Partner in Foot CareHealthcare as it Should BeCompassionate and Convenient Podiatry ServicesAt Thrive Foot and Ankle, we are revolutionizing foot care with our unique approach: Direct Access to Your Doctor- No middleman, no call centers, Just real conversation with a doctor who knows your name .Transparent & Affordable Pricing- No hassle with insurance and surprise bills months later. Personalized Care- We take the time to listen, treat, and get you back on your feet faster. Meet Your Doctor Welcome — I’m So Glad You’re HereI’m Dr. Rachel Robinson, founder of Thrive Foot and Ankle. I’m on a mission to change how we do medicine — to bring it back to what it should be: hu",
+      "aboutText": "",
+      "pagesScraped": [
+        "home"
+      ]
+    },
+    {
+      "chamberSlug": "the-place-4-hot-tubs-fireplaces-inc",
+      "website": "http://yourplace4.com/",
+      "scrapedAt": "2026-05-31T12:11:05.843Z",
+      "title": "The Place for Fireplaces, Hot Tubs, Swim Spas, and Patio",
+      "metaDescription": "Make THE PLACE in Medina YOUR PLACE for Fireplaces, Hot Tubs, Swim Spas and Patio in the Cleveland-Akron area. Large showroom, friendly and helpful sales folks, and great installation and service.",
+      "h1": [
+        "Fireplaces • Hot Tubs • Swim Spas"
+      ],
+      "services": [
+        "Make The Place your place for",
+        "Get what you want from the experts you need.",
+        "4,500+",
+        "5,000+",
+        "What our customers have to say . . .",
+        "(330) 239-4000",
+        "Don’t Miss a Recipe!",
+        "Hot Tub & Swim Spa Event",
+        "SAVE",
+        "up to $8000",
+        "Hot Tubs",
+        "Swim Spas"
+      ],
+      "listItems": [
+        "Heat & Glo Fireplace Models",
+        "Gas Fireplace Inserts",
+        "Wood Fireplace Inserts",
+        "Electric Fireplace Inserts",
+        "Pellet Fireplace Inserts",
+        "Fireplace MakeoversToggle child menu Makeover Gallery",
+        "Makeover Gallery",
+        "New Fireplace Installations",
+        "StovesToggle child menu Gas Stoves Wood Stoves Pellet Stoves",
+        "Gas Stoves",
+        "Wood Stoves",
+        "Pellet Stoves",
+        "Gas Logs",
+        "Coast Spas Hot Tubs",
+        "Hydropool Hot Tubs"
+      ],
+      "homeText": "Fun in the Sun Hot Tub & Swim Spa Event Payments as low as $89/mo* Factory Direct Savings SAVE up to $4000 on In-Stock Hot Tubs SAVE up to $8000 on In-Stock Swim Spas Huge Selection in our Showroom Hurry in for best availability! * For qualified buyers. Details available in store Make The Place your place for Fireplaces • Hot Tubs • Swim Spas Get what you want from the experts you need. Questions for our Experts? Call us at (330) 239-4000 Or fill out our Contact Form Hot Tubs The Place isn’t your everyday Hot Tub store. Come in and EXPERIENCE the hot tub lifestyle. Hot tubs from Entry to Elite to fit every budget. The Place; where getting yourself into hot water is a good thing! Go to Hot Tubs Swim Spas With a swim spa from The Place in Medina it is easy for your family to have a healthy lifestyle year-round. Check out our large selection of swim spas and cover. Go to Swim Spas Fireplaces Browse fireplaces, stoves, and inserts by Fireside Hearth and Home. Fuel types include gas, wood, ",
+      "aboutText": "",
+      "pagesScraped": [
+        "home"
+      ]
+    },
+    {
+      "chamberSlug": "vensure-employer-solutions",
+      "website": "https://www.vensure.com/",
+      "scrapedAt": "2026-05-31T12:11:11.063Z",
+      "title": "VensureHR is HR | Payroll | Employee Benefits | Hiring",
+      "metaDescription": "No matter what size your business is, VensureHR offers comprehensive HR and technology services such as payroll, employee benefits, compliance, and recruiting.",
+      "h1": [
+        "Realizing Your Business Vision Just Got Easier"
+      ],
+      "services": [
+        "Uncover the HR Complexities Impacting Your Success.",
+        "Understanding Our Process",
+        "Ready to modernize and scale your business?",
+        "Your Gateway to Top-Tier Benefits",
+        "Helping Businesses Thrive",
+        "Our Vensure Values",
+        "Awards",
+        "SERVICES",
+        "COMPANY",
+        "CHAT WITH US",
+        "HR Solutions That Power Your Business’s Success",
+        "Benefits"
+      ],
+      "listItems": [
+        "Consolidate payroll, hiring, HR, workers’ compensation, EPLI, cyber insurance, and more.",
+        "Create a safe workplace with guidance from our risk management team.",
+        "Keep employees happy with richer benefits at a fair rate.",
+        "Gain access to better group health insurance, retirement, and commuter benefits.",
+        "Review and mitigate compliance concerns.",
+        "Review payroll administration and payroll tax filing procedures.",
+        "Uncover areas of opportunity to improve or create streamlined HR processes."
+      ],
+      "homeText": "",
+      "aboutText": "",
+      "pagesScraped": [
+        "home",
+        "about"
+      ]
     }
   ]
 }

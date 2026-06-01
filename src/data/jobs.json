@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-31T08:15:15.411Z",
-  "totalJobs": 5,
+  "generatedAt": "2026-06-01T10:18:52.342Z",
+  "totalJobs": 4,
   "jobs": [
     {
       "slug": "domestic-violence-shelter-manager-medina-county",
@@ -16,7 +16,7 @@
       "dateRaw": "5/21/2026",
       "dateISO": "2026-05-21",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/domestic-violence-shelter-manager-medina-county-333559",
-      "scrapedAt": "2026-05-31T08:15:12.998Z"
+      "scrapedAt": "2026-06-01T10:18:50.336Z"
     },
     {
       "slug": "domestic-violence-crisis-specialist",
@@ -32,7 +32,7 @@
       "dateRaw": "5/21/2026",
       "dateISO": "2026-05-21",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/domestic-violence-crisis-specialist-333565",
-      "scrapedAt": "2026-05-31T08:15:13.557Z"
+      "scrapedAt": "2026-06-01T10:18:50.884Z"
     },
     {
       "slug": "public-health-nurse",
@@ -48,7 +48,7 @@
       "dateRaw": "5/18/2026",
       "dateISO": "2026-05-18",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/public-health-nurse-332753",
-      "scrapedAt": "2026-05-31T08:15:14.104Z"
+      "scrapedAt": "2026-06-01T10:18:51.778Z"
     },
     {
       "slug": "catering-event-staff",
@@ -64,23 +64,7 @@
       "dateRaw": "4/30/2026",
       "dateISO": "2026-04-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/catering-event-staff-328997",
-      "scrapedAt": "2026-05-31T08:15:14.668Z"
-    },
-    {
-      "slug": "music-teacher",
-      "jobId": "317454",
-      "title": "Music Teacher",
-      "subtitle": "",
-      "body": "Rios Guitar Co.& Music Store is looking for contract Music Teachers in all areas of music. Music Educational Background a strong plus. Experience teaching music also a plus. If you play an instrument or multiple instruments and want to teach, contact us for an interview at 645 Lafayette Road Medina, Ohio 44256 or call 1-330-725-8575",
-      "tags": [],
-      "location": "",
-      "applyUrl": "",
-      "companyName": "Rios Guitar Co. & Music Store",
-      "companySlug": "",
-      "dateRaw": "3/6/2026",
-      "dateISO": "2026-03-06",
-      "detailUrl": "https://business.medinachamber.com/jobs/Details/music-teacher-317454",
-      "scrapedAt": "2026-05-31T08:15:15.403Z"
+      "scrapedAt": "2026-06-01T10:18:52.331Z"
     }
   ]
 }

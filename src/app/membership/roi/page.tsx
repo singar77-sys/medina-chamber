@@ -61,7 +61,7 @@ export default function RoiPage() {
             <div className="grid md:grid-cols-3 gap-f34">
               <div>
                 <p className="text-h3 text-cambridge mb-f8">$100/year</p>
-                <p className="text-body font-semibold text-text-primary mb-f5">Safety Council fee for non-members</p>
+                <p className="text-body font-bold text-text-primary mb-f5">Safety Council fee for non-members</p>
                 <p className="text-body-sm text-text-secondary leading-relaxed">
                   Chamber members participate at no cost. That&apos;s $100
                   you&apos;re paying right now if you attend as a non-member.
@@ -69,7 +69,7 @@ export default function RoiPage() {
               </div>
               <div>
                 <p className="text-h3 text-cambridge mb-f8">18%</p>
-                <p className="text-body font-semibold text-text-primary mb-f5">Typical BWC group experience rating savings</p>
+                <p className="text-body font-bold text-text-primary mb-f5">Typical BWC group experience rating savings</p>
                 <p className="text-body-sm text-text-secondary leading-relaxed">
                   Ohio employers who meet Safety Council attendance requirements
                   qualify for the Ohio BWC group rebate program.
@@ -77,7 +77,7 @@ export default function RoiPage() {
               </div>
               <div>
                 <p className="text-h3 text-cambridge mb-f8">500+</p>
-                <p className="text-body font-semibold text-text-primary mb-f5">Members currently accessing these programs</p>
+                <p className="text-body font-bold text-text-primary mb-f5">Members currently accessing these programs</p>
                 <p className="text-body-sm text-text-secondary leading-relaxed">
                   Every one of them made the same calculation you&apos;re running
                   right now — and decided the math worked.

@@ -156,7 +156,7 @@ export default function HallOfFamePage() {
                       sizes="(max-width: 640px) 33vw, (max-width: 768px) 25vw, (max-width: 1024px) 20vw, 16vw"
                     />
                   </div>
-                  <p className="text-caption font-semibold text-text-primary text-center leading-snug">
+                  <p className="text-caption font-bold text-text-primary text-center leading-snug">
                     {inductee.name}
                   </p>
                   <figcaption className="sr-only">

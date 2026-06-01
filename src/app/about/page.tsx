@@ -434,7 +434,7 @@ export default async function AboutPage() {
                   <p>Additional parking at City Hall garage, no charge.</p>
                   <p>Wheelchair accessible entrance and parking.</p>
                   <p className="mt-f13">
-                    <span className="font-semibold text-text-primary">
+                    <span className="font-bold text-text-primary">
                       General inquiries:{" "}
                     </span>
                     <a

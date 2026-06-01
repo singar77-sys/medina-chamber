@@ -42,7 +42,7 @@ function SliderRow({ label, sublabel, value, min, max, step, prefix = "", suffix
     <div>
       <div className="flex items-baseline justify-between mb-f8">
         <div>
-          <p className="text-body font-semibold text-text-primary">{label}</p>
+          <p className="text-body font-bold text-text-primary">{label}</p>
           {sublabel && <p className="text-caption text-text-tertiary mt-f3">{sublabel}</p>}
         </div>
         <div className="flex items-center gap-f3 ml-f13">
@@ -157,7 +157,7 @@ export function RoiCalculator() {
           <div className="space-y-f13 pb-f21 border-b border-white/10">
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-body-sm font-semibold">BWC Safety Council savings</p>
+                <p className="text-body-sm font-bold">BWC Safety Council savings</p>
                 <p className="text-caption text-white/50 mt-f3">{(BWC_RATE * 100).toFixed(0)}% of {fmt(bwcPremium)} premium</p>
               </div>
               <span className={`text-body font-bold tabular-nums ${bwcSavings > 0 ? "text-emerald" : "text-white/40"}`}>
@@ -167,7 +167,7 @@ export function RoiCalculator() {
 
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-body-sm font-semibold">Safety Council fee avoided</p>
+                <p className="text-body-sm font-bold">Safety Council fee avoided</p>
                 <p className="text-caption text-white/50 mt-f3">Non-members pay $100/year</p>
               </div>
               <span className="text-body font-bold tabular-nums text-emerald">+{fmt(SAFETY_FEE)}</span>
@@ -175,7 +175,7 @@ export function RoiCalculator() {
 
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-body-sm font-semibold">Energy program savings</p>
+                <p className="text-body-sm font-bold">Energy program savings</p>
                 <p className="text-caption text-white/50 mt-f3">{(ENERGY_RATE * 100).toFixed(0)}% of {fmt(monthlyEnergy * 12)}/yr spend</p>
               </div>
               <span className={`text-body font-bold tabular-nums ${energySavings > 0 ? "text-emerald" : "text-white/40"}`}>
@@ -186,11 +186,11 @@ export function RoiCalculator() {
 
           <div className="py-f13 border-b border-white/10">
             <div className="flex justify-between items-center">
-              <p className="text-body-sm font-semibold text-white/70">Total annual savings</p>
+              <p className="text-body-sm font-bold text-white/70">Total annual savings</p>
               <span className="text-body font-bold tabular-nums text-cambridge">{fmt(totalSavings)}</span>
             </div>
             <div className="flex justify-between items-center mt-f8">
-              <p className="text-body-sm font-semibold text-white/70">Essentials membership</p>
+              <p className="text-body-sm font-bold text-white/70">Essentials membership</p>
               <span className="text-body font-bold tabular-nums text-white/60">−{fmt(ESSENTIALS_PRICE)}</span>
             </div>
           </div>

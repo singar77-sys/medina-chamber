@@ -148,7 +148,7 @@ export default function ContactPage() {
                     bg-bg-primary border border-border-secondary
                     rounded-[var(--radius-lg)]
                     hover:border-cambridge/40
-                    hover:shadow-[0_8px_32px_rgba(131,188,169,0.10)]
+                    hover:shadow-cambridge
                     transition-all duration-200
                   "
                 >

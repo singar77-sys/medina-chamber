@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ButtonLink, ButtonA } from "@/components/ui/Button";
 import { FadeIn } from "@/components/FadeIn";
 import { ApplicationForm } from "./ApplicationForm";
 import { safeJsonLd } from "@/lib/json-ld";
@@ -102,30 +103,12 @@ export default function JoinPage() {
           </p>
 
           <div className="mt-f34 flex flex-wrap gap-f13">
-            <a
-              href="#apply"
-              className="
-                inline-flex items-center px-8 py-4
-                bg-accent hover:bg-accent-hover
-                text-white font-bold text-body
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
-            >
+            <ButtonA href="#apply" size="lg">
               Start Your Application →
-            </a>
-            <Link
-              href="/membership/pricing"
-              className="
-                inline-flex items-center px-6 py-4
-                bg-bg-tertiary hover:bg-border-primary
-                text-text-primary font-bold text-body-sm
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
-            >
+            </ButtonA>
+            <ButtonLink href="/membership/pricing" variant="secondary" size="lg">
               View Pricing
-            </Link>
+            </ButtonLink>
           </div>
         </div>
       </section>

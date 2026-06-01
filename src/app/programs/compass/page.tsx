@@ -157,11 +157,11 @@ export default async function CompassPage() {
           </p>
           <p className="text-body-sm text-text-tertiary mt-f13">
             Presented by the{" "}
-            <span className="text-text-secondary font-semibold">
+            <span className="text-text-secondary font-bold">
               Greater Medina Chamber of Commerce
             </span>{" "}
             in partnership with the{" "}
-            <span className="text-text-secondary font-semibold">
+            <span className="text-text-secondary font-bold">
               Center for Immersive Leadership
             </span>
             .
@@ -196,7 +196,7 @@ export default async function CompassPage() {
                 <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-f8">
                   {item.label}
                 </p>
-                <p className="text-body font-semibold text-text-primary whitespace-pre-line">
+                <p className="text-body font-bold text-text-primary whitespace-pre-line">
                   {item.value}
                 </p>
               </div>

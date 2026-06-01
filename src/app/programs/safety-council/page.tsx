@@ -114,11 +114,11 @@ export default async function SafetyCouncilPage() {
 
           <p className="text-body-sm text-text-tertiary mt-f8">
             A partnership between the{" "}
-            <span className="text-text-secondary font-semibold">
+            <span className="text-text-secondary font-bold">
               Ohio Bureau of Workers&apos; Compensation
             </span>{" "}
             and the{" "}
-            <span className="text-text-secondary font-semibold">
+            <span className="text-text-secondary font-bold">
               Greater Medina Chamber of Commerce
             </span>
           </p>
@@ -153,17 +153,17 @@ export default async function SafetyCouncilPage() {
               <div className="space-y-f21">
                 <div>
                   <p className="text-caption text-text-tertiary uppercase tracking-wider">Location</p>
-                  <p className="text-body font-semibold text-text-primary mt-f3">Williams on the Lake</p>
+                  <p className="text-body font-bold text-text-primary mt-f3">Williams on the Lake</p>
                   <p className="text-body-sm text-text-secondary">787 Lafayette Road, Medina</p>
                 </div>
                 <div>
                   <p className="text-caption text-text-tertiary uppercase tracking-wider">Schedule</p>
-                  <p className="text-body font-semibold text-text-primary mt-f3">Third Tuesday of each month</p>
+                  <p className="text-body font-bold text-text-primary mt-f3">Third Tuesday of each month</p>
                   <p className="text-body-sm text-text-secondary">11:30 AM – 1:00 PM</p>
                 </div>
                 <div>
                   <p className="text-caption text-text-tertiary uppercase tracking-wider">Per-Meeting Cost</p>
-                  <p className="text-body font-semibold text-text-primary mt-f3">$20 per person</p>
+                  <p className="text-body font-bold text-text-primary mt-f3">$20 per person</p>
                 </div>
                 <div className="pt-f13 border-t border-border-secondary">
                   <p className="text-body-sm text-text-tertiary">

@@ -38,43 +38,39 @@ export default function PortalLoginPage({
   }
 
   return (
-    <div
-      className="min-h-full flex items-center justify-center py-12 px-4"
-      style={{ background: "#0C1B33" }}
-    >
+    <div className="min-h-full flex items-center justify-center py-f89 px-f13 bg-oxford">
       <div className="w-full max-w-sm">
         {/* Logo */}
-        <div className="flex flex-col items-center mb-8">
+        <div className="flex flex-col items-center mb-f34">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/chamber-logos/icon-white.png"
             alt="Medina Chamber"
-            className="w-14 h-14 mb-4"
+            className="w-f55 h-f55 mb-f13"
           />
-          <h1 className="text-white text-xl font-semibold">Member Portal</h1>
-          <p className="text-sm mt-1" style={{ color: "#83BCA9" }}>
+          <h1 className="text-white text-h4">Member Portal</h1>
+          <p className="text-cambridge text-body-sm mt-f3">
             Greater Medina Chamber of Commerce
           </p>
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl p-8 shadow-2xl">
+        <div className="bg-bg-primary rounded-[var(--radius-lg)] p-f34 shadow-[var(--shadow-lg)]">
           {sent ? (
             /* ── Sent state ── */
             <div className="text-center">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl"
-                   style={{ background: "#f0faf6" }}>
+              <div className="w-f34 h-f34 rounded-full flex items-center justify-center mx-auto mb-f13 text-2xl bg-surface-cambridge">
                 ✉️
               </div>
-              <h2 className="text-gray-900 text-lg font-semibold mb-2">
+              <h2 className="text-h4 mb-f5">
                 Check your inbox
               </h2>
-              <p className="text-gray-500 text-sm leading-relaxed">
+              <p className="text-text-tertiary text-body-sm leading-relaxed">
                 We sent a login link to{" "}
-                <strong className="text-gray-700">{email}</strong>. It expires
-                in 15 minutes.
+                <strong className="text-text-secondary">{email}</strong>. It
+                expires in 15 minutes.
               </p>
-              <p className="text-gray-400 text-xs mt-4">
+              <p className="text-text-tertiary text-caption mt-f13">
                 Don&apos;t see it? Check your spam folder.
               </p>
               <button
@@ -82,8 +78,7 @@ export default function PortalLoginPage({
                   setSent(false);
                   setEmail("");
                 }}
-                className="mt-5 text-sm hover:text-gray-600 transition-colors"
-                style={{ color: "#83BCA9" }}
+                className="mt-f13 text-body-sm text-cambridge hover:text-cambridge/80 transition-colors"
               >
                 Use a different email
               </button>
@@ -91,27 +86,25 @@ export default function PortalLoginPage({
           ) : (
             /* ── Login form ── */
             <>
-              <h2 className="text-gray-900 text-lg font-semibold mb-1">
-                Sign in
-              </h2>
-              <p className="text-gray-500 text-sm mb-6">
+              <h2 className="text-h4 mb-f3">Sign in</h2>
+              <p className="text-text-tertiary text-body-sm mb-f21">
                 Enter your member email and we&apos;ll send a login link.
               </p>
 
               {/* Link error from magic link verification failure */}
               {linkError && (
-                <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg border border-red-200 mb-4">
+                <p className="text-body-sm text-red-600 bg-red-50 px-f13 py-f8 rounded-[var(--radius-sm)] border border-red-200 mb-f13">
                   {linkError === "invalid_link"
                     ? "That link has expired or is invalid. Please request a new one."
                     : "We couldn't find your account. Contact the chamber if you need help."}
                 </p>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-f13">
                 <div>
                   <label
                     htmlFor="email"
-                    className="block text-sm font-medium text-gray-700 mb-1.5"
+                    className="block text-body-sm font-bold text-text-primary mb-f5"
                   >
                     Email address
                   </label>
@@ -125,13 +118,21 @@ export default function PortalLoginPage({
                     required
                     disabled={loading}
                     placeholder="you@yourbusiness.com"
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 disabled:opacity-50"
-                    style={{ "--tw-ring-color": "#83BCA9" } as React.CSSProperties}
+                    className="
+                      w-full px-f13 py-f8
+                      bg-bg-secondary border border-border-primary
+                      rounded-[var(--radius-sm)]
+                      text-body-sm text-text-primary
+                      placeholder:text-text-tertiary
+                      focus:outline-none focus:border-cambridge
+                      focus-visible:ring-2 focus-visible:ring-cambridge/40
+                      transition-colors disabled:opacity-50
+                    "
                   />
                 </div>
 
                 {formError && (
-                  <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg border border-red-200">
+                  <p className="text-body-sm text-red-600 bg-red-50 px-f13 py-f8 rounded-[var(--radius-sm)] border border-red-200">
                     {formError}
                   </p>
                 )}
@@ -139,8 +140,14 @@ export default function PortalLoginPage({
                 <button
                   type="submit"
                   disabled={loading || !email.trim()}
-                  className="w-full py-2.5 text-sm font-semibold text-white rounded-lg transition-opacity disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
-                  style={{ background: "#0C1B33" }}
+                  className="
+                    w-full py-f13
+                    text-body-sm font-bold text-white
+                    bg-oxford hover:bg-oxford/90
+                    rounded-[var(--radius-md)]
+                    transition-opacity disabled:opacity-40
+                    cursor-pointer disabled:cursor-not-allowed
+                  "
                 >
                   {loading ? "Sending link…" : "Send login link"}
                 </button>
@@ -149,7 +156,7 @@ export default function PortalLoginPage({
           )}
         </div>
 
-        <p className="text-center text-xs mt-6" style={{ color: "#475569" }}>
+        <p className="text-center text-caption mt-f21 text-text-tertiary">
           Only registered chamber members can access this portal.
         </p>
       </div>

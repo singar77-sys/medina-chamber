@@ -299,7 +299,7 @@ export default function HomePage() {
                     bg-bg-secondary border border-border-secondary
                     rounded-[var(--radius-lg)]
                     overflow-hidden
-                    hover:border-cambridge/40 hover:shadow-[0_12px_40px_rgba(131,188,169,0.12)]
+                    hover:border-cambridge/40 hover:shadow-cambridge
                     transition-shadow duration-300
                   "
                 >

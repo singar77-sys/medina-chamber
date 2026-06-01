@@ -36,7 +36,7 @@ export function EventGallery({ photos, title = "Photos" }: Props) {
   return (
     <section aria-label={title || "Photo gallery"}>
       {title && (
-        <h2 className="text-lg font-semibold text-oxford [[data-theme=dark]_&]:text-white mb-4">
+        <h2 className="text-lg font-bold text-oxford [[data-theme=dark]_&]:text-white mb-4">
           {title}
         </h2>
       )}

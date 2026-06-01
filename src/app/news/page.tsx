@@ -77,7 +77,7 @@ export default function NewsPage() {
                   className="
                     group p-f21 rounded-[var(--radius-lg)] transition-all duration-200
                     bg-bg-primary border border-border-secondary hover:border-cambridge/40
-                    hover:shadow-[0_8px_32px_rgba(131,188,169,0.10)]
+                    hover:shadow-cambridge
                   "
                 >
                   <p className="text-caption font-bold uppercase tracking-wider mb-f8 text-cambridge">

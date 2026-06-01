@@ -37,34 +37,32 @@ export default function AdminLoginPage() {
   }
 
   return (
-    // Full-viewport overlay so the public site chrome is hidden
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center"
-      style={{ background: "#0C1B33" }}
-    >
-      <div className="w-full max-w-sm mx-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-oxford">
+      <div className="w-full max-w-sm mx-f13">
         {/* Logo */}
-        <div className="flex flex-col items-center mb-8">
+        <div className="flex flex-col items-center mb-f34">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/chamber-logos/icon-white.png"
             alt="Medina Chamber"
-            className="w-14 h-14 mb-4"
+            className="w-f55 h-f55 mb-f13"
           />
-          <h1 className="text-white text-xl font-semibold">Chamber Admin</h1>
-          <p style={{ color: "#83BCA9" }} className="text-sm mt-1">
+          <h1 className="text-white text-h4">Chamber Admin</h1>
+          <p className="text-cambridge text-body-sm mt-f3">
             Hunter Systems
           </p>
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl p-8 shadow-2xl">
-          <h2 className="text-gray-900 text-lg font-semibold mb-1">Sign in</h2>
-          <p className="text-gray-500 text-sm mb-6">Use your admin password to continue.</p>
+        <div className="bg-bg-primary rounded-[var(--radius-lg)] p-f34 shadow-[var(--shadow-lg)]">
+          <h2 className="text-h4 mb-f3">Sign in</h2>
+          <p className="text-text-tertiary text-body-sm mb-f21">
+            Use your admin password to continue.
+          </p>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-f13">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label className="block text-body-sm font-bold text-text-primary mb-f5">
                 Password
               </label>
               <input
@@ -75,12 +73,20 @@ export default function AdminLoginPage() {
                 autoComplete="current-password"
                 required
                 disabled={loading}
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#83BCA9] disabled:opacity-50"
+                className="
+                  w-full px-f13 py-f8
+                  bg-bg-secondary border border-border-primary
+                  rounded-[var(--radius-sm)]
+                  text-body-sm text-text-primary
+                  focus:outline-none focus:border-cambridge
+                  focus-visible:ring-2 focus-visible:ring-cambridge/40
+                  transition-colors disabled:opacity-50
+                "
               />
             </div>
 
             {error && (
-              <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg border border-red-200">
+              <p className="text-body-sm text-red-600 bg-red-50 px-f13 py-f8 rounded-[var(--radius-sm)] border border-red-200">
                 {error}
               </p>
             )}
@@ -88,15 +94,20 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={loading || !password}
-              className="w-full py-2.5 text-sm font-semibold text-white rounded-lg transition-opacity disabled:opacity-40"
-              style={{ background: "#0C1B33" }}
+              className="
+                w-full py-f13
+                text-body-sm font-bold text-white
+                bg-oxford hover:bg-oxford/90
+                rounded-[var(--radius-md)]
+                transition-opacity disabled:opacity-40
+              "
             >
               {loading ? "Signing in…" : "Sign in"}
             </button>
           </form>
         </div>
 
-        <p className="text-center text-xs mt-6" style={{ color: "#475569" }}>
+        <p className="text-center text-caption mt-f21 text-text-tertiary">
           Restricted access, authorized personnel only
         </p>
       </div>

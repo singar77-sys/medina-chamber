@@ -149,7 +149,7 @@ export default function GolfOutingPage() {
                 <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-f8">
                   {item.label}
                 </p>
-                <p className="text-body font-semibold text-text-primary whitespace-pre-line">
+                <p className="text-body font-bold text-text-primary whitespace-pre-line">
                   {item.value}
                 </p>
               </div>
@@ -218,7 +218,7 @@ export default function GolfOutingPage() {
 
             <div className="mt-f21 max-w-2xl p-f13 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]">
               <p className="text-body-sm text-text-secondary leading-relaxed">
-                <span className="font-semibold text-text-primary">Refund policy: </span>
+                <span className="font-bold text-text-primary">Refund policy: </span>
                 Invoices due within 30 days of registration. Refunds issued for
                 cancellations before July 6, 2026 less a $30 processing fee. No
                 refunds after July 6, 2026.
@@ -245,7 +245,7 @@ export default function GolfOutingPage() {
               <div>
                 <p className="text-body text-text-secondary">
                   Contact{" "}
-                  <span className="font-semibold text-text-primary">Stephanie Mueller</span>{" "}
+                  <span className="font-bold text-text-primary">Stephanie Mueller</span>{" "}
                   to learn about available packages.
                 </p>
                 <div className="mt-f13 flex flex-wrap gap-f13">

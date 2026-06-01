@@ -196,7 +196,7 @@ export default async function JobDetailPage(
                 <p className="text-caption text-cambridge mb-2 font-bold uppercase tracking-wider">
                   Posted by
                 </p>
-                <p className="text-body font-semibold text-text-primary leading-snug">
+                <p className="text-body font-bold text-text-primary leading-snug">
                   {job.companyName}
                 </p>
                 <p className="text-caption text-text-tertiary mt-1">{dateDisplay}</p>

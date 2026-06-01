@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { IceCube } from "@/components/IceCube";
+import { Button, ButtonLink } from "@/components/ui/Button";
 
 /* ─── Swatch Component ─────────────────────────────────── */
 
@@ -227,44 +228,25 @@ export default function FoundationPage() {
         <div className="space-y-8">
           {/* Buttons */}
           <div>
-            <h3 className="text-h4 mb-4">Buttons</h3>
-            <div className="flex flex-wrap gap-4">
-              <button
-                type="button"
-                className="
-                  inline-flex items-center px-6 py-3
-                  bg-accent hover:bg-accent-hover
-                  text-white font-bold text-body-sm
-                  rounded-[var(--radius-md)]
-                  transition-colors
-                "
-              >
-                Join Now &rarr;
-              </button>
-              <button
-                type="button"
-                className="
-                  inline-flex items-center px-6 py-3
-                  bg-bg-tertiary hover:bg-border-primary
-                  text-text-primary font-bold text-body-sm
-                  rounded-[var(--radius-md)]
-                  transition-colors
-                "
-              >
-                Learn More
-              </button>
-              <button
-                type="button"
-                className="
-                  inline-flex items-center px-6 py-3
-                  border border-border-primary hover:border-text-tertiary
-                  text-text-primary font-bold text-body-sm
-                  rounded-[var(--radius-md)]
-                  transition-colors
-                "
-              >
-                View Events
-              </button>
+            <h3 className="text-h4 mb-f13">Buttons</h3>
+            <div className="flex flex-wrap gap-f13">
+              <Button size="lg">Join Now →</Button>
+              <Button variant="secondary" size="lg">Learn More</Button>
+              <Button variant="ghost" size="lg">View Events</Button>
+              <Button size="md">Medium Primary</Button>
+              <Button variant="ghost" size="sm">Small Ghost</Button>
+            </div>
+            <div className="mt-f13 space-y-f8">
+              <p className="text-caption">
+                <code>variant</code>: primary · secondary · ghost
+              </p>
+              <p className="text-caption">
+                <code>size</code>: sm (header) · md (standard) · lg (hero/page CTAs)
+              </p>
+              <p className="text-caption">
+                Components: <code>Button</code> (button el) ·{" "}
+                <code>ButtonLink</code> (Next Link) · <code>ButtonA</code> (anchor)
+              </p>
             </div>
           </div>
 
@@ -318,6 +300,7 @@ export default function FoundationPage() {
                 { label: "shadow-sm", shadow: "var(--shadow-sm)" },
                 { label: "shadow-md", shadow: "var(--shadow-md)" },
                 { label: "shadow-lg", shadow: "var(--shadow-lg)" },
+                { label: "shadow-cambridge", shadow: "var(--shadow-cambridge)" },
               ].map(({ label, shadow }) => (
                 <div
                   key={label}
@@ -434,6 +417,42 @@ export default function FoundationPage() {
               <li>Real photography over stock &mdash; Medina sells itself</li>
             </ul>
           </div>
+        </div>
+      </section>
+
+      {/* Fibonacci Spacing Scale */}
+      <section className="pb-f34">
+        <h2 className="text-overline text-cambridge mb-f21">Fibonacci Spacing Scale</h2>
+        <p className="text-body text-text-secondary mb-f21 max-w-2xl">
+          Every spatial value is a Fibonacci ordinal. Use as Tailwind utilities:{" "}
+          <code>py-f89</code>, <code>gap-f34</code>, <code>mt-f21</code>, etc.
+        </p>
+        <div className="space-y-f8">
+          {(
+            [
+              { token: "f3",   px: "3px",   rem: "0.1875rem" },
+              { token: "f5",   px: "5px",   rem: "0.3125rem" },
+              { token: "f8",   px: "8px",   rem: "0.5rem" },
+              { token: "f13",  px: "13px",  rem: "0.8125rem" },
+              { token: "f21",  px: "21px",  rem: "1.3125rem" },
+              { token: "f34",  px: "34px",  rem: "2.125rem" },
+              { token: "f55",  px: "55px",  rem: "3.4375rem" },
+              { token: "f89",  px: "89px",  rem: "5.5625rem" },
+              { token: "f144", px: "144px", rem: "9rem" },
+              { token: "f233", px: "233px", rem: "14.5625rem" },
+            ] as { token: string; px: string; rem: string }[]
+          ).map(({ token, px, rem }) => (
+            <div key={token} className="flex items-center gap-f21">
+              <code className="text-caption w-16 shrink-0">{token}</code>
+              <div
+                className="h-4 bg-cambridge/40 rounded-sm shrink-0"
+                style={{ width: px }}
+              />
+              <span className="text-caption text-text-tertiary">
+                {px} / {rem}
+              </span>
+            </div>
+          ))}
         </div>
       </section>
     </div>

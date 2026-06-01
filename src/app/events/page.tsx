@@ -28,7 +28,7 @@ function EventCard({ event }: { event: ReturnType<typeof getUpcomingEvents>[numb
         group flex flex-col min-w-0 overflow-hidden
         bg-bg-secondary border border-border-secondary
         rounded-[var(--radius-lg)]
-        hover:border-cambridge/40 hover:shadow-[0_12px_40px_rgba(131,188,169,0.12)]
+        hover:border-cambridge/40 hover:shadow-cambridge
         transition-all
       "
     >
@@ -236,7 +236,7 @@ export default function EventsPage() {
             {nextGetToKnow && (
               <Link
                 href={`/events/${nextGetToKnow.slug}`}
-                className="group relative overflow-hidden flex flex-col bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] hover:border-cambridge/50 hover:shadow-[0_8px_32px_rgba(0,0,0,0.1)] transition-all"
+                className="group relative overflow-hidden flex flex-col bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] hover:border-cambridge/50 hover:shadow-[var(--shadow-md)] transition-all"
               >
                 <div className="h-[3px] bg-gradient-to-r from-transparent via-cambridge to-transparent" />
                 <div className="p-f21 flex flex-col flex-1">
@@ -265,7 +265,7 @@ export default function EventsPage() {
             {nextEggs && (
               <Link
                 href={`/events/${nextEggs.slug}`}
-                className="group relative overflow-hidden flex flex-col bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] hover:border-cambridge/50 hover:shadow-[0_8px_32px_rgba(0,0,0,0.1)] transition-all"
+                className="group relative overflow-hidden flex flex-col bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] hover:border-cambridge/50 hover:shadow-[var(--shadow-md)] transition-all"
               >
                 <div className="h-[3px] bg-gradient-to-r from-transparent via-cambridge to-transparent" />
                 <div className="p-f21 flex flex-col flex-1">

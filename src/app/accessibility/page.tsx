@@ -71,12 +71,12 @@ const knownLimitations = [
 
 export default function AccessibilityPage() {
   return (
-    <div className="mx-auto max-w-5xl px-6 lg:px-8 py-16 lg:py-24">
+    <div className="mx-auto max-w-5xl px-6 lg:px-8 py-f55 lg:py-f89">
       {/* Hero */}
       <section className="max-w-3xl">
-        <p className="text-overline text-cambridge mb-4">Our Commitment</p>
+        <p className="text-overline text-cambridge mb-f13">Our Commitment</p>
         <h1 className="text-display">Accessibility Statement</h1>
-        <p className="text-body-lg text-text-secondary mt-6 leading-relaxed">
+        <p className="text-body-lg text-text-secondary mt-f21 leading-relaxed">
           The Greater Medina Chamber of Commerce is committed to making our
           website and programs accessible to everyone, including people with
           disabilities. The businesses we champion and the community we serve
@@ -86,9 +86,9 @@ export default function AccessibilityPage() {
       </section>
 
       {/* Conformance status */}
-      <section className="mt-16 p-8 lg:p-10 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+      <section className="mt-f55 p-f21 lg:p-f34 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
         <h2 className="text-h3">Conformance Status</h2>
-        <p className="text-body text-text-secondary mt-4 leading-relaxed">
+        <p className="text-body text-text-secondary mt-f13 leading-relaxed">
           This website aims to conform to the{" "}
           <a
             href="https://www.w3.org/TR/WCAG21/"
@@ -101,22 +101,22 @@ export default function AccessibilityPage() {
           , the international standard referenced by the Americans with
           Disabilities Act (ADA) and Section 508 of the Rehabilitation Act.
         </p>
-        <p className="text-body-sm text-text-tertiary mt-4">
+        <p className="text-body-sm text-text-tertiary mt-f13">
           <span className="font-bold text-text-secondary">Last reviewed:</span>{" "}
           April 14, 2026
         </p>
       </section>
 
       {/* What we've done */}
-      <section className="mt-20">
-        <h2 className="text-overline text-cambridge mb-8">What We&apos;ve Done</h2>
-        <div className="grid md:grid-cols-2 gap-6">
+      <section className="mt-f55">
+        <h2 className="text-overline text-cambridge mb-f21">What We&apos;ve Done</h2>
+        <div className="grid md:grid-cols-2 gap-f21">
           {whatWeveDone.map((item) => (
             <div
               key={item.title}
-              className="p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
+              className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
             >
-              <h3 className="text-h4 mb-3">{item.title}</h3>
+              <h3 className="text-h4 mb-f8">{item.title}</h3>
               <p className="text-body-sm text-text-secondary leading-relaxed">
                 {item.body}
               </p>
@@ -126,18 +126,18 @@ export default function AccessibilityPage() {
       </section>
 
       {/* Known limitations */}
-      <section className="mt-20">
-        <h2 className="text-overline text-cambridge mb-8">Known Limitations</h2>
-        <p className="text-body text-text-secondary mb-6 max-w-3xl">
+      <section className="mt-f55">
+        <h2 className="text-overline text-cambridge mb-f21">Known Limitations</h2>
+        <p className="text-body text-text-secondary mb-f21 max-w-3xl">
           We are continuously improving. A few areas we are still working on:
         </p>
-        <div className="space-y-4">
+        <div className="space-y-f13">
           {knownLimitations.map((item) => (
             <div
               key={item.title}
-              className="p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
+              className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
             >
-              <h3 className="text-h4 mb-2">{item.title}</h3>
+              <h3 className="text-h4 mb-f5">{item.title}</h3>
               <p className="text-body-sm text-text-secondary leading-relaxed">
                 {item.body}
               </p>
@@ -147,18 +147,18 @@ export default function AccessibilityPage() {
       </section>
 
       {/* Report an issue */}
-      <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-        <div className="grid lg:grid-cols-2 gap-10 items-center">
+      <section className="mt-f55 p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+        <div className="grid lg:grid-cols-2 gap-f34 items-center">
           <div>
-            <p className="text-overline text-cambridge mb-3">Feedback</p>
+            <p className="text-overline text-cambridge mb-f8">Feedback</p>
             <h2 className="text-h2">Report an Accessibility Issue</h2>
-            <p className="text-body-lg text-text-secondary mt-4 leading-relaxed">
+            <p className="text-body-lg text-text-secondary mt-f13 leading-relaxed">
               If you run into a barrier on our website or have a suggestion to
               help us improve, please tell us. We take accessibility feedback
               seriously and will respond within two business days.
             </p>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-f13">
             <div className="space-y-2">
               <p className="text-body text-text-secondary">
                 <span className="font-bold text-text-primary">Email:</span>{" "}
@@ -184,7 +184,7 @@ export default function AccessibilityPage() {
             <Link
               href="/about/contact"
               className="
-                inline-flex items-center px-6 py-3
+                inline-flex items-center px-f21 py-f13
                 bg-accent hover:bg-accent-hover
                 text-white font-bold text-body-sm
                 rounded-[var(--radius-md)]
@@ -198,9 +198,9 @@ export default function AccessibilityPage() {
       </section>
 
       {/* Standards reference */}
-      <section className="mt-20">
-        <h2 className="text-overline text-cambridge mb-6">Standards Referenced</h2>
-        <ul className="space-y-3 text-body text-text-secondary max-w-3xl">
+      <section className="mt-f55">
+        <h2 className="text-overline text-cambridge mb-f21">Standards Referenced</h2>
+        <ul className="space-y-f8 text-body text-text-secondary max-w-3xl">
           <li>
             <a
               href="https://www.w3.org/TR/WCAG21/"

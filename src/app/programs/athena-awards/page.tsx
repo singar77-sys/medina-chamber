@@ -99,11 +99,11 @@ export default async function AthenaAwardsPage() {
           </p>
           <p className="text-body-sm text-text-tertiary mt-f8">
             Co-hosted by the{" "}
-            <span className="text-text-secondary font-semibold">
+            <span className="text-text-secondary font-bold">
               Greater Medina Chamber of Commerce
             </span>{" "}
             and the{" "}
-            <span className="text-text-secondary font-semibold">
+            <span className="text-text-secondary font-bold">
               Medina County Women&apos;s Journal
             </span>
           </p>
@@ -137,13 +137,13 @@ export default async function AthenaAwardsPage() {
               <div className="space-y-f21">
                 <div>
                   <p className="text-caption text-text-tertiary uppercase tracking-wider">Format</p>
-                  <p className="text-body font-semibold text-text-primary mt-f3">
+                  <p className="text-body font-bold text-text-primary mt-f3">
                     Annual ceremony, soft drinks, appetizers, program, and complimentary wine
                   </p>
                 </div>
                 <div>
                   <p className="text-caption text-text-tertiary uppercase tracking-wider">Registration</p>
-                  <p className="text-body font-semibold text-text-primary mt-f3">
+                  <p className="text-body font-bold text-text-primary mt-f3">
                     Required, walk-ins not permitted
                   </p>
                 </div>

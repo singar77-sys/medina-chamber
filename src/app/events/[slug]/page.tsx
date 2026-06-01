@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { ButtonA, ButtonLink } from "@/components/ui/Button";
 import { notFound } from "next/navigation";
 import { events, getEventBySlug, eventMetaDescription } from "@/data/events";
 import { getCmsEventData } from "@/lib/cms-store";
@@ -183,7 +184,7 @@ export default async function EventPage(
             <div className="mt-f34">
               <h2 className="text-h3 mb-f13">Location</h2>
               <div className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-                <p className="text-body font-semibold">
+                <p className="text-body font-bold">
                   {event.venue ?? "Greater Medina Chamber of Commerce"}
                 </p>
                 <p className="text-body-sm text-text-secondary mt-f3">
@@ -210,7 +211,7 @@ export default async function EventPage(
                       key={i}
                       className={
                         i === 0
-                          ? "text-body font-semibold"
+                          ? "text-body font-bold"
                           : i <= 1
                           ? "text-body-sm text-text-secondary mt-f3"
                           : "text-caption text-text-tertiary mt-f13 border-t border-border-secondary pt-f13"
@@ -229,7 +230,7 @@ export default async function EventPage(
                 <h2 className="text-h3 mb-f13">Questions?</h2>
                 <p className="text-body-sm text-text-secondary">
                   Contact{" "}
-                  <span className="font-semibold text-text-primary">
+                  <span className="font-bold text-text-primary">
                     {event.contactName}
                   </span>
                   {event.contactPhone && ` at ${event.contactPhone}`}.
@@ -252,25 +253,20 @@ export default async function EventPage(
                 <div className="inline-block bg-cambridge/20 px-3 py-1 rounded-full text-cambridge text-caption font-bold mb-f8">
                   {event.month.substring(0, 3)} {event.day}
                 </div>
-                <p className="text-body font-semibold text-text-primary">
+                <p className="text-body font-bold text-text-primary">
                   {event.startTime} – {event.endTime}
                 </p>
               </div>
 
-              <a
+              <ButtonA
                 href={event.registerUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="
-                  block w-full text-center py-3 px-6
-                  bg-accent hover:bg-accent-hover
-                  text-white font-bold text-body-sm
-                  rounded-[var(--radius-md)]
-                  transition-colors
-                "
+                size="md"
+                className="w-full justify-center"
               >
                 Register Now →
-              </a>
+              </ButtonA>
 
               <p className="text-caption text-text-tertiary text-center mt-f8">
                 Registration handled securely via GrowthZone
@@ -283,18 +279,9 @@ export default async function EventPage(
               )}
             </div>
 
-            <Link
-              href="/events"
-              className="
-                flex items-center justify-center gap-2 w-full py-3 px-6
-                border border-border-secondary hover:border-border-primary
-                text-text-primary font-bold text-body-sm
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
-            >
+            <ButtonLink href="/events" variant="ghost" size="md" className="w-full justify-center gap-2">
               ← All Events
-            </Link>
+            </ButtonLink>
           </aside>
         </div>
       </section>

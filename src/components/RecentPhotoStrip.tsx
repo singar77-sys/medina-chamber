@@ -12,15 +12,21 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { getStaticPhotos } from "@/lib/static-media";
+import { getMergedStaticPhotos } from "@/lib/static-media";
 import { FadeIn } from "@/components/FadeIn";
 
 export async function RecentPhotoStrip() {
-  const photos = await getStaticPhotos(
-    "photos/gallery",
-    "Chamber members at a community event, Greater Medina Chamber of Commerce, Medina Ohio",
-    8,
-  );
+  // photos/top-8 is synced nightly from the chamber's SharePoint
+  // "Top 8" folder via .github/workflows/sync-sharepoint-photos.yml.
+  // photos/gallery is the hand-curated fallback used when top-8 is
+  // empty (first run, auth misconfigured, or admin cleared the folder).
+  const alt =
+    "Chamber members at a community event, Greater Medina Chamber of Commerce, Medina Ohio";
+  const merged = await getMergedStaticPhotos([
+    { folder: "photos/top-8", alt, limit: 8 },
+    { folder: "photos/gallery", alt, limit: 8 },
+  ]);
+  const photos = merged.slice(0, 8);
   if (photos.length < 4) return null;
 
   return (

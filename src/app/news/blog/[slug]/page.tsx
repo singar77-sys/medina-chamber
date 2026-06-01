@@ -169,7 +169,7 @@ export default async function BlogPostPage(
             <div className="sticky top-f21 space-y-f13">
               {/* Join CTA */}
               <div className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-                <p className="text-body font-semibold text-text-primary leading-snug">
+                <p className="text-body font-bold text-text-primary leading-snug">
                   Want resources like this for your business?
                 </p>
                 <p className="text-text-secondary text-body-sm mt-f8">

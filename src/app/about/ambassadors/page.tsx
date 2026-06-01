@@ -133,7 +133,7 @@ export default function AmbassadorsPage() {
                     <p className="text-body-sm text-text-secondary mt-f3">
                       {a.title}
                     </p>
-                    <p className="text-caption font-semibold text-cambridge mt-f3">
+                    <p className="text-caption font-bold text-cambridge mt-f3">
                       {a.company}
                     </p>
                     <div className="mt-f13 flex flex-col gap-1">

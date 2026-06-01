@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ButtonLink } from "@/components/ui/Button";
 import { FadeIn } from "@/components/FadeIn";
 import { jaclyn, stephanie } from "@/data/staff";
 import { safeJsonLd } from "@/lib/json-ld";
@@ -150,7 +151,7 @@ export default function BoardPage() {
                     {m.name.split(" ").map((n) => n[0]).join("").substring(0, 2)}
                   </div>
                   <div>
-                    <p className="text-body font-semibold text-text-primary">
+                    <p className="text-body font-bold text-text-primary">
                       {m.name}
                     </p>
                     <p className="text-caption text-text-tertiary mt-f3">
@@ -181,30 +182,12 @@ export default function BoardPage() {
                 </p>
               </div>
               <div className="space-y-f13">
-                <Link
-                  href="/about/contact"
-                  className="
-                    block w-full text-center py-f13 px-f21
-                    bg-accent hover:bg-accent-hover
-                    text-white font-bold text-body-sm
-                    rounded-[var(--radius-md)]
-                    transition-colors
-                  "
-                >
+                <ButtonLink href="/about/contact" size="md" className="w-full justify-center">
                   Get in Touch →
-                </Link>
-                <Link
-                  href="/about/ambassadors"
-                  className="
-                    block w-full text-center py-f13 px-f21
-                    border border-border-primary hover:border-text-tertiary
-                    text-text-primary font-bold text-body-sm
-                    rounded-[var(--radius-md)]
-                    transition-colors
-                  "
-                >
+                </ButtonLink>
+                <ButtonLink href="/about/ambassadors" variant="ghost" size="md" className="w-full justify-center">
                   Meet the Ambassadors
-                </Link>
+                </ButtonLink>
               </div>
             </div>
           </div>

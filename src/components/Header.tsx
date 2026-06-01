@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { ButtonLink, ButtonA } from "@/components/ui/Button";
 import { navigation, ctaLink, memberLogin, type NavItem } from "@/lib/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 import { CommandPaletteTrigger } from "./CommandPaletteTrigger";
@@ -317,21 +318,17 @@ function MobileMenu({
 
         {/* Mobile Member Login */}
         <div className="px-f21 pt-f21">
-          <a
+          <ButtonA
             href={memberLogin.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="
-              flex items-center justify-center w-full py-3 px-6
-              bg-emerald hover:bg-emerald/90
-              text-white font-bold text-body-sm
-              rounded-[var(--radius-md)]
-              transition-colors
-            "
+            variant="ghost"
+            size="md"
+            className="w-full justify-center"
             onClick={onClose}
           >
             {memberLogin.label}
-          </a>
+          </ButtonA>
         </div>
 
         <div className="p-f21 space-y-f5">
@@ -427,19 +424,14 @@ function MobileMenu({
 
         {/* Mobile CTA */}
         <div className="p-f21 pt-0">
-          <Link
+          <ButtonLink
             href={ctaLink.href}
-            className="
-              flex items-center justify-center w-full py-3.5 px-6
-              bg-accent hover:bg-accent-hover
-              text-white font-bold text-body-sm
-              rounded-[var(--radius-md)]
-              transition-colors
-            "
+            size="md"
+            className="w-full justify-center"
             onClick={onClose}
           >
             {ctaLink.label} →
-          </Link>
+          </ButtonLink>
         </div>
       </nav>
     </div>
@@ -607,19 +599,13 @@ export function Header() {
               </a>
 
               {/* Desktop CTA */}
-              <Link
+              <ButtonLink
                 href={ctaLink.href}
-                className="
-                  hidden xl:flex items-center px-f13 py-f8
-                  whitespace-nowrap
-                  bg-accent hover:bg-accent-hover
-                  text-white font-bold text-body-sm
-                  rounded-[var(--radius-md)]
-                  transition-colors
-                "
+                size="sm"
+                className="hidden xl:flex"
               >
                 {ctaLink.label} →
-              </Link>
+              </ButtonLink>
 
               {/* Mobile hamburger */}
               <button

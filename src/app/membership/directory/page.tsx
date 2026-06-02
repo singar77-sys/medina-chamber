@@ -52,21 +52,6 @@ export default function DirectoryPage() {
         ))}
       </div>
 
-      {/* Network View easter egg */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f21 pb-f55">
-        <Link
-          href="/membership/directory/network"
-          className="
-            inline-flex items-center gap-f8
-            text-caption text-text-tertiary hover:text-accent
-            focus-visible:outline-none focus-visible:text-accent focus-visible:ring-2 focus-visible:ring-cambridge/40 focus-visible:rounded
-            transition-colors duration-200
-          "
-        >
-          Explore the network view <span aria-hidden="true">→</span>
-        </Link>
-      </section>
-
       {/* Join CTA (preserved from previous implementation) */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>

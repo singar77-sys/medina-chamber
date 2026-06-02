@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-01T10:18:52.342Z",
-  "totalJobs": 4,
+  "generatedAt": "2026-06-02T09:06:31.872Z",
+  "totalJobs": 3,
   "jobs": [
     {
       "slug": "domestic-violence-shelter-manager-medina-county",
@@ -16,7 +16,7 @@
       "dateRaw": "5/21/2026",
       "dateISO": "2026-05-21",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/domestic-violence-shelter-manager-medina-county-333559",
-      "scrapedAt": "2026-06-01T10:18:50.336Z"
+      "scrapedAt": "2026-06-02T09:06:30.714Z"
     },
     {
       "slug": "domestic-violence-crisis-specialist",
@@ -32,23 +32,7 @@
       "dateRaw": "5/21/2026",
       "dateISO": "2026-05-21",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/domestic-violence-crisis-specialist-333565",
-      "scrapedAt": "2026-06-01T10:18:50.884Z"
-    },
-    {
-      "slug": "public-health-nurse",
-      "jobId": "332753",
-      "title": "Public Health Nurse",
-      "subtitle": "",
-      "body": "Job Title: \nPublic Health Nurse\nService Area: \nCommunity Health\nEmployment Status: \nFull-Time (40 hrs/wk), Non-Exempt\nPay Grade: \nHourly Range: $24.00 - $32.25\nBased on qualifications & experience\nHours of Operation: 8:00am - 4:30pm\nDays of Work: Monday - Friday \nOccasional evening/weekend if needed\nPosting Date: May 18, 2026\nClosing Date: June 1, 2026\n \n\nThe Medina County Health Department, a nationally accredited health department, has a full-time opening for a Public Health Nurse (PHN). This position will work in our newborn home visiting program, Complex Medical Help (CMH), and child and adolescent immunization programs.\n\nEssential Job Responsibilities include but are not limited to:\nAbility to provide public health nursing care in a culturally competent mannerDemonstrates ability to exercise independent professional judgement and utilize critical thinking skillsDescribes factors affecting the health of a communityDescribes assets and resources that can be used for improving the health of a communityCommunicates information to influence behavior and improve healthDescribes the ways public health, health care, and other organizations can work together or individually to impact the health of a communityMinimum Education, Training and/or Experience Needs:\nLicensed as a Registered Nurse in the State of Ohio; Bachelor of Science in Nursing from an accredited college or university required. Minimum two years of nursing experience required; Current CPR Certification; Prior experience in Public Health Nursing, Community Health Nursing, or Pediatric Nursing setting is preferred.\n \nBenefits:\nHealth Insurance (Medical/Dental/Vision/Rx)Wellness ProgramOhio Public Employees Retirement SystemPaid Sick and Vacation Time, 12 Paid HolidaysOhio Deferred Compensation and OCERPTuition Reimbursement ProgramOpportunity for Public Loan Forgiveness Program for eligible employeesRequirements:\nMeet minimum education, training, and experience listedReliable transportationValid Ohio Driver&rsquo;s LicenseProof of auto insurance meeting Board minimumsSuccessfully pass B.C.I. background check and reference checksTo Apply:\nSend a completed MCHD Employment Application (located at www.medinahealth.org/careers/), and current resume and cover letter no later than 4:30 PM on Monday, June 1, 2026 to: Human Resources, Medina County Health Department, 4800 Ledgewood Drive, Medina, Ohio 44256; or fax to (330) 723-9659; or e-mail to hr@medinahealth.org. EOE",
-      "tags": [],
-      "location": "",
-      "applyUrl": "",
-      "companyName": "Medina County Health Department",
-      "companySlug": "",
-      "dateRaw": "5/18/2026",
-      "dateISO": "2026-05-18",
-      "detailUrl": "https://business.medinachamber.com/jobs/Details/public-health-nurse-332753",
-      "scrapedAt": "2026-06-01T10:18:51.778Z"
+      "scrapedAt": "2026-06-02T09:06:31.334Z"
     },
     {
       "slug": "catering-event-staff",
@@ -64,7 +48,7 @@
       "dateRaw": "4/30/2026",
       "dateISO": "2026-04-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/catering-event-staff-328997",
-      "scrapedAt": "2026-06-01T10:18:52.331Z"
+      "scrapedAt": "2026-06-02T09:06:31.861Z"
     }
   ]
 }

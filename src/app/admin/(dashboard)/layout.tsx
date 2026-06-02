@@ -16,6 +16,7 @@ export default function AdminDashboardLayout({
 }) {
   return (
     <div
+      data-theme="light"
       className="fixed inset-0 z-50 flex overflow-hidden"
       style={{ background: "#f8fafc", fontFamily: "system-ui, -apple-system, sans-serif" }}
     >

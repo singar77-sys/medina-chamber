@@ -1,7 +1,23 @@
 {
-  "generatedAt": "2026-06-02T09:06:31.872Z",
-  "totalJobs": 3,
+  "generatedAt": "2026-06-03T09:25:18.968Z",
+  "totalJobs": 4,
   "jobs": [
+    {
+      "slug": "dental-assistant",
+      "jobId": "335485",
+      "title": "Dental Assistant",
+      "subtitle": "",
+      "body": "Job Title: \nDental Assistant\nService Area: \nHealth Center\nEmployment Status: \nFull-Time (40 hrs/wk), Non-Exempt\nPay Grade: \nHourly Range: $19.50 - $26.21\nBased on qualifications & experience\nHealth Center Hours of Operation:\nMon., Wed., Thurs. 8:00 AM &ndash; 4:30 PM\nTuesday 8:00 AM &ndash; 7:00 PM\nFriday 8:00 AM &ndash; 2:00 PM\nPosting Date: June 1, 2026\nClosing Date: June 15, 2026\n \n\nThe Medina County Health Department, a nationally accredited health department, has a career opportunity for a full time Dental Assistant position in our Health Center Division.  The Health Center Division is a Federally Qualified Health Center (FQHC) in northeastern Ohio, providing primary care, dental care, behavioral health, and enabling services to patients annually regardless of ability to pay.  This position assists the dentist(s), and any other provider in the direct provision of primary dental care to patients of the clinic.  \n\nEssential Job Responsibilities include but are not limited to:\nAssists the dentist(s) and other providers during a variety of treatment procedures.  Helps to provide direct care in all dental specialties, including pediatric dentistry and oral surgery.Provides patients with instructions for oral care following surgery or other dental treatments procedures, such as the placement of a restoration (filling).Assists in maintaining adequate operatory supplies and compiles list of items for inventory control and ordering purposes.Performs responsibilities in a timely, thorough, and consistent manner.Maintains a good attendance record; be prompt and punctual.Maintains accurate patient records in Electronic Dental Record (EDR).Minimum Education, Training and/or Experience Needs:\n\nHigh School Diploma or general education degree (GED), and completion of an accredited course in dental assisting required.  State or National Dental Assistant Certification and dental experience preferred.  Ohio State Dental Board Dental Assistant Radiographer Certificate or ability to secure within six (6) months of employment. Current CPR healthcare provider certification. Experience with eClinicalWorks (eCW) a plus.  FQHC experience a plus.  Some evening clinic hours.\n\nBenefits:\nHealth Insurance (Medical/Dental/Vision/Rx)Wellness ProgramOhio Public Employees Retirement SystemPaid Sick and Vacation Time, 12 Paid HolidaysOhio Deferred Compensation and OCERPTuition Reimbursement ProgramOpportunity for Public Loan Forgiveness Program for eligible employeesRequirements:\nMeet minimum education, training, and experience listedReliable TransportationValid Ohio Driver&rsquo;s LicenseProof of Auto Insurance meeting Board minimumsSuccessfully pass B.C.I. background check and reference checksTo Apply:\nSend a completed MCHD Employment Application (located at www.medinahealth.org/careers/), current resume and cover letter, no later than 4:30 PM on Monday, June 15, 2026 to: Human Resources, Medina County Health Department, 4800 Ledgewood Drive, Medina, Ohio 44256; or fax to (330) 723-9659; or e-mail to hr@medinahealth.org. EOE",
+      "tags": [],
+      "location": "",
+      "applyUrl": "",
+      "companyName": "Medina County Health Department",
+      "companySlug": "",
+      "dateRaw": "6/1/2026",
+      "dateISO": "2026-06-01",
+      "detailUrl": "https://business.medinachamber.com/jobs/Details/dental-assistant-335485",
+      "scrapedAt": "2026-06-03T09:25:17.276Z"
+    },
     {
       "slug": "domestic-violence-shelter-manager-medina-county",
       "jobId": "333559",
@@ -16,7 +32,7 @@
       "dateRaw": "5/21/2026",
       "dateISO": "2026-05-21",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/domestic-violence-shelter-manager-medina-county-333559",
-      "scrapedAt": "2026-06-02T09:06:30.714Z"
+      "scrapedAt": "2026-06-03T09:25:17.819Z"
     },
     {
       "slug": "domestic-violence-crisis-specialist",
@@ -32,7 +48,7 @@
       "dateRaw": "5/21/2026",
       "dateISO": "2026-05-21",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/domestic-violence-crisis-specialist-333565",
-      "scrapedAt": "2026-06-02T09:06:31.334Z"
+      "scrapedAt": "2026-06-03T09:25:18.381Z"
     },
     {
       "slug": "catering-event-staff",
@@ -48,7 +64,7 @@
       "dateRaw": "4/30/2026",
       "dateISO": "2026-04-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/catering-event-staff-328997",
-      "scrapedAt": "2026-06-02T09:06:31.861Z"
+      "scrapedAt": "2026-06-03T09:25:18.957Z"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-05-31T12:11:21.358Z",
-  "totalFetched": 527,
-  "foundCount": 498,
-  "notFoundCount": 2,
+  "generatedAt": "2026-06-07T12:21:40.426Z",
+  "totalFetched": 528,
+  "foundCount": 502,
+  "notFoundCount": 0,
   "members": [
     {
       "chamberSlug": "3m-company",
@@ -5984,6 +5984,18 @@
       "businessStatus": "OPERATIONAL",
       "hours": null,
       "googleAddress": "1475 S Price Rd, Chandler, AZ 85286"
+    },
+    {
+      "chamberSlug": "medina-center-for-rehabilitation-nursing",
+      "fetchedAt": "2026-06-07T12:21:40.174Z",
+      "found": true,
+      "placeId": "ChIJIYoVCNTJMIgR42GwvJjvmWs",
+      "googleName": "Medina Center for Rehabilitation and Nursing",
+      "rating": 3.7,
+      "reviewCount": 56,
+      "businessStatus": "OPERATIONAL",
+      "hours": null,
+      "googleAddress": "555 Springbrook Dr, Medina, OH 44256"
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-05-31T12:11:12.765Z",
-  "totalScraped": 478,
-  "successCount": 454,
+  "generatedAt": "2026-06-07T12:21:38.048Z",
+  "totalScraped": 479,
+  "successCount": 455,
   "failCount": 0,
   "members": [
     {
@@ -12381,6 +12381,50 @@
       "pagesScraped": [
         "home",
         "about"
+      ]
+    },
+    {
+      "chamberSlug": "medina-center-for-rehabilitation-nursing",
+      "website": "http://www.medinarehabnursing.com/",
+      "scrapedAt": "2026-06-07T12:21:35.791Z",
+      "title": "Nursing, Rehabilitation and Memory Care | Medina, OH",
+      "metaDescription": "Medina Center offers a full range of nursing, rehabilitation, and memory care services in Medina, OH.",
+      "h1": [
+        "Welcome to Medina Center"
+      ],
+      "services": [
+        "Medina Center Services",
+        "Medina Center Facebook Updates",
+        "Medina Center provides a full range of skilled 24-hour nursing care services.",
+        "Skilled nursing services include:",
+        "Skilled Nursing",
+        "Long-Term Care",
+        "Rehabilitation",
+        "Secure Memory Care",
+        "Respite Care"
+      ],
+      "listItems": [
+        "Home",
+        "Services",
+        "Skilled Nursing",
+        "Stroke",
+        "Cardiac and pulmonary illnesses",
+        "Post-surgery recovery",
+        "Respiratory illness",
+        "Total joint replacement",
+        "Fractures",
+        "Bariatric care",
+        "BiPAP/CPAP",
+        "Cardiac care",
+        "Diabetes care",
+        "Enteral nutrition – GT, PEG, PEJ",
+        "IV access care"
+      ],
+      "homeText": "A Skilled Nursing Center Providing the Highest Level of CareLearn MoreA Skilled Nursing Center Providing the Highest Level of Care Welcome to Medina Center Welcome to Medina Center for Rehabilitation and Nursing, a Medicare- and Medicaid-certified and VA-approved skilled nursing center in Medina, Ohio. Whether you need short-term rehabilitation or long-term skilled nursing care, our team of professionals is ready to provide customized care in a comfortable, home-like setting. For individuals living with Alzheimer’s or other dementias, we offer a secure memory care unit that provides an enriching, purpose-filled lifestyle. Please explore the website, read our newsletter, or contact us. Medina Center ServicesSkilled Nursing24-hour skilled nursing care plus a team of physicians, social workers and nutritionists.Learn MoreLearn MoreLong-Term CareCustomized professional care and a comfortable lifestyle in a home-like setting.Learn MoreLearn MoreRehabilitationHelping you regain function and ",
+      "aboutText": "",
+      "pagesScraped": [
+        "home",
+        "services"
       ]
     }
   ]

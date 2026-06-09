@@ -112,13 +112,13 @@ export function BlogEditor({ post, adminToken, mode }: Props) {
     label, error, children,
   }: { label: string; error?: string; children: React.ReactNode }) => (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <label className="block text-sm font-medium text-text-primary mb-1">{label}</label>
       {children}
       {error && <p className="text-xs text-red-600 mt-1">{error}</p>}
     </div>
   );
 
-  const inputCls = "w-full text-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#83BCA9]";
+  const inputCls = "w-full text-sm px-3 py-2 border border-border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-cambridge/40";
 
   return (
     <div className="space-y-5">
@@ -148,9 +148,9 @@ export function BlogEditor({ post, adminToken, mode }: Props) {
             disabled={mode === "edit"}
             maxLength={80}
             placeholder="my-post-slug"
-            className={`${inputCls} ${mode === "edit" ? "bg-gray-50 text-gray-400" : ""}`}
+            className={`${inputCls} ${mode === "edit" ? "bg-gray-50 text-text-tertiary" : ""}`}
           />
-          {mode === "new" && <p className="text-[11px] text-gray-400 mt-1">URL: /news/blog/{slug || "…"}</p>}
+          {mode === "new" && <p className="text-[11px] text-text-tertiary mt-1">URL: /news/blog/{slug || "…"}</p>}
         </Field>
       </div>
 
@@ -184,10 +184,10 @@ export function BlogEditor({ post, adminToken, mode }: Props) {
           placeholder="Post body. Paragraphs are separated by blank lines."
           className={`${inputCls} resize-y font-mono text-xs`}
         />
-        <p className="text-[11px] text-gray-400 mt-1">{body.length.toLocaleString()} chars</p>
+        <p className="text-[11px] text-text-tertiary mt-1">{body.length.toLocaleString()} chars</p>
       </Field>
 
-      <div className="flex items-center justify-between pt-2 border-t border-gray-200">
+      <div className="flex items-center justify-between pt-2 border-t border-border-primary">
         {mode === "edit" ? (
           <button
             onClick={deletePost}
@@ -203,15 +203,15 @@ export function BlogEditor({ post, adminToken, mode }: Props) {
         <div className="flex gap-3">
           <button
             onClick={() => router.push("/admin/blog")}
-            className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
+            className="px-4 py-2 text-sm text-text-secondary hover:text-text-primary"
           >
             Cancel
           </button>
           <button
             onClick={save}
             disabled={saving}
-            className="px-5 py-2 text-sm font-medium text-white rounded-lg disabled:opacity-50 transition-opacity"
-            style={{ background: "#0C1B33" }}
+            className="px-5 py-2 text-sm font-bold text-white rounded-lg disabled:opacity-50 transition-opacity"
+            style={{ background: "var(--color-oxford)" }}
           >
             {saving ? "Saving…" : mode === "new" ? "Publish Post" : "Save Changes"}
           </button>

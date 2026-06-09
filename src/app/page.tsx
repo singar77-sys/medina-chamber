@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { ButtonLink, ButtonA } from "@/components/ui/Button";
 import { totalCount } from "@/data/members";
 import { getUpcomingEvents, shortenEventTitle } from "@/data/events";
 import { FadeIn } from "@/components/FadeIn";
@@ -130,7 +131,7 @@ export default function HomePage() {
         {/* Content — vertical rhythm: pt-f144 (144px) / pb-f89 (89px) */}
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 pb-f89 lg:pb-f89 pt-f144 w-full">
           <div className="max-w-3xl">
-            <p className="text-overline text-cambridge mb-4 tracking-widest">
+            <p className="text-overline text-cambridge mb-f13 tracking-widest">
               Greater Medina Chamber of Commerce
             </p>
             <h1 className="font-display font-bold uppercase leading-[0.88] tracking-tight text-white">
@@ -149,22 +150,13 @@ export default function HomePage() {
               drive growth.
             </p>
             <div className="mt-f34 flex flex-wrap gap-f21">
-              <Link
-                href="/membership/join"
-                className="
-                  inline-flex items-center px-8 py-4
-                  bg-accent hover:bg-accent-hover
-                  text-white font-bold text-body
-                  rounded-[var(--radius-md)]
-                  transition-colors
-                "
-              >
+              <ButtonLink href="/membership/join" variant="primary" size="lg">
                 Join the Chamber →
-              </Link>
+              </ButtonLink>
               <Link
                 href="/membership/directory"
                 className="
-                  inline-flex items-center px-6 py-4
+                  inline-flex items-center px-f21 py-f21
                   border border-white/30 hover:border-white/60
                   text-white
                   font-bold text-body-sm
@@ -185,7 +177,7 @@ export default function HomePage() {
         color="rgba(92, 149, 183, 0.22)"
       >
         <div className="mx-auto max-w-7xl px-6 lg:px-8 py-f55">
-          <div className="grid grid-cols-3 gap-4 md:gap-8">
+          <div className="grid grid-cols-3 gap-f13 md:gap-f21">
             {[
               { end: 500, label: "Member Businesses", suffix: "+" },
               { end: 40, label: "Events Per Year", suffix: "+" },
@@ -376,7 +368,7 @@ export default function HomePage() {
             })}
           </div>
 
-          <div className="mt-8 sm:hidden text-center">
+          <div className="mt-f21 sm:hidden text-center">
             <Link
               href="/events"
               className="text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
@@ -423,36 +415,22 @@ export default function HomePage() {
                   Need a room for your next&nbsp;
                   <span className="text-accent">meeting</span>?
                 </h2>
-                <p className="text-body-lg text-text-secondary mt-4 leading-relaxed">
+                <p className="text-body-lg text-text-secondary mt-f13 leading-relaxed">
                   Two professional meeting rooms in the heart of downtown
                   Medina. Free parking, Wi-Fi, and AV included. Member pricing
                   available.
                 </p>
                 <div className="mt-f34 flex flex-wrap gap-f13">
-                  <Link
-                    href="/programs/rental-space"
-                    className="
-                      inline-flex items-center px-6 py-3
-                      bg-accent hover:bg-accent-hover
-                      text-white font-bold text-body-sm
-                      rounded-[var(--radius-md)]
-                      transition-colors
-                    "
-                  >
+                  <ButtonLink href="/programs/rental-space" variant="primary" size="md">
                     See Availability →
-                  </Link>
-                  <a
+                  </ButtonLink>
+                  <ButtonA
                     href={mailto(memberServices.email, "Meeting space inquiry")}
-                    className="
-                      inline-flex items-center px-6 py-3
-                      border border-border-primary hover:border-text-tertiary
-                      text-text-primary font-bold text-body-sm
-                      rounded-[var(--radius-md)]
-                      transition-colors
-                    "
+                    variant="ghost"
+                    size="md"
                   >
                     Email to book
-                  </a>
+                  </ButtonA>
                 </div>
               </div>
 
@@ -487,45 +465,37 @@ export default function HomePage() {
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
-                <p className="text-overline text-cambridge mb-4">Membership</p>
+                <p className="text-overline text-cambridge mb-f13">Membership</p>
                 <h2 className="text-h2">
                   Ready to be part of what&apos;s building Medina?
                 </h2>
-                <p className="text-body-lg text-text-secondary mt-4">
+                <p className="text-body-lg text-text-secondary mt-f13">
                   Three tiers starting at $345 a year. The savings programs
                   alone typically cover that in the first month. Stephanie
                   will walk you through everything, no pressure.
                 </p>
               </div>
               <div className="space-y-f21">
-                <Link
+                <ButtonLink
                   href="/membership/join"
-                  className="
-                    block w-full text-center py-4 px-6
-                    bg-accent hover:bg-accent-hover
-                    text-white font-bold text-body
-                    rounded-[var(--radius-md)]
-                    transition-colors
-                  "
+                  variant="primary"
+                  size="lg"
+                  className="w-full justify-center"
                 >
                   Apply for Membership →
-                </Link>
-                <Link
+                </ButtonLink>
+                <ButtonLink
                   href="/membership/benefits"
-                  className="
-                    block w-full text-center py-3 px-6
-                    border border-border-primary hover:border-text-tertiary
-                    text-text-primary font-bold text-body-sm
-                    rounded-[var(--radius-md)]
-                    transition-colors
-                  "
+                  variant="ghost"
+                  size="md"
+                  className="w-full justify-center"
                 >
                   See All Benefits
-                </Link>
+                </ButtonLink>
                 <a
                   href={mailto(stephanie.email)}
                   className="
-                    block w-full text-center py-3 px-6
+                    block w-full text-center py-f13 px-f21
                     text-cambridge font-bold text-body-sm
                     transition-colors hover:text-cambridge/80
                   "

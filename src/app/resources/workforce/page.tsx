@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ButtonLink, ButtonA } from "@/components/ui/Button";
 
 export const metadata: Metadata = {
   title: "Hire & Grow Your Team in Medina County, Workforce Resources",
@@ -91,7 +92,7 @@ const quickLinks = [
 
 export default function WorkforcePage() {
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-caption text-text-tertiary mb-10">
         <Link href="/resources" className="hover:text-text-primary transition-colors">
@@ -103,12 +104,12 @@ export default function WorkforcePage() {
 
       {/* Hero */}
       <section className="max-w-3xl">
-        <p className="text-overline text-cambridge mb-4">Business Resources</p>
+        <p className="text-overline text-cambridge mb-f13">Business Resources</p>
         <h1 className="text-display">
             <span className="block">Hire &amp; Grow Your Team</span>
             <span className="block text-accent">in Medina County</span>
           </h1>
-        <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
+        <p className="text-body-lg text-text-secondary mt-f21 max-w-2xl">
           Programs to find candidates, subsidize training, and build a safer,
           better-equipped workforce, from the Chamber and Ohio&apos;s state
           workforce system.
@@ -116,7 +117,7 @@ export default function WorkforcePage() {
       </section>
 
       {/* Quick links strip */}
-      <div className="mt-10 flex flex-wrap gap-3">
+      <div className="mt-10 flex flex-wrap gap-f8">
         {quickLinks.map((l) =>
           l.internal ? (
             <Link
@@ -141,7 +142,7 @@ export default function WorkforcePage() {
       </div>
 
       {/* Sections */}
-      <div className="mt-16 space-y-8">
+      <div className="mt-f55 space-y-f21">
         {sections.map((s) => (
           <div
             key={s.id}
@@ -151,44 +152,40 @@ export default function WorkforcePage() {
               {s.label}
             </span>
             <h2 className="text-h3 mt-2">{s.title}</h2>
-            <p className="text-body text-text-secondary mt-4 leading-relaxed max-w-3xl">
+            <p className="text-body text-text-secondary mt-f13 leading-relaxed max-w-3xl">
               {s.body}
             </p>
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div className="mt-f21 flex flex-wrap gap-f8">
               {s.action.internal ? (
-                <Link
-                  href={s.action.href}
-                  className="inline-flex items-center px-6 py-3 bg-accent hover:bg-accent-hover text-white font-bold text-body-sm rounded-[var(--radius-md)] transition-colors"
-                >
+                <ButtonLink href={s.action.href} variant="primary" size="md">
                   {s.action.label} →
-                </Link>
+                </ButtonLink>
               ) : (
-                <a
+                <ButtonA
                   href={s.action.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center px-6 py-3 bg-accent hover:bg-accent-hover text-white font-bold text-body-sm rounded-[var(--radius-md)] transition-colors"
+                  variant="primary"
+                  size="md"
                 >
                   {s.action.label} →
-                </a>
+                </ButtonA>
               )}
               {s.secondaryAction && (
                 s.secondaryAction.internal ? (
-                  <Link
-                    href={s.secondaryAction.href}
-                    className="inline-flex items-center px-6 py-3 border border-border-primary hover:border-text-tertiary text-text-primary font-bold text-body-sm rounded-[var(--radius-md)] transition-colors"
-                  >
+                  <ButtonLink href={s.secondaryAction.href} variant="ghost" size="md">
                     {s.secondaryAction.label} →
-                  </Link>
+                  </ButtonLink>
                 ) : (
-                  <a
+                  <ButtonA
                     href={s.secondaryAction.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center px-6 py-3 border border-border-primary hover:border-text-tertiary text-text-primary font-bold text-body-sm rounded-[var(--radius-md)] transition-colors"
+                    variant="ghost"
+                    size="md"
                   >
                     {s.secondaryAction.label} →
-                  </a>
+                  </ButtonA>
                 )
               )}
             </div>
@@ -197,27 +194,21 @@ export default function WorkforcePage() {
       </div>
 
       {/* CTA */}
-      <section className="mt-20 p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+      <section className="mt-f55 p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
         <div className="max-w-2xl">
           <h2 className="text-h2">Post your open positions free</h2>
-          <p className="text-body-lg text-text-secondary mt-4">
+          <p className="text-body-lg text-text-secondary mt-f13">
             Chamber members post jobs on the Medina Chamber job board at no
             extra cost. Free job postings are included in all three membership
             tiers. Join for $345/year.
           </p>
-          <div className="mt-8 flex flex-wrap gap-4">
-            <Link
-              href="/membership/join"
-              className="inline-flex items-center px-8 py-4 bg-accent hover:bg-accent-hover text-white font-bold text-body rounded-[var(--radius-md)] transition-colors"
-            >
+          <div className="mt-f21 flex flex-wrap gap-f13">
+            <ButtonLink href="/membership/join" variant="primary" size="lg">
               Join the Chamber →
-            </Link>
-            <Link
-              href="/jobs"
-              className="inline-flex items-center px-6 py-4 border border-border-primary hover:border-text-tertiary text-text-primary font-bold text-body-sm rounded-[var(--radius-md)] transition-colors"
-            >
+            </ButtonLink>
+            <ButtonLink href="/jobs" variant="ghost" size="lg">
               Browse Job Board
-            </Link>
+            </ButtonLink>
           </div>
         </div>
       </section>

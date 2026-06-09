@@ -182,7 +182,7 @@ export default async function PortalDashboardPage() {
             alt="Medina Chamber"
             className="w-7 h-7"
           />
-          <span className="text-white text-sm font-semibold hidden sm:block">
+          <span className="text-white text-sm font-bold hidden sm:block">
             Member Portal
           </span>
         </div>
@@ -207,16 +207,16 @@ export default async function PortalDashboardPage() {
       <main className="flex-1 px-4 sm:px-6 py-8 max-w-4xl mx-auto w-full">
         {/* Welcome */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-text-primary">
             Welcome back, {contact.firstName}
           </h1>
-          <p className="text-gray-500 text-sm mt-1">{org.name}</p>
+          <p className="text-text-secondary text-sm mt-1">{org.name}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
           {/* ── Membership card ──────────────────────────────────────────── */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
+          <div className="bg-bg-primary rounded-2xl p-6 shadow-sm border border-border-secondary">
+            <h2 className="text-xs font-bold text-text-tertiary uppercase tracking-wider mb-4">
               Membership
             </h2>
 
@@ -224,9 +224,9 @@ export default async function PortalDashboardPage() {
               <div className="space-y-3">
                 {/* Tier */}
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Plan</span>
+                  <span className="text-sm text-text-secondary">Plan</span>
                   <span
-                    className="text-xs font-semibold px-2.5 py-1 rounded-full"
+                    className="text-xs font-bold px-2.5 py-1 rounded-full"
                     style={
                       tierBadge
                         ? { background: tierBadge.bg, color: tierBadge.color }
@@ -239,24 +239,24 @@ export default async function PortalDashboardPage() {
 
                 {/* Status */}
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Status</span>
+                  <span className="text-sm text-text-secondary">Status</span>
                   {statusBadge ? (
                     <span
-                      className="text-xs font-semibold px-2.5 py-1 rounded-full"
+                      className="text-xs font-bold px-2.5 py-1 rounded-full"
                       style={{ background: statusBadge.bg, color: statusBadge.color }}
                     >
                       {statusBadge.label}
                     </span>
                   ) : (
-                    <span className="text-sm text-gray-400">—</span>
+                    <span className="text-sm text-text-tertiary">—</span>
                   )}
                 </div>
 
                 {/* Annual rate */}
                 {membership.annualPriceCents != null && (
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Annual dues</span>
-                    <span className="text-sm font-semibold text-gray-900">
+                    <span className="text-sm text-text-secondary">Annual dues</span>
+                    <span className="text-sm font-bold text-text-primary">
                       {formatCents(membership.annualPriceCents)}
                     </span>
                   </div>
@@ -264,23 +264,23 @@ export default async function PortalDashboardPage() {
 
                 {/* Renewal date */}
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Renews</span>
-                  <span className="text-sm text-gray-900">
+                  <span className="text-sm text-text-secondary">Renews</span>
+                  <span className="text-sm text-text-primary">
                     {formatDate(membership.renewalDate)}
                   </span>
                 </div>
 
                 {/* Member since */}
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Member since</span>
-                  <span className="text-sm text-gray-900">
+                  <span className="text-sm text-text-secondary">Member since</span>
+                  <span className="text-sm text-text-primary">
                     {formatDate(membership.startDate)}
                   </span>
                 </div>
               </div>
             ) : (
               <div className="text-center py-4">
-                <p className="text-sm text-gray-400 leading-relaxed">
+                <p className="text-sm text-text-tertiary leading-relaxed">
                   Membership record not found.
                   <br />
                   <a
@@ -297,22 +297,22 @@ export default async function PortalDashboardPage() {
           </div>
 
           {/* ── Contact card ─────────────────────────────────────────────── */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
+          <div className="bg-bg-primary rounded-2xl p-6 shadow-sm border border-border-secondary">
+            <h2 className="text-xs font-bold text-text-tertiary uppercase tracking-wider mb-4">
               Your Profile
             </h2>
             <div className="space-y-3">
               <div className="flex items-start justify-between gap-2">
-                <span className="text-sm text-gray-600 shrink-0">Name</span>
-                <span className="text-sm text-gray-900 text-right">
+                <span className="text-sm text-text-secondary shrink-0">Name</span>
+                <span className="text-sm text-text-primary text-right">
                   {contact.firstName} {contact.lastName}
                 </span>
               </div>
 
               {contact.title && (
                 <div className="flex items-start justify-between gap-2">
-                  <span className="text-sm text-gray-600 shrink-0">Title</span>
-                  <span className="text-sm text-gray-900 text-right">
+                  <span className="text-sm text-text-secondary shrink-0">Title</span>
+                  <span className="text-sm text-text-primary text-right">
                     {contact.title}
                   </span>
                 </div>
@@ -320,8 +320,8 @@ export default async function PortalDashboardPage() {
 
               {contact.email && (
                 <div className="flex items-start justify-between gap-2">
-                  <span className="text-sm text-gray-600 shrink-0">Email</span>
-                  <span className="text-sm text-gray-900 text-right break-all">
+                  <span className="text-sm text-text-secondary shrink-0">Email</span>
+                  <span className="text-sm text-text-primary text-right break-all">
                     {contact.email}
                   </span>
                 </div>
@@ -329,14 +329,14 @@ export default async function PortalDashboardPage() {
 
               {org.phone && (
                 <div className="flex items-start justify-between gap-2">
-                  <span className="text-sm text-gray-600 shrink-0">Phone</span>
-                  <span className="text-sm text-gray-900">{org.phone}</span>
+                  <span className="text-sm text-text-secondary shrink-0">Phone</span>
+                  <span className="text-sm text-text-primary">{org.phone}</span>
                 </div>
               )}
 
               {org.websiteUrl && (
                 <div className="flex items-start justify-between gap-2">
-                  <span className="text-sm text-gray-600 shrink-0">Website</span>
+                  <span className="text-sm text-text-secondary shrink-0">Website</span>
                   <a
                     href={org.websiteUrl}
                     target="_blank"
@@ -364,17 +364,17 @@ export default async function PortalDashboardPage() {
         </div>
 
         {/* ── Invoices ───────────────────────────────────────────────────── */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
+        <div className="bg-bg-primary rounded-2xl p-6 shadow-sm border border-border-secondary">
+          <h2 className="text-xs font-bold text-text-tertiary uppercase tracking-wider mb-4">
             Recent Invoices
           </h2>
 
           {invoiceRows.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-4">
+            <p className="text-sm text-text-tertiary text-center py-4">
               No invoices on record yet.
             </p>
           ) : (
-            <div className="divide-y divide-gray-50">
+            <div className="divide-y divide-border-secondary">
               {invoiceRows.map((inv) => {
                 const badge = INVOICE_STATUS[inv.status] ?? { label: inv.status, color: "#64748b" };
                 return (
@@ -383,10 +383,10 @@ export default async function PortalDashboardPage() {
                     className="flex items-center justify-between py-3 gap-3"
                   >
                     <div className="min-w-0">
-                      <p className="text-sm text-gray-900 truncate">
+                      <p className="text-sm text-text-primary truncate">
                         {inv.description ?? "Invoice"}
                       </p>
-                      <p className="text-xs text-gray-400 mt-0.5">
+                      <p className="text-xs text-text-tertiary mt-0.5">
                         {inv.dueDate
                           ? `Due ${formatDate(inv.dueDate)}`
                           : formatDate(inv.createdAt?.toISOString().slice(0, 10))}
@@ -394,12 +394,12 @@ export default async function PortalDashboardPage() {
                     </div>
                     <div className="flex items-center gap-3 shrink-0">
                       <span
-                        className="text-xs font-semibold"
+                        className="text-xs font-bold"
                         style={{ color: badge.color }}
                       >
                         {badge.label}
                       </span>
-                      <span className="text-sm font-semibold text-gray-900 tabular-nums">
+                      <span className="text-sm font-bold text-text-primary tabular-nums">
                         {formatCents(inv.amountCents)}
                       </span>
                     </div>
@@ -414,40 +414,40 @@ export default async function PortalDashboardPage() {
         <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
           <a
             href="/membership/directory"
-            className="flex items-center gap-3 bg-white rounded-xl px-5 py-4 shadow-sm border border-gray-100 hover:border-gray-200 transition-colors group"
+            className="flex items-center gap-3 bg-bg-primary rounded-xl px-5 py-4 shadow-sm border border-border-secondary hover:border-border-primary transition-colors group"
           >
             <span className="text-xl">🗂️</span>
             <div>
-              <p className="text-sm font-semibold text-gray-900 group-hover:text-gray-700">
+              <p className="text-sm font-bold text-text-primary hover:text-text-secondary">
                 Member Directory
               </p>
-              <p className="text-xs text-gray-400">Browse all members</p>
+              <p className="text-xs text-text-tertiary">Browse all members</p>
             </div>
           </a>
 
           <a
             href="/events"
-            className="flex items-center gap-3 bg-white rounded-xl px-5 py-4 shadow-sm border border-gray-100 hover:border-gray-200 transition-colors group"
+            className="flex items-center gap-3 bg-bg-primary rounded-xl px-5 py-4 shadow-sm border border-border-secondary hover:border-border-primary transition-colors group"
           >
             <span className="text-xl">📅</span>
             <div>
-              <p className="text-sm font-semibold text-gray-900 group-hover:text-gray-700">
+              <p className="text-sm font-bold text-text-primary hover:text-text-secondary">
                 Events
               </p>
-              <p className="text-xs text-gray-400">Upcoming chamber events</p>
+              <p className="text-xs text-text-tertiary">Upcoming chamber events</p>
             </div>
           </a>
 
           <a
             href="mailto:office@medinaohchamber.com"
-            className="flex items-center gap-3 bg-white rounded-xl px-5 py-4 shadow-sm border border-gray-100 hover:border-gray-200 transition-colors group"
+            className="flex items-center gap-3 bg-bg-primary rounded-xl px-5 py-4 shadow-sm border border-border-secondary hover:border-border-primary transition-colors group"
           >
             <span className="text-xl">✉️</span>
             <div>
-              <p className="text-sm font-semibold text-gray-900 group-hover:text-gray-700">
+              <p className="text-sm font-bold text-text-primary hover:text-text-secondary">
                 Contact Us
               </p>
-              <p className="text-xs text-gray-400">office@medinaohchamber.com</p>
+              <p className="text-xs text-text-tertiary">office@medinaohchamber.com</p>
             </div>
           </a>
         </div>
@@ -455,7 +455,7 @@ export default async function PortalDashboardPage() {
 
       {/* ── Footer ─────────────────────────────────────────────────────────── */}
       <footer className="text-center py-6 mt-4">
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-text-tertiary">
           Greater Medina Chamber of Commerce &middot; 139 N. Court Street, Suite A, Medina, OH 44256
         </p>
       </footer>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ButtonLink, ButtonA } from "@/components/ui/Button";
 import { jobs, getJobBySlug, formatJobDate } from "@/data/jobs";
 import { members } from "@/data/members";
 
@@ -143,7 +144,7 @@ export default async function JobDetailPage(
         dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-caption text-text-tertiary mb-10">
           <Link href="/jobs" className="hover:text-text-primary transition-colors">
@@ -156,13 +157,13 @@ export default async function JobDetailPage(
         <div className="grid lg:grid-cols-[1fr_320px] gap-12 lg:gap-16">
           {/* Main column */}
           <div>
-            <p className="text-overline text-cambridge mb-4">
+            <p className="text-overline text-cambridge mb-f13">
               Posted {dateDisplay}
             </p>
 
             <h1 className="text-display leading-tight">{job.title}</h1>
 
-            <p className="text-h4 text-text-secondary mt-3">
+            <p className="text-h4 text-text-secondary mt-f8">
               {job.companyName}
             </p>
 
@@ -189,9 +190,9 @@ export default async function JobDetailPage(
           </div>
 
           {/* Sidebar */}
-          <aside className="space-y-6">
+          <aside className="space-y-f21">
             {/* Company card */}
-            <div className="sticky top-8 space-y-4">
+            <div className="sticky top-8 space-y-f13">
               <div className="p-6 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
                 <p className="text-caption text-cambridge mb-2 font-bold uppercase tracking-wider">
                   Posted by
@@ -202,51 +203,39 @@ export default async function JobDetailPage(
                 <p className="text-caption text-text-tertiary mt-1">{dateDisplay}</p>
 
                 {job.applyUrl && (
-                  <a
+                  <ButtonA
                     href={job.applyUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="
-                      block mt-5 w-full text-center py-2.5 px-4
-                      bg-accent hover:bg-accent-hover
-                      text-white font-bold text-body-sm
-                      rounded-[var(--radius-md)]
-                      transition-colors
-                    "
+                    variant="primary"
+                    size="sm"
+                    className="mt-f13 w-full justify-center"
                   >
                     Apply Now →
-                  </a>
+                  </ButtonA>
                 )}
 
                 {memberRecord && (
-                  <Link
+                  <ButtonLink
                     href={`/membership/directory/${memberRecord.chamberSlug}`}
-                    className="
-                      block mt-3 w-full text-center py-2.5 px-4
-                      bg-cambridge/20 hover:bg-cambridge/30
-                      text-cambridge font-bold text-body-sm
-                      rounded-[var(--radius-md)]
-                      transition-colors
-                    "
+                    variant="secondary"
+                    size="sm"
+                    className="mt-f8 w-full justify-center"
                   >
                     View Company Profile →
-                  </Link>
+                  </ButtonLink>
                 )}
               </div>
 
               {/* Back link */}
-              <Link
+              <ButtonLink
                 href="/jobs"
-                className="
-                  flex items-center justify-center gap-2 w-full py-3 px-6
-                  border border-border-secondary hover:border-border-primary
-                  text-text-primary font-bold text-body-sm
-                  rounded-[var(--radius-md)]
-                  transition-colors
-                "
+                variant="ghost"
+                size="md"
+                className="w-full justify-center"
               >
                 ← All Jobs
-              </Link>
+              </ButtonLink>
             </div>
           </aside>
         </div>

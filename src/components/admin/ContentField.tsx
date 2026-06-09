@@ -70,17 +70,17 @@ export function ContentField({ def, currentValue, isOverridden, adminToken }: Pr
   }
 
   return (
-    <div className="border border-gray-200 rounded-lg overflow-hidden">
+    <div className="border border-border-primary rounded-lg overflow-hidden">
       {/* Field header */}
-      <div className="flex items-center gap-2 px-4 py-2.5 bg-gray-50 border-b border-gray-200">
-        <span className="text-sm font-medium text-gray-700">{def.label}</span>
+      <div className="flex items-center gap-2 px-4 py-2.5 bg-gray-50 border-b border-border-primary">
+        <span className="text-sm font-bold text-text-primary">{def.label}</span>
         {overridden && (
-          <span className="ml-1 text-[10px] uppercase tracking-wide font-semibold px-1.5 py-0.5 rounded"
+          <span className="ml-1 text-[10px] uppercase tracking-wide font-bold px-1.5 py-0.5 rounded"
             style={{ background: "#d1fae5", color: "#065f46" }}>
             Custom
           </span>
         )}
-        {def.hint && <span className="ml-auto text-xs text-gray-400">{def.hint}</span>}
+        {def.hint && <span className="ml-auto text-xs text-text-tertiary">{def.hint}</span>}
       </div>
 
       {/* Editor */}
@@ -91,7 +91,7 @@ export function ContentField({ def, currentValue, isOverridden, adminToken }: Pr
             onChange={(e) => setValue(e.target.value)}
             rows={3}
             maxLength={def.maxLength}
-            className="w-full text-sm px-3 py-2 border border-gray-300 rounded-md resize-y focus:outline-none focus:ring-2 focus:ring-[#83BCA9]"
+            className="w-full text-sm px-3 py-2 border border-border-primary rounded-md resize-y focus:outline-none focus:ring-2 focus:ring-cambridge/40"
           />
         ) : (
           <input
@@ -99,13 +99,13 @@ export function ContentField({ def, currentValue, isOverridden, adminToken }: Pr
             value={value}
             onChange={(e) => setValue(e.target.value)}
             maxLength={def.maxLength}
-            className="w-full text-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#83BCA9]"
+            className="w-full text-sm px-3 py-2 border border-border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-cambridge/40"
           />
         )}
 
         {/* Footer actions */}
         <div className="flex items-center justify-between mt-2">
-          <span className={`text-xs ${remaining < 20 ? "text-red-500" : "text-gray-400"}`}>
+          <span className={`text-xs ${remaining < 20 ? "text-red-500" : "text-text-tertiary"}`}>
             {remaining} chars remaining
           </span>
 
@@ -117,7 +117,7 @@ export function ContentField({ def, currentValue, isOverridden, adminToken }: Pr
               <button
                 onClick={reset}
                 disabled={saving}
-                className="text-xs text-gray-400 hover:text-gray-600 disabled:opacity-40"
+                className="text-xs text-text-tertiary hover:text-text-secondary disabled:opacity-40"
               >
                 Reset to default
               </button>
@@ -126,7 +126,7 @@ export function ContentField({ def, currentValue, isOverridden, adminToken }: Pr
               onClick={save}
               disabled={!isDirty || saving}
               className="px-3 py-1 text-xs font-medium text-white rounded-md transition-opacity disabled:opacity-40"
-              style={{ background: "#0C1B33" }}
+              style={{ background: "var(--color-oxford)" }}
             >
               {saving ? "Saving…" : "Save"}
             </button>

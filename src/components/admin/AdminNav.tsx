@@ -53,8 +53,8 @@ export function AdminNav() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/images/chamber-logos/icon-white.png" alt="" className="w-7 h-7" />
         <div>
-          <p className="text-white text-xs font-semibold leading-tight">Chamber Admin</p>
-          <p style={{ color: "#83BCA9" }} className="text-[10px] leading-tight">
+          <p className="text-white text-xs font-bold leading-tight">Chamber Admin</p>
+          <p style={{ color: "var(--color-cambridge)" }} className="text-[10px] leading-tight">
             Hunter Systems
           </p>
         </div>
@@ -70,11 +70,11 @@ export function AdminNav() {
               href={item.href}
               className="flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors"
               style={{
-                color: active ? "#ffffff" : "#94a3b8",
+                color: active ? "#ffffff" : "var(--color-text-tertiary)",
                 background: active ? "rgba(131,188,169,0.15)" : "transparent",
               }}
             >
-              <span style={{ color: active ? "#83BCA9" : "#64748b" }} className="text-base leading-none">
+              <span style={{ color: active ? "var(--color-cambridge)" : "var(--color-text-secondary)" }} className="text-base leading-none">
                 {item.icon}
               </span>
               {item.label}
@@ -88,15 +88,15 @@ export function AdminNav() {
         <a
           href="/admin/notify"
           className="flex items-center gap-2 px-3 py-2 rounded-md text-xs mb-1 transition-colors"
-          style={{ color: "#94a3b8" }}
+          style={{ color: "var(--color-text-tertiary)" }}
         >
-          <span style={{ color: "#83BCA9" }}>⟳</span>
+          <span style={{ color: "var(--color-cambridge)" }}>⟳</span>
           View public site
         </a>
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-xs transition-colors text-left"
-          style={{ color: "#94a3b8" }}
+          style={{ color: "var(--color-text-tertiary)" }}
         >
           <span>⎋</span>
           Log out

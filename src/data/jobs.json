@@ -1,7 +1,23 @@
 {
-  "generatedAt": "2026-06-08T09:23:12.461Z",
-  "totalJobs": 4,
+  "generatedAt": "2026-06-09T08:31:15.695Z",
+  "totalJobs": 5,
   "jobs": [
+    {
+      "slug": "chiropractic-receptionist-assistant",
+      "jobId": "336324",
+      "title": "Chiropractic receptionist / Assistant",
+      "subtitle": "",
+      "body": "About Us:\nWe are a patient-focused chiropractic office dedicated to providing exceptional care and a welcoming environment. Our team values professionalism, compassion, and teamwork.\nPosition Overview:\nWe are seeking a Chiropractic Assistant / Front Desk professional who is organized, friendly, and enjoys working with people. This role is essential in ensuring smooth office operations and delivering outstanding patient experiences.\nKey Responsibilities:\nGreet and assist patients with a positive attitudeSchedule appointments and manage patient flowHandle phone calls and inquiries professionallyMaintain accurate records and documentationSupport the chiropractic team with administrative tasksQualifications:\nProficient in computer skillsAdministrative background is a plusStrong communication and interpersonal skillsAbility to work collaboratively as part of a teamFriendly, patient-oriented, and loves working with peopleWhy Join Us?\nSupportive team environmentOpportunity to grow in a healthcare settingMake a meaningful impact on patients&rsquo; well-beingJob Type: Full-time\nPay: $17.00 per hour\nBenefits:\n401(k)401(k) matchingEmployee discountHealth insuranceOn-the-job trainingPaid time offPaid trainingReferral programWork Location: In person\n\nPLEASE APPLY WITH A RESUME TO: DRKARACRABILL@GMAIL.COM OR FEEL FREE TO CALL (330) 952-2255",
+      "tags": [],
+      "location": "",
+      "applyUrl": "",
+      "companyName": "New Horizon Chiropractic",
+      "companySlug": "",
+      "dateRaw": "6/4/2026",
+      "dateISO": "2026-06-04",
+      "detailUrl": "https://business.medinachamber.com/jobs/Details/chiropractic-receptionist-assistant-336324",
+      "scrapedAt": "2026-06-09T08:31:12.978Z"
+    },
     {
       "slug": "dental-assistant",
       "jobId": "335485",
@@ -16,7 +32,7 @@
       "dateRaw": "6/1/2026",
       "dateISO": "2026-06-01",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/dental-assistant-335485",
-      "scrapedAt": "2026-06-08T09:23:10.793Z"
+      "scrapedAt": "2026-06-09T08:31:13.573Z"
     },
     {
       "slug": "domestic-violence-shelter-manager-medina-county",
@@ -32,7 +48,7 @@
       "dateRaw": "5/21/2026",
       "dateISO": "2026-05-21",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/domestic-violence-shelter-manager-medina-county-333559",
-      "scrapedAt": "2026-06-08T09:23:11.337Z"
+      "scrapedAt": "2026-06-09T08:31:14.267Z"
     },
     {
       "slug": "domestic-violence-crisis-specialist",
@@ -48,7 +64,7 @@
       "dateRaw": "5/21/2026",
       "dateISO": "2026-05-21",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/domestic-violence-crisis-specialist-333565",
-      "scrapedAt": "2026-06-08T09:23:11.911Z"
+      "scrapedAt": "2026-06-09T08:31:15.100Z"
     },
     {
       "slug": "catering-event-staff",
@@ -64,7 +80,7 @@
       "dateRaw": "4/30/2026",
       "dateISO": "2026-04-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/catering-event-staff-328997",
-      "scrapedAt": "2026-06-08T09:23:12.450Z"
+      "scrapedAt": "2026-06-09T08:31:15.683Z"
     }
   ]
 }

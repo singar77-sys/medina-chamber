@@ -76,7 +76,7 @@ export function NotifyForm({ adminToken }: Props) {
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83BCA9]"
+          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-cambridge)]"
         >
           {CATEGORIES.map((c) => (
             <option key={c} value={c}>{c}</option>
@@ -92,7 +92,7 @@ export function NotifyForm({ adminToken }: Props) {
           rows={6}
           maxLength={2000}
           placeholder="Describe what you need help with. The more detail, the faster we can help."
-          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83BCA9] resize-y"
+          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-cambridge)] resize-y"
           required
         />
         <p className="text-xs text-gray-400 mt-1">{2000 - message.length} chars remaining</p>
@@ -108,7 +108,7 @@ export function NotifyForm({ adminToken }: Props) {
         type="submit"
         disabled={sending || !message.trim()}
         className="px-5 py-2.5 text-sm font-semibold text-white rounded-lg disabled:opacity-40 transition-opacity"
-        style={{ background: "#0C1B33" }}
+        style={{ background: "var(--color-oxford)" }}
       >
         {sending ? "Sending…" : "Send to Hunter Systems"}
       </button>

@@ -61,7 +61,7 @@ export function GraphicPanel({
         <div>
           <p className="text-xs text-gray-400 mb-2">
             Preview, Social (1200×630)
-            <span className="ml-2" style={{ color: "#83BCA9" }}>· {previewLabel}</span>
+            <span className="ml-2" style={{ color: "var(--color-cambridge)" }}>· {previewLabel}</span>
           </p>
           <div className="border border-gray-200 rounded-xl overflow-hidden bg-white">
             {graphicImageUrl ? (

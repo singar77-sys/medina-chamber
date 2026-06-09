@@ -113,7 +113,7 @@ export function GraphicTemplateCreator({ adminToken, onSaved, onCancel }: Props)
           <select
             value={eventTypeSlug}
             onChange={(e) => setEventTypeSlug(e.target.value)}
-            className="w-full text-sm px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#83BCA9] bg-white"
+            className="w-full text-sm px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[var(--color-cambridge)] bg-white"
           >
             <option value="">Select type…</option>
             {EVENT_TYPE_OPTIONS.map((opt) => (
@@ -133,13 +133,13 @@ export function GraphicTemplateCreator({ adminToken, onSaved, onCancel }: Props)
               onChange={(e) => setStylePrompt(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && generate()}
               placeholder='e.g. "in the style of Star Wars" or "Art Deco gold and black"'
-              className="flex-1 text-sm px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#83BCA9]"
+              className="flex-1 text-sm px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[var(--color-cambridge)]"
             />
             <button
               onClick={generate}
               disabled={!eventTypeSlug || !stylePrompt.trim() || generating}
               className="px-4 py-2 rounded-md text-sm font-medium text-white transition-opacity disabled:opacity-40"
-              style={{ background: "#0C1B33" }}
+              style={{ background: "var(--color-oxford)" }}
             >
               {generating ? "Generating…" : "Generate"}
             </button>
@@ -162,7 +162,7 @@ export function GraphicTemplateCreator({ adminToken, onSaved, onCancel }: Props)
         <div className="flex items-center gap-3 py-4">
           <div
             className="w-4 h-4 border-2 rounded-full animate-spin"
-            style={{ borderColor: "#83BCA9", borderTopColor: "transparent" }}
+            style={{ borderColor: "var(--color-cambridge)", borderTopColor: "transparent" }}
           />
           <span className="text-sm text-gray-500">
             Claude is designing your template, this takes 10–20 seconds…
@@ -193,7 +193,7 @@ export function GraphicTemplateCreator({ adminToken, onSaved, onCancel }: Props)
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full text-sm px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#83BCA9]"
+                className="w-full text-sm px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[var(--color-cambridge)]"
               />
             </div>
 
@@ -220,7 +220,7 @@ export function GraphicTemplateCreator({ adminToken, onSaved, onCancel }: Props)
                 onClick={save}
                 disabled={saving || !name.trim()}
                 className="flex-1 py-2 rounded-md text-sm font-medium text-white transition-opacity disabled:opacity-40"
-                style={{ background: "#83BCA9" }}
+                style={{ background: "var(--color-cambridge)" }}
               >
                 {saving ? "Saving…" : "Save Template"}
               </button>

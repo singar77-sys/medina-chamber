@@ -119,7 +119,7 @@ export function EventEditor({ slug, event, initialOverride, adminToken }: Props)
   }
 
   const inputCls =
-    "w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#83BCA9]";
+    "w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-cambridge";
   const labelCls = "block text-xs font-medium text-gray-500 mb-1";
 
   return (
@@ -304,7 +304,7 @@ export function EventEditor({ slug, event, initialOverride, adminToken }: Props)
               onClick={handleSave}
               disabled={status === "saving"}
               className="px-5 py-2 rounded-lg text-sm font-medium text-white disabled:opacity-60"
-              style={{ background: "#0C1B33" }}
+              style={{ background: "var(--color-oxford)" }}
             >
               {status === "saving" ? "Saving…" : "Save changes"}
             </button>

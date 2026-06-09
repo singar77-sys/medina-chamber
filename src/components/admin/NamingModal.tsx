@@ -105,7 +105,7 @@ export function NamingModal({ files, defaultDescription = "", onConfirm, onCance
               if (e.key === "Escape") onCancel();
             }}
             placeholder="e.g. golf outing, chamber chat, ribbon cutting…"
-            className="w-full text-sm px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83BCA9] text-gray-800 placeholder:text-gray-400"
+            className="w-full text-sm px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-cambridge)] text-gray-800 placeholder:text-gray-400"
           />
         </div>
 
@@ -118,7 +118,7 @@ export function NamingModal({ files, defaultDescription = "", onConfirm, onCance
             <span className="text-[10px] uppercase tracking-widest text-gray-400 w-14 shrink-0 pt-0.5">File</span>
             <span
               className="text-xs font-mono break-all"
-              style={{ color: hasDescription ? "#0C1B33" : "#9ca3af" }}
+              style={{ color: hasDescription ? "var(--color-oxford)" : "#9ca3af" }}
             >
               {filenamePreview}
               {files.length > 1 && hasDescription && (
@@ -149,7 +149,7 @@ export function NamingModal({ files, defaultDescription = "", onConfirm, onCance
             onClick={() => onConfirm(description)}
             disabled={!hasDescription}
             className="flex-1 py-2.5 text-sm text-white rounded-lg font-medium transition-colors disabled:opacity-40"
-            style={{ background: "#0C1B33" }}
+            style={{ background: "var(--color-oxford)" }}
           >
             Upload {files.length > 1 ? `${files.length} files` : ""}
           </button>

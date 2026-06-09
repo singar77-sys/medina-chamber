@@ -141,13 +141,13 @@ export function EventPhotoUploader({ eventSlug, eventTitle, adminToken, initialP
         onClick={() => inputRef.current?.click()}
         className="cursor-pointer rounded-xl border-2 border-dashed transition-colors px-6 py-8 text-center"
         style={{
-          borderColor: dragging ? "#83BCA9" : "#e5e7eb",
+          borderColor: dragging ? "var(--color-cambridge)" : "#e5e7eb",
           background: dragging ? "rgba(131,188,169,0.05)" : "transparent",
         }}
       >
         <p className="text-sm text-gray-500">
           Drop photos here or{" "}
-          <span style={{ color: "#83BCA9" }} className="font-medium">browse</span>
+          <span style={{ color: "var(--color-cambridge)" }} className="font-medium">browse</span>
         </p>
         <p className="text-xs text-gray-400 mt-1">JPEG, PNG, WebP up to 15 MB · Auto-converted to WebP</p>
         <input
@@ -237,7 +237,7 @@ export function EventPhotoUploader({ eventSlug, eventTitle, adminToken, initialP
               onKeyDown={(e) => e.key === "Enter" && saveCaption(editingCaption)}
               placeholder="Optional photo caption"
               autoFocus
-              className="w-full text-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#83BCA9]"
+              className="w-full text-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-cambridge)]"
             />
             <div className="flex gap-2">
               <button
@@ -249,7 +249,7 @@ export function EventPhotoUploader({ eventSlug, eventTitle, adminToken, initialP
               <button
                 onClick={() => saveCaption(editingCaption)}
                 className="flex-1 py-2 text-sm text-white rounded-md"
-                style={{ background: "#0C1B33" }}
+                style={{ background: "var(--color-oxford)" }}
               >
                 Save
               </button>

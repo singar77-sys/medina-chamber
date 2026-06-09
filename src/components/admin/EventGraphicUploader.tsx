@@ -77,7 +77,7 @@ export function EventGraphicUploader({
           <div className="absolute top-2 right-2">
             <span
               className="text-[10px] uppercase tracking-wide font-semibold px-2 py-0.5 rounded"
-              style={{ background: "rgba(12,27,51,0.85)", color: "#83BCA9" }}
+              style={{ background: "rgba(12,27,51,0.85)", color: "var(--color-cambridge)" }}
             >
               Active
             </span>
@@ -87,11 +87,13 @@ export function EventGraphicUploader({
         <button
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
-          className="w-full rounded-xl border-2 border-dashed border-gray-200 hover:border-[#83BCA9] transition-colors px-4 py-6 text-center disabled:opacity-50"
+          className="w-full rounded-xl border-2 border-dashed border-gray-200 transition-colors px-4 py-6 text-center disabled:opacity-50"
+          onMouseEnter={(e) => (e.currentTarget.style.borderColor = "var(--color-cambridge)")}
+          onMouseLeave={(e) => (e.currentTarget.style.borderColor = "")}
         >
           {uploading ? (
             <div className="flex items-center justify-center gap-2">
-              <div className="w-4 h-4 rounded-full border-2 border-[#83BCA9] border-t-transparent animate-spin" />
+              <div className="w-4 h-4 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: "var(--color-cambridge) transparent transparent transparent" }} />
               <span className="text-sm text-gray-500">Uploading…</span>
             </div>
           ) : (

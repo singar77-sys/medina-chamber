@@ -106,7 +106,7 @@ export function GraphicEditor({ slug, eventTitle, adminToken, initialInfo, onInf
     <div className="flex flex-col h-80 border border-gray-200 rounded-lg overflow-hidden bg-white">
       {/* Header */}
       <div className="flex items-center gap-2 px-4 py-2.5 border-b border-gray-200 bg-gray-50">
-        <span style={{ color: "#83BCA9" }}>◈</span>
+        <span style={{ color: "var(--color-cambridge)" }}>◈</span>
         <span className="text-sm font-medium text-gray-700">Graphic Command</span>
         <span className="ml-auto text-xs text-gray-400">date · time · venue · note</span>
       </div>
@@ -119,7 +119,7 @@ export function GraphicEditor({ slug, eventTitle, adminToken, initialInfo, onInf
               className="max-w-[85%] px-3 py-2 rounded-lg text-sm whitespace-pre-wrap"
               style={
                 msg.role === "user"
-                  ? { background: "#0C1B33", color: "#fff" }
+                  ? { background: "var(--color-oxford)", color: "#fff" }
                   : msg.isError
                   ? { background: "#fef2f2", color: "#991b1b", border: "1px solid #fecaca" }
                   : { background: "#f1f5f9", color: "#374151" }
@@ -148,13 +148,13 @@ export function GraphicEditor({ slug, eventTitle, adminToken, initialInfo, onInf
           onKeyDown={handleKeyDown}
           placeholder='e.g. "Change the date to May 15"'
           disabled={loading}
-          className="flex-1 text-sm px-3 py-1.5 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#83BCA9] disabled:opacity-50"
+          className="flex-1 text-sm px-3 py-1.5 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[var(--color-cambridge)] disabled:opacity-50"
         />
         <button
           onClick={send}
           disabled={loading || !input.trim()}
           className="px-3 py-1.5 rounded-md text-sm font-medium text-white transition-opacity disabled:opacity-40"
-          style={{ background: "#0C1B33" }}
+          style={{ background: "var(--color-oxford)" }}
         >
           Send
         </button>

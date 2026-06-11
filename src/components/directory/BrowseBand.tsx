@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { IndustryChipStrip } from "./IndustryChipStrip";
 import { getMembersByCity, getCommunityInvestors } from "@/data/members";
 
-const FEATURED_CITIES = ["Medina", "Brunswick", "Wadsworth", "Lodi"] as const;
+const FEATURED_CITIES = ["Medina", "Brunswick", "Wadsworth"] as const;
 
 interface BrowseBandProps {
   /** Full category list sorted by member count (descending). */

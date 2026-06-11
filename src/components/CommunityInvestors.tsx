@@ -172,6 +172,18 @@ export function CommunityInvestors() {
           </p>
         </FadeIn>
 
+        {/* Member quote */}
+        <FadeIn delay={300}>
+          <figure className="mt-8 mx-auto max-w-2xl text-center">
+            <blockquote className="text-body-sm text-text-secondary italic leading-relaxed">
+              &ldquo;Strong businesses help build strong communities. Through the Chamber, we&apos;re able to play an active role in making Medina County a great place for everyone.&rdquo;
+            </blockquote>
+            <figcaption className="mt-3 text-caption text-text-tertiary">
+              Steve Allison &middot; Fire Dex
+            </figcaption>
+          </figure>
+        </FadeIn>
+
       </div>
     </section>
   );

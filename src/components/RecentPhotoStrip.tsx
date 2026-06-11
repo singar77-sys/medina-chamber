@@ -30,11 +30,12 @@ export async function RecentPhotoStrip() {
   if (photos.length < 4) return null;
 
   return (
-    <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+    <section className="border-t border-border-primary">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
       <FadeIn>
         <div className="flex items-end justify-between mb-f21 gap-f13 flex-wrap">
           <div>
-            <p className="text-overline text-cambridge mb-f8">Community</p>
+            <p className="text-overline text-cambridge mb-f8">Highlights</p>
             <h2 className="text-h2">Life at the Chamber</h2>
           </div>
           <Link
@@ -75,6 +76,7 @@ export async function RecentPhotoStrip() {
           </Link>
         </div>
       </FadeIn>
+      </div>
     </section>
   );
 }

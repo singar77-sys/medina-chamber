@@ -94,11 +94,6 @@ export function IndustryChipStrip({
             `}
           >
             {category}
-            <span
-              className={`ml-f5 ${isActive ? chipClasses.count.active : chipClasses.count.idle}`}
-            >
-              {count}
-            </span>
           </button>
         );
       })}

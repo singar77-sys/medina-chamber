@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { IndustryChipStrip } from "./IndustryChipStrip";
 import { getMembersByCity, getCommunityInvestors } from "@/data/members";
@@ -55,26 +54,9 @@ export function BrowseBand({
   return (
     <section
       aria-labelledby="browse-band-heading"
-      className="relative bg-oxford border-y border-white/10 py-f55 lg:py-f89 overflow-hidden"
+      className="bg-oxford border-y border-white/10 py-f55 lg:py-f89"
     >
-      {/* Ghosted Medina Square aerial backdrop */}
-      <div
-        className="absolute inset-0 pointer-events-none select-none"
-        aria-hidden="true"
-      >
-        <Image
-          src="/images/photos/medina-square-aerial-spring.jpg"
-          alt=""
-          fill
-          className="object-cover object-center opacity-[0.10]"
-          sizes="100vw"
-          quality={55}
-        />
-        {/* Bottom wash keeps the investor ribbon legible */}
-        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-oxford to-transparent" />
-      </div>
-
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <p className="text-overline text-cambridge mb-f8 tracking-[0.18em]">
           Browse the directory
         </p>
@@ -82,7 +64,7 @@ export function BrowseBand({
           Every trade. <span className="text-cambridge">Every town.</span>
         </h2>
         <p className="text-body-lg text-white/70 mt-f8 max-w-2xl">
-          {memberCount} member businesses across Medina County — browse by
+          500+ member businesses across Medina County. Browse by
           what you need or where you are.
         </p>
 
@@ -127,7 +109,7 @@ export function BrowseBand({
 
             <div className="mt-f21">
               <Button variant="primary" size="md" onClick={onSeeAll}>
-                Browse all {memberCount} members{" "}
+                Browse all 500+ members{" "}
                 <span aria-hidden="true" className="ml-f5">
                   →
                 </span>
@@ -153,34 +135,26 @@ export function BrowseBand({
             </div>
 
             <ul>
-              {cities.map(({ city, slug, total }) => (
+              {cities.map(({ city, slug }) => (
                 <li key={city}>
                   <Link
                     href={`/community/${slug}`}
                     className="
-                      group flex items-baseline gap-f13
+                      group flex items-center
                       py-f13 border-b border-white/10
                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge focus-visible:rounded
                     "
                   >
-                    <span
-                      className="text-h2 font-bold text-cambridge leading-none w-[2.5ch] tabular-nums"
-                      aria-hidden="true"
-                    >
-                      {total}
-                    </span>
-                    <span className="text-body-lg text-white group-hover:text-cambridge transition-colors duration-200">
+                    <span className="flex-1 text-body-lg text-white group-hover:text-cambridge transition-colors duration-200">
                       {city}
                     </span>
                     <span
-                      className="ml-auto text-white/40 group-hover:text-cambridge group-hover:translate-x-1 transition-all duration-200"
+                      className="text-white/40 group-hover:text-cambridge group-hover:translate-x-1 transition-all duration-200"
                       aria-hidden="true"
                     >
                       →
                     </span>
-                    <span className="sr-only">
-                      {total} members in {city}
-                    </span>
+                    <span className="sr-only">{city} member businesses</span>
                   </Link>
                 </li>
               ))}

@@ -338,6 +338,9 @@ summary,
 [data-theme="dark"]  .ci-card              { border-color: rgb(255 255 255 / 0.15); }
 [data-theme="dark"]  .ci-card:hover        { border-color: rgb(131 188 169 / 0.4); }
 .ci-card img                               { mix-blend-mode: multiply; }
+/* White-on-transparent PNG logos — invert first so white→black, then multiply renders correctly */
+.ci-card[href*="fire-dex"] img,
+.ci-card[href*="great-lakes-construction-co"] img { filter: invert(1); }
 
 
 /* ── Community Investor marquee ──────────────────────────────── */

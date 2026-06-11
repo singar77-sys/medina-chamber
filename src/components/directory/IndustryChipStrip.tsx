@@ -17,6 +17,8 @@ interface IndustryChipStripProps {
   active: string | null;
   /** Called when a chip is clicked. Passes null to clear. */
   onSelect: (category: string | null) => void;
+  /** Optional: renders a "See all members" link under the chips. */
+  onSeeAll?: () => void;
 }
 
 export function IndustryChipStrip({
@@ -24,6 +26,7 @@ export function IndustryChipStrip({
   totalCount,
   active,
   onSelect,
+  onSeeAll,
 }: IndustryChipStripProps) {
   if (industries.length === 0) return null;
 
@@ -77,6 +80,22 @@ export function IndustryChipStrip({
           );
         })}
       </div>
+
+      {onSeeAll && (
+        <div className="mt-f13">
+          <button
+            type="button"
+            onClick={onSeeAll}
+            className="
+              text-caption text-text-tertiary hover:text-accent
+              underline underline-offset-4 transition-colors duration-200
+              focus-visible:outline-none focus-visible:text-accent
+            "
+          >
+            See all members <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      )}
     </section>
   );
 }

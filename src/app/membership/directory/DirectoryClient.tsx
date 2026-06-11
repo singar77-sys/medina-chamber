@@ -45,6 +45,7 @@ function DirectoryClientInner({
   const [activeCategory, setActiveCategory] = useState<string | null>(
     searchParams.get("category") ?? null,
   );
+  const [showAll, setShowAll] = useState(searchParams.get("all") === "1");
 
   const [semanticSlugs, setSemanticSlugs] = useState<string[] | null>(null);
   const [isSearching, setIsSearching] = useState(false);
@@ -56,10 +57,11 @@ function DirectoryClientInner({
     const params = new URLSearchParams();
     if (search.trim()) params.set("q", search.trim());
     if (activeCategory) params.set("category", activeCategory);
+    if (showAll && !search.trim() && !activeCategory) params.set("all", "1");
     const qs = params.toString();
     router.replace(pathname + (qs ? `?${qs}` : ""), { scroll: false });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, activeCategory]);
+  }, [search, activeCategory, showAll]);
 
   // Debounced semantic search
   useEffect(() => {
@@ -124,12 +126,13 @@ function DirectoryClientInner({
     return result;
   }, [members, search, activeCategory, semanticSlugs]);
 
-  const isFiltered = !!search.trim() || !!activeCategory;
+  const isFiltered = !!search.trim() || !!activeCategory || showAll;
 
   function reset() {
     setSearch("");
     setActiveCategory(null);
     setSemanticSlugs(null);
+    setShowAll(false);
   }
 
   return (
@@ -150,8 +153,22 @@ function DirectoryClientInner({
             totalCount={totalIndustries}
             active={activeCategory}
             onSelect={setActiveCategory}
+            onSeeAll={() => setShowAll(true)}
           />
           {citiesSlot}
+          <div className="mx-auto max-w-7xl px-6 lg:px-8 -mt-f21 pb-f34">
+            <button
+              type="button"
+              onClick={() => setShowAll(true)}
+              className="
+                text-caption text-text-tertiary hover:text-accent
+                underline underline-offset-4 transition-colors duration-200
+                focus-visible:outline-none focus-visible:text-accent
+              "
+            >
+              See all members <span aria-hidden="true">→</span>
+            </button>
+          </div>
         </>
       ) : (
         // ── RESULTS MODE ─────────────────────────────

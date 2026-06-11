@@ -180,7 +180,7 @@ export default function HomePage() {
           <div className="grid grid-cols-3 gap-f13 md:gap-f21">
             {[
               { end: 500, label: "Member Businesses", suffix: "+" },
-              { end: 40, label: "Events Per Year", suffix: "+" },
+              { end: 50, label: "Events Per Year", suffix: "+" },
               { end: new Date().getFullYear() - 1938, label: "Years Serving", suffix: "+" },
             ].map((s) => (
               <div key={s.label} className="text-center">
@@ -399,7 +399,7 @@ export default function HomePage() {
             src="/images/photos/networking.webp"
             alt=""
             fill
-            className="object-cover opacity-[0.05]"
+            className="object-cover opacity-[0.10]"
             sizes="100vw"
             quality={60}
           />
@@ -454,7 +454,7 @@ export default function HomePage() {
             src="/images/photos/industry-medina.jpg"
             alt=""
             fill
-            className="object-cover object-center opacity-[0.05]"
+            className="object-cover object-center opacity-[0.10]"
             sizes="100vw"
             quality={55}
           />

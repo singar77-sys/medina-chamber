@@ -8,9 +8,6 @@ import { BrandShaderBackground } from "@/components/effects/BrandShaderBackgroun
  * Server Component. No photo — the quote itself is the face. Massive
  * cambridge open-quote as visual anchor, attribution in the lower-right
  * corner as signature, supporting stat chip + link to more stories.
- *
- * ⚠️ The quote below is a structural placeholder. Swap with a real
- * attributed member testimonial before taking to market.
  */
 export function MemberVoice() {
   return (
@@ -33,9 +30,11 @@ export function MemberVoice() {
               &ldquo;
             </span>
             <span className="mv-quote__body">
-              We didn&apos;t join the Chamber to network.
+              The Chamber helped us build relationships that turned into
+              customers, partnerships, and lasting opportunities.
               <br />
-              We joined to <span className="text-accent">win</span>.
+              It&apos;s been <span className="text-accent">invaluable</span> to
+              our growth.
             </span>
           </blockquote>
         </FadeIn>
@@ -47,13 +46,10 @@ export function MemberVoice() {
                 Attribution
               </p>
               <p className="text-body-sm text-text-primary mt-2 font-bold">
-                Matt Hunter
+                Dan Calvin
                 <span className="text-text-tertiary font-normal">
-                  {" · "}President, Hunter Consulting
+                  {" · "}Critchfield, Critchfield &amp; Johnston, Ltd.
                 </span>
-              </p>
-              <p className="text-caption text-text-tertiary mt-1">
-                Chamber member since 2018 · Workers&apos; comp savings partner
               </p>
             </div>
 

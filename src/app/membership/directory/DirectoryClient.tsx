@@ -52,16 +52,49 @@ function DirectoryClientInner({
   const [searchError, setSearchError] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
 
-  // Sync URL when filters change
+  // Last query string this component wrote (or adopted). Lets the
+  // URL→state effect tell our own router.replace echoes apart from real
+  // navigations (nav link, back/forward, command palette).
+  const lastSyncedQs = useRef(searchParams.toString());
+  const urlWriteTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // State → URL, debounced. Typing doesn't spam router.replace per
+  // keystroke; the URL settles 250ms after the last change. Debouncing
+  // also guarantees any searchParams change that differs from
+  // lastSyncedQs is a real navigation, not a stale echo of our own write.
   useEffect(() => {
     const params = new URLSearchParams();
     if (search.trim()) params.set("q", search.trim());
     if (activeCategory) params.set("category", activeCategory);
     if (showAll && !search.trim() && !activeCategory) params.set("all", "1");
     const qs = params.toString();
-    router.replace(pathname + (qs ? `?${qs}` : ""), { scroll: false });
+    if (qs === lastSyncedQs.current) return;
+    urlWriteTimer.current = setTimeout(() => {
+      lastSyncedQs.current = qs;
+      router.replace(pathname + (qs ? `?${qs}` : ""), { scroll: false });
+    }, 250);
+    return () => {
+      if (urlWriteTimer.current) clearTimeout(urlWriteTimer.current);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, activeCategory, showAll]);
+
+  // URL → state. Without this, state only reads the URL at mount: clicking
+  // a nav/footer link to the bare directory while filtered left the old
+  // search stuck in the box with the results still filtered (and the next
+  // keystroke wrote the stale filter back into the URL). Adopting the
+  // params on real navigations keeps the URL authoritative both ways.
+  useEffect(() => {
+    const qs = searchParams.toString();
+    if (qs === lastSyncedQs.current) return; // our own echo
+    if (urlWriteTimer.current) clearTimeout(urlWriteTimer.current);
+    lastSyncedQs.current = qs;
+    /* eslint-disable react-hooks/set-state-in-effect */
+    setSearch(searchParams.get("q") ?? "");
+    setActiveCategory(searchParams.get("category") ?? null);
+    setShowAll(searchParams.get("all") === "1");
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, [searchParams]);
 
   // Debounced semantic search
   useEffect(() => {
@@ -192,28 +225,42 @@ function DirectoryClientInner({
             variant="refine"
           />
 
-          <div className="mt-f21 flex items-center justify-between">
-            <p className="text-caption text-text-tertiary">
+          {/* Active filters — every applied filter is visible and
+              individually removable, so nothing can get invisibly stuck. */}
+          <div className="mt-f21 flex flex-wrap items-center gap-x-f13 gap-y-f8">
+            <p className="text-caption text-text-tertiary shrink-0">
               <span className="font-bold text-text-primary">{filtered.length}</span>{" "}
               of {members.length} members
-              {activeCategory && (
-                <>
-                  {" "}in <span className="text-cambridge">{activeCategory}</span>
-                </>
-              )}
               {search.trim() && !searchError && semanticSlugs && (
-                <span className="ml-2 text-cambridge">· semantic match</span>
+                <span className="ml-2 text-cambridge">· smart match</span>
               )}
               {searchError && (
-                <span className="ml-2 text-text-tertiary">· keyword fallback</span>
+                <span className="ml-2 text-text-tertiary">· keyword match</span>
               )}
             </p>
+
+            {search.trim() && (
+              <FilterPill
+                label={`“${search.trim()}”`}
+                onRemove={() => setSearch("")}
+              />
+            )}
+            {activeCategory && (
+              <FilterPill
+                label={activeCategory}
+                onRemove={() => setActiveCategory(null)}
+              />
+            )}
+            {showAll && !search.trim() && !activeCategory && (
+              <FilterPill label="All members" onRemove={() => setShowAll(false)} />
+            )}
+
             <button
               onClick={reset}
               type="button"
-              className="text-caption text-text-tertiary hover:text-accent focus-visible:outline-none focus-visible:text-accent focus-visible:ring-2 focus-visible:ring-cambridge/40 focus-visible:rounded underline underline-offset-2 transition-colors duration-200"
+              className="ml-auto text-caption text-text-tertiary hover:text-accent focus-visible:outline-none focus-visible:text-accent focus-visible:ring-2 focus-visible:ring-cambridge/40 focus-visible:rounded underline underline-offset-2 transition-colors duration-200"
             >
-              Clear filters
+              Clear all
             </button>
           </div>
 
@@ -230,7 +277,14 @@ function DirectoryClientInner({
                 Try rephrasing — describe the service you need.
               </p>
               <button
-                onClick={reset}
+                onClick={() => {
+                  // Honest label: actually land on the full member list,
+                  // not back on the browse landing.
+                  setSearch("");
+                  setActiveCategory(null);
+                  setSemanticSlugs(null);
+                  setShowAll(true);
+                }}
                 type="button"
                 className="
                   mt-f21 inline-flex items-center px-f21 py-f13
@@ -248,6 +302,35 @@ function DirectoryClientInner({
         </section>
       )}
     </>
+  );
+}
+
+/** Removable pill showing one active filter (query, category, or all). */
+function FilterPill({ label, onRemove }: { label: string; onRemove: () => void }) {
+  return (
+    <span
+      className="
+        inline-flex items-center gap-f5
+        pl-f13 pr-f5 py-f5 rounded-full
+        bg-cambridge/10 border border-cambridge/40
+        text-body-sm text-text-primary
+      "
+    >
+      {label}
+      <button
+        type="button"
+        onClick={onRemove}
+        aria-label={`Remove ${label} filter`}
+        className="
+          flex items-center justify-center w-f21 h-f21 rounded-full
+          text-text-secondary hover:text-text-primary hover:bg-cambridge/20
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge
+          transition-colors duration-200
+        "
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+    </span>
   );
 }
 

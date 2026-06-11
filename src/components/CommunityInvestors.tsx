@@ -53,7 +53,7 @@ function LogoTile({ m, ghost = false }: LogoTileProps) {
         ci-card
         flex-shrink-0 flex items-center justify-center
         w-36 h-[4.5rem] px-3
-        border border-border-secondary hover:border-cambridge/40
+        bg-white border border-black/8 hover:border-cambridge/60
         rounded-[var(--radius-md)]
         transition-colors duration-200
         ${ghost ? "ci-marquee-dupe" : ""}
@@ -64,7 +64,7 @@ function LogoTile({ m, ghost = false }: LogoTileProps) {
         <img
           src={logoPath}
           alt={ghost ? "" : `${m.name} logo`}
-          className="max-h-10 max-w-full w-auto object-contain"
+          className="max-h-10 max-w-full w-auto object-contain mix-blend-multiply"
           loading="lazy"
         />
       ) : (

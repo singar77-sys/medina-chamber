@@ -169,22 +169,30 @@ function DirectoryClientInner({
   }
 
   /**
-   * Chip click = fresh browse-by-industry intent. Clear any lingering
-   * search text so the two filters don't silently AND together and
-   * return zero results (e.g. q="roofers" + category "Insurance").
-   * Deselecting a chip (category=null) keeps the search as-is.
+   * Search and category are mutually exclusive intents: picking one
+   * clears the other. Without this they silently AND together and
+   * return zero results (e.g. category "Employee Benefits" lingering
+   * under a new "Roofers" search, or q="roofers" under a fresh
+   * "Insurance" chip click). Deselecting a chip (category=null) keeps
+   * the search as-is.
    */
   function selectCategory(category: string | null) {
     setActiveCategory(category);
     if (category) setSearch("");
   }
 
+  /** New search input (typing or a suggestion chip) drops any category. */
+  function startSearch(next: string) {
+    setSearch(next);
+    if (next.trim() && activeCategory) setActiveCategory(null);
+  }
+
   return (
     <>
       <DirectoryHero
         query={search}
-        onQueryChange={setSearch}
-        onSuggestionClick={(s) => setSearch(s)}
+        onQueryChange={startSearch}
+        onSuggestionClick={startSearch}
         isSearching={isSearching}
       />
 

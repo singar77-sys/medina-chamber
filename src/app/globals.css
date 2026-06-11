@@ -310,6 +310,19 @@ summary,
   color: var(--cambridge);
 }
 
+/* BrowseBand exception: the oxford-navy band is a dark surface regardless
+ * of page theme — cambridge reads at ~4.6:1 on oxford-blue, so restore
+ * the actual teal rather than the accent-orange fallback. */
+[data-theme="light"] .bg-oxford .text-cambridge {
+  color: var(--cambridge);
+}
+[data-theme="light"] .bg-oxford .hover\:text-cambridge:hover {
+  color: var(--cambridge);
+}
+[data-theme="light"] .bg-oxford .hover\:text-cambridge\/80:hover {
+  color: color-mix(in oklab, var(--cambridge) 80%, transparent);
+}
+
 /* Community Investors — explicit per-theme overrides.
  *
  * [[data-theme=dark]_&]: Tailwind variants appear to apply in both themes

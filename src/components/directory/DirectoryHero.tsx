@@ -46,10 +46,6 @@ export function DirectoryHero({
           <span className="block">Find a Local</span>
           <span className="block text-accent">Medina Business</span>
         </h1>
-        <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
-          Ask in plain English. Smart search matches your need to the right chamber member.
-        </p>
-
         <div className="mt-f34 max-w-2xl">
           <RotatingPlaceholder prompts={EXAMPLE_PROMPTS} paused={focused || !!query}>
             {(current) => (

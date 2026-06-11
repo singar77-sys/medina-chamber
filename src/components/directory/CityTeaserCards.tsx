@@ -1,16 +1,13 @@
 import Link from "next/link";
-import Image from "next/image";
-import { getMembersByCity, getInitials, type Member } from "@/data/members";
+import { getMembersByCity } from "@/data/members";
 
 const FEATURED_CITIES = ["Medina", "Brunswick", "Wadsworth", "Lodi"] as const;
-const LOGOS_PER_CARD = 5;
 
 /**
  * Four featured city teaser cards on the main directory page.
  *
- * Each card links to the existing /community/[slug] page and shows up to
- * five sample member logos as a tactile preview. Empty cities (no members)
- * are skipped silently.
+ * Each card links to the existing /community/[slug] page with the city
+ * name and member count. Empty cities (no members) are skipped silently.
  */
 export function CityTeaserCards() {
   const cards = FEATURED_CITIES.map((city) => {
@@ -18,7 +15,6 @@ export function CityTeaserCards() {
     return {
       city,
       slug: city.toLowerCase(),
-      sample: all.slice(0, LOGOS_PER_CARD),
       total: all.length,
     };
   }).filter((c) => c.total > 0);
@@ -56,12 +52,10 @@ export function CityTeaserCards() {
 function CityCard({
   city,
   slug,
-  sample,
   total,
 }: {
   city: string;
   slug: string;
-  sample: Member[];
   total: number;
 }) {
   return (
@@ -80,36 +74,6 @@ function CityCard({
         <h3 className="text-h4 group-hover:text-accent transition-colors">{city}</h3>
         <span className="text-caption text-text-tertiary">{total}</span>
       </header>
-
-      <div className="flex -space-x-2 mb-f13">
-        {sample.map((m) => (
-          <div
-            key={m.chamberSlug}
-            className="
-              relative w-f34 h-f34
-              bg-bg-secondary border-2 border-bg-primary
-              rounded-full overflow-hidden
-              flex items-center justify-center
-            "
-            title={m.name}
-          >
-            {m.logoUrl ? (
-              <Image
-                src={m.logoUrl}
-                alt=""
-                fill
-                className="object-contain p-1"
-                sizes="40px"
-                unoptimized
-              />
-            ) : (
-              <span className="text-caption font-bold text-text-tertiary">
-                {getInitials(m.name)}
-              </span>
-            )}
-          </div>
-        ))}
-      </div>
 
       <p className="text-caption text-text-secondary mt-auto">
         See all in {city} <span aria-hidden="true">→</span>

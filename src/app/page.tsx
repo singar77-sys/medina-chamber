@@ -304,13 +304,13 @@ export default function HomePage() {
                       </FluidGraphicFrame>
                     </div>
                   ) : event.image ? (
-                    <div className="relative aspect-video border-b border-border-secondary overflow-hidden">
+                    <div className="relative aspect-[1200/630] border-b border-border-secondary overflow-hidden">
                       <Image
                         src={event.image}
                         alt={event.title}
                         fill
                         sizes="(max-width: 768px) 100vw, 33vw"
-                        className="object-cover"
+                        className="object-cover object-bottom"
                       />
                     </div>
                   ) : null}

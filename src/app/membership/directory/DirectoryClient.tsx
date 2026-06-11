@@ -9,13 +9,16 @@ import { type Member } from "@/data/members";
 
 interface DirectoryClientProps {
   members: Member[];
-  topIndustries: ReadonlyArray<{ category: string; count: number }>;
-  totalIndustries: number;
+  /** Full category list sorted by member count (descending). */
+  industries: ReadonlyArray<{ category: string; count: number }>;
   /** Server-rendered Community Investor showcase (passed in via page.tsx). */
   investorsSlot: ReactNode;
   /** Server-rendered City teaser cards (passed in via page.tsx). */
   citiesSlot: ReactNode;
 }
+
+/** How many industry chips show before the visitor expands to all. */
+const TOP_INDUSTRIES = 10;
 
 // ── Client-side keyword fallback (used if /api/search errors out) ───
 function keywordFilter(members: Member[], q: string): Member[] {
@@ -32,8 +35,7 @@ function keywordFilter(members: Member[], q: string): Member[] {
 
 function DirectoryClientInner({
   members,
-  topIndustries,
-  totalIndustries,
+  industries,
   investorsSlot,
   citiesSlot,
 }: DirectoryClientProps) {
@@ -50,7 +52,25 @@ function DirectoryClientInner({
   const [semanticSlugs, setSemanticSlugs] = useState<string[] | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [searchError, setSearchError] = useState(false);
+  const [showAllCategories, setShowAllCategories] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
+
+  const topIndustries = industries.slice(0, TOP_INDUSTRIES);
+  const browseIndustries = showAllCategories ? industries : topIndustries;
+
+  // Refine bar stays compact (top 10), but if the active category is a
+  // rare one (picked from the expanded list or a deep link), prepend it
+  // so its chip is visible and deselectable.
+  const refineIndustries =
+    activeCategory && !topIndustries.some((i) => i.category === activeCategory)
+      ? [
+          industries.find((i) => i.category === activeCategory) ?? {
+            category: activeCategory,
+            count: 0,
+          },
+          ...topIndustries,
+        ]
+      : topIndustries;
 
   // Last query string this component wrote (or adopted). Lets the
   // URL→state effect tell our own router.replace echoes apart from real
@@ -201,11 +221,13 @@ function DirectoryClientInner({
         <>
           {investorsSlot}
           <IndustryChipStrip
-            industries={topIndustries}
-            totalCount={totalIndustries}
+            industries={browseIndustries}
+            totalCount={industries.length}
             active={activeCategory}
             onSelect={selectCategory}
             onSeeAll={() => setShowAll(true)}
+            expanded={showAllCategories}
+            onToggleExpand={() => setShowAllCategories((v) => !v)}
           />
           {citiesSlot}
           <div className="mx-auto max-w-7xl px-6 lg:px-8 -mt-f21 pb-f34">
@@ -226,8 +248,8 @@ function DirectoryClientInner({
         // ── RESULTS MODE ─────────────────────────────
         <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f34">
           <IndustryChipStrip
-            industries={topIndustries}
-            totalCount={totalIndustries}
+            industries={refineIndustries}
+            totalCount={industries.length}
             active={activeCategory}
             onSelect={selectCategory}
             variant="refine"

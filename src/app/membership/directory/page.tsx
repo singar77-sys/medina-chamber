@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { members, getTopIndustries, getAllCategories } from "@/data/members";
+import { members, getTopIndustries } from "@/data/members";
 import { DirectoryClient } from "./DirectoryClient";
 import { CommunityInvestors } from "@/components/CommunityInvestors";
 import { CityTeaserCards } from "@/components/directory/CityTeaserCards";
@@ -19,15 +19,15 @@ export const metadata: Metadata = {
 };
 
 export default function DirectoryPage() {
-  const topIndustries = getTopIndustries(10);
-  const totalIndustries = getAllCategories().length;
+  // Full count-sorted category list; the client shows the top 10 until
+  // the visitor expands to all categories.
+  const industries = getTopIndustries(Infinity);
 
   return (
     <>
       <DirectoryClient
         members={members}
-        topIndustries={topIndustries}
-        totalIndustries={totalIndustries}
+        industries={industries}
         investorsSlot={<CommunityInvestors />}
         citiesSlot={<CityTeaserCards />}
       />

@@ -28,6 +28,10 @@ interface IndustryChipStripProps {
   onSeeAll?: () => void;
   /** Layout variant — see component docblock. */
   variant?: "browse" | "refine";
+  /** Whether the full category list is currently shown (browse only). */
+  expanded?: boolean;
+  /** Optional: makes the count badge a toggle for the full list (browse only). */
+  onToggleExpand?: () => void;
 }
 
 export function IndustryChipStrip({
@@ -37,6 +41,8 @@ export function IndustryChipStrip({
   onSelect,
   onSeeAll,
   variant = "browse",
+  expanded = false,
+  onToggleExpand,
 }: IndustryChipStripProps) {
   if (industries.length === 0) return null;
 
@@ -44,10 +50,11 @@ export function IndustryChipStrip({
     <div
       role="group"
       aria-label="Industry filters"
-      className="
-        flex gap-f8 overflow-x-auto pb-f8
-        -mx-6 px-6 lg:mx-0 lg:px-0 lg:flex-wrap lg:overflow-visible
-      "
+      className={
+        expanded
+          ? "flex flex-wrap gap-f8 pb-f8"
+          : "flex gap-f8 overflow-x-auto pb-f8 -mx-6 px-6 lg:mx-0 lg:px-0 lg:flex-wrap lg:overflow-visible"
+      }
     >
       {industries.map(({ category, count }) => {
         const isActive = active === category;
@@ -92,9 +99,30 @@ export function IndustryChipStrip({
         <h2 id="industries-heading" className="text-h3">
           Browse by industry
         </h2>
-        <span className="text-caption text-text-tertiary">
-          {totalCount} categories
-        </span>
+        {onToggleExpand ? (
+          <button
+            type="button"
+            onClick={onToggleExpand}
+            aria-expanded={expanded}
+            className="
+              text-caption text-text-tertiary hover:text-accent
+              underline underline-offset-4 transition-colors duration-200
+              focus-visible:outline-none focus-visible:text-accent
+            "
+          >
+            {expanded ? (
+              "Show top industries"
+            ) : (
+              <>
+                All {totalCount} categories <span aria-hidden="true">→</span>
+              </>
+            )}
+          </button>
+        ) : (
+          <span className="text-caption text-text-tertiary">
+            {totalCount} categories
+          </span>
+        )}
       </header>
 
       {chips}

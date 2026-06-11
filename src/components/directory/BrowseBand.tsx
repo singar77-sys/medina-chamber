@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { IndustryChipStrip } from "./IndustryChipStrip";
 import { getMembersByCity, getCommunityInvestors } from "@/data/members";
+import { useTheme } from "@/components/ThemeProvider";
 
 const FEATURED_CITIES = ["Medina", "Brunswick", "Wadsworth"] as const;
 
@@ -26,13 +27,6 @@ interface BrowseBandProps {
   onToggleExpand: () => void;
 }
 
-/**
- * BrowseBand — the directory's browse moment as a single oxford-navy
- * band: industries (golden-ratio major column) and communities (minor
- * column) over a ghosted aerial of Medina Square, footed by a slim
- * Community Investor ribbon. Replaces the old three stacked sections
- * (homepage investors grid + chip strip + city cards).
- */
 export function BrowseBand({
   industries,
   visibleIndustries,
@@ -43,6 +37,8 @@ export function BrowseBand({
   expanded,
   onToggleExpand,
 }: BrowseBandProps) {
+  const { theme } = useTheme();
+
   const cities = FEATURED_CITIES.map((city) => ({
     city,
     slug: city.toLowerCase(),
@@ -54,16 +50,16 @@ export function BrowseBand({
   return (
     <section
       aria-labelledby="browse-band-heading"
-      className="bg-oxford border-y border-white/10 py-f55 lg:py-f89"
+      className="browse-band border-y border-border-primary py-f55 lg:py-f89"
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <p className="text-overline text-cambridge mb-f8 tracking-[0.18em]">
           Browse the directory
         </p>
-        <h2 id="browse-band-heading" className="text-h2 text-white">
+        <h2 id="browse-band-heading" className="text-h2 text-text-primary">
           Every trade. <span className="text-cambridge">Every town.</span>
         </h2>
-        <p className="text-body-lg text-white/70 mt-f8 max-w-2xl">
+        <p className="text-body-lg text-text-secondary mt-f8 max-w-2xl">
           500+ member businesses across Medina County. Browse by
           what you need or where you are.
         </p>
@@ -73,7 +69,7 @@ export function BrowseBand({
           {/* ── By industry ── */}
           <div>
             <div className="flex items-baseline justify-between mb-f13">
-              <h3 className="text-caption uppercase tracking-[0.18em] font-bold text-white/60">
+              <h3 className="text-caption uppercase tracking-[0.18em] font-bold">
                 By industry
               </h3>
               <button
@@ -81,7 +77,7 @@ export function BrowseBand({
                 onClick={onToggleExpand}
                 aria-expanded={expanded}
                 className="
-                  text-caption text-white/60 hover:text-cambridge
+                  text-caption text-text-tertiary hover:text-cambridge
                   underline underline-offset-4 transition-colors duration-200
                   focus-visible:outline-none focus-visible:text-cambridge
                 "
@@ -103,7 +99,7 @@ export function BrowseBand({
               active={active}
               onSelect={onSelect}
               variant="refine"
-              appearance="dark"
+              appearance={theme === "dark" ? "dark" : "light"}
               expanded={expanded}
             />
 
@@ -120,13 +116,13 @@ export function BrowseBand({
           {/* ── By community ── */}
           <div>
             <div className="flex items-baseline justify-between mb-f13">
-              <h3 className="text-caption uppercase tracking-[0.18em] font-bold text-white/60">
+              <h3 className="text-caption uppercase tracking-[0.18em] font-bold">
                 By community
               </h3>
               <Link
                 href="/community"
                 className="
-                  text-caption text-white/60 hover:text-cambridge
+                  text-caption text-text-tertiary hover:text-cambridge
                   underline underline-offset-4 transition-colors duration-200
                 "
               >
@@ -141,15 +137,15 @@ export function BrowseBand({
                     href={`/community/${slug}`}
                     className="
                       group flex items-center
-                      py-f13 border-b border-white/10
+                      py-f13 border-b border-border-primary
                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge focus-visible:rounded
                     "
                   >
-                    <span className="flex-1 text-body-lg text-white group-hover:text-cambridge transition-colors duration-200">
+                    <span className="flex-1 text-body-lg text-text-primary group-hover:text-cambridge transition-colors duration-200">
                       {city}
                     </span>
                     <span
-                      className="text-white/40 group-hover:text-cambridge group-hover:translate-x-1 transition-all duration-200"
+                      className="text-text-tertiary group-hover:text-cambridge group-hover:translate-x-1 transition-all duration-200"
                       aria-hidden="true"
                     >
                       →
@@ -162,11 +158,11 @@ export function BrowseBand({
           </div>
         </div>
 
-        {/* ── Community Investor ribbon — slim nod, not the homepage grid ── */}
-        <div className="mt-f34 lg:mt-f55 pt-f21 border-t border-white/10 flex flex-wrap items-baseline gap-x-f13 gap-y-f8">
-          <p className="text-body-sm text-white/70">
+        {/* ── Community Investor ribbon ── */}
+        <div className="mt-f34 lg:mt-f55 pt-f21 border-t border-border-primary flex flex-wrap items-baseline gap-x-f13 gap-y-f8">
+          <p className="text-body-sm text-text-secondary">
             Backed by{" "}
-            <span className="font-bold text-white">
+            <span className="font-bold text-text-primary">
               {investorCount} Community Investors
             </span>{" "}
             — the businesses leading Medina County.

@@ -1,0 +1,75 @@
+# Nightly sync of the chamber's "2026 Photos" SharePoint folder
+# (medinaohchamber.sharepoint.com → Shared Documents → 1 photos →
+# 2026 Photos) into public/images/photos/. The exact folder list is
+# in scripts/sharepoint-sync.config.json — edit that, not this YAML.
+#
+# Whatever changed gets committed; the commit triggers a Vercel
+# rebuild and the new photos go live on the homepage Top 8 strip
+# (and any other page that reads from photos/{slug}/).
+#
+# Manual trigger: Actions tab → "Sync SharePoint Photos" → Run workflow.
+#
+# Required secrets (Settings → Secrets and variables → Actions):
+#   AZURE_TENANT_ID
+#   AZURE_CLIENT_ID
+#   AZURE_CLIENT_SECRET
+#
+# Azure setup the chamber's M365 admin needs to do once (Entra portal):
+#   1. App registrations → New registration → "Medina Chamber Site Sync"
+#   2. API permissions → Microsoft Graph → Application → Sites.Selected
+#      → click "Grant admin consent"
+#   3. PowerShell w/ PnP (one-time grant for the root site):
+#      Grant-PnPAzureADAppSitePermission \
+#        -AppId <client-id> -DisplayName "Medina Chamber Site Sync" \
+#        -Site https://medinaohchamber.sharepoint.com -Permissions Read
+#   4. Certificates & secrets → New client secret → copy the value
+#   5. Hand the tenant ID, client ID, and secret value over to add
+#      as GitHub Actions secrets
+
+name: Sync SharePoint Photos
+
+on:
+  schedule:
+    # 06:00 UTC → 02:00 ET (EDT) / 01:00 ET (EST). Pre-dawn so the
+    # site has the new images before anyone visits in the morning.
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-sharepoint-photos
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - run: npm ci
+
+      - name: Pull photos from SharePoint
+        env:
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+        run: npm run sync:sharepoint
+
+      - name: Commit and push if anything changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/images/photos/
+          if git diff --staged --quiet; then
+            echo "No photo changes — exiting clean."
+            exit 0
+          fi
+          git commit -m "chore(photos): nightly SharePoint sync"
+          git push

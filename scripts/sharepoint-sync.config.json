@@ -1,0 +1,87 @@
+{
+  "$comment": "Maps SharePoint subfolders under sourceRoot to local public/images/ destinations. Edit this file (no code change) to add/remove folders, retire the year (e.g. change sourceRoot to '1 photos/2027 Photos'), or repoint a destination. Each sync resets its dest dir before writing, so removing an entry here will leave files in place on disk — delete manually if you actually want them gone.",
+  "hostname": "medinaohchamber.sharepoint.com",
+  "sourceRoot": "1 photos/2026 Photos",
+  "syncs": [
+    {
+      "label": "Homepage Top 8",
+      "folder": "Top 8",
+      "dest": "photos/top-8",
+      "slug": "top-8-medina-chamber",
+      "limit": 8,
+      "alt": "Greater Medina Chamber of Commerce community event highlight, Medina Ohio"
+    },
+    {
+      "label": "Ribbon Cuttings",
+      "folder": "Ribbon Cutting",
+      "dest": "photos/ribbon-cutting",
+      "slug": "ribbon-cutting-medina-chamber",
+      "limit": 32,
+      "alt": "Ribbon cutting ceremony hosted by the Greater Medina Chamber of Commerce, Medina Ohio"
+    },
+    {
+      "label": "Eggs and Expertise",
+      "folder": "Eggs and Expertise",
+      "dest": "photos/eggs-and-expertise",
+      "slug": "eggs-and-expertise-medina-chamber",
+      "limit": 16,
+      "alt": "Eggs and Expertise breakfast learning series, Greater Medina Chamber of Commerce"
+    },
+    {
+      "label": "Lunch Bunch",
+      "folder": "Lunch Bunch",
+      "dest": "photos/lunch-bunch",
+      "slug": "lunch-bunch-medina-chamber",
+      "limit": 16,
+      "alt": "Lunch Bunch member networking lunch, Greater Medina Chamber of Commerce"
+    },
+    {
+      "label": "Chamber Chat",
+      "folder": "Chamber Chat",
+      "dest": "photos/chamber-chat",
+      "slug": "chamber-chat-medina-chamber",
+      "limit": 16,
+      "alt": "Chamber Chat member discussion, Greater Medina Chamber of Commerce"
+    },
+    {
+      "label": "Get to Know the Chamber",
+      "folder": "Get to Know the Chamber",
+      "dest": "photos/get-to-know-chamber",
+      "slug": "get-to-know-chamber-medina",
+      "limit": 12,
+      "alt": "Get to Know the Chamber orientation, Greater Medina Chamber of Commerce"
+    },
+    {
+      "label": "Member Meetings",
+      "folder": "Member Meetings",
+      "dest": "photos/member-meetings",
+      "slug": "member-meetings-medina-chamber",
+      "limit": 16,
+      "alt": "Greater Medina Chamber member meeting, Medina Ohio"
+    },
+    {
+      "label": "Networking WOW",
+      "folder": "Networking WOW",
+      "dest": "photos/networking-wow",
+      "slug": "networking-wow-medina-chamber",
+      "limit": 16,
+      "alt": "Networking WOW event, Greater Medina Chamber of Commerce, Medina Ohio"
+    },
+    {
+      "label": "PPE Fashion Show",
+      "folder": "PPE Fashion Show",
+      "dest": "photos/ppe-fashion-show",
+      "slug": "ppe-fashion-show-medina",
+      "limit": 24,
+      "alt": "PPE Fashion Show event, Greater Medina Chamber of Commerce, Medina Ohio"
+    },
+    {
+      "label": "Social Connect",
+      "folder": "Social Connect",
+      "dest": "photos/social-connect",
+      "slug": "social-connect-medina-chamber",
+      "limit": 16,
+      "alt": "Social Connect after-hours networking, Greater Medina Chamber of Commerce"
+    }
+  ]
+}

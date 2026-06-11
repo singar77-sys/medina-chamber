@@ -5,20 +5,29 @@
  * directory by that category via the onSelect callback (client-side
  * filter state in DirectoryClient).
  *
+ * Two variants:
+ *   - "browse" (default): full section with "Browse by industry" header,
+ *     used on the unfiltered directory landing view.
+ *   - "refine": compact chip row with no header or section padding, used
+ *     at the top of search/filter results so the results grid stays high
+ *     on the page.
+ *
  * Future enhancement: switch chips to <Link> elements pointing at
  * /membership/directory/industry/[slug] once those static pages are built.
  */
 interface IndustryChipStripProps {
   /** Top industries by member count: [{ category, count }, …]. */
   industries: ReadonlyArray<{ category: string; count: number }>;
-  /** Total industry count (for the count badge). */
+  /** Total industry count (for the count badge, browse variant only). */
   totalCount: number;
   /** Currently active category (null if none). */
   active: string | null;
   /** Called when a chip is clicked. Passes null to clear. */
   onSelect: (category: string | null) => void;
-  /** Optional: renders a "See all members" link under the chips. */
+  /** Optional: renders a "See all members" link under the chips (browse only). */
   onSeeAll?: () => void;
+  /** Layout variant — see component docblock. */
+  variant?: "browse" | "refine";
 }
 
 export function IndustryChipStrip({
@@ -27,8 +36,52 @@ export function IndustryChipStrip({
   active,
   onSelect,
   onSeeAll,
+  variant = "browse",
 }: IndustryChipStripProps) {
   if (industries.length === 0) return null;
+
+  const chips = (
+    <div
+      role="group"
+      aria-label="Industry filters"
+      className="
+        flex gap-f8 overflow-x-auto pb-f8
+        -mx-6 px-6 lg:mx-0 lg:px-0 lg:flex-wrap lg:overflow-visible
+      "
+    >
+      {industries.map(({ category, count }) => {
+        const isActive = active === category;
+        return (
+          <button
+            key={category}
+            type="button"
+            onClick={() => onSelect(isActive ? null : category)}
+            aria-pressed={isActive}
+            className={`
+              shrink-0
+              text-body-sm font-medium
+              px-f13 py-f8
+              rounded-full
+              border transition-colors duration-200
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge focus-visible:ring-offset-2 focus-visible:ring-offset-bg-primary
+              ${isActive
+                ? "bg-cambridge text-bg-primary border-cambridge hover:bg-cambridge/85"
+                : "bg-bg-primary text-text-secondary border-border-primary hover:border-cambridge hover:text-text-primary"}
+            `}
+          >
+            {category}
+            <span className={`ml-f5 ${isActive ? "opacity-70" : "text-text-tertiary"}`}>
+              {count}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+
+  if (variant === "refine") {
+    return <div aria-label="Refine by industry">{chips}</div>;
+  }
 
   return (
     <section
@@ -44,42 +97,7 @@ export function IndustryChipStrip({
         </span>
       </header>
 
-      <div
-        role="group"
-        aria-label="Industry filters"
-        className="
-          flex gap-f8 overflow-x-auto pb-f8
-          -mx-6 px-6 lg:mx-0 lg:px-0 lg:flex-wrap lg:overflow-visible
-        "
-      >
-        {industries.map(({ category, count }) => {
-          const isActive = active === category;
-          return (
-            <button
-              key={category}
-              type="button"
-              onClick={() => onSelect(isActive ? null : category)}
-              aria-pressed={isActive}
-              className={`
-                shrink-0
-                text-body-sm font-medium
-                px-f13 py-f8
-                rounded-full
-                border transition-colors duration-200
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge focus-visible:ring-offset-2 focus-visible:ring-offset-bg-primary
-                ${isActive
-                  ? "bg-cambridge text-bg-primary border-cambridge hover:bg-cambridge/85"
-                  : "bg-bg-primary text-text-secondary border-border-primary hover:border-cambridge hover:text-text-primary"}
-              `}
-            >
-              {category}
-              <span className={`ml-f5 ${isActive ? "opacity-70" : "text-text-tertiary"}`}>
-                {count}
-              </span>
-            </button>
-          );
-        })}
-      </div>
+      {chips}
 
       {onSeeAll && (
         <div className="mt-f13">

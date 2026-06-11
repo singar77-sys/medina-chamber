@@ -135,6 +135,17 @@ function DirectoryClientInner({
     setShowAll(false);
   }
 
+  /**
+   * Chip click = fresh browse-by-industry intent. Clear any lingering
+   * search text so the two filters don't silently AND together and
+   * return zero results (e.g. q="roofers" + category "Insurance").
+   * Deselecting a chip (category=null) keeps the search as-is.
+   */
+  function selectCategory(category: string | null) {
+    setActiveCategory(category);
+    if (category) setSearch("");
+  }
+
   return (
     <>
       <DirectoryHero
@@ -152,7 +163,7 @@ function DirectoryClientInner({
             industries={topIndustries}
             totalCount={totalIndustries}
             active={activeCategory}
-            onSelect={setActiveCategory}
+            onSelect={selectCategory}
             onSeeAll={() => setShowAll(true)}
           />
           {citiesSlot}
@@ -177,7 +188,8 @@ function DirectoryClientInner({
             industries={topIndustries}
             totalCount={totalIndustries}
             active={activeCategory}
-            onSelect={setActiveCategory}
+            onSelect={selectCategory}
+            variant="refine"
           />
 
           <div className="mt-f21 flex items-center justify-between">

@@ -50,7 +50,7 @@ export function BrowseBand({
   return (
     <section
       aria-labelledby="browse-band-heading"
-      className="browse-band border-y border-border-primary py-f55 lg:py-f89"
+      className="browse-band border-y border-border-primary py-f89 lg:py-f144"
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <p className="text-overline text-cambridge mb-f8 tracking-[0.18em]">
@@ -59,16 +59,16 @@ export function BrowseBand({
         <h2 id="browse-band-heading" className="text-h2 text-text-primary">
           Every trade. <span className="text-cambridge">Every town.</span>
         </h2>
-        <p className="text-body-lg text-text-secondary mt-f8 max-w-2xl">
+        <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
           500+ member businesses across Medina County. Browse by
           what you need or where you are.
         </p>
 
         {/* Golden ratio: industries (major) : communities (minor) */}
-        <div className="mt-f34 grid gap-f34 lg:gap-f55 lg:grid-cols-[1.618fr_1fr] items-start">
+        <div className="mt-f55 grid gap-f55 lg:gap-f89 lg:grid-cols-[1.618fr_1fr] items-start">
           {/* ── By industry ── */}
           <div>
-            <div className="flex items-baseline justify-between mb-f13">
+            <div className="flex items-baseline justify-between mb-f21">
               <h3 className="text-caption uppercase tracking-[0.18em] font-bold">
                 By industry
               </h3>
@@ -103,7 +103,7 @@ export function BrowseBand({
               expanded={expanded}
             />
 
-            <div className="mt-f21">
+            <div className="mt-f34">
               <Button variant="primary" size="md" onClick={onSeeAll}>
                 Browse all 500+ members{" "}
                 <span aria-hidden="true" className="ml-f5">
@@ -115,7 +115,7 @@ export function BrowseBand({
 
           {/* ── By community ── */}
           <div>
-            <div className="flex items-baseline justify-between mb-f13">
+            <div className="flex items-baseline justify-between mb-f21">
               <h3 className="text-caption uppercase tracking-[0.18em] font-bold">
                 By community
               </h3>
@@ -159,7 +159,7 @@ export function BrowseBand({
         </div>
 
         {/* ── Community Investor ribbon ── */}
-        <div className="mt-f34 lg:mt-f55 pt-f21 border-t border-border-primary flex flex-wrap items-baseline gap-x-f13 gap-y-f8">
+        <div className="mt-f55 lg:mt-f89 pt-f34 border-t border-border-primary flex flex-wrap items-baseline gap-x-f13 gap-y-f8">
           <p className="text-body-sm text-text-secondary">
             Backed by{" "}
             <span className="font-bold text-text-primary">

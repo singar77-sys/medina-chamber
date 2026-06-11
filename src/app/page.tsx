@@ -295,15 +295,25 @@ export default function HomePage() {
                     transition-shadow duration-300
                   "
                 >
-                  {/* Graphic hero — event-type identity. Falls back to
-                      no-banner if the event type isn't recognized. */}
-                  {Graphic && (
+                  {/* Graphic hero — SVG graphic for known event types;
+                      Cloudinary photo fallback for everything else. */}
+                  {Graphic ? (
                     <div className="border-b border-border-secondary">
                       <FluidGraphicFrame mode="social">
                         <Graphic mode="social" />
                       </FluidGraphicFrame>
                     </div>
-                  )}
+                  ) : event.image ? (
+                    <div className="relative aspect-video border-b border-border-secondary overflow-hidden">
+                      <Image
+                        src={event.image}
+                        alt={event.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : null}
 
                   {/* Date badge header */}
                   <div className="flex items-center gap-3 p-5 border-b border-border-secondary">

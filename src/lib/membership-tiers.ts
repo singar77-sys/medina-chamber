@@ -49,11 +49,17 @@ export interface TierDisplay {
 // ── Query ──────────────────────────────────────────────────────────────────────
 
 export async function getActiveTiers(): Promise<TierDisplay[]> {
-  const rows = await db
-    .select()
-    .from(membershipTiers)
-    .where(eq(membershipTiers.isActive, true))
-    .orderBy(asc(membershipTiers.sortOrder));
+  let rows: (typeof membershipTiers.$inferSelect)[];
+  try {
+    rows = await db
+      .select()
+      .from(membershipTiers)
+      .where(eq(membershipTiers.isActive, true))
+      .orderBy(asc(membershipTiers.sortOrder));
+  } catch (err) {
+    console.error("[membership-tiers] getActiveTiers failed:", err);
+    return [];
+  }
 
   return rows.map((tier, i) => {
     const meta = TIER_META[tier.slug] ?? { who: "", cta: "Join" };

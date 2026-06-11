@@ -16,7 +16,6 @@ const SUGGESTION_CHIPS = [
   "Roofers",
   "Insurance",
   "Restaurants",
-  "Marketing",
 ] as const;
 
 interface DirectoryHeroProps {

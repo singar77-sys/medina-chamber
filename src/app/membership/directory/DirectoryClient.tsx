@@ -1,20 +1,17 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef, Suspense, type ReactNode } from "react";
+import { useState, useMemo, useEffect, useRef, Suspense } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { MemberCard } from "@/components/MemberCard";
 import { DirectoryHero } from "@/components/directory/DirectoryHero";
 import { IndustryChipStrip } from "@/components/directory/IndustryChipStrip";
+import { BrowseBand } from "@/components/directory/BrowseBand";
 import { type Member } from "@/data/members";
 
 interface DirectoryClientProps {
   members: Member[];
   /** Full category list sorted by member count (descending). */
   industries: ReadonlyArray<{ category: string; count: number }>;
-  /** Server-rendered Community Investor showcase (passed in via page.tsx). */
-  investorsSlot: ReactNode;
-  /** Server-rendered City teaser cards (passed in via page.tsx). */
-  citiesSlot: ReactNode;
 }
 
 /** How many industry chips show before the visitor expands to all. */
@@ -33,12 +30,7 @@ function keywordFilter(members: Member[], q: string): Member[] {
   );
 }
 
-function DirectoryClientInner({
-  members,
-  industries,
-  investorsSlot,
-  citiesSlot,
-}: DirectoryClientProps) {
+function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -218,32 +210,16 @@ function DirectoryClientInner({
 
       {!isFiltered ? (
         // ── BROWSE MODE ──────────────────────────────
-        <>
-          {investorsSlot}
-          <IndustryChipStrip
-            industries={browseIndustries}
-            totalCount={industries.length}
-            active={activeCategory}
-            onSelect={selectCategory}
-            onSeeAll={() => setShowAll(true)}
-            expanded={showAllCategories}
-            onToggleExpand={() => setShowAllCategories((v) => !v)}
-          />
-          {citiesSlot}
-          <div className="mx-auto max-w-7xl px-6 lg:px-8 -mt-f21 pb-f34">
-            <button
-              type="button"
-              onClick={() => setShowAll(true)}
-              className="
-                text-caption text-text-tertiary hover:text-accent
-                underline underline-offset-4 transition-colors duration-200
-                focus-visible:outline-none focus-visible:text-accent
-              "
-            >
-              See all members <span aria-hidden="true">→</span>
-            </button>
-          </div>
-        </>
+        <BrowseBand
+          industries={industries}
+          visibleIndustries={browseIndustries}
+          memberCount={members.length}
+          active={activeCategory}
+          onSelect={selectCategory}
+          onSeeAll={() => setShowAll(true)}
+          expanded={showAllCategories}
+          onToggleExpand={() => setShowAllCategories((v) => !v)}
+        />
       ) : (
         // ── RESULTS MODE ─────────────────────────────
         <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f34">

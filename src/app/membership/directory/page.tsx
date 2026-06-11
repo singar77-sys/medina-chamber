@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { members, getTopIndustries } from "@/data/members";
 import { DirectoryClient } from "./DirectoryClient";
-import { CommunityInvestors } from "@/components/CommunityInvestors";
-import { CityTeaserCards } from "@/components/directory/CityTeaserCards";
 import { FadeIn } from "@/components/FadeIn";
 
 export const metadata: Metadata = {
@@ -25,12 +23,7 @@ export default function DirectoryPage() {
 
   return (
     <>
-      <DirectoryClient
-        members={members}
-        industries={industries}
-        investorsSlot={<CommunityInvestors />}
-        citiesSlot={<CityTeaserCards />}
-      />
+      <DirectoryClient members={members} industries={industries} />
 
       {/* SEO — server-rendered member list (hidden from users) ─
           sr-only keeps HTML in the DOM so crawlers index it

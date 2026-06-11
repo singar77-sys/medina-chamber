@@ -32,6 +32,8 @@ interface IndustryChipStripProps {
   expanded?: boolean;
   /** Optional: makes the count badge a toggle for the full list (browse only). */
   onToggleExpand?: () => void;
+  /** "dark" renders glass chips for oxford-navy band backgrounds. */
+  appearance?: "light" | "dark";
 }
 
 export function IndustryChipStrip({
@@ -43,8 +45,25 @@ export function IndustryChipStrip({
   variant = "browse",
   expanded = false,
   onToggleExpand,
+  appearance = "light",
 }: IndustryChipStripProps) {
   if (industries.length === 0) return null;
+
+  const chipClasses =
+    appearance === "dark"
+      ? {
+          active: "bg-cambridge text-oxford border-cambridge hover:bg-cambridge/85",
+          idle: "bg-white/5 text-white/85 border-white/15 hover:border-cambridge hover:text-white",
+          count: { active: "opacity-70", idle: "text-white/45" },
+          focus: "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge",
+        }
+      : {
+          active: "bg-cambridge text-bg-primary border-cambridge hover:bg-cambridge/85",
+          idle: "bg-bg-primary text-text-secondary border-border-primary hover:border-cambridge hover:text-text-primary",
+          count: { active: "opacity-70", idle: "text-text-tertiary" },
+          focus:
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge focus-visible:ring-offset-2 focus-visible:ring-offset-bg-primary",
+        };
 
   const chips = (
     <div
@@ -70,14 +89,14 @@ export function IndustryChipStrip({
               px-f13 py-f8
               rounded-full
               border transition-colors duration-200
-              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge focus-visible:ring-offset-2 focus-visible:ring-offset-bg-primary
-              ${isActive
-                ? "bg-cambridge text-bg-primary border-cambridge hover:bg-cambridge/85"
-                : "bg-bg-primary text-text-secondary border-border-primary hover:border-cambridge hover:text-text-primary"}
+              ${chipClasses.focus}
+              ${isActive ? chipClasses.active : chipClasses.idle}
             `}
           >
             {category}
-            <span className={`ml-f5 ${isActive ? "opacity-70" : "text-text-tertiary"}`}>
+            <span
+              className={`ml-f5 ${isActive ? chipClasses.count.active : chipClasses.count.idle}`}
+            >
               {count}
             </span>
           </button>

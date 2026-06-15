@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-14T08:41:15.107Z",
+  "generatedAt": "2026-06-15T10:55:40.959Z",
   "totalArticles": 8,
   "articles": [
     {
@@ -19,7 +19,7 @@
       "dateISO": "2026-06-02",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775437335/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/4dd462d46cd244a48743e577b121f589/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/live-the-lube-323362",
-      "scrapedAt": "2026-06-14T08:41:11.722Z"
+      "scrapedAt": "2026-06-15T10:55:37.496Z"
     },
     {
       "slug": "bike-nite",
@@ -38,7 +38,7 @@
       "dateISO": "2026-06-01",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774648744/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/bd5933d0c9fb4c5cac1abbbe42344594/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/bike-nite-321882",
-      "scrapedAt": "2026-06-14T08:41:12.185Z"
+      "scrapedAt": "2026-06-15T10:55:37.995Z"
     },
     {
       "slug": "mhrb-the-scoop-quarterly-newsletter",
@@ -57,7 +57,7 @@
       "dateISO": "2026-05-19",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_131,w_235,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1779221884/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/0fda756f21514230a1893051af2601b6/Small-logo-for-email-signature.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/mhrb-the-scoop-quarterly-newsletter-333125",
-      "scrapedAt": "2026-06-14T08:41:12.656Z"
+      "scrapedAt": "2026-06-15T10:55:38.491Z"
     },
     {
       "slug": "hope-healing-annual-golf-outing-at-bunker-hill-june-16-2026",
@@ -76,7 +76,7 @@
       "dateISO": "2026-05-18",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_351,w_1200,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1779135701/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/3ba8e54abeed447e9742b3dd69870ea3/hh-logo-full-color-rgb-1200px-300ppi-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/hope-healing-annual-golf-outing-at-bunker-hill-june-16-2026-332775",
-      "scrapedAt": "2026-06-14T08:41:13.125Z"
+      "scrapedAt": "2026-06-15T10:55:38.986Z"
     },
     {
       "slug": "bella-moxie-boutique-june-workshops",
@@ -95,7 +95,7 @@
       "dateISO": "2026-05-15",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1328,w_1501,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1778099608/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/25fb66bb107f42c08f0d7fda5b91d5a9/Bella-Moxie.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/bella-moxie-boutique-june-workshops-329749",
-      "scrapedAt": "2026-06-14T08:41:13.614Z"
+      "scrapedAt": "2026-06-15T10:55:39.469Z"
     },
     {
       "slug": "car-cruise-in",
@@ -114,7 +114,7 @@
       "dateISO": "2026-04-06",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775437512/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/62aa1d5146da4ab78eb0def384a2a8ee/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/car-cruise-in-323364",
-      "scrapedAt": "2026-06-14T08:41:14.077Z"
+      "scrapedAt": "2026-06-15T10:55:39.954Z"
     },
     {
       "slug": "office-space-for-lease-in-brunswick-medina-area",
@@ -133,7 +133,7 @@
       "dateISO": "2026-03-30",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_173,w_622,x_19,y_17/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774884260/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/01c3e1965c7f43d38cba8aa81b32ede7/st-mark-logo-for-web.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/office-space-for-lease-in-brunswick-medina-area-322021",
-      "scrapedAt": "2026-06-14T08:41:14.561Z"
+      "scrapedAt": "2026-06-15T10:55:40.451Z"
     },
     {
       "slug": "4-70-home-equity-loan",
@@ -152,7 +152,7 @@
       "dateISO": "2026-03-05",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_102,w_329,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1772744802/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/67b2db200e8d45f8a690794e3d701c2e/PSE-Credit-Union.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/4-70-home-equity-loan-317280",
-      "scrapedAt": "2026-06-14T08:41:15.096Z"
+      "scrapedAt": "2026-06-15T10:55:40.951Z"
     }
   ]
 }

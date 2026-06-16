@@ -85,6 +85,7 @@ export function BrowseBand({
             variant="refine"
             appearance={theme === "dark" ? "dark" : "light"}
             expanded={expanded}
+            layoutMode="grid"
           />
         </div>
 

@@ -34,6 +34,8 @@ interface IndustryChipStripProps {
   onToggleExpand?: () => void;
   /** "dark" renders glass chips for oxford-navy band backgrounds. */
   appearance?: "light" | "dark";
+  /** "grid" snaps chips into a fixed-column grid (use in browse band). */
+  layoutMode?: "flex" | "grid";
 }
 
 export function IndustryChipStrip({
@@ -46,6 +48,7 @@ export function IndustryChipStrip({
   expanded = false,
   onToggleExpand,
   appearance = "light",
+  layoutMode = "flex",
 }: IndustryChipStripProps) {
   if (industries.length === 0) return null;
 
@@ -65,16 +68,16 @@ export function IndustryChipStrip({
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge focus-visible:ring-offset-2 focus-visible:ring-offset-bg-primary",
         };
 
+  const isGrid = layoutMode === "grid";
+
+  const containerClass = isGrid
+    ? "grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-f8"
+    : expanded
+      ? "flex flex-wrap gap-f8 pb-f8"
+      : "flex gap-f8 overflow-x-auto pb-f8 -mx-6 px-6 lg:mx-0 lg:px-0 lg:flex-wrap lg:overflow-visible";
+
   const chips = (
-    <div
-      role="group"
-      aria-label="Industry filters"
-      className={
-        expanded
-          ? "flex flex-wrap gap-f8 pb-f8"
-          : "flex gap-f8 overflow-x-auto pb-f8 -mx-6 px-6 lg:mx-0 lg:px-0 lg:flex-wrap lg:overflow-visible"
-      }
-    >
+    <div role="group" aria-label="Industry filters" className={containerClass}>
       {industries.map(({ category, count }) => {
         const isActive = active === category;
         return (
@@ -84,17 +87,18 @@ export function IndustryChipStrip({
             onClick={() => onSelect(isActive ? null : category)}
             aria-pressed={isActive}
             className={`
-              shrink-0 inline-flex items-center gap-f8
+              ${isGrid ? "w-full flex-col py-f13 gap-f5" : "shrink-0 flex-row gap-f8 py-f8"}
+              inline-flex items-center justify-center
               text-body-sm font-medium
-              px-f13 py-f8
-              rounded-full
+              px-f13
+              rounded-[var(--radius-md)]
               border transition-colors duration-200
               ${chipClasses.focus}
               ${isActive ? chipClasses.active : chipClasses.idle}
             `}
           >
-            {category}
-            <span className={`text-[11px] tabular-nums ${isActive ? chipClasses.count.active : chipClasses.count.idle}`}>
+            <span className={isGrid ? "text-center leading-tight" : ""}>{category}</span>
+            <span className={`tabular-nums ${isGrid ? "text-[11px]" : "text-[11px]"} ${isActive ? chipClasses.count.active : chipClasses.count.idle}`}>
               {count}
             </span>
           </button>

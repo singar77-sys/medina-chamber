@@ -15,7 +15,7 @@ interface DirectoryClientProps {
 }
 
 /** How many industry chips show before the visitor expands to all. */
-const TOP_INDUSTRIES = 15;
+const TOP_INDUSTRIES = 16;
 
 // ── Client-side keyword fallback (used if /api/search errors out) ───
 function keywordFilter(members: Member[], q: string): Member[] {

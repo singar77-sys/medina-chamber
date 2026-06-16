@@ -61,11 +61,6 @@ export function MemberModal({ member, onClose }: MemberModalProps) {
                 Community Investor
               </span>
             )}
-            {member.tier === "vp" && (
-              <span className="inline-block mt-f5 px-f8 py-f3 bg-accent/10 text-accent text-caption font-bold rounded-full">
-                Visibility Plus
-              </span>
-            )}
           </div>
           <button
             onClick={onClose}

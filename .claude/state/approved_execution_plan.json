@@ -1,0 +1,53 @@
+{
+  "execution_mode": "subagent",
+  "goal": "Fix remaining design token gaps identified in pre-launch audit",
+  "waves": [
+    {
+      "wave": 0,
+      "type": "parallel",
+      "phases": [
+        {
+          "id": "9",
+          "subject": "W1: portal/dashboard — full design token migration",
+          "agent": "general-purpose",
+          "files": ["src/app/portal/dashboard/page.tsx"],
+          "description": "Replace all hardcoded bg-white, text-gray-*, border-gray-*, font-semibold with design tokens. Token map: bg-white→bg-bg-primary, text-gray-400→text-text-tertiary, text-gray-600→text-text-secondary, text-gray-900→text-text-primary, border-gray-100→border-border-secondary, border-gray-200→border-border-primary, font-semibold→font-bold. Preserve auth logic and GrowthZone API calls."
+        },
+        {
+          "id": "10",
+          "subject": "W2: privacy/page.tsx — Fibonacci spacing sweep",
+          "agent": "general-purpose",
+          "files": ["src/app/privacy/page.tsx"],
+          "description": "Replace default Tailwind spacing: py-16→py-f55, py-24→py-f89, mt-12→mt-f34, mb-4→mb-f13, mt-8→mt-f21, mb-3→mt-f8. Keep px-6 lg:px-8 horizontal padding as-is."
+        },
+        {
+          "id": "11",
+          "subject": "W3: Button adoption + spacing — homepage, workforce, jobs",
+          "agent": "general-purpose",
+          "files": ["src/app/page.tsx", "src/app/resources/workforce/page.tsx", "src/app/jobs/[slug]/page.tsx"],
+          "description": "Replace inline-styled Link/a with ButtonLink/ButtonA. Convert default Tailwind spacing to Fibonacci tokens. Homepage hero CTAs: keep white text override since they sit on dark overlay. Replace any font-semibold with font-bold."
+        },
+        {
+          "id": "12",
+          "subject": "W4: Admin components — hardcoded hex → CSS vars",
+          "agent": "general-purpose",
+          "files": ["src/components/admin/AdminNav.tsx", "src/components/admin/BlogEditor.tsx", "src/components/admin/ContentField.tsx", "src/components/admin/PricingEditor.tsx"],
+          "description": "Replace #83BCA9→var(--color-cambridge), #0C1B33→var(--color-oxford), ring-[#83BCA9]→focus:ring-cambridge/40, border-gray-*→border-border-*, text-gray-*→design tokens, font-semibold→font-bold."
+        }
+      ]
+    },
+    {
+      "wave": 1,
+      "type": "sequential",
+      "phases": [
+        {
+          "id": "13",
+          "subject": "W5: Verify all fixes, commit, and deploy to Vercel",
+          "agent": "task-completion-verifier",
+          "depends_on": ["9", "10", "11", "12"],
+          "description": "Run tsc --noEmit, verify no bg-white/text-gray-* remain in changed files, check git user.email=singar77@gmail.com, commit with message 'fix: design token sweep — portal dashboard, privacy, button adoption, admin hex', push to main, verify Vercel deployment is READY."
+        }
+      ]
+    }
+  ]
+}

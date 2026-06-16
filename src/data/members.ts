@@ -101,6 +101,28 @@ export function getInitials(name: string): string {
   return (words[0][0] + words[1][0]).toUpperCase();
 }
 
+const AVATAR_PALETTE = [
+  { bg: "bg-cambridge/15", text: "text-cambridge"  },
+  { bg: "bg-oxford/10",    text: "text-oxford"     },
+  { bg: "bg-accent/10",    text: "text-accent"     },
+  { bg: "bg-amber-50",     text: "text-amber-700"  },
+  { bg: "bg-violet-50",    text: "text-violet-700" },
+] as const;
+
+export type AvatarColor = (typeof AVATAR_PALETTE)[number];
+
+/** Deterministic color slot from the palette, hashed by business name. */
+export function getAvatarColor(name: string): AvatarColor {
+  const hash = name.split("").reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+  return AVATAR_PALETTE[hash % AVATAR_PALETTE.length];
+}
+
+/** First alphabetical character of the business name (skips leading numbers/symbols). */
+export function getAvatarInitial(name: string): string {
+  const match = name.match(/[A-Za-z]/);
+  return match ? match[0].toUpperCase() : (name[0]?.toUpperCase() ?? "?");
+}
+
 /** All members in a given city (case-insensitive match against the parsed address city). */
 export function getMembersByCity(city: string): Member[] {
   const target = city.toLowerCase();

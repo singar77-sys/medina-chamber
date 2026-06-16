@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { type Member, extractCity, getInitials, isCommunityInvestor } from "@/data/members";
+import { type Member, extractCity, getAvatarInitial, getAvatarColor, isCommunityInvestor } from "@/data/members";
 
 interface MemberCardProps {
   member: Member;
@@ -8,7 +8,8 @@ interface MemberCardProps {
 
 export function MemberCard({ member }: MemberCardProps) {
   const city = extractCity(member.address);
-  const initials = getInitials(member.name);
+  const avatarInitial = getAvatarInitial(member.name);
+  const avatarColor = getAvatarColor(member.name);
   const primaryCategory = member.categories[0] ?? "";
   const isCi = isCommunityInvestor(member);
 
@@ -27,12 +28,12 @@ export function MemberCard({ member }: MemberCardProps) {
           : "border-border-secondary hover:border-border-primary"}
       `}
     >
-      {/* Logo / Initials */}
-      <div className="
+      {/* Logo / Avatar */}
+      <div className={`
         relative h-28 flex items-center justify-center
-        bg-bg-secondary border-b border-border-secondary
-        overflow-hidden
-      ">
+        border-b border-border-secondary overflow-hidden
+        ${member.logoUrl ? "bg-bg-secondary" : avatarColor.bg}
+      `}>
         {member.logoUrl ? (
           <Image
             src={member.logoUrl}
@@ -43,12 +44,8 @@ export function MemberCard({ member }: MemberCardProps) {
             unoptimized
           />
         ) : (
-          <span className="
-            text-2xl font-bold tracking-tight
-            text-text-tertiary group-hover:text-cambridge
-            transition-colors
-          ">
-            {initials}
+          <span className={`text-6xl font-bold leading-none select-none ${avatarColor.text} opacity-60`}>
+            {avatarInitial}
           </span>
         )}
       </div>

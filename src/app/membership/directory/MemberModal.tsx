@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { type GraphNode } from "./graphData";
+import { getAvatarInitial, getAvatarColor } from "@/data/members";
 
 interface MemberModalProps {
   member: GraphNode;
@@ -9,14 +10,11 @@ interface MemberModalProps {
 }
 
 function Initials({ name }: { name: string }) {
-  const words = name.trim().split(/\s+/);
-  const initials =
-    words.length === 1
-      ? words[0].substring(0, 2).toUpperCase()
-      : (words[0][0] + words[1][0]).toUpperCase();
+  const initial = getAvatarInitial(name);
+  const color = getAvatarColor(name);
   return (
-    <div className="w-14 h-14 shrink-0 rounded-[var(--radius-md)] bg-oxford flex items-center justify-center text-cambridge font-bold text-h4">
-      {initials}
+    <div className={`w-14 h-14 shrink-0 rounded-[var(--radius-md)] flex items-center justify-center font-bold text-h4 ${color.bg} ${color.text}`}>
+      {initial}
     </div>
   );
 }

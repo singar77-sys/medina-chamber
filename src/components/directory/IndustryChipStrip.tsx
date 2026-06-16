@@ -84,7 +84,7 @@ export function IndustryChipStrip({
             onClick={() => onSelect(isActive ? null : category)}
             aria-pressed={isActive}
             className={`
-              shrink-0
+              shrink-0 inline-flex items-center gap-f8
               text-body-sm font-medium
               px-f13 py-f8
               rounded-full
@@ -94,6 +94,9 @@ export function IndustryChipStrip({
             `}
           >
             {category}
+            <span className={`text-[11px] tabular-nums ${isActive ? chipClasses.count.active : chipClasses.count.idle}`}>
+              {count}
+            </span>
           </button>
         );
       })}

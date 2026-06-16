@@ -44,32 +44,22 @@ export function BrowseBand({
       className="browse-band border-y border-border-primary py-f89 lg:py-f144"
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        {/* Header row */}
-        <div className="flex flex-col gap-f13 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="text-overline text-cambridge mb-f8 tracking-[0.18em]">
-              Browse the directory
-            </p>
-            <h2 id="browse-band-heading" className="text-h2 text-text-primary">
-              Every trade. <span className="text-cambridge">Every town.</span>
-            </h2>
-            <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
-              500+ member businesses across Medina County. Search by industry or browse them all.
-            </p>
-          </div>
-          <div className="shrink-0">
-            <Button variant="primary" size="md" onClick={onSeeAll}>
-              Browse all {memberCount}+ members{" "}
-              <span aria-hidden="true" className="ml-f5">→</span>
-            </Button>
-          </div>
-        </div>
+        {/* Header */}
+        <p className="text-overline text-cambridge mb-f8 tracking-[0.18em]">
+          Browse the directory
+        </p>
+        <h2 id="browse-band-heading" className="text-h2 text-text-primary">
+          Every trade. <span className="text-cambridge">Every town.</span>
+        </h2>
+        <p className="text-body-lg text-text-secondary mt-f13">
+          {memberCount}+ member businesses across Medina County.
+        </p>
 
-        {/* Industry chips — full width */}
+        {/* Industry chips */}
         <div className="mt-f55">
-          <div className="flex items-baseline justify-between mb-f21">
+          <div className="flex items-center justify-between mb-f21">
             <h3 className="text-caption uppercase tracking-[0.18em] font-bold text-text-primary">
-              By industry
+              Browse by industry
             </h3>
             <button
               type="button"
@@ -81,11 +71,9 @@ export function BrowseBand({
                 focus-visible:outline-none focus-visible:text-cambridge
               "
             >
-              {expanded ? (
-                "Show fewer"
-              ) : (
-                <>All {industries.length} categories <span aria-hidden="true">→</span></>
-              )}
+              {expanded
+                ? "Show fewer"
+                : <>All {industries.length} categories <span aria-hidden="true">→</span></>}
             </button>
           </div>
 
@@ -100,24 +88,23 @@ export function BrowseBand({
           />
         </div>
 
-        {/* Community Investor ribbon */}
-        <div className="mt-f55 lg:mt-f89 pt-f34 border-t border-border-primary flex flex-wrap items-baseline gap-x-f13 gap-y-f8">
+        {/* Bottom bar: CTA + CI ribbon */}
+        <div className="mt-f55 pt-f34 border-t border-border-primary flex flex-col gap-f21 sm:flex-row sm:items-center sm:justify-between">
+          <Button variant="primary" size="md" onClick={onSeeAll}>
+            Browse all {memberCount}+ members{" "}
+            <span aria-hidden="true" className="ml-f5">→</span>
+          </Button>
+
           <p className="text-body-sm text-text-secondary">
-            Backed by{" "}
-            <span className="font-bold text-text-primary">
+            Including{" "}
+            <Link
+              href="/membership/community-investor"
+              className="font-bold text-text-primary hover:text-cambridge transition-colors duration-200"
+            >
               {investorCount} Community Investors
-            </span>{" "}
-            — the businesses leading Medina County.
+            </Link>
+            {" "}— the businesses leading Medina County.
           </p>
-          <Link
-            href="/membership/community-investor"
-            className="
-              text-body-sm font-bold text-cambridge hover:text-cambridge/80
-              transition-colors duration-200
-            "
-          >
-            Meet them <span aria-hidden="true">→</span>
-          </Link>
         </div>
       </div>
     </section>

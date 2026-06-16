@@ -3,10 +3,8 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { IndustryChipStrip } from "./IndustryChipStrip";
-import { getMembersByCity, getCommunityInvestors } from "@/data/members";
+import { getCommunityInvestors } from "@/data/members";
 import { useTheme } from "@/components/ThemeProvider";
-
-const FEATURED_CITIES = ["Medina", "Brunswick", "Wadsworth"] as const;
 
 interface BrowseBandProps {
   /** Full category list sorted by member count (descending). */
@@ -38,13 +36,6 @@ export function BrowseBand({
   onToggleExpand,
 }: BrowseBandProps) {
   const { theme } = useTheme();
-
-  const cities = FEATURED_CITIES.map((city) => ({
-    city,
-    slug: city.toLowerCase(),
-    total: getMembersByCity(city).length,
-  })).filter((c) => c.total > 0);
-
   const investorCount = getCommunityInvestors().length;
 
   return (
@@ -53,112 +44,63 @@ export function BrowseBand({
       className="browse-band border-y border-border-primary py-f89 lg:py-f144"
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <p className="text-overline text-cambridge mb-f8 tracking-[0.18em]">
-          Browse the directory
-        </p>
-        <h2 id="browse-band-heading" className="text-h2 text-text-primary">
-          Every trade. <span className="text-cambridge">Every town.</span>
-        </h2>
-        <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
-          500+ member businesses across Medina County. Browse by
-          what you need or where you are.
-        </p>
-
-        {/* Golden ratio: industries (major) : communities (minor) */}
-        <div className="mt-f55 grid gap-f55 lg:gap-f89 lg:grid-cols-[1.618fr_1fr] items-start">
-          {/* ── By industry ── */}
+        {/* Header row */}
+        <div className="flex flex-col gap-f13 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <div className="flex items-baseline justify-between mb-f21">
-              <h3 className="text-caption uppercase tracking-[0.18em] font-bold">
-                By industry
-              </h3>
-              <button
-                type="button"
-                onClick={onToggleExpand}
-                aria-expanded={expanded}
-                className="
-                  text-caption text-text-tertiary hover:text-cambridge
-                  underline underline-offset-4 transition-colors duration-200
-                  focus-visible:outline-none focus-visible:text-cambridge
-                "
-              >
-                {expanded ? (
-                  "Show top industries"
-                ) : (
-                  <>
-                    All {industries.length} categories{" "}
-                    <span aria-hidden="true">→</span>
-                  </>
-                )}
-              </button>
-            </div>
-
-            <IndustryChipStrip
-              industries={visibleIndustries}
-              totalCount={industries.length}
-              active={active}
-              onSelect={onSelect}
-              variant="refine"
-              appearance={theme === "dark" ? "dark" : "light"}
-              expanded={expanded}
-            />
-
-            <div className="mt-f34">
-              <Button variant="primary" size="md" onClick={onSeeAll}>
-                Browse all 500+ members{" "}
-                <span aria-hidden="true" className="ml-f5">
-                  →
-                </span>
-              </Button>
-            </div>
+            <p className="text-overline text-cambridge mb-f8 tracking-[0.18em]">
+              Browse the directory
+            </p>
+            <h2 id="browse-band-heading" className="text-h2 text-text-primary">
+              Every trade. <span className="text-cambridge">Every town.</span>
+            </h2>
+            <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
+              500+ member businesses across Medina County. Search by industry or browse them all.
+            </p>
           </div>
-
-          {/* ── By community ── */}
-          <div>
-            <div className="flex items-baseline justify-between mb-f21">
-              <h3 className="text-caption uppercase tracking-[0.18em] font-bold">
-                By community
-              </h3>
-              <Link
-                href="/community"
-                className="
-                  text-caption text-text-tertiary hover:text-cambridge
-                  underline underline-offset-4 transition-colors duration-200
-                "
-              >
-                See all <span aria-hidden="true">→</span>
-              </Link>
-            </div>
-
-            <ul>
-              {cities.map(({ city, slug }) => (
-                <li key={city}>
-                  <Link
-                    href={`/community/${slug}`}
-                    className="
-                      group flex items-center
-                      py-f13 border-b border-border-primary
-                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge focus-visible:rounded
-                    "
-                  >
-                    <span className="flex-1 text-body-lg text-text-primary group-hover:text-cambridge transition-colors duration-200">
-                      {city}
-                    </span>
-                    <span
-                      className="text-text-tertiary group-hover:text-cambridge group-hover:translate-x-1 transition-all duration-200"
-                      aria-hidden="true"
-                    >
-                      →
-                    </span>
-                    <span className="sr-only">{city} member businesses</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          <div className="shrink-0">
+            <Button variant="primary" size="md" onClick={onSeeAll}>
+              Browse all {memberCount}+ members{" "}
+              <span aria-hidden="true" className="ml-f5">→</span>
+            </Button>
           </div>
         </div>
 
-        {/* ── Community Investor ribbon ── */}
+        {/* Industry chips — full width */}
+        <div className="mt-f55">
+          <div className="flex items-baseline justify-between mb-f21">
+            <h3 className="text-caption uppercase tracking-[0.18em] font-bold text-text-primary">
+              By industry
+            </h3>
+            <button
+              type="button"
+              onClick={onToggleExpand}
+              aria-expanded={expanded}
+              className="
+                text-caption text-text-tertiary hover:text-cambridge
+                underline underline-offset-4 transition-colors duration-200
+                focus-visible:outline-none focus-visible:text-cambridge
+              "
+            >
+              {expanded ? (
+                "Show fewer"
+              ) : (
+                <>All {industries.length} categories <span aria-hidden="true">→</span></>
+              )}
+            </button>
+          </div>
+
+          <IndustryChipStrip
+            industries={visibleIndustries}
+            totalCount={industries.length}
+            active={active}
+            onSelect={onSelect}
+            variant="refine"
+            appearance={theme === "dark" ? "dark" : "light"}
+            expanded={expanded}
+          />
+        </div>
+
+        {/* Community Investor ribbon */}
         <div className="mt-f55 lg:mt-f89 pt-f34 border-t border-border-primary flex flex-wrap items-baseline gap-x-f13 gap-y-f8">
           <p className="text-body-sm text-text-secondary">
             Backed by{" "}

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-16T10:07:04.759Z",
+  "generatedAt": "2026-06-17T09:30:26.049Z",
   "totalJobs": 4,
   "jobs": [
     {
@@ -16,7 +16,7 @@
       "dateRaw": "6/11/2026",
       "dateISO": "2026-06-11",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/manager-of-engagement-337631",
-      "scrapedAt": "2026-06-16T10:07:03.123Z"
+      "scrapedAt": "2026-06-17T09:30:24.294Z"
     },
     {
       "slug": "chiropractic-receptionist-assistant",
@@ -32,7 +32,7 @@
       "dateRaw": "6/4/2026",
       "dateISO": "2026-06-04",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/chiropractic-receptionist-assistant-336324",
-      "scrapedAt": "2026-06-16T10:07:03.652Z"
+      "scrapedAt": "2026-06-17T09:30:24.848Z"
     },
     {
       "slug": "domestic-violence-crisis-specialist",
@@ -48,7 +48,7 @@
       "dateRaw": "5/21/2026",
       "dateISO": "2026-05-21",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/domestic-violence-crisis-specialist-333565",
-      "scrapedAt": "2026-06-16T10:07:04.230Z"
+      "scrapedAt": "2026-06-17T09:30:25.426Z"
     },
     {
       "slug": "catering-event-staff",
@@ -64,7 +64,7 @@
       "dateRaw": "4/30/2026",
       "dateISO": "2026-04-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/catering-event-staff-328997",
-      "scrapedAt": "2026-06-16T10:07:04.751Z"
+      "scrapedAt": "2026-06-17T09:30:26.042Z"
     }
   ]
 }

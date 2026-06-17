@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-16T10:07:02.080Z",
-  "totalArticles": 8,
+  "generatedAt": "2026-06-17T09:30:23.032Z",
+  "totalArticles": 7,
   "articles": [
     {
       "slug": "live-the-lube",
@@ -19,7 +19,7 @@
       "dateISO": "2026-06-02",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775437335/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/4dd462d46cd244a48743e577b121f589/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/live-the-lube-323362",
-      "scrapedAt": "2026-06-16T10:06:58.225Z"
+      "scrapedAt": "2026-06-17T09:30:09.608Z"
     },
     {
       "slug": "bike-nite",
@@ -38,7 +38,7 @@
       "dateISO": "2026-06-01",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774648744/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/bd5933d0c9fb4c5cac1abbbe42344594/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/bike-nite-321882",
-      "scrapedAt": "2026-06-16T10:06:58.808Z"
+      "scrapedAt": "2026-06-17T09:30:10.183Z"
     },
     {
       "slug": "mhrb-the-scoop-quarterly-newsletter",
@@ -57,26 +57,7 @@
       "dateISO": "2026-05-19",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_131,w_235,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1779221884/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/0fda756f21514230a1893051af2601b6/Small-logo-for-email-signature.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/mhrb-the-scoop-quarterly-newsletter-333125",
-      "scrapedAt": "2026-06-16T10:06:59.335Z"
-    },
-    {
-      "slug": "hope-healing-annual-golf-outing-at-bunker-hill-june-16-2026",
-      "articleId": "332775",
-      "title": "Hope & Healing Annual Golf Outing at Bunker Hill - June 16, 2026",
-      "subtitle": "Support a great cause!",
-      "body": "Get ready to tee off for a day that&rsquo;s equal parts fun, flexibility, and philanthropy!\nJoin Hope & Healing Survivor Resource Center for an unforgettable experience.\n\nHope & Healing Annual Golf Outing📅 Tuesday, June 16\n📍 Bunker Hill Golf Club, Medina\n⏰ 8:00 AM Tee Time - 9:00 AM Virtual Golf - 1:00 PM Dinner\n\nRegister Here:https://birdease.com/33855\n\nPlay Your Way⛳ Option 1: Hit the Course + Dinner\nEnjoy a full round of 18-holes of golf packed with:\nRaffles & silent auction prizesPutting contestMargarita holeBall launcherAnd more games throughout the course!\n\n⛳ Option 2: Virtual Golf + Dinner\nNot a golfer? No problem. Keep it casual with a virtual golf experience! All the fun, and none of the run-around:\nPlay a few virtual rounds at your own paceEnjoy the delicious dinner experienceAccess to raffles, auction items, and games galore!\n\nWhy It MattersEvery swing (or swing simulation) supports the life-saving work of Hope & Healing, serving thousands of survivors and their families across Summit and Medina Counties, through our 24/7 crisis hotline, emergency shelters, housing and legal advocacy, as well as prevention education and community outreach.\n\nGet Involved Another WayDonate: If you can't make it, but still want to support.Sponsor: Gain visibility while making a meaningful impact.Want to double your visibility? Sponsor both the Swing for Survivors Golf Outing and the Night of Hope and Healing Gala here.\n\nHowever you choose to participate, you&rsquo;ll be helping bring safety, hope, and healing to those who need it most.\n\nWe hope to see you there, whether you&rsquo;re on the greens or on a screen! \n\nRegister Here:https://birdease.com/33855",
-      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_351,w_1200,x_0,y_0/q_auto/f_auto/q_auto/v1779135701/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/3ba8e54abeed447e9742b3dd69870ea3/hh-logo-full-color-rgb-1200px-300ppi-2.png",
-      "tags": [
-        "By\r\n                            Hope & Healing Survivor Resource Center (Battered Women's Shelter and Rape Crisi",
-        "5/18/2026"
-      ],
-      "memberName": "Hope & Healing Survivor Resource Center (Battered Women's Shelter and Rape Crisi",
-      "memberSlug": "22529292",
-      "dateRaw": "5/18/2026",
-      "dateISO": "2026-05-18",
-      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_351,w_1200,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1779135701/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/3ba8e54abeed447e9742b3dd69870ea3/hh-logo-full-color-rgb-1200px-300ppi-2.png",
-      "detailUrl": "https://business.medinachamber.com/news/Details/hope-healing-annual-golf-outing-at-bunker-hill-june-16-2026-332775",
-      "scrapedAt": "2026-06-16T10:06:59.896Z"
+      "scrapedAt": "2026-06-17T09:30:10.777Z"
     },
     {
       "slug": "bella-moxie-boutique-june-workshops",
@@ -95,7 +76,7 @@
       "dateISO": "2026-05-15",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1328,w_1501,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1778099608/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/25fb66bb107f42c08f0d7fda5b91d5a9/Bella-Moxie.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/bella-moxie-boutique-june-workshops-329749",
-      "scrapedAt": "2026-06-16T10:07:00.427Z"
+      "scrapedAt": "2026-06-17T09:30:11.354Z"
     },
     {
       "slug": "car-cruise-in",
@@ -114,7 +95,7 @@
       "dateISO": "2026-04-06",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775437512/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/62aa1d5146da4ab78eb0def384a2a8ee/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/car-cruise-in-323364",
-      "scrapedAt": "2026-06-16T10:07:00.953Z"
+      "scrapedAt": "2026-06-17T09:30:11.892Z"
     },
     {
       "slug": "office-space-for-lease-in-brunswick-medina-area",
@@ -133,7 +114,7 @@
       "dateISO": "2026-03-30",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_173,w_622,x_19,y_17/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774884260/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/01c3e1965c7f43d38cba8aa81b32ede7/st-mark-logo-for-web.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/office-space-for-lease-in-brunswick-medina-area-322021",
-      "scrapedAt": "2026-06-16T10:07:01.542Z"
+      "scrapedAt": "2026-06-17T09:30:12.469Z"
     },
     {
       "slug": "4-70-home-equity-loan",
@@ -152,7 +133,7 @@
       "dateISO": "2026-03-05",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_102,w_329,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1772744802/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/67b2db200e8d45f8a690794e3d701c2e/PSE-Credit-Union.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/4-70-home-equity-loan-317280",
-      "scrapedAt": "2026-06-16T10:07:02.072Z"
+      "scrapedAt": "2026-06-17T09:30:23.018Z"
     }
   ]
 }

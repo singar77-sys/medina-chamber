@@ -61,6 +61,9 @@ export const payments = pgTable("payments", {
   stripeRefundId: text("stripe_refund_id").unique(),
   stripePaymentMethodId: text("stripe_payment_method_id"),
 
+  // GrowthZone import idempotency key
+  gzId: text("gz_id").unique(),
+
   // Human-readable memo — required for check/cash/manual entries
   memo: text("memo"),
 

@@ -14,10 +14,11 @@
  *
  * Pure functions only — no DB, no I/O. The .xlsx is read elsewhere (load.ts).
  *
- * Schema gaps (see also the importer recon): events HAS gz_id, but
- * event_registrations does NOT have any gz id / idempotency column, so the
- * gzContactId / eventKey we emit live only on the output object for the
- * orchestrator to consume — they are not (yet) persistable columns.
+ * Both events and event_registrations now have gz_id columns.
+ * events.gz_id = syntheticEventGzId (name + date) — stable, unique.
+ * event_registrations.gz_id = a composite synthetic key (see mapRegistration)
+ * because the GrowthZone export has no per-registration id — dedup is
+ * best-effort.
  */
 import type { InferInsertModel } from "drizzle-orm";
 import { excelDateToISO, parseCents } from "./coerce";
@@ -200,11 +201,14 @@ export function deriveEvents(rows: Row[]): DerivedEvent[] {
 // ── (b) mapRegistration ─────────────────────────────────────────────────────────
 
 /**
- * An `eventRegistrations` insert, plus orchestration-only fields the schema
- * has no column for:
+ * An `eventRegistrations` insert, plus orchestration-only fields:
  *   - eventKey     : links this registration to its parent event (deriveEvents)
  *   - gzContactId  : numeric GrowthZone ContactId, when present, so the
  *                    orchestrator can resolve contact_id / organization_id.
+ *
+ * `gzId` is part of RegistrationInsert (event_registrations.gz_id column) and
+ * is set to a composite synthetic key — the GrowthZone export carries no
+ * per-registration id, so dedup is best-effort (see mapRegistration).
  */
 export type MappedRegistration = Omit<
   RegistrationInsert,
@@ -251,11 +255,28 @@ export function mapRegistration(row: Row): MappedRegistration {
 
   // guestName / guestEmail always populated for guest-path import.
   const attendeeName = str(row[COL.attendeeName]);
+  const guestName = attendeeName === "" ? null : attendeeName;
+
+  const eventKey = eventKeyFor(row);
+
+  // Synthetic gzId: best-effort composite key for idempotent re-import.
+  // The GrowthZone export carries NO per-registration id, so this is the
+  // closest stable identifier we can derive. Re-import dedup for registrations
+  // is approximate — a same-person same-event same-day double-import would collide
+  // correctly, but a registration whose date or attendee name changed would not.
+  const registrationDateISO =
+    excelDateToISO(row["Registration Date"]) ?? "nodate";
+  const attendeeSegment =
+    gzContactId !== null
+      ? String(gzContactId)
+      : `guest-${kebab(guestName ?? "unknown")}`;
+  const gzId = `gzreg-${eventKey}-${attendeeSegment}-${registrationDateISO}`;
 
   return {
-    eventKey: eventKeyFor(row),
+    eventKey,
     gzContactId,
-    guestName: attendeeName === "" ? null : attendeeName,
+    gzId,
+    guestName,
     // No email column exists in this export; emit null so the guest path is
     // intact and a later source can backfill it.
     guestEmail: null,

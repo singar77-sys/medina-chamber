@@ -11,11 +11,13 @@
  * "Payment" column: amountPaidCents = Invoice Amount − Invoice Balance, both in
  * integer cents. We subtract cents (never floats) so there is zero FP drift.
  *
- * Schema gaps: neither `invoices` nor `payments` has a GrowthZone id column, so
- * we cannot store a gz key for idempotent re-import. We still EMIT the GrowthZone
- * keys (gzOrgId = ContactId, gzInvoiceNumber = Invoice #) on every output object
- * under clearly-named, non-DB fields so a later migration/orchestrator can link
- * and dedupe. These fields are NOT part of the Drizzle $inferInsert shape.
+ * `invoices.gz_id` = Invoice # as a string (e.g. "109656") — unique per invoice.
+ * `payments.gz_id` = "gzpay-" + Invoice # — one derived payment per invoice.
+ * Both columns are `text("gz_id").unique()`, so nullable Stripe-originated rows
+ * leave them null without violating the unique constraint.
+ *
+ * gzOrgId (ContactId) and gzInvoiceNumber are still emitted as orchestration-only
+ * fields so the orchestrator can resolve org/membership FKs.
  */
 
 import { excelDateToISO, parseCents, cleanStr } from "./coerce";
@@ -31,12 +33,12 @@ import type { invoices, payments } from "@/lib/db/schema";
 export type MappedInvoice = Required<
   Pick<
     typeof invoices.$inferInsert,
-    "amountCents" | "amountPaidCents" | "status" | "description" | "paidAt"
+    "amountCents" | "amountPaidCents" | "status" | "description" | "paidAt" | "gzId"
   >
 > & {
-  /** GrowthZone ContactId — the numeric org join key (no DB column exists). */
+  /** GrowthZone ContactId — the numeric org join key for FK resolution. */
   gzOrgId: string | null;
-  /** GrowthZone "Invoice #" — natural key for idempotency (no DB column exists). */
+  /** GrowthZone "Invoice #" — kept for orchestrator cross-referencing. */
   gzInvoiceNumber: string | null;
 };
 
@@ -44,7 +46,7 @@ export type MappedInvoice = Required<
 export type MappedInvoicePayment = Required<
   Pick<
     typeof payments.$inferInsert,
-    "type" | "method" | "amountCents" | "memo" | "occurredAt"
+    "type" | "method" | "amountCents" | "memo" | "occurredAt" | "gzId"
   >
 > & {
   gzOrgId: string | null;
@@ -106,14 +108,17 @@ export function mapInvoice(row: Row): MappedInvoice {
   const paidAt =
     amountPaidCents > 0 && isoDate ? new Date(`${isoDate}T00:00:00.000Z`) : null;
 
+  const gzInvoiceNumber = cleanStr(row["Invoice #"]);
+
   return {
     amountCents,
     amountPaidCents,
     status,
     description: cleanStr(row["Line Item Description"]),
     paidAt,
+    gzId: gzInvoiceNumber,
     gzOrgId: cleanStr(row.ContactId),
-    gzInvoiceNumber: cleanStr(row["Invoice #"]),
+    gzInvoiceNumber,
   };
 }
 
@@ -139,6 +144,7 @@ export function mapInvoicePayment(row: Row): MappedInvoicePayment | null {
     amountCents: amountPaidCents,
     memo: `GrowthZone historical import (invoice ${gzInvoiceNumber ?? "unknown"})`,
     occurredAt: isoDate ? new Date(`${isoDate}T00:00:00.000Z`) : new Date(0),
+    gzId: gzInvoiceNumber !== null ? `gzpay-${gzInvoiceNumber}` : null,
     gzOrgId: cleanStr(row.ContactId),
     gzInvoiceNumber,
   };

@@ -118,6 +118,9 @@ export const invoices = pgTable("invoices", {
   stripeInvoiceId: text("stripe_invoice_id").unique(),
   stripePaymentIntentId: text("stripe_payment_intent_id"),
 
+  // GrowthZone import idempotency key
+  gzId: text("gz_id").unique(),
+
   // Amounts in cents
   amountCents: integer("amount_cents").notNull(),
   amountPaidCents: integer("amount_paid_cents").notNull().default(0),

@@ -125,6 +125,9 @@ export const eventRegistrations = pgTable("event_registrations", {
   amountCents: integer("amount_cents").notNull().default(0),
   stripePaymentIntentId: text("stripe_payment_intent_id"),
 
+  // GrowthZone import idempotency key
+  gzId: text("gz_id").unique(),
+
   checkedInAt: timestamp("checked_in_at", { withTimezone: true }),
   notes: text("notes"),
 

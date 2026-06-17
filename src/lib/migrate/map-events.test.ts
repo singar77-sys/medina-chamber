@@ -208,6 +208,42 @@ describe("mapRegistration", () => {
     expect(golf.eventKey).toBe("Annual Chamber Golf Outing 2025|2025-07-21");
   });
 
+  it("emits a stable gzId composite key embedding eventKey + contactId + regDate", () => {
+    // Best-effort composite: "gzreg-" + eventKey + "-" + gzContactId + "-" + registrationDateISO.
+    // Registration Date serial 45743.66674212963 → calendar day 2025-03-27 UTC
+    // (Math.round on the fractional serial pushes it past UTC midnight).
+    const golf = mapRegistration(golfRow);
+    expect(golf.gzId).toBe(
+      "gzreg-Annual Chamber Golf Outing 2025|2025-07-21-28154029-2025-03-27",
+    );
+  });
+
+  it("uses guest-<kebab(name)> segment in gzId when ContactId is absent", () => {
+    const junkRow = toRow([
+      "Some Event",
+      "Guest Person",
+      "",
+      "Non Member",
+      "Org",
+      45859,
+      45743, // Registration Date whole serial → 2025-03-27 UTC
+      "Registered",
+      1,
+      0,
+      1,
+      0,
+      0,
+      "",
+      "Totals", // non-numeric → gzContactId null
+      "",
+      "Walk-in",
+    ]);
+    const r = mapRegistration(junkRow);
+    expect(r.gzId).toBe(
+      "gzreg-Some Event|2025-07-21-guest-guest-person-2025-03-27",
+    );
+  });
+
   it("uses Registered Count for quantity (floor of 1)", () => {
     expect(mapRegistration(golfRow).quantity).toBe(1);
   });

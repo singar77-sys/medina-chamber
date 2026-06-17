@@ -92,7 +92,12 @@ describe("mapInvoice", () => {
     expect((inv.paidAt as Date).toISOString().slice(0, 10)).toBe("2024-03-01");
   });
 
-  it("emits the GrowthZone keys (no DB column exists for them)", () => {
+  it("emits gzId equal to the Invoice # string", () => {
+    const inv = mapInvoice(PAID_ROW);
+    expect(inv.gzId).toBe("109656");
+  });
+
+  it("emits the GrowthZone orchestration keys", () => {
     const inv = mapInvoice(PAID_ROW);
     expect(inv.gzOrgId).toBe("22529352");
     expect(inv.gzInvoiceNumber).toBe("109656");
@@ -125,6 +130,7 @@ describe("mapInvoicePayment", () => {
     expect(pay!.memo).toBe("GrowthZone historical import (invoice 109656)");
     expect(pay!.occurredAt).toBeInstanceOf(Date);
     expect((pay!.occurredAt as Date).toISOString().slice(0, 10)).toBe("2024-03-01");
+    expect(pay!.gzId).toBe("gzpay-109656");
     expect(pay!.gzOrgId).toBe("22529352");
     expect(pay!.gzInvoiceNumber).toBe("109656");
   });

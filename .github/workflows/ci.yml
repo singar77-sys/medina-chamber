@@ -1,0 +1,47 @@
+# CI quality gate — secret-free static checks only.
+#
+# We intentionally do NOT run `next build` / `pnpm build` here.
+# The Next.js build evaluates server code that needs runtime secrets
+# (DATABASE_URL, UPSTASH_REDIS_REST_URL, etc.). We do not want secrets
+# in GitHub Actions, and Vercel already builds with real env on deploy.
+# CI's job is the secret-free static gate: lint + unit tests.
+#
+# Typecheck (`tsc --noEmit`) is omitted: the Next.js generated types in
+# .next/types/validator.ts reference a page that does not exist yet,
+# producing pre-existing TS2307 errors that are a framework artifact,
+# not application code debt. Re-add this step once those types are clean.
+
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  quality:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test

@@ -157,7 +157,7 @@ export function deriveTiers(rows: Row[]): MembershipTierInsert[] {
   }
 
   // Deterministic output order by sortOrder then name.
-  tiers.sort((a, b) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name));
+  tiers.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0) || a.name.localeCompare(b.name));
   return tiers;
 }
 

@@ -64,37 +64,43 @@ describe("mapOrganizationRow — defensive null guard", () => {
 describe("mapOrganizationRow — member-style row", () => {
   it("maps every populated column to the schema's camelCase keys", () => {
     const org = mapOrganizationRow(memberRow);
+    expect(org).not.toBeNull();
+    const o = org!;
 
     // ContactId is the GrowthZone join key → lands in the real gzId column,
     // coerced to a string (gz_id is text).
-    expect(org.gzId).toBe("22966185");
-    expect(typeof org.gzId).toBe("string");
+    expect(o.gzId).toBe("22966185");
+    expect(typeof o.gzId).toBe("string");
 
-    expect(org.name).toBe("Acme Co");
-    expect(org.status).toBe("active");
-    expect(org.email).toBe("hi@acme.com");
-    expect(org.phone).toBe("(330) 555-1212");
-    expect(org.websiteUrl).toBe("https://acme.com");
-    expect(org.address1).toBe("123 Main St");
-    expect(org.city).toBe("Medina");
-    expect(org.state).toBe("OH");
-    expect(org.zip).toBe("44256");
+    expect(o.name).toBe("Acme Co");
+    expect(o.status).toBe("active");
+    expect(o.email).toBe("hi@acme.com");
+    expect(o.phone).toBe("(330) 555-1212");
+    expect(o.websiteUrl).toBe("https://acme.com");
+    expect(o.address1).toBe("123 Main St");
+    expect(o.city).toBe("Medina");
+    expect(o.state).toBe("OH");
+    expect(o.zip).toBe("44256");
   });
 
   it("preserves the raw status for re-classification", () => {
-    expect(mapOrganizationRow(memberRow).gzStatus).toBe("Active");
+    const org = mapOrganizationRow(memberRow);
+    expect(org).not.toBeNull();
+    expect(org!.gzStatus).toBe("Active");
   });
 
   it("does not split a single category name on its internal semicolon", () => {
     // "Retail; Services" is ONE category name (semicolon is internal, not a
     // delimiter). The real delimiter is a comma, and there is none here.
-    expect(mapOrganizationRow(memberRow).categories).toEqual([
-      "Retail; Services",
-    ]);
+    const org = mapOrganizationRow(memberRow);
+    expect(org).not.toBeNull();
+    expect(org!.categories).toEqual(["Retail; Services"]);
   });
 
   it("emits no organizations columns the schema does not have", () => {
     const org = mapOrganizationRow(memberRow);
+    expect(org).not.toBeNull();
+    const o = org!;
     const allowedKeys = new Set([
       // organizations columns
       "gzId",
@@ -111,34 +117,38 @@ describe("mapOrganizationRow — member-style row", () => {
       "categories",
       "gzStatus",
     ]);
-    for (const key of Object.keys(org)) {
+    for (const key of Object.keys(o)) {
       expect(allowedKeys.has(key)).toBe(true);
     }
     // Account Number is ignored entirely.
-    expect(org).not.toHaveProperty("accountNumber");
+    expect(o).not.toHaveProperty("accountNumber");
   });
 });
 
 describe("mapOrganizationRow — sparse non-member row", () => {
   it("nulls every blank optional field and keeps the populated phone", () => {
     const org = mapOrganizationRow(sparseNonMemberRow);
+    expect(org).not.toBeNull();
+    const o = org!;
 
-    expect(org.gzId).toBe("22966459");
-    expect(org.name).toBe("21B Consulting");
-    expect(org.status).toBe("non_member");
-    expect(org.phone).toBe("(843) 749-2227");
+    expect(o.gzId).toBe("22966459");
+    expect(o.name).toBe("21B Consulting");
+    expect(o.status).toBe("non_member");
+    expect(o.phone).toBe("(843) 749-2227");
 
     // Empty cells become null, not "".
-    expect(org.email).toBeNull();
-    expect(org.websiteUrl).toBeNull();
-    expect(org.address1).toBeNull();
-    expect(org.city).toBeNull();
-    expect(org.state).toBeNull();
-    expect(org.zip).toBeNull();
+    expect(o.email).toBeNull();
+    expect(o.websiteUrl).toBeNull();
+    expect(o.address1).toBeNull();
+    expect(o.city).toBeNull();
+    expect(o.state).toBeNull();
+    expect(o.zip).toBeNull();
   });
 
   it("returns an empty category list for a blank categories cell", () => {
-    expect(mapOrganizationRow(sparseNonMemberRow).categories).toEqual([]);
+    const org = mapOrganizationRow(sparseNonMemberRow);
+    expect(org).not.toBeNull();
+    expect(org!.categories).toEqual([]);
   });
 });
 

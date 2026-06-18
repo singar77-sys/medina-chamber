@@ -36,7 +36,7 @@ import {
   eventRegistrations,
 } from "@/lib/db/schema";
 
-import { loadRows } from "./load";
+import { loadRows, type Row } from "./load";
 import { mapOrganizationRow, type MappedOrganization } from "./map-organizations";
 import { mapContact, type MappedContact } from "./map-contacts";
 import {
@@ -429,9 +429,10 @@ function nowUpdate() {
 export async function runImport(
   db: DB,
   filePaths: FilePaths = DEFAULT_FILE_PATHS,
+  extraOrgRows: Row[] = [],
 ): Promise<ReconciliationReport> {
   // ── Read + map all sources up front (pure; surfaces file errors early) ──────
-  const orgRows = loadRows(filePaths.organizations);
+  const orgRows = [...loadRows(filePaths.organizations), ...extraOrgRows];
   const contactRows = loadRows(filePaths.contacts);
   const membershipRows = loadRows(filePaths.memberships);
   const invoiceRows = loadRows(filePaths.invoices);

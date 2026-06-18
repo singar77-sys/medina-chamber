@@ -35,6 +35,8 @@ if (!dbUrl) {
 }
 const client = postgres(dbUrl, { ssl: "require", max: 1 });
 const db = drizzle(client, { schema });
+import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import {
   runImport,
   DEFAULT_FILE_PATHS,
@@ -43,6 +45,7 @@ import {
   type ReconciliationReport,
   type TableReport,
 } from "@/lib/migrate/orchestrate";
+import type { Row } from "@/lib/migrate/load";
 
 /** Build the FilePaths from positional argv, falling back to the defaults. */
 function resolveFilePaths(argv: string[]): FilePaths {
@@ -127,6 +130,15 @@ function printReport(report: ReconciliationReport): void {
 void (async () => {
   const filePaths = resolveFilePaths(process.argv.slice(2));
 
+  // Load supplemental org rows for pending-approval members missing from the
+  // orgs export (their ContactIds exist in the membership report but not in
+  // "Contacts Report.xlsx", so without this they drop as "unresolved org FK").
+  const supplementalPath = resolve("scripts/gz-supplemental-orgs.json");
+  const extraOrgRows: Row[] = existsSync(supplementalPath)
+    ? (JSON.parse(readFileSync(supplementalPath, "utf8")) as Row[])
+    : [];
+  console.log(`Supplemental orgs: ${extraOrgRows.length} rows`);
+
   console.log("🔄  Starting GrowthZone → Postgres import...\n");
   console.log("  Sources:");
   for (const [k, v] of Object.entries(filePaths)) {
@@ -135,7 +147,7 @@ void (async () => {
 
   let report: ReconciliationReport;
   try {
-    report = await runImport(db, filePaths);
+    report = await runImport(db, filePaths, extraOrgRows);
   } catch (err) {
     console.error("\n❌  Import failed:");
     console.error(err instanceof Error ? err.message : String(err));

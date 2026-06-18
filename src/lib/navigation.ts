@@ -207,5 +207,5 @@ export const ctaLink = {
 
 export const memberLogin = {
   label: "Member Login",
-  href: "https://greatermedinachamberofcommerce.growthzoneapp.com/a/MIC/Login",
+  href: "/portal",
 };

@@ -320,8 +320,6 @@ function MobileMenu({
         <div className="px-f21 pt-f21">
           <ButtonA
             href={memberLogin.href}
-            target="_blank"
-            rel="noopener noreferrer"
             variant="ghost"
             size="md"
             className="w-full justify-center"
@@ -585,8 +583,6 @@ export function Header() {
               {/* Desktop Member Login — ghost link so Join Now is the only filled CTA */}
               <a
                 href={memberLogin.href}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="
                   hidden xl:flex items-center px-3 py-2
                   whitespace-nowrap

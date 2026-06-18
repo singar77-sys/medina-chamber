@@ -12,10 +12,16 @@ import { contacts } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { signMagicToken } from "@/lib/portal-session";
 import { resend, EMAIL_RE } from "@/lib/email";
+import { limitPortalAuth } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
 export async function POST(req: Request): Promise<Response> {
+  // Rate limit per client IP (~5/min). Fail-open: a limiter hiccup never
+  // blocks login or leaks a 500.
+  const limited = await limitPortalAuth(req);
+  if (limited) return limited;
+
   let body: { email?: unknown };
   try {
     body = await req.json();

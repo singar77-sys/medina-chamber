@@ -28,6 +28,7 @@ import { ensureStripeCustomer } from "@/lib/stripe/customer";
 import { db } from "@/lib/db";
 import { invoices } from "@/lib/db/schema";
 import { verifyPortalSession, PORTAL_COOKIE } from "@/lib/portal-session";
+import { limitPortalCheckout } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -40,6 +41,11 @@ async function getSession() {
 }
 
 export async function POST(req: Request): Promise<Response> {
+  // Rate limit per client IP (~10/min). Fail-open: a limiter hiccup never
+  // blocks a paying member or leaks a 500.
+  const limited = await limitPortalCheckout(req);
+  if (limited) return limited;
+
   const session = await getSession();
   if (!session) {
     return Response.json({ error: "unauthorized" }, { status: 401 });

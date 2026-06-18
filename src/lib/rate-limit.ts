@@ -112,3 +112,80 @@ export async function applyRateLimit(
   }
   return null;
 }
+
+// ── Lazy fail-open limiter (portal routes) ─────────────────────────
+//
+// The limiters above (chatLimiter, formLimiter, …) are constructed at module
+// load, which calls getRedis() at import time. For routes that must keep the
+// production build secret-free AND must never 500 on a limiter hiccup, we want
+// stricter guarantees:
+//
+//   • LAZY — the limiter (Upstash or in-memory) is built on first .limit()
+//     call, not at import. Importing this module reads no env and opens no
+//     socket, so `next build`'s page-data collection stays secret-free.
+//   • FAIL OPEN — if the Upstash client can't init (env absent) or a check
+//     throws, the request is ALLOWED and we warn once. A rate limiter is a
+//     guardrail, not a gate: a transient Redis error must not take down
+//     magic-link login or checkout.
+//
+// This differs from applyRateLimit + the eager limiters, which fall back to a
+// per-isolate in-memory limiter (fail-closed-ish). Here a missing limiter means
+// "allow", because for these endpoints availability beats perfect limiting.
+function makeLazyFailOpenLimiter(requestsPerMinute: number, prefix: string) {
+  let limiter: SimpleLimiter | undefined;
+  let warned = false;
+
+  function warnOnce(reason: string, err?: unknown) {
+    if (warned) return;
+    warned = true;
+    console.warn(`[rate-limit] ${prefix} failing open: ${reason}`, err ?? "");
+  }
+
+  return {
+    /** True if the request is allowed, false if it should be 429'd. */
+    async allow(key: string): Promise<boolean> {
+      try {
+        if (limiter === undefined) {
+          // Build on first use. Upstash when configured; in-memory otherwise.
+          limiter =
+            makeUpstashLimiter(requestsPerMinute, prefix) ??
+            new InMemoryLimiter(requestsPerMinute);
+        }
+        const { success } = await limiter.limit(key);
+        return success;
+      } catch (err) {
+        // Limiter threw (e.g. Redis unreachable) — fail open.
+        warnOnce("limiter check threw", err);
+        return true;
+      }
+    },
+  };
+}
+
+// 5 req/min per IP for magic-link requests — humans don't request links 5x/min.
+const portalAuthLimiter = makeLazyFailOpenLimiter(5, "rl:portal-auth");
+
+// 10 req/min per IP for checkout-session creation.
+const portalCheckoutLimiter = makeLazyFailOpenLimiter(10, "rl:portal-checkout");
+
+/**
+ * Fail-open rate-limit guard for the magic-link request endpoint.
+ * Returns a 429 Response when over the limit, otherwise null (proceed).
+ * Never throws; on any limiter failure the request is allowed.
+ */
+export async function limitPortalAuth(req: Request): Promise<Response | null> {
+  const ok = await portalAuthLimiter.allow(getRequestIp(req));
+  return ok ? null : new Response("Too many requests.", { status: 429 });
+}
+
+/**
+ * Fail-open rate-limit guard for the checkout endpoint.
+ * Returns a 429 Response when over the limit, otherwise null (proceed).
+ * Never throws; on any limiter failure the request is allowed.
+ */
+export async function limitPortalCheckout(
+  req: Request,
+): Promise<Response | null> {
+  const ok = await portalCheckoutLimiter.allow(getRequestIp(req));
+  return ok ? null : new Response("Too many requests.", { status: 429 });
+}

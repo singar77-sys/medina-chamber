@@ -1,12 +1,14 @@
-# CI quality gate — secret-free static checks only.
+# CI quality gate — secret-free checks: lint + unit tests + production build.
 #
-# We intentionally do NOT run `next build` / `pnpm build` here.
-# The Next.js build evaluates server code that needs runtime secrets
-# (DATABASE_URL, UPSTASH_REDIS_REST_URL, etc.). We do not want secrets
-# in GitHub Actions, and Vercel already builds with real env on deploy.
-# CI's job is the secret-free static gate: lint + unit tests.
+# `pnpm build` runs WITHOUT secrets. The db (src/lib/db) and Stripe
+# (src/lib/stripe/client) clients are lazily constructed behind Proxies, so
+# importing them during "Collecting page data" reads no env, opens no socket,
+# and never throws — `next build` succeeds with DATABASE_URL / STRIPE_* /
+# UPSTASH_* all unset. Sentry sourcemap upload auto-skips without an auth token.
+# This catches the class of latent build-breaks (eager env reads at module
+# load) that previously only surfaced on a real Vercel deploy.
 #
-# Typecheck (`tsc --noEmit`) is omitted: the Next.js generated types in
+# Typecheck (`tsc --noEmit`) is still omitted: the Next.js generated types in
 # .next/types/validator.ts reference a page that does not exist yet,
 # producing pre-existing TS2307 errors that are a framework artifact,
 # not application code debt. Re-add this step once those types are clean.
@@ -49,3 +51,11 @@ jobs:
 
       - name: Test
         run: pnpm test
+
+      # Secret-free production build. Proves the app builds with NO runtime
+      # secrets — the lazy db + Stripe Proxies mean module import during page-
+      # data collection never reads env or opens a socket. Sentry sourcemap
+      # upload auto-skips without SENTRY_AUTH_TOKEN. If this fails, something
+      # reintroduced an eager env read / throw at module load.
+      - name: Build (secret-free)
+        run: pnpm build

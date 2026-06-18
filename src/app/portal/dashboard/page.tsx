@@ -188,7 +188,21 @@ export default async function PortalDashboardPage() {
         </div>
 
         <div className="flex items-center gap-4">
-          <span className="text-sm" style={{ color: "#83BCA9" }}>
+          <a
+            href="/portal/billing"
+            className="text-sm hover:underline"
+            style={{ color: "#83BCA9" }}
+          >
+            Billing
+          </a>
+          <a
+            href="/portal/profile"
+            className="text-sm hover:underline"
+            style={{ color: "#83BCA9" }}
+          >
+            Profile
+          </a>
+          <span className="text-sm hidden sm:inline" style={{ color: "#83BCA9" }}>
             {contact.firstName} {contact.lastName}
           </span>
           <form action="/api/portal/auth/logout" method="post">
@@ -298,9 +312,18 @@ export default async function PortalDashboardPage() {
 
           {/* ── Contact card ─────────────────────────────────────────────── */}
           <div className="bg-bg-primary rounded-2xl p-6 shadow-sm border border-border-secondary">
-            <h2 className="text-xs font-bold text-text-tertiary uppercase tracking-wider mb-4">
-              Your Profile
-            </h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xs font-bold text-text-tertiary uppercase tracking-wider">
+                Your Profile
+              </h2>
+              <a
+                href="/portal/profile"
+                className="text-xs font-bold hover:underline"
+                style={{ color: "#0C1B33" }}
+              >
+                Edit
+              </a>
+            </div>
             <div className="space-y-3">
               <div className="flex items-start justify-between gap-2">
                 <span className="text-sm text-text-secondary shrink-0">Name</span>

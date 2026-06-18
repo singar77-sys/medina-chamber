@@ -168,6 +168,10 @@ const portalAuthLimiter = makeLazyFailOpenLimiter(5, "rl:portal-auth");
 // 10 req/min per IP for checkout-session creation.
 const portalCheckoutLimiter = makeLazyFailOpenLimiter(10, "rl:portal-checkout");
 
+// 20 req/min per IP for profile saves — an authenticated member editing their
+// own listing; generous, just caps runaway clients / scripted abuse.
+const portalProfileLimiter = makeLazyFailOpenLimiter(20, "rl:portal-profile");
+
 /**
  * Fail-open rate-limit guard for the magic-link request endpoint.
  * Returns a 429 Response when over the limit, otherwise null (proceed).
@@ -187,5 +191,17 @@ export async function limitPortalCheckout(
   req: Request,
 ): Promise<Response | null> {
   const ok = await portalCheckoutLimiter.allow(getRequestIp(req));
+  return ok ? null : new Response("Too many requests.", { status: 429 });
+}
+
+/**
+ * Fail-open rate-limit guard for the profile-update endpoint.
+ * Returns a 429 Response when over the limit, otherwise null (proceed).
+ * Never throws; on any limiter failure the request is allowed.
+ */
+export async function limitPortalProfile(
+  req: Request,
+): Promise<Response | null> {
+  const ok = await portalProfileLimiter.allow(getRequestIp(req));
   return ok ? null : new Response("Too many requests.", { status: 429 });
 }

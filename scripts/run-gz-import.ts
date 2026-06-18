@@ -20,7 +20,21 @@
  * Requires DATABASE_URL (loaded via --env-file=.env.local, as run-gz-sync does).
  */
 
-import { db } from "@/lib/db";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+import * as schema from "@/lib/db/schema";
+
+// The import runs against the SESSION pooler (port 5432): SSL on, prepared
+// statements ON. Do NOT set prepare:false here — that is only correct for the
+// app's transaction-pooler path (src/lib/db), and on the session pooler it
+// breaks Supabase's tenant routing (auth fails as bare "postgres").
+const dbUrl = process.env.DATABASE_URL;
+if (!dbUrl) {
+  console.error("DATABASE_URL is not set");
+  process.exit(1);
+}
+const client = postgres(dbUrl, { ssl: "require", max: 1 });
+const db = drizzle(client, { schema });
 import {
   runImport,
   DEFAULT_FILE_PATHS,
@@ -124,7 +138,9 @@ void (async () => {
     report = await runImport(db, filePaths);
   } catch (err) {
     console.error("\n❌  Import failed:");
-    console.error(err instanceof Error ? err.stack ?? err.message : String(err));
+    console.error(err instanceof Error ? err.message : String(err));
+    const cause = (err as { cause?: unknown })?.cause;
+    if (cause) console.error("CAUSE:", cause instanceof Error ? cause.message : cause);
     process.exit(1);
     return;
   }

@@ -93,6 +93,48 @@ export const DEFAULT_FILE_PATHS: FilePaths = {
 // Small generic helpers
 // ─────────────────────────────────────────────────────────────────────────────
 
+/**
+ * Keep ONE row per non-empty conflict key (last occurrence wins, which matches
+ * onConflictDoUpdate's "latest data" intent). Rows whose key is null/undefined/""
+ * pass through unchanged (a NULL gz_id never conflicts in Postgres). Returns the
+ * de-duplicated rows (original order preserved by first appearance of each key,
+ * with the last row's data) and the count dropped.
+ */
+export function dedupeByKey<T>(
+  rows: T[],
+  key: (r: T) => string | null | undefined,
+): { rows: T[]; dropped: number } {
+  // Two-pass: first collect the last-seen row for each keyed value, then
+  // rebuild the output in insertion order (first appearance of each key).
+  const keyedMap = new Map<string, T>(); // key → last-seen row
+  const emptyKeyRows: T[] = [];
+
+  for (const r of rows) {
+    const k = key(r);
+    if (k === null || k === undefined || k === "") {
+      emptyKeyRows.push(r);
+    } else {
+      keyedMap.set(k, r); // overwrite with later occurrence
+    }
+  }
+
+  // Rebuild in first-appearance order: iterate rows again, emit once per key.
+  const seen = new Set<string>();
+  const out: T[] = [];
+  for (const r of rows) {
+    const k = key(r);
+    if (k === null || k === undefined || k === "") continue; // handled below
+    if (!seen.has(k)) {
+      seen.add(k);
+      out.push(keyedMap.get(k)!); // last-seen data, first-seen position
+    }
+  }
+  // Append all empty-key rows unchanged.
+  for (const r of emptyKeyRows) out.push(r);
+
+  return { rows: out, dropped: rows.length - out.length };
+}
+
 /** Split an array into fixed-size chunks (last chunk may be shorter). */
 export function chunk<T>(arr: T[], size: number = BATCH_SIZE): T[][] {
   const out: T[][] = [];
@@ -469,7 +511,7 @@ export async function runImport(
 
   // ── 2. organizations (key on gzId) ──────────────────────────────────────────
   const orgsWithSlugs = assignUniqueSlugs(mappedOrgs);
-  const orgInserts = orgsWithSlugs.map((o) => ({
+  const orgInsertsRaw = orgsWithSlugs.map((o) => ({
     gzId: o.gzId,
     name: o.name,
     slug: o.slug,
@@ -483,6 +525,13 @@ export async function runImport(
     zip: o.zip,
     gzSyncedAt: new Date(),
   }));
+  const { rows: orgInserts, dropped: orgDupesDrop } = dedupeByKey(
+    orgInsertsRaw,
+    (r) => r.gzId,
+  );
+  if (orgDupesDrop > 0) {
+    recordSkip(report.organizations, "duplicate gzId in source", orgDupesDrop);
+  }
 
   const orgGzToId = new Map<string, string>();
   for (const batch of chunk(orgInserts)) {
@@ -539,14 +588,14 @@ export async function runImport(
   report.deDupedEmails = plan.deDupedEmails;
   recordSkip(report.contacts, "unaffiliated (null org)", plan.skippedUnaffiliated);
 
-  const contactInserts: Array<typeof contacts.$inferInsert> = [];
+  const contactInsertsRaw: Array<typeof contacts.$inferInsert> = [];
   for (const c of plan.kept) {
     const orgId = c.gzOrgId !== null ? orgGzToId.get(c.gzOrgId) : undefined;
     if (!orgId) {
       recordSkip(report.contacts, "unresolved org FK");
       continue;
     }
-    contactInserts.push({
+    contactInsertsRaw.push({
       organizationId: orgId,
       gzId: c.gzId,
       firstName: c.firstName,
@@ -559,6 +608,14 @@ export async function runImport(
   }
   report.unresolvedFkCounts["contacts.organizationId"] =
     report.contacts.reasons["unresolved org FK"] ?? 0;
+
+  const { rows: contactInserts, dropped: contactDupesDrop } = dedupeByKey(
+    contactInsertsRaw,
+    (r) => r.gzId ?? null,
+  );
+  if (contactDupesDrop > 0) {
+    recordSkip(report.contacts, "duplicate gzId in source", contactDupesDrop);
+  }
 
   for (const batch of chunk(contactInserts)) {
     await db
@@ -586,7 +643,14 @@ export async function runImport(
   const contactGzToId = buildGzIdMap(allContacts);
 
   // ── 5. membership_tiers (key on slug) ───────────────────────────────────────
-  const tierValues = deriveTiers(membershipRows);
+  const tierValuesRaw = deriveTiers(membershipRows);
+  const { rows: tierValues, dropped: tierDupesDrop } = dedupeByKey(
+    tierValuesRaw,
+    (r) => r.slug,
+  );
+  if (tierDupesDrop > 0) {
+    recordSkip(report.membershipTiers, "duplicate slug in source", tierDupesDrop);
+  }
   report.membershipTiers.input = tierValues.length;
   for (const batch of chunk(tierValues)) {
     await db
@@ -614,7 +678,7 @@ export async function runImport(
   report.droppedDuplicateMemberships = dedupe.dropped;
   recordSkip(report.memberships, "duplicate org membership", dedupe.dropped);
 
-  const membershipInserts: Array<typeof memberships.$inferInsert> = [];
+  const membershipInsertsRaw: Array<typeof memberships.$inferInsert> = [];
   for (const m of dedupe.winners) {
     const orgId = orgGzToId.get(m.gzContactId);
     const tierId = tierSlugToId.get(m.tierSlug);
@@ -626,7 +690,7 @@ export async function runImport(
       recordSkip(report.memberships, "unresolved tier FK");
       continue;
     }
-    membershipInserts.push({
+    membershipInsertsRaw.push({
       ...m.membership,
       organizationId: orgId,
       tierId,
@@ -636,6 +700,14 @@ export async function runImport(
     report.memberships.reasons["unresolved org FK"] ?? 0;
   report.unresolvedFkCounts["memberships.tierId"] =
     report.memberships.reasons["unresolved tier FK"] ?? 0;
+
+  const { rows: membershipInserts, dropped: membershipDupesDrop } = dedupeByKey(
+    membershipInsertsRaw,
+    (r) => r.gzId ?? null,
+  );
+  if (membershipDupesDrop > 0) {
+    recordSkip(report.memberships, "duplicate gzId in source", membershipDupesDrop);
+  }
 
   for (const batch of chunk(membershipInserts)) {
     await db
@@ -657,14 +729,14 @@ export async function runImport(
   }
 
   // ── 7. invoices (key on gzId = invoice number) ──────────────────────────────
-  const invoiceInserts: Array<typeof invoices.$inferInsert> = [];
+  const invoiceInsertsRaw: Array<typeof invoices.$inferInsert> = [];
   for (const inv of mappedInvoices) {
     const orgId = inv.gzOrgId !== null ? orgGzToId.get(inv.gzOrgId) : undefined;
     if (!orgId) {
       recordSkip(report.invoices, "unresolved org FK");
       continue;
     }
-    invoiceInserts.push({
+    invoiceInsertsRaw.push({
       organizationId: orgId,
       gzId: inv.gzId,
       amountCents: inv.amountCents,
@@ -676,6 +748,14 @@ export async function runImport(
   }
   report.unresolvedFkCounts["invoices.organizationId"] =
     report.invoices.reasons["unresolved org FK"] ?? 0;
+
+  const { rows: invoiceInserts, dropped: invoiceDupesDrop } = dedupeByKey(
+    invoiceInsertsRaw,
+    (r) => r.gzId ?? null,
+  );
+  if (invoiceDupesDrop > 0) {
+    recordSkip(report.invoices, "duplicate gzId in source", invoiceDupesDrop);
+  }
 
   for (const batch of chunk(invoiceInserts)) {
     await db
@@ -702,7 +782,7 @@ export async function runImport(
   const invoiceGzToId = buildGzIdMap(allInvoices);
 
   // ── 8. payments (key on gzId; invoiceId notNull) ────────────────────────────
-  const paymentInserts: Array<typeof payments.$inferInsert> = [];
+  const paymentInsertsRaw: Array<typeof payments.$inferInsert> = [];
   for (const p of mappedPayments) {
     const orgId = p.gzOrgId !== null ? orgGzToId.get(p.gzOrgId) : undefined;
     const invoiceId =
@@ -715,7 +795,7 @@ export async function runImport(
       recordSkip(report.payments, "unresolved invoice FK");
       continue;
     }
-    paymentInserts.push({
+    paymentInsertsRaw.push({
       organizationId: orgId,
       invoiceId,
       type: p.type,
@@ -730,6 +810,14 @@ export async function runImport(
     report.payments.reasons["unresolved org FK"] ?? 0;
   report.unresolvedFkCounts["payments.invoiceId"] =
     report.payments.reasons["unresolved invoice FK"] ?? 0;
+
+  const { rows: paymentInserts, dropped: paymentDupesDrop } = dedupeByKey(
+    paymentInsertsRaw,
+    (r) => r.gzId ?? null,
+  );
+  if (paymentDupesDrop > 0) {
+    recordSkip(report.payments, "duplicate gzId in source", paymentDupesDrop);
+  }
 
   for (const batch of chunk(paymentInserts)) {
     await db
@@ -753,10 +841,19 @@ export async function runImport(
   }
 
   // ── 9. events (key on gzId; strip eventKey before insert) ───────────────────
-  const eventInserts = derivedEvents.map((e) => stripEventKey(e));
+  // Dedupe by gzId BEFORE inserting; eventKeyToId is built only from survivors.
+  // Registrations referencing a dropped event's key will get "unresolved event FK".
+  const { rows: dedupedEvents, dropped: eventDupesDrop } = dedupeByKey(
+    derivedEvents,
+    (e) => e.gzId ?? null,
+  );
+  if (eventDupesDrop > 0) {
+    recordSkip(report.events, "duplicate gzId in source", eventDupesDrop);
+  }
+  const eventInserts = dedupedEvents.map((e) => stripEventKey(e));
   const eventKeyToId = new Map<string, string>();
-  for (let i = 0; i < derivedEvents.length; i += BATCH_SIZE) {
-    const slice = derivedEvents.slice(i, i + BATCH_SIZE);
+  for (let i = 0; i < dedupedEvents.length; i += BATCH_SIZE) {
+    const slice = dedupedEvents.slice(i, i + BATCH_SIZE);
     const batch = eventInserts.slice(i, i + BATCH_SIZE);
     const returned = await db
       .insert(events)
@@ -782,7 +879,7 @@ export async function runImport(
   }
 
   // ── 10. event_registrations (key on gzId) ───────────────────────────────────
-  const regInserts: Array<typeof eventRegistrations.$inferInsert> = [];
+  const regInsertsRaw: Array<typeof eventRegistrations.$inferInsert> = [];
   for (const r of mappedRegistrations) {
     const eventId = eventKeyToId.get(r.eventKey);
     if (!eventId) {
@@ -795,7 +892,7 @@ export async function runImport(
       r.gzContactId !== null ? contactGzToId.get(String(r.gzContactId)) ?? null : null;
     // organizationId on a registration is nullable; resolve via the contact's
     // org is not available here (registration has no org gzId), so leave null.
-    regInserts.push({
+    regInsertsRaw.push({
       ...stripRegistrationCarry(r),
       eventId,
       contactId,
@@ -803,6 +900,14 @@ export async function runImport(
   }
   report.unresolvedFkCounts["eventRegistrations.eventId"] =
     report.eventRegistrations.reasons["unresolved event FK"] ?? 0;
+
+  const { rows: regInserts, dropped: regDupesDrop } = dedupeByKey(
+    regInsertsRaw,
+    (r) => r.gzId ?? null,
+  );
+  if (regDupesDrop > 0) {
+    recordSkip(report.eventRegistrations, "duplicate gzId in source", regDupesDrop);
+  }
 
   for (const batch of chunk(regInserts)) {
     await db

@@ -13,6 +13,7 @@ import {
   assignUniqueSlugs,
   buildGzIdMap,
   chunk,
+  dedupeByKey,
   dedupeMemberships,
   kebabCase,
   planContacts,
@@ -289,5 +290,84 @@ describe("planContacts", () => {
     planContacts([first, second]);
     expect(first.email).toBe("dup@x.com"); // untouched
     expect(second.email).toBe("dup@x.com"); // original object untouched (copy nulled)
+  });
+});
+
+// ── dedupeByKey ───────────────────────────────────────────────────────────────
+
+describe("dedupeByKey", () => {
+  type Row = { id: string; val: string };
+
+  it("returns all rows and dropped=0 when all keys are unique", () => {
+    const rows: Row[] = [
+      { id: "a", val: "1" },
+      { id: "b", val: "2" },
+      { id: "c", val: "3" },
+    ];
+    const result = dedupeByKey(rows, (r) => r.id);
+    expect(result.rows).toHaveLength(3);
+    expect(result.dropped).toBe(0);
+    expect(result.rows.map((r) => r.id)).toEqual(["a", "b", "c"]);
+  });
+
+  it("keeps the LAST occurrence's data for duplicate keys", () => {
+    const rows: Row[] = [
+      { id: "dup", val: "first" },
+      { id: "other", val: "x" },
+      { id: "dup", val: "second" },
+      { id: "dup", val: "third" },
+    ];
+    const result = dedupeByKey(rows, (r) => r.id);
+    expect(result.dropped).toBe(2);
+    expect(result.rows).toHaveLength(2);
+    // "dup" appears at first-seen position (index 0) but carries last-seen data
+    const dupRow = result.rows.find((r) => r.id === "dup");
+    expect(dupRow?.val).toBe("third");
+  });
+
+  it("preserves first-appearance insertion order", () => {
+    const rows: Row[] = [
+      { id: "b", val: "b1" },
+      { id: "a", val: "a1" },
+      { id: "b", val: "b2" },
+      { id: "c", val: "c1" },
+      { id: "a", val: "a2" },
+    ];
+    const result = dedupeByKey(rows, (r) => r.id);
+    expect(result.rows.map((r) => r.id)).toEqual(["b", "a", "c"]);
+    expect(result.rows.map((r) => r.val)).toEqual(["b2", "a2", "c1"]);
+    expect(result.dropped).toBe(2);
+  });
+
+  it("passes through rows with null key unchanged, dropped=0 for them", () => {
+    const rows: Row[] = [
+      { id: "a", val: "1" },
+      { id: "", val: "empty-key" },
+      { id: "a", val: "2" },
+    ];
+    const result = dedupeByKey(rows, (r) => r.id || null);
+    // "a" deduped to 1, empty-key passes through → 2 rows total, 1 dropped
+    expect(result.dropped).toBe(1);
+    expect(result.rows).toHaveLength(2);
+    const emptyRow = result.rows.find((r) => r.val === "empty-key");
+    expect(emptyRow).toBeDefined();
+  });
+
+  it("treats null, undefined, and empty string as empty keys (all pass through)", () => {
+    const mixed = [
+      { k: null as string | null | undefined, v: "null-key" },
+      { k: undefined as string | null | undefined, v: "undef-key" },
+      { k: "" as string | null | undefined, v: "empty-key" },
+      { k: "real", v: "keyed" },
+    ];
+    const result = dedupeByKey(mixed, (r) => r.k);
+    expect(result.dropped).toBe(0);
+    expect(result.rows).toHaveLength(4);
+  });
+
+  it("returns empty array and dropped=0 for empty input", () => {
+    const result = dedupeByKey([] as Row[], (r) => r.id);
+    expect(result.rows).toHaveLength(0);
+    expect(result.dropped).toBe(0);
   });
 });

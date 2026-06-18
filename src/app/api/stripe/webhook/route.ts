@@ -1,0 +1,137 @@
+/**
+ * POST /api/stripe/webhook
+ * ------------------------
+ * Receives Stripe webhook events and writes them into the payments ledger.
+ *
+ * Runtime: nodejs (NOT edge). postgres-js opens a TCP socket, which the edge
+ * runtime can't do, and Stripe signature verification needs the raw request
+ * bytes. force-dynamic keeps the handler from ever being cached/prerendered.
+ *
+ * Raw body: in the Next.js App Router, route handlers receive the Web `Request`,
+ * and `await req.text()` returns the body exactly as sent — no body parser sits
+ * in front of it. That raw string is what `constructEvent` must verify against;
+ * a JSON-reparsed body would fail the signature check.
+ *
+ * Idempotency: Stripe retries deliveries until it gets a 2xx. The ledger's
+ * UNIQUE constraints on stripeChargeId / stripeRefundId make recordPayment safe
+ * to call repeatedly, so a redelivered event is a no-op rather than a double
+ * charge. We therefore return 200 on every handled or ignored event, 400 only on
+ * a bad signature, and 500 only on an unexpected throw.
+ */
+
+import type Stripe from "stripe";
+import { eq } from "drizzle-orm";
+import { stripe } from "@/lib/stripe/client";
+import { db } from "@/lib/db";
+import { invoices } from "@/lib/db/schema";
+import { recordPayment } from "@/lib/billing/ledger";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+export async function POST(req: Request) {
+  const rawBody = await req.text();
+  const sig = req.headers.get("stripe-signature");
+
+  let event: Stripe.Event;
+  try {
+    event = stripe.webhooks.constructEvent(
+      rawBody,
+      sig ?? "",
+      process.env.STRIPE_WEBHOOK_SECRET!,
+    );
+  } catch {
+    return new Response("bad signature", { status: 400 });
+  }
+
+  try {
+    switch (event.type) {
+      case "payment_intent.succeeded": {
+        const pi = event.data.object as Stripe.PaymentIntent;
+        const organizationId = pi.metadata?.organizationId;
+        const invoiceId = pi.metadata?.invoiceId;
+
+        // Without both ids we can't attribute the charge to an invoice. This is
+        // expected for PaymentIntents created outside our billing flow, so it's
+        // an ack (200), not an error.
+        if (!organizationId || !invoiceId) {
+          console.warn(
+            `[stripe webhook] payment_intent.succeeded ${pi.id} has no organizationId/invoiceId metadata — skipping`,
+          );
+          break;
+        }
+
+        await recordPayment(db, {
+          organizationId,
+          invoiceId,
+          type: "charge",
+          method: "card",
+          amountCents: pi.amount_received ?? pi.amount,
+          stripeChargeId:
+            typeof pi.latest_charge === "string"
+              ? pi.latest_charge
+              : (pi.latest_charge?.id ?? undefined),
+          stripePaymentMethodId:
+            typeof pi.payment_method === "string"
+              ? pi.payment_method
+              : (pi.payment_method?.id ?? undefined),
+        });
+        break;
+      }
+
+      case "charge.refunded": {
+        const charge = event.data.object as Stripe.Charge;
+        const organizationId = charge.metadata?.organizationId;
+        const invoiceId = charge.metadata?.invoiceId;
+
+        if (!organizationId || !invoiceId) {
+          console.warn(
+            `[stripe webhook] charge.refunded ${charge.id} has no organizationId/invoiceId metadata — skipping`,
+          );
+          break;
+        }
+
+        // Stripe returns refunds most-recent-first; the head is the refund this
+        // event is about. Its id is the idempotency key — do NOT reuse the
+        // charge id (that belongs to the original charge row).
+        const latestRefund = charge.refunds?.data?.[0];
+
+        await recordPayment(db, {
+          organizationId,
+          invoiceId,
+          type: "refund",
+          method: "card",
+          amountCents: -charge.amount_refunded,
+          stripeRefundId: latestRefund?.id,
+        });
+        break;
+      }
+
+      case "invoice.payment_failed": {
+        const stripeInvoice = event.data.object as Stripe.Invoice;
+        const invoiceId = stripeInvoice.metadata?.invoiceId;
+
+        if (invoiceId) {
+          await db
+            .update(invoices)
+            .set({ status: "past_due", updatedAt: new Date() })
+            .where(eq(invoices.id, invoiceId));
+        } else {
+          console.warn(
+            `[stripe webhook] invoice.payment_failed ${stripeInvoice.id} has no invoiceId metadata — skipping`,
+          );
+        }
+        break;
+      }
+
+      default:
+        // Unhandled event type — acknowledge so Stripe stops retrying.
+        break;
+    }
+
+    return new Response("ok", { status: 200 });
+  } catch (err) {
+    console.error(`[stripe webhook] error handling ${event.type}:`, err);
+    return new Response("internal error", { status: 500 });
+  }
+}

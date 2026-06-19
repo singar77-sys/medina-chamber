@@ -13,9 +13,10 @@
  * History: the site once degraded silently to "no rate limiting" when the
  * Upstash env vars were missing (caught by the website-security-sentinel
  * audit); the in-memory fallback above closed that gap. As of 2026-06-19,
- * UPSTASH_REDIS_REST_URL + _TOKEN ARE set in Vercel Production (verified via
- * `vercel env ls`), so prod uses the distributed limiter. The in-memory
- * fallback now only covers local dev + Preview, where those vars are unset.
+ * UPSTASH_REDIS_REST_URL + _TOKEN ARE set in all three Vercel environments —
+ * Production, Preview, and Development (verified via `vercel env ls`) — so every
+ * deployed environment uses the distributed limiter. The in-memory fallback now
+ * only applies to a local process started without those vars loaded.
  */
 
 import { Ratelimit } from "@upstash/ratelimit";

@@ -33,12 +33,14 @@ const txUpdWhere = vi.fn(async () => undefined);
 const txSet = vi.fn(() => ({ where: txUpdWhere }));
 const txUpdate = vi.fn(() => ({ set: txSet }));
 const transaction = vi.fn(
-  async (fn: (tx: { select: typeof txSelect; update: typeof txUpdate }) => Promise<void>) => {
-    await fn({ select: txSelect, update: txUpdate });
-  },
+  async (fn: (tx: { select: typeof txSelect; update: typeof txUpdate }) => Promise<boolean>) =>
+    fn({ select: txSelect, update: txUpdate }),
 );
 
 vi.mock("@/lib/db", () => ({ db: { update: dbUpdate, transaction } }));
+
+const notifyRegistration = vi.fn(async () => {});
+vi.mock("@/lib/events/notify-registration", () => ({ notifyRegistration }));
 
 // Resolved in beforeAll after env is stubbed.
 let stripe: import("stripe").default;
@@ -55,6 +57,7 @@ afterEach(() => {
   transaction.mockClear();
   txUpdate.mockClear();
   txSet.mockClear();
+  notifyRegistration.mockClear();
   regRow = undefined;
 });
 
@@ -178,6 +181,7 @@ describe("POST /api/stripe/webhook — event registration", () => {
     // registration + event + ticket rows updated; dues ledger untouched
     expect(txUpdate).toHaveBeenCalledTimes(3);
     expect(recordPayment).not.toHaveBeenCalled();
+    expect(notifyRegistration).toHaveBeenCalledWith("reg_1"); // email on confirm
   });
 
   it("leaves the registration pending when the amount paid is short", async () => {
@@ -198,6 +202,7 @@ describe("POST /api/stripe/webhook — event registration", () => {
     const res = await POST(makeRequest(payload, sig));
     expect(res.status).toBe(200);
     expect(txUpdate).not.toHaveBeenCalled(); // underpaid → not confirmed
+    expect(notifyRegistration).not.toHaveBeenCalled();
   });
 
   it("is an idempotent no-op when the registration is already confirmed", async () => {
@@ -212,6 +217,7 @@ describe("POST /api/stripe/webhook — event registration", () => {
 
     expect(res.status).toBe(200);
     expect(txUpdate).not.toHaveBeenCalled();
+    expect(notifyRegistration).not.toHaveBeenCalled();
   });
 
   it("acks (200) when the registration row is missing", async () => {
@@ -226,5 +232,6 @@ describe("POST /api/stripe/webhook — event registration", () => {
 
     expect(res.status).toBe(200);
     expect(txUpdate).not.toHaveBeenCalled();
+    expect(notifyRegistration).not.toHaveBeenCalled();
   });
 });

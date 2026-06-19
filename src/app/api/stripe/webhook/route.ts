@@ -30,6 +30,7 @@ import {
   eventRegistrations,
 } from "@/lib/db/schema";
 import { recordPayment } from "@/lib/billing/ledger";
+import { notifyRegistration } from "@/lib/events/notify-registration";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -51,7 +52,7 @@ async function confirmEventRegistration(
   paymentIntentId: string,
   amountReceived: number,
 ): Promise<void> {
-  await db.transaction(async (tx) => {
+  const confirmed = await db.transaction(async (tx) => {
     const [reg] = await tx
       .select({
         id: eventRegistrations.id,
@@ -70,17 +71,17 @@ async function confirmEventRegistration(
       console.warn(
         `[stripe webhook] event registration ${registrationId} not found — skipping`,
       );
-      return;
+      return false;
     }
     // Only pending → confirmed bumps counts; anything else is an idempotent no-op.
-    if (reg.status !== "pending") return;
+    if (reg.status !== "pending") return false;
 
     // Never confirm a seat that wasn't actually paid for in full.
     if (amountReceived < reg.amountCents) {
       console.warn(
         `[stripe webhook] registration ${registrationId} paid ${amountReceived} < expected ${reg.amountCents} — leaving pending`,
       );
-      return;
+      return false;
     }
 
     await tx
@@ -106,7 +107,13 @@ async function confirmEventRegistration(
         .set({ soldCount: sql`${eventTickets.soldCount} + ${reg.quantity}` })
         .where(eq(eventTickets.id, reg.ticketId));
     }
+
+    return true;
   });
+
+  // Send the confirmation email only when THIS delivery actually confirmed —
+  // a redelivery that no-ops (already confirmed) must not re-send.
+  if (confirmed) await notifyRegistration(registrationId);
 }
 
 export async function POST(req: Request) {

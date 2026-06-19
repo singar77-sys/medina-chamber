@@ -32,6 +32,7 @@ import { limitEventRegister } from "@/lib/rate-limit";
 import { EMAIL_RE } from "@/lib/email";
 import { stripe } from "@/lib/stripe/client";
 import { ensureStripeCustomer } from "@/lib/stripe/customer";
+import { notifyRegistration } from "@/lib/events/notify-registration";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -207,6 +208,7 @@ export async function POST(req: Request): Promise<Response> {
         .where(eq(events.id, event.id));
       return inserted;
     });
+    await notifyRegistration(reg.id);
     return Response.json({ status: "waitlisted", registrationId: reg.id });
   }
 
@@ -232,6 +234,7 @@ export async function POST(req: Request): Promise<Response> {
       }
       return inserted;
     });
+    await notifyRegistration(reg.id);
     return Response.json({ status: "confirmed", registrationId: reg.id });
   }
 

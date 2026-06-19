@@ -90,6 +90,9 @@ const del = vi.fn(() => ({ where: delWhere }));
 
 vi.mock("@/lib/db", () => ({ db: { select, insert, transaction, delete: del } }));
 
+const notifyRegistration = vi.fn(async () => {});
+vi.mock("@/lib/events/notify-registration", () => ({ notifyRegistration }));
+
 let POST: (req: Request) => Promise<Response>;
 beforeAll(async () => {
   POST = (await import("./route")).POST;
@@ -204,6 +207,7 @@ describe("POST /api/events/register — free RSVP", () => {
     // inserted with confirmed status + normalized lowercase guest email
     expect(values).toHaveBeenCalledWith(expect.objectContaining({ status: "confirmed", guestEmail: "jane@x.co", guestName: "Jane Guest" }));
     expect(sessionsCreate).not.toHaveBeenCalled();
+    expect(notifyRegistration).toHaveBeenCalledWith("reg_1");
   });
 
   it("confirms a logged-in member without requiring guest fields", async () => {

@@ -42,6 +42,9 @@ vi.mock("@/lib/db", () => ({ db: { update: dbUpdate, transaction } }));
 const notifyRegistration = vi.fn(async () => {});
 vi.mock("@/lib/events/notify-registration", () => ({ notifyRegistration }));
 
+const processJoinPayment = vi.fn(async (_db: unknown, _input: Record<string, unknown>) => {});
+vi.mock("@/lib/membership/process-join-payment", () => ({ processJoinPayment }));
+
 // Resolved in beforeAll after env is stubbed.
 let stripe: import("stripe").default;
 let POST: (req: Request) => Promise<Response>;
@@ -58,6 +61,7 @@ afterEach(() => {
   txUpdate.mockClear();
   txSet.mockClear();
   notifyRegistration.mockClear();
+  processJoinPayment.mockClear();
   regRow = undefined;
 });
 
@@ -233,5 +237,38 @@ describe("POST /api/stripe/webhook — event registration", () => {
     expect(res.status).toBe(200);
     expect(txUpdate).not.toHaveBeenCalled();
     expect(notifyRegistration).not.toHaveBeenCalled();
+  });
+});
+
+describe("POST /api/stripe/webhook — join", () => {
+  it("routes a join payment to processJoinPayment (not the dues ledger branch)", async () => {
+    const event = {
+      id: "evt_join",
+      type: "payment_intent.succeeded",
+      data: {
+        object: {
+          id: "pi_join",
+          amount: 34500,
+          amount_received: 34500,
+          latest_charge: "ch_j",
+          payment_method: "pm_j",
+          metadata: { type: "join", organizationId: "org1", invoiceId: "inv1", membershipId: "m1" },
+        },
+      },
+    };
+    const { payload, sig } = signed(event);
+    const res = await POST(makeRequest(payload, sig));
+
+    expect(res.status).toBe(200);
+    expect(processJoinPayment).toHaveBeenCalledTimes(1);
+    const arg = processJoinPayment.mock.calls[0][1] as Record<string, unknown>;
+    expect(arg).toMatchObject({
+      organizationId: "org1",
+      invoiceId: "inv1",
+      membershipId: "m1",
+      amountReceived: 34500,
+      stripeChargeId: "ch_j",
+    });
+    expect(recordPayment).not.toHaveBeenCalled(); // not the dues branch
   });
 });

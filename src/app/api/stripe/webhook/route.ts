@@ -31,6 +31,7 @@ import {
 } from "@/lib/db/schema";
 import { recordPayment } from "@/lib/billing/ledger";
 import { notifyRegistration } from "@/lib/events/notify-registration";
+import { processJoinPayment } from "@/lib/membership/process-join-payment";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -146,6 +147,34 @@ export async function POST(req: Request) {
             pi.id,
             pi.amount_received ?? pi.amount ?? 0,
           );
+          break;
+        }
+
+        // Join payment → record the charge + activate the new membership.
+        if (pi.metadata?.type === "join") {
+          const orgId = pi.metadata.organizationId;
+          const invId = pi.metadata.invoiceId;
+          const memId = pi.metadata.membershipId;
+          if (orgId && invId && memId) {
+            await processJoinPayment(db, {
+              organizationId: orgId,
+              invoiceId: invId,
+              membershipId: memId,
+              amountReceived: pi.amount_received ?? pi.amount ?? 0,
+              stripeChargeId:
+                typeof pi.latest_charge === "string"
+                  ? pi.latest_charge
+                  : (pi.latest_charge?.id ?? undefined),
+              stripePaymentMethodId:
+                typeof pi.payment_method === "string"
+                  ? pi.payment_method
+                  : (pi.payment_method?.id ?? undefined),
+            });
+          } else {
+            console.warn(
+              `[stripe webhook] join payment ${pi.id} missing org/invoice/membership ids — skipping`,
+            );
+          }
           break;
         }
 

@@ -1,74 +1,61 @@
 # Upstash Redis — production rate limiting
 
-**Status: ACTION REQUIRED (ops).** As of this writing the site ships to production
-**without** Upstash Redis configured, so every rate limiter falls back to a
-**per-isolate in-memory counter**. Each Vercel function isolate keeps its own
-counts, so an attacker who fans requests across cold isolates gets a fresh budget
-on each one and can beat the limit. The code already prefers the distributed
-Upstash limiter the moment the two env vars below are present — this is purely an
-env/provisioning task, no code change.
+**Status: ✅ Configured in Production (verified 2026-06-19).**
 
-## Why it matters
+`UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are both present in the
+Vercel **Production** environment (set ~61 days ago; confirmed with
+`vercel env ls production`). So production rate limiting already uses the
+distributed Upstash sliding-window limiter, **not** the per-isolate in-memory
+fallback — every limiter in `src/lib/rate-limit.ts`, including the `joinLimiter`
+added in the join-flow hardening, is global across isolates in prod.
+
+> This corrects an earlier assumption (and a since-fixed comment in
+> `rate-limit.ts`) that prod shipped without Upstash. It does not.
+
+## How the code uses these vars
 
 `src/lib/rate-limit.ts` builds every limiter with a two-tier strategy
 (`makeLimiter`):
 
-1. **Preferred — Upstash Redis sliding window.** Activated when **both**
-   `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are set. All isolates
-   share one set of counters, so the limit is global and can't be out-run by
-   spreading load across isolates.
-2. **Fallback — in-memory per-isolate counter.** What runs today. Better than the
-   old fall-open ("no limiting") behavior, but per-isolate.
+1. **Preferred — Upstash Redis sliding window.** Active when **both**
+   `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are set
+   (`getRedis()` in `src/lib/upstash.ts`). All isolates share one set of
+   counters, so the limit is global and can't be out-run by spreading load
+   across cold isolates.
+2. **Fallback — in-memory per-isolate counter.** Used only when those vars are
+   absent (local dev, and any environment without them — see below).
 
-The most exposed endpoint is `POST /api/join` (`joinLimiter`, 3 req/min/IP): an
-unauthenticated write that inserts 4 rows and opens a Stripe Checkout session
-before any payment. Until Upstash is wired up, that limit is only enforced
-per-isolate. (`chatLimiter`, `formLimiter`, `searchLimiter`, the portal
-`limit*` guards, and `eventRegister` get the same upgrade for free.)
+The vars use the **REST** credentials, not a `redis://` connection string — the
+`@upstash/redis` client speaks REST.
 
-> The abandoned-join expiry sweep (`/api/cron/join-sweep`) clears the rows a
-> flood would leave behind, but it runs daily — distributed rate limiting is the
-> front-line control. The two are complementary.
+## Remaining (optional) gap: Preview / Development
 
-## Provisioning
+The two vars are scoped to **Production only**. Preview and Development
+deployments therefore fall back to the per-isolate in-memory limiter. That is
+low-risk — Preview/Dev aren't the public attack surface — but if you want
+parity, add them to those environments:
 
-Upstash Vector is already used for semantic search, so an Upstash account likely
-exists — Redis is a **separate** database you still need to create.
+```bash
+# pull the existing Production value, then add it to Preview + Development
+vercel env add UPSTASH_REDIS_REST_URL preview
+vercel env add UPSTASH_REDIS_REST_URL development
+vercel env add UPSTASH_REDIS_REST_TOKEN preview
+vercel env add UPSTASH_REDIS_REST_TOKEN development
+```
 
-1. **Create the database** — either route works:
-   - **Vercel Marketplace** (recommended): Vercel dashboard → project →
-     *Storage* → *Marketplace Database Providers* → **Upstash** → *Redis*. The
-     integration injects `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN`
-     into the linked environments automatically.
-   - **Upstash console** (manual): console.upstash.com → *Create Database*
-     (Global, low-latency region) → copy the **REST** URL + token from the
-     "REST API" panel.
-2. **Set the env vars** (only if you created it manually). Vercel dashboard →
-   project → *Settings* → *Environment Variables*, scope = **Production**
-   (add Preview too if you want preview deploys limited):
-   - `UPSTASH_REDIS_REST_URL`
-   - `UPSTASH_REDIS_REST_TOKEN`
-
-   Use the **REST** credentials, not the `redis://` connection string — the
-   `@upstash/redis` client (`src/lib/upstash.ts`) speaks REST.
-3. **Redeploy** so the new env vars are baked into the runtime. `getRedis()`
-   reads them at first use; existing isolates won't pick them up without a new
-   deployment.
+(Reuse the same database, or point Preview/Dev at a separate Upstash database
+to keep their rate-limit counters isolated from prod.)
 
 ## Verify
 
-After the redeploy, confirm the distributed limiter is live:
+- **Env keys** — `vercel env ls production` lists both `UPSTASH_REDIS_REST_*`
+  under Production.
+- **Functional** — send a limited endpoint (e.g. the join form) faster than its
+  limit from one client and confirm the `429` threshold is stable across bursts.
+  With the in-memory fallback the threshold drifts as you hit different isolates;
+  with Upstash it's consistent.
+- **Upstash console** — the database's metrics / data browser show keys with the
+  limiter prefixes (`rl:join`, `rl:form`, `rl:chat`, …) as traffic arrives.
 
-- **Functional check** — from one machine, send the join form (or any limited
-  endpoint) faster than its limit and confirm a `429` appears at the expected
-  count and **stays** consistent across repeated bursts. With the in-memory
-  fallback the threshold drifts as you hit different isolates; with Upstash it's
-  stable.
-- **Upstash console** — the database's *Data Browser* / metrics should show keys
-  with the limiter prefixes (`rl:join`, `rl:form`, `rl:chat`, …) appearing as
-  traffic arrives.
-- **Env check** — `vercel env ls` (or the dashboard) lists both
-  `UPSTASH_REDIS_REST_*` vars under Production.
-
-No code change is needed once the vars are present; `makeLimiter` switches to
-Upstash automatically.
+No code change is needed for any of this; `makeLimiter` switches to Upstash
+automatically whenever the two vars are present.

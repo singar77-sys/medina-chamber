@@ -10,11 +10,12 @@
  *      cold isolate gets a fresh budget. Imperfect, but materially better
  *      than the fall-open behavior the previous version had.
  *
- * The site previously degraded silently to "no rate limiting" when Upstash
- * Redis env vars were missing. The website-security-sentinel audit caught
- * that — we ship to production WITHOUT Upstash Redis configured today, so
- * every public POST/GET endpoint was effectively unrate-limited. The
- * in-memory fallback closes that gap until Upstash Redis is wired up.
+ * History: the site once degraded silently to "no rate limiting" when the
+ * Upstash env vars were missing (caught by the website-security-sentinel
+ * audit); the in-memory fallback above closed that gap. As of 2026-06-19,
+ * UPSTASH_REDIS_REST_URL + _TOKEN ARE set in Vercel Production (verified via
+ * `vercel env ls`), so prod uses the distributed limiter. The in-memory
+ * fallback now only covers local dev + Preview, where those vars are unset.
  */
 
 import { Ratelimit } from "@upstash/ratelimit";

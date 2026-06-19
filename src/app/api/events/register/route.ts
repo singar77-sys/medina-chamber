@@ -242,6 +242,12 @@ export async function POST(req: Request): Promise<Response> {
     .returning({ id: eventRegistrations.id });
 
   const origin = process.env.NEXT_PUBLIC_SITE_URL ?? new URL(req.url).origin;
+  // Return to the public event page the visitor came from. returnSlug is the
+  // static (public) slug; validate it's a plain slug so a crafted value can't
+  // build an off-path/absolute redirect, and fall back to the DB slug.
+  const rawReturn = str(b, "returnSlug");
+  const returnSlug =
+    rawReturn && /^[a-z0-9-]+$/.test(rawReturn) ? rawReturn : event.slug;
   // The webhook reads these off the PaymentIntent metadata to confirm the row.
   const metadata = { registrationId: reg.id, eventId: event.id };
 
@@ -269,8 +275,8 @@ export async function POST(req: Request): Promise<Response> {
       line_items: [lineItem],
       payment_intent_data: { metadata },
       metadata,
-      success_url: `${origin}/events/${event.slug}?registered=1`,
-      cancel_url: `${origin}/events/${event.slug}?registration_canceled=1`,
+      success_url: `${origin}/events/${returnSlug}?registered=1`,
+      cancel_url: `${origin}/events/${returnSlug}?registration_canceled=1`,
     });
     return Response.json({ url: checkoutSession.url, registrationId: reg.id });
   } catch (err) {

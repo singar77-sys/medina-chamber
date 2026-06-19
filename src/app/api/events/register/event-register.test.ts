@@ -278,4 +278,21 @@ describe("POST /api/events/register — paid", () => {
     expect(res.status).toBe(500);
     expect(del).toHaveBeenCalledTimes(1); // orphaned pending row deleted
   });
+
+  it("uses a validated returnSlug for redirects and falls back on a bad one", async () => {
+    asMember();
+    ticketRow = { id: "tk_1", name: "Member Rate", priceCents: 5000, stripePriceId: null, maxQuantity: null, soldCount: 0, isMemberOnly: false };
+
+    await POST(req({ eventId: "evt_1", ticketId: "tk_1", returnSlug: "eggs-expertise-canva-101" }));
+    expect(sessionsCreate.mock.calls[0][0].success_url).toContain(
+      "/events/eggs-expertise-canva-101?registered=1",
+    );
+
+    sessionsCreate.mockClear();
+    await POST(req({ eventId: "evt_1", ticketId: "tk_1", returnSlug: "../evil?x=1" }));
+    // not a plain slug → falls back to the DB event slug (publishedEvent = "biz-lunch")
+    expect(sessionsCreate.mock.calls[0][0].success_url).toContain(
+      "/events/biz-lunch?registered=1",
+    );
+  });
 });

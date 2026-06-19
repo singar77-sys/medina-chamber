@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ButtonA, ButtonLink } from "@/components/ui/Button";
 import { notFound } from "next/navigation";
 import { events, getEventBySlug, eventMetaDescription } from "@/data/events";
+import { isRegisterableEvent } from "@/lib/events/db-events";
 import { getCmsEventData } from "@/lib/cms-store";
 import { getEventGraphicRenderer } from "@/components/events/graphics/registry";
 import { FluidGraphicFrame } from "@/components/events/graphics/FluidGraphicFrame";
@@ -46,14 +47,22 @@ export async function generateMetadata(
 
 // ── Page component ─────────────────────────────────────────────────────────
 export default async function EventPage(
-  { params }: { params: Promise<{ slug: string }> }
+  {
+    params,
+    searchParams,
+  }: {
+    params: Promise<{ slug: string }>;
+    searchParams: Promise<{ registered?: string; registration_canceled?: string }>;
+  }
 ) {
   const { slug } = await params;
   const base = getEventBySlug(slug);
   if (!base) notFound();
-  const [override, photos] = await Promise.all([
+  const [override, photos, registerable, sp] = await Promise.all([
     getCmsEventData(slug),
     getEventPhotosWithFallback(slug),
+    isRegisterableEvent(base.title, base.dateISO),
+    searchParams,
   ]);
   const event = override ? { ...base, ...override } : base;
 
@@ -139,6 +148,23 @@ export default async function EventPage(
           <span>/</span>
           <span className="text-text-secondary truncate">{event.title}</span>
         </nav>
+
+        {sp.registered && (
+          <div
+            className="mb-f21 rounded-[var(--radius-lg)] px-f21 py-f13 text-body-sm"
+            style={{ background: "#f0fdf4", color: "#15803d" }}
+          >
+            ✅ You&apos;re registered! A confirmation email is on its way.
+          </div>
+        )}
+        {sp.registration_canceled && (
+          <div
+            className="mb-f21 rounded-[var(--radius-lg)] px-f21 py-f13 text-body-sm"
+            style={{ background: "#fff7ed", color: "#c2410c" }}
+          >
+            Checkout was canceled — you have not been registered.
+          </div>
+        )}
 
         <div className="grid lg:grid-cols-[1fr_360px] gap-f34 lg:gap-f55">
           {/* Main column */}
@@ -258,19 +284,35 @@ export default async function EventPage(
                 </p>
               </div>
 
-              <ButtonA
-                href={event.registerUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                size="md"
-                className="w-full justify-center"
-              >
-                Register Now →
-              </ButtonA>
-
-              <p className="text-caption text-text-tertiary text-center mt-f8">
-                Registration handled securely via GrowthZone
-              </p>
+              {registerable ? (
+                <>
+                  <ButtonLink
+                    href={`/events/${slug}/register`}
+                    size="md"
+                    className="w-full justify-center"
+                  >
+                    Register Now →
+                  </ButtonLink>
+                  <p className="text-caption text-text-tertiary text-center mt-f8">
+                    Secure registration &amp; payment
+                  </p>
+                </>
+              ) : (
+                <>
+                  <ButtonA
+                    href={event.registerUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    size="md"
+                    className="w-full justify-center"
+                  >
+                    Register Now →
+                  </ButtonA>
+                  <p className="text-caption text-text-tertiary text-center mt-f8">
+                    Registration handled securely via GrowthZone
+                  </p>
+                </>
+              )}
 
               {pricingLines[0] && (
                 <p className="text-caption text-cambridge text-center mt-f3 font-bold">

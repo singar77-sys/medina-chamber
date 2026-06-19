@@ -20,14 +20,94 @@
  */
 
 import type Stripe from "stripe";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { stripe } from "@/lib/stripe/client";
 import { db } from "@/lib/db";
-import { invoices } from "@/lib/db/schema";
+import {
+  invoices,
+  events,
+  eventTickets,
+  eventRegistrations,
+} from "@/lib/db/schema";
 import { recordPayment } from "@/lib/billing/ledger";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+/**
+ * Confirm a paid event registration. Idempotent: only a `pending` row
+ * transitions to `confirmed` and bumps the event/ticket counts, so a Stripe
+ * redelivery (or a double webhook) is a safe no-op. The registration row is
+ * locked FOR UPDATE so two concurrent deliveries for the same registration
+ * can't both pass the pending check.
+ *
+ * Money integrity: the registration's recorded amountCents — NOT the metadata
+ * flag — is the gate. We refuse to confirm a seat that wasn't paid for in full,
+ * so any future flow that reuses registrationId metadata with a smaller charge
+ * can't buy a registration on the cheap.
+ */
+async function confirmEventRegistration(
+  registrationId: string,
+  paymentIntentId: string,
+  amountReceived: number,
+): Promise<void> {
+  await db.transaction(async (tx) => {
+    const [reg] = await tx
+      .select({
+        id: eventRegistrations.id,
+        eventId: eventRegistrations.eventId,
+        ticketId: eventRegistrations.ticketId,
+        quantity: eventRegistrations.quantity,
+        amountCents: eventRegistrations.amountCents,
+        status: eventRegistrations.status,
+      })
+      .from(eventRegistrations)
+      .where(eq(eventRegistrations.id, registrationId))
+      .limit(1)
+      .for("update");
+
+    if (!reg) {
+      console.warn(
+        `[stripe webhook] event registration ${registrationId} not found — skipping`,
+      );
+      return;
+    }
+    // Only pending → confirmed bumps counts; anything else is an idempotent no-op.
+    if (reg.status !== "pending") return;
+
+    // Never confirm a seat that wasn't actually paid for in full.
+    if (amountReceived < reg.amountCents) {
+      console.warn(
+        `[stripe webhook] registration ${registrationId} paid ${amountReceived} < expected ${reg.amountCents} — leaving pending`,
+      );
+      return;
+    }
+
+    await tx
+      .update(eventRegistrations)
+      .set({
+        status: "confirmed",
+        stripePaymentIntentId: paymentIntentId,
+        updatedAt: sql`now()`,
+      })
+      .where(eq(eventRegistrations.id, reg.id));
+
+    await tx
+      .update(events)
+      .set({
+        registrationCount: sql`${events.registrationCount} + ${reg.quantity}`,
+        updatedAt: sql`now()`,
+      })
+      .where(eq(events.id, reg.eventId));
+
+    if (reg.ticketId) {
+      await tx
+        .update(eventTickets)
+        .set({ soldCount: sql`${eventTickets.soldCount} + ${reg.quantity}` })
+        .where(eq(eventTickets.id, reg.ticketId));
+    }
+  });
+}
 
 export async function POST(req: Request) {
   const rawBody = await req.text();
@@ -48,6 +128,20 @@ export async function POST(req: Request) {
     switch (event.type) {
       case "payment_intent.succeeded": {
         const pi = event.data.object as Stripe.PaymentIntent;
+
+        // Event-registration payment → confirm the registration. This is a
+        // separate flow from dues (no invoice ledger entry); the registration
+        // row itself is the record of the sale.
+        const registrationId = pi.metadata?.registrationId;
+        if (registrationId) {
+          await confirmEventRegistration(
+            registrationId,
+            pi.id,
+            pi.amount_received ?? pi.amount ?? 0,
+          );
+          break;
+        }
+
         const organizationId = pi.metadata?.organizationId;
         const invoiceId = pi.metadata?.invoiceId;
 

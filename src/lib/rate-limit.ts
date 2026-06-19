@@ -96,7 +96,16 @@ export const healthLimiter = makeLimiter(60, "rl:health");
  * downstream keying scheme still has a stable key.
  */
 export function getRequestIp(req: Request): string {
-  return req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "anonymous";
+  // Prefer x-real-ip: Vercel's edge sets it to the real client IP and overwrites
+  // any client-supplied value, so it can't be spoofed the way the leftmost
+  // x-forwarded-for hop can (a client can prepend a fake XFF; the proxy only
+  // appends). Fall back to the first XFF hop for local/dev where x-real-ip is
+  // absent, then to a stable constant so keying never breaks.
+  return (
+    req.headers.get("x-real-ip")?.trim() ||
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    "anonymous"
+  );
 }
 
 /** Returns a 429 Response if rate limited, null if OK to proceed. */
@@ -172,6 +181,10 @@ const portalCheckoutLimiter = makeLazyFailOpenLimiter(10, "rl:portal-checkout");
 // own listing; generous, just caps runaway clients / scripted abuse.
 const portalProfileLimiter = makeLazyFailOpenLimiter(20, "rl:portal-profile");
 
+// 10 req/min per IP for event registration — public endpoint that writes rows +
+// creates Stripe sessions; generous for real attendees, caps scripted abuse.
+const eventRegisterLimiter = makeLazyFailOpenLimiter(10, "rl:event-register");
+
 /**
  * Fail-open rate-limit guard for the magic-link request endpoint.
  * Returns a 429 Response when over the limit, otherwise null (proceed).
@@ -203,5 +216,17 @@ export async function limitPortalProfile(
   req: Request,
 ): Promise<Response | null> {
   const ok = await portalProfileLimiter.allow(getRequestIp(req));
+  return ok ? null : new Response("Too many requests.", { status: 429 });
+}
+
+/**
+ * Fail-open rate-limit guard for the public event-registration endpoint.
+ * Returns a 429 Response when over the limit, otherwise null (proceed).
+ * Never throws; on any limiter failure the request is allowed.
+ */
+export async function limitEventRegister(
+  req: Request,
+): Promise<Response | null> {
+  const ok = await eventRegisterLimiter.allow(getRequestIp(req));
   return ok ? null : new Response("Too many requests.", { status: 429 });
 }

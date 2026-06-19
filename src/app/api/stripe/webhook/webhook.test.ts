@@ -21,7 +21,24 @@ vi.mock("@/lib/billing/ledger", () => ({ recordPayment }));
 const dbUpdate = vi.fn(() => ({
   set: () => ({ where: vi.fn().mockResolvedValue(undefined) }),
 }));
-vi.mock("@/lib/db", () => ({ db: { update: dbUpdate } }));
+
+// Event-registration confirm path:
+// db.transaction(tx => tx.select(...).limit(1).for("update") + tx.update(...) ×N).
+let regRow: Record<string, unknown> | undefined;
+const txForUpdate = vi.fn(async () => (regRow ? [regRow] : []));
+const txSelect = vi.fn(() => ({
+  from: () => ({ where: () => ({ limit: () => ({ for: txForUpdate }) }) }),
+}));
+const txUpdWhere = vi.fn(async () => undefined);
+const txSet = vi.fn(() => ({ where: txUpdWhere }));
+const txUpdate = vi.fn(() => ({ set: txSet }));
+const transaction = vi.fn(
+  async (fn: (tx: { select: typeof txSelect; update: typeof txUpdate }) => Promise<void>) => {
+    await fn({ select: txSelect, update: txUpdate });
+  },
+);
+
+vi.mock("@/lib/db", () => ({ db: { update: dbUpdate, transaction } }));
 
 // Resolved in beforeAll after env is stubbed.
 let stripe: import("stripe").default;
@@ -35,6 +52,10 @@ beforeAll(async () => {
 afterEach(() => {
   recordPayment.mockClear();
   dbUpdate.mockClear();
+  transaction.mockClear();
+  txUpdate.mockClear();
+  txSet.mockClear();
+  regRow = undefined;
 });
 
 function makeRequest(payload: string, signature: string): Request {
@@ -131,5 +152,79 @@ describe("POST /api/stripe/webhook — payment_intent.succeeded", () => {
 
     expect(res.status).toBe(200);
     expect(recordPayment).not.toHaveBeenCalled();
+  });
+});
+
+describe("POST /api/stripe/webhook — event registration", () => {
+  it("confirms a pending registration and bumps counts (not the dues ledger)", async () => {
+    regRow = { id: "reg_1", eventId: "evt_1", ticketId: "tk_1", quantity: 2, amountCents: 10000, status: "pending" };
+    const event = {
+      id: "evt_pi",
+      type: "payment_intent.succeeded",
+      data: {
+        object: {
+          id: "pi_evt",
+          amount: 10000,
+          amount_received: 10000,
+          metadata: { registrationId: "reg_1", eventId: "evt_1" },
+        },
+      },
+    };
+    const { payload, sig } = signed(event);
+    const res = await POST(makeRequest(payload, sig));
+
+    expect(res.status).toBe(200);
+    expect(transaction).toHaveBeenCalledTimes(1);
+    // registration + event + ticket rows updated; dues ledger untouched
+    expect(txUpdate).toHaveBeenCalledTimes(3);
+    expect(recordPayment).not.toHaveBeenCalled();
+  });
+
+  it("leaves the registration pending when the amount paid is short", async () => {
+    regRow = { id: "reg_1", eventId: "evt_1", ticketId: "tk_1", quantity: 2, amountCents: 10000, status: "pending" };
+    const event = {
+      id: "evt_pi_short",
+      type: "payment_intent.succeeded",
+      data: {
+        object: {
+          id: "pi_short",
+          amount: 5000,
+          amount_received: 5000,
+          metadata: { registrationId: "reg_1" },
+        },
+      },
+    };
+    const { payload, sig } = signed(event);
+    const res = await POST(makeRequest(payload, sig));
+    expect(res.status).toBe(200);
+    expect(txUpdate).not.toHaveBeenCalled(); // underpaid → not confirmed
+  });
+
+  it("is an idempotent no-op when the registration is already confirmed", async () => {
+    regRow = { id: "reg_1", eventId: "evt_1", ticketId: "tk_1", quantity: 2, status: "confirmed" };
+    const event = {
+      id: "evt_pi2",
+      type: "payment_intent.succeeded",
+      data: { object: { id: "pi_evt2", amount: 10000, metadata: { registrationId: "reg_1" } } },
+    };
+    const { payload, sig } = signed(event);
+    const res = await POST(makeRequest(payload, sig));
+
+    expect(res.status).toBe(200);
+    expect(txUpdate).not.toHaveBeenCalled();
+  });
+
+  it("acks (200) when the registration row is missing", async () => {
+    regRow = undefined;
+    const event = {
+      id: "evt_pi3",
+      type: "payment_intent.succeeded",
+      data: { object: { id: "pi_evt3", amount: 10000, metadata: { registrationId: "missing" } } },
+    };
+    const { payload, sig } = signed(event);
+    const res = await POST(makeRequest(payload, sig));
+
+    expect(res.status).toBe(200);
+    expect(txUpdate).not.toHaveBeenCalled();
   });
 });

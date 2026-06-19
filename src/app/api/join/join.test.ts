@@ -6,7 +6,7 @@ vi.stubEnv("STRIPE_SECRET_KEY", "sk_test_dummy_key_for_unit_tests");
 vi.mock("@sentry/nextjs", () => ({ captureMessage: vi.fn(), captureException: vi.fn() }));
 vi.mock("@/lib/rate-limit", () => ({
   applyRateLimit: vi.fn(async () => null),
-  formLimiter: {},
+  joinLimiter: {},
 }));
 vi.mock("@/lib/email", () => ({ EMAIL_RE: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ }));
 vi.mock("@/lib/sanitize", () => ({

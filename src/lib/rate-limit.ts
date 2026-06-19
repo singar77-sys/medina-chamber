@@ -83,6 +83,14 @@ export const chatLimiter = makeLimiter(20, "rl:chat");
 // 5 req/min per IP for forms — humans don't submit forms 5x/min
 export const formLimiter = makeLimiter(5, "rl:form");
 
+// 3 req/min per IP for the public self-serve join — stricter than the generic
+// form limit because it's an unauthenticated write: each accepted POST inserts 4
+// rows (org + contact + membership + invoice) and opens a Stripe Checkout session
+// before any payment. Cross-isolate effectiveness depends on Upstash Redis being
+// configured in prod (see docs/upstash-redis-prod-setup.md); the in-memory
+// fallback is per-isolate, so an attacker fanning across cold isolates can beat it.
+export const joinLimiter = makeLimiter(3, "rl:join");
+
 // 30 req/min per IP for semantic search — typeahead + intent searches
 export const searchLimiter = makeLimiter(30, "rl:search");
 

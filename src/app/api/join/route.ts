@@ -14,7 +14,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { and, eq, gt } from "drizzle-orm";
-import { formLimiter, applyRateLimit } from "@/lib/rate-limit";
+import { joinLimiter, applyRateLimit } from "@/lib/rate-limit";
 import { EMAIL_RE } from "@/lib/email";
 import { pickString, pickOptional } from "@/lib/sanitize";
 import { db } from "@/lib/db";
@@ -51,7 +51,7 @@ const MAX = {
 };
 
 export async function POST(req: NextRequest): Promise<Response> {
-  const limited = await applyRateLimit(req, formLimiter);
+  const limited = await applyRateLimit(req, joinLimiter);
   if (limited) return limited;
 
   let body: unknown;

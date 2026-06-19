@@ -26,7 +26,7 @@ export async function processJoinPayment(
   db: DB,
   input: ProcessJoinPaymentInput,
 ): Promise<void> {
-  await recordPayment(db, {
+  const result = await recordPayment(db, {
     organizationId: input.organizationId,
     invoiceId: input.invoiceId,
     type: "charge",
@@ -35,6 +35,17 @@ export async function processJoinPayment(
     stripeChargeId: input.stripeChargeId,
     stripePaymentMethodId: input.stripePaymentMethodId,
   });
+
+  // Money gate: only a FULLY-paid invoice activates the membership. The ledger
+  // (recordPayment) derives invoice status from the summed payments, so a short
+  // payment records the charge but leaves the invoice — and the membership —
+  // pending. Mirrors the event-registration amount gate.
+  if (result.invoiceStatus !== "paid") {
+    console.warn(
+      `[join] invoice ${input.invoiceId} not fully paid (${result.invoiceStatus}) — not activating membership`,
+    );
+    return;
+  }
 
   const activated = await activateMembership(db, input.membershipId, input.organizationId);
   if (!activated) return; // redelivery / already active → no duplicate emails

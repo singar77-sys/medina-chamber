@@ -76,6 +76,18 @@ describe("processJoinPayment", () => {
     expect(notifyStaffNewMember).not.toHaveBeenCalled();
   });
 
+  it("does NOT activate (or email) when the invoice isn't fully paid", async () => {
+    recordPayment.mockResolvedValueOnce({
+      paymentId: "p1",
+      invoiceStatus: "pending", // short payment → ledger leaves it pending
+      amountPaidCents: 10000,
+      idempotentHit: false,
+    });
+    await processJoinPayment(mockDb as never, INPUT);
+    expect(activateMembership).not.toHaveBeenCalled();
+    expect(sendWelcomeEmail).not.toHaveBeenCalled();
+  });
+
   it("skips the welcome when the new member has no contact email", async () => {
     detailRow = { orgName: "Acme Co", tierName: "Business Essentials", cFirst: null, cLast: null, cEmail: null };
     await processJoinPayment(mockDb as never, INPUT);

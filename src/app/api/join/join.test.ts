@@ -44,7 +44,8 @@ const from = vi.fn((t: unknown) => {
 const select = vi.fn(() => ({ from }));
 const delWhere = vi.fn(async () => undefined);
 const del = vi.fn(() => ({ where: delWhere }));
-vi.mock("@/lib/db", () => ({ db: { select, delete: del } }));
+const transaction = vi.fn(async (fn: (tx: { delete: typeof del }) => Promise<unknown>) => fn({ delete: del }));
+vi.mock("@/lib/db", () => ({ db: { select, delete: del, transaction } }));
 
 let POST: (req: Request) => Promise<Response>;
 beforeAll(async () => {
@@ -144,10 +145,18 @@ describe("POST /api/join — happy path", () => {
     expect(args.payment_intent_data.metadata).toMatchObject({ type: "join", membershipId: "m1" });
   });
 
-  it("cleans up the prospect + invoice and 500s if Checkout creation fails", async () => {
+  it("cleans up the prospect + invoice (in a transaction) and 500s if Checkout creation fails", async () => {
     sessionsCreate.mockRejectedValueOnce(new Error("stripe down"));
     const res = await POST(req(VALID));
     expect(res.status).toBe(500);
+    expect(transaction).toHaveBeenCalledTimes(1);
     expect(del).toHaveBeenCalledTimes(2); // invoice, then org (cascades contact+membership)
+  });
+
+  it("409s (not 500) when the unique-email insert loses a race", async () => {
+    createPendingMember.mockRejectedValueOnce(Object.assign(new Error("dup"), { code: "23505" }));
+    const res = await POST(req(VALID));
+    expect(res.status).toBe(409);
+    expect(sessionsCreate).not.toHaveBeenCalled();
   });
 });

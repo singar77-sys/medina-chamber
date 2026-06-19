@@ -25,7 +25,11 @@ import {
   organizations,
 } from "@/lib/db/schema";
 import { stripe } from "@/lib/stripe/client";
-import { createPendingMember, generateOrgSlug } from "@/lib/membership/join";
+import {
+  createPendingMember,
+  generateOrgSlug,
+  type CreatePendingMemberResult,
+} from "@/lib/membership/join";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -132,23 +136,36 @@ export async function POST(req: NextRequest): Promise<Response> {
 
   const slug = await generateOrgSlug(db, businessName);
 
-  const member = await createPendingMember(db, {
-    businessName,
-    slug,
-    firstName,
-    lastName,
-    email,
-    phone,
-    title,
-    website,
-    address1,
-    city,
-    state,
-    zip,
-    tierId: tier.id,
-    tierName: tier.name,
-    amountCents: tier.annualPriceCents,
-  });
+  let member: CreatePendingMemberResult;
+  try {
+    member = await createPendingMember(db, {
+      businessName,
+      slug,
+      firstName,
+      lastName,
+      email,
+      phone,
+      title,
+      website,
+      address1,
+      city,
+      state,
+      zip,
+      tierId: tier.id,
+      tierName: tier.name,
+      amountCents: tier.annualPriceCents,
+    });
+  } catch (err) {
+    // Lost a check-then-insert race on the unique email → same 409 as the
+    // pre-check. The transaction rolled back, so there are no orphan rows.
+    if (err && typeof err === "object" && "code" in err && (err as { code?: unknown }).code === "23505") {
+      return NextResponse.json(
+        { error: "An account with this email already exists. Please sign in to your member portal." },
+        { status: 409 },
+      );
+    }
+    throw err;
+  }
 
   const origin = process.env.NEXT_PUBLIC_SITE_URL ?? new URL(req.url).origin;
   // The webhook reads these off the PaymentIntent metadata to record payment +
@@ -188,8 +205,10 @@ export async function POST(req: NextRequest): Promise<Response> {
     console.error("[join] checkout session create failed:", err);
     Sentry.captureException(err, { tags: { route: "join", phase: "checkout" } });
     try {
-      await db.delete(invoices).where(eq(invoices.id, member.invoiceId));
-      await db.delete(organizations).where(eq(organizations.id, member.organizationId));
+      await db.transaction(async (tx) => {
+        await tx.delete(invoices).where(eq(invoices.id, member.invoiceId));
+        await tx.delete(organizations).where(eq(organizations.id, member.organizationId));
+      });
     } catch (cleanupErr) {
       console.error("[join] cleanup after checkout failure failed:", cleanupErr);
     }

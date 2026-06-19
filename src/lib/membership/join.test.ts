@@ -2,15 +2,12 @@ import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { organizations, contacts, memberships, invoices } from "@/lib/db/schema";
 
 // generateOrgSlug: db.select().from().where().limit() → existing or []
-let slugTaken: string[] = [];
-let checkedSlug = "";
-const limit = vi.fn(async () => (slugTaken.includes(checkedSlug) ? [{ id: "x" }] : []));
-const selWhere = vi.fn((cond: unknown) => {
-  // capture the slug being checked from the eq() condition is hard; instead the
-  // test sets `checkedSlug` before each generateOrgSlug call sequence via the spy below.
-  void cond;
-  return { limit };
-});
+// generateOrgSlug probes each candidate slug via select().limit(); the first
+// `slugTakenUpTo` probes report "taken" so we can exercise the -2 collision path.
+let slugProbe = 0;
+let slugTakenUpTo = 0;
+const limit = vi.fn(async () => (slugProbe++ < slugTakenUpTo ? [{ id: "x" }] : []));
+const selWhere = vi.fn(() => ({ limit }));
 const selFrom = vi.fn(() => ({ where: selWhere }));
 const select = vi.fn(() => ({ from: selFrom }));
 
@@ -51,7 +48,8 @@ beforeAll(async () => {
 
 afterEach(() => {
   vi.clearAllMocks();
-  slugTaken = [];
+  slugProbe = 0;
+  slugTakenUpTo = 0;
   flipRows = [{ id: "m1" }];
   lastInsertTable = undefined;
 });
@@ -66,9 +64,12 @@ describe("kebabCase", () => {
 
 describe("generateOrgSlug", () => {
   it("returns the base slug when free", async () => {
-    checkedSlug = "acme-co";
-    slugTaken = [];
+    slugTakenUpTo = 0;
     expect(await mod.generateOrgSlug(mockDb as never, "Acme Co")).toBe("acme-co");
+  });
+  it("appends -2 when the base slug is taken", async () => {
+    slugTakenUpTo = 1; // first probe (acme-co) taken, second (acme-co-2) free
+    expect(await mod.generateOrgSlug(mockDb as never, "Acme Co")).toBe("acme-co-2");
   });
 });
 

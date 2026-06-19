@@ -7,6 +7,7 @@ const NAV_ITEMS: { href: string; label: string; icon: string; exact?: boolean }[
   { href: "/admin", label: "Dashboard", icon: "▦", exact: true },
   { href: "/admin/content", label: "Page Content", icon: "✎" },
   { href: "/admin/events", label: "Events", icon: "◈" },
+  { href: "/admin/registrations", label: "Registrations", icon: "◰" },
   { href: "/admin/graphic-templates", label: "Graphic Templates", icon: "◑" },
   { href: "/admin/media", label: "Media Library", icon: "⬡" },
   { href: "/admin/blog", label: "Blog", icon: "◧" },

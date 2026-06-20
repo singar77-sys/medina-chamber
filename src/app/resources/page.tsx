@@ -38,6 +38,14 @@ const resources = [
       "Post jobs, access OhioMeansJobs, find on-the-job training subsidies, and connect your team with safety and credentials programs, all available to Medina County employers.",
     cta: "Workforce resources",
   },
+  {
+    href: "/resources/library",
+    label: "Library",
+    title: "Browse the Resource Library",
+    description:
+      "A curated collection of tools, programs, forms, and links, organized by topic and kept current by the chamber, beyond the guides above.",
+    cta: "Open the library",
+  },
 ];
 
 export default function ResourcesPage() {

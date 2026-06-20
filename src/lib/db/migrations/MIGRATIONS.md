@@ -19,6 +19,7 @@ journal entries, because they do things drizzle-kit can't express:
 | `0004_renewal_notice_tracking.sql` | `invoices.renewal_notice_sent_days` column | kept with the off-journal set |
 | `0005_hot_deals.sql` | `hot_deals` table (member deals/coupons) | kept with the off-journal set |
 | `0006_sponsorship_inquiries.sql` | `sponsorship_inquiries` table (sponsorship intake) | kept with the off-journal set |
+| `0007_resources.sql` | `resources` table (resource library) | kept with the off-journal set |
 
 `drizzle-kit migrate` does **not** run these. A fresh environment set up with
 `db:migrate` alone is missing them — and app code that writes

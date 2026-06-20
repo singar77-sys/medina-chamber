@@ -45,6 +45,9 @@ vi.mock("@/lib/events/notify-registration", () => ({ notifyRegistration }));
 const processJoinPayment = vi.fn(async (_db: unknown, _input: Record<string, unknown>) => {});
 vi.mock("@/lib/membership/process-join-payment", () => ({ processJoinPayment }));
 
+const processRenewalPayment = vi.fn(async (_db: unknown, _invoiceId: string) => false);
+vi.mock("@/lib/membership/process-renewal-payment", () => ({ processRenewalPayment }));
+
 // Resolved in beforeAll after env is stubbed.
 let stripe: import("stripe").default;
 let POST: (req: Request) => Promise<Response>;
@@ -62,6 +65,7 @@ afterEach(() => {
   txSet.mockClear();
   notifyRegistration.mockClear();
   processJoinPayment.mockClear();
+  processRenewalPayment.mockClear();
   regRow = undefined;
 });
 
@@ -129,6 +133,35 @@ describe("POST /api/stripe/webhook — payment_intent.succeeded", () => {
       stripeChargeId: "ch_123",
       stripePaymentMethodId: "pm_123",
     });
+    // A fully-paid dues invoice runs renewal advancement (no-ops for non-renewals).
+    expect(processRenewalPayment).toHaveBeenCalledWith(expect.anything(), "inv_abc");
+  });
+
+  it("does NOT run renewal advancement when the invoice isn't fully paid", async () => {
+    recordPayment.mockResolvedValueOnce({
+      paymentId: "pay_partial",
+      invoiceStatus: "pending",
+      amountPaidCents: 5000,
+      idempotentHit: false,
+    });
+    const event = {
+      id: "evt_partial",
+      type: "payment_intent.succeeded",
+      data: {
+        object: {
+          id: "pi_partial",
+          amount: 5000,
+          amount_received: 5000,
+          latest_charge: "ch_p",
+          metadata: { invoiceId: "inv_p", organizationId: "org_p" },
+        },
+      },
+    };
+    const { payload, sig } = signed(event);
+    const res = await POST(makeRequest(payload, sig));
+    expect(res.status).toBe(200);
+    expect(recordPayment).toHaveBeenCalledTimes(1);
+    expect(processRenewalPayment).not.toHaveBeenCalled();
   });
 
   it("returns 200 but does NOT record when metadata is missing", async () => {

@@ -32,6 +32,7 @@ import {
 import { recordPayment } from "@/lib/billing/ledger";
 import { notifyRegistration } from "@/lib/events/notify-registration";
 import { processJoinPayment } from "@/lib/membership/process-join-payment";
+import { processRenewalPayment } from "@/lib/membership/process-renewal-payment";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -191,7 +192,7 @@ export async function POST(req: Request) {
           break;
         }
 
-        await recordPayment(db, {
+        const duesResult = await recordPayment(db, {
           organizationId,
           invoiceId,
           type: "charge",
@@ -206,6 +207,13 @@ export async function POST(req: Request) {
               ? pi.payment_method
               : (pi.payment_method?.id ?? undefined),
         });
+
+        // If that payment fully settled a renewal invoice, advance the
+        // membership's renewal date + reactivate it. No-ops for non-renewal
+        // invoices, so it's safe to call on every fully-paid dues invoice.
+        if (duesResult.invoiceStatus === "paid") {
+          await processRenewalPayment(db, invoiceId);
+        }
         break;
       }
 

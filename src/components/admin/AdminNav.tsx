@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 
 const NAV_ITEMS: { href: string; label: string; icon: string; exact?: boolean }[] = [
   { href: "/admin", label: "Dashboard", icon: "▦", exact: true },
+  { href: "/admin/reporting", label: "Reporting", icon: "▥" },
   { href: "/admin/content", label: "Page Content", icon: "✎" },
   { href: "/admin/events", label: "Events", icon: "◈" },
   { href: "/admin/registrations", label: "Registrations", icon: "◰" },

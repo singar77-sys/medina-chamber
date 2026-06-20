@@ -41,6 +41,10 @@ export const campaignStatus = pgEnum("campaign_status", [
   "scheduled",
   "sending",
   "sent",
+  // Terminal recovery state for a send that was stranded mid-flight after it
+  // had already reached some recipients. Set by the admin reset route; never
+  // re-sendable (re-sending would double-blast the delivered recipients).
+  "sent_with_errors",
   "cancelled",
 ]);
 

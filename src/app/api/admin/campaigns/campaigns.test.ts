@@ -9,7 +9,7 @@ const insValues = vi.fn((_v: Record<string, unknown>) => ({ returning: insReturn
 const insert = vi.fn(() => ({ values: insValues }));
 const selOrderBy = vi.fn(async () => []);
 const selFrom = vi.fn(() => ({ orderBy: selOrderBy }));
-const select = vi.fn(() => ({ from: selFrom }));
+const select = vi.fn((_projection?: unknown) => ({ from: selFrom }));
 vi.mock("@/lib/db", () => ({ db: { insert, select } }));
 
 vi.mock("@/lib/email", () => ({ EMAIL_RE: /^[^@\s]+@[^@\s]+\.[^@\s]+$/ }));
@@ -18,9 +18,11 @@ const sendCampaign = vi.fn(async () => ({ sent: 5, recipients: 5 }) as Record<st
 vi.mock("@/lib/email/campaign-send", () => ({ sendCampaign }));
 
 let createPost: (req: Request) => Promise<Response>;
+let listGet: (req: Request) => Promise<Response>;
 let sendPost: (req: Request, ctx: { params: Promise<{ id: string }> }) => Promise<Response>;
 beforeAll(async () => {
   createPost = (await import("./route")).POST;
+  listGet = (await import("./route")).GET;
   sendPost = (await import("./[id]/send/route")).POST;
 });
 
@@ -64,6 +66,26 @@ describe("POST /api/admin/campaigns (create)", () => {
     expect(values.status).toBe("draft");
     expect(values.fromEmail).toContain("@");
     expect(values.name).toBe("May News");
+  });
+});
+
+describe("GET /api/admin/campaigns (list)", () => {
+  const get = () => new Request("http://localhost/api/admin/campaigns");
+
+  it("rejects unauthorized callers before touching the db", async () => {
+    requireAdminToken.mockReturnValue(Response.json({ error: "no" }, { status: 401 }));
+    const res = await listGet(get());
+    expect(res.status).toBe(401);
+    expect(select).not.toHaveBeenCalled();
+  });
+
+  it("surfaces a failedCount so a partially-failed blast isn't hidden as 'sent'", async () => {
+    const res = await listGet(get());
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ campaigns: [] });
+    // the projection exposes failedCount derived from email_sends
+    const projection = select.mock.calls[0][0] as Record<string, unknown>;
+    expect(projection).toHaveProperty("failedCount");
   });
 });
 

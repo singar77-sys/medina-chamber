@@ -6,9 +6,9 @@
  */
 
 import { requireAdminToken } from "@/lib/admin-auth";
-import { desc } from "drizzle-orm";
+import { desc, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { emailCampaigns } from "@/lib/db/schema";
+import { emailCampaigns, emailSends } from "@/lib/db/schema";
 import type { CampaignSegment } from "@/lib/db/schema";
 import { EMAIL_RE } from "@/lib/email";
 import { cleanLine, MAX_FROM_NAME, MAX_HTML, MAX_NAME, MAX_SUBJECT } from "@/lib/email/campaign-validate";
@@ -35,6 +35,14 @@ export async function GET(req: Request): Promise<Response> {
       status: emailCampaigns.status,
       recipientCount: emailCampaigns.recipientCount,
       sentCount: emailCampaigns.sentCount,
+      // Live count of failed deliveries — when a batch fails, sentCount and
+      // recipientCount diverge; this makes a partially-failed blast visible
+      // instead of looking cleanly "sent".
+      failedCount: sql<number>`(
+        select count(*)::int from ${emailSends}
+        where ${emailSends.campaignId} = ${emailCampaigns.id}
+          and ${emailSends.status} = 'failed'
+      )`,
       openCount: emailCampaigns.openCount,
       clickCount: emailCampaigns.clickCount,
       unsubscribeCount: emailCampaigns.unsubscribeCount,

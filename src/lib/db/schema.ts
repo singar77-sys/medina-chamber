@@ -15,3 +15,4 @@ export * from "./schema/events";
 export * from "./schema/email";
 export * from "./schema/workflows";
 export * from "./schema/analytics";
+export * from "./schema/deals";

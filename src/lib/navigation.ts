@@ -66,6 +66,11 @@ export const navigation: NavItem[] = [
         description: "What you get as a Chamber member",
       },
       {
+        label: "Member Deals",
+        href: "/deals",
+        description: "Exclusive offers from chamber members",
+      },
+      {
         label: "Pricing & Tiers",
         href: "/membership/pricing",
         description: "Investment levels based on company size",

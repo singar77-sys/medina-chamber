@@ -17,6 +17,7 @@ journal entries, because they do things drizzle-kit can't express:
 | `0002_enable_rls.sql` | `ENABLE ROW LEVEL SECURITY` on all tables | drizzle doesn't manage RLS |
 | `0003_campaign_sent_with_errors.sql` | `ALTER TYPE … ADD VALUE 'sent_with_errors'` | enum value adds aren't generated |
 | `0004_renewal_notice_tracking.sql` | `invoices.renewal_notice_sent_days` column | kept with the off-journal set |
+| `0005_hot_deals.sql` | `hot_deals` table (member deals/coupons) | kept with the off-journal set |
 
 `drizzle-kit migrate` does **not** run these. A fresh environment set up with
 `db:migrate` alone is missing them — and app code that writes

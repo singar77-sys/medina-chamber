@@ -475,6 +475,19 @@ export default async function PortalDashboardPage() {
           </a>
 
           <a
+            href="/portal/deals"
+            className="flex items-center gap-3 bg-bg-primary rounded-xl px-5 py-4 shadow-sm border border-border-secondary hover:border-border-primary transition-colors group"
+          >
+            <span className="text-xl">✦</span>
+            <div>
+              <p className="text-sm font-bold text-text-primary hover:text-text-secondary">
+                My Deals
+              </p>
+              <p className="text-xs text-text-tertiary">Post a member deal</p>
+            </div>
+          </a>
+
+          <a
             href="mailto:office@medinaohchamber.com"
             className="flex items-center gap-3 bg-bg-primary rounded-xl px-5 py-4 shadow-sm border border-border-secondary hover:border-border-primary transition-colors group"
           >

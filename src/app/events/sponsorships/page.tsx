@@ -3,6 +3,7 @@ import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { jaclyn, stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
+import { SponsorshipForm } from "./SponsorshipForm";
 
 export const metadata: Metadata = {
   title: "Sponsorships & Ribbon Cuttings",
@@ -123,7 +124,7 @@ export default function SponsorshipsPage() {
           </p>
           <div className="mt-f21">
             <a
-              href={mailto(stephanie.email)}
+              href="#become-a-sponsor"
               className="
                 inline-flex items-center px-f21 py-f13
                 bg-accent hover:bg-accent-hover
@@ -132,7 +133,7 @@ export default function SponsorshipsPage() {
                 transition-colors
               "
             >
-              Talk to Stephanie About Sponsorship →
+              Become a Sponsor →
             </a>
           </div>
         </div>
@@ -227,6 +228,19 @@ export default function SponsorshipsPage() {
             </div>
           </FadeIn>
         </div>
+      </section>
+
+      {/* Become a sponsor — intake form */}
+      <section id="become-a-sponsor" className="mx-auto max-w-3xl px-6 lg:px-8 py-f55 lg:py-f89 scroll-mt-f89">
+        <FadeIn>
+          <p className="text-overline text-cambridge mb-f8">Get Started</p>
+          <h2 className="text-h2">Become a Sponsor</h2>
+          <p className="text-body text-text-secondary mt-f13 mb-f34 max-w-2xl leading-relaxed">
+            Tell us about your business and what you&apos;d like to sponsor. We&apos;ll follow up
+            within one business day with the options and pricing that fit.
+          </p>
+          <SponsorshipForm />
+        </FadeIn>
       </section>
 
       {/* Cta */}

@@ -16,3 +16,4 @@ export * from "./schema/email";
 export * from "./schema/workflows";
 export * from "./schema/analytics";
 export * from "./schema/deals";
+export * from "./schema/sponsorships";

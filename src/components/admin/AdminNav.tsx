@@ -15,6 +15,7 @@ const NAV_ITEMS: { href: string; label: string; icon: string; exact?: boolean }[
   { href: "/admin/members", label: "Members", icon: "◉" },
   { href: "/admin/committees", label: "Committees", icon: "❖" },
   { href: "/admin/deals", label: "Member Deals", icon: "✦" },
+  { href: "/admin/sponsorships", label: "Sponsorships", icon: "◆" },
   { href: "/admin/campaigns", label: "Email Campaigns", icon: "✉" },
   { href: "/admin/notify", label: "Contact Support", icon: "◎" },
 ];

@@ -15,7 +15,7 @@
  */
 
 import { NextResponse } from "next/server";
-import { requireAdminToken } from "@/lib/admin-auth";
+import { requireAdminSession } from "@/lib/admin-auth";
 import { resend } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
@@ -31,7 +31,7 @@ const CATEGORIES = [
 ] as const;
 
 export async function POST(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   let body: { message?: string; category?: string };

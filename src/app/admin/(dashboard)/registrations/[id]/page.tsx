@@ -1,10 +1,9 @@
 /**
  * /admin/registrations/[id] — manage one DB event's on-site registration.
  *
- * Loads the event, its tickets, and its roster, then hands them (plus the admin
- * token, like the other admin pages) to the TicketManager + RegistrationRoster
- * client islands. Gated by proxy.ts (admin cookie); mutations re-check the
- * Bearer token at /api/admin/reg/*.
+ * Loads the event, its tickets, and its roster, then hands them to the
+ * TicketManager + RegistrationRoster client islands. Gated by proxy.ts (admin
+ * cookie); mutations re-check the admin_session cookie at /api/admin/reg/*.
  */
 
 import { notFound } from "next/navigation";
@@ -96,8 +95,6 @@ export default async function AdminEventRegistrationPage({
     checkedIn: r.checkedInAt != null,
   }));
 
-  const adminToken = process.env.CHAT_ADMIN_TOKEN ?? "";
-
   return (
     <div className="px-6 py-6 max-w-3xl space-y-6">
       <div>
@@ -112,14 +109,13 @@ export default async function AdminEventRegistrationPage({
       </div>
 
       <TicketManager
-        adminToken={adminToken}
         eventId={event.id}
         initialStatus={event.status}
         initialCapacity={event.maxCapacity}
         initialTickets={tickets as AdminTicket[]}
       />
 
-      <RegistrationRoster adminToken={adminToken} initialRegistrations={roster} />
+      <RegistrationRoster initialRegistrations={roster} />
     </div>
   );
 }

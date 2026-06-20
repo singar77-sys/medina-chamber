@@ -4,13 +4,13 @@
  */
 
 import { NextResponse } from "next/server";
-import { requireAdminToken } from "@/lib/admin-auth";
+import { requireAdminSession } from "@/lib/admin-auth";
 import { clearEventGraphicImage } from "@/lib/media-store";
 
 export const dynamic = "force-dynamic";
 
 export async function DELETE(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const { searchParams } = new URL(req.url);

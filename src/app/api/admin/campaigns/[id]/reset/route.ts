@@ -1,7 +1,7 @@
 /**
  * POST /api/admin/campaigns/[id]/reset — recover a campaign stranded in "sending".
  *
- * Admin only (Bearer CHAT_ADMIN_TOKEN).
+ * Admin only (admin_session cookie).
  *
  * The send engine atomically claims a campaign (draft/scheduled → "sending")
  * before it sends. If a catastrophic error escapes after that claim (e.g. the
@@ -35,7 +35,7 @@
  *     so a send that finishes between our read and our write can't be clobbered.
  */
 
-import { requireAdminToken } from "@/lib/admin-auth";
+import { requireAdminSession } from "@/lib/admin-auth";
 import { and, eq, lt, ne, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { emailCampaigns, emailSends } from "@/lib/db/schema";
@@ -50,7 +50,7 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const { id } = await params;

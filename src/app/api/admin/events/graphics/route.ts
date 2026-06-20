@@ -28,7 +28,7 @@
  */
 
 import { NextResponse } from "next/server";
-import { requireAdminToken } from "@/lib/admin-auth";
+import { requireAdminSession } from "@/lib/admin-auth";
 import { setEventInfoOverride, clearEventInfoOverride } from "@/lib/cms-store";
 import type { EventInfo } from "@/components/events/graphics/shared";
 import { generateText } from "ai";
@@ -64,7 +64,7 @@ Rules:
 - Respond with ONLY the JSON object, no markdown, no explanation outside JSON`;
 
 export async function POST(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   let body: { slug?: string; command?: string; currentInfo?: EventInfo };

@@ -3,13 +3,13 @@
  * PUT  /api/admin/content               — save a content field override
  * DELETE /api/admin/content?page=&field= — reset to static default
  *
- * All routes require the admin bearer token (Authorization: Bearer ...).
- * The admin UI pages use fetch() with the token from a client-side
- * session context; direct API calls also work for scripting.
+ * All routes require the admin_session cookie.
+ * The admin UI pages use fetch() with credentials so the cookie is
+ * sent automatically from the browser session.
  */
 
 import { NextResponse } from "next/server";
-import { requireAdminToken } from "@/lib/admin-auth";
+import { requireAdminSession } from "@/lib/admin-auth";
 import {
   getContentField,
   setContentField,
@@ -20,7 +20,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export async function GET(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const url = new URL(req.url);
@@ -49,7 +49,7 @@ export async function GET(req: Request): Promise<Response> {
 }
 
 export async function PUT(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   let body: { page?: string; field?: string; value?: string };
@@ -81,7 +81,7 @@ export async function PUT(req: Request): Promise<Response> {
 }
 
 export async function DELETE(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const url = new URL(req.url);

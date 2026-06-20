@@ -20,7 +20,7 @@
 
 import { NextResponse } from "next/server";
 import sharp from "sharp";
-import { requireAdminToken } from "@/lib/admin-auth";
+import { requireAdminSession } from "@/lib/admin-auth";
 import {
   uploadMedia,
   setEventGraphicImage,
@@ -56,7 +56,7 @@ function toTitleCase(str: string): string {
 }
 
 export async function POST(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   let formData: FormData;

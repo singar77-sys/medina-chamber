@@ -1,7 +1,7 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
-const requireAdminToken = vi.fn<(req: Request) => Response | null>(() => null);
-vi.mock("@/lib/admin-auth", () => ({ requireAdminToken }));
+const requireAdminSession = vi.fn<(req: Request) => Promise<Response | null>>(async () => null);
+vi.mock("@/lib/admin-auth", () => ({ requireAdminSession }));
 
 // ── db mock ──────────────────────────────────────────────────────────────────
 // Two select shapes share one chain, distinguished by their terminal call:
@@ -38,7 +38,7 @@ const minsAgo = (m: number) => new Date(Date.now() - m * 60_000);
 
 beforeEach(() => {
   vi.clearAllMocks();
-  requireAdminToken.mockReturnValue(null);
+  requireAdminSession.mockResolvedValue(null);
   existing = { status: "sending", updatedAt: minsAgo(20) }; // stale by default
   delivered = 0;
   resetRows = [{ id: "camp1", status: "draft" }];
@@ -46,7 +46,7 @@ beforeEach(() => {
 
 describe("POST /api/admin/campaigns/[id]/reset", () => {
   it("rejects unauthorized callers before touching the db", async () => {
-    requireAdminToken.mockReturnValue(Response.json({ error: "no" }, { status: 401 }));
+    requireAdminSession.mockResolvedValue(Response.json({ error: "no" }, { status: 401 }));
     const res = await POST(req(), ctx);
     expect(res.status).toBe(401);
     expect(select).not.toHaveBeenCalled();

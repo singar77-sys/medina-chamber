@@ -1,12 +1,12 @@
 /**
  * POST /api/admin/campaigns/[id]/send — send a draft campaign now.
  *
- * Admin only (Bearer CHAT_ADMIN_TOKEN). Delegates to the idempotent send
+ * Admin only (admin_session cookie). Delegates to the idempotent send
  * engine: a campaign that's already sending/sent is refused with 409, so a
  * double-click can't blast members twice.
  */
 
-import { requireAdminToken } from "@/lib/admin-auth";
+import { requireAdminSession } from "@/lib/admin-auth";
 import { db } from "@/lib/db";
 import { sendCampaign } from "@/lib/email/campaign-send";
 
@@ -17,7 +17,7 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const { id } = await params;

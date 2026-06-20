@@ -16,7 +16,7 @@
  */
 
 import { NextResponse } from "next/server";
-import { requireAdminToken } from "@/lib/admin-auth";
+import { requireAdminSession } from "@/lib/admin-auth";
 import {
   getCmsBlogPost,
   saveCmsBlogPost,
@@ -55,7 +55,7 @@ function validatePost(
 }
 
 export async function GET(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const url = new URL(req.url);
@@ -72,7 +72,7 @@ export async function GET(req: Request): Promise<Response> {
 }
 
 export async function POST(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   let body: Partial<CmsBlogPost>;
@@ -108,7 +108,7 @@ export async function POST(req: Request): Promise<Response> {
 }
 
 export async function PUT(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   let body: Partial<CmsBlogPost> & { slug: string };
@@ -142,7 +142,7 @@ export async function PUT(req: Request): Promise<Response> {
 }
 
 export async function DELETE(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const url = new URL(req.url);

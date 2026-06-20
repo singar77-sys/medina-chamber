@@ -20,12 +20,11 @@ const EVENT_TYPE_OPTIONS = [
 ];
 
 interface Props {
-  adminToken: string;
   onSaved: (config: GraphicConfig) => void;
   onCancel: () => void;
 }
 
-export function GraphicTemplateCreator({ adminToken, onSaved, onCancel }: Props) {
+export function GraphicTemplateCreator({ onSaved, onCancel }: Props) {
   const [eventTypeSlug, setEventTypeSlug] = useState("");
   const [stylePrompt, setStylePrompt] = useState("");
   const [generating, setGenerating] = useState(false);
@@ -45,8 +44,8 @@ export function GraphicTemplateCreator({ adminToken, onSaved, onCancel }: Props)
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${adminToken}`,
         },
+        credentials: "same-origin",
         body: JSON.stringify({ eventTypeSlug, stylePrompt }),
       });
 
@@ -75,8 +74,8 @@ export function GraphicTemplateCreator({ adminToken, onSaved, onCancel }: Props)
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${adminToken}`,
         },
+        credentials: "same-origin",
         body: JSON.stringify({ config: draft, name }),
       });
 

@@ -1,12 +1,12 @@
 /**
  * /api/admin/campaigns/[id] — read, edit (draft only), delete (draft only).
  *
- * Admin only (Bearer CHAT_ADMIN_TOKEN). Once a campaign has been sent it is
+ * Admin only (admin_session cookie). Once a campaign has been sent it is
  * immutable: edits and deletes are refused with 409 so the audit trail and
  * recipient counts can't be rewritten after the fact.
  */
 
-import { requireAdminToken } from "@/lib/admin-auth";
+import { requireAdminSession } from "@/lib/admin-auth";
 import { eq, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { emailCampaigns } from "@/lib/db/schema";
@@ -27,7 +27,7 @@ export async function GET(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const { id } = await params;
@@ -45,7 +45,7 @@ export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const { id } = await params;
@@ -123,7 +123,7 @@ export async function DELETE(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const { id } = await params;

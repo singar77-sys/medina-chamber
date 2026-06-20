@@ -32,7 +32,7 @@ function hasSent(status: string): boolean {
   return status === "sent" || status === "sending" || status === "sent_with_errors";
 }
 
-export function CampaignsTable({ campaigns, adminToken }: { campaigns: CampaignRow[]; adminToken: string }) {
+export function CampaignsTable({ campaigns }: { campaigns: CampaignRow[] }) {
   const [rows, setRows] = useState(campaigns);
   const [deleting, setDeleting] = useState<string | null>(null);
 
@@ -42,7 +42,7 @@ export function CampaignsTable({ campaigns, adminToken }: { campaigns: CampaignR
     try {
       const res = await fetch(`/api/admin/campaigns/${id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${adminToken}` },
+        credentials: "same-origin",
       });
       if (res.ok) {
         setRows((rs) => rs.filter((r) => r.id !== id));

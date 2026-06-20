@@ -1,13 +1,13 @@
 /**
  * POST /api/admin/reg/events/[id]/tickets — create a ticket type for a DB event.
  *
- * Admin only: validated by the Bearer CHAT_ADMIN_TOKEN (requireAdminToken). The
+ * Admin only: validated by the admin_session cookie (requireAdminSession). The
  * admin page that calls this is additionally gated by proxy.ts (admin cookie);
- * the token is the API-layer check. Adding a ticket is what makes an event
+ * the session cookie is the API-layer check. Adding a ticket is what makes an event
  * "own" on-site registration (the public bridge requires ≥1 ticket).
  */
 
-import { requireAdminToken } from "@/lib/admin-auth";
+import { requireAdminSession } from "@/lib/admin-auth";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { events, eventTickets } from "@/lib/db/schema";
@@ -22,7 +22,7 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const { id: eventId } = await params;

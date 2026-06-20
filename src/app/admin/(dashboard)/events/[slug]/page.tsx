@@ -43,7 +43,6 @@ export default async function AdminEventPage({ params }: Props) {
   };
 
   const currentInfo: EventInfo = savedOverride ?? baseInfo;
-  const adminToken = process.env.CHAT_ADMIN_TOKEN ?? "";
 
   return (
     <div className="px-6 py-6 max-w-5xl space-y-6">
@@ -62,14 +61,12 @@ export default async function AdminEventPage({ params }: Props) {
         slug={slug}
         event={event}
         initialOverride={savedEventData}
-        adminToken={adminToken}
       />
 
       {/* Social graphic editor (client component — preview updates live) */}
       {Graphic || customTemplate || graphicImageUrl ? (
         <GraphicPanel
           event={event}
-          adminToken={adminToken}
           initialInfo={currentInfo}
           hasSavedOverride={savedOverride !== null}
           customTemplate={customTemplate}
@@ -91,7 +88,6 @@ export default async function AdminEventPage({ params }: Props) {
         <EventPhotoUploader
           eventSlug={slug}
           eventTitle={event.title}
-          adminToken={adminToken}
           initialPhotos={eventPhotos}
         />
       </div>

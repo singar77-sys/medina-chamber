@@ -12,7 +12,6 @@ import type { GraphicConfig } from "@/lib/graphic-template";
 
 interface Props {
   event: ChamberEvent;
-  adminToken: string;
   initialInfo: EventInfo;
   hasSavedOverride: boolean;
   customTemplate?: GraphicConfig | null;
@@ -21,7 +20,6 @@ interface Props {
 
 export function GraphicPanel({
   event,
-  adminToken,
   initialInfo,
   hasSavedOverride,
   customTemplate,
@@ -89,7 +87,6 @@ export function GraphicPanel({
           {/* Custom image upload (Canva / external) */}
           <EventGraphicUploader
             eventSlug={event.slug}
-            adminToken={adminToken}
             initialImageUrl={graphicImageUrl}
             onImageChange={(url) => setGraphicImageUrl(url)}
           />
@@ -104,7 +101,6 @@ export function GraphicPanel({
                 <GraphicEditor
                   slug={event.slug}
                   eventTitle={event.title}
-                  adminToken={adminToken}
                   initialInfo={currentInfo}
                   onInfoChange={(info) => {
                     setCurrentInfo(info);

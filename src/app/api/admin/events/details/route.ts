@@ -8,7 +8,7 @@
  */
 
 import { NextResponse } from "next/server";
-import { requireAdminToken } from "@/lib/admin-auth";
+import { requireAdminSession } from "@/lib/admin-auth";
 import {
   getCmsEventData,
   setCmsEventData,
@@ -38,7 +38,7 @@ function deriveDateFields(
 }
 
 export async function GET(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const { searchParams } = new URL(req.url);
@@ -50,7 +50,7 @@ export async function GET(req: Request): Promise<Response> {
 }
 
 export async function PUT(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   let body: { slug?: string; data?: CmsEventData };
@@ -75,7 +75,7 @@ export async function PUT(req: Request): Promise<Response> {
 }
 
 export async function DELETE(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const { searchParams } = new URL(req.url);

@@ -5,7 +5,6 @@ import { CampaignComposer } from "@/components/admin/CampaignComposer";
 export const dynamic = "force-dynamic";
 
 export default async function NewCampaignPage() {
-  const adminToken = process.env.CHAT_ADMIN_TOKEN ?? "";
   const tiers = await getActiveTiers();
   const tierOptions = tiers.map((t) => ({ value: t.key, label: t.name }));
 
@@ -21,7 +20,7 @@ export default async function NewCampaignPage() {
         </p>
       </div>
 
-      <CampaignComposer adminToken={adminToken} tierOptions={tierOptions} />
+      <CampaignComposer tierOptions={tierOptions} />
     </div>
   );
 }

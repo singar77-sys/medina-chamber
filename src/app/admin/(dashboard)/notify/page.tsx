@@ -1,8 +1,6 @@
 import { NotifyForm } from "@/components/admin/NotifyForm";
 
 export default function NotifyPage() {
-  const adminToken = process.env.CHAT_ADMIN_TOKEN ?? "";
-
   return (
     <div className="px-6 py-6 max-w-xl space-y-6">
       <div>
@@ -13,7 +11,7 @@ export default function NotifyPage() {
         </p>
       </div>
 
-      <NotifyForm adminToken={adminToken} />
+      <NotifyForm />
 
       <div className="border-t border-gray-200 pt-4">
         <p className="text-xs text-gray-400">

@@ -2,10 +2,10 @@
  * GET /api/admin/chat-log
  * ───────────────────────
  * Lists recent ChamberBot conversations from the 90-day log store.
- * Auth-gated via CHAT_ADMIN_TOKEN.
+ * Auth-gated via the admin_session cookie.
  *
  * Query params:
- *   token=<string>                  auth (also accepts Authorization: Bearer)
+ *   (auth via admin_session cookie)
  *   from=YYYY-MM-DD                 optional; defaults to 7 days ago
  *   to=YYYY-MM-DD                   optional; defaults to today
  *   topic=<ChatTopic>               optional filter
@@ -25,7 +25,7 @@
  */
 
 import { NextResponse } from "next/server";
-import { requireAdminToken } from "@/lib/admin-auth";
+import { requireAdminSession } from "@/lib/admin-auth";
 import {
   listConversationKeys,
   getConversations,
@@ -49,7 +49,7 @@ export async function GET(req: Request) {
   const limited = await applyRateLimit(req, healthLimiter);
   if (limited) return limited;
 
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const url = new URL(req.url);

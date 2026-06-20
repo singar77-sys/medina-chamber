@@ -4,8 +4,8 @@
  * RegistrationRoster — admin roster + day-of check-in for an event.
  *
  * Lists every registration (member or guest) with status, and toggles check-in
- * via POST /api/admin/reg/checkin/[id] (confirmed ↔ attended). Carries the admin
- * Bearer token from the proxy-gated server page.
+ * via POST /api/admin/reg/checkin/[id] (confirmed ↔ attended). Authenticates via
+ * the httpOnly admin_session cookie (sent automatically on same-origin fetch).
  */
 
 import { useState } from "react";
@@ -30,10 +30,8 @@ const STATUS_STYLE: Record<string, { bg: string; color: string }> = {
 };
 
 export function RegistrationRoster({
-  adminToken,
   initialRegistrations,
 }: {
-  adminToken: string;
   initialRegistrations: RosterRow[];
 }) {
   const [rows, setRows] = useState<RosterRow[]>(initialRegistrations);
@@ -43,7 +41,8 @@ export function RegistrationRoster({
     setBusy(row.id);
     const res = await fetch(`/api/admin/reg/checkin/${row.id}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${adminToken}` },
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
       body: JSON.stringify({ checkedIn: !row.checkedIn }),
     });
     if (res.ok) {

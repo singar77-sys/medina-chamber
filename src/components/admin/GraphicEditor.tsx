@@ -12,12 +12,11 @@ interface Message {
 interface Props {
   slug: string;
   eventTitle: string;
-  adminToken: string;
   initialInfo: EventInfo;
   onInfoChange: (info: EventInfo) => void;
 }
 
-export function GraphicEditor({ slug, eventTitle, adminToken, initialInfo, onInfoChange }: Props) {
+export function GraphicEditor({ slug, eventTitle, initialInfo, onInfoChange }: Props) {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -46,8 +45,8 @@ export function GraphicEditor({ slug, eventTitle, adminToken, initialInfo, onInf
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${adminToken}`,
         },
+        credentials: "same-origin",
         body: JSON.stringify({ slug, command, currentInfo }),
       });
 

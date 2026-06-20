@@ -1,56 +1,46 @@
 /**
  * Shared auth gate for /api/admin/* routes.
  *
- * Expects a bearer token matching process.env.CHAT_ADMIN_TOKEN, supplied
- * via the Authorization header only:
+ * Reads the httpOnly `admin_session` cookie and verifies it with
+ * verifySession (HMAC-SHA256 over CHAT_ADMIN_TOKEN, see admin-session.ts).
+ * This replaces the old Bearer-token / ?token= guard — the session cookie
+ * is set server-side at login and is never exposed to JavaScript, access
+ * logs, browser history, or Referer headers.
  *
- *   Authorization: Bearer <token>
+ * Fail-closed:
+ *   - 503 if CHAT_ADMIN_TOKEN is unset or shorter than 16 chars (not
+ *     configured — never accidentally open with a default credential).
+ *   - 401 if the cookie is missing or fails verification.
+ *   - null if authorized and OK to proceed.
  *
- * Query-string tokens (?token=…) are explicitly rejected. They appear in
- * Vercel access logs, browser history, Referer headers, and session-replay
- * tools — leaking a credential through any of those is unacceptable for
- * an admin endpoint.
+ * Mirrors the page-level gate in src/proxy.ts so API routes and pages
+ * enforce the same session check.
  *
- * Returns null if authorized, or a Response to return directly otherwise.
- * Uses timing-safe comparison to resist remote timing attacks on the token.
- *
- * If CHAT_ADMIN_TOKEN is unset, every request is rejected — fail-closed,
- * never accidentally open with a default credential.
+ * The cookie header is parsed directly off the plain Request rather than
+ * via next/headers cookies(), so plain-Request route handlers and tests
+ * that construct raw Request objects work unchanged.
  */
 
-function timingSafeEqual(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  let diff = 0;
-  for (let i = 0; i < a.length; i++) {
-    diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  }
-  return diff === 0;
-}
+import { ADMIN_COOKIE, getAdminSecret, verifySession } from "@/lib/admin-session";
 
-function extractToken(req: Request): string | null {
-  const auth = req.headers.get("authorization");
-  if (auth) {
-    const m = auth.match(/^Bearer\s+(.+)$/i);
-    if (m) return m[1].trim();
+function extractSessionCookie(req: Request): string | null {
+  const header = req.headers.get("cookie");
+  if (!header) return null;
+  for (const part of header.split(";")) {
+    const i = part.indexOf("=");
+    if (i === -1) continue;
+    if (part.slice(0, i).trim() === ADMIN_COOKIE) return part.slice(i + 1).trim();
   }
   return null;
 }
 
-/** Returns a 401 Response if unauthorized, null if OK to proceed. */
-export function requireAdminToken(req: Request): Response | null {
-  const expected = process.env.CHAT_ADMIN_TOKEN;
-  if (!expected || expected.length < 16) {
-    return Response.json(
-      { error: "Admin access not configured." },
-      { status: 503 },
-    );
-  }
-  const provided = extractToken(req);
-  if (!provided) {
-    return Response.json({ error: "Missing token." }, { status: 401 });
-  }
-  if (!timingSafeEqual(provided, expected)) {
-    return Response.json({ error: "Invalid token." }, { status: 401 });
-  }
+/** 503 if not configured, 401 if cookie missing/invalid, null if OK. Fail-closed. */
+export async function requireAdminSession(req: Request): Promise<Response | null> {
+  if (!getAdminSecret())
+    return Response.json({ error: "Admin access not configured." }, { status: 503 });
+  const token = extractSessionCookie(req);
+  if (!token) return Response.json({ error: "Unauthorized." }, { status: 401 });
+  if (!(await verifySession(token)))
+    return Response.json({ error: "Unauthorized." }, { status: 401 });
   return null;
 }

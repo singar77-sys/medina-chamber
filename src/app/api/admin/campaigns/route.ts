@@ -1,11 +1,11 @@
 /**
  * /api/admin/campaigns — list campaigns, create a draft.
  *
- * Admin only (Bearer CHAT_ADMIN_TOKEN). A new campaign is always created as a
+ * Admin only (admin_session cookie). A new campaign is always created as a
  * draft; it is only sent via POST /api/admin/campaigns/[id]/send.
  */
 
-import { requireAdminToken } from "@/lib/admin-auth";
+import { requireAdminSession } from "@/lib/admin-auth";
 import { desc, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { emailCampaigns, emailSends } from "@/lib/db/schema";
@@ -24,7 +24,7 @@ function str(v: unknown): string | null {
 }
 
 export async function GET(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const campaigns = await db
@@ -57,7 +57,7 @@ export async function GET(req: Request): Promise<Response> {
 }
 
 export async function POST(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   let body: Record<string, unknown>;

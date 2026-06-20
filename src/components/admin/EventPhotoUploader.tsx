@@ -7,7 +7,6 @@ import { NamingModal } from "@/components/admin/NamingModal";
 interface Props {
   eventSlug: string;
   eventTitle?: string;   // pre-fills the naming modal description
-  adminToken: string;
   initialPhotos: MediaItem[];
 }
 
@@ -27,7 +26,7 @@ function defaultDescFromTitle(title: string): string {
     .toLowerCase();
 }
 
-export function EventPhotoUploader({ eventSlug, eventTitle, adminToken, initialPhotos }: Props) {
+export function EventPhotoUploader({ eventSlug, eventTitle, initialPhotos }: Props) {
   const [photos, setPhotos] = useState<MediaItem[]>(initialPhotos);
   const [uploading, setUploading] = useState<UploadingFile[]>([]);
   const [dragging, setDragging] = useState(false);
@@ -65,7 +64,7 @@ export function EventPhotoUploader({ eventSlug, eventTitle, adminToken, initialP
           try {
             const res = await fetch("/api/admin/media/upload", {
               method: "POST",
-              headers: { Authorization: `Bearer ${adminToken}` },
+              credentials: "same-origin",
               body: fd,
             });
             const data = await res.json();
@@ -91,14 +90,14 @@ export function EventPhotoUploader({ eventSlug, eventTitle, adminToken, initialP
         setUploading((prev) => prev.filter((u) => u.progress === "uploading"));
       }, 3000);
     },
-    [eventSlug, adminToken],
+    [eventSlug],
   );
 
   async function deletePhoto(url: string) {
     if (!confirm("Remove this photo?")) return;
     await fetch(
       `/api/admin/media?url=${encodeURIComponent(url)}&eventSlug=${encodeURIComponent(eventSlug)}`,
-      { method: "DELETE", headers: { Authorization: `Bearer ${adminToken}` } },
+      { method: "DELETE", credentials: "same-origin" },
     );
     setPhotos((prev) => prev.filter((p) => p.url !== url));
   }
@@ -108,8 +107,8 @@ export function EventPhotoUploader({ eventSlug, eventTitle, adminToken, initialP
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${adminToken}`,
       },
+      credentials: "same-origin",
       body: JSON.stringify({ url, eventSlug, caption: captionDraft }),
     });
     setPhotos((prev) =>

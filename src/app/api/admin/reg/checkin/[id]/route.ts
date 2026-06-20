@@ -1,13 +1,13 @@
 /**
  * POST /api/admin/reg/checkin/[id] — check a registration in or out.
  *
- * Admin only (Bearer CHAT_ADMIN_TOKEN). Body { checkedIn: boolean }. Checking in
+ * Admin only (admin_session cookie). Body { checkedIn: boolean }. Checking in
  * stamps checkedInAt + sets status "attended"; checking out clears the stamp and
  * returns the registration to "confirmed". Only confirmed/attended registrations
  * can be checked in (you can't check in a waitlisted/pending/cancelled one).
  */
 
-import { requireAdminToken } from "@/lib/admin-auth";
+import { requireAdminSession } from "@/lib/admin-auth";
 import { eq, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { eventRegistrations } from "@/lib/db/schema";
@@ -19,7 +19,7 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const { id } = await params;

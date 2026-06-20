@@ -8,10 +8,9 @@ import { NamingModal } from "@/components/admin/NamingModal";
 
 interface Props {
   items: MediaItem[];
-  adminToken: string;
 }
 
-export function MediaLibraryClient({ items: initialItems, adminToken }: Props) {
+export function MediaLibraryClient({ items: initialItems }: Props) {
   const [items, setItems] = useState<MediaItem[]>(initialItems);
   const [filter, setFilter] = useState<string>("all");
   const [dragging, setDragging] = useState(false);
@@ -50,7 +49,7 @@ export function MediaLibraryClient({ items: initialItems, adminToken }: Props) {
 
         const res = await fetch("/api/admin/media/upload", {
           method: "POST",
-          headers: { Authorization: `Bearer ${adminToken}` },
+          credentials: "same-origin",
           body: fd,
         });
         const data = await res.json();
@@ -80,7 +79,7 @@ export function MediaLibraryClient({ items: initialItems, adminToken }: Props) {
 
     await fetch(`/api/admin/media?${params.toString()}`, {
       method: "DELETE",
-      headers: { Authorization: `Bearer ${adminToken}` },
+      credentials: "same-origin",
     });
 
     setItems((prev) => prev.filter((i) => i.url !== url));
@@ -91,8 +90,8 @@ export function MediaLibraryClient({ items: initialItems, adminToken }: Props) {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${adminToken}`,
       },
+      credentials: "same-origin",
       body: JSON.stringify({ url, eventSlug, alt }),
     });
     setItems((prev) => prev.map((i) => (i.url === url ? { ...i, alt } : i)));

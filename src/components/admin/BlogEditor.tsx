@@ -6,7 +6,6 @@ import type { CmsBlogPost } from "@/lib/cms-store";
 
 interface Props {
   post?: CmsBlogPost;
-  adminToken: string;
   mode: "new" | "edit";
 }
 
@@ -19,7 +18,7 @@ function slugify(s: string) {
     .slice(0, 80);
 }
 
-export function BlogEditor({ post, adminToken, mode }: Props) {
+export function BlogEditor({ post, mode }: Props) {
   const router = useRouter();
   const [title, setTitle] = useState(post?.title ?? "");
   const [slug, setSlug] = useState(post?.slug ?? "");
@@ -71,8 +70,8 @@ export function BlogEditor({ post, adminToken, mode }: Props) {
         method: mode === "new" ? "POST" : "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${adminToken}`,
         },
+        credentials: "same-origin",
         body: JSON.stringify(payload),
       });
 
@@ -97,7 +96,7 @@ export function BlogEditor({ post, adminToken, mode }: Props) {
     try {
       await fetch(`/api/admin/blog?slug=${post.slug}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${adminToken}` },
+        credentials: "same-origin",
       });
       router.push("/admin/blog");
       router.refresh();

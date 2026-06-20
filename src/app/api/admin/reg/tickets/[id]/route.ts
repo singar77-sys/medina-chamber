@@ -2,12 +2,12 @@
  * PATCH  /api/admin/reg/tickets/[id] — edit a ticket type.
  * DELETE /api/admin/reg/tickets/[id] — remove a ticket type.
  *
- * Admin only (Bearer CHAT_ADMIN_TOKEN). DELETE refuses if any registration
+ * Admin only (admin_session cookie). DELETE refuses if any registration
  * already references the ticket — pulling a sold ticket out from under attendees
  * would orphan their records and corrupt the roster; cancel those first.
  */
 
-import { requireAdminToken } from "@/lib/admin-auth";
+import { requireAdminSession } from "@/lib/admin-auth";
 import { eq, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { eventTickets, eventRegistrations } from "@/lib/db/schema";
@@ -22,7 +22,7 @@ export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const { id } = await params;
@@ -90,7 +90,7 @@ export async function DELETE(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const { id } = await params;

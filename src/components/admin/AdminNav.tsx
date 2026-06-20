@@ -26,22 +26,9 @@ export function AdminNav() {
   }
 
   async function handleLogout() {
-    const token = document.cookie
-      .split("; ")
-      .find((r) => r.startsWith("admin_session="))
-      ?.split("=")[1];
-
-    await fetch("/api/admin/auth", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token ?? ""}`,
-      },
-      body: JSON.stringify({}),
-    });
-
-    // Simpler: just hit the logout path
-    await fetch("/api/admin/auth/logout", { method: "POST" });
+    // Logout clears the httpOnly admin_session cookie server-side; the cookie
+    // is sent automatically on this same-origin POST.
+    await fetch("/api/admin/auth/logout", { method: "POST", credentials: "same-origin" });
     window.location.href = "/admin/login";
   }
 

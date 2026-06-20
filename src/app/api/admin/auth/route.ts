@@ -3,11 +3,11 @@
  * POST /api/admin/auth/logout  — clear session cookie
  *
  * The admin password IS the CHAT_ADMIN_TOKEN env var. One credential
- * controls both the bearer-token API routes and the UI login.
+ * controls both the cookie-gated admin API routes and the UI login.
  */
 
 import { NextResponse } from "next/server";
-import { signSession, ADMIN_COOKIE } from "@/lib/admin-session";
+import { signSession, getAdminSecret, ADMIN_COOKIE } from "@/lib/admin-session";
 
 function timingSafeEqual(a: string, b: string): boolean {
   if (a.length !== b.length) return false;
@@ -35,7 +35,10 @@ export async function POST(req: Request): Promise<Response> {
   }
 
   // Login
-  const expected = process.env.CHAT_ADMIN_TOKEN;
+  // Single source of the fail-closed floor (getAdminSecret in admin-session.ts):
+  // refuse to mint a session when the secret is unset or too weak, so login,
+  // the API guard, and verifySession all agree on what "configured" means.
+  const expected = getAdminSecret();
   if (!expected) {
     return NextResponse.json({ error: "Admin access not configured." }, { status: 503 });
   }

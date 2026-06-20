@@ -9,7 +9,7 @@
  */
 
 import { NextResponse } from "next/server";
-import { requireAdminToken } from "@/lib/admin-auth";
+import { requireAdminSession } from "@/lib/admin-auth";
 import {
   getCmsPricing,
   setCmsPricing,
@@ -22,7 +22,7 @@ import { bustChamberFactsCache } from "@/lib/chamber-facts";
 export const dynamic = "force-dynamic";
 
 export async function GET(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const saved = await getCmsPricing();
@@ -34,7 +34,7 @@ export async function GET(req: Request): Promise<Response> {
 }
 
 export async function POST(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   let body: { tiers?: unknown; faqs?: unknown };
@@ -77,7 +77,7 @@ export async function POST(req: Request): Promise<Response> {
 }
 
 export async function DELETE(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   await clearCmsPricing();

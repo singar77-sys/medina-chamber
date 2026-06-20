@@ -8,7 +8,7 @@
  */
 
 import { NextResponse } from "next/server";
-import { requireAdminToken } from "@/lib/admin-auth";
+import { requireAdminSession } from "@/lib/admin-auth";
 import {
   getEventPhotos,
   getRecentMedia,
@@ -20,7 +20,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export async function GET(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const { searchParams } = new URL(req.url);
@@ -41,7 +41,7 @@ export async function GET(req: Request): Promise<Response> {
 }
 
 export async function DELETE(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const { searchParams } = new URL(req.url);
@@ -57,7 +57,7 @@ export async function DELETE(req: Request): Promise<Response> {
 }
 
 export async function PATCH(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   let body: { url?: string; eventSlug?: string; alt?: string; filename?: string; caption?: string };

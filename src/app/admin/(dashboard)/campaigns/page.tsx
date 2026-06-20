@@ -38,7 +38,6 @@ async function loadCampaigns(): Promise<CampaignRow[]> {
 }
 
 export default async function CampaignsPage() {
-  const adminToken = process.env.CHAT_ADMIN_TOKEN ?? "";
   const campaigns = await loadCampaigns();
 
   return (
@@ -59,7 +58,7 @@ export default async function CampaignsPage() {
         </Link>
       </div>
 
-      <CampaignsTable campaigns={campaigns} adminToken={adminToken} />
+      <CampaignsTable campaigns={campaigns} />
     </div>
   );
 }

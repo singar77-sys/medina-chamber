@@ -7,10 +7,9 @@ interface Props {
   def: ContentFieldDef;
   currentValue: string;
   isOverridden: boolean;
-  adminToken: string;
 }
 
-export function ContentField({ def, currentValue, isOverridden, adminToken }: Props) {
+export function ContentField({ def, currentValue, isOverridden }: Props) {
   const [value, setValue] = useState(currentValue);
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState<"idle" | "saved" | "error">("idle");
@@ -29,8 +28,8 @@ export function ContentField({ def, currentValue, isOverridden, adminToken }: Pr
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${adminToken}`,
         },
+        credentials: "same-origin",
         body: JSON.stringify({ page: def.page, field: def.field, value }),
       });
 
@@ -57,7 +56,7 @@ export function ContentField({ def, currentValue, isOverridden, adminToken }: Pr
     try {
       await fetch(`/api/admin/content?page=${def.page}&field=${def.field}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${adminToken}` },
+        credentials: "same-origin",
       });
       setValue(def.defaultValue);
       setOverridden(false);

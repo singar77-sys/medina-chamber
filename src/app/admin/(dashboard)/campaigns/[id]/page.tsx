@@ -14,7 +14,6 @@ export default async function CampaignDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const adminToken = process.env.CHAT_ADMIN_TOKEN ?? "";
 
   const [row] = await db
     .select()
@@ -62,7 +61,7 @@ export default async function CampaignDetailPage({
         <h1 className="text-xl font-semibold text-gray-900 mt-1">{row.name}</h1>
       </div>
 
-      <CampaignComposer adminToken={adminToken} tierOptions={tierOptions} campaign={campaign} />
+      <CampaignComposer tierOptions={tierOptions} campaign={campaign} />
     </div>
   );
 }

@@ -5,8 +5,6 @@ import { PricingEditor } from "@/components/admin/PricingEditor";
 export const dynamic = "force-dynamic";
 
 export default async function ContentEditorPage() {
-  const adminToken = process.env.CHAT_ADMIN_TOKEN ?? "";
-
   type FieldWithValue = { def: (typeof CONTENT_FIELD_DEFS)[number]; currentValue: string; isOverridden: boolean };
 
   // Load pricing + all content fields in parallel
@@ -52,7 +50,6 @@ export default async function ContentEditorPage() {
           Membership Pricing
         </h2>
         <PricingEditor
-          adminToken={adminToken}
           initialPricing={pricing}
           isOverridden={pricingIsOverridden}
           updatedAt={pricingUpdatedAt ?? null}
@@ -84,7 +81,6 @@ export default async function ContentEditorPage() {
                     def={def}
                     currentValue={currentValue}
                     isOverridden={isOverridden}
-                    adminToken={adminToken}
                   />
                 ))}
               </div>

@@ -1,7 +1,7 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
-const requireAdminToken = vi.fn<(req: Request) => Response | null>(() => null);
-vi.mock("@/lib/admin-auth", () => ({ requireAdminToken }));
+const requireAdminSession = vi.fn<(req: Request) => Promise<Response | null>>(async () => null);
+vi.mock("@/lib/admin-auth", () => ({ requireAdminSession }));
 
 let createdCampaign: Record<string, unknown>;
 const insReturning = vi.fn(async () => [createdCampaign]);
@@ -28,7 +28,7 @@ beforeAll(async () => {
 
 beforeEach(() => {
   vi.clearAllMocks();
-  requireAdminToken.mockReturnValue(null);
+  requireAdminSession.mockResolvedValue(null);
   createdCampaign = { id: "c1", status: "draft" };
   sendCampaign.mockResolvedValue({ sent: 5, recipients: 5 });
 });
@@ -38,7 +38,7 @@ const post = (body: unknown) =>
 
 describe("POST /api/admin/campaigns (create)", () => {
   it("rejects unauthorized callers before touching the db", async () => {
-    requireAdminToken.mockReturnValue(Response.json({ error: "no" }, { status: 401 }));
+    requireAdminSession.mockResolvedValue(Response.json({ error: "no" }, { status: 401 }));
     const res = await createPost(post({ name: "X", subject: "Y" }));
     expect(res.status).toBe(401);
     expect(insert).not.toHaveBeenCalled();
@@ -73,7 +73,7 @@ describe("GET /api/admin/campaigns (list)", () => {
   const get = () => new Request("http://localhost/api/admin/campaigns");
 
   it("rejects unauthorized callers before touching the db", async () => {
-    requireAdminToken.mockReturnValue(Response.json({ error: "no" }, { status: 401 }));
+    requireAdminSession.mockResolvedValue(Response.json({ error: "no" }, { status: 401 }));
     const res = await listGet(get());
     expect(res.status).toBe(401);
     expect(select).not.toHaveBeenCalled();

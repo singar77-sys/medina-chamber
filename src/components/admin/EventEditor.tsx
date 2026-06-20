@@ -8,10 +8,9 @@ interface Props {
   slug: string;
   event: ChamberEvent;
   initialOverride: CmsEventData | null;
-  adminToken: string;
 }
 
-export function EventEditor({ slug, event, initialOverride, adminToken }: Props) {
+export function EventEditor({ slug, event, initialOverride }: Props) {
   const [override, setOverride] = useState<CmsEventData | null>(initialOverride);
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
@@ -63,8 +62,8 @@ export function EventEditor({ slug, event, initialOverride, adminToken }: Props)
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${adminToken}`,
         },
+        credentials: "same-origin",
         body: JSON.stringify({ slug, data }),
       });
       if (!res.ok) throw new Error(await res.text());
@@ -91,7 +90,7 @@ export function EventEditor({ slug, event, initialOverride, adminToken }: Props)
         `/api/admin/events/details?slug=${encodeURIComponent(slug)}`,
         {
           method: "DELETE",
-          headers: { Authorization: `Bearer ${adminToken}` },
+          credentials: "same-origin",
         },
       );
       if (!res.ok) throw new Error(await res.text());

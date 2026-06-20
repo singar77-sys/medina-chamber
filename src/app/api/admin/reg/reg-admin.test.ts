@@ -1,9 +1,13 @@
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import { signSession } from "@/lib/admin-session";
 
-// Use the REAL requireAdminToken so auth enforcement is actually tested. Stub the
-// expected token (must be >= 16 chars or the guard 503s).
+// Use the REAL requireAdminSession so auth enforcement is actually tested. Stub the
+// expected token (signSession/verifySession need it; must be >= 16 chars or the guard 503s).
 const TOKEN = "test-admin-token-1234567890";
 vi.stubEnv("CHAT_ADMIN_TOKEN", TOKEN);
+
+// signSession is async and needs the env stubbed first, so it's resolved in beforeAll.
+let COOKIE: string;
 
 // Unified db mock. Per-test, set `selectRows` (the single SELECT a route runs)
 // and `returningRows` (the INSERT/UPDATE/DELETE ... RETURNING result).
@@ -41,6 +45,7 @@ let checkin: (req: Request, ctx: Ctx) => Promise<Response>;
 type Ctx = { params: Promise<{ id: string }> };
 
 beforeAll(async () => {
+  COOKIE = await signSession();
   createTicket = (await import("./events/[id]/tickets/route")).POST;
   ({ PATCH: patchTicket, DELETE: deleteTicket } = await import("./tickets/[id]/route"));
   patchEvent = (await import("./events/[id]/route")).PATCH;
@@ -58,7 +63,7 @@ function req(body: unknown, { auth = true, method = "POST" } = {}): Request {
     method,
     headers: {
       "content-type": "application/json",
-      ...(auth ? { authorization: `Bearer ${TOKEN}` } : {}),
+      ...(auth ? { cookie: `admin_session=${COOKIE}` } : {}),
     },
     body: JSON.stringify(body),
   });
@@ -66,7 +71,7 @@ function req(body: unknown, { auth = true, method = "POST" } = {}): Request {
 const P = (id: string): Ctx => ({ params: Promise.resolve({ id }) });
 
 describe("admin reg API — auth", () => {
-  it("401s every route without a Bearer token", async () => {
+  it("401s every route without a session cookie", async () => {
     expect((await createTicket(req({}, { auth: false }), P("e1"))).status).toBe(401);
     expect((await patchTicket(req({}, { auth: false }), P("t1"))).status).toBe(401);
     expect((await deleteTicket(req({}, { auth: false, method: "DELETE" }), P("t1"))).status).toBe(401);
@@ -79,7 +84,7 @@ describe("admin reg API — auth", () => {
   it("401s on a wrong token", async () => {
     const bad = new Request("http://localhost/x", {
       method: "POST",
-      headers: { "content-type": "application/json", authorization: "Bearer wrong" },
+      headers: { "content-type": "application/json", cookie: "admin_session=tampered.invalid" },
       body: "{}",
     });
     expect((await createTicket(bad, P("e1"))).status).toBe(401);

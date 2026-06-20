@@ -4,7 +4,7 @@
  *
  * Uses SubtleCrypto (Web Crypto API) so it runs in both Node.js and
  * Edge runtimes. The signing secret is CHAT_ADMIN_TOKEN — the same
- * credential used by the bearer-token API guard in admin-auth.ts.
+ * credential used by the cookie-session API guard in admin-auth.ts.
  *
  * Cookie value format: base64url(payload).base64url(hmac)
  * Payload: JSON { iat: number, exp: number }
@@ -13,6 +13,21 @@
 
 export const ADMIN_COOKIE = "admin_session";
 const TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
+
+/**
+ * Minimum accepted length for CHAT_ADMIN_TOKEN. A shorter (or unset) secret is
+ * treated as "admin not configured" everywhere — the single source of the
+ * fail-closed floor shared by signSession, verifySession, the API guard
+ * (admin-auth.ts), and the login route (api/admin/auth).
+ */
+export const MIN_ADMIN_SECRET_LEN = 16;
+
+/** The configured admin secret, or null if unset / below the minimum length. */
+export function getAdminSecret(): string | null {
+  const secret = process.env.CHAT_ADMIN_TOKEN;
+  if (!secret || secret.length < MIN_ADMIN_SECRET_LEN) return null;
+  return secret;
+}
 
 interface Payload {
   iat: number;
@@ -48,8 +63,8 @@ function toBuffer(s: string): ArrayBuffer {
 }
 
 export async function signSession(): Promise<string> {
-  const secret = process.env.CHAT_ADMIN_TOKEN;
-  if (!secret) throw new Error("CHAT_ADMIN_TOKEN not configured");
+  const secret = getAdminSecret();
+  if (!secret) throw new Error("CHAT_ADMIN_TOKEN not configured or too short");
 
   const payload: Payload = { iat: Date.now(), exp: Date.now() + TTL_MS };
   const payloadB64 = toB64u(toBuffer(JSON.stringify(payload)));
@@ -61,7 +76,7 @@ export async function signSession(): Promise<string> {
 }
 
 export async function verifySession(token: string): Promise<boolean> {
-  const secret = process.env.CHAT_ADMIN_TOKEN;
+  const secret = getAdminSecret();
   if (!secret) return false;
 
   const dot = token.lastIndexOf(".");

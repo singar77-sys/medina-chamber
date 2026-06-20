@@ -4,14 +4,12 @@ import { useState, useRef } from "react";
 
 interface Props {
   eventSlug: string;
-  adminToken: string;
   initialImageUrl: string | null;
   onImageChange: (url: string | null) => void;
 }
 
 export function EventGraphicUploader({
   eventSlug,
-  adminToken,
   initialImageUrl,
   onImageChange,
 }: Props) {
@@ -32,7 +30,7 @@ export function EventGraphicUploader({
     try {
       const res = await fetch("/api/admin/media/upload", {
         method: "POST",
-        headers: { Authorization: `Bearer ${adminToken}` },
+        credentials: "same-origin",
         body: fd,
       });
       const data = await res.json();
@@ -52,7 +50,7 @@ export function EventGraphicUploader({
 
     await fetch(`/api/admin/events/graphic-image?slug=${encodeURIComponent(eventSlug)}`, {
       method: "DELETE",
-      headers: { Authorization: `Bearer ${adminToken}` },
+      credentials: "same-origin",
     });
 
     setImageUrl(null);

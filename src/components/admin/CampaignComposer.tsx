@@ -29,7 +29,6 @@ export interface CampaignData {
 }
 
 interface Props {
-  adminToken: string;
   tierOptions: TierOption[];
   campaign?: CampaignData;
 }
@@ -61,7 +60,7 @@ function sameSet(a: string[], b: string[]): boolean {
   return JSON.stringify([...a].sort()) === JSON.stringify([...b].sort());
 }
 
-export function CampaignComposer({ adminToken, tierOptions, campaign }: Props) {
+export function CampaignComposer({ tierOptions, campaign }: Props) {
   const editable = !campaign || campaign.status === "draft" || campaign.status === "scheduled";
   const isSent =
     !!campaign && ["sent", "sending", "sent_with_errors"].includes(campaign.status);
@@ -105,7 +104,8 @@ export function CampaignComposer({ adminToken, tierOptions, campaign }: Props) {
   function authFetch(url: string, method: string, body?: unknown) {
     return fetch(url, {
       method,
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${adminToken}` },
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
       body: body === undefined ? undefined : JSON.stringify(body),
     });
   }

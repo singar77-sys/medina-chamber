@@ -12,11 +12,7 @@ const CATEGORIES = [
   "Other",
 ] as const;
 
-interface Props {
-  adminToken: string;
-}
-
-export function NotifyForm({ adminToken }: Props) {
+export function NotifyForm() {
   const [message, setMessage] = useState("");
   const [category, setCategory] = useState<string>(CATEGORIES[0]);
   const [sending, setSending] = useState(false);
@@ -34,8 +30,8 @@ export function NotifyForm({ adminToken }: Props) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${adminToken}`,
         },
+        credentials: "same-origin",
         body: JSON.stringify({ message: message.trim(), category }),
       });
 

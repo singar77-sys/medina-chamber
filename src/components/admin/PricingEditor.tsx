@@ -4,13 +4,12 @@ import { useState } from "react";
 import type { PricingConfig, PricingTier } from "@/lib/cms-store";
 
 interface Props {
-  adminToken: string;
   initialPricing: PricingConfig;
   isOverridden: boolean;
   updatedAt: string | null;
 }
 
-export function PricingEditor({ adminToken, initialPricing, isOverridden, updatedAt }: Props) {
+export function PricingEditor({ initialPricing, isOverridden, updatedAt }: Props) {
   const [tiers, setTiers] = useState<PricingTier[]>(initialPricing.tiers);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -40,8 +39,8 @@ export function PricingEditor({ adminToken, initialPricing, isOverridden, update
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${adminToken}`,
         },
+        credentials: "same-origin",
         body: JSON.stringify({ tiers, faqs: initialPricing.faqs }),
       });
       const data = await res.json();
@@ -61,7 +60,7 @@ export function PricingEditor({ adminToken, initialPricing, isOverridden, update
     try {
       await fetch("/api/admin/pricing", {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${adminToken}` },
+        credentials: "same-origin",
       });
       window.location.reload();
     } catch {

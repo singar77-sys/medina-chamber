@@ -1,13 +1,13 @@
 /**
  * PATCH /api/admin/reg/events/[id] — update an event's registration settings.
  *
- * Admin only (Bearer CHAT_ADMIN_TOKEN). Whitelisted fields only: status
+ * Admin only (admin_session cookie). Whitelisted fields only: status
  * (publish/unpublish/cancel), maxCapacity, and the registration window. This is
  * how staff turn an imported event into a live, on-site-registerable one
  * (status → published, with tickets added separately).
  */
 
-import { requireAdminToken } from "@/lib/admin-auth";
+import { requireAdminSession } from "@/lib/admin-auth";
 import { eq, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { events } from "@/lib/db/schema";
@@ -29,7 +29,7 @@ export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const { id } = await params;

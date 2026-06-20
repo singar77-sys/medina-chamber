@@ -10,7 +10,7 @@
  */
 
 import { NextResponse } from "next/server";
-import { requireAdminToken } from "@/lib/admin-auth";
+import { requireAdminSession } from "@/lib/admin-auth";
 import { generateText } from "ai";
 import { anthropic } from "@ai-sdk/anthropic";
 import type { GraphicConfigDraft } from "@/lib/graphic-template";
@@ -112,7 +112,7 @@ DESIGN GUIDANCE:
 Return ONLY the JSON object. No code fences, no explanation.`;
 
 export async function POST(req: Request): Promise<Response> {
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   let body: { eventTypeSlug?: string; stylePrompt?: string };

@@ -5,9 +5,10 @@
  *
  * Publish/unpublish + capacity (PATCH /api/admin/reg/events/[id]) and ticket
  * add/delete (POST .../tickets, DELETE /api/admin/reg/tickets/[id]). All calls
- * carry the admin Bearer token passed down from the (proxy-gated) server page.
- * Adding the first ticket is what makes the event registerable on the public
- * site, so this is where staff turn an imported event "live".
+ * authenticate via the httpOnly admin_session cookie (sent automatically on
+ * same-origin fetch). Adding the first ticket is what makes the event
+ * registerable on the public site, so this is where staff turn an imported
+ * event "live".
  */
 
 import { useState } from "react";
@@ -30,13 +31,11 @@ function dollars(cents: number): string {
 }
 
 export function TicketManager({
-  adminToken,
   eventId,
   initialStatus,
   initialCapacity,
   initialTickets,
 }: {
-  adminToken: string;
   eventId: string;
   initialStatus: string;
   initialCapacity: number | null;
@@ -59,7 +58,8 @@ export function TicketManager({
   function authFetch(url: string, method: string, body?: unknown) {
     return fetch(url, {
       method,
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${adminToken}` },
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
       body: body === undefined ? undefined : JSON.stringify(body),
     });
   }

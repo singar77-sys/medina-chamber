@@ -5,7 +5,7 @@
  * histograms. Cheap read (just counters, no transcript scan).
  *
  * Query params:
- *   token=<string>     auth (also accepts Authorization: Bearer)
+ *   (auth via admin_session cookie)
  *   from=YYYY-MM-DD    optional; defaults to 30 days ago
  *   to=YYYY-MM-DD      optional; defaults to today
  *
@@ -19,7 +19,7 @@
  */
 
 import { NextResponse } from "next/server";
-import { requireAdminToken } from "@/lib/admin-auth";
+import { requireAdminSession } from "@/lib/admin-auth";
 import { getStats } from "@/lib/chat-log";
 import { healthLimiter, applyRateLimit } from "@/lib/rate-limit";
 
@@ -40,7 +40,7 @@ export async function GET(req: Request) {
   const limited = await applyRateLimit(req, healthLimiter);
   if (limited) return limited;
 
-  const authErr = requireAdminToken(req);
+  const authErr = await requireAdminSession(req);
   if (authErr) return authErr;
 
   const url = new URL(req.url);

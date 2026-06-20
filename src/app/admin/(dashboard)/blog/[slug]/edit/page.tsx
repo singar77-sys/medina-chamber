@@ -13,15 +13,13 @@ export default async function EditBlogPostPage({ params }: Props) {
   const post = await getCmsBlogPost(slug);
   if (!post) notFound();
 
-  const adminToken = process.env.CHAT_ADMIN_TOKEN ?? "";
-
   return (
     <div className="px-6 py-6 max-w-3xl">
       <h1 className="text-xl font-semibold text-gray-900 mb-1">Edit Post</h1>
       <p className="text-sm text-gray-500 mb-6">
         <code>/news/blog/{slug}</code>
       </p>
-      <BlogEditor mode="edit" post={post} adminToken={adminToken} />
+      <BlogEditor mode="edit" post={post} />
     </div>
   );
 }

@@ -22,11 +22,10 @@ const EVENT_TYPE_LABELS: Record<string, string> = {
 };
 
 interface Props {
-  adminToken: string;
   initialTemplates: GraphicConfig[];
 }
 
-export function GraphicTemplatesClient({ adminToken, initialTemplates }: Props) {
+export function GraphicTemplatesClient({ initialTemplates }: Props) {
   const [templates, setTemplates] = useState<GraphicConfig[]>(initialTemplates);
   const [creating, setCreating] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -37,7 +36,7 @@ export function GraphicTemplatesClient({ adminToken, initialTemplates }: Props) 
     try {
       await fetch(`/api/admin/graphic-templates?id=${encodeURIComponent(id)}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${adminToken}` },
+        credentials: "same-origin",
       });
       setTemplates((prev) => prev.filter((t) => t.id !== id));
     } finally {
@@ -72,7 +71,6 @@ export function GraphicTemplatesClient({ adminToken, initialTemplates }: Props) 
 
       {creating && (
         <GraphicTemplateCreator
-          adminToken={adminToken}
           onSaved={handleSaved}
           onCancel={() => setCreating(false)}
         />

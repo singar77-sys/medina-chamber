@@ -13,6 +13,7 @@ import { and, desc, eq, isNotNull, isNull, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { contacts, emailSends, emailCampaigns } from "@/lib/db/schema";
 import { verifyUnsubscribeToken } from "@/lib/email/unsubscribe-token";
+import { applyRateLimit, emailUnsubscribeLimiter } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -70,6 +71,9 @@ function page(ok: boolean): string {
 }
 
 export async function GET(req: Request): Promise<Response> {
+  const limited = await applyRateLimit(req, emailUnsubscribeLimiter);
+  if (limited) return limited;
+
   const token = new URL(req.url).searchParams.get("token") ?? "";
   const ok = await unsubscribe(token);
   return new Response(page(ok), {
@@ -79,6 +83,9 @@ export async function GET(req: Request): Promise<Response> {
 }
 
 export async function POST(req: Request): Promise<Response> {
+  const limited = await applyRateLimit(req, emailUnsubscribeLimiter);
+  if (limited) return limited;
+
   const token = new URL(req.url).searchParams.get("token") ?? "";
   const ok = await unsubscribe(token);
   return new Response(ok ? "unsubscribed" : "invalid token", { status: ok ? 200 : 400 });

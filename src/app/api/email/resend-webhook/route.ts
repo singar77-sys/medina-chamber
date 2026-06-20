@@ -10,11 +10,17 @@
 import { db } from "@/lib/db";
 import { verifyResendSignature } from "@/lib/email/resend-signature";
 import { recordResendEvent } from "@/lib/email/track-resend-event";
+import { applyRateLimit, resendWebhookLimiter } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request): Promise<Response> {
+  // IP rate limit first — before the secret check, raw-body read, and signature
+  // verification — so an unauthenticated flood is the cheapest possible reject.
+  const limited = await applyRateLimit(req, resendWebhookLimiter);
+  if (limited) return limited;
+
   const secret = process.env.RESEND_WEBHOOK_SECRET;
   if (!secret) {
     console.error("[resend-webhook] RESEND_WEBHOOK_SECRET is not configured");

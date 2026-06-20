@@ -1,4 +1,11 @@
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import { applyRateLimit } from "@/lib/rate-limit";
+
+vi.mock("@/lib/rate-limit", () => ({
+  applyRateLimit: vi.fn(async () => null),
+  emailUnsubscribeLimiter: {},
+}));
+const mockedApplyRateLimit = vi.mocked(applyRateLimit);
 
 const verifyUnsubscribeToken = vi.fn<(t: string) => string | null>(() => "contact-1");
 vi.mock("@/lib/email/unsubscribe-token", () => ({ verifyUnsubscribeToken }));
@@ -65,5 +72,25 @@ describe("unsubscribe", () => {
   it("POST (one-click) unsubscribes and returns 200", async () => {
     const res = await POST(req("good", "POST"));
     expect(res.status).toBe(200);
+  });
+
+  it("GET 429s when rate limited, before verifying the token or touching the DB", async () => {
+    mockedApplyRateLimit.mockResolvedValueOnce(
+      new Response("Too many requests, please slow down.", { status: 429 }),
+    );
+    const res = await GET(req("good"));
+    expect(res.status).toBe(429);
+    expect(verifyUnsubscribeToken).not.toHaveBeenCalled();
+    expect(update).not.toHaveBeenCalled();
+  });
+
+  it("POST 429s when rate limited, before verifying the token or touching the DB", async () => {
+    mockedApplyRateLimit.mockResolvedValueOnce(
+      new Response("Too many requests, please slow down.", { status: 429 }),
+    );
+    const res = await POST(req("good", "POST"));
+    expect(res.status).toBe(429);
+    expect(verifyUnsubscribeToken).not.toHaveBeenCalled();
+    expect(update).not.toHaveBeenCalled();
   });
 });

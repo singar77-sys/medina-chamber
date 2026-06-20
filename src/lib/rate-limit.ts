@@ -99,6 +99,16 @@ export const searchLimiter = makeLimiter(30, "rl:search");
 // 60 req/min per IP for health probe — uptime monitors poll frequently
 export const healthLimiter = makeLimiter(60, "rl:health");
 
+// 60 req/min per IP for the public unsubscribe endpoint. The HMAC token is
+// unforgeable, but each GET click still runs a DB UPDATE attempt — a human
+// clicks once, so 60/min is generous while capping an unauthenticated flood.
+export const emailUnsubscribeLimiter = makeLimiter(60, "rl:email-unsub");
+
+// 600 req/min per IP for the Resend webhook — sized comfortably above Resend's
+// legitimate delivery-event burst, applied before signature verification so an
+// unauthenticated flood is rejected before the HMAC check and raw-body read.
+export const resendWebhookLimiter = makeLimiter(600, "rl:resend-webhook");
+
 /**
  * Extracts the client IP from a request. Trusts x-forwarded-for from
  * Vercel's edge (where the proxy is well-known and sets this header

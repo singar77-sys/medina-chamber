@@ -22,7 +22,8 @@ function selResult() {
   };
 }
 const where = vi.fn(() => selResult());
-const from = vi.fn(() => ({ where }));
+const leftJoin = vi.fn(() => ({ where }));
+const from = vi.fn(() => ({ where, leftJoin }));
 const select = vi.fn(() => ({ from }));
 
 const returning = vi.fn(async () => returningRows);
@@ -35,6 +36,10 @@ const delWhere = vi.fn(() => ({ returning }));
 const del = vi.fn(() => ({ where: delWhere }));
 
 vi.mock("@/lib/db", () => ({ db: { select, insert, update, delete: del } }));
+
+// event_attended logging is best-effort; mock it so we can assert the touchpoint.
+const logEngagement = vi.fn(async (_db: unknown, _input: Record<string, unknown>) => {});
+vi.mock("@/lib/engagement", () => ({ logEngagement }));
 
 let createTicket: (req: Request, ctx: Ctx) => Promise<Response>;
 let patchTicket: (req: Request, ctx: Ctx) => Promise<Response>;
@@ -163,6 +168,16 @@ describe("check-in", () => {
     const res = await checkin(req({ checkedIn: true }), P("r1"));
     expect(res.status).toBe(200);
     expect(set).toHaveBeenCalledWith(expect.objectContaining({ status: "attended" }));
+  });
+
+  it("logs event_attended for a member check-in", async () => {
+    selectRows = [
+      { id: "r1", status: "confirmed", organizationId: "o1", contactId: "c1", eventId: "e1", eventTitle: "Brew" },
+    ];
+    returningRows = [{ id: "r1", status: "attended" }];
+    await checkin(req({ checkedIn: true }), P("r1"));
+    expect(logEngagement).toHaveBeenCalledTimes(1);
+    expect(logEngagement.mock.calls[0][1]).toMatchObject({ eventType: "event_attended", organizationId: "o1" });
   });
 
   it("409s checking in a non-confirmed (e.g. waitlisted) registration", async () => {

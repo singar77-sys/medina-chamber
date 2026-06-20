@@ -15,6 +15,7 @@ import {
   PORTAL_COOKIE,
   SESSION_MAX_AGE,
 } from "@/lib/portal-session";
+import { logEngagement } from "@/lib/engagement";
 
 export const runtime = "nodejs";
 
@@ -62,5 +63,14 @@ export async function GET(req: Request): Promise<Response> {
     maxAge: SESSION_MAX_AGE,
     path: "/",
   });
+
+  // Member-ROI signal — a portal login. Best-effort, after the cookie is set so a
+  // logging failure can never affect the login (matches every other call site).
+  await logEngagement(db, {
+    eventType: "portal_login",
+    organizationId: contact.organizationId,
+    contactId: contact.id,
+  });
+
   return res;
 }

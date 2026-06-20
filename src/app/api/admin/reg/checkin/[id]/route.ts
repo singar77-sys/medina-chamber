@@ -10,7 +10,8 @@
 import { requireAdminSession } from "@/lib/admin-auth";
 import { eq, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { eventRegistrations } from "@/lib/db/schema";
+import { eventRegistrations, events } from "@/lib/db/schema";
+import { logEngagement } from "@/lib/engagement";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -35,8 +36,16 @@ export async function POST(
   }
 
   const [reg] = await db
-    .select({ id: eventRegistrations.id, status: eventRegistrations.status })
+    .select({
+      id: eventRegistrations.id,
+      status: eventRegistrations.status,
+      contactId: eventRegistrations.contactId,
+      organizationId: eventRegistrations.organizationId,
+      eventId: eventRegistrations.eventId,
+      eventTitle: events.title,
+    })
     .from(eventRegistrations)
+    .leftJoin(events, eq(eventRegistrations.eventId, events.id))
     .where(eq(eventRegistrations.id, id))
     .limit(1);
   if (!reg) return Response.json({ error: "registration not found" }, { status: 404 });
@@ -62,6 +71,17 @@ export async function POST(
       status: eventRegistrations.status,
       checkedInAt: eventRegistrations.checkedInAt,
     });
+
+  // Member-ROI signal: record attendance when checking IN (not out), and only
+  // for member registrations (guests have no org/contact to attribute to).
+  if (body.checkedIn && (reg.organizationId || reg.contactId)) {
+    await logEngagement(db, {
+      eventType: "event_attended",
+      organizationId: reg.organizationId,
+      contactId: reg.contactId,
+      metadata: { eventId: reg.eventId, eventTitle: reg.eventTitle ?? undefined },
+    });
+  }
 
   return Response.json({ registration: updated });
 }

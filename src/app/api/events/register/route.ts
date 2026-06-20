@@ -33,6 +33,7 @@ import { EMAIL_RE } from "@/lib/email";
 import { stripe } from "@/lib/stripe/client";
 import { ensureStripeCustomer } from "@/lib/stripe/customer";
 import { notifyRegistration } from "@/lib/events/notify-registration";
+import { logEngagement } from "@/lib/engagement";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -208,6 +209,14 @@ export async function POST(req: Request): Promise<Response> {
         .where(eq(events.id, event.id));
       return inserted;
     });
+    if (organizationId) {
+      await logEngagement(db, {
+        eventType: "event_registered",
+        organizationId,
+        contactId,
+        metadata: { eventId: event.id, eventTitle: event.title, status: "waitlisted" },
+      });
+    }
     await notifyRegistration(reg.id);
     return Response.json({ status: "waitlisted", registrationId: reg.id });
   }
@@ -234,6 +243,14 @@ export async function POST(req: Request): Promise<Response> {
       }
       return inserted;
     });
+    if (organizationId) {
+      await logEngagement(db, {
+        eventType: "event_registered",
+        organizationId,
+        contactId,
+        metadata: { eventId: event.id, eventTitle: event.title, status: "confirmed" },
+      });
+    }
     await notifyRegistration(reg.id);
     return Response.json({ status: "confirmed", registrationId: reg.id });
   }
@@ -281,6 +298,14 @@ export async function POST(req: Request): Promise<Response> {
       success_url: `${origin}/events/${returnSlug}?registered=1`,
       cancel_url: `${origin}/events/${returnSlug}?registration_canceled=1`,
     });
+    if (organizationId) {
+      await logEngagement(db, {
+        eventType: "event_registered",
+        organizationId,
+        contactId,
+        metadata: { eventId: event.id, eventTitle: event.title, status: "pending" },
+      });
+    }
     return Response.json({ url: checkoutSession.url, registrationId: reg.id });
   } catch (err) {
     // Don't leave an orphaned pending registration if Checkout creation fails.

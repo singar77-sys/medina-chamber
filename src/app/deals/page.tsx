@@ -71,7 +71,7 @@ export default async function DealsPage() {
                   )}
                   {link && (
                     <a
-                      href={link}
+                      href={`/go/deal/${d.id}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-body-sm font-semibold mt-f13 text-accent"

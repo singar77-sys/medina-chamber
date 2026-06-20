@@ -30,6 +30,7 @@ import {
   contacts,
 } from "@/lib/db/schema";
 import { sendRenewalConfirmation } from "./renewal-email";
+import { logEngagement } from "@/lib/engagement";
 
 export async function processRenewalPayment(db: DB, invoiceId: string): Promise<boolean> {
   const [inv] = await db
@@ -62,9 +63,16 @@ export async function processRenewalPayment(db: DB, invoiceId: string): Promise<
         ),
       ),
     )
-    .returning({ id: memberships.id });
+    .returning({ id: memberships.id, organizationId: memberships.organizationId });
 
   if (!advanced) return false; // already advanced for this period, or not the current renewal
+
+  // Member-ROI signal — a completed renewal. Best-effort, never blocks the renewal.
+  await logEngagement(db, {
+    eventType: "renewal_completed",
+    organizationId: advanced.organizationId,
+    metadata: { invoiceId, renewedThrough: inv.periodEnd },
+  });
 
   // Best-effort confirmation to the primary contact — never blocks the renewal.
   try {

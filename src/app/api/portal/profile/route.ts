@@ -27,6 +27,7 @@ import { contacts, organizations } from "@/lib/db/schema";
 import { verifyPortalSession, PORTAL_COOKIE } from "@/lib/portal-session";
 import { limitPortalProfile } from "@/lib/rate-limit";
 import { EMAIL_RE } from "@/lib/email";
+import { logEngagement } from "@/lib/engagement";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -218,6 +219,14 @@ export async function POST(req: Request): Promise<Response> {
         .set({ ...orgUpdate, updatedAt: sql`now()` })
         .where(eq(organizations.id, session.organizationId));
     }
+  });
+
+  // Member-ROI signal — the member updated their profile/listing. Best-effort.
+  await logEngagement(db, {
+    eventType: "profile_updated",
+    organizationId: session.organizationId,
+    contactId: session.contactId,
+    metadata: { contact: hasContact, org: hasOrg },
   });
 
   return Response.json({ ok: true });

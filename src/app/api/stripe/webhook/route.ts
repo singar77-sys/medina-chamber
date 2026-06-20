@@ -25,6 +25,7 @@ import { stripe } from "@/lib/stripe/client";
 import { db } from "@/lib/db";
 import {
   invoices,
+  payments,
   events,
   eventTickets,
   eventRegistrations,
@@ -219,28 +220,43 @@ export async function POST(req: Request) {
 
       case "charge.refunded": {
         const charge = event.data.object as Stripe.Charge;
-        const organizationId = charge.metadata?.organizationId;
-        const invoiceId = charge.metadata?.invoiceId;
 
-        if (!organizationId || !invoiceId) {
+        // Attribution: PaymentIntent / Checkout metadata does NOT propagate to
+        // the Charge, so charge.metadata is empty here. The original charge was
+        // recorded in the ledger with stripeChargeId = charge.id — look that row
+        // up to recover the invoice + org it paid.
+        const [orig] = await db
+          .select({ invoiceId: payments.invoiceId, organizationId: payments.organizationId })
+          .from(payments)
+          .where(eq(payments.stripeChargeId, charge.id))
+          .limit(1);
+
+        if (!orig?.invoiceId) {
           console.warn(
-            `[stripe webhook] charge.refunded ${charge.id} has no organizationId/invoiceId metadata — skipping`,
+            `[stripe webhook] charge.refunded ${charge.id}: no recorded charge to attribute — skipping`,
           );
           break;
         }
 
-        // Stripe returns refunds most-recent-first; the head is the refund this
-        // event is about. Its id is the idempotency key — do NOT reuse the
-        // charge id (that belongs to the original charge row).
+        // Stripe returns refunds most-recent-first; data[0] is the refund THIS
+        // event represents. Record ITS delta — NOT charge.amount_refunded, which
+        // is the cumulative total across all refunds — keyed on the refund id so
+        // a redelivery is idempotent and partial refunds each record once.
         const latestRefund = charge.refunds?.data?.[0];
+        if (!latestRefund) {
+          console.warn(
+            `[stripe webhook] charge.refunded ${charge.id}: no refund detail on the event — skipping`,
+          );
+          break;
+        }
 
         await recordPayment(db, {
-          organizationId,
-          invoiceId,
+          organizationId: orig.organizationId,
+          invoiceId: orig.invoiceId,
           type: "refund",
           method: "card",
-          amountCents: -charge.amount_refunded,
-          stripeRefundId: latestRefund?.id,
+          amountCents: -latestRefund.amount,
+          stripeRefundId: latestRefund.id,
         });
         break;
       }

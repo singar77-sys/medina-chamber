@@ -87,7 +87,7 @@ export async function notifyStaffNewMember(p: StaffNewMemberParams): Promise<voi
   const html = `
     <div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#1a1a1a">
       <h2 style="color:#0C1B33;margin-bottom:4px">New paid member 🎉</h2>
-      <p style="color:#666;margin-top:0">A membership was just purchased and activated on medinachamber.com.</p>
+      <p style="color:#666;margin-top:0">A membership was just purchased and activated on medinaohchamber.com.</p>
       <table style="width:100%;border-collapse:collapse;margin-top:16px">
         <tr><td style="padding:8px 0;border-bottom:1px solid #eee;color:#666;width:40%">Business</td><td style="padding:8px 0;border-bottom:1px solid #eee;font-weight:600">${escapeHtml(p.businessName)}</td></tr>
         <tr><td style="padding:8px 0;border-bottom:1px solid #eee;color:#666">Contact</td><td style="padding:8px 0;border-bottom:1px solid #eee">${escapeHtml(p.contactName)} &lt;${escapeHtml(p.email)}&gt;</td></tr>
@@ -98,7 +98,7 @@ export async function notifyStaffNewMember(p: StaffNewMemberParams): Promise<voi
 
   try {
     await resend.emails.send({
-      from: "Greater Medina Chamber Membership <chamber@huntersystems.dev>",
+      from: "Greater Medina Chamber Membership <noreply@medinaohchamber.com>",
       replyTo: p.email,
       to: CHAMBER_NOTIFY_EMAIL,
       subject: `New member: ${p.businessName} (${p.tierName})`,

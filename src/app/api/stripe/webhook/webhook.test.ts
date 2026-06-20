@@ -22,6 +22,13 @@ const dbUpdate = vi.fn(() => ({
   set: () => ({ where: vi.fn().mockResolvedValue(undefined) }),
 }));
 
+// charge.refunded path: db.select(...).from(payments).where(...).limit(1) → the
+// original charge's ledger row (for attribution), or [] if we never recorded it.
+let chargeRow: Record<string, unknown> | undefined;
+const dbSelect = vi.fn(() => ({
+  from: () => ({ where: () => ({ limit: vi.fn(async () => (chargeRow ? [chargeRow] : [])) }) }),
+}));
+
 // Event-registration confirm path:
 // db.transaction(tx => tx.select(...).limit(1).for("update") + tx.update(...) ×N).
 let regRow: Record<string, unknown> | undefined;
@@ -37,7 +44,7 @@ const transaction = vi.fn(
     fn({ select: txSelect, update: txUpdate }),
 );
 
-vi.mock("@/lib/db", () => ({ db: { update: dbUpdate, transaction } }));
+vi.mock("@/lib/db", () => ({ db: { update: dbUpdate, transaction, select: dbSelect } }));
 
 const notifyRegistration = vi.fn(async () => {});
 vi.mock("@/lib/events/notify-registration", () => ({ notifyRegistration }));
@@ -67,6 +74,7 @@ afterEach(() => {
   processJoinPayment.mockClear();
   processRenewalPayment.mockClear();
   regRow = undefined;
+  chargeRow = undefined;
 });
 
 function makeRequest(payload: string, signature: string): Request {
@@ -303,5 +311,48 @@ describe("POST /api/stripe/webhook — join", () => {
       stripeChargeId: "ch_j",
     });
     expect(recordPayment).not.toHaveBeenCalled(); // not the dues branch
+  });
+});
+
+describe("POST /api/stripe/webhook — charge.refunded", () => {
+  it("attributes off the original charge + records the refund DELTA (not the cumulative)", async () => {
+    chargeRow = { invoiceId: "inv1", organizationId: "org1" };
+    const event = {
+      id: "evt_refund",
+      type: "charge.refunded",
+      data: {
+        object: {
+          id: "ch_1",
+          amount_refunded: 5000, // cumulative across refunds — must NOT be used
+          refunds: { data: [{ id: "re_1", amount: 2500 }] }, // this event's delta
+        },
+      },
+    };
+    const { payload, sig } = signed(event);
+    const res = await POST(makeRequest(payload, sig));
+
+    expect(res.status).toBe(200);
+    expect(recordPayment).toHaveBeenCalledTimes(1);
+    const [, arg] = recordPayment.mock.calls[0];
+    expect(arg).toMatchObject({
+      organizationId: "org1",
+      invoiceId: "inv1",
+      type: "refund",
+      amountCents: -2500, // the delta, negative — not -5000
+      stripeRefundId: "re_1",
+    });
+  });
+
+  it("acks (200) and skips when the original charge was never recorded in the ledger", async () => {
+    chargeRow = undefined;
+    const event = {
+      id: "evt_refund_unknown",
+      type: "charge.refunded",
+      data: { object: { id: "ch_unknown", refunds: { data: [{ id: "re_x", amount: 1000 }] } } },
+    };
+    const { payload, sig } = signed(event);
+    const res = await POST(makeRequest(payload, sig));
+    expect(res.status).toBe(200);
+    expect(recordPayment).not.toHaveBeenCalled();
   });
 });

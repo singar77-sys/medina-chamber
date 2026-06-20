@@ -13,8 +13,9 @@
  * Idempotency:
  *   - Invoice creation checks for an existing invoice with period_start = renewal_date
  *   - Status transitions only touch rows that qualify; safe to run multiple times per day
- *   - Notice emails use exact-day matching so a double-run won't send duplicates
- *     (Resend's rate limits also provide a backstop)
+ *   - Notice emails stamp invoices.renewal_notice_sent_days after sending, and the
+ *     notice query skips stages already sent — so a same-day re-run / retry / manual
+ *     trigger won't re-email the member.
  */
 
 import { db } from "@/lib/db";
@@ -179,6 +180,7 @@ async function sendRenewalNotices(today: Date, daysOut: number, result: RenewalR
       AND m.renewal_date::text = ${targetDate}
       AND i.status IN ('pending', 'draft')
       AND i.amount_paid_cents < i.amount_cents
+      AND (i.renewal_notice_sent_days IS NULL OR i.renewal_notice_sent_days > ${daysOut})
   `) as Array<{
     membership_id: string;
     organization_id: string;
@@ -212,6 +214,13 @@ async function sendRenewalNotices(today: Date, daysOut: number, result: RenewalR
           daysOut,
         }),
       });
+
+      // Mark this stage sent so a same-day re-run / retry won't re-email it.
+      await db.execute(sql`
+        UPDATE invoices
+        SET    renewal_notice_sent_days = ${daysOut}, updated_at = now()
+        WHERE  id = ${row.invoice_id}
+      `);
 
       if (daysOut === 30) result.notices30Sent++;
       else               result.notices7Sent++;

@@ -1,4 +1,4 @@
-import { afterAll, describe, expect, it } from "vitest";
+import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { deriveInvoiceStatus, recordPayment } from "./ledger";
 
 // ── deriveInvoiceStatus (pure) ───────────────────────────────────────────────
@@ -27,6 +27,73 @@ describe("deriveInvoiceStatus", () => {
 
   it("returns 'pending' for a zero-amount invoice with a positive paid total", () => {
     expect(deriveInvoiceStatus(0, 500)).toBe("pending");
+  });
+});
+
+// ── recordPayment idempotency (mocked — runs in CI, no DB) ───────────────────
+//
+// The integration suite below proves the real flow but is skipped without
+// staging creds, so the central money invariant — a redelivered Stripe webhook
+// must never double-record a payment — would otherwise have ZERO enforcement in
+// CI. These pin the two idempotency guards (the check-first fast path and the
+// unique-violation race recovery) against a mock db.
+
+describe("recordPayment idempotency (mocked)", () => {
+  let selectQueue: unknown[][];
+  const limit = vi.fn(async () => selectQueue.shift() ?? []);
+  const where = vi.fn(() => ({ limit }));
+  const from = vi.fn(() => ({ where }));
+  const select = vi.fn(() => ({ from }));
+  const transaction = vi.fn();
+  const mockDb = { select, transaction } as never;
+
+  const input = {
+    organizationId: "o1",
+    invoiceId: "inv1",
+    type: "charge" as const,
+    method: "card" as const,
+    amountCents: 10000,
+    stripeChargeId: "ch_1",
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    selectQueue = [];
+  });
+
+  it("redelivered charge (stripeChargeId already recorded) is a no-op — never inserts", async () => {
+    // findExisting → the payment row already exists; buildHitResult → its invoice.
+    selectQueue = [[{ id: "p1", invoiceId: "inv1" }], [{ status: "paid", amountPaidCents: 10000 }]];
+    const res = await recordPayment(mockDb, input);
+    expect(res.idempotentHit).toBe(true);
+    expect(res.invoiceStatus).toBe("paid");
+    expect(transaction).not.toHaveBeenCalled(); // the double-charge guard held
+  });
+
+  it("a concurrent duplicate (insert hits a unique violation) recovers without double-recording", async () => {
+    // pre-insert findExisting → none; the insert throws 23505; post-throw findExisting → now exists.
+    selectQueue = [[], [{ id: "p1", invoiceId: "inv1" }], [{ status: "paid", amountPaidCents: 10000 }]];
+    transaction.mockImplementationOnce(async () => {
+      const e = new Error("duplicate key value violates unique constraint") as Error & { code?: string };
+      e.code = "23505";
+      throw e;
+    });
+    const res = await recordPayment(mockDb, input);
+    expect(res.idempotentHit).toBe(true);
+    expect(transaction).toHaveBeenCalledTimes(1);
+  });
+
+  it("a genuinely new charge enters the insert transaction", async () => {
+    selectQueue = [[]]; // findExisting → none
+    transaction.mockResolvedValueOnce({
+      paymentId: "p2",
+      invoiceStatus: "paid",
+      amountPaidCents: 10000,
+      idempotentHit: false,
+    });
+    const res = await recordPayment(mockDb, { ...input, stripeChargeId: "ch_new" });
+    expect(transaction).toHaveBeenCalledTimes(1);
+    expect(res.idempotentHit).toBe(false);
   });
 });
 

@@ -135,6 +135,11 @@ export const invoices = pgTable("invoices", {
   periodStart: date("period_start"),
   periodEnd: date("period_end"),
 
+  // Last renewal-notice stage (days-out: 30 or 7) emailed for this invoice;
+  // null = none. Lets the daily renewal cron skip notices it already sent, so a
+  // same-day re-run / retry can't re-spam the member. (Off-journal migration 0004.)
+  renewalNoticeSentDays: integer("renewal_notice_sent_days"),
+
   lineItems: jsonb("line_items").$type<InvoiceLineItem[]>(),
 
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),

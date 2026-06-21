@@ -18,7 +18,12 @@ export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
   const { slug } = await params;
-  const found = await getDirectoryMemberBySlug(db, slug);
+  let found: Awaited<ReturnType<typeof getDirectoryMemberBySlug>> = null;
+  try {
+    found = await getDirectoryMemberBySlug(db, slug);
+  } catch (err) {
+    console.error("[directory/member] metadata load failed:", err);
+  }
   if (!found) return { title: "Member Not Found" };
   const member = found.member;
 
@@ -46,7 +51,13 @@ export default async function MemberPage(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const found = await getDirectoryMemberBySlug(db, slug);
+  let found: Awaited<ReturnType<typeof getDirectoryMemberBySlug>> = null;
+  try {
+    found = await getDirectoryMemberBySlug(db, slug);
+  } catch (err) {
+    // DB unreachable — degrade to 404 rather than a 500 error page.
+    console.error("[directory/member] load failed:", err);
+  }
   if (!found) notFound();
   const member = found.member;
 

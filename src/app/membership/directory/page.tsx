@@ -24,8 +24,9 @@ export default async function DirectoryPage() {
   try {
     members = await getDirectoryMembers(db);
   } catch (err) {
-    const host = process.env.DATABASE_URL?.split("@")[1]?.split("/")[0] ?? "unset";
-    console.error("DBHOST2:: " + host, err);
+    const cause = (err as { cause?: { message?: string } })?.cause?.message ?? (err as Error)?.message ?? "?";
+    const url = process.env.DATABASE_URL ?? "";
+    console.error(`DBFAIL:: ${cause} | port=${url.split(":").pop()?.split("/")[0]} ssl=${url.includes("sslmode")}`, err);
   }
   // Full count-sorted category list; the client shows the top 10 until
   // the visitor expands to all categories.

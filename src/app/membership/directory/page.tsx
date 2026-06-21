@@ -24,8 +24,7 @@ export default async function DirectoryPage() {
   try {
     members = await getDirectoryMembers(db);
   } catch (err) {
-    const cause = (err as { cause?: { message?: string } })?.cause?.message ?? (err as Error)?.message ?? "?";
-    console.error("DBCAUSE:: " + cause, err);
+    console.error("[directory] load failed:", err);
   }
   // Full count-sorted category list; the client shows the top 10 until
   // the visitor expands to all categories.

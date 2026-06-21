@@ -2,21 +2,25 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { members, getMemberBySlug, extractCity, getInitials } from "@/data/members";
+import { extractCity, getInitials } from "@/data/members";
+import { db } from "@/lib/db";
+import { getDirectoryMemberBySlug } from "@/lib/directory";
+import { DirectoryViewBeacon } from "@/components/DirectoryViewBeacon";
 
 import { safeJsonLd } from "@/lib/json-ld";
-// ── Static generation ──────────────────────────────────────────
-export function generateStaticParams() {
-  return members.map((m) => ({ slug: m.chamberSlug }));
-}
+
+// Rendered per request off the DB (active members only). No build-time DB
+// dependency, and lets the directory_view beacon attribute real views.
+export const dynamic = "force-dynamic";
 
 // ── Per-page metadata ──────────────────────────────────────────
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
   const { slug } = await params;
-  const member = getMemberBySlug(slug);
-  if (!member) return { title: "Member Not Found" };
+  const found = await getDirectoryMemberBySlug(db, slug);
+  if (!found) return { title: "Member Not Found" };
+  const member = found.member;
 
   const city = extractCity(member.address) || "Medina";
   const descBase = member.description
@@ -42,8 +46,9 @@ export default async function MemberPage(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const member = getMemberBySlug(slug);
-  if (!member) notFound();
+  const found = await getDirectoryMemberBySlug(db, slug);
+  if (!found) notFound();
+  const member = found.member;
 
   const city = extractCity(member.address);
   const initials = getInitials(member.name);
@@ -58,7 +63,7 @@ export default async function MemberPage(
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: member.name,
-    url: member.website || member.gzUrl,
+    url: member.website || undefined,
     telephone: member.phone || undefined,
     address: member.address
       ? {
@@ -100,6 +105,7 @@ export default async function MemberPage(
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
+      <DirectoryViewBeacon slug={member.chamberSlug} />
 
       <div className="mx-auto max-w-5xl px-6 lg:px-8 py-12 lg:py-20">
 
@@ -198,7 +204,7 @@ export default async function MemberPage(
 
               {member.website && (
                 <a
-                  href={member.website}
+                  href={`/go/org/${member.chamberSlug}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2.5 text-body-sm text-text-secondary hover:text-accent transition-colors group"
@@ -215,7 +221,7 @@ export default async function MemberPage(
             <div className="mt-6 flex flex-wrap gap-3">
               {member.website && (
                 <a
-                  href={member.website}
+                  href={`/go/org/${member.chamberSlug}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="

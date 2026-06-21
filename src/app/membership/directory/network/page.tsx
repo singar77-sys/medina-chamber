@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { members, getAllCategories } from "@/data/members";
+import { db } from "@/lib/db";
+import { getDirectoryMembers } from "@/lib/directory";
 import { MemberGraph } from "../MemberGraph";
 
 export const metadata: Metadata = {
@@ -16,8 +17,18 @@ export const metadata: Metadata = {
   robots: { index: false },
 };
 
-export default function MemberNetworkPage() {
-  const categories = getAllCategories();
+export const dynamic = "force-dynamic";
+
+export default async function MemberNetworkPage() {
+  let members: Awaited<ReturnType<typeof getDirectoryMembers>> = [];
+  try {
+    members = await getDirectoryMembers(db);
+  } catch (err) {
+    console.error("[directory/network] load failed:", err);
+  }
+  const categories = [...new Set(members.flatMap((m) => m.categories))].sort((a, b) =>
+    a.localeCompare(b),
+  );
   return (
     <>
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f89 pb-f21">

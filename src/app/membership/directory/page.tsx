@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { members, getTopIndustries } from "@/data/members";
+import { db } from "@/lib/db";
+import { getDirectoryMembers, topIndustries } from "@/lib/directory";
 import { DirectoryClient } from "./DirectoryClient";
 import { FadeIn } from "@/components/FadeIn";
 
@@ -16,10 +17,18 @@ export const metadata: Metadata = {
   alternates: { canonical: "/membership/directory" },
 };
 
-export default function DirectoryPage() {
+export const dynamic = "force-dynamic";
+
+export default async function DirectoryPage() {
+  let members: Awaited<ReturnType<typeof getDirectoryMembers>> = [];
+  try {
+    members = await getDirectoryMembers(db);
+  } catch (err) {
+    console.error("[directory] load failed:", err);
+  }
   // Full count-sorted category list; the client shows the top 10 until
   // the visitor expands to all categories.
-  const industries = getTopIndustries(Infinity);
+  const industries = topIndustries(members);
 
   return (
     <>

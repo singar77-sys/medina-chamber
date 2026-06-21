@@ -24,7 +24,8 @@ export default async function DirectoryPage() {
   try {
     members = await getDirectoryMembers(db);
   } catch (err) {
-    console.error("[directory] load failed:", err);
+    const conn = process.env.DATABASE_URL?.includes("pooler") ? "POOLED" : "DIRECT";
+    console.error(`DBDIAG ${conn} code=${(err as { code?: string })?.code ?? "?"} [directory] load failed:`, err);
   }
   // Full count-sorted category list; the client shows the top 10 until
   // the visitor expands to all categories.

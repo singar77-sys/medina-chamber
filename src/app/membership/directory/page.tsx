@@ -24,7 +24,8 @@ export default async function DirectoryPage() {
   try {
     members = await getDirectoryMembers(db);
   } catch (err) {
-    console.error("[directory] load failed:", err);
+    const host = process.env.DATABASE_URL?.split("@")[1]?.split("/")[0] ?? "unset";
+    console.error("DBHOST2:: " + host, err);
   }
   // Full count-sorted category list; the client shows the top 10 until
   // the visitor expands to all categories.

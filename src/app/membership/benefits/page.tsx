@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
@@ -119,43 +120,61 @@ export default async function BenefitsPage() {
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
 
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
-        <div className="max-w-3xl">
-          <p className="text-overline text-cambridge mb-f8">Membership</p>
-          <h1 className="text-display">
-            <span className="block">Member</span>
-            <span className="block text-accent">Benefits</span>
-          </h1>
-          <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
-            Chamber membership isn&apos;t just a badge, it&apos;s access to the
-            relationships, resources, and advocacy that help Medina County
-            businesses grow.
-          </p>
-          <div className="mt-f21 flex flex-wrap gap-f13">
-            <Link
-              href="/membership/join"
-              className="
-                inline-flex items-center px-f21 py-f13
-                bg-accent hover:bg-accent-hover
-                text-white font-bold text-body
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
-            >
-              Join the Chamber →
-            </Link>
-            <Link
-              href="/membership/pricing"
-              className="
-                inline-flex items-center px-f21 py-f13
-                border border-border-primary hover:border-text-tertiary
-                text-text-primary font-bold text-body-sm
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
-            >
-              View Pricing
-            </Link>
+      <section className="relative overflow-hidden pt-f144 pb-f89">
+        {/* Ghosted "Medina Means Business" branding backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/membership/medina-chamber-member-benefits-hero.webp"
+            alt=""
+            fill
+            priority
+            className="object-cover opacity-[0.33]"
+            sizes="100vw"
+            quality={70}
+          />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <p className="text-overline text-cambridge mb-f8">Membership</p>
+            <h1 className="text-display">
+              <span className="block">Member</span>
+              <span className="block text-accent">Benefits</span>
+            </h1>
+            <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
+              Chamber membership isn&apos;t just a badge, it&apos;s access to the
+              relationships, resources, and advocacy that help Medina County
+              businesses grow.
+            </p>
+            <div className="mt-f21 flex flex-wrap gap-f13">
+              <Link
+                href="/membership/join"
+                className="
+                  inline-flex items-center px-f21 py-f13
+                  bg-accent hover:bg-accent-hover
+                  text-white font-bold text-body
+                  rounded-[var(--radius-md)]
+                  transition-colors
+                "
+              >
+                Join the Chamber →
+              </Link>
+              <Link
+                href="/membership/pricing"
+                className="
+                  inline-flex items-center px-f21 py-f13
+                  border border-border-primary hover:border-text-tertiary
+                  text-text-primary font-bold text-body-sm
+                  rounded-[var(--radius-md)]
+                  transition-colors
+                "
+              >
+                View Pricing
+              </Link>
+            </div>
           </div>
         </div>
       </section>

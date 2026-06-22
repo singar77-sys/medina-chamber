@@ -79,18 +79,36 @@ export default function HallOfFamePage() {
   return (
     <>
       
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
-        <div className="max-w-3xl">
-          <p className="text-overline text-cambridge mb-f8">About</p>
-          <h1 className="text-display">
-            <span className="block">Hall of</span>
-            <span className="block text-accent">Fame</span>
-          </h1>
-          <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
-            Established in 1979, the Hall of Fame honors the people and
-            organizations who have shaped Medina County into an exceptional
-            place to live and work.
-          </p>
+      <section className="relative overflow-hidden pt-f144 pb-f89">
+        {/* Ghosted Medina heritage shadowbox — antique square photo + A.I. Root bee block — backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/people/hall-of-fame/medina-chamber-hall-of-fame-heritage.webp"
+            alt=""
+            fill
+            priority
+            className="object-cover opacity-[0.33]"
+            sizes="100vw"
+            quality={70}
+          />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <p className="text-overline text-cambridge mb-f8">About</p>
+            <h1 className="text-display">
+              <span className="block">Hall of</span>
+              <span className="block text-accent">Fame</span>
+            </h1>
+            <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
+              Established in 1979, the Hall of Fame honors the people and
+              organizations who have shaped Medina County into an exceptional
+              place to live and work.
+            </p>
+          </div>
         </div>
       </section>
 

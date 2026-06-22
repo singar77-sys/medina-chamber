@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { jobs, formatJobDate, totalJobsCount } from "@/data/jobs";
 import { FadeIn } from "@/components/FadeIn";
@@ -19,24 +20,42 @@ export default function JobsPage() {
   return (
     <>
       
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
-        <div className="max-w-3xl">
-          <p className="text-overline text-cambridge mb-f8">Member Resources</p>
-          <h1 className="text-display">
-            <span className="block">Local</span>
-            <span className="block text-accent">Job Board</span>
-          </h1>
-          <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
-            Job openings posted by Greater Medina Chamber member businesses.
-            These are real positions from employers in Medina County, hiring
-            locally, through the Chamber network.
-          </p>
-          {totalJobsCount > 0 && (
-            /* mt-f8 (8px) — count sub-label tuck */
-            <p className="text-body-sm text-text-tertiary mt-f8">
-              {totalJobsCount} open position{totalJobsCount !== 1 ? "s" : ""} currently listed
+      <section className="relative overflow-hidden pt-f144 pb-f89">
+        {/* Ghosted historic Medina Square storefronts backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/medina-chamber-job-board-hero.webp"
+            alt=""
+            fill
+            priority
+            className="object-cover opacity-[0.33]"
+            sizes="100vw"
+            quality={70}
+          />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <p className="text-overline text-cambridge mb-f8">Member Resources</p>
+            <h1 className="text-display">
+              <span className="block">Local</span>
+              <span className="block text-accent">Job Board</span>
+            </h1>
+            <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
+              Job openings posted by Greater Medina Chamber member businesses.
+              These are real positions from employers in Medina County, hiring
+              locally, through the Chamber network.
             </p>
-          )}
+            {totalJobsCount > 0 && (
+              /* mt-f8 (8px) — count sub-label tuck */
+              <p className="text-body-sm text-text-tertiary mt-f8">
+                {totalJobsCount} open position{totalJobsCount !== 1 ? "s" : ""} currently listed
+              </p>
+            )}
+          </div>
         </div>
       </section>
 

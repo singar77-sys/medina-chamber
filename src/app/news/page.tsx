@@ -51,17 +51,35 @@ export default function NewsPage() {
   return (
     <>
       {/* Hero */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
-        <div className="max-w-3xl">
-          <p className="text-overline text-cambridge mb-f8">News</p>
-          <h1 className="text-display">
-            <span className="block">What&apos;s Happening</span>
-            <span className="block text-accent">in Medina</span>
-          </h1>
-          <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
-            Business resources, member announcements, podcast conversations, and
-            stories from across Medina County&apos;s business community.
-          </p>
+      <section className="relative overflow-hidden pt-f144 pb-f89">
+        {/* Ghosted downtown Medina Public Square street-scene backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/medina-chamber-news-hero.webp"
+            alt=""
+            fill
+            priority
+            className="object-cover opacity-[0.33]"
+            sizes="100vw"
+            quality={70}
+          />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <p className="text-overline text-cambridge mb-f8">News</p>
+            <h1 className="text-display">
+              <span className="block">What&apos;s Happening</span>
+              <span className="block text-accent">in Medina</span>
+            </h1>
+            <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
+              Business resources, member announcements, podcast conversations, and
+              stories from across Medina County&apos;s business community.
+            </p>
+          </div>
         </div>
       </section>
 

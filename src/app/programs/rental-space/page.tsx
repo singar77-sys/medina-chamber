@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { memberServices } from "@/data/staff";
@@ -85,43 +86,61 @@ export default function RentalSpacePage() {
       />
 
       {/* Hero */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
-        <div className="max-w-3xl">
-          <p className="text-overline text-cambridge mb-f8">Programs</p>
-          <h1 className="text-display">
-            <span className="block">Meeting</span>
-            <span className="block text-accent">Space</span>
-          </h1>
-          <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
-            Professional meeting and event space in the heart of downtown
-            Medina. Two rooms. Free parking. Everything you need already there.
-          </p>
+      <section className="relative overflow-hidden pt-f144 pb-f89">
+        {/* Ghosted Main Room meeting-space backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/programs/rental-space/medina-chamber-meeting-space-hero.webp"
+            alt=""
+            fill
+            priority
+            className="object-cover opacity-[0.33]"
+            sizes="100vw"
+            quality={70}
+          />
+        </div>
 
-          <div className="mt-f34 flex flex-wrap gap-f13">
-            <a
-              href={mailto(memberServices.email)}
-              className="
-                inline-flex items-center px-8 py-4
-                bg-accent hover:bg-accent-hover
-                text-white font-bold text-body
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
-            >
-              Check Availability →
-            </a>
-            <a
-              href="tel:+13307238773"
-              className="
-                inline-flex items-center px-6 py-4
-                border border-border-primary hover:border-text-tertiary
-                text-text-primary font-bold text-body-sm
-                rounded-[var(--radius-md)]
-                transition-colors
-              "
-            >
-              (330) 723-8773
-            </a>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <p className="text-overline text-cambridge mb-f8">Programs</p>
+            <h1 className="text-display">
+              <span className="block">Meeting</span>
+              <span className="block text-accent">Space</span>
+            </h1>
+            <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
+              Professional meeting and event space in the heart of downtown
+              Medina. Two rooms. Free parking. Everything you need already there.
+            </p>
+
+            <div className="mt-f34 flex flex-wrap gap-f13">
+              <a
+                href={mailto(memberServices.email)}
+                className="
+                  inline-flex items-center px-8 py-4
+                  bg-accent hover:bg-accent-hover
+                  text-white font-bold text-body
+                  rounded-[var(--radius-md)]
+                  transition-colors
+                "
+              >
+                Check Availability →
+              </a>
+              <a
+                href="tel:+13307238773"
+                className="
+                  inline-flex items-center px-6 py-4
+                  border border-border-primary hover:border-text-tertiary
+                  text-text-primary font-bold text-body-sm
+                  rounded-[var(--radius-md)]
+                  transition-colors
+                "
+              >
+                (330) 723-8773
+              </a>
+            </div>
           </div>
         </div>
       </section>

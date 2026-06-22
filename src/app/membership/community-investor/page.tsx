@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
@@ -110,9 +111,26 @@ export default async function CommunityInvestorPage() {
       />
 
       {/* Hero — oxford background signals premium tier; same in both themes
-          to avoid a brighter shade leaking in dark mode. */}
-      <section className="bg-oxford border-b border-white/10">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
+          to avoid a brighter shade leaking in dark mode. Ghosted gazebo
+          backdrop sits under an oxford scrim to keep the dark tier intact. */}
+      <section className="relative overflow-hidden bg-oxford border-b border-white/10">
+        {/* Ghosted Public Square gazebo backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/membership/medina-chamber-community-investor-hero.webp"
+            alt=""
+            fill
+            priority
+            className="object-cover object-center opacity-[0.33]"
+            sizes="100vw"
+            quality={70}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-oxford via-oxford/80 to-oxford/40" />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
           <div className="max-w-3xl">
             <p className="text-overline text-cambridge mb-f8">Membership · Top Tier</p>
             <h1 className="text-display text-white">

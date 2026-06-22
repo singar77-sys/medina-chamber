@@ -32,7 +32,7 @@ const RENAMES = [
   },
   {
     from: "images/photos/7f44d302-e587-4fc1-80c4-7e328329a6e1.png",
-    to:   "images/photos/chamber-three-pillars-backdrop.webp",
+    to:   "images/photos/medina-chamber-headquarters-court-street.webp",
     maxWidth: 2000,
     quality: 78,
   },

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
@@ -89,19 +90,36 @@ export default function GolfOutingPage() {
       />
 
       
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
-        <div className="max-w-3xl">
-          <p className="text-overline text-cambridge mb-f8">Annual Event</p>
-          <h1 className="text-display">
-            <span className="block">Chamber</span>
-            <span className="block text-accent">Golf Outing</span>
-          </h1>
-          <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
-            The premier networking event on the Medina County business calendar.
-            18 holes, great food, on-course games, and a room full of people worth
-            knowing.
-          </p>
-          <div className="mt-f21 flex flex-wrap gap-f13">
+      <section className="relative overflow-hidden pt-f144 pb-f89">
+        {/* Ghosted golf-ball-at-sunset backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/programs/golf-outing/medina-chamber-golf-outing-hero.webp"
+            alt=""
+            fill
+            priority
+            className="object-cover opacity-[0.33]"
+            sizes="100vw"
+            quality={70}
+          />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <p className="text-overline text-cambridge mb-f8">Annual Event</p>
+            <h1 className="text-display">
+              <span className="block">Chamber</span>
+              <span className="block text-accent">Golf Outing</span>
+            </h1>
+            <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
+              The premier networking event on the Medina County business calendar.
+              18 holes, great food, on-course games, and a room full of people worth
+              knowing.
+            </p>
+            <div className="mt-f21 flex flex-wrap gap-f13">
             <a
               href="https://business.medinachamber.com/ap/Events/Register/07FA922CxCwCR"
               target="_blank"
@@ -128,6 +146,7 @@ export default function GolfOutingPage() {
             >
               All Events
             </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -197,8 +216,22 @@ export default function GolfOutingPage() {
       </section>
 
       {/* Pricing */}
-      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+        {/* Ghosted golfers-teeing-up backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/programs/golf-outing/medina-chamber-golf-outing-pricing.webp"
+            alt=""
+            fill
+            className="object-cover opacity-[0.33]"
+            sizes="100vw"
+            quality={70}
+          />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
             <h2 className="text-overline text-cambridge mb-f21">Pricing</h2>
             <div className="grid sm:grid-cols-2 gap-f21 max-w-2xl">

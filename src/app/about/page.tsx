@@ -305,7 +305,22 @@ export default async function AboutPage() {
       )}
 
       {/* Core Values */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      <section className="relative overflow-hidden py-f89 lg:py-f144">
+        {/* Ghosted downtown Medina storefronts backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/about/medina-chamber-values-bg.webp"
+            alt=""
+            fill
+            className="object-cover opacity-[0.33]"
+            sizes="100vw"
+            quality={70}
+          />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <FadeIn>
           <div className="max-w-2xl mb-f21">
             <p className="text-overline text-cambridge mb-f8">What We Stand For</p>
@@ -342,6 +357,7 @@ export default async function AboutPage() {
               </div>
             </FadeIn>
           ))}
+        </div>
         </div>
       </section>
 

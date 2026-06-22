@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { db } from "@/lib/db";
 import { getPublicDeals } from "@/lib/deals";
 
@@ -30,13 +31,31 @@ export default async function DealsPage() {
 
   return (
     <main>
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f89 pb-f34">
-        <div className="max-w-3xl">
-          <h1 className="text-h1 text-text-primary">Member Deals</h1>
-          <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
-            Exclusive offers from Greater Medina Chamber members. Support local — and save. Chamber
-            members can post their own deal from the member portal.
-          </p>
+      <section className="relative overflow-hidden pt-f89 pb-f34">
+        {/* Ghosted downtown Medina car-show / storefronts backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/medina-chamber-deals-hero.webp"
+            alt=""
+            fill
+            priority
+            className="object-cover opacity-[0.33]"
+            sizes="100vw"
+            quality={70}
+          />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <h1 className="text-h1 text-text-primary">Member Deals</h1>
+            <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
+              Exclusive offers from Greater Medina Chamber members. Support local — and save. Chamber
+              members can post their own deal from the member portal.
+            </p>
+          </div>
         </div>
       </section>
 

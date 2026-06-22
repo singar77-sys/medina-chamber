@@ -207,8 +207,22 @@ export default async function BenefitsPage() {
       </section>
 
       {/* Additional perks */}
-      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+        {/* Ghosted Medina Chamber branded-buttons backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/membership/medina-chamber-member-perks-bg.webp"
+            alt=""
+            fill
+            className="object-cover opacity-[0.33]"
+            sizes="100vw"
+            quality={70}
+          />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
             <h2 className="text-overline text-cambridge mb-f21">Additional Member Perks</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-f21">

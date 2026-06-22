@@ -73,10 +73,23 @@ export default function ContactPage() {
         dangerouslySetInnerHTML={{ __html: safeJsonLd(contactJsonLd) }}
       />
 
-      {/* ambient gradient, no photo bg */}
+      {/* ambient gradient + ghosted chamber building (reused from homepage) */}
       <div className="relative isolate overflow-hidden">
         <div className="slow-gradient" aria-hidden="true">
           <div className="slow-gradient__grid" />
+        </div>
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/medina-chamber-headquarters-court-street.webp"
+            alt=""
+            fill
+            priority
+            className="object-cover opacity-[0.33]"
+            sizes="100vw"
+          />
         </div>
 
         <section className="relative mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">

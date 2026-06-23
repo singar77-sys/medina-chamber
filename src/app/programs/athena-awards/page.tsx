@@ -100,7 +100,7 @@ export default async function AthenaAwardsPage() {
             priority
             className="object-cover opacity-[0.33]"
             sizes="100vw"
-            quality={72}
+            quality={70}
           />
         </div>
 

@@ -35,7 +35,10 @@ const nextConfig: NextConfig = {
     root: path.join(import.meta.dirname, "."),
   },
   images: {
-    qualities: [55, 60, 75, 85],
+    qualities: [55, 60, 70, 75, 85],
+    // Serve AVIF first (~20-30% smaller than WebP) with WebP fallback. Next
+    // content-negotiates per Accept header and caches each variant.
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         // GrowthZone member logos and event images

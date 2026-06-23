@@ -192,7 +192,6 @@ export default function ContactPage() {
                     width={560}
                     height={420}
                     className="w-full aspect-[4/3] object-cover object-top"
-                    priority
                   />
                 </div>
 

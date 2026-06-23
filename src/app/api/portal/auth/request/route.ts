@@ -98,8 +98,7 @@ function buildEmail(firstName: string, link: string): string {
             </p>
             <p style="margin:0 0 24px;font-size:15px;color:#475569;line-height:1.65">
               Click the button below to access your member portal.
-              This link expires in <strong>15&nbsp;minutes</strong> and
-              can only be used once.
+              This link expires in <strong>15&nbsp;minutes</strong>.
             </p>
             <div style="text-align:center;margin-bottom:24px">
               <a href="${link}"

@@ -63,6 +63,9 @@ export async function proxy(request: NextRequest) {
     // own origin (/monitoring) so we don't need the ingest hostname here.
     // Vercel Analytics/Speed Insights also same-origin.
     `connect-src 'self'`,
+    // Allow the Medina Means Business flipbook (hosted on hflip.co) to load in
+    // the magazine page <iframe>; default-src 'self' would otherwise block it.
+    `frame-src https://*.hflip.co`,
     `frame-ancestors 'none'`,
     `form-action 'self'`,
     `base-uri 'self'`,

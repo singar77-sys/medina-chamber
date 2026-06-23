@@ -26,11 +26,18 @@ interface Issue {
 
 const issues: Issue[] = [
   {
+    title: "Volume 2, Issue 1",
+    quarter: "Spring 2026",
+    date: "April 2026",
+    url: "https://wjcspub.hflip.co/mmbmagazine",
+    latest: true,
+  },
+  {
     title: "Impact",
     quarter: "Q4 2025",
     date: "October 2025",
     url: "https://wjcspub.hflip.co/2025Q4Impact",
-    latest: true,
+    latest: false,
   },
   {
     title: "Growth",

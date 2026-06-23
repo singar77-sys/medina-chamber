@@ -31,7 +31,7 @@ export default async function DealsPage() {
 
   return (
     <main>
-      <section className="relative overflow-hidden pt-f89 pb-f34">
+      <section className="relative overflow-hidden pt-f144 pb-f89">
         {/* Ghosted downtown Medina car-show / storefronts backdrop */}
         <div
           className="absolute inset-0 pointer-events-none select-none"
@@ -50,7 +50,11 @@ export default async function DealsPage() {
 
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <div className="max-w-3xl">
-            <h1 className="text-h1 text-text-primary">Member Deals</h1>
+            <p className="text-overline text-cambridge mb-f8">Membership</p>
+            <h1 className="text-display">
+              <span className="block">Member</span>
+              <span className="block text-accent">Deals</span>
+            </h1>
             <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
               Exclusive offers from Greater Medina Chamber members. Support local — and save. Chamber
               members can post their own deal from the member portal.

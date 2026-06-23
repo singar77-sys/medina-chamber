@@ -110,10 +110,8 @@ export default async function CommunityInvestorPage() {
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
 
-      {/* Hero — oxford background signals premium tier; same in both themes
-          to avoid a brighter shade leaking in dark mode. Ghosted gazebo
-          backdrop sits under an oxford scrim to keep the dark tier intact. */}
-      <section className="relative overflow-hidden bg-oxford border-b border-white/10">
+      {/* Hero */}
+      <section className="relative overflow-hidden pt-f144 pb-f89">
         {/* Ghosted Public Square gazebo backdrop */}
         <div
           className="absolute inset-0 pointer-events-none select-none"
@@ -124,29 +122,29 @@ export default async function CommunityInvestorPage() {
             alt=""
             fill
             priority
-            className="object-cover object-center opacity-[0.33]"
+            className="object-cover opacity-[0.33]"
             sizes="100vw"
             quality={70}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-oxford via-oxford/80 to-oxford/40" />
         </div>
-        <div className="relative mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
+
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <div className="max-w-3xl">
             <p className="text-overline text-cambridge mb-f8">Membership · Top Tier</p>
-            <h1 className="text-display text-white">
+            <h1 className="text-display">
               <span className="block">Community</span>
-              <span className="block text-cambridge">Investor</span>
+              <span className="block text-accent">Investor</span>
             </h1>
-            <p className="text-body-lg text-white/70 mt-f13 max-w-2xl leading-relaxed">
+            <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
               This is where chamber leadership lives. The CEOs, founders, and
               owners who don&apos;t just join the chamber — they shape Medina
               County&apos;s business direction.
             </p>
             <div className="mt-f21 flex flex-wrap items-center gap-f13">
-              <div className="text-white/50 text-body-sm font-mono">
-                $1,145 <span className="text-white/30">/year</span>
+              <div className="text-text-secondary text-body-sm font-mono">
+                $1,145 <span className="text-text-tertiary">/year</span>
               </div>
-              <div className="w-px h-4 bg-white/20" />
+              <div className="w-px h-4 bg-border-primary" />
               <Link
                 href="/membership/join"
                 className="
@@ -163,8 +161,8 @@ export default async function CommunityInvestorPage() {
                 href={mailto(stephanie.email)}
                 className="
                   inline-flex items-center px-f21 py-f13
-                  border border-white/20 hover:border-white/40
-                  text-white/80 hover:text-white font-bold text-body-sm
+                  border border-border-primary hover:border-text-tertiary
+                  text-text-primary font-bold text-body-sm
                   rounded-[var(--radius-md)]
                   transition-colors
                 "

@@ -51,7 +51,7 @@ export default function NewsPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden pt-f144 pb-f89">
+      <section className="relative overflow-hidden pt-f144 pb-f89 min-h-[42rem]">
         {/* Ghosted downtown Medina Public Square street-scene backdrop */}
         <div
           className="absolute inset-0 pointer-events-none select-none"

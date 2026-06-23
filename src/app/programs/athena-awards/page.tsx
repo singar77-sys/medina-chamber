@@ -87,7 +87,7 @@ export default async function AthenaAwardsPage() {
       />
 
       
-      <section className="relative overflow-hidden pt-f144 pb-f89">
+      <section className="relative overflow-hidden pt-f144 pb-f89 min-h-[42rem]">
         {/* Ghosted Athena International award trophy backdrop */}
         <div
           className="absolute inset-0 pointer-events-none select-none"

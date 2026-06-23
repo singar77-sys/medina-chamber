@@ -48,7 +48,7 @@ export default function SavingsPage() {
       />
 
       {/* Hero */}
-      <section className="relative overflow-hidden pt-f144 pb-f89">
+      <section className="relative overflow-hidden pt-f144 pb-f89 min-h-[42rem]">
         {/* Ghosted Medina Chamber etched-seal glass-door backdrop */}
         <div
           className="absolute inset-0 pointer-events-none select-none"

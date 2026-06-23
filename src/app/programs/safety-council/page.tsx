@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
@@ -86,8 +87,25 @@ export default async function SafetyCouncilPage() {
       />
 
       
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
-        <div className="max-w-3xl">
+      <section className="relative overflow-hidden pt-f144 pb-f89 min-h-[42rem]">
+        {/* Ghosted safety-worker (hard hat + hi-vis) backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/medina-chamber-safety-council-hero.webp"
+            alt=""
+            fill
+            priority
+            className="object-cover opacity-[0.33]"
+            sizes="100vw"
+            quality={70}
+          />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="max-w-3xl">
           <p className="text-overline text-cambridge mb-f8">Programs</p>
           <h1 className="text-display">
             <span className="block">Safety</span>
@@ -122,6 +140,7 @@ export default async function SafetyCouncilPage() {
               Greater Medina Chamber of Commerce
             </span>
           </p>
+        </div>
         </div>
       </section>
 
@@ -305,10 +324,24 @@ export default async function SafetyCouncilPage() {
         </section>
       )}
 
-      {/* Chamber members enroll free */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
-        <FadeIn>
-          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+      {/* Chamber members enroll free — ghosted safety-gear section background */}
+      <section className="relative overflow-hidden py-f55 lg:py-f89">
+        {/* Ghosted safety-gear backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/medina-chamber-safety-council-bg.webp"
+            alt=""
+            fill
+            className="object-cover opacity-[0.33]"
+            sizes="100vw"
+            quality={70}
+          />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <FadeIn>
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
                 <h2 className="text-h2">Chamber members enroll free.</h2>
@@ -346,8 +379,8 @@ export default async function SafetyCouncilPage() {
                 </Link>
               </div>
             </div>
-          </div>
-        </FadeIn>
+          </FadeIn>
+        </div>
       </section>
     </>
   );

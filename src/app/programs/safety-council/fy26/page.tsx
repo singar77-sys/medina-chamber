@@ -117,7 +117,7 @@ export default function SafetyCouncilFY26Page() {
       />
 
       {/* Hero */}
-      <section className="bg-oxford border-b border-white/10">
+      <section className="bg-oxford border-b border-white/10 min-h-[42rem]">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
           <div className="max-w-3xl">
             <p className="text-overline text-cambridge mb-f8">Safety Council · FY26 Program</p>

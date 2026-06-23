@@ -105,7 +105,7 @@ export default function EventsPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden pt-f144 pb-f89">
+      <section className="relative overflow-hidden pt-f144 pb-f89 min-h-[42rem]">
         {/* Ghosted networking-event backdrop */}
         <div
           className="absolute inset-0 pointer-events-none select-none"

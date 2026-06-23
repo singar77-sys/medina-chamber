@@ -86,7 +86,7 @@ export default function RentalSpacePage() {
       />
 
       {/* Hero */}
-      <section className="relative overflow-hidden pt-f144 pb-f89">
+      <section className="relative overflow-hidden pt-f144 pb-f89 min-h-[42rem]">
         {/* Ghosted Main Room meeting-space backdrop */}
         <div
           className="absolute inset-0 pointer-events-none select-none"

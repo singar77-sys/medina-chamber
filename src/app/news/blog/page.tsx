@@ -50,7 +50,7 @@ export default function BlogListingPage() {
       />
 
       {/* Hero */}
-      <section className="relative overflow-hidden pt-f144 pb-f89">
+      <section className="relative overflow-hidden pt-f144 pb-f89 min-h-[42rem]">
         {/* Ghosted Medina Square aerial backdrop */}
         <div
           className="absolute inset-0 pointer-events-none select-none"

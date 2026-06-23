@@ -92,7 +92,7 @@ export default function ContactPage() {
           />
         </div>
 
-        <section className="relative mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
+        <section className="relative mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89 min-h-[42rem]">
           <div className="max-w-3xl">
             <p className="text-overline text-cambridge mb-f8">Contact</p>
             <h1 className="text-display">

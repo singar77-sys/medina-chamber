@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
@@ -141,8 +142,25 @@ export default async function CompassPage() {
       />
 
       {/* Hero */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
-        <div className="max-w-3xl">
+      <section className="relative overflow-hidden pt-f144 pb-f89 min-h-[42rem]">
+        {/* Ghosted Compass leadership backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/medina-chamber-compass-hero.webp"
+            alt=""
+            fill
+            priority
+            className="object-cover opacity-[0.33]"
+            sizes="100vw"
+            quality={70}
+          />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="max-w-3xl">
           <p className="text-overline text-cambridge mb-f8">
             Leadership Development
           </p>
@@ -180,6 +198,7 @@ export default async function CompassPage() {
             >
               Get Notified for Next Cohort →
             </Link>
+          </div>
           </div>
         </div>
       </section>

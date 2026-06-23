@@ -39,7 +39,7 @@ export function DirectoryHero({
   const [focused, setFocused] = useState(false);
 
   return (
-    <section className="relative overflow-hidden pt-f144 pb-f55">
+    <section className="relative overflow-hidden pt-f144 pb-f89 min-h-[42rem]">
       {/* Ghosted downtown Medina backdrop */}
       <div
         className="absolute inset-0 pointer-events-none select-none"

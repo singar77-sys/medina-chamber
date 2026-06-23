@@ -8,15 +8,7 @@
 
 import { NextResponse } from "next/server";
 import { signSession, getAdminSecret, ADMIN_COOKIE } from "@/lib/admin-session";
-
-function timingSafeEqual(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  let diff = 0;
-  for (let i = 0; i < a.length; i++) {
-    diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  }
-  return diff === 0;
-}
+import { authenticateAdmin } from "@/lib/admin-users";
 
 export async function POST(req: Request): Promise<Response> {
   const url = new URL(req.url);
@@ -38,8 +30,10 @@ export async function POST(req: Request): Promise<Response> {
   // Single source of the fail-closed floor (getAdminSecret in admin-session.ts):
   // refuse to mint a session when the secret is unset or too weak, so login,
   // the API guard, and verifySession all agree on what "configured" means.
-  const expected = getAdminSecret();
-  if (!expected) {
+  // The signing secret must be configured — single source of the fail-closed
+  // floor (getAdminSecret), so login, the API guard, and verifySession agree
+  // on what "configured" means.
+  if (!getAdminSecret()) {
     return NextResponse.json({ error: "Admin access not configured." }, { status: 503 });
   }
 
@@ -50,14 +44,18 @@ export async function POST(req: Request): Promise<Response> {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { password } = body;
-  if (!password || !timingSafeEqual(password, expected)) {
+  // Match the submitted token against the per-admin credentials (ADMIN_USERS),
+  // or the shared CHAT_ADMIN_TOKEN when those aren't configured. Returns the
+  // admin's display name on success, recorded in the session for accountability.
+  const adminName = body.password ? await authenticateAdmin(body.password) : null;
+  if (!adminName) {
     // Constant-ish delay to blunt timing attacks even at the HTTP layer
     await new Promise((r) => setTimeout(r, 200));
     return NextResponse.json({ error: "Invalid password." }, { status: 401 });
   }
 
-  const token = await signSession();
+  const token = await signSession(adminName);
+  console.info(`[admin/auth] login: ${adminName}`);
   const res = NextResponse.json({ ok: true });
   res.cookies.set(ADMIN_COOKIE, token, {
     httpOnly: true,

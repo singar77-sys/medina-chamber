@@ -22,7 +22,7 @@ const NAV_ITEMS: { href: string; label: string; icon: string; exact?: boolean }[
   { href: "/admin/notify", label: "Contact Support", icon: "◎" },
 ];
 
-export function AdminNav() {
+export function AdminNav({ adminName }: { adminName?: string }) {
   const pathname = usePathname();
 
   function isActive(item: (typeof NAV_ITEMS)[number]) {
@@ -79,6 +79,14 @@ export function AdminNav() {
 
       {/* Footer */}
       <div className="px-3 py-4 border-t" style={{ borderColor: "var(--border-primary)" }}>
+        {adminName && (
+          <p className="px-3 mb-2 text-[10px] leading-tight" style={{ color: "var(--color-text-tertiary)" }}>
+            Signed in as{" "}
+            <span className="font-bold" style={{ color: "var(--color-cambridge)" }}>
+              {adminName}
+            </span>
+          </p>
+        )}
         <a
           href="/admin/notify"
           className="flex items-center gap-2 px-3 py-2 rounded-md text-xs mb-1 transition-colors"

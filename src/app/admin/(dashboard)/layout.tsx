@@ -7,20 +7,27 @@
  * (public) route group layout once the project grows.
  */
 
+import { cookies } from "next/headers";
 import { AdminNav } from "@/components/admin/AdminNav";
+import { ADMIN_COOKIE, readSession } from "@/lib/admin-session";
 
-export default function AdminDashboardLayout({
+export default async function AdminDashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Surface who's signed in (per-admin accounts). The proxy already gated this
+  // route; here we just read the name off the verified session for display.
+  const token = (await cookies()).get(ADMIN_COOKIE)?.value;
+  const session = token ? await readSession(token) : null;
+  const adminName = session?.sub ?? "Admin";
   return (
     <div
       data-theme="light"
       className="fixed inset-0 z-50 flex overflow-hidden"
       style={{ background: "#f8fafc", fontFamily: "system-ui, -apple-system, sans-serif" }}
     >
-      <AdminNav />
+      <AdminNav adminName={adminName} />
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top bar */}
         <div

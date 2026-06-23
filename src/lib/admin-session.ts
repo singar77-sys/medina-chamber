@@ -30,6 +30,11 @@ export function getAdminSecret(): string | null {
 }
 
 interface Payload {
+  /**
+   * Subject — the admin's display name (per-admin accounts, admin-users.ts).
+   * Optional for backward-compat with sessions minted before named accounts.
+   */
+  sub?: string;
   iat: number;
   exp: number;
 }
@@ -62,11 +67,15 @@ function toBuffer(s: string): ArrayBuffer {
   return new TextEncoder().encode(s).buffer as ArrayBuffer;
 }
 
-export async function signSession(): Promise<string> {
+export async function signSession(sub?: string): Promise<string> {
   const secret = getAdminSecret();
   if (!secret) throw new Error("CHAT_ADMIN_TOKEN not configured or too short");
 
-  const payload: Payload = { iat: Date.now(), exp: Date.now() + TTL_MS };
+  const payload: Payload = {
+    ...(sub ? { sub } : {}),
+    iat: Date.now(),
+    exp: Date.now() + TTL_MS,
+  };
   const payloadB64 = toB64u(toBuffer(JSON.stringify(payload)));
 
   const key = await importKey(secret);
@@ -75,12 +84,17 @@ export async function signSession(): Promise<string> {
   return `${payloadB64}.${toB64u(sig)}`;
 }
 
-export async function verifySession(token: string): Promise<boolean> {
+/**
+ * Verify the session cookie and return its payload (including `sub`, the admin
+ * name) when valid, or null. The signature is checked against the server
+ * secret and the token must be unexpired.
+ */
+export async function readSession(token: string): Promise<Payload | null> {
   const secret = getAdminSecret();
-  if (!secret) return false;
+  if (!secret) return null;
 
   const dot = token.lastIndexOf(".");
-  if (dot === -1) return false;
+  if (dot === -1) return null;
 
   const payloadB64 = token.slice(0, dot);
   const sigB64 = token.slice(dot + 1);
@@ -93,13 +107,19 @@ export async function verifySession(token: string): Promise<boolean> {
       fromB64u(sigB64),
       toBuffer(payloadB64),
     );
-    if (!valid) return false;
+    if (!valid) return null;
 
     const payload: Payload = JSON.parse(
       new TextDecoder().decode(fromB64u(payloadB64)),
     );
-    return Date.now() < payload.exp;
+    if (Date.now() >= payload.exp) return null;
+    return payload;
   } catch {
-    return false;
+    return null;
   }
+}
+
+/** Boolean gate used by the proxy guard and the /api/admin/* guard. */
+export async function verifySession(token: string): Promise<boolean> {
+  return (await readSession(token)) !== null;
 }

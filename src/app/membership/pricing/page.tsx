@@ -88,7 +88,7 @@ export default async function PricingPage() {
             priority
             className="object-cover opacity-[0.33]"
             sizes="100vw"
-            quality={70}
+            quality={60}
           />
         </div>
 

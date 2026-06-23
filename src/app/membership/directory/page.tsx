@@ -68,7 +68,7 @@ export default async function DirectoryPage() {
             fill
             className="object-cover opacity-[0.33]"
             sizes="100vw"
-            quality={70}
+            quality={60}
           />
         </div>
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">

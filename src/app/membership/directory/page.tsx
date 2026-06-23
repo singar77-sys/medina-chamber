@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { db } from "@/lib/db";
 import { getDirectoryMembers, topIndustries } from "@/lib/directory";
@@ -54,10 +55,24 @@ export default async function DirectoryPage() {
         ))}
       </div>
 
-      {/* Join CTA (preserved from previous implementation) */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
-        <FadeIn>
-          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+      {/* Join CTA — clock-medina ghosted as the section background */}
+      <section className="relative overflow-hidden py-f55 lg:py-f89">
+        {/* Ghosted Medina town-clock backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/clock-medina.jpg"
+            alt=""
+            fill
+            className="object-cover opacity-[0.33]"
+            sizes="100vw"
+            quality={70}
+          />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <FadeIn>
             <div className="max-w-2xl">
               <h2 className="text-h2">Want your business in the directory?</h2>
               <p className="text-body-lg text-text-secondary mt-f13">
@@ -94,8 +109,8 @@ export default async function DirectoryPage() {
                 </Link>
               </div>
             </div>
-          </div>
-        </FadeIn>
+          </FadeIn>
+        </div>
       </section>
     </>
   );

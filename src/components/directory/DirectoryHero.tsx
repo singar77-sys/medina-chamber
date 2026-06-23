@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { RotatingPlaceholder } from "./RotatingPlaceholder";
 
 const EXAMPLE_PROMPTS = [
@@ -38,8 +39,24 @@ export function DirectoryHero({
   const [focused, setFocused] = useState(false);
 
   return (
-    <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f55">
-      <div className="max-w-3xl">
+    <section className="relative overflow-hidden pt-f144 pb-f55">
+      {/* Ghosted downtown Medina backdrop */}
+      <div
+        className="absolute inset-0 pointer-events-none select-none"
+        aria-hidden="true"
+      >
+        <Image
+          src="/images/photos/downtown-medina-2.jpg"
+          alt=""
+          fill
+          priority
+          className="object-cover opacity-[0.33]"
+          sizes="100vw"
+          quality={70}
+        />
+      </div>
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="max-w-3xl">
         <p className="text-overline text-cambridge mb-f8">Member Directory</p>
         <h1 className="text-display">
           <span className="block">Find a Local</span>
@@ -114,6 +131,7 @@ export function DirectoryHero({
             </div>
           )}
         </div>
+      </div>
       </div>
     </section>
   );

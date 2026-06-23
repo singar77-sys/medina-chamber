@@ -168,7 +168,7 @@ async function main() {
               logo_url = coalesce(${m.logoUrl || null}, logo_url),
               membership_tier = ${tier},
               updated_at = now()
-            where id = ${p.fromId}`;
+            where id = ${p.fromId!}`;
         }
       }
 

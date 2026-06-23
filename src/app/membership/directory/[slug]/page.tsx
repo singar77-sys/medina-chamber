@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { extractCity, getInitials } from "@/data/members";
+import { extractCity, getInitials, getMemberBySlug } from "@/data/members";
 import { db } from "@/lib/db";
 import { getDirectoryMemberBySlug } from "@/lib/directory";
 import { DirectoryViewBeacon } from "@/components/DirectoryViewBeacon";
@@ -24,8 +24,10 @@ export async function generateMetadata(
   } catch (err) {
     console.error("[directory/member] metadata load failed:", err);
   }
-  if (!found) return { title: "Member Not Found" };
-  const member = found.member;
+  // Fall back to the static member record when the DB is unreachable or has no
+  // active match, so member pages never hard-404.
+  const member = found?.member ?? getMemberBySlug(slug);
+  if (!member) return { title: "Member Not Found" };
 
   const city = extractCity(member.address) || "Medina";
   const descBase = member.description
@@ -55,11 +57,15 @@ export default async function MemberPage(
   try {
     found = await getDirectoryMemberBySlug(db, slug);
   } catch (err) {
-    // DB unreachable — degrade to 404 rather than a 500 error page.
+    // DB unreachable — fall through to the static fallback below.
     console.error("[directory/member] load failed:", err);
   }
-  if (!found) notFound();
-  const member = found.member;
+  // Fall back to the static members.json record when the DB is down or has no
+  // active match, so members linked elsewhere (e.g. the homepage Community
+  // Investors marquee) never hard-404. The directory index stays DB-filtered;
+  // only direct slug hits fall back here.
+  const member = found?.member ?? getMemberBySlug(slug);
+  if (!member) notFound();
 
   const city = extractCity(member.address);
   const initials = getInitials(member.name);

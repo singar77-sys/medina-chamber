@@ -185,9 +185,23 @@ export default function BoardPage() {
       </section>
 
       {/* CTA */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
-        <FadeIn>
-          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+      <section className="relative overflow-hidden py-f55 lg:py-f89">
+        {/* Ghosted boardroom-discussion backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/backgrounds/boardroom-discussion.webp"
+            alt=""
+            fill
+            className="object-cover opacity-[0.33]"
+            sizes="100vw"
+            quality={70}
+          />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <FadeIn>
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
                 <p className="text-overline text-cambridge mb-f8">
@@ -209,17 +223,17 @@ export default function BoardPage() {
                 </ButtonLink>
               </div>
             </div>
-          </div>
 
-          <div className="mt-f34">
-            <Link
-              href="/about"
-              className="text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
-            >
-              ← Back to About
-            </Link>
-          </div>
-        </FadeIn>
+            <div className="mt-f34">
+              <Link
+                href="/about"
+                className="text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
+              >
+                ← Back to About
+              </Link>
+            </div>
+          </FadeIn>
+        </div>
       </section>
     </>
   );

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
@@ -86,8 +87,25 @@ export default async function AthenaAwardsPage() {
       />
 
       
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
-        <div className="max-w-3xl">
+      <section className="relative overflow-hidden pt-f144 pb-f89">
+        {/* Ghosted Athena International award trophy backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/medina-chamber-athena-awards-hero.webp"
+            alt=""
+            fill
+            priority
+            className="object-cover opacity-[0.33]"
+            sizes="100vw"
+            quality={72}
+          />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="max-w-3xl">
           <p className="text-overline text-cambridge mb-f8">Annual Program</p>
           <h1 className="text-display">
             <span className="block">Athena</span>
@@ -107,6 +125,7 @@ export default async function AthenaAwardsPage() {
               Medina County Women&apos;s Journal
             </span>
           </p>
+          </div>
         </div>
       </section>
 

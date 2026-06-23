@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
@@ -98,8 +99,25 @@ export default function MagazinePage() {
       />
 
       {/* Hero */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89 min-h-[42rem]">
-        <div className="max-w-3xl">
+      <section className="relative overflow-hidden pt-f144 pb-f89 min-h-[42rem]">
+        {/* Ghosted Medina County courthouse backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/medina-chamber-magazine-hero.webp"
+            alt=""
+            fill
+            priority
+            className="object-cover opacity-[0.33]"
+            sizes="100vw"
+            quality={70}
+          />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="max-w-3xl">
           <p className="text-overline text-cambridge mb-f8">Magazine</p>
           <h1 className="text-display">
             <span className="block">Medina Means</span>
@@ -110,6 +128,7 @@ export default function MagazinePage() {
             profiles, community stories, chamber updates, and the people
             driving Medina County forward.
           </p>
+          </div>
         </div>
       </section>
 

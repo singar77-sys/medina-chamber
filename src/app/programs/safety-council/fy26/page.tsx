@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
@@ -117,15 +118,31 @@ export default function SafetyCouncilFY26Page() {
       />
 
       {/* Hero */}
-      <section className="bg-oxford border-b border-white/10 min-h-[42rem]">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 pt-f144 pb-f89">
+      <section className="relative overflow-hidden pt-f144 pb-f89 min-h-[42rem]">
+        {/* Ghosted workplace-safety backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/medina-chamber-safety-council-fy26-hero.webp"
+            alt=""
+            fill
+            priority
+            className="object-cover opacity-[0.33]"
+            sizes="100vw"
+            quality={70}
+          />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <div className="max-w-3xl">
             <p className="text-overline text-cambridge mb-f8">Safety Council · FY26 Program</p>
-            <h1 className="text-display text-white leading-tight">
+            <h1 className="text-display leading-tight">
               <span className="block">BWC Safety</span>
-              <span className="block text-cambridge">Council Program</span>
+              <span className="block text-accent">Council Program</span>
             </h1>
-            <p className="text-body-lg text-white/65 mt-f13 max-w-xl leading-relaxed">
+            <p className="text-body-lg text-text-secondary mt-f13 max-w-xl leading-relaxed">
               Collaborate with local employers, develop workplace prevention strategies,
               and earn meaningful rebates on your Ohio workers&apos; compensation policy.
             </p>
@@ -146,8 +163,8 @@ export default function SafetyCouncilFY26Page() {
                 href="/programs/safety-council"
                 className="
                   inline-flex items-center px-f21 py-f13
-                  border border-white/20 hover:border-white/40
-                  text-white/80 hover:text-white font-bold text-body-sm
+                  border border-border-primary hover:border-text-tertiary
+                  text-text-primary font-bold text-body-sm
                   rounded-[var(--radius-md)]
                   transition-colors
                 "

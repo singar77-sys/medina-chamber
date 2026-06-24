@@ -19,6 +19,7 @@ import { BeeFly } from "@/components/effects/BeeFly";
 import { CommunityInvestors } from "@/components/CommunityInvestors";
 import { RecentPhotoStrip } from "@/components/RecentPhotoStrip";
 import { MagazineDropIn } from "@/components/MagazineDropIn";
+import { GazeboHero } from "@/components/GazeboHero";
 
 import { safeJsonLd } from "@/lib/json-ld";
 import { chamberOffice, memberServices, stephanie } from "@/data/staff";
@@ -104,24 +105,7 @@ export default function HomePage() {
       
       <section className="site-hero relative min-h-[85dvh] flex items-end overflow-hidden">
         {/* Background photos — theme-aware */}
-        <Image
-          src="/images/photos/gazebo-daytime-flag.jpg"
-          alt="Historic Medina Square gazebo"
-          fill
-          sizes="100vw"
-          className="object-cover object-center hero-ken-burns [[data-theme=dark]_&]:hidden"
-          priority
-          quality={60}
-        />
-        <Image
-          src="/images/photos/gazebo-night-flag.jpg"
-          alt="Historic Medina gazebo at night"
-          fill
-          sizes="100vw"
-          className="object-cover object-center hero-ken-burns hidden [[data-theme=dark]_&]:block"
-          priority
-          quality={60}
-        />
+        <GazeboHero kenBurns />
         {/* Gradient overlay — bottom-up oxford wash */}
         <div className="absolute inset-0 bg-gradient-to-t from-oxford via-oxford/60 to-oxford/15" />
         {/* Top-down cap — darkens upper third so headline lands on dark sky

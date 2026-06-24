@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import { GazeboHero } from "@/components/GazeboHero";
 import { activeCommunities, getMembersByCity } from "@/data/communities";
 import { FadeIn } from "@/components/FadeIn";
 import { CountUp } from "@/components/CountUp";
@@ -72,24 +72,7 @@ export default function MedinaMeansBusinessPage() {
       
       <section className="relative min-h-[80dvh] flex items-end overflow-hidden">
         {/* Background photos — theme-aware */}
-        <Image
-          src="/images/photos/gazebo-daytime-flag.jpg"
-          alt="Historic Medina Square gazebo"
-          fill
-          sizes="100vw"
-          className="object-cover object-center [[data-theme=dark]_&]:hidden"
-          priority
-          quality={60}
-        />
-        <Image
-          src="/images/photos/gazebo-night-flag.jpg"
-          alt="Historic Medina gazebo at night"
-          fill
-          sizes="100vw"
-          className="object-cover object-center hidden [[data-theme=dark]_&]:block"
-          priority
-          quality={60}
-        />
+        <GazeboHero />
         {/* Gradient overlay — white wash in light, dark wash in dark mode */}
         <div className="absolute inset-0 bg-gradient-to-t from-white via-white/85 to-white/50 [[data-theme=dark]_&]:from-oxford [[data-theme=dark]_&]:via-oxford/60 [[data-theme=dark]_&]:to-oxford/15" />
 

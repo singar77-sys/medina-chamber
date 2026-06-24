@@ -9,7 +9,6 @@ import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
 import { CommandPalette } from "@/components/CommandPalette";
 import { KeywordHotkey } from "@/components/KeywordHotkey";
-import { MedinaAmbience } from "@/components/weather/MedinaAmbience";
 import { BirthdayConfetti } from "@/components/BirthdayConfetti";
 import "./globals.css";
 
@@ -108,10 +107,6 @@ export default async function RootLayout({
             <ChatWidget />
             <CommandPalette />
             <KeywordHotkey />
-            {/* Weather-aware landing ambience — plays once per session
-                based on Medina's live conditions (snow/rain/fog) + applies
-                time-aware theme on first visit if user hasn't chosen. */}
-            <MedinaAmbience />
             <BirthdayConfetti />
           </ThemeProvider>
         </PostHogProvider>

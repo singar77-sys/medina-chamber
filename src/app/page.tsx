@@ -105,7 +105,7 @@ export default function HomePage() {
       
       <section className="site-hero relative min-h-[85dvh] flex items-end overflow-hidden">
         {/* Background photos — theme-aware */}
-        <GazeboHero kenBurns />
+        <GazeboHero />
         {/* Gradient overlay — bottom-up oxford wash */}
         <div className="absolute inset-0 bg-gradient-to-t from-oxford via-oxford/60 to-oxford/15" />
         {/* Top-down cap — darkens upper third so headline lands on dark sky

@@ -111,7 +111,7 @@ export default function HomePage() {
           sizes="100vw"
           className="object-cover object-center hero-ken-burns [[data-theme=dark]_&]:hidden"
           priority
-          quality={62}
+          quality={60}
         />
         <Image
           src="/images/photos/gazebo-night-flag.jpg"
@@ -119,7 +119,8 @@ export default function HomePage() {
           fill
           sizes="100vw"
           className="object-cover object-center hero-ken-burns hidden [[data-theme=dark]_&]:block"
-          quality={62}
+          priority
+          quality={60}
         />
         {/* Gradient overlay — bottom-up oxford wash */}
         <div className="absolute inset-0 bg-gradient-to-t from-oxford via-oxford/60 to-oxford/15" />

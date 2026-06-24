@@ -79,7 +79,7 @@ export default function MedinaMeansBusinessPage() {
           sizes="100vw"
           className="object-cover object-center [[data-theme=dark]_&]:hidden"
           priority
-          quality={85}
+          quality={62}
         />
         <Image
           src="/images/photos/gazebo-night-flag.jpg"
@@ -87,8 +87,7 @@ export default function MedinaMeansBusinessPage() {
           fill
           sizes="100vw"
           className="object-cover object-center hidden [[data-theme=dark]_&]:block"
-          priority
-          quality={85}
+          quality={62}
         />
         {/* Gradient overlay — white wash in light, dark wash in dark mode */}
         <div className="absolute inset-0 bg-gradient-to-t from-white via-white/85 to-white/50 [[data-theme=dark]_&]:from-oxford [[data-theme=dark]_&]:via-oxford/60 [[data-theme=dark]_&]:to-oxford/15" />

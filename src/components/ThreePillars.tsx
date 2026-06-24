@@ -87,7 +87,7 @@ export function ThreePillars() {
               fill
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 40vw"
-              quality={85}
+              quality={70}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-oxford/50 via-transparent to-transparent pointer-events-none" />
             <div className="absolute bottom-3 left-3 bg-oxford/80 backdrop-blur-sm text-white text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">

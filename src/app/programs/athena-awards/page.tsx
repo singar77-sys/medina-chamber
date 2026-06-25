@@ -5,8 +5,6 @@ import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
 import { jaclyn } from "@/data/staff";
 import { mailto } from "@/lib/format";
-import { getStaticPhotos } from "@/lib/static-media";
-import { EventGallery } from "@/components/events/EventGallery";
 
 export const metadata: Metadata = {
   title: "Athena Awards",
@@ -73,12 +71,7 @@ const pricing = [
   { tier: "Non-Members", price: "$55" },
 ];
 
-export default async function AthenaAwardsPage() {
-  const highlights = await getStaticPhotos(
-    "events/athena-awards/highlights",
-    "Award recipient at the Athena Awards ceremony, Greater Medina Chamber of Commerce, Medina Ohio",
-  );
-
+export default function AthenaAwardsPage() {
   return (
     <>
       <script
@@ -223,17 +216,6 @@ export default async function AthenaAwardsPage() {
           </FadeIn>
         </div>
       </section>
-
-      {/* 2026 ceremony — highlight photos */}
-      {highlights.length > 0 && (
-        <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
-          <FadeIn>
-            <p className="text-overline text-cambridge mb-f8">From the 2026 Ceremony</p>
-            <h2 className="text-h2 mb-f21">A Night to Remember</h2>
-            <EventGallery photos={highlights} title="" />
-          </FadeIn>
-        </section>
-      )}
 
       {/* Sponsorship + Nominations */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">

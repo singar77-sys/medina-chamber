@@ -3,8 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
-import { getStaticPhotos } from "@/lib/static-media";
-import { EventGallery } from "@/components/events/EventGallery";
 
 export const metadata: Metadata = {
   title: "Member Benefits",
@@ -92,12 +90,7 @@ const extraBenefits = [
   },
 ];
 
-export default async function BenefitsPage() {
-  const communityPhotos = await getStaticPhotos(
-    "photos/sneak-peeks",
-    "Chamber members at a networking event, Greater Medina Chamber of Commerce, Medina Ohio",
-    8,
-  );
+export default function BenefitsPage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -240,17 +233,6 @@ export default async function BenefitsPage() {
           </FadeIn>
         </div>
       </section>
-
-      {/* Community photos — membership in action */}
-      {communityPhotos.length > 0 && (
-        <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
-          <FadeIn>
-            <p className="text-overline text-cambridge mb-f8">Members in action</p>
-            <h2 className="text-h2 mb-f21">This is what membership looks like.</h2>
-            <EventGallery photos={communityPhotos} title="" />
-          </FadeIn>
-        </section>
-      )}
 
       {/* Join CTA */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">

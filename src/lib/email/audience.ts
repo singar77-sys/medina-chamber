@@ -51,7 +51,10 @@ export async function resolveAudience(
       .select({ id: memberships.organizationId })
       .from(memberships)
       .innerJoin(membershipTiers, eq(memberships.tierId, membershipTiers.id))
-      .where(and(eq(memberships.status, "active"), inArray(membershipTiers.slug, segment.tiers)));
+      // Include in-grace `past_due` members: they're still paying members and
+      // should get tier comms. Silently excluding them (active-only) dropped
+      // anyone inside the 30-day grace window. lapsed/cancelled stay excluded.
+      .where(and(inArray(memberships.status, ["active", "past_due"]), inArray(membershipTiers.slug, segment.tiers)));
     conditions.push(inArray(organizations.id, tierOrgs));
   }
 

@@ -40,7 +40,7 @@ export function ThemeScript({ nonce }: { nonce?: string }) {
         var preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         var theme = stored || preferred;
         document.documentElement.setAttribute('data-theme', theme);
-      } catch(e) {}
+      } catch (e) { /* localStorage/matchMedia blocked (private mode, locked-down browser) — keep the SSR default theme */ }
     })();
   `;
   // suppressHydrationWarning: React normalises nonce="" during hydration

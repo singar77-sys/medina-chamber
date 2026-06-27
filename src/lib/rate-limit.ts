@@ -152,22 +152,24 @@ export async function applyRateLimit(
 //   • LAZY — the limiter (Upstash or in-memory) is built on first .limit()
 //     call, not at import. Importing this module reads no env and opens no
 //     socket, so `next build`'s page-data collection stays secret-free.
-//   • FAIL OPEN — if the Upstash client can't init (env absent) or a check
-//     throws, the request is ALLOWED and we warn once. A rate limiter is a
-//     guardrail, not a gate: a transient Redis error must not take down
-//     magic-link login or checkout.
+//   • DEGRADE, DON'T FAIL OPEN — when Upstash isn't configured the limiter is
+//     in-memory per-isolate; when a configured Upstash check throws (Redis blip)
+//     it ALSO degrades to that in-memory limiter rather than allowing
+//     unconditionally, and warns once. A guardrail still applies during an
+//     outage, and the endpoint never 500s on the limiter.
 //
-// This differs from applyRateLimit + the eager limiters, which fall back to a
-// per-isolate in-memory limiter (fail-closed-ish). Here a missing limiter means
-// "allow", because for these endpoints availability beats perfect limiting.
+// Like applyRateLimit + the eager limiters, the worst case is a per-isolate
+// in-memory limiter (fail-closed-ish) — never "no limiter at all" — which matters
+// because these endpoints send mail and open Stripe sessions.
 function makeLazyFailOpenLimiter(requestsPerMinute: number, prefix: string) {
   let limiter: SimpleLimiter | undefined;
+  let memFallback: InMemoryLimiter | undefined;
   let warned = false;
 
   function warnOnce(reason: string, err?: unknown) {
     if (warned) return;
     warned = true;
-    console.warn(`[rate-limit] ${prefix} failing open: ${reason}`, err ?? "");
+    console.warn(`[rate-limit] ${prefix} degrading to in-memory: ${reason}`, err ?? "");
   }
 
   return {
@@ -183,9 +185,19 @@ function makeLazyFailOpenLimiter(requestsPerMinute: number, prefix: string) {
         const { success } = await limiter.limit(key);
         return success;
       } catch (err) {
-        // Limiter threw (e.g. Redis unreachable) — fail open.
-        warnOnce("limiter check threw", err);
-        return true;
+        // Upstash threw (Redis unreachable). These endpoints send mail, open
+        // Stripe sessions, and write rows, so DON'T fail fully open — degrade to a
+        // per-isolate in-memory limiter so a guardrail still applies during the
+        // outage (the same fallback the eager limiters use). Only a thrown
+        // in-memory check (shouldn't happen) allows, so the guard never 500s.
+        warnOnce("Upstash limiter threw", err);
+        try {
+          memFallback ??= new InMemoryLimiter(requestsPerMinute);
+          const { success } = await memFallback.limit(key);
+          return success;
+        } catch {
+          return true;
+        }
       }
     },
   };
@@ -208,7 +220,7 @@ const eventRegisterLimiter = makeLazyFailOpenLimiter(10, "rl:event-register");
 /**
  * Fail-open rate-limit guard for the magic-link request endpoint.
  * Returns a 429 Response when over the limit, otherwise null (proceed).
- * Never throws; on any limiter failure the request is allowed.
+ * Never throws; degrades to a per-isolate in-memory limiter if Upstash is unavailable.
  */
 export async function limitPortalAuth(req: Request): Promise<Response | null> {
   const ok = await portalAuthLimiter.allow(getRequestIp(req));
@@ -218,7 +230,7 @@ export async function limitPortalAuth(req: Request): Promise<Response | null> {
 /**
  * Fail-open rate-limit guard for the checkout endpoint.
  * Returns a 429 Response when over the limit, otherwise null (proceed).
- * Never throws; on any limiter failure the request is allowed.
+ * Never throws; degrades to a per-isolate in-memory limiter if Upstash is unavailable.
  */
 export async function limitPortalCheckout(
   req: Request,
@@ -230,7 +242,7 @@ export async function limitPortalCheckout(
 /**
  * Fail-open rate-limit guard for the profile-update endpoint.
  * Returns a 429 Response when over the limit, otherwise null (proceed).
- * Never throws; on any limiter failure the request is allowed.
+ * Never throws; degrades to a per-isolate in-memory limiter if Upstash is unavailable.
  */
 export async function limitPortalProfile(
   req: Request,
@@ -242,7 +254,7 @@ export async function limitPortalProfile(
 /**
  * Fail-open rate-limit guard for the public event-registration endpoint.
  * Returns a 429 Response when over the limit, otherwise null (proceed).
- * Never throws; on any limiter failure the request is allowed.
+ * Never throws; degrades to a per-isolate in-memory limiter if Upstash is unavailable.
  */
 export async function limitEventRegister(
   req: Request,

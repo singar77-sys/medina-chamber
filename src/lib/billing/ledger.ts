@@ -138,6 +138,28 @@ export async function recordPayment(
 
   try {
     return await db.transaction(async (tx) => {
+      // Lock the parent invoice for the life of the transaction FIRST. Two
+      // concurrent deliveries with DIFFERENT stripe ids against the same invoice
+      // (a dues charge + a manual/event charge, a retry that minted a new charge,
+      // a split payment) both run at Postgres' default READ COMMITTED, so without
+      // this lock each SUM would miss the other's uncommitted insert and the
+      // second UPDATE would clobber the first's amountPaidCents. FOR UPDATE forces
+      // the second txn to wait and re-read — same pattern as confirmEventRegistration.
+      const [inv] = await tx
+        .select({
+          amountCents: invoices.amountCents,
+          status: invoices.status,
+          paidAt: invoices.paidAt,
+        })
+        .from(invoices)
+        .where(eq(invoices.id, input.invoiceId))
+        .limit(1)
+        .for("update");
+
+      if (!inv) {
+        throw new Error(`invoice not found: ${input.invoiceId}`);
+      }
+
       const [inserted] = await tx
         .insert(payments)
         .values({
@@ -164,20 +186,6 @@ export async function recordPayment(
         .where(eq(payments.invoiceId, input.invoiceId));
 
       const newPaidCents = sum;
-
-      const [inv] = await tx
-        .select({
-          amountCents: invoices.amountCents,
-          status: invoices.status,
-          paidAt: invoices.paidAt,
-        })
-        .from(invoices)
-        .where(eq(invoices.id, input.invoiceId))
-        .limit(1);
-
-      if (!inv) {
-        throw new Error(`invoice not found: ${input.invoiceId}`);
-      }
 
       const nextStatus = deriveInvoiceStatus(inv.amountCents, newPaidCents);
 

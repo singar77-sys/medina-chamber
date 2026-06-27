@@ -144,9 +144,15 @@ export async function sendCampaign(db: DB, campaignId: string): Promise<SendCamp
     }
   }
 
+  // Reflect the real outcome: 'sent' only when every recipient was delivered.
+  // A partial or total failure becomes 'sent_with_errors' (terminal + non-
+  // resendable, so the recipients who DID get it aren't re-blasted on a retry) —
+  // a fully-failed blast must never masquerade as a clean send. sentCount carries
+  // the real delivered number either way.
+  const finalStatus = sent === audience.length ? "sent" : "sent_with_errors";
   await db
     .update(emailCampaigns)
-    .set({ status: "sent", sentAt: new Date(), sentCount: sent, updatedAt: new Date() })
+    .set({ status: finalStatus, sentAt: new Date(), sentCount: sent, updatedAt: new Date() })
     .where(eq(emailCampaigns.id, campaignId));
 
   return { sent, recipients: audience.length };

@@ -86,7 +86,13 @@ export async function createPendingMember(
   input: CreatePendingMemberInput,
 ): Promise<CreatePendingMemberResult> {
   const today = new Date();
-  const renewal = new Date(today.getFullYear() + 1, today.getMonth(), today.getDate());
+  // Build the renewal date from UTC parts so it agrees with isoDate()'s UTC
+  // serialization — a local-time `new Date(y, m, d)` shifts the stored date by a
+  // day on any non-UTC host. (A Feb-29 join normalizes to Mar-1 in a non-leap
+  // year, matching addYears() used for periodEnd elsewhere.)
+  const renewal = new Date(
+    Date.UTC(today.getUTCFullYear() + 1, today.getUTCMonth(), today.getUTCDate()),
+  );
 
   return db.transaction(async (tx) => {
     const [org] = await tx

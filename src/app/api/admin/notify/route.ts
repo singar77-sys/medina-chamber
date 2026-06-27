@@ -41,7 +41,12 @@ export async function POST(req: Request): Promise<Response> {
     return NextResponse.json({ error: "Invalid JSON." }, { status: 400 });
   }
 
-  const { message, category = "Other" } = body;
+  const { message } = body;
+  // Coerce category to the known allowlist — it is interpolated raw into the
+  // email subject + body below, so an off-list value would be HTML injection.
+  const category = (CATEGORIES as readonly string[]).includes(body.category ?? "")
+    ? (body.category as string)
+    : "Other";
   if (!message?.trim()) {
     return NextResponse.json({ error: "message is required." }, { status: 400 });
   }

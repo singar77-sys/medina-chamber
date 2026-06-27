@@ -20,7 +20,7 @@
  */
 
 import type Stripe from "stripe";
-import { eq, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import { stripe } from "@/lib/stripe/client";
 import { db } from "@/lib/db";
 import {
@@ -214,6 +214,14 @@ export async function POST(req: Request) {
         // invoices, so it's safe to call on every fully-paid dues invoice.
         if (duesResult.invoiceStatus === "paid") {
           await processRenewalPayment(db, invoiceId);
+        } else {
+          // The portal sets the Checkout amount to the exact open balance, so a
+          // dues charge that doesn't fully settle the invoice is an anomaly worth
+          // surfacing — a short payment otherwise leaves the invoice silently pending.
+          console.warn(
+            `[stripe webhook] dues charge ${pi.id} on invoice ${invoiceId} did not fully settle it ` +
+              `(status=${duesResult.invoiceStatus}, paidCents=${duesResult.amountPaidCents}) — possible short payment`,
+          );
         }
         break;
       }
@@ -266,10 +274,13 @@ export async function POST(req: Request) {
         const invoiceId = stripeInvoice.metadata?.invoiceId;
 
         if (invoiceId) {
+          // Only a still-open invoice may flip to past_due. A late or duplicated
+          // payment_failed must never revert an invoice that a concurrent
+          // payment_intent.succeeded already settled (or that was voided).
           await db
             .update(invoices)
             .set({ status: "past_due", updatedAt: new Date() })
-            .where(eq(invoices.id, invoiceId));
+            .where(and(eq(invoices.id, invoiceId), inArray(invoices.status, ["pending", "draft"])));
         } else {
           console.warn(
             `[stripe webhook] invoice.payment_failed ${stripeInvoice.id} has no invoiceId metadata — skipping`,

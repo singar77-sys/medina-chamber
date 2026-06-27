@@ -61,6 +61,12 @@ export async function getRegisterableEvent(
   title: string,
   dateISO: string,
 ): Promise<RegisterableEvent | null> {
+  // A blank/unparseable scrape date (events.json can carry `dateISO: ""`) must be
+  // an explicit miss, not an accidental match — bail before the query so an event
+  // with a bad date falls back to the GrowthZone link instead of silently pairing
+  // with the wrong DB row.
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateISO)) return null;
+
   // (title + date) is the natural join key between the static scrape and the DB.
   const candidates = await db
     .select({

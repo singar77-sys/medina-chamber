@@ -17,10 +17,11 @@
  *   • Money: the charged amount is derived server-side from the ticket's
  *     priceCents × quantity, never from the request.
  *
- * Capacity is checked against events.registrationCount at request time (a small
- * oversell race is possible under heavy concurrency; acceptable at chamber scale
- * and reconcilable from the roster). Paid registrations only increment the count
- * on webhook confirmation; free/waitlist increment here, atomically.
+ * Capacity: free RSVPs claim a seat with a CONDITIONAL UPDATE (race-safe — a
+ * concurrent RSVP that would oversell claims 0 rows and is waitlisted instead).
+ * Paid registrations only increment the count on webhook confirmation, so a paid
+ * oversell under heavy concurrency remains possible (accepted at chamber scale,
+ * reconcilable from the roster). free/waitlist counters increment here atomically.
  */
 
 import { cookies } from "next/headers";
@@ -221,38 +222,62 @@ export async function POST(req: Request): Promise<Response> {
     return Response.json({ status: "waitlisted", registrationId: reg.id });
   }
 
-  // ── Free: confirm immediately + increment counts atomically ─────────────────
+  // ── Free: atomically claim a seat, then confirm. The atCapacity check above is
+  //    a non-transactional read; this conditional UPDATE is the real gate, so two
+  //    concurrent RSVPs that both passed that stale read can't oversell — the one
+  //    that loses claims 0 rows and is recorded as waitlisted instead. ──────────
   if (amountCents === 0) {
-    const [reg] = await db.transaction(async (tx) => {
-      const inserted = await tx
-        .insert(eventRegistrations)
-        .values({ ...baseRow, status: "confirmed" })
-        .returning({ id: eventRegistrations.id });
-      await tx
+    const outcome = await db.transaction(async (tx) => {
+      const seat = await tx
         .update(events)
         .set({
           registrationCount: sql`${events.registrationCount} + ${quantity}`,
           updatedAt: sql`now()`,
         })
-        .where(eq(events.id, event.id));
+        .where(
+          and(
+            eq(events.id, event.id),
+            sql`(${events.maxCapacity} is null or ${events.registrationCount} + ${quantity} <= ${events.maxCapacity})`,
+          ),
+        )
+        .returning({ id: events.id });
+
+      // Capacity filled between the read and now — record as waitlisted instead.
+      if (seat.length === 0) {
+        const [w] = await tx
+          .insert(eventRegistrations)
+          .values({ ...baseRow, status: "waitlisted" })
+          .returning({ id: eventRegistrations.id });
+        await tx
+          .update(events)
+          .set({ waitlistCount: sql`${events.waitlistCount} + ${quantity}`, updatedAt: sql`now()` })
+          .where(eq(events.id, event.id));
+        return { status: "waitlisted" as const, id: w.id };
+      }
+
       if (ticket) {
         await tx
           .update(eventTickets)
           .set({ soldCount: sql`${eventTickets.soldCount} + ${quantity}` })
           .where(eq(eventTickets.id, ticket.id));
       }
-      return inserted;
+      const [c] = await tx
+        .insert(eventRegistrations)
+        .values({ ...baseRow, status: "confirmed" })
+        .returning({ id: eventRegistrations.id });
+      return { status: "confirmed" as const, id: c.id };
     });
+
     if (organizationId) {
       await logEngagement(db, {
         eventType: "event_registered",
         organizationId,
         contactId,
-        metadata: { eventId: event.id, eventTitle: event.title, status: "confirmed" },
+        metadata: { eventId: event.id, eventTitle: event.title, status: outcome.status },
       });
     }
-    await notifyRegistration(reg.id);
-    return Response.json({ status: "confirmed", registrationId: reg.id });
+    await notifyRegistration(outcome.id);
+    return Response.json({ status: outcome.status, registrationId: outcome.id });
   }
 
   // ── Paid: pending registration + Stripe Checkout; webhook confirms ──────────

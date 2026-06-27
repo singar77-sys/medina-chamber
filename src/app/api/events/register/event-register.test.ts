@@ -78,7 +78,9 @@ const select = vi.fn(() => ({ from }));
 const returning = vi.fn(async () => [{ id: "reg_1" }]);
 const values = vi.fn(() => ({ returning }));
 const insert = vi.fn(() => ({ values }));
-const updWhere = vi.fn(async () => undefined);
+// update().set().where() is awaitable (count bumps ignore the result) AND
+// chains to .returning() for the conditional capacity claim on the free path.
+const updWhere = vi.fn(() => ({ returning }));
 const set = vi.fn(() => ({ where: updWhere }));
 const update = vi.fn(() => ({ set }));
 const transaction = vi.fn(

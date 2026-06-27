@@ -9,7 +9,7 @@
  */
 
 import { NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { hotDeals, organizations } from "@/lib/db/schema";
 import { logEngagement } from "@/lib/engagement";
@@ -34,6 +34,10 @@ export async function GET(
 
   if (!UUID_RE.test(id)) return fallback;
 
+  // Only a live deal is clickable/trackable — mirror getPublicDeals (active +
+  // approved + inside its date window, on a real org). Otherwise an unapproved
+  // deal's UUID (visible in the member portal) would 302 + log a hot_deal_view
+  // before staff moderate it, and expired/paused deals would still drive metrics.
   const [deal] = await db
     .select({
       organizationId: hotDeals.organizationId,
@@ -41,8 +45,16 @@ export async function GET(
       orgWebsite: organizations.websiteUrl,
     })
     .from(hotDeals)
-    .leftJoin(organizations, eq(hotDeals.organizationId, organizations.id))
-    .where(eq(hotDeals.id, id))
+    .innerJoin(organizations, eq(hotDeals.organizationId, organizations.id))
+    .where(
+      and(
+        eq(hotDeals.id, id),
+        eq(hotDeals.isActive, true),
+        eq(hotDeals.isApproved, true),
+        sql`(${hotDeals.startsAt} is null or ${hotDeals.startsAt} <= current_date)`,
+        sql`(${hotDeals.endsAt} is null or ${hotDeals.endsAt} >= current_date)`,
+      ),
+    )
     .limit(1);
 
   const dest = deal ? safeHttpUrl(deal.dealUrl) ?? safeHttpUrl(deal.orgWebsite) : null;

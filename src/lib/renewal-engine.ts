@@ -170,7 +170,8 @@ async function sendRenewalNotices(today: Date, daysOut: number, result: RenewalR
       t.name             AS tier_name,
       t.annual_price_cents,
       o.name             AS org_name,
-      i.id               AS invoice_id
+      i.id               AS invoice_id,
+      i.amount_cents     AS invoice_amount_cents
     FROM memberships m
     JOIN membership_tiers t ON t.id = m.tier_id
     JOIN organizations o    ON o.id = m.organization_id
@@ -189,6 +190,7 @@ async function sendRenewalNotices(today: Date, daysOut: number, result: RenewalR
     annual_price_cents: number;
     org_name: string;
     invoice_id: string;
+    invoice_amount_cents: number;
   }>;
 
   for (const row of candidates) {
@@ -210,7 +212,9 @@ async function sendRenewalNotices(today: Date, daysOut: number, result: RenewalR
           orgName:     row.org_name,
           tierName:    row.tier_name,
           renewalDate: row.renewal_date,
-          amountCents: row.annual_price_cents,
+          // Use the amount actually invoiced, not the live tier price — they differ
+          // if the tier price changed after the invoice was created ~60 days out.
+          amountCents: row.invoice_amount_cents,
           daysOut,
         }),
       });

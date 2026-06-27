@@ -124,6 +124,9 @@ export function seatsLeft(event: RegisterableEvent): number | null {
 export function registrationIsOpen(event: RegisterableEvent, now = new Date()): boolean {
   if (event.registrationOpenAt && now < event.registrationOpenAt) return false;
   if (event.registrationCloseAt && now > event.registrationCloseAt) return false;
-  if (event.startsAt && now > event.startsAt) return false;
+  // startsAt is midnight-UTC date-only for imported events, so a raw `now > startsAt`
+  // closes registration from ~8pm ET the night before. Treat the whole start day as
+  // open; registrationCloseAt is the precise cutoff for events with a real time.
+  if (event.startsAt && now.getTime() >= event.startsAt.getTime() + 24 * 60 * 60 * 1000) return false;
   return true;
 }

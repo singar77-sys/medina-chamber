@@ -99,8 +99,14 @@ describe("registrationIsOpen", () => {
     expect(registrationIsOpen(evt({ registrationOpenAt: FUTURE }) as never)).toBe(false);
     expect(registrationIsOpen(evt({ registrationCloseAt: new Date(Date.now() - 1000) }) as never)).toBe(false);
   });
-  it("is closed once the event has started", () => {
-    expect(registrationIsOpen(evt({ startsAt: new Date(Date.now() - 1000) }) as never)).toBe(false);
+  it("is closed once the event's day has fully passed", () => {
+    // >24h ago — past the date-only start-day tolerance.
+    expect(registrationIsOpen(evt({ startsAt: new Date(Date.now() - 25 * 60 * 60 * 1000) }) as never)).toBe(false);
+  });
+  it("stays open on the day of a date-only (midnight-UTC) event", () => {
+    // midnight UTC today is ~8pm ET yesterday — must NOT read as already started.
+    const todayMidnightUTC = new Date(`${new Date().toISOString().slice(0, 10)}T00:00:00Z`);
+    expect(registrationIsOpen(evt({ startsAt: todayMidnightUTC }) as never)).toBe(true);
   });
 });
 

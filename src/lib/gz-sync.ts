@@ -53,16 +53,17 @@ function parseAddress(raw: string): {
   zip: string | null;
 } {
   if (!raw) return { address1: null, city: "Medina", state: "OH", zip: null };
-  // Scraper format: "123 Main St, Medina, OH, 44256"
-  const [street = "", city = "Medina", state = "OH", zip = ""] = raw
-    .split(",")
-    .map((s) => s.trim());
-  return {
-    address1: street || null,
-    city: city || "Medina",
-    state: state || "OH",
-    zip: zip || null,
-  };
+  // GZ emits "[street…], city, state, zip". Anchor on the trailing city/state/zip
+  // (only treating the last token as a zip when it looks like one) so a missing
+  // street line doesn't shift every field left — a positional split mapped
+  // "Medina, OH, 44256" to street=Medina / state=44256, losing the real zip.
+  const parts = raw.split(",").map((s) => s.trim()).filter(Boolean);
+  const hasZip = parts.length > 0 && /^\d{5}(-\d{4})?$/.test(parts[parts.length - 1]);
+  const zip = hasZip ? parts.pop()! : null;
+  const state = parts.length >= 2 ? parts.pop()! : "OH";
+  const city = parts.length >= 1 ? parts.pop()! : "Medina";
+  const address1 = parts.length ? parts.join(", ") : null;
+  return { address1, city: city || "Medina", state: state || "OH", zip: zip || null };
 }
 
 function chunk<T>(arr: T[], size: number): T[][] {
@@ -230,20 +231,30 @@ export async function runGzSync(): Promise<SyncResult> {
     }
   }
 
-  // Replace category junctions for the synced org set (delete-then-reinsert
-  // is the safest way to handle additions and removals in one operation).
+  // Replace category junctions for the synced org set ATOMICALLY: the delete and
+  // the re-insert must commit together. Without the transaction, a failure between
+  // them (timeout, dropped connection, a throwing insert batch) would leave every
+  // synced org with ZERO categories — wiping the public directory's facets until
+  // the next nightly run. The try/catch records the failure in the sync_log
+  // instead of letting a throw escape before the audit row is written.
   if (orgRows.length > 0) {
     const orgIds = orgRows.map((o) => o.id);
-    await db
-      .delete(organizationCategories)
-      .where(inArray(organizationCategories.organizationId, orgIds));
-  }
-
-  for (const batch of chunk(junctionRows, 500)) {
-    await db
-      .insert(organizationCategories)
-      .values(batch)
-      .onConflictDoNothing();
+    try {
+      await db.transaction(async (tx) => {
+        await tx
+          .delete(organizationCategories)
+          .where(inArray(organizationCategories.organizationId, orgIds));
+        for (const batch of chunk(junctionRows, 500)) {
+          await tx.insert(organizationCategories).values(batch).onConflictDoNothing();
+        }
+      });
+    } catch (err) {
+      errors += junctionRows.length;
+      errorDetails.push({
+        id: "organization_categories",
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
   }
 
   // ── 4. Write sync_log ─────────────────────────────────────────────────────

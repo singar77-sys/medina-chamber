@@ -72,9 +72,11 @@ export async function POST(
       checkedInAt: eventRegistrations.checkedInAt,
     });
 
-  // Member-ROI signal: record attendance when checking IN (not out), and only
-  // for member registrations (guests have no org/contact to attribute to).
-  if (body.checkedIn && (reg.organizationId || reg.contactId)) {
+  // Member-ROI signal: record attendance only on the genuine confirmed→attended
+  // transition (reg.status is the PRE-update status) — re-checking-in an already
+  // 'attended' row must not write a second event_attended and inflate the metric.
+  // Members only (guests have no org/contact to attribute to).
+  if (body.checkedIn && reg.status === "confirmed" && (reg.organizationId || reg.contactId)) {
     await logEngagement(db, {
       eventType: "event_attended",
       organizationId: reg.organizationId,

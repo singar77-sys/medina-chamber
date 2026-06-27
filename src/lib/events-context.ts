@@ -24,7 +24,10 @@ const allEvents = (eventsData as { events: RawEvent[] }).events;
 
 /** Returns a formatted string of upcoming events for the system prompt. */
 export function formatEventsForPrompt(): string {
-  const today = new Date().toISOString().split("T")[0];
+  // Use the chamber's local (Eastern) calendar day, not UTC — after ~8pm ET, UTC
+  // has rolled to tomorrow and a same-day event would be filtered out hours early.
+  // en-CA renders as YYYY-MM-DD, matching dateISO.
+  const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
   const upcoming = allEvents.filter((e) => e.dateISO >= today).slice(0, 10);
 
   if (upcoming.length === 0) return "";

@@ -122,7 +122,10 @@ export async function signMagicToken(
 export async function verifyMagicToken(
   token: string,
 ): Promise<MagicLinkPayload | null> {
-  return verifyToken<MagicLinkPayload>(token);
+  const p = await verifyToken<MagicLinkPayload>(token);
+  // A magic-link token must carry an email — reject a session token (no email)
+  // reused here, since the two classes share PORTAL_AUTH_SECRET and verify alike.
+  return p && typeof p.email === "string" && p.email ? p : null;
 }
 
 // ── Portal session ─────────────────────────────────────────────────────────────
@@ -141,5 +144,8 @@ export async function signPortalSession(
 export async function verifyPortalSession(
   token: string,
 ): Promise<PortalSessionPayload | null> {
-  return verifyToken<PortalSessionPayload>(token);
+  const p = await verifyToken<PortalSessionPayload>(token);
+  // A session token must carry an organizationId — reject a magic-link token (which
+  // has none) reused as a session cookie, so it can never be honored with org=undefined.
+  return p && typeof p.organizationId === "string" && p.organizationId ? p : null;
 }

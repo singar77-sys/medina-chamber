@@ -31,7 +31,11 @@ function optText(v: unknown, max: number): string | null | "ERR" {
 function optDate(v: unknown): string | null | "ERR" {
   if (v == null || v === "") return null;
   if (typeof v !== "string" || !ISO_DATE.test(v)) return "ERR";
-  return Number.isNaN(new Date(`${v}T00:00:00Z`).getTime()) ? "ERR" : v;
+  // JS Date rolls impossible days over (2024-02-31 → 2024-03-02) instead of NaN,
+  // but a Postgres `date` column rejects them → an unhandled 500 on insert. Require
+  // the parsed date to round-trip to the same string so 2024-02-31 et al are 400s.
+  const d = new Date(`${v}T00:00:00Z`);
+  return Number.isNaN(d.getTime()) || d.toISOString().slice(0, 10) !== v ? "ERR" : v;
 }
 
 function optUrl(v: unknown): string | null | "ERR" {

@@ -161,9 +161,19 @@ describe("POST /api/events/register — validation & gating", () => {
     expect((await POST(req({ eventId: "evt_1", guestName: "A", guestEmail: "a@b.co" }))).status).toBe(400);
   });
 
-  it("400s when the event has already started", async () => {
-    eventRow = publishedEvent({ startsAt: new Date(Date.now() - 1000) });
+  it("400s when the event's day has fully passed", async () => {
+    // >24h ago — past the date-only start-day tolerance (a same-day midnight-UTC
+    // startsAt must NOT block, which is the bug this guards against).
+    eventRow = publishedEvent({ startsAt: new Date(Date.now() - 25 * 60 * 60 * 1000) });
     expect((await POST(req({ eventId: "evt_1", guestName: "A", guestEmail: "a@b.co" }))).status).toBe(400);
+  });
+
+  it("still allows registration on the day of a date-only (midnight-UTC) event", async () => {
+    // midnight UTC today is ~8pm ET yesterday → must not read as 'already started'.
+    const todayMidnightUTC = new Date(`${new Date().toISOString().slice(0, 10)}T00:00:00Z`);
+    eventRow = publishedEvent({ startsAt: todayMidnightUTC });
+    const res = await POST(req({ eventId: "evt_1", guestName: "A", guestEmail: "a@b.co" }));
+    expect(res.status).toBe(200);
   });
 
   it("400s a guest with no name/email", async () => {

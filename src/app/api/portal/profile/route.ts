@@ -84,8 +84,13 @@ function normalizeUrl(v: string): string | null | "INVALID" {
  */
 function sanitizeSocial(v: string): string | null | "INVALID" {
   if (!v) return null;
+  // A leading "/" — protocol-relative "//evil.com" or absolute "/path" — resolves
+  // to an off-site URL when rendered as an <a href> on the public directory. Reject
+  // it; a real handle/domain never starts with "/". (A bare "evil.com/x" is harmless:
+  // with no scheme the browser treats it as a same-site relative link.)
+  if (v.startsWith("/")) return "INVALID";
   if (v.includes(":")) return normalizeUrl(v); // scheme present → must be http(s)
-  return v; // no colon → plain handle/domain, safe text
+  return v; // plain handle/domain → safe text
 }
 
 export async function POST(req: Request): Promise<Response> {

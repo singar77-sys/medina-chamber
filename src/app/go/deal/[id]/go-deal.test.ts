@@ -6,8 +6,8 @@ vi.mock("@/lib/engagement", () => ({ logEngagement }));
 let dealRow: Record<string, unknown> | null = null;
 const limit = vi.fn(async () => (dealRow ? [dealRow] : []));
 const where = vi.fn(() => ({ limit }));
-const leftJoin = vi.fn(() => ({ where }));
-const from = vi.fn(() => ({ leftJoin }));
+const innerJoin = vi.fn(() => ({ where }));
+const from = vi.fn(() => ({ innerJoin }));
 const select = vi.fn(() => ({ from }));
 vi.mock("@/lib/db", () => ({ db: { select } }));
 

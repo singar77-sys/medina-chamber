@@ -17,6 +17,7 @@
 import { NextResponse } from "next/server";
 import { requireAdminSession } from "@/lib/admin-auth";
 import { resend } from "@/lib/email";
+import { escHtml } from "@/lib/sanitize";
 
 export const dynamic = "force-dynamic";
 
@@ -80,7 +81,7 @@ export async function POST(req: Request): Promise<Response> {
             </tr>
           </table>
           <div style="background: #f9f9f9; border: 1px solid #eee; border-radius: 8px; padding: 16px;">
-            <p style="margin: 0; white-space: pre-wrap; line-height: 1.6;">${message.replace(/</g, "&lt;")}</p>
+            <p style="margin: 0; white-space: pre-wrap; line-height: 1.6;">${escHtml(message)}</p>
           </div>
         </div>
       `,

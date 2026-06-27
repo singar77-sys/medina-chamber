@@ -114,7 +114,11 @@ export async function POST(req: Request): Promise<Response> {
   if (event.registrationCloseAt && now > event.registrationCloseAt) {
     return bad("registration has closed");
   }
-  if (event.startsAt && now > event.startsAt) {
+  // Imported events store startsAt as midnight-UTC date-only (no real clock time),
+  // so a raw `now > startsAt` rejects registration from ~8pm ET the night before
+  // through the whole event day. Treat the start-day as open and only block once a
+  // full day has passed; registrationCloseAt is the precise cutoff for timed events.
+  if (event.startsAt && now.getTime() >= event.startsAt.getTime() + 24 * 60 * 60 * 1000) {
     return bad("this event has already started");
   }
 
@@ -255,7 +259,35 @@ export async function POST(req: Request): Promise<Response> {
         return { status: "waitlisted" as const, id: w.id };
       }
 
-      if (ticket) {
+      // Claim ticket inventory the same conditional way. A capped ticket that sold
+      // out under us means waitlist, not confirm — give back the seat we claimed.
+      if (ticket && ticket.maxQuantity != null) {
+        const inv = await tx
+          .update(eventTickets)
+          .set({ soldCount: sql`${eventTickets.soldCount} + ${quantity}` })
+          .where(
+            and(
+              eq(eventTickets.id, ticket.id),
+              sql`${eventTickets.soldCount} + ${quantity} <= ${eventTickets.maxQuantity}`,
+            ),
+          )
+          .returning({ id: eventTickets.id });
+        if (inv.length === 0) {
+          await tx
+            .update(events)
+            .set({
+              registrationCount: sql`${events.registrationCount} - ${quantity}`,
+              waitlistCount: sql`${events.waitlistCount} + ${quantity}`,
+              updatedAt: sql`now()`,
+            })
+            .where(eq(events.id, event.id));
+          const [w] = await tx
+            .insert(eventRegistrations)
+            .values({ ...baseRow, status: "waitlisted" })
+            .returning({ id: eventRegistrations.id });
+          return { status: "waitlisted" as const, id: w.id };
+        }
+      } else if (ticket) {
         await tx
           .update(eventTickets)
           .set({ soldCount: sql`${eventTickets.soldCount} + ${quantity}` })

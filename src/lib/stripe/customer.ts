@@ -2,12 +2,14 @@
  * ensureStripeCustomer — idempotently link an organization to a Stripe customer.
  *
  * If the org already has a stripeCustomerId we return it untouched. Otherwise we
- * create exactly one Stripe customer, persist its id, and return it. The unique
- * constraint on organizations.stripeCustomerId is the backstop: this function is
- * the single writer of that column, so a given org never gets a second customer.
+ * create a Stripe customer and persist it with a guarded conditional UPDATE (only
+ * when stripeCustomerId IS NULL). Two concurrent callers each create a customer,
+ * but only the first write wins; the loser re-reads the winner's id and deletes
+ * its now-orphaned customer. The .unique() constraint can't help here — the two
+ * racing writes hold DIFFERENT ids, so it never fires.
  */
 
-import { eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import type { DB } from "@/lib/db";
 import { organizations } from "@/lib/db/schema";
 import { stripe } from "./client";
@@ -46,10 +48,28 @@ export async function ensureStripeCustomer(
     },
   });
 
-  await db
+  // Persist only if no id was set in the meantime. A concurrent call may have won
+  // the race and written a DIFFERENT customer id (so the unique constraint never
+  // fires) — guard the write and clean up the loser's orphan.
+  const [linked] = await db
     .update(organizations)
     .set({ stripeCustomerId: customer.id, updatedAt: new Date() })
-    .where(eq(organizations.id, organizationId));
+    .where(and(eq(organizations.id, organizationId), isNull(organizations.stripeCustomerId)))
+    .returning({ stripeCustomerId: organizations.stripeCustomerId });
 
-  return customer.id;
+  if (linked?.stripeCustomerId) return linked.stripeCustomerId;
+
+  // Lost the race: another call already linked a customer. Delete the duplicate we
+  // just created (best-effort) and return the winner's id.
+  try {
+    await stripe.customers.del(customer.id);
+  } catch (err) {
+    console.error(`[stripe] failed to delete orphaned customer ${customer.id}:`, err);
+  }
+  const [current] = await db
+    .select({ stripeCustomerId: organizations.stripeCustomerId })
+    .from(organizations)
+    .where(eq(organizations.id, organizationId))
+    .limit(1);
+  return current?.stripeCustomerId ?? customer.id;
 }

@@ -20,7 +20,7 @@ export default async function CommitteesPage() {
           <h1 className="text-h1 text-text-primary">Committees &amp; Working Groups</h1>
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
             Chamber committees are where members shape programs, build relationships, and move
-            Medina forward. Members can join any committee from the member portal.
+            Medina forward. Members get involved by reaching out to the chamber office.
           </p>
         </div>
       </section>

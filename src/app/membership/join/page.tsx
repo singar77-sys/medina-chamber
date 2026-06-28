@@ -80,15 +80,7 @@ const faqJsonLd = {
   })),
 };
 
-export const dynamic = "force-dynamic";
-
-export default async function JoinPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ joined?: string; canceled?: string }>;
-}) {
-  const { joined, canceled } = await searchParams;
-
+export default function JoinPage() {
   return (
     <>
       <script
@@ -199,23 +191,6 @@ export default async function JoinPage({
           <div className="max-w-3xl">
             <p className="text-overline text-cambridge mb-f8">Join</p>
             <h2 className="text-h2 mb-f21">Become a Member</h2>
-            {joined && (
-              <div
-                className="mb-f21 rounded-[var(--radius-lg)] px-f21 py-f13 text-body-sm"
-                style={{ background: "#f0fdf4", color: "#15803d" }}
-              >
-                ✅ Payment received — welcome to the Chamber! Your membership is active. Check your
-                email for your member portal sign-in link.
-              </div>
-            )}
-            {canceled && (
-              <div
-                className="mb-f21 rounded-[var(--radius-lg)] px-f21 py-f13 text-body-sm"
-                style={{ background: "#fff7ed", color: "#c2410c" }}
-              >
-                Checkout was canceled — you have not been charged. Pick up where you left off below.
-              </div>
-            )}
             {/* Applications are handled in GrowthZone (the live system of record).
                 The internal Stripe join flow stays dormant until the cutover. */}
             <div className="text-center">

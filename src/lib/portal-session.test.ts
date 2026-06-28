@@ -46,7 +46,7 @@ describe("portal-session HMAC auth", () => {
   });
 
   it("round-trips a magic-link token", async () => {
-    const t = await signMagicToken("c1", "a@x.co");
+    const t = await signMagicToken("c1", "a@x.co", 0);
     expect(await verifyMagicToken(t)).toMatchObject({ contactId: "c1", email: "a@x.co" });
   });
 
@@ -86,7 +86,7 @@ describe("portal-session HMAC auth", () => {
   it("rejects an expired magic-link token", async () => {
     const t0 = 1_700_000_000_000;
     const now = vi.spyOn(Date, "now").mockReturnValue(t0);
-    const t = await signMagicToken("c1", "a@x.co");
+    const t = await signMagicToken("c1", "a@x.co", 0);
     now.mockReturnValue(t0 + 16 * 60 * 1000); // 16 minutes later — past the 15-min TTL
     expect(await verifyMagicToken(t)).toBeNull();
   });

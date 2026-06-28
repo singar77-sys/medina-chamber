@@ -1,8 +1,10 @@
 /**
  * /api/email/unsubscribe?token=… — unsubscribe a contact from chamber emails.
  *
- * GET  — the link in the email footer; unsubscribes and returns a confirmation page.
- * POST — RFC 8058 one-click (List-Unsubscribe-Post); unsubscribes and returns 200.
+ * GET  — the footer link; shows a confirmation page and does NOT mutate, so an
+ *        email-security link scanner that prefetches it can't silently unsubscribe.
+ * POST — performs the unsubscribe: the confirm button AND RFC 8058 one-click
+ *        (List-Unsubscribe-Post). Returns the confirmation page (200).
  *
  * The token is HMAC(contactId), so the link can't be used to unsubscribe anyone
  * else. Idempotent: the global flag flips once; the campaign counter + send row
@@ -70,14 +72,32 @@ function page(ok: boolean): string {
 </body></html>`;
 }
 
+function confirmPage(token: string): string {
+  const action = `/api/email/unsubscribe?token=${encodeURIComponent(token)}`;
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unsubscribe</title></head>
+<body style="margin:0;font-family:system-ui,-apple-system,sans-serif;background:#f8fafc;color:#0f172a">
+  <div style="max-width:440px;margin:80px auto;padding:32px;background:#fff;border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,.08);text-align:center">
+    <h1 style="font-size:20px;margin:0 0 8px">Unsubscribe from chamber emails?</h1>
+    <p style="font-size:15px;color:#475569;line-height:1.6;margin:0 0 24px">Click below to stop receiving emails from the Greater Medina Chamber of Commerce.</p>
+    <form method="POST" action="${action}">
+      <button type="submit" style="display:inline-block;padding:14px 36px;background:#0C1B33;color:#fff;border:0;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer">Yes, unsubscribe</button>
+    </form>
+    <p style="margin:24px 0 0;font-size:12px;color:#94a3b8">Greater Medina Chamber of Commerce</p>
+  </div>
+</body></html>`;
+}
+
+// GET renders a confirmation page and NEVER mutates — a link scanner that
+// prefetches the footer link can no longer silently unsubscribe the member. The
+// actual unsubscribe happens on POST (the confirm button + RFC 8058 one-click).
 export async function GET(req: Request): Promise<Response> {
   const limited = await applyRateLimit(req, emailUnsubscribeLimiter);
   if (limited) return limited;
 
   const token = new URL(req.url).searchParams.get("token") ?? "";
-  const ok = await unsubscribe(token);
-  return new Response(page(ok), {
-    status: ok ? 200 : 400,
+  const valid = verifyUnsubscribeToken(token) !== null;
+  return new Response(valid ? confirmPage(token) : page(false), {
+    status: valid ? 200 : 400,
     headers: { "content-type": "text/html; charset=utf-8" },
   });
 }
@@ -88,5 +108,10 @@ export async function POST(req: Request): Promise<Response> {
 
   const token = new URL(req.url).searchParams.get("token") ?? "";
   const ok = await unsubscribe(token);
-  return new Response(ok ? "unsubscribed" : "invalid token", { status: ok ? 200 : 400 });
+  // HTML for the confirm-button click; an RFC 8058 one-click POST ignores the body
+  // and just needs the 2xx status.
+  return new Response(page(ok), {
+    status: ok ? 200 : 400,
+    headers: { "content-type": "text/html; charset=utf-8" },
+  });
 }

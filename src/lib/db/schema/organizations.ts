@@ -112,6 +112,11 @@ export const contacts = pgTable("contacts", {
   // copied cookie can be killed without rotating PORTAL_AUTH_SECRET (off-journal 0009).
   sessionEpoch: integer("session_epoch").notNull().default(0),
 
+  // Bumped when a magic link is consumed (the verify POST), making each link
+  // single-use — the token embeds this epoch and a replay no longer matches
+  // (off-journal migration 0010).
+  magicTokenEpoch: integer("magic_token_epoch").notNull().default(0),
+
   // Email health
   unsubscribedAt: timestamp("unsubscribed_at", { withTimezone: true }),
   bounceCount: integer("bounce_count").notNull().default(0),

@@ -29,6 +29,7 @@ export const SESSION_MAX_AGE = 30 * 24 * 60 * 60; // seconds, for cookie maxAge
 export interface MagicLinkPayload {
   contactId: string;
   email: string;
+  epoch: number;
   iat: number;
   exp: number;
 }
@@ -118,10 +119,12 @@ async function verifyToken<T extends { exp: number }>(token: string): Promise<T 
 export async function signMagicToken(
   contactId: string,
   email: string,
+  epoch: number,
 ): Promise<string> {
   return signPayload({
     contactId,
     email,
+    epoch,
     iat: Date.now(),
     exp: Date.now() + MAGIC_TTL_MS,
   });
@@ -131,9 +134,12 @@ export async function verifyMagicToken(
   token: string,
 ): Promise<MagicLinkPayload | null> {
   const p = await verifyToken<MagicLinkPayload>(token);
-  // A magic-link token must carry an email — reject a session token (no email)
-  // reused here, since the two classes share PORTAL_AUTH_SECRET and verify alike.
-  return p && typeof p.email === "string" && p.email ? p : null;
+  // A magic-link token must carry an email (reject a session token reused here —
+  // the two classes share PORTAL_AUTH_SECRET) and a numeric single-use epoch.
+  if (!p || typeof p.email !== "string" || !p.email || typeof p.epoch !== "number") {
+    return null;
+  }
+  return p;
 }
 
 // ── Portal session ─────────────────────────────────────────────────────────────

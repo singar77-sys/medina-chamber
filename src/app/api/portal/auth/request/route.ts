@@ -39,14 +39,14 @@ export async function POST(req: Request): Promise<Response> {
 
   // Look up contact — fire-and-forget on hit; generic response always returned
   const [contact] = await db
-    .select({ id: contacts.id, firstName: contacts.firstName })
+    .select({ id: contacts.id, firstName: contacts.firstName, magicTokenEpoch: contacts.magicTokenEpoch })
     .from(contacts)
     .where(eq(contacts.email, email))
     .limit(1);
 
   if (contact) {
     try {
-      const token = await signMagicToken(contact.id, email);
+      const token = await signMagicToken(contact.id, email, contact.magicTokenEpoch);
       const baseUrl =
         process.env.NEXT_PUBLIC_SITE_URL ?? "https://medinaohchamber.com";
       const link = `${baseUrl}/api/portal/auth/verify?token=${encodeURIComponent(token)}`;

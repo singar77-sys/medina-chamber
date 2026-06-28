@@ -34,6 +34,7 @@ const OFF_JOURNAL = [
   "0007_resources.sql",
   "0008_integrity_hardening.sql",
   "0009_session_epoch.sql",
+  "0010_magic_token_epoch.sql",
 ];
 
 async function main(): Promise<void> {

@@ -47,12 +47,11 @@ const req = (token: string, method = "GET") =>
   new Request(`http://localhost/api/email/unsubscribe?token=${token}`, { method });
 
 describe("unsubscribe", () => {
-  it("GET with a valid token unsubscribes + attributes the campaign (200 html)", async () => {
+  it("GET with a valid token shows the confirm page and does NOT mutate (prefetch-safe)", async () => {
     const res = await GET(req("good"));
     expect(res.status).toBe(200);
     expect(res.headers.get("content-type")).toContain("text/html");
-    // contact flip + send mark + campaign increment = 3 updates
-    expect(update).toHaveBeenCalledTimes(3);
+    expect(update).not.toHaveBeenCalled(); // GET never unsubscribes — the POST does
   });
 
   it("GET with an invalid token returns 400 and never writes", async () => {
@@ -62,16 +61,19 @@ describe("unsubscribe", () => {
     expect(update).not.toHaveBeenCalled();
   });
 
-  it("is idempotent: an already-unsubscribed contact doesn't re-increment", async () => {
-    flipRows = []; // the conditional flip matched nothing (already unsubscribed)
-    const res = await GET(req("good"));
-    expect(res.status).toBe(200);
-    expect(update).toHaveBeenCalledTimes(1); // only the (no-op) contact update; no send/campaign writes
-  });
-
-  it("POST (one-click) unsubscribes and returns 200", async () => {
+  it("POST unsubscribes + attributes the campaign (200 html, 3 updates)", async () => {
     const res = await POST(req("good", "POST"));
     expect(res.status).toBe(200);
+    expect(res.headers.get("content-type")).toContain("text/html");
+    // contact flip + send mark + campaign increment = 3 updates
+    expect(update).toHaveBeenCalledTimes(3);
+  });
+
+  it("POST is idempotent: an already-unsubscribed contact doesn't re-increment", async () => {
+    flipRows = []; // the conditional flip matched nothing (already unsubscribed)
+    const res = await POST(req("good", "POST"));
+    expect(res.status).toBe(200);
+    expect(update).toHaveBeenCalledTimes(1); // only the (no-op) contact update; no send/campaign writes
   });
 
   it("GET 429s when rate limited, before verifying the token or touching the DB", async () => {

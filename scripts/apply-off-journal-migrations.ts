@@ -32,6 +32,7 @@ const OFF_JOURNAL = [
   "0005_hot_deals.sql",
   "0006_sponsorship_inquiries.sql",
   "0007_resources.sql",
+  "0008_integrity_hardening.sql",
 ];
 
 async function main(): Promise<void> {

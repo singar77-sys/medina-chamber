@@ -91,6 +91,11 @@ export const memberships = pgTable("memberships", {
   // GrowthZone migration reference
   gzId: text("gz_id").unique(),
 
+  // When the membership entered past_due — the lapse grace window is measured from
+  // here, not renewal_date, so a cron gap can't lapse a member with zero grace
+  // (off-journal migration 0008).
+  pastDueSince: timestamp("past_due_since", { withTimezone: true }),
+
   cancelledAt: timestamp("cancelled_at", { withTimezone: true }),
   cancelReason: text("cancel_reason"),
 

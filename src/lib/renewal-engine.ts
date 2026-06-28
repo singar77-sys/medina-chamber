@@ -76,7 +76,7 @@ export async function runRenewalEngine(): Promise<RenewalResult> {
   await sendRenewalNotices(today, 30, result);
   await sendRenewalNotices(today, 7, result);
   await markPastDue(today, result);
-  await markLapsed(today, result);
+  await markLapsed(result);
 
   result.durationMs = Date.now() - started;
   return result;
@@ -140,7 +140,7 @@ async function createRenewalInvoices(today: Date, result: RenewalResult): Promis
         periodStart:     renewalDate,
         periodEnd,
         lineItems,
-      });
+      }).onConflictDoNothing(); // unique(membership_id, period_start) — a double-run is a no-op
 
       result.invoicesCreated++;
       console.log(`[renewal] invoice created for ${row.org_name} (renewal ${renewalDate})`);
@@ -250,7 +250,7 @@ async function markPastDue(today: Date, result: RenewalResult): Promise<void> {
   // We only transition if an invoice exists — guards against bad data / manual entries.
   const updated = await db.execute(sql`
     UPDATE memberships m
-    SET    status = 'past_due', updated_at = now()
+    SET    status = 'past_due', past_due_since = now(), updated_at = now()
     WHERE  m.status = 'active'
       AND  m.renewal_date < ${todayStr}::date
       AND  EXISTS (
@@ -270,14 +270,17 @@ async function markPastDue(today: Date, result: RenewalResult): Promise<void> {
 
 // ── Phase 5: past_due → lapsed (30-day grace period) ──────────────────────────
 
-async function markLapsed(today: Date, result: RenewalResult): Promise<void> {
-  const graceCutoff = toDateStr(addDays(today, -30));
-
+async function markLapsed(result: RenewalResult): Promise<void> {
+  // Lapse only after a full 30-day grace measured from when the membership BECAME
+  // past_due, not from renewal_date — otherwise a cron outage could flip a member
+  // active→past_due and lapse them in the SAME run (zero grace, no dunning). Rows
+  // with no past_due_since (shouldn't occur post-backfill) are skipped, not lapsed.
   const updated = await db.execute(sql`
     UPDATE memberships
     SET    status = 'lapsed', updated_at = now()
     WHERE  status = 'past_due'
-      AND  renewal_date < ${graceCutoff}::date
+      AND  past_due_since IS NOT NULL
+      AND  past_due_since < now() - interval '30 days'
     RETURNING id
   `) as Array<{ id: string }>;
 

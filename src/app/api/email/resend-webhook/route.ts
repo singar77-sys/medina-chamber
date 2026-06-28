@@ -40,7 +40,7 @@ export async function POST(req: Request): Promise<Response> {
   );
   if (!valid) return new Response("invalid signature", { status: 401 });
 
-  let event: { type?: string; data?: { email_id?: string } };
+  let event: { type?: string; data?: { email_id?: string; bounce?: { type?: string } } };
   try {
     event = JSON.parse(body) as typeof event;
   } catch {
@@ -51,7 +51,7 @@ export async function POST(req: Request): Promise<Response> {
   if (!event.type || !messageId) return new Response("ignored", { status: 200 });
 
   try {
-    await recordResendEvent(db, event.type, messageId);
+    await recordResendEvent(db, event.type, messageId, event.data?.bounce?.type ?? null);
   } catch (err) {
     console.error("[resend-webhook] failed to record event:", err);
     return new Response("error", { status: 500 });

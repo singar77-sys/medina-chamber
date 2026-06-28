@@ -75,6 +75,14 @@ describe("POST /api/email/resend-webhook", () => {
     vi.stubEnv("RESEND_WEBHOOK_SECRET", "whsec_dummy");
     const res = await POST(req(EVENT));
     expect(res.status).toBe(200);
-    expect(recordResendEvent).toHaveBeenCalledWith(expect.anything(), "email.delivered", "email-1");
+    expect(recordResendEvent).toHaveBeenCalledWith(expect.anything(), "email.delivered", "email-1", null);
+  });
+
+  it("extracts data.bounce.type and passes it through", async () => {
+    vi.stubEnv("RESEND_WEBHOOK_SECRET", "whsec_dummy");
+    const body = JSON.stringify({ type: "email.bounced", data: { email_id: "email-2", bounce: { type: "Permanent" } } });
+    const res = await POST(req(body));
+    expect(res.status).toBe(200);
+    expect(recordResendEvent).toHaveBeenCalledWith(expect.anything(), "email.bounced", "email-2", "Permanent");
   });
 });

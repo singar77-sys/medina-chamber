@@ -5,8 +5,10 @@
  * the relevant timestamp being null and committed via a guarded UPDATE …
  * RETURNING, so Resend's at-least-once redelivery can't inflate open/click/
  * bounce counts. Opens and clicks also drop an engagement_event for the member
- * ROI dashboard; bounces bump the contact's bounceCount (so resolveAudience
- * suppresses repeat bouncers); a spam complaint hard-unsubscribes the contact.
+ * ROI dashboard; a PERMANENT (hard) bounce bumps the contact's bounceCount (so
+ * resolveAudience suppresses repeat hard-bouncers) — a "Temporary" bounce (full
+ * mailbox, greylisting, transient DNS) does NOT, so a blip never permanently
+ * suppresses a deliverable address; a spam complaint hard-unsubscribes the contact.
  *
  * Unknown / delivery-only event types are no-ops. An event for a message we
  * never sent (no matching send row) is silently ignored.
@@ -20,6 +22,9 @@ export async function recordResendEvent(
   db: DB,
   type: string,
   messageId: string,
+  /** Resend's data.bounce.type ("Permanent" | "Temporary"); only "Permanent"
+   *  counts toward contact-level suppression. */
+  bounceType?: string | null,
 ): Promise<void> {
   const [send] = await db
     .select({
@@ -85,7 +90,11 @@ export async function recordResendEvent(
         .update(emailCampaigns)
         .set({ bounceCount: sql`${emailCampaigns.bounceCount} + 1` })
         .where(eq(emailCampaigns.id, send.campaignId));
-      if (send.contactId) {
+      // Only a PERMANENT (hard) bounce counts toward contact-level suppression
+      // (resolveAudience drops a contact at MAX_BOUNCES). Resend also emits
+      // email.bounced for "Temporary" bounces (full mailbox, greylisting, transient
+      // DNS) — those must NOT permanently suppress an otherwise-deliverable address.
+      if (send.contactId && bounceType === "Permanent") {
         await db
           .update(contacts)
           .set({ bounceCount: sql`${contacts.bounceCount} + 1`, lastBouncedAt: sql`now()` })

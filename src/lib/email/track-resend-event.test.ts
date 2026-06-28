@@ -54,10 +54,15 @@ describe("recordResendEvent", () => {
     expect(insert).not.toHaveBeenCalled();
   });
 
-  it("bounces: flips send, bumps campaign + contact bounceCount, no engagement", async () => {
-    await recordResendEvent(mockDb, "email.bounced", "m1");
-    expect(update).toHaveBeenCalledTimes(3); // send flip + campaign + contact
+  it("permanent bounce: flips send, bumps campaign + contact suppression, no engagement", async () => {
+    await recordResendEvent(mockDb, "email.bounced", "m1", "Permanent");
+    expect(update).toHaveBeenCalledTimes(3); // send flip + campaign + contact suppression
     expect(insert).not.toHaveBeenCalled();
+  });
+
+  it("temporary bounce: flips send + campaign but does NOT touch contact suppression", async () => {
+    await recordResendEvent(mockDb, "email.bounced", "m1", "Temporary");
+    expect(update).toHaveBeenCalledTimes(2); // send flip + campaign only — no contact bump
   });
 
   it("spam complaint hard-unsubscribes the contact", async () => {

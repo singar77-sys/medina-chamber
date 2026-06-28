@@ -48,19 +48,16 @@ export async function generateMetadata(
 export default async function EventPage(
   {
     params,
-    searchParams,
   }: {
     params: Promise<{ slug: string }>;
-    searchParams: Promise<{ registered?: string; registration_canceled?: string }>;
   }
 ) {
   const { slug } = await params;
   const base = getEventBySlug(slug);
   if (!base) notFound();
-  const [override, photos, sp] = await Promise.all([
+  const [override, photos] = await Promise.all([
     getCmsEventData(slug),
     getEventPhotosWithFallback(slug),
-    searchParams,
   ]);
   const event = override ? { ...base, ...override } : base;
 
@@ -146,23 +143,6 @@ export default async function EventPage(
           <span>/</span>
           <span className="text-text-secondary truncate">{event.title}</span>
         </nav>
-
-        {sp.registered && (
-          <div
-            className="mb-f21 rounded-[var(--radius-lg)] px-f21 py-f13 text-body-sm"
-            style={{ background: "#f0fdf4", color: "#15803d" }}
-          >
-            ✅ You&apos;re registered! A confirmation email is on its way.
-          </div>
-        )}
-        {sp.registration_canceled && (
-          <div
-            className="mb-f21 rounded-[var(--radius-lg)] px-f21 py-f13 text-body-sm"
-            style={{ background: "#fff7ed", color: "#c2410c" }}
-          >
-            Checkout was canceled — you have not been registered.
-          </div>
-        )}
 
         <div className="grid lg:grid-cols-[1fr_360px] gap-f34 lg:gap-f55">
           {/* Main column */}

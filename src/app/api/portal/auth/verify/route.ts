@@ -33,6 +33,7 @@ export async function GET(req: Request): Promise<Response> {
       id: contacts.id,
       organizationId: contacts.organizationId,
       portalClaimedAt: contacts.portalClaimedAt,
+      sessionEpoch: contacts.sessionEpoch,
     })
     .from(contacts)
     .where(eq(contacts.id, payload.contactId))
@@ -53,6 +54,7 @@ export async function GET(req: Request): Promise<Response> {
   const sessionToken = await signPortalSession(
     contact.id,
     contact.organizationId,
+    contact.sessionEpoch,
   );
 
   const res = NextResponse.redirect(`${origin}/portal/dashboard`);

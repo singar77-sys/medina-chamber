@@ -107,6 +107,11 @@ export const contacts = pgTable("contacts", {
   clerkUserId: text("clerk_user_id").unique(),
   portalClaimedAt: timestamp("portal_claimed_at", { withTimezone: true }),
 
+  // Bumped on logout / revocation to invalidate outstanding portal session cookies.
+  // The session token embeds this; verifyPortalSession rejects a stale epoch, so a
+  // copied cookie can be killed without rotating PORTAL_AUTH_SECRET (off-journal 0009).
+  sessionEpoch: integer("session_epoch").notNull().default(0),
+
   // Email health
   unsubscribedAt: timestamp("unsubscribed_at", { withTimezone: true }),
   bounceCount: integer("bounce_count").notNull().default(0),

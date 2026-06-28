@@ -9,7 +9,14 @@
  *
  * Token format: base64url(JSON payload).base64url(HMAC signature)
  * Same scheme as admin-session.ts — proven, auditable, zero deps.
+ *
+ * Node-only: verifyPortalSession reads contacts.session_epoch (the revocation
+ * check), so this module must not be imported into an edge/middleware context.
  */
+
+import { eq } from "drizzle-orm";
+import { db } from "@/lib/db";
+import { contacts } from "@/lib/db/schema";
 
 export const PORTAL_COOKIE = "portal_session";
 
@@ -29,6 +36,7 @@ export interface MagicLinkPayload {
 export interface PortalSessionPayload {
   contactId: string;
   organizationId: string;
+  epoch: number;
   exp: number;
 }
 
@@ -133,10 +141,12 @@ export async function verifyMagicToken(
 export async function signPortalSession(
   contactId: string,
   organizationId: string,
+  epoch: number,
 ): Promise<string> {
   return signPayload({
     contactId,
     organizationId,
+    epoch,
     exp: Date.now() + SESSION_TTL_MS,
   });
 }
@@ -145,7 +155,25 @@ export async function verifyPortalSession(
   token: string,
 ): Promise<PortalSessionPayload | null> {
   const p = await verifyToken<PortalSessionPayload>(token);
-  // A session token must carry an organizationId — reject a magic-link token (which
-  // has none) reused as a session cookie, so it can never be honored with org=undefined.
-  return p && typeof p.organizationId === "string" && p.organizationId ? p : null;
+  // A session token must carry an organizationId (reject a magic-link token reused
+  // as a cookie — never honored with org=undefined) and a numeric epoch.
+  if (!p || typeof p.organizationId !== "string" || !p.organizationId || typeof p.epoch !== "number") {
+    return null;
+  }
+  // Revocation check: the token's epoch must still match the contact's current
+  // session_epoch. Logout / compromise bumps the epoch, instantly invalidating any
+  // outstanding cookies without rotating the shared secret. Fail CLOSED on a DB
+  // error (treat as unauthenticated — the portal can't function without the DB anyway).
+  try {
+    const [c] = await db
+      .select({ sessionEpoch: contacts.sessionEpoch })
+      .from(contacts)
+      .where(eq(contacts.id, p.contactId))
+      .limit(1);
+    if (!c || c.sessionEpoch !== p.epoch) return null;
+  } catch (err) {
+    console.error("[portal-session] session_epoch check failed:", err);
+    return null;
+  }
+  return p;
 }

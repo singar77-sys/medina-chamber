@@ -15,6 +15,10 @@ export const growthZone = {
   events: "https://business.medinachamber.com/member-events",
   memberNews: "https://business.medinachamber.com/news",
   joinApplication: "https://business.medinachamber.com/applicationtojoin2",
+  /** Member sign-in (GrowthZone MIC). The custom /portal is built but stays
+   *  DORMANT until the GrowthZone cutover, so member login points here while the
+   *  public site is live. (/a/MIC/Login 301-redirects to this canonical path.) */
+  login: "https://business.medinachamber.com/MIC/Login",
   /** Individual member portal — append GZ slug */
   memberProfile: "https://business.medinachamber.com/list/Details/",
 } as const;
@@ -211,7 +215,10 @@ export const ctaLink = {
   href: "/membership/join",
 };
 
+// Member login goes to GrowthZone (the live system of record). The custom magic-link
+// portal (/portal) is built but stays dormant until the GrowthZone cutover.
 export const memberLogin = {
   label: "Member Login",
-  href: "/portal",
+  href: growthZone.login,
+  external: true,
 };

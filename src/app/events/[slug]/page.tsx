@@ -4,7 +4,6 @@ import Link from "next/link";
 import { ButtonA, ButtonLink } from "@/components/ui/Button";
 import { notFound } from "next/navigation";
 import { events, getEventBySlug, eventMetaDescription } from "@/data/events";
-import { isRegisterableEvent } from "@/lib/events/db-events";
 import { getCmsEventData } from "@/lib/cms-store";
 import { getEventGraphicRenderer } from "@/components/events/graphics/registry";
 import { FluidGraphicFrame } from "@/components/events/graphics/FluidGraphicFrame";
@@ -58,10 +57,9 @@ export default async function EventPage(
   const { slug } = await params;
   const base = getEventBySlug(slug);
   if (!base) notFound();
-  const [override, photos, registerable, sp] = await Promise.all([
+  const [override, photos, sp] = await Promise.all([
     getCmsEventData(slug),
     getEventPhotosWithFallback(slug),
-    isRegisterableEvent(base.title, base.dateISO),
     searchParams,
   ]);
   const event = override ? { ...base, ...override } : base;
@@ -284,35 +282,21 @@ export default async function EventPage(
                 </p>
               </div>
 
-              {registerable ? (
-                <>
-                  <ButtonLink
-                    href={`/events/${slug}/register`}
-                    size="md"
-                    className="w-full justify-center"
-                  >
-                    Register Now →
-                  </ButtonLink>
-                  <p className="text-caption text-text-tertiary text-center mt-f8">
-                    Secure registration &amp; payment
-                  </p>
-                </>
-              ) : (
-                <>
-                  <ButtonA
-                    href={event.registerUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    size="md"
-                    className="w-full justify-center"
-                  >
-                    Register Now →
-                  </ButtonA>
-                  <p className="text-caption text-text-tertiary text-center mt-f8">
-                    Registration handled securely via GrowthZone
-                  </p>
-                </>
-              )}
+              {/* Registration is handled in GrowthZone (the live system of record).
+                  The internal on-site registration flow stays dormant until the
+                  GrowthZone cutover. */}
+              <ButtonA
+                href={event.registerUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                size="md"
+                className="w-full justify-center"
+              >
+                Register Now →
+              </ButtonA>
+              <p className="text-caption text-text-tertiary text-center mt-f8">
+                Registration handled securely via GrowthZone
+              </p>
 
               {pricingLines[0] && (
                 <p className="text-caption text-cambridge text-center mt-f3 font-bold">

@@ -3,8 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ButtonLink, ButtonA } from "@/components/ui/Button";
 import { FadeIn } from "@/components/FadeIn";
-import { JoinFlow } from "./JoinFlow";
-import { getActiveTiers } from "@/lib/membership-tiers";
+import { growthZone } from "@/lib/navigation";
 import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
@@ -88,10 +87,7 @@ export default async function JoinPage({
 }: {
   searchParams: Promise<{ joined?: string; canceled?: string }>;
 }) {
-  const [{ joined, canceled }, allTiers] = await Promise.all([searchParams, getActiveTiers()]);
-  const tiers = allTiers
-    .filter((t) => t.price > 0)
-    .map((t) => ({ slug: t.key, name: t.name, price: t.price, tagline: t.tagline, featured: t.featured }));
+  const { joined, canceled } = await searchParams;
 
   return (
     <>
@@ -220,7 +216,24 @@ export default async function JoinPage({
                 Checkout was canceled — you have not been charged. Pick up where you left off below.
               </div>
             )}
-            <JoinFlow tiers={tiers} />
+            {/* Applications are handled in GrowthZone (the live system of record).
+                The internal Stripe join flow stays dormant until the cutover. */}
+            <div className="text-center">
+              <ButtonA
+                href={growthZone.joinApplication}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="primary"
+                size="lg"
+                className="justify-center"
+              >
+                Apply for Membership →
+              </ButtonA>
+              <p className="text-body-sm text-text-tertiary mt-f13">
+                You&apos;ll complete your application on the chamber&apos;s secure
+                membership portal.
+              </p>
+            </div>
           </div>
 
           <div className="mt-f34">

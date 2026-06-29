@@ -184,6 +184,7 @@ export default function First30DaysPage() {
         titleAccent="30 Days."
         subtitle="Seven steps to turn membership into momentum. Written for time-starved business owners, everything here is optimized for fast wins and real connections, not busywork."
         image="/images/photos/backgrounds/mentorship-laptop.webp"
+        objectPosition="center 25%"
         breadcrumb={
           <nav className="flex items-center gap-2 text-caption text-text-tertiary">
             <Link

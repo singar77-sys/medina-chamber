@@ -19,6 +19,7 @@ export function PageHero({
   titleAccent,
   subtitle,
   image,
+  objectPosition,
   breadcrumb,
   children,
 }: {
@@ -27,6 +28,9 @@ export function PageHero({
   titleAccent: ReactNode;
   subtitle?: ReactNode;
   image: string;
+  /** CSS object-position for the ghosted photo, e.g. "center 25%" to keep faces
+   *  in frame on wide desktop crops. Defaults to centre. */
+  objectPosition?: string;
   breadcrumb?: ReactNode;
   children?: ReactNode;
 }) {
@@ -43,6 +47,7 @@ export function PageHero({
           fill
           priority
           className="object-cover opacity-[0.33]"
+          style={objectPosition ? { objectPosition } : undefined}
           sizes="100vw"
           quality={60}
         />

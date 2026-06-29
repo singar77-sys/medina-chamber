@@ -100,6 +100,7 @@ export default function WorkforcePage() {
         titleAccent="in Medina County"
         subtitle="Programs to find candidates, subsidize training, and build a safer, better-equipped workforce, from the Chamber and Ohio's state workforce system."
         image="/images/photos/backgrounds/community-conversation.webp"
+        objectPosition="center 40%"
         breadcrumb={
           <nav className="flex items-center gap-2 text-caption text-text-tertiary">
             <Link href="/resources" className="hover:text-text-primary transition-colors">

@@ -98,7 +98,7 @@ export default async function SafetyCouncilPage() {
             alt=""
             fill
             priority
-            className="object-cover opacity-[0.33]"
+            className="object-cover object-[center_25%] opacity-[0.33]"
             sizes="100vw"
             quality={60}
           />
@@ -335,7 +335,7 @@ export default async function SafetyCouncilPage() {
             src="/images/photos/medina-chamber-safety-council-bg.webp"
             alt=""
             fill
-            className="object-cover opacity-[0.33]"
+            className="object-cover object-[center_25%] opacity-[0.33]"
             sizes="100vw"
             quality={60}
           />

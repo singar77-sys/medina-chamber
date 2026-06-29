@@ -54,7 +54,7 @@ const benefits = [
 const faqs = [
   {
     q: "How much does membership cost?",
-    a: "Three fixed tiers: Business Essentials at $345/year, Visibility Plus at $575/year, and Community Investor at $1,145/year. Most new members start with Essentials and upgrade as their visibility and advocacy needs grow.",
+    a: "Three fixed tiers based on your company size — Business Essentials, Visibility Plus, and Community Investor. See our Pricing & Tiers page for current rates. Most new members start with Essentials and upgrade as their visibility and advocacy needs grow.",
   },
   {
     q: "What if I'm a sole proprietor or work from home?",

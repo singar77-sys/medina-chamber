@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "Member Deals & Savings · Greater Medina Chamber of Commerce",
   description:
     "Exclusive deals and offers from Greater Medina Chamber of Commerce members. Support local businesses and save.",
+  alternates: { canonical: "/deals" },
 };
 
 function formatDate(iso: string): string {

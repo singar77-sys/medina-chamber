@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHero } from "@/components/PageHero";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -121,28 +122,25 @@ const programs = [
 
 export default function BusinessGrantsPage() {
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-caption text-text-tertiary mb-10">
-        <Link href="/resources" className="hover:text-text-primary transition-colors">
-          Resources
-        </Link>
-        <span>/</span>
-        <span className="text-text-secondary">Business Grants & Funding</span>
-      </nav>
+    <>
+      <PageHero
+        overline="Business Resources"
+        titleTop="Business Grants &"
+        titleAccent="Funding in Medina County"
+        subtitle="State, federal, and local programs that help Medina County businesses start, grow, and hire."
+        image="/images/photos/medina-square-aerial-summer.jpg"
+        breadcrumb={
+          <nav className="flex items-center gap-2 text-caption text-text-tertiary">
+            <Link href="/resources" className="hover:text-text-primary transition-colors">
+              Resources
+            </Link>
+            <span>/</span>
+            <span className="text-text-secondary">Business Grants & Funding</span>
+          </nav>
+        }
+      />
 
-      {/* Hero */}
-      <section className="max-w-3xl">
-        <p className="text-overline text-cambridge mb-4">Business Resources</p>
-        <h1 className="text-display">
-            <span className="block">Business Grants &amp;</span>
-            <span className="block text-accent">Funding in Medina County</span>
-          </h1>
-        <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-          State, federal, and local programs that help Medina County businesses
-          start, grow, and hire.
-        </p>
-      </section>
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-24">
 
       {/* Honest framing callout */}
       <div className="mt-12 p-6 bg-bg-secondary border border-cambridge/20 rounded-[var(--radius-lg)]">
@@ -257,5 +255,6 @@ export default function BusinessGrantsPage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHero } from "@/components/PageHero";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 
@@ -177,34 +178,27 @@ export default function First30DaysPage() {
         dangerouslySetInnerHTML={{ __html: safeJsonLd(howToJsonLd) }}
       />
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
-        {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-caption text-text-tertiary mb-10">
-          <Link
-            href="/membership/benefits"
-            className="hover:text-text-primary transition-colors"
-          >
-            Membership
-          </Link>
-          <span>/</span>
-          <span className="text-text-secondary">First 30 Days</span>
-        </nav>
+      <PageHero
+        overline="New Member Onboarding"
+        titleTop="Your First"
+        titleAccent="30 Days."
+        subtitle="Seven steps to turn membership into momentum. Written for time-starved business owners, everything here is optimized for fast wins and real connections, not busywork."
+        image="/images/photos/backgrounds/mentorship-laptop.webp"
+        breadcrumb={
+          <nav className="flex items-center gap-2 text-caption text-text-tertiary">
+            <Link
+              href="/membership/benefits"
+              className="hover:text-text-primary transition-colors"
+            >
+              Membership
+            </Link>
+            <span>/</span>
+            <span className="text-text-secondary">First 30 Days</span>
+          </nav>
+        }
+      />
 
-        {/* Hero */}
-        <section className="max-w-3xl">
-          <p className="text-overline text-cambridge mb-4">
-            New Member Onboarding
-          </p>
-          <h1 className="text-display">
-            <span className="block">Your First</span>
-            <span className="block text-accent">30 Days.</span>
-          </h1>
-          <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-            Seven steps to turn membership into momentum. Written for
-            time-starved business owners, everything here is optimized for
-            fast wins and real connections, not busywork.
-          </p>
-        </section>
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-24">
 
         {/* Overview callout */}
         <FadeIn>

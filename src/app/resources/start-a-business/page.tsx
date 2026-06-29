@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHero } from "@/components/PageHero";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -133,29 +134,25 @@ const faqs = [
 
 export default function StartABusinessPage() {
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-caption text-text-tertiary mb-10">
-        <Link href="/resources" className="hover:text-text-primary transition-colors">
-          Resources
-        </Link>
-        <span>/</span>
-        <span className="text-text-secondary">Start a Business</span>
-      </nav>
+    <>
+      <PageHero
+        overline="Business Resources"
+        titleTop="Start a Business in"
+        titleAccent="Medina County"
+        subtitle="A practical step-by-step guide to launching a business in Medina County, Ohio, from choosing a structure to getting your first customer."
+        image="/images/photos/downtown-medina.jpg"
+        breadcrumb={
+          <nav className="flex items-center gap-2 text-caption text-text-tertiary">
+            <Link href="/resources" className="hover:text-text-primary transition-colors">
+              Resources
+            </Link>
+            <span>/</span>
+            <span className="text-text-secondary">Start a Business</span>
+          </nav>
+        }
+      />
 
-      {/* Hero */}
-      <section className="max-w-3xl">
-        <p className="text-overline text-cambridge mb-4">Business Resources</p>
-        <h1 className="text-display">
-            <span className="block">Start a Business in</span>
-            <span className="block text-accent">Medina County</span>
-          </h1>
-        <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-          A practical step-by-step guide to launching a business in Medina
-          County, Ohio, from choosing a structure to getting your first
-          customer.
-        </p>
-      </section>
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-24">
 
       {/* Steps */}
       <section className="mt-20 space-y-6">
@@ -273,5 +270,6 @@ export default function StartABusinessPage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHero } from "@/components/PageHero";
 import Link from "next/link";
 import { activeCommunities, getMembersByCity } from "@/data/communities";
 
@@ -16,22 +17,22 @@ export const metadata: Metadata = {
 
 export default function CommunityHubPage() {
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
-      {/* Hero */}
-      <section className="max-w-3xl">
-        <p className="text-overline text-cambridge mb-4">
-          Medina County, Ohio
-        </p>
-        <h1 className="text-display">
-            <span className="block">Business Communities</span>
-            <span className="block text-accent">Across the County</span>
-          </h1>
-        <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-          The Greater Medina Chamber of Commerce serves businesses in every
-          corner of Medina County, from the Square to the southern townships.
-          500+ member businesses across {activeCommunities.length} communities.
-        </p>
-      </section>
+    <>
+      <PageHero
+        overline="Medina County, Ohio"
+        titleTop="Business Communities"
+        titleAccent="Across the County"
+        subtitle={
+          <>
+            The Greater Medina Chamber of Commerce serves businesses in every
+            corner of Medina County, from the Square to the southern townships.
+            500+ member businesses across {activeCommunities.length} communities.
+          </>
+        }
+        image="/images/photos/medina-square-aerial-spring.jpg"
+      />
+
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-24">
 
       {/* Community grid */}
       <section className="mt-16">
@@ -114,5 +115,6 @@ export default function CommunityHubPage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

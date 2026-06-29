@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHero } from "@/components/PageHero";
 import Link from "next/link";
 import { ButtonLink, ButtonA } from "@/components/ui/Button";
 
@@ -92,29 +93,25 @@ const quickLinks = [
 
 export default function WorkforcePage() {
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-caption text-text-tertiary mb-10">
-        <Link href="/resources" className="hover:text-text-primary transition-colors">
-          Resources
-        </Link>
-        <span>/</span>
-        <span className="text-text-secondary">Workforce</span>
-      </nav>
+    <>
+      <PageHero
+        overline="Business Resources"
+        titleTop="Hire & Grow Your Team"
+        titleAccent="in Medina County"
+        subtitle="Programs to find candidates, subsidize training, and build a safer, better-equipped workforce, from the Chamber and Ohio's state workforce system."
+        image="/images/photos/backgrounds/community-conversation.webp"
+        breadcrumb={
+          <nav className="flex items-center gap-2 text-caption text-text-tertiary">
+            <Link href="/resources" className="hover:text-text-primary transition-colors">
+              Resources
+            </Link>
+            <span>/</span>
+            <span className="text-text-secondary">Workforce</span>
+          </nav>
+        }
+      />
 
-      {/* Hero */}
-      <section className="max-w-3xl">
-        <p className="text-overline text-cambridge mb-f13">Business Resources</p>
-        <h1 className="text-display">
-            <span className="block">Hire &amp; Grow Your Team</span>
-            <span className="block text-accent">in Medina County</span>
-          </h1>
-        <p className="text-body-lg text-text-secondary mt-f21 max-w-2xl">
-          Programs to find candidates, subsidize training, and build a safer,
-          better-equipped workforce, from the Chamber and Ohio&apos;s state
-          workforce system.
-        </p>
-      </section>
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 pb-f55 lg:pb-f89">
 
       {/* Quick links strip */}
       <div className="mt-10 flex flex-wrap gap-f8">
@@ -213,5 +210,6 @@ export default function WorkforcePage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

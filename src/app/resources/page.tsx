@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHero } from "@/components/PageHero";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -50,19 +51,16 @@ const resources = [
 
 export default function ResourcesPage() {
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
-      {/* Hero */}
-      <section className="max-w-3xl">
-        <p className="text-overline text-cambridge mb-4">Greater Medina Chamber</p>
-        <h1 className="text-display">
-            <span className="block">Business Resources</span>
-            <span className="block text-accent">for Medina County</span>
-          </h1>
-        <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-          Practical guides to the programs, registrations, and funding sources
-          available to businesses starting or growing in Medina County, Ohio.
-        </p>
-      </section>
+    <>
+      <PageHero
+        overline="Greater Medina Chamber"
+        titleTop="Business Resources"
+        titleAccent="for Medina County"
+        subtitle="Practical guides to the programs, registrations, and funding sources available to businesses starting or growing in Medina County, Ohio."
+        image="/images/photos/industry-medina.jpg"
+      />
+
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-24">
 
       {/* Resource cards */}
       <section className="mt-20 grid md:grid-cols-3 gap-6">
@@ -114,5 +112,6 @@ export default function ResourcesPage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

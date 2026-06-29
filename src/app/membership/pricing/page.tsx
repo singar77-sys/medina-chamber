@@ -299,8 +299,22 @@ export default async function PricingPage() {
       </section>
 
       {/* Essentials benefits table */}
-      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+        {/* Ghosted networking backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/networking.webp"
+            alt=""
+            fill
+            className="object-cover opacity-[0.10]"
+            sizes="100vw"
+            quality={60}
+          />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
             <div className="max-w-2xl">
               <p className="text-overline text-cambridge mb-f8">What&apos;s Inside</p>

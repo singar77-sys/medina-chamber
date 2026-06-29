@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHero } from "@/components/PageHero";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { safeJsonLd } from "@/lib/json-ld";
@@ -90,27 +91,24 @@ export default async function CommunityPage(
         dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
-        {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-caption text-text-tertiary mb-10">
-          <Link href="/community" className="hover:text-text-primary transition-colors">
-            Communities
-          </Link>
-          <span>/</span>
-          <span className="text-text-secondary">{community.name}</span>
-        </nav>
+      <PageHero
+        overline={community.county}
+        titleTop={community.name}
+        titleAccent="Business Community"
+        subtitle={community.description}
+        image="/images/photos/downtown-medina-2.jpg"
+        breadcrumb={
+          <nav className="flex items-center gap-2 text-caption text-text-tertiary">
+            <Link href="/community" className="hover:text-text-primary transition-colors">
+              Communities
+            </Link>
+            <span>/</span>
+            <span className="text-text-secondary">{community.name}</span>
+          </nav>
+        }
+      />
 
-        {/* Hero */}
-        <section className="max-w-3xl">
-          <p className="text-overline text-cambridge mb-4">{community.county}</p>
-          <h1 className="text-display">
-            <span className="block">{community.name}</span>
-            <span className="block text-accent">Business Community</span>
-          </h1>
-          <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-            {community.description}
-          </p>
-        </section>
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-24">
 
         {/* Stats strip */}
         <section className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4">

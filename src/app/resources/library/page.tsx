@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHero } from "@/components/PageHero";
 import Link from "next/link";
 import { db } from "@/lib/db";
 import { getPublicResources, groupByCategory, type Resource } from "@/lib/resources";
@@ -26,25 +27,23 @@ export default async function ResourceLibraryPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
-      {/* Hero */}
-      <section className="max-w-3xl">
-        <p className="text-overline text-cambridge mb-4">Greater Medina Chamber</p>
-        <h1 className="text-display">
-          <span className="block">Resource Library</span>
-          <span className="block text-accent">for Medina County</span>
-        </h1>
-        <p className="text-body-lg text-text-secondary mt-6 max-w-2xl">
-          A curated set of tools, programs, forms, and links to help Medina County
-          businesses start, fund, hire, and grow.
-        </p>
+    <>
+      <PageHero
+        overline="Greater Medina Chamber"
+        titleTop="Resource Library"
+        titleAccent="for Medina County"
+        subtitle="A curated set of tools, programs, forms, and links to help Medina County businesses start, fund, hire, and grow."
+        image="/images/photos/backgrounds/notebook-workspace.webp"
+      >
         <Link
           href="/resources"
           className="inline-block mt-6 text-body-sm font-bold text-cambridge hover:translate-x-1 transition-transform"
         >
           ← All resources &amp; guides
         </Link>
-      </section>
+      </PageHero>
+
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-24">
 
       {/* Library, grouped by category */}
       {groups.length === 0 ? (
@@ -86,5 +85,6 @@ export default async function ResourceLibraryPage() {
         </div>
       )}
     </div>
+    </>
   );
 }

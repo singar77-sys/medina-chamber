@@ -488,7 +488,7 @@ export default async function AboutPage() {
         <FadeIn>
           <div className="max-w-2xl mb-f21">
             <p className="text-overline text-cambridge mb-f8">Explore More</p>
-            <h2 className="text-h2">Discover more about the chamber.</h2>
+            <h2 className="text-h2">More about the chamber.</h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-f21">
             {quickLinks.map((link, i) => (

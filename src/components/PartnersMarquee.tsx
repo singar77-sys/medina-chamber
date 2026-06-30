@@ -41,11 +41,11 @@ const PARTNERS: Partner[] = [
     tagline: "Workplace safety training & BWC rebates",
   },
   {
-    name: "Medina County Young Professionals Association",
-    logo: "/images/partners/medina-county-young-professionals-association.jpg",
-    href: "https://www.facebook.com/MedinaCountyYPA/",
+    name: "VensureHR",
+    logo: "/images/partners/vensurehr.png",
+    href: "https://vensure.com/",
     external: true,
-    tagline: "Next-generation business networking",
+    tagline: "HR, payroll & benefits solutions",
   },
   {
     name: "Community Energy Advisors",

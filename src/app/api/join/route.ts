@@ -18,6 +18,7 @@ import { joinLimiter, applyRateLimit } from "@/lib/rate-limit";
 import { EMAIL_RE } from "@/lib/email";
 import { pickString, pickOptional } from "@/lib/sanitize";
 import { db } from "@/lib/db";
+import { getSiteOrigin } from "@/lib/site-url";
 import {
   contacts,
   membershipTiers,
@@ -167,7 +168,8 @@ export async function POST(req: NextRequest): Promise<Response> {
     throw err;
   }
 
-  const origin = process.env.NEXT_PUBLIC_SITE_URL ?? new URL(req.url).origin;
+  // Canonical origin — a spoofed Host can't influence the Stripe redirect in prod.
+  const origin = getSiteOrigin(req);
   // The webhook reads these off the PaymentIntent metadata to record payment +
   // activate. type discriminates a join from a dues / event-registration payment.
   const metadata = {

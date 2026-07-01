@@ -29,6 +29,7 @@ import { db } from "@/lib/db";
 import { invoices } from "@/lib/db/schema";
 import { verifyPortalSession, PORTAL_COOKIE } from "@/lib/portal-session";
 import { limitPortalCheckout } from "@/lib/rate-limit";
+import { getSiteOrigin } from "@/lib/site-url";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -99,10 +100,9 @@ export async function POST(req: Request): Promise<Response> {
 
   const customerId = await ensureStripeCustomer(db, invoice.organizationId);
 
-  // Prefer the configured public site URL so success/cancel land on the right
-  // host behind proxies; fall back to the request origin in dev / preview.
-  const origin =
-    process.env.NEXT_PUBLIC_SITE_URL ?? new URL(req.url).origin;
+  // Canonical origin so success/cancel land on the right host behind proxies; a
+  // spoofed Host can't influence the redirect in prod (dev falls back to origin).
+  const origin = getSiteOrigin(req);
 
   const metadata = {
     invoiceId: invoice.id,

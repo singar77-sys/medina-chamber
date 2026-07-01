@@ -840,11 +840,7 @@ export function ChamberBotPortal({
                           {m.role === "user" ? (
                             m.content
                           ) : m.content ? (
-                            <span
-                              dangerouslySetInnerHTML={{
-                                __html: renderMarkdown(m.content),
-                              }}
-                            />
+                            <span>{renderMarkdown(m.content)}</span>
                           ) : (
                             <span
                               className="typing"

@@ -651,7 +651,7 @@ export function ChatWidget() {
                   {m.role === "user" ? (
                     m.content
                   ) : m.content ? (
-                    <span dangerouslySetInnerHTML={{ __html: renderMarkdown(m.content) }} />
+                    <span>{renderMarkdown(m.content)}</span>
                   ) : isLoading ? (
                     <span className="flex gap-1 items-center py-0.5">
                       <span className="w-1.5 h-1.5 bg-text-tertiary rounded-full animate-bounce [animation-delay:0ms]" />

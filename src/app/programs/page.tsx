@@ -5,7 +5,7 @@ import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
-  title: "Programs",
+  title: "Programs for Local Businesses in Medina County",
   description:
     "Greater Medina Chamber of Commerce programs, leadership development, networking events, workplace safety, and professional meeting space for Medina County businesses.",
   openGraph: {

@@ -17,6 +17,12 @@ interface CountUpProps {
  * Animated number counter that triggers once when scrolled into view.
  * Uses a ref (not state) for the fired flag so the IntersectionObserver
  * is created exactly once — no re-observation on state changes.
+ *
+ * The FINAL value is rendered server-side (count seeds to `end`), so
+ * crawlers and view-source see the real number and there's no layout
+ * shift. When the element scrolls into view the animation resets to 0
+ * and counts up to `end` — a purely visual flourish that never changes
+ * the accessible content for no-JS / crawler contexts.
  */
 export function CountUp({
   end,
@@ -25,7 +31,8 @@ export function CountUp({
   prefix = "",
   className = "",
 }: CountUpProps) {
-  const [count, setCount] = useState(0);
+  // Seed to `end` so SSR markup shows the final number, not 0.
+  const [count, setCount] = useState(end);
   const [hasStarted, setHasStarted] = useState(false);
   const hasAnimated = useRef(false); // ref flag — never causes effect re-run
   const ref = useRef<HTMLSpanElement>(null);
@@ -74,7 +81,7 @@ export function CountUp({
 
   return (
     <span ref={ref} className={className}>
-      {prefix}{hasStarted ? count : 0}{suffix}
+      {prefix}{hasStarted ? count : end}{suffix}
     </span>
   );
 }

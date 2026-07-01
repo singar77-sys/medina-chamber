@@ -6,7 +6,7 @@ import { getRecentBlogPosts, formatBlogDate } from "@/data/blog";
 import { FadeIn } from "@/components/FadeIn";
 
 export const metadata: Metadata = {
-  title: "News",
+  title: "Medina County Business News",
   description:
     "The latest from the Greater Medina Chamber of Commerce, business blog, member announcements, the Medina Matters Podcast, and the Medina Means Business magazine.",
   openGraph: {

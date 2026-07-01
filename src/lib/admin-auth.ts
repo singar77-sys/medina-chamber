@@ -2,7 +2,7 @@
  * Shared auth gate for /api/admin/* routes.
  *
  * Reads the httpOnly `admin_session` cookie and verifies it with
- * verifySession (HMAC-SHA256 over CHAT_ADMIN_TOKEN, see admin-session.ts).
+ * verifySession (HMAC-SHA256 over ADMIN_SESSION_SECRET, see admin-session.ts).
  * This replaces the old Bearer-token / ?token= guard — the session cookie
  * is set server-side at login and is never exposed to JavaScript, access
  * logs, browser history, or Referer headers.

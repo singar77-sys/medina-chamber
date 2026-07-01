@@ -16,8 +16,9 @@
  *   - ADMIN_USERS UNSET → the shared CHAT_ADMIN_TOKEN is the sole login
  *                         credential (recorded as "Admin"), exactly as before.
  *
- * CHAT_ADMIN_TOKEN is ALWAYS the HMAC signing secret for the session cookie
- * (see admin-session.ts), independent of ADMIN_USERS.
+ * The session cookie is signed with the dedicated ADMIN_SESSION_SECRET (see
+ * admin-session.ts), independent of both CHAT_ADMIN_TOKEN and ADMIN_USERS —
+ * rotating a login credential never invalidates live sessions, and vice versa.
  */
 
 import { getAdminSecret } from "@/lib/admin-session";

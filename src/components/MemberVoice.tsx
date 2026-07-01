@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
-import { BrandShaderBackground } from "@/components/effects/BrandShaderBackground";
+import { BrandShaderBackgroundLazy } from "@/components/effects/BrandShaderBackgroundLazy";
 
 /**
  * MemberVoice — typographic pull quote as architectural moment.
@@ -17,7 +17,7 @@ export function MemberVoice() {
           quote with pointer-events: none so it never interferes with
           selection or reading. Replaces the old static cambridge
           radial wash with something living. */}
-      <BrandShaderBackground className="mv-shader-bg" />
+      <BrandShaderBackgroundLazy className="mv-shader-bg" />
 
       <div className="relative z-10 mx-auto max-w-6xl px-6 lg:px-8">
         <FadeIn>

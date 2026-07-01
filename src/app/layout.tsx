@@ -5,10 +5,7 @@ import { ThemeProvider, ThemeScript } from "@/components/ThemeProvider";
 import { PostHogProvider } from "@/components/PostHogProvider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { ChatWidget } from "@/components/ChatWidget";
-import { CommandPalette } from "@/components/CommandPalette";
-import { KeywordHotkey } from "@/components/KeywordHotkey";
-import { BirthdayConfetti } from "@/components/BirthdayConfetti";
+import { DeferredGlobals } from "@/components/DeferredGlobals";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -99,10 +96,11 @@ export default async function RootLayout({
               {children}
             </main>
             <Footer />
-            <ChatWidget />
-            <CommandPalette />
-            <KeywordHotkey />
-            <BirthdayConfetti />
+            {/* Non-critical global widgets (chat, command palette, keyword
+                hotkey, birthday confetti) — mounted after first paint /
+                first interaction to keep their JS off the initial bundle.
+                See DeferredGlobals for the deferral strategy. */}
+            <DeferredGlobals />
           </ThemeProvider>
         </PostHogProvider>
         {/* Vercel observability — page views + web vitals (LCP, INP, CLS).

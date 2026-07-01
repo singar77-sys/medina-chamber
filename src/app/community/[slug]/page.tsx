@@ -11,6 +11,10 @@ import {
 import { getUpcomingEvents } from "@/data/events";
 import { isVisibilityPlus } from "@/data/members";
 
+// ISR: shows up to 4 upcoming events (filtered by `new Date()`); re-render
+// daily so passed events drop off rather than freezing at build time.
+export const revalidate = 86400;
+
 // ── Static generation ─────────────────────────────────────────────
 // Prerender every defined community, including ones with zero current
 // members. The Rittman node on the contact-page map links here, and

@@ -8,6 +8,7 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
+import { THEME_SCRIPT } from "@/lib/theme-script";
 
 type Theme = "light" | "dark";
 
@@ -29,24 +30,21 @@ export function useTheme() {
  * Inline script to prevent flash of wrong theme.
  * Injected into <head> before any paint.
  *
- * Takes a CSP nonce as a prop because it's an inline <script> — the
- * middleware-issued nonce makes it execute under our strict CSP.
+ * The script body (THEME_SCRIPT) is static and lives in
+ * src/lib/theme-script.ts so the server/edge proxy can import its hash for
+ * the CSP without pulling in this "use client" module. Instead of a
+ * per-request nonce (which would force the whole app tree dynamic), it is
+ * allowed through the CSP by a build-stable `'sha256-...'` source.
  */
-export function ThemeScript({ nonce }: { nonce?: string }) {
-  const script = `
-    (function() {
-      try {
-        var stored = localStorage.getItem('mc-theme');
-        var preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        var theme = stored || preferred;
-        document.documentElement.setAttribute('data-theme', theme);
-      } catch (e) { /* localStorage/matchMedia blocked (private mode, locked-down browser) — keep the SSR default theme */ }
-    })();
-  `;
-  // suppressHydrationWarning: React normalises nonce="" during hydration
-  // (intentional nonce-hiding behaviour). The mismatch warning is harmless
-  // but causes a visible dev-mode overlay — suppress it here.
-  return <script suppressHydrationWarning nonce={nonce} dangerouslySetInnerHTML={{ __html: script }} />;
+export function ThemeScript() {
+  // suppressHydrationWarning: React normalises the nonce attribute during
+  // hydration; suppressing avoids a harmless dev-mode overlay warning.
+  return (
+    <script
+      suppressHydrationWarning
+      dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }}
+    />
+  );
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {

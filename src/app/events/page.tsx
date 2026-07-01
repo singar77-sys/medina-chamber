@@ -6,6 +6,12 @@ import { getEventGraphicRenderer } from "@/components/events/graphics/registry";
 import { FluidGraphicFrame } from "@/components/events/graphics/FluidGraphicFrame";
 import { FadeIn } from "@/components/FadeIn";
 
+// ISR: the upcoming/past split is derived from `new Date()` against static
+// event data, so re-render daily to drop events as they pass rather than
+// freezing the list at build time. Events are day-granular (dateISO), so a
+// 24h cadence is sufficient; no per-request rendering needed.
+export const revalidate = 86400;
+
 export const metadata: Metadata = {
   title: "Events",
   description:

@@ -228,12 +228,15 @@ function RoomModal({ room, onClose }: { room: Room; onClose: () => void }) {
 
         {/* Photo panel — hero of the dialog. Ken Burns on open. */}
         <div className="rsc-modal__photo">
+          {/* No `priority` — this photo only renders after the user clicks
+              a card to open the modal, so it's never the page LCP. Letting
+              next/image lazy-load it on demand keeps it off the initial
+              request path. */}
           <Image
             src={room.photo}
             alt={`${room.name} at the Greater Medina Chamber`}
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
-            priority
             className="rsc-modal__photo-img"
           />
           <span className="rsc-modal__chip">{room.chip}</span>

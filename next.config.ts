@@ -64,6 +64,28 @@ const nextConfig: NextConfig = {
         source: "/:path*",
         headers: securityHeaders,
       },
+      // Static fonts under public/fonts — long-lived immutable caching is
+      // safe here: font files are versioned by filename (BNBergen-Bold.woff2,
+      // Mistrully.woff2, …) and are never overwritten in place with different
+      // bytes under the same name. A new font ships as a new/renamed file.
+      {
+        source: "/fonts/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+      // Static images under public/images — deliberately NOT `immutable`.
+      // Deploy practice overwrites image files in place under the same name
+      // (partner-logo swaps, "Life at the Chamber" gallery slot #N swaps,
+      // hero photo replacements — see git history). `immutable` would pin
+      // stale bytes in browser caches for a year, so we cap at one day and
+      // force revalidation to pick up in-place replacements promptly.
+      {
+        source: "/images/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=86400, must-revalidate" },
+        ],
+      },
     ];
   },
   // Legacy Squarespace URLs — preserve old bookmarks and SEO equity by

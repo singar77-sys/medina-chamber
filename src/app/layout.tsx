@@ -8,11 +8,18 @@ import { Footer } from "@/components/Footer";
 import { DeferredGlobals } from "@/components/DeferredGlobals";
 import "./globals.css";
 
+// Keep non-production Vercel deployments (preview branches) out of the index
+// so scraped duplicate content never competes with the real site. Fail-safe:
+// ONLY an explicit "preview" triggers noindex — production, development, and
+// an unset VERCEL_ENV all index normally.
+const isPreview = process.env.VERCEL_ENV === "preview";
+
 export const metadata: Metadata = {
   title: {
     default: "Medina Chamber of Commerce",
     template: "%s | Medina Chamber",
   },
+  ...(isPreview && { robots: { index: false, follow: false } }),
   description:
     "The Greater Medina Chamber of Commerce connects businesses, drives economic growth, and strengthens the Medina community. Est. 1938.",
   metadataBase: new URL("https://medinachamber.com"),

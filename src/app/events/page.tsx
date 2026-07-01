@@ -13,7 +13,7 @@ import { FadeIn } from "@/components/FadeIn";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "Events",
+  title: "Medina County Business Events & Networking",
   description:
     "Upcoming networking events, workshops, and community gatherings from the Greater Medina Chamber of Commerce. Chamber Chat, Networking WOW, Member Meetings, Golf Outing, and more.",
   openGraph: {

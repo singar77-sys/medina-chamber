@@ -7,7 +7,7 @@ import { growthZone } from "@/lib/navigation";
 import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
-  title: "Join the Chamber",
+  title: "Join the Greater Medina Chamber of Commerce",
   description:
     "Join the Greater Medina Chamber of Commerce. Membership benefits include networking events, business directory listing, advocacy, savings programs, and community visibility.",
   openGraph: {

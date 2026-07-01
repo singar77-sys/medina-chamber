@@ -185,6 +185,3 @@ export async function recordTokenUsage(
   getMemBucket("daily").total += total;
   getMemBucket("monthly").total += total;
 }
-
-export const DAILY_CAP_FOR_TESTS = DAILY_TOKEN_CAP;
-export const MONTHLY_CAP_FOR_TESTS = MONTHLY_TOKEN_CAP;

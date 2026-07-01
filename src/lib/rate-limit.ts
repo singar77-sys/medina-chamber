@@ -36,6 +36,22 @@ function makeUpstashLimiter(
   });
 }
 
+// Same as makeUpstashLimiter but with an arbitrary window, for limiters that
+// enforce more than a per-minute cap (e.g. the admin-login hourly ceiling).
+function makeUpstashWindowLimiter(
+  limit: number,
+  window: `${number} h` | `${number} m`,
+  prefix: string,
+): Ratelimit | null {
+  const redis = getRedis();
+  if (!redis) return null;
+  return new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(limit, window),
+    prefix,
+  });
+}
+
 // ── In-memory fallback ────────────────────────────────────────────
 // Per-isolate fixed-window counter. Window resets every 60 seconds.
 // Memory cost: ~32 bytes × unique-IPs × time-window. Bounded by an LRU
@@ -50,13 +66,17 @@ interface MemBucket {
 
 class InMemoryLimiter {
   private buckets = new Map<string, MemBucket>();
-  constructor(private readonly perMinute: number) {}
+  // windowMs defaults to 60s so every existing caller (perMinute) is unchanged.
+  constructor(
+    private readonly limit_: number,
+    private readonly windowMs: number = 60_000,
+  ) {}
 
   async limit(key: string): Promise<{ success: boolean }> {
     const now = Date.now();
     let bucket = this.buckets.get(key);
     if (!bucket || bucket.resetAt <= now) {
-      bucket = { count: 0, resetAt: now + 60_000 };
+      bucket = { count: 0, resetAt: now + this.windowMs };
       // LRU-ish: evict oldest when oversized.
       if (this.buckets.size >= MAX_BUCKETS) {
         const firstKey = this.buckets.keys().next().value;
@@ -65,7 +85,7 @@ class InMemoryLimiter {
       this.buckets.set(key, bucket);
     }
     bucket.count++;
-    return { success: bucket.count <= this.perMinute };
+    return { success: bucket.count <= this.limit_ };
   }
 }
 
@@ -261,4 +281,73 @@ export async function limitEventRegister(
 ): Promise<Response | null> {
   const ok = await eventRegisterLimiter.allow(getRequestIp(req));
   return ok ? null : new Response("Too many requests.", { status: 429 });
+}
+
+// ── Admin login limiter (dual window) ──────────────────────────────
+//
+// Brute-forcing the admin password must be cheap to block: two lazily-built
+// sliding windows per IP — a burst cap (5/min) and a sustained cap (20/hour).
+// Applied BEFORE the constant-time credential check so a spammed bad request is
+// rejected fast, without ever running the expensive comparison. Lazy + degrade
+// (never fail fully open), same discipline as the portal limiters above.
+function makeLazyWindowLimiter(
+  limit: number,
+  window: `${number} h` | `${number} m`,
+  windowMs: number,
+  prefix: string,
+) {
+  let limiter: SimpleLimiter | undefined;
+  let memFallback: InMemoryLimiter | undefined;
+  let warned = false;
+
+  function warnOnce(reason: string, err?: unknown) {
+    if (warned) return;
+    warned = true;
+    console.warn(`[rate-limit] ${prefix} degrading to in-memory: ${reason}`, err ?? "");
+  }
+
+  return {
+    async allow(key: string): Promise<boolean> {
+      try {
+        if (limiter === undefined) {
+          limiter =
+            makeUpstashWindowLimiter(limit, window, prefix) ??
+            new InMemoryLimiter(limit, windowMs);
+        }
+        const { success } = await limiter.limit(key);
+        return success;
+      } catch (err) {
+        warnOnce("Upstash limiter threw", err);
+        try {
+          memFallback ??= new InMemoryLimiter(limit, windowMs);
+          const { success } = await memFallback.limit(key);
+          return success;
+        } catch {
+          return true;
+        }
+      }
+    },
+  };
+}
+
+const adminAuthPerMinute = makeLazyWindowLimiter(5, "1 m", 60_000, "rl:admin-auth-min");
+const adminAuthPerHour = makeLazyWindowLimiter(20, "1 h", 60 * 60_000, "rl:admin-auth-hr");
+
+/**
+ * Rate-limit guard for the admin login route: 5 attempts/min AND 20/hour per IP.
+ * Returns a 429 Response (with a `reason` tag) when either window is exceeded,
+ * otherwise null. Checked before the credential comparison. Never throws.
+ */
+export async function limitAdminAuth(
+  req: Request,
+): Promise<{ response: Response; reason: "rate_min" | "rate_hour" } | null> {
+  const key = getRequestIp(req);
+  // Check both windows; the minute burst cap is the tighter, more common trip.
+  if (!(await adminAuthPerMinute.allow(key))) {
+    return { response: new Response("Too many requests.", { status: 429 }), reason: "rate_min" };
+  }
+  if (!(await adminAuthPerHour.allow(key))) {
+    return { response: new Response("Too many requests.", { status: 429 }), reason: "rate_hour" };
+  }
+  return null;
 }

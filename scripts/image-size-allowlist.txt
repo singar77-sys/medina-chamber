@@ -1,0 +1,12 @@
+# Image-size guard allowlist — read by scripts/check-image-sizes.mjs.
+#
+# One repo-relative path per line for a raster image (jpg/jpeg/png) that is
+# ALLOWED to exceed the 500 KB CI threshold. Use sparingly: the right fix for
+# an oversized photo is almost always "convert it to WebP/AVIF", not an
+# allowlist entry. Add a comment above each path explaining why it's exempt.
+#
+# Example:
+#   # Full-res print asset for the annual-report PDF export — not web-served.
+#   public/images/print/annual-report-cover.png
+#
+# (No entries yet.)

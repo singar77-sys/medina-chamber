@@ -27,6 +27,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # Full history so the image-size guard can diff against origin/main.
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -55,6 +58,15 @@ jobs:
 
       - name: Test
         run: pnpm test
+
+      # Image-size guard — fails if a new/changed jpg/jpeg/png in this branch
+      # exceeds 500 KB (SVG/WebP/AVIF exempt). Keeps the deploy image payload
+      # from creeping back after the asset diet. Exceptions go in
+      # scripts/image-size-allowlist.txt. See scripts/check-image-sizes.mjs.
+      - name: Image-size guard
+        run: node scripts/check-image-sizes.mjs
+        env:
+          BASE_REF: origin/main
 
       # Secret-free production build. Proves the app builds with NO runtime
       # secrets — the lazy db + Stripe Proxies mean module import during page-

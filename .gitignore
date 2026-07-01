@@ -70,3 +70,13 @@ public/images/chamber events/
 # in production. Too large for git. Use scripts/sync-sharepoint-photos.mjs
 # to upload to Blob storage instead.
 public/images/events/
+
+# Historical ribbon-cutting / event photos (public/images/archive/) — ~37 MB
+# of high-res JPEGs that nothing in src/ renders (not referenced literally,
+# not scanned by getStaticPhotos). Removed from git tracking in the asset
+# diet; a local copy is kept under .archive-backup/ (also ignored below) in
+# case the chamber wants the originals back. Keep out of git going forward.
+public/images/archive/
+
+# Local backup of the removed historical archive photos — never shipped.
+.archive-backup/

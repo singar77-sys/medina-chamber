@@ -1,17 +1,47 @@
 /**
- * Edge proxy (Next.js 16's renamed middleware) — Content Security Policy
- * with per-request nonce.
+ * Edge proxy (Next.js 16's renamed middleware) — Content Security Policy.
  *
- * Generates a fresh base64 nonce on every request and:
- *   1. Sets the CSP response header with that nonce.
- *   2. Forwards the nonce in the `x-nonce` request header so server
- *      components can read it via `headers().get("x-nonce")` and apply
- *      `nonce={nonce}` to any inline <script> they render (notably the
- *      JSON-LD blocks on event/blog/member detail pages).
+ * Two CSP tiers, chosen per request path, because Next.js 16's rendering
+ * model forces a real tradeoff between static generation and a nonce-based
+ * script CSP:
  *
- * `'strict-dynamic'` lets framework-injected scripts (Next.js bootstrap,
- * Vercel Analytics, Speed Insights, Sentry browser SDK) execute as long
- * as they were loaded by a nonced script — which Next.js handles for us.
+ *   - A statically prerendered App Router page emits inline RSC bootstrap
+ *     scripts (`self.__next_f.push(...)`). Next can only stamp a nonce on
+ *     those during *server-side* rendering from the request's CSP header;
+ *     a build-time static page has no request, so they ship WITHOUT a
+ *     nonce and WITHOUT an integrity hash (verified in Next 16.2.9:
+ *     server/app-render/use-flight-response.js only nonces them, never
+ *     hashes; required-scripts.js only adds SRI integrity to *external*
+ *     bundles). Their content is per-page, so they can't be hash-listed
+ *     ahead of time either. Under a nonce/`strict-dynamic` script-src they
+ *     are blocked → the page never hydrates.
+ *   - Reading the nonce in the root layout (`headers()`) also forces the
+ *     ENTIRE app tree to render dynamically, killing TTFB/CDN caching for
+ *     marketing pages that have no dynamic data at all.
+ *
+ * Resolution:
+ *   - DYNAMIC HTML routes (`/admin/**`, `/portal/**`) keep the strict
+ *     nonce + `strict-dynamic` policy. They render on-demand, so Next
+ *     auto-nonces every inline script (including `__next_f`) from the CSP
+ *     header on each request. Full script-XSS protection where sensitive
+ *     data and auth live.
+ *   - STATIC/ISR routes (all public marketing pages) get a policy WITHOUT
+ *     a nonce. The un-hashable inline RSC payload forces `'unsafe-inline'`
+ *     on `script-src` for these routes specifically — there is no CSP3
+ *     construct that trusts variable inline scripts without a nonce or a
+ *     per-script hash. Every OTHER directive stays identically strict
+ *     (object-src 'none', base-uri 'self', form-action 'self',
+ *     frame-ancestors 'none', img allowlist, connect-src, style-src), and
+ *     the ThemeScript anti-FOUC inline script is pinned by a build-stable
+ *     `'sha256-...'` hash rather than needing the relaxation. This tier is
+ *     acceptable here because marketing pages have no reachable inline
+ *     script-injection sink: JSON-LD blocks are `type="application/ld+json"`
+ *     data (never executed by the browser, so `script-src` doesn't gate
+ *     them) and are additionally `<`-escaped by safeJsonLd().
+ *
+ * The proxy runs on every matched request regardless of whether the HTML
+ * is cached, so attaching a per-tier header to static routes does NOT make
+ * them dynamic.
  *
  * The matcher skips static assets, the API surface, the Sentry tunnel
  * (/monitoring/*), and prefetch requests so we don't waste CPU on those.
@@ -22,36 +52,50 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { verifySession, ADMIN_COOKIE } from "@/lib/admin-session";
+import { THEME_SCRIPT_HASH } from "@/lib/theme-script";
 
-export async function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+// Route prefixes that render dynamically (server-rendered on demand) and
+// therefore support the strict per-request nonce + `strict-dynamic` policy.
+// Everything else the matcher hits is statically generated.
+const DYNAMIC_HTML_PREFIXES = ["/admin", "/portal"];
 
-  // Guard /admin/** — skip the login page itself to avoid redirect loops
-  if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
-    const token = request.cookies.get(ADMIN_COOKIE)?.value;
-    const valid = token ? await verifySession(token) : false;
-    if (!valid) {
-      const res = NextResponse.redirect(new URL("/admin/login", request.url));
-      if (token) res.cookies.delete(ADMIN_COOKIE);
-      return res;
-    }
+export function isDynamicHtmlRoute(pathname: string): boolean {
+  return DYNAMIC_HTML_PREFIXES.some(
+    (p) => pathname === p || pathname.startsWith(`${p}/`),
+  );
+}
+
+/**
+ * Build the CSP header value. All directives are identical across tiers
+ * except `script-src`:
+ *   - dynamic tier: nonce + hash + strict-dynamic (no unsafe-inline)
+ *   - static tier:  hash + 'self' + 'unsafe-inline' (forced by inline RSC)
+ */
+export function buildCsp(nonce: string | null): string {
+  const isDev = process.env.NODE_ENV === "development";
+
+  let scriptSrc: string;
+  if (nonce) {
+    // Dynamic routes: Next auto-nonces framework + inline RSC scripts from
+    // this header at render time. strict-dynamic trusts what they load.
+    // The theme hash lets ThemeScript run without depending on the nonce.
+    scriptSrc = isDev
+      ? `script-src 'self' 'nonce-${nonce}' '${THEME_SCRIPT_HASH}' 'strict-dynamic' 'unsafe-eval'`
+      : `script-src 'self' 'nonce-${nonce}' '${THEME_SCRIPT_HASH}' 'strict-dynamic'`;
+  } else {
+    // Static routes: inline RSC payload scripts cannot be nonced or hashed
+    // ahead of time, so 'unsafe-inline' is unavoidable for script-src here.
+    // No nonce/strict-dynamic — under CSP3 a nonce/hash would make browsers
+    // IGNORE 'unsafe-inline', re-blocking the inline RSC payload. The theme
+    // hash is still listed for CSP2-only browsers that honor both.
+    scriptSrc = isDev
+      ? `script-src 'self' 'unsafe-inline' '${THEME_SCRIPT_HASH}' 'unsafe-eval'`
+      : `script-src 'self' 'unsafe-inline' '${THEME_SCRIPT_HASH}'`;
   }
 
-
-  // 16 random bytes → 22-char base64 nonce. crypto.randomUUID is
-  // available in the edge runtime; we hash it through btoa for compactness.
-  const nonceBytes = crypto.getRandomValues(new Uint8Array(16));
-  const nonce = btoa(String.fromCharCode(...nonceBytes));
-
-  const csp = [
+  return [
     `default-src 'self'`,
-    // strict-dynamic + nonce: trust scripts that we mark with the nonce,
-    // and scripts those load (Next.js bootstrap → analytics, Sentry, etc).
-    // Dev: React requires 'unsafe-eval' for hot reload / devtools.
-    // Omitted in production — strict-dynamic covers runtime scripts.
-    process.env.NODE_ENV === "development"
-      ? `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-eval'`
-      : `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
+    scriptSrc,
     // Tailwind injects inline styles; without 'unsafe-inline' Tailwind
     // breaks on every page. Acceptable trade — style XSS is much narrower
     // than script XSS.
@@ -72,10 +116,39 @@ export async function proxy(request: NextRequest) {
     `object-src 'none'`,
     `upgrade-insecure-requests`,
   ].join("; ");
+}
 
-  // Forward nonce to the React tree.
+export async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Guard /admin/** — skip the login page itself to avoid redirect loops
+  if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
+    const token = request.cookies.get(ADMIN_COOKIE)?.value;
+    const valid = token ? await verifySession(token) : false;
+    if (!valid) {
+      const res = NextResponse.redirect(new URL("/admin/login", request.url));
+      if (token) res.cookies.delete(ADMIN_COOKIE);
+      return res;
+    }
+  }
+
+  const dynamic = isDynamicHtmlRoute(pathname);
+
+  // Dynamic routes get a fresh per-request nonce; static routes get none
+  // (their inline RSC scripts can't carry one — see the file header).
+  // 16 random bytes → 22-char base64 nonce. crypto.getRandomValues is
+  // available in the edge runtime.
+  let nonce: string | null = null;
+  if (dynamic) {
+    const nonceBytes = crypto.getRandomValues(new Uint8Array(16));
+    nonce = btoa(String.fromCharCode(...nonceBytes));
+  }
+
+  const csp = buildCsp(nonce);
+
   const requestHeaders = new Headers(request.headers);
-  requestHeaders.set("x-nonce", nonce);
+  // Forward the nonce to the React tree only on dynamic routes.
+  if (nonce) requestHeaders.set("x-nonce", nonce);
   requestHeaders.set("Content-Security-Policy", csp);
 
   const response = NextResponse.next({

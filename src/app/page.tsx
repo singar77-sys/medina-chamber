@@ -12,6 +12,12 @@ import { PartnersMarquee } from "@/components/PartnersMarquee";
 import { RentalSpaceCards } from "@/components/RentalSpaceCards";
 import { MemberVoice } from "@/components/MemberVoice";
 import { getEventGraphicRenderer } from "@/components/events/graphics/registry";
+
+// ISR: the homepage shows the next 3 upcoming events, filtered by `new Date()`
+// against static event data. Re-render daily so passed events drop off instead
+// of freezing at build time. (Also refreshes the "years serving" count once a
+// year for free.)
+export const revalidate = 86400;
 import { FluidGraphicFrame } from "@/components/events/graphics/FluidGraphicFrame";
 import { TiltCard } from "@/components/events/TiltCard";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";

@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { headers } from "next/headers";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider, ThemeScript } from "@/components/ThemeProvider";
@@ -49,10 +48,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // CSP nonce issued by middleware.ts — passed to every inline <script>
-  // we render so they execute under the strict policy.
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
-
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -80,7 +75,7 @@ export default async function RootLayout({
           type="font/woff2"
           crossOrigin="anonymous"
         />
-        <ThemeScript nonce={nonce} />
+        <ThemeScript />
       </head>
       <body className="min-h-screen flex flex-col antialiased">
         <PostHogProvider>

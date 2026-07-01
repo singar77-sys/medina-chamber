@@ -123,12 +123,6 @@ export function getAvatarInitial(name: string): string {
   return match ? match[0].toUpperCase() : (name[0]?.toUpperCase() ?? "?");
 }
 
-/** All members in a given city (case-insensitive match against the parsed address city). */
-export function getMembersByCity(city: string): Member[] {
-  const target = city.toLowerCase();
-  return members.filter((m) => extractCity(m.address).toLowerCase() === target);
-}
-
 /** Top N industries by member count, sorted descending. */
 export function getTopIndustries(limit = 10): Array<{ category: string; count: number }> {
   const counts = new Map<string, number>();

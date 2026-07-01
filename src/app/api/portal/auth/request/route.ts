@@ -13,6 +13,8 @@ import { eq } from "drizzle-orm";
 import { signMagicToken } from "@/lib/portal-session";
 import { resend, EMAIL_RE } from "@/lib/email";
 import { limitPortalAuth } from "@/lib/rate-limit";
+import { escHtml } from "@/lib/sanitize";
+import { getSiteOrigin } from "@/lib/site-url";
 
 export const runtime = "nodejs";
 
@@ -47,15 +49,14 @@ export async function POST(req: Request): Promise<Response> {
   if (contact) {
     try {
       const token = await signMagicToken(contact.id, email, contact.magicTokenEpoch);
-      const baseUrl =
-        process.env.NEXT_PUBLIC_SITE_URL ?? "https://medinaohchamber.com";
-      const link = `${baseUrl}/api/portal/auth/verify?token=${encodeURIComponent(token)}`;
+      // Canonical origin (spoofed Host can't influence the login link in prod).
+      const link = buildMagicLink(getSiteOrigin(req), token);
 
       await resend.emails.send({
         from: "Medina Chamber <noreply@medinaohchamber.com>",
         to: email,
         subject: "Your member portal access link",
-        html: buildEmail(contact.firstName, link),
+        html: buildEmail(contact.firstName ?? "", link),
       });
     } catch (err) {
       // Log but don't leak errors to the client
@@ -67,7 +68,25 @@ export async function POST(req: Request): Promise<Response> {
   return NextResponse.json({ ok: true });
 }
 
+/**
+ * Build the magic-link URL. In production the protocol is forced to https: so a
+ * misconfigured NEXT_PUBLIC_SITE_URL (or an allowlisted origin) can never emit an
+ * http login link that would leak the one-time token in cleartext.
+ */
+function buildMagicLink(origin: string, token: string): string {
+  let base = origin;
+  if (process.env.NODE_ENV === "production") {
+    base = origin.replace(/^http:\/\//i, "https://");
+  }
+  return `${base}/api/portal/auth/verify?token=${encodeURIComponent(token)}`;
+}
+
 function buildEmail(firstName: string, link: string): string {
+  // Escape every dynamic field before interpolating into the HTML. firstName is
+  // member-controlled; the link is our own but escaped for defense in depth (its
+  // token is URL-encoded, so escaping leaves a valid, round-trippable href).
+  const safeName = escHtml(firstName);
+  const safeLink = escHtml(link);
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -94,14 +113,14 @@ function buildEmail(firstName: string, link: string): string {
         <tr>
           <td style="padding:32px">
             <p style="margin:0 0 6px;font-size:20px;font-weight:700;color:#0f172a">
-              Hi ${firstName},
+              Hi ${safeName},
             </p>
             <p style="margin:0 0 24px;font-size:15px;color:#475569;line-height:1.65">
               Click the button below to access your member portal.
               This link expires in <strong>15&nbsp;minutes</strong>.
             </p>
             <div style="text-align:center;margin-bottom:24px">
-              <a href="${link}"
+              <a href="${safeLink}"
                  style="display:inline-block;padding:14px 36px;background:#0C1B33;color:#ffffff;text-decoration:none;border-radius:8px;font-size:15px;font-weight:600;letter-spacing:.01em">
                 Access Member Portal
               </a>

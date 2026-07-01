@@ -6,14 +6,17 @@
  * routes enforce the same validation contract.
  */
 
-/** HTML-escape &, <, >, and " so values are safe inside attribute or
- *  text contexts in rendered email HTML. */
+/** HTML-escape &, <, >, ", and ' so values are safe inside attribute
+ *  (single- or double-quoted) or text contexts in rendered email HTML.
+ *  The single-quote escape (&#39;) closes an attribute-injection gap for any
+ *  value interpolated into a single-quoted HTML attribute. */
 export function escHtml(s: string): string {
   return String(s)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 /**

@@ -45,25 +45,30 @@ jobs:
           # Need full token so the push at the end can trigger Vercel.
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Set up Node 20
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
+          cache: "pnpm"
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Scrape events
-        run: npm run scrape:events
+        run: pnpm scrape:events
         continue-on-error: true   # one scraper failing shouldn't block the others
 
       - name: Scrape member news
-        run: npm run scrape:news
+        run: pnpm scrape:news
         continue-on-error: true
 
       - name: Scrape jobs
-        run: npm run scrape:jobs
+        run: pnpm scrape:jobs
         continue-on-error: true
 
       # Smoke check — refuse to push an empty events file.

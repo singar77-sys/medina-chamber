@@ -8,10 +8,10 @@
 # This catches the class of latent build-breaks (eager env reads at module
 # load) that previously only surfaced on a real Vercel deploy.
 #
-# Typecheck (`tsc --noEmit`) is still omitted: the Next.js generated types in
-# .next/types/validator.ts reference a page that does not exist yet,
-# producing pre-existing TS2307 errors that are a framework artifact,
-# not application code debt. Re-add this step once those types are clean.
+# Typecheck (`tsc --noEmit`) is a hard gate. The old Next.js validator-type
+# artifact (TS2307 against a non-existent page in .next/types) is gone on the
+# current Next version — `tsc --noEmit` is clean with or without a prior build,
+# because the tsconfig `.next/types/**` globs simply match nothing when absent.
 
 name: CI
 
@@ -42,12 +42,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Lint is ADVISORY for now: the repo has ~105 pre-existing eslint errors
-      # (tracked separately as lint-debt cleanup). Test is the hard gate.
-      # Flip this to blocking (remove continue-on-error) once the backlog clears.
+      # Lint is ADVISORY for now: the repo has ~108 pre-existing eslint errors
+      # (tracked separately as lint-debt cleanup). Typecheck, test, and build
+      # are the hard gates. TODO: flip this to blocking (remove
+      # continue-on-error) once the lint backlog is cleared in its own PR.
       - name: Lint (advisory)
         run: pnpm lint
         continue-on-error: true
+
+      - name: Typecheck
+        run: pnpm exec tsc --noEmit
 
       - name: Test
         run: pnpm test

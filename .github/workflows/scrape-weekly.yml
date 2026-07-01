@@ -45,18 +45,23 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Set up Node 20
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
+          cache: "pnpm"
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       # ── Step 1: scrape members ───────────────────────────────
       - name: Scrape member directory
-        run: npm run scrape
+        run: pnpm scrape
 
       # ── Step 2: smoke-check the new members.json ─────────────
       # Catches the most insidious scrape failure: GrowthZone changes their
@@ -76,7 +81,7 @@ jobs:
       # Upstash include scraped website text (services, aboutText) for
       # richer semantic matching. Stale website data → stale vectors.
       - name: Scrape member websites
-        run: npm run scrape:websites
+        run: pnpm scrape:websites
         continue-on-error: true   # one bad website shouldn't kill the run
 
       # ── Step 4: sync to Upstash Vector ───────────────────────
@@ -95,7 +100,7 @@ jobs:
       - name: Scrape Google ratings
         env:
           GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
-        run: npm run scrape:ratings
+        run: pnpm scrape:ratings
         continue-on-error: true
 
       - name: Show diff (for log visibility)

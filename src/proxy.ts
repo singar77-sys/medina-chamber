@@ -69,7 +69,9 @@ export function isDynamicHtmlRoute(pathname: string): boolean {
  * Build the CSP header value. All directives are identical across tiers
  * except `script-src`:
  *   - dynamic tier: nonce + hash + strict-dynamic (no unsafe-inline)
- *   - static tier:  hash + 'self' + 'unsafe-inline' (forced by inline RSC)
+ *   - static tier:  'self' + 'unsafe-inline', NO hash/nonce (forced by the
+ *     un-hashable inline RSC payload — any hash/nonce would disable
+ *     'unsafe-inline' under CSP3 and break hydration)
  */
 export function buildCsp(nonce: string | null): string {
   const isDev = process.env.NODE_ENV === "development";
@@ -83,14 +85,18 @@ export function buildCsp(nonce: string | null): string {
       ? `script-src 'self' 'nonce-${nonce}' '${THEME_SCRIPT_HASH}' 'strict-dynamic' 'unsafe-eval'`
       : `script-src 'self' 'nonce-${nonce}' '${THEME_SCRIPT_HASH}' 'strict-dynamic'`;
   } else {
-    // Static routes: inline RSC payload scripts cannot be nonced or hashed
-    // ahead of time, so 'unsafe-inline' is unavoidable for script-src here.
-    // No nonce/strict-dynamic — under CSP3 a nonce/hash would make browsers
-    // IGNORE 'unsafe-inline', re-blocking the inline RSC payload. The theme
-    // hash is still listed for CSP2-only browsers that honor both.
+    // Static routes: Next's inline RSC payload scripts (self.__next_f.push)
+    // are per-page and cannot be nonced (no request at build time) or hashed
+    // (content varies per page), so 'unsafe-inline' is the only source that
+    // admits them. CRITICAL: no hash or nonce may appear alongside it — under
+    // CSP Level 3 (every current browser) the presence of ANY hash/nonce in
+    // script-src makes the browser IGNORE 'unsafe-inline', which would block
+    // the un-hashable RSC scripts and stop the page from hydrating. The theme
+    // script is inline too, so plain 'unsafe-inline' already covers it; it
+    // does NOT need its hash listed here (and listing it breaks everything).
     scriptSrc = isDev
-      ? `script-src 'self' 'unsafe-inline' '${THEME_SCRIPT_HASH}' 'unsafe-eval'`
-      : `script-src 'self' 'unsafe-inline' '${THEME_SCRIPT_HASH}'`;
+      ? `script-src 'self' 'unsafe-inline' 'unsafe-eval'`
+      : `script-src 'self' 'unsafe-inline'`;
   }
 
   return [

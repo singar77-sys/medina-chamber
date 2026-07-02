@@ -99,13 +99,18 @@ describe("buildCsp — static tier (no nonce)", () => {
     expect(scriptSrc).not.toContain("'strict-dynamic'");
   });
 
-  it("allows 'unsafe-inline' (forced by inline RSC payload) plus the theme hash", () => {
+  it("allows 'unsafe-inline' and lists NO hash/nonce (or hydration breaks)", () => {
     // 'unsafe-inline' is required because statically-prerendered Next pages
     // emit inline self.__next_f.push(...) scripts that carry neither a nonce
-    // nor a pre-computable hash. This relaxation is scoped to script-src on
-    // static routes only.
+    // nor a pre-computable hash. CRITICAL: the static tier must NOT list any
+    // hash or nonce alongside 'unsafe-inline' — under CSP Level 3 (every
+    // current browser) the presence of a hash/nonce makes the browser IGNORE
+    // 'unsafe-inline', which re-blocks the un-hashable RSC scripts and stops
+    // the page from hydrating. This is the regression that took prod down;
+    // the theme script is inline and already covered by 'unsafe-inline'.
     expect(scriptSrc).toContain("'unsafe-inline'");
-    expect(scriptSrc).toContain(`'${THEME_SCRIPT_HASH}'`);
+    expect(scriptSrc).not.toContain(`'${THEME_SCRIPT_HASH}'`);
+    expect(scriptSrc).not.toContain("sha256-");
   });
 
   it("keeps every shared strict directive (only script-src is relaxed)", () => {

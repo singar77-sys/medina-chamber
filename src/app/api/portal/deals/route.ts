@@ -11,6 +11,7 @@ import { db } from "@/lib/db";
 import { hotDeals } from "@/lib/db/schema";
 import { verifyPortalSession, PORTAL_COOKIE } from "@/lib/portal-session";
 import { limitPortalProfile } from "@/lib/rate-limit";
+import { assertSameOrigin } from "@/lib/csrf";
 import { buildDealValues } from "@/lib/deals-input";
 
 export const runtime = "nodejs";
@@ -25,6 +26,9 @@ async function getSession() {
 export async function POST(req: Request): Promise<Response> {
   const limited = await limitPortalProfile(req);
   if (limited) return limited;
+
+  const csrf = assertSameOrigin(req);
+  if (csrf) return csrf;
 
   const session = await getSession();
   if (!session) return Response.json({ error: "Not signed in." }, { status: 401 });

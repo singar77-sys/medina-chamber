@@ -29,6 +29,7 @@ import { db } from "@/lib/db";
 import { invoices } from "@/lib/db/schema";
 import { verifyPortalSession, PORTAL_COOKIE } from "@/lib/portal-session";
 import { limitPortalCheckout } from "@/lib/rate-limit";
+import { assertSameOrigin } from "@/lib/csrf";
 import { getSiteOrigin } from "@/lib/site-url";
 
 export const runtime = "nodejs";
@@ -46,6 +47,9 @@ export async function POST(req: Request): Promise<Response> {
   // blocks a paying member or leaks a 500.
   const limited = await limitPortalCheckout(req);
   if (limited) return limited;
+
+  const csrf = assertSameOrigin(req);
+  if (csrf) return csrf;
 
   const session = await getSession();
   if (!session) {

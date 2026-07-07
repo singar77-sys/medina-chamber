@@ -21,7 +21,9 @@
  * that construct raw Request objects work unchanged.
  */
 
-import { ADMIN_COOKIE, getAdminSecret, verifySession } from "@/lib/admin-session";
+import { ADMIN_COOKIE, getAdminSecret, readSession } from "@/lib/admin-session";
+import { isCurrentAdmin } from "@/lib/admin-users";
+import { assertSameOrigin } from "@/lib/csrf";
 
 function extractSessionCookie(req: Request): string | null {
   const header = req.headers.get("cookie");
@@ -36,11 +38,21 @@ function extractSessionCookie(req: Request): string | null {
 
 /** 503 if not configured, 401 if cookie missing/invalid, null if OK. Fail-closed. */
 export async function requireAdminSession(req: Request): Promise<Response | null> {
+  // CSRF defense-in-depth: reject cross-origin state-changing requests. The admin
+  // cookie is already SameSite=Strict; this is a second layer. Safe methods and
+  // Origin-less requests pass through untouched.
+  const csrf = assertSameOrigin(req);
+  if (csrf) return csrf;
+
   if (!getAdminSecret())
     return Response.json({ error: "Admin access not configured." }, { status: 503 });
   const token = extractSessionCookie(req);
   if (!token) return Response.json({ error: "Unauthorized." }, { status: 401 });
-  if (!(await verifySession(token)))
+  const payload = await readSession(token);
+  if (!payload) return Response.json({ error: "Unauthorized." }, { status: 401 });
+  // Per-admin revocation: reject a session whose subject is no longer a current
+  // admin (removed from ADMIN_USERS) without waiting out the 12h expiry.
+  if (!isCurrentAdmin(payload.sub))
     return Response.json({ error: "Unauthorized." }, { status: 401 });
   return null;
 }

@@ -51,7 +51,8 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { verifySession, ADMIN_COOKIE } from "@/lib/admin-session";
+import { readSession, ADMIN_COOKIE } from "@/lib/admin-session";
+import { isCurrentAdmin } from "@/lib/admin-users";
 import { THEME_SCRIPT_HASH } from "@/lib/theme-script";
 
 // Route prefixes that render dynamically (server-rendered on demand) and
@@ -130,7 +131,10 @@ export async function proxy(request: NextRequest) {
   // Guard /admin/** — skip the login page itself to avoid redirect loops
   if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
     const token = request.cookies.get(ADMIN_COOKIE)?.value;
-    const valid = token ? await verifySession(token) : false;
+    const payload = token ? await readSession(token) : null;
+    // Valid = correctly-signed, unexpired, AND still a current admin (per-admin
+    // revocation via ADMIN_USERS — see isCurrentAdmin).
+    const valid = payload !== null && isCurrentAdmin(payload.sub);
     if (!valid) {
       const res = NextResponse.redirect(new URL("/admin/login", request.url));
       if (token) res.cookies.delete(ADMIN_COOKIE);

@@ -48,7 +48,7 @@ export function MemberVoice() {
               <p className="text-body-sm text-text-primary mt-2 font-bold">
                 Dan Calvin
                 <span className="text-text-tertiary font-normal">
-                  {" · "}Critchfield, Critchfield &amp; Johnston, Ltd.
+                  {", "}Critchfield, Critchfield &amp; Johnston, Ltd.
                 </span>
               </p>
             </div>

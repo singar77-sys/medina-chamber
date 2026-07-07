@@ -27,7 +27,7 @@ const ALLOWED_HOST_SUFFIXES = [
   ".vercel.app", // Vercel preview + production deployment URLs
 ];
 
-function isAllowedOrigin(origin: string): boolean {
+export function isAllowedOrigin(origin: string): boolean {
   let host: string;
   let protocol: string;
   try {

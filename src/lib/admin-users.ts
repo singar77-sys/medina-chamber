@@ -92,3 +92,24 @@ export async function authenticateAdmin(submitted: string): Promise<string | nul
   }
   return matched;
 }
+
+/**
+ * Whether a session's subject (the admin's name, stored as `sub`) is still a
+ * currently-valid admin. Enables PER-ADMIN revocation: with named accounts
+ * (ADMIN_USERS set), a session whose `sub` is no longer in ADMIN_USERS is
+ * rejected on its next request — without waiting out the 12h expiry or rotating
+ * the shared signing secret (which logs everyone out).
+ *
+ * Two accept-all cases keep this safe and backward-compatible:
+ *   - Shared-token mode (ADMIN_USERS unset): there is no per-person identity to
+ *     revoke, so any validly-signed session is accepted.
+ *   - A session with no `sub` (minted before named accounts existed): grandfathered
+ *     in. Such tokens can only be produced by our own server and expire within 12h
+ *     of this code shipping, so the window is bounded.
+ */
+export function isCurrentAdmin(sub: string | undefined): boolean {
+  const users = parseAdminUsers();
+  if (users.length === 0) return true; // shared-token mode — nothing to revoke
+  if (!sub) return true;               // legacy pre-named-account session (expires <12h)
+  return users.some((u) => u.name === sub);
+}

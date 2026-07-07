@@ -16,7 +16,8 @@
  * UNIQUE constraints on stripeChargeId / stripeRefundId make recordPayment safe
  * to call repeatedly, so a redelivered event is a no-op rather than a double
  * charge. We therefore return 200 on every handled or ignored event, 400 only on
- * a bad signature, and 500 only on an unexpected throw.
+ * a bad signature, 503 when STRIPE_WEBHOOK_SECRET isn't configured, and 500 only
+ * on an unexpected throw.
  */
 
 import type Stripe from "stripe";
@@ -120,6 +121,16 @@ async function confirmEventRegistration(
 }
 
 export async function POST(req: Request) {
+  // Fail-closed on a misconfigured deploy: without the signing secret we can't
+  // verify anything, so return an explicit 503 (mirrors the Resend webhook)
+  // instead of letting constructEvent throw a misleading "bad signature" 400 that
+  // would silently drop every payment + membership activation.
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!webhookSecret) {
+    console.error("[stripe webhook] STRIPE_WEBHOOK_SECRET is not configured");
+    return new Response("not configured", { status: 503 });
+  }
+
   const rawBody = await req.text();
   const sig = req.headers.get("stripe-signature");
 
@@ -128,7 +139,7 @@ export async function POST(req: Request) {
     event = stripe.webhooks.constructEvent(
       rawBody,
       sig ?? "",
-      process.env.STRIPE_WEBHOOK_SECRET!,
+      webhookSecret,
     );
   } catch {
     return new Response("bad signature", { status: 400 });

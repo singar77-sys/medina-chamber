@@ -10,10 +10,14 @@ import { eq, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { contacts } from "@/lib/db/schema";
 import { PORTAL_COOKIE, verifyPortalSession } from "@/lib/portal-session";
+import { assertSameOrigin } from "@/lib/csrf";
 
 export const runtime = "nodejs";
 
 export async function POST(req: Request): Promise<Response> {
+  const csrf = assertSameOrigin(req);
+  if (csrf) return csrf;
+
   // Revoke EVERY outstanding session for this member, not just clear this cookie:
   // bump session_epoch so a copied/stolen cookie is invalidated too. Best-effort —
   // logout must still clear the cookie even if the bump fails.

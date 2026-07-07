@@ -34,6 +34,13 @@ function createClient() {
   return postgres(url, {
     prepare: false, // required for Supabase pgBouncer transaction mode
     max: 1,         // serverless: one connection per function invocation
+    // Force TLS regardless of whether DATABASE_URL carries sslmode=require.
+    // postgres-js defaults to a PLAINTEXT connection when neither the ssl option
+    // nor sslmode is set — which would expose member PII + payment metadata in
+    // transit to Supabase. 'require' encrypts without CA verification (the pooler
+    // hostname doesn't match its cert CN, so 'verify-full' would fail); this is
+    // the standard Supabase + postgres-js setting.
+    ssl: "require",
   });
 }
 

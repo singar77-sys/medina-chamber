@@ -26,6 +26,7 @@ import { db } from "@/lib/db";
 import { contacts, organizations } from "@/lib/db/schema";
 import { verifyPortalSession, PORTAL_COOKIE } from "@/lib/portal-session";
 import { limitPortalProfile } from "@/lib/rate-limit";
+import { assertSameOrigin } from "@/lib/csrf";
 import { EMAIL_RE } from "@/lib/email";
 import { logEngagement } from "@/lib/engagement";
 
@@ -98,6 +99,9 @@ export async function POST(req: Request): Promise<Response> {
   // blocks a member saving their profile or leaks a 500.
   const limited = await limitPortalProfile(req);
   if (limited) return limited;
+
+  const csrf = assertSameOrigin(req);
+  if (csrf) return csrf;
 
   const session = await getSession();
   if (!session) {

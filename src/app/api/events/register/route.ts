@@ -30,9 +30,11 @@ import { db } from "@/lib/db";
 import { events, eventTickets, eventRegistrations } from "@/lib/db/schema";
 import { verifyPortalSession, PORTAL_COOKIE } from "@/lib/portal-session";
 import { limitEventRegister } from "@/lib/rate-limit";
+import { assertSameOrigin } from "@/lib/csrf";
 import { EMAIL_RE } from "@/lib/email";
 import { stripe } from "@/lib/stripe/client";
 import { ensureStripeCustomer } from "@/lib/stripe/customer";
+import { getSiteOrigin } from "@/lib/site-url";
 import { notifyRegistration } from "@/lib/events/notify-registration";
 import { logEngagement } from "@/lib/engagement";
 
@@ -62,6 +64,9 @@ export async function POST(req: Request): Promise<Response> {
   // Public endpoint — rate limit per IP (~10/min), fail-open.
   const limited = await limitEventRegister(req);
   if (limited) return limited;
+
+  const csrf = assertSameOrigin(req);
+  if (csrf) return csrf;
 
   let body: unknown;
   try {
@@ -318,7 +323,10 @@ export async function POST(req: Request): Promise<Response> {
     .values({ ...baseRow, status: "pending" })
     .returning({ id: eventRegistrations.id });
 
-  const origin = process.env.NEXT_PUBLIC_SITE_URL ?? new URL(req.url).origin;
+  // Canonical origin so success/cancel land on the right host; a spoofed Host
+  // can't influence the Stripe redirect in prod (fail-closed if the canonical
+  // URL is unset). Matches the hardening join/checkout already use.
+  const origin = getSiteOrigin(req);
   // Return to the public event page the visitor came from. returnSlug is the
   // static (public) slug; validate it's a plain slug so a crafted value can't
   // build an off-path/absolute redirect, and fall back to the DB slug.

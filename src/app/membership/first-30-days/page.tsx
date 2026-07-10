@@ -35,7 +35,7 @@ const steps: Step[] = [
     time: "10 minutes",
     title: "Complete your Member Hub profile",
     why:
-      "Members find members through the directory. Your profile is how 500+ Medina County businesses discover you when they search for what you do. A blank profile is a missed connection.",
+      "Members find members through the directory. Your profile is how Medina County businesses discover you when they search for what you do. A blank profile is a missed connection.",
     actions: [
       "Log in to the Member Hub (link sent in your welcome email)",
       "Add your business description, categories, and hours",
@@ -432,7 +432,7 @@ export default function First30DaysPage() {
               {
                 label: "Chamber Directory",
                 href: "/membership/directory",
-                description: "Browse all 500+ member businesses.",
+                description: "Browse all member businesses.",
               },
             ].map((link, i) => (
               <FadeIn key={link.href} delay={i * 50}>

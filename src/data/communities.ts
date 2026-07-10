@@ -41,7 +41,7 @@ const allCommunities: Community[] = [
     description:
       "Brunswick is the most populated city in Medina County with a strong retail, healthcare, and service economy along Route 303 and Pearl Road. The city's proximity to I-71 makes it a strategic location for businesses serving both Medina and Cuyahoga counties.",
     chamberPitch:
-      "Brunswick businesses gain county-wide visibility through the Medina Chamber's 500+ member directory, networking events, and advocacy, connecting you to the broader Medina County market.",
+      "Brunswick businesses gain county-wide visibility through the Medina Chamber's member directory, networking events, and advocacy, connecting you to the broader Medina County market.",
   },
   {
     slug: "wadsworth",
@@ -77,7 +77,7 @@ const allCommunities: Community[] = [
     description:
       "Seville straddles Medina and Wayne counties along Route 3 with a mix of retail, agricultural, and service businesses. Its location at the intersection of Routes 3 and 224 gives businesses access to southern Medina County and the Wooster corridor.",
     chamberPitch:
-      "Seville's position between Medina and Wayne counties makes chamber membership especially valuable, tap into a 500+ member network that stretches across the region.",
+      "Seville's position between Medina and Wayne counties makes chamber membership especially valuable, tap into a member network that stretches across the region.",
   },
   {
     slug: "valley-city",
@@ -137,7 +137,7 @@ const allCommunities: Community[] = [
     description:
       "Granger Township sits just northeast of Medina city, a largely residential community where local trades, professional services, and agricultural-adjacent businesses serve the township and the surrounding corridor between Medina and Brunswick.",
     chamberPitch:
-      "Granger businesses gain a countywide stage through the chamber, membership connects your operation to Medina, Brunswick, and the full 500+ member network without leaving the township.",
+      "Granger businesses gain a countywide stage through the chamber, membership connects your operation to Medina, Brunswick, and the full member network without leaving the township.",
   },
   {
     slug: "montville",

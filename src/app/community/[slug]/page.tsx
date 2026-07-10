@@ -115,15 +115,7 @@ export default async function CommunityPage(
       <div className="mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-24">
 
         {/* Stats strip */}
-        <section className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="p-5 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] text-center">
-            <p className="text-h2 text-cambridge">{cityMembers.length}</p>
-            <p className="text-caption text-text-tertiary mt-1">Chamber Members</p>
-          </div>
-          <div className="p-5 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] text-center">
-            <p className="text-h2 text-cambridge">{topCategories.length}+</p>
-            <p className="text-caption text-text-tertiary mt-1">Industries</p>
-          </div>
+        <section className="mt-12 grid grid-cols-2 gap-4">
           <div className="p-5 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] text-center">
             <p className="text-h2 text-cambridge">{upcoming.length}</p>
             <p className="text-caption text-text-tertiary mt-1">Upcoming Events</p>
@@ -177,7 +169,7 @@ export default async function CommunityPage(
               Top Industries in {community.name}
             </h2>
             <div className="flex flex-wrap gap-3">
-              {topCategories.map(([cat, count]) => (
+              {topCategories.map(([cat]) => (
                 <Link
                   key={cat}
                   href={`/membership/directory?category=${encodeURIComponent(cat)}`}
@@ -190,7 +182,6 @@ export default async function CommunityPage(
                   "
                 >
                   {cat}
-                  <span className="text-caption text-text-tertiary">{count}</span>
                 </Link>
               ))}
             </div>
@@ -314,7 +305,7 @@ export default async function CommunityPage(
               Put your {community.name} business on the map
             </h2>
             <p className="text-body-lg text-text-secondary mt-4">
-              Join 500+ Medina County businesses in the chamber. Get listed in
+              Join Medina County businesses in the chamber. Get listed in
               the directory, attend networking events, and access savings
               programs that more than pay for membership.
             </p>

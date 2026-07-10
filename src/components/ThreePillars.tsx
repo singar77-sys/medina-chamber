@@ -49,7 +49,7 @@ const PILLARS: Pillar[] = [
     label: "Your Network",
     title: "Connections that open doors.",
     desc:
-      "Networking events, leadership awards, the Safety Council, the Annual Golf Outing, plus 500+ member businesses in a searchable directory.",
+      "Networking events, leadership awards, the Safety Council, the Annual Golf Outing, plus a searchable directory of member businesses.",
     href: "/events",
     cta: "Browse Events →",
     variant: "network",

@@ -93,7 +93,7 @@ const COMMANDS: Command[] = [
     group: "Membership",
     href: "/membership/directory",
     keywords: ["find", "search", "business", "company", "members"],
-    hint: "Search 500+ member businesses",
+    hint: "Search member businesses",
   },
   {
     id: "join",

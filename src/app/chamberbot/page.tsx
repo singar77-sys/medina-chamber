@@ -15,11 +15,11 @@ import { ChamberBotRoute } from "./ChamberBotRoute";
 export const metadata: Metadata = {
   title: "ChamberBot, Immersive Experience",
   description:
-    "Talk to the Greater Medina Chamber's AI assistant. Ask about members, events, programs, advocacy, or anything Medina-business, backed by 500+ live member records and the full chamber calendar.",
+    "Talk to the Greater Medina Chamber's AI assistant. Ask about members, events, programs, advocacy, or anything Medina-business, backed by live member records and the full chamber calendar.",
   openGraph: {
     title: "ChamberBot | Greater Medina Chamber of Commerce",
     description:
-      "An AI assistant for Medina County business — members, events, programs, advocacy. 500+ live records, full calendar, instant answers.",
+      "An AI assistant for Medina County business — members, events, programs, advocacy. Live records, full calendar, instant answers.",
   },
   alternates: { canonical: "/chamberbot" },
   robots: { index: true, follow: true },

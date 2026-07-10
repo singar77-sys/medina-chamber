@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 /**
  * MedinaNetworkMap — stylized Medina County network.
@@ -77,9 +76,6 @@ const COMMUNITIES: NetworkNode[] = [
   { key: "lodi",        name: "Lodi",         x: 220, y: 370, anchor: "end",    dy: 24 },  // SW
 ];
 
-const GMAPS_URL =
-  "https://maps.google.com/?q=139+N+Court+Street+Suite+A+Medina+OH+44256";
-
 /**
  * Build a gentle quadratic-Bezier path between HQ and a community.
  * The curve bows perpendicular to the straight line by a small
@@ -101,14 +97,6 @@ function curvedPath(from: NetworkNode, to: NetworkNode): string {
 
 export function MedinaNetworkMap() {
   const [hoveredKey, setHoveredKey] = useState<NodeKey | null>(null);
-  const router = useRouter();
-
-  // Warm the community route on hover so the click lands on an already
-  // prefetched page — Next.js Link does this automatically, but here
-  // we're driving navigation imperatively from an SVG <a> intercept.
-  const prefetchCommunity = (key: NodeKey) => {
-    router.prefetch(`/community/${key}`);
-  };
 
   return (
     <div className="mnm-wrap">
@@ -217,109 +205,69 @@ export function MedinaNetworkMap() {
           </circle>
         ))}
 
-        {/* Layer 5 — community nodes. Each one links to its city
-            landing page (/community/{slug}) so clicking Brunswick
-            pulls up Brunswick's members, categories, and events.
-            Uses an SVG <a> so it's a real anchor (right-click → open
-            in new tab, middle-click, keyboard focus all work), with
-            an onClick intercept to get client-side navigation and
-            avoid a full page reload. */}
+        {/* Layer 5 — community nodes. Interactivity is intentionally OFF
+            for now (map is being redesigned): these are plain <g> groups,
+            not links. Hover still highlights the node + its curve. To
+            re-enable navigation later, wrap each in an SVG <a> to
+            /community/{c.key} with a client-side onClick intercept. */}
         {COMMUNITIES.map((c) => {
           const isActive = hoveredKey === c.key;
-          const href = `/community/${c.key}`;
           return (
-            <a
+            <g
               key={`node-${c.key}`}
-              href={href}
-              aria-label={`View ${c.name} chamber members and community resources`}
-              onClick={(e) => {
-                // Let modified clicks (cmd/ctrl/shift/middle) fall
-                // through to the browser's default new-tab/new-window
-                // behavior — only intercept plain left-clicks.
-                if (
-                  e.button === 0 &&
-                  !e.metaKey &&
-                  !e.ctrlKey &&
-                  !e.shiftKey &&
-                  !e.altKey
-                ) {
-                  e.preventDefault();
-                  router.push(href);
-                }
-              }}
-              onMouseEnter={() => {
-                setHoveredKey(c.key);
-                prefetchCommunity(c.key);
-              }}
+              className="mnm-node"
+              onMouseEnter={() => setHoveredKey(c.key)}
               onMouseLeave={() => setHoveredKey((k) => (k === c.key ? null : k))}
-              onTouchStart={() => {
-                setHoveredKey(c.key);
-                prefetchCommunity(c.key);
-              }}
-              onTouchEnd={() => setHoveredKey((k) => (k === c.key ? null : k))}
-              onFocus={() => {
-                setHoveredKey(c.key);
-                prefetchCommunity(c.key);
-              }}
-              onBlur={() => setHoveredKey((k) => (k === c.key ? null : k))}
             >
-              <g className="mnm-node">
-                <circle cx={c.x} cy={c.y} r={22} fill="transparent" />
-                <circle
-                  cx={c.x}
-                  cy={c.y}
-                  r={7}
-                  fill="none"
-                  stroke={isActive ? "#FF4000" : "rgba(131, 188, 169, 0.9)"}
-                  strokeWidth={1.4}
-                />
-                <circle
-                  cx={c.x}
-                  cy={c.y}
-                  r={3}
-                  fill={isActive ? "#FF4000" : "#83BCA9"}
-                />
-                <text
-                  x={c.x + (c.anchor === "end" ? -12 : c.anchor === "start" ? 12 : 0)}
-                  y={c.y + (c.dy ?? 0)}
-                  textAnchor={c.anchor}
-                  className="mnm-label"
-                  style={{ fill: isActive ? "#ffffff" : "rgba(255, 255, 255, 0.62)" }}
-                >
-                  {c.name}
-                </text>
-              </g>
-            </a>
+              <circle cx={c.x} cy={c.y} r={22} fill="transparent" />
+              <circle
+                cx={c.x}
+                cy={c.y}
+                r={7}
+                fill="none"
+                stroke={isActive ? "#FF4000" : "rgba(131, 188, 169, 0.9)"}
+                strokeWidth={1.4}
+              />
+              <circle
+                cx={c.x}
+                cy={c.y}
+                r={3}
+                fill={isActive ? "#FF4000" : "#83BCA9"}
+              />
+              <text
+                x={c.x + (c.anchor === "end" ? -12 : c.anchor === "start" ? 12 : 0)}
+                y={c.y + (c.dy ?? 0)}
+                textAnchor={c.anchor}
+                className="mnm-label"
+                style={{ fill: isActive ? "#ffffff" : "rgba(255, 255, 255, 0.62)" }}
+              >
+                {c.name}
+              </text>
+            </g>
           );
         })}
 
-        {/* Layer 6 — HQ (clickable, gentle breath) */}
-        <a
-          href={GMAPS_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Open Chamber headquarters address in Google Maps for directions"
-        >
-          <g className="mnm-hq">
-            <circle
-              cx={HQ.x}
-              cy={HQ.y}
-              r={14}
-              className="mnm-hq-breath"
-              fill="rgba(255, 64, 0, 0.22)"
-            />
-            <circle cx={HQ.x} cy={HQ.y} r={10} fill="#FF4000" />
-            <circle cx={HQ.x} cy={HQ.y} r={4}  fill="#FFFFFF" />
-            <text
-              x={HQ.x}
-              y={HQ.y + 34}
-              textAnchor="middle"
-              className="mnm-hq-label"
-            >
-              Chamber HQ
-            </text>
-          </g>
-        </a>
+        {/* Layer 6 — HQ (gentle breath). Non-clickable for now; the
+            floating address card below carries the Get-directions link. */}
+        <g className="mnm-hq">
+          <circle
+            cx={HQ.x}
+            cy={HQ.y}
+            r={14}
+            className="mnm-hq-breath"
+            fill="rgba(255, 64, 0, 0.22)"
+          />
+          <circle cx={HQ.x} cy={HQ.y} r={10} fill="#FF4000" />
+          <circle cx={HQ.x} cy={HQ.y} r={4}  fill="#FFFFFF" />
+          <text
+            x={HQ.x}
+            y={HQ.y + 34}
+            textAnchor="middle"
+            className="mnm-hq-label"
+          >
+            Chamber HQ
+          </text>
+        </g>
 
         {/* Layer 7 — compass (decorative, for directional context) */}
         <g className="mnm-compass" transform="translate(60 60)">

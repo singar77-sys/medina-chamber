@@ -15,7 +15,10 @@ import { organizations, organizationCategories, categories } from "@/lib/db/sche
 import type { Member } from "@/data/members";
 
 // DB tier text → the legacy numeric rank the UI sorts by (premium first).
-const TIER_NUM: Record<string, number> = { visibility_plus: 2, gold: 10, silver: 20 };
+// community_investor is the TOP tier and must sort first — omitting it made
+// every CI default to 20 (silver) and sink below Visibility Plus, dropping the
+// Community-Investor-first ordering the directory grid is built around.
+const TIER_NUM: Record<string, number> = { community_investor: 1, visibility_plus: 2, gold: 10, silver: 20 };
 
 const ORG_COLS = {
   id: organizations.id,

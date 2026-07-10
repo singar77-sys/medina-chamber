@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import Link from "next/link";
-import { activeCommunities, getMembersByCity } from "@/data/communities";
+import { activeCommunities } from "@/data/communities";
 
 export const metadata: Metadata = {
   title: "Medina County Business Communities",
@@ -26,7 +26,7 @@ export default function CommunityHubPage() {
           <>
             The Greater Medina Chamber of Commerce serves businesses in every
             corner of Medina County, from the Square to the southern townships.
-            500+ member businesses across {activeCommunities.length} communities.
+            Member businesses across every community we serve.
           </>
         }
         image="/images/photos/medina-square-aerial-spring.jpg"
@@ -37,9 +37,7 @@ export default function CommunityHubPage() {
       {/* Community grid */}
       <section className="mt-16">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {activeCommunities.map((c) => {
-            const memberCount = getMembersByCity(c.cityMatch).length;
-            return (
+          {activeCommunities.map((c) => (
               <Link
                 key={c.slug}
                 href={`/community/${c.slug}`}
@@ -59,17 +57,13 @@ export default function CommunityHubPage() {
                 <p className="text-body-sm text-text-secondary mt-2 leading-relaxed flex-1">
                   {c.tagline}
                 </p>
-                <div className="mt-4 flex items-center justify-between">
-                  <span className="text-caption text-text-tertiary">
-                    {memberCount} chamber member{memberCount !== 1 ? "s" : ""}
-                  </span>
+                <div className="mt-4 flex items-center justify-end">
                   <span className="text-body-sm text-cambridge font-bold group-hover:translate-x-0.5 transition-transform">
                     Explore →
                   </span>
                 </div>
               </Link>
-            );
-          })}
+          ))}
         </div>
       </section>
 

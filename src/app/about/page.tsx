@@ -5,8 +5,6 @@ import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
 import { chamberOffice, jaclyn, stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
-import { getStaticPhotos } from "@/lib/static-media";
-import { EventGallery } from "@/components/events/EventGallery";
 
 export const metadata: Metadata = {
   title: "About the Chamber",
@@ -104,12 +102,6 @@ const quickLinks = [
 ];
 
 export default async function AboutPage() {
-  const communityPhotos = await getStaticPhotos(
-    "photos/sneak-peeks",
-    "Chamber community event, Greater Medina Chamber of Commerce, Medina Ohio",
-    12,
-  );
-
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "AboutPage",
@@ -190,27 +182,12 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* Core Purpose + Stats */}
+      {/* Stats */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
-          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] relative overflow-hidden">
-            <div className="absolute -top-32 -right-32 w-64 h-64 bg-cambridge/10 rounded-full blur-3xl" />
-            <div className="relative max-w-3xl">
-              <p className="text-overline text-cambridge mb-f8">Our Core Purpose</p>
-              <p className="text-h2 leading-tight">
-                To champion and empower Medina&apos;s business community,
-                driving growth through{" "}
-                <span className="text-cambridge">advocacy</span>,{" "}
-                <span className="text-cambridge">connection</span>, and{" "}
-                <span className="text-cambridge">leadership</span>.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-f21 grid grid-cols-2 md:grid-cols-4 gap-f21">
+          <div className="grid grid-cols-3 gap-f21">
             {[
               { stat: "1938", label: "Founded" },
-              { stat: "500+", label: "Member Businesses" },
               { stat: "50+", label: "Events Per Year" },
               { stat: "9", label: "Committees" },
             ].map((item) => (
@@ -233,76 +210,31 @@ export default async function AboutPage() {
       {/* Our Story */}
       <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-f34 lg:gap-f55 items-start">
-            <FadeIn>
-              <div>
-                <p className="text-overline text-cambridge mb-f8">Our Story</p>
-                <h2 className="text-h2">
-                  From isolation to influence, and what comes next.
-                </h2>
-                <div className="mt-f13 space-y-f21 text-body text-text-secondary leading-relaxed">
-                  <p>
-                    In 1938, Medina&apos;s local businesses stood largely alone, 
-                    facing the daily challenges of running a business in isolation.
-                    They needed connection. They needed a voice. And they needed
-                    someone to champion their interests when decisions were being
-                    made in City Hall and at the Statehouse.
-                  </p>
-                  <p>
-                    The Greater Medina Chamber of Commerce was built to be exactly
-                    that, a dual force of community connection and business
-                    advocacy. We organized networking events, developed educational
-                    programs, and established mentorship opportunities. We sat at
-                    the table with elected officials to make sure Medina&apos;s
-                    business voices were heard in the halls of power.
-                  </p>
-                  <p>
-                    {new Date().getFullYear() - 1938} years later, that dual approach still defines us.
-                    Today, 500+ Medina County businesses stand taller,
-                    better connected, and better represented, shaping a thriving
-                    future together. We&apos;re not a networking club. We&apos;re
-                    the infrastructure that makes Medina a place where businesses
-                    don&apos;t just survive. They flourish.
-                  </p>
-                </div>
-              </div>
-            </FadeIn>
-
-            <FadeIn delay={150}>
-              <div className="p-f34 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]">
-                <p className="text-overline text-cambridge mb-f8">
-                  Positioning Statement
+          <FadeIn>
+            <div className="max-w-3xl">
+              <p className="text-overline text-cambridge mb-f8">Our Story</p>
+              <h2 className="text-h2">Built in 1938. Still building.</h2>
+              <div className="mt-f13 space-y-f21 text-body text-text-secondary leading-relaxed">
+                <p>
+                  In 1938, Medina&apos;s businesses stood largely alone. They
+                  needed connection, a voice, and someone to represent their
+                  interests when decisions were made in City Hall and at the
+                  Statehouse. The Greater Medina Chamber of Commerce was built to
+                  be exactly that, a dual force of community connection and
+                  business advocacy.
                 </p>
-                <p className="text-body text-text-primary leading-relaxed">
-                  For local businesses in Medina, Ohio seeking growth, support,
-                  and a voice at the table, the Greater Medina Chamber of Commerce
-                  is the leading local business organization that combines
-                  advocacy with community connection.
-                </p>
-                <p className="text-body-sm text-text-secondary mt-f21 leading-relaxed">
-                  Unlike traditional networking groups or solo lobbying efforts,
-                  we ensure your business interests are represented in the halls
-                  of power while providing essential resources and networking
-                  opportunities to create a thriving, connected business community.
+                <p>
+                  {new Date().getFullYear() - 1938} years later, that dual
+                  approach still defines us. Medina County businesses are
+                  better connected and better represented for it. We&apos;re not a
+                  networking club, we&apos;re the infrastructure that helps Medina
+                  businesses flourish.
                 </p>
               </div>
-            </FadeIn>
-          </div>
+            </div>
+          </FadeIn>
         </div>
       </section>
-
-      {/* Community photos — proof we live our story */}
-      {communityPhotos.length > 0 && (
-        <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <FadeIn>
-              <p className="text-overline text-cambridge mb-f8">Community</p>
-              <h2 className="text-h2 mb-f21">Chamber life in pictures.</h2>
-              <EventGallery photos={communityPhotos} title="" />
-            </FadeIn>
-          </div>
-        </section>
-      )}
 
       {/* Core Values */}
       <section className="relative overflow-hidden py-f89 lg:py-f144">
@@ -525,7 +457,7 @@ export default async function AboutPage() {
                   Ready to be part of what&apos;s building Medina?
                 </h2>
                 <p className="text-body-lg text-text-secondary mt-f13">
-                  Join 500+ businesses in the Chamber network. Three
+                  Join the businesses in the Chamber network. Three
                   tiers, one community, a shared commitment to making Medina
                   County the best place in Ohio to run a business.
                 </p>

@@ -18,8 +18,6 @@
 interface IndustryChipStripProps {
   /** Top industries by member count: [{ category, count }, …]. */
   industries: ReadonlyArray<{ category: string; count: number }>;
-  /** Total industry count (for the count badge, browse variant only). */
-  totalCount: number;
   /** Currently active category (null if none). */
   active: string | null;
   /** Called when a chip is clicked. Passes null to clear. */
@@ -40,7 +38,6 @@ interface IndustryChipStripProps {
 
 export function IndustryChipStrip({
   industries,
-  totalCount,
   active,
   onSelect,
   onSeeAll,
@@ -57,13 +54,11 @@ export function IndustryChipStrip({
       ? {
           active: "bg-cambridge text-oxford border-cambridge hover:bg-cambridge/85",
           idle: "bg-white/5 text-white/85 border-white/15 hover:border-cambridge hover:text-white",
-          count: { active: "opacity-70", idle: "text-white/45" },
           focus: "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge",
         }
       : {
           active: "bg-cambridge text-bg-primary border-cambridge hover:bg-cambridge/85",
           idle: "bg-bg-primary text-text-secondary border-border-primary hover:border-cambridge hover:text-text-primary",
-          count: { active: "opacity-70", idle: "text-text-tertiary" },
           focus:
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge focus-visible:ring-offset-2 focus-visible:ring-offset-bg-primary",
         };
@@ -78,7 +73,7 @@ export function IndustryChipStrip({
 
   const chips = (
     <div role="group" aria-label="Industry filters" className={containerClass}>
-      {industries.map(({ category, count }) => {
+      {industries.map(({ category }) => {
         const isActive = active === category;
         return (
           <button
@@ -98,9 +93,6 @@ export function IndustryChipStrip({
             `}
           >
             <span className={isGrid ? "text-center leading-tight" : ""}>{category}</span>
-            <span className={`tabular-nums ${isGrid ? "text-[11px]" : "text-[11px]"} ${isActive ? chipClasses.count.active : chipClasses.count.idle}`}>
-              {count}
-            </span>
           </button>
         );
       })}
@@ -135,13 +127,13 @@ export function IndustryChipStrip({
               "Show top industries"
             ) : (
               <>
-                All {totalCount} categories <span aria-hidden="true">→</span>
+                All categories <span aria-hidden="true">→</span>
               </>
             )}
           </button>
         ) : (
           <span className="text-caption text-text-tertiary">
-            {totalCount} categories
+            All categories
           </span>
         )}
       </header>

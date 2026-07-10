@@ -46,7 +46,7 @@ export const navigation: NavItem[] = [
       {
         label: "Athena Awards",
         href: "/programs/athena-awards",
-        description: "Honoring women leaders in Medina County",
+        description: "Honoring leaders who advance women in Medina County",
       },
       {
         label: "Golf Outing",
@@ -94,11 +94,14 @@ export const navigation: NavItem[] = [
         href: "/programs/rental-space",
         description: "Book a meeting room in downtown Medina",
       },
-      {
-        label: "Committees & Councils",
-        href: "/membership/committees",
-        description: "Get involved in Chamber leadership",
-      },
+      // Committees & Councils — removed from the main nav 2026-07-10 by request.
+      // The page is retained at /membership/committees (still reachable directly
+      // and via site search). To restore it to the nav, uncomment this entry.
+      // {
+      //   label: "Committees & Councils",
+      //   href: "/membership/committees",
+      //   description: "Get involved in Chamber leadership",
+      // },
       {
         label: "Savings Programs",
         href: "/membership/savings",

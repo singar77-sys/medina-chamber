@@ -38,7 +38,7 @@ export default function NotFound() {
               href="/membership/directory"
               eyebrow="Most likely"
               title="Member Directory"
-              copy="500+ chamber businesses, searchable by name, service, industry, or city."
+              copy="Chamber businesses, searchable by name, service, industry, or city."
             />
             <ExitCard
               href="/events"

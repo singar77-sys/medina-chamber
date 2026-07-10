@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { db } from "@/lib/db";
 import { getDirectoryMembers, topIndustries } from "@/lib/directory";
-import { extractCity } from "@/data/members";
+import { members as staticMembers } from "@/data/members";
 import { DirectoryClient } from "./DirectoryClient";
 import { FadeIn } from "@/components/FadeIn";
 
@@ -28,53 +28,23 @@ export default async function DirectoryPage() {
   } catch (err) {
     console.error("[directory] load failed:", err);
   }
+  // Resilience: the DB is the only runtime dependency of this public page.
+  // If it's unreachable (bad prod DATABASE_URL, enforced SSL, IP allowlist)
+  // or returns nothing, fall back to the bundled static roster so the
+  // directory degrades to a full, styled page instead of rendering empty.
+  if (members.length === 0) {
+    console.warn("[directory] DB returned no members — using static roster fallback");
+    members = staticMembers;
+  }
   // Full count-sorted category list; the client shows the top 10 until
   // the visitor expands to all categories.
   const industries = topIndustries(members);
 
+  // The full A–Z member dump was removed — the searchable grid above plus
+  // sitemap.ts cover browsing and crawl indexing respectively.
   return (
     <>
       <DirectoryClient members={members} industries={industries} />
-
-      {/* SEO — server-rendered A–Z member list, VISIBLE (not sr-only).
-          Every member's detail page is already in sitemap.ts and linked
-          here by name, so crawlers index the full roster via real links.
-          We deliberately DON'T dump each member's full address +
-          description into the DOM: that hidden-text block bloated every
-          request on this force-dynamic page for no SEO gain over the
-          canonical detail pages. Name + link + city + primary category is
-          enough to index and is genuinely useful to browsing visitors. */}
-      {members.length > 0 && (
-        <section
-          aria-labelledby="all-members-heading"
-          className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 border-t border-border-secondary"
-        >
-          <header className="mb-f21">
-            <p className="text-overline text-text-tertiary">All members</p>
-            <h2 id="all-members-heading" className="text-h3 mt-f5">
-              Every chamber business, A–Z
-            </h2>
-          </header>
-          <ul className="columns-1 sm:columns-2 lg:columns-3 gap-f21 text-caption">
-            {members.map((m) => {
-              const city = extractCity(m.address);
-              const primary = m.categories[0];
-              return (
-                <li key={m.chamberSlug} className="mb-f5 break-inside-avoid">
-                  <Link
-                    href={`/membership/directory/${m.chamberSlug}`}
-                    className="text-text-secondary hover:text-accent focus-visible:outline-none focus-visible:text-accent focus-visible:underline focus-visible:underline-offset-2 transition-colors duration-200"
-                  >
-                    <span className="font-medium">{m.name}</span>
-                    {city && <span className="text-text-tertiary"> · {city}</span>}
-                    {primary && <span className="text-text-tertiary"> · {primary}</span>}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      )}
 
       {/* Join CTA — clock-medina ghosted as the section background */}
       <section className="relative overflow-hidden py-f55 lg:py-f89">

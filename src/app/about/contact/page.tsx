@@ -5,7 +5,7 @@ import { ContactForm } from "./ContactForm";
 import { MedinaNetworkMap } from "@/components/about/MedinaNetworkMap";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
-import { chamberOffice, stephanie } from "@/data/staff";
+import { chamberOffice } from "@/data/staff";
 import { mailto } from "@/lib/format";
 
 export const metadata: Metadata = {
@@ -100,8 +100,8 @@ export default function ContactPage() {
             <span className="block text-accent">with the Chamber</span>
           </h1>
             <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
-              We&apos;re the hub of Medina County&apos;s business network, {" "}
-              500+ members across every community in the area.
+              We&apos;re the hub of Medina County&apos;s business network,
+              serving every community in the area.
               Questions about membership, events, or how we can help?
             </p>
             <div className="mt-f21 flex flex-wrap gap-f13">
@@ -128,16 +128,6 @@ export default function ContactPage() {
                 "
               >
                 Email the office
-              </a>
-              <a
-                href="#contact-form"
-                className="
-                  inline-flex items-center px-f13 py-f13
-                  text-cambridge font-bold text-body-sm
-                  hover:text-cambridge/80 transition-colors
-                "
-              >
-                Or send a message ↓
               </a>
             </div>
           </div>
@@ -177,55 +167,10 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* form + Stephanie */}
-      <section id="contact-form" className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      {/* contact form */}
+      <section id="contact-form" className="mx-auto max-w-2xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
-          <div className="grid lg:grid-cols-2 gap-f34 lg:gap-f55 items-start">
-            <ContactForm />
-
-            <aside>
-              <div className="bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] p-f34 lg:p-f55">
-                <div className="mb-f21 overflow-hidden rounded-[var(--radius-md)]">
-                  <Image
-                    src="/images/people/staff/stephanie-mueller-membership-events-coordinator-greater-medina-chamber.jpg"
-                    alt="Stephanie Mueller, Membership & Events Coordinator at the Greater Medina Chamber of Commerce"
-                    width={560}
-                    height={420}
-                    className="w-full aspect-[4/3] object-cover object-top"
-                  />
-                </div>
-
-                <p className="text-caption text-cambridge font-bold uppercase tracking-wider mb-f3">
-                  Membership &amp; Events
-                </p>
-                <p className="text-h4 text-text-primary">Stephanie Mueller</p>
-                <p className="text-body-sm text-text-secondary mt-f8 mb-f21 leading-relaxed">
-                  Stephanie is your direct line for membership questions, event
-                  sponsorships, and ribbon cuttings. She responds within one
-                  business day.
-                </p>
-
-                <div className="space-y-f13 border-t border-border-secondary pt-f21">
-                  <a
-                    href="tel:+13307238773"
-                    className="flex items-center gap-f13 text-body-sm text-text-primary hover:text-cambridge transition-colors"
-                  >
-                    <span className="text-cambridge font-bold">→</span>
-                    (330) 723-8773
-                  </a>
-                  <a
-                    href={mailto(stephanie.email)}
-                    className="flex items-center gap-f13 text-body-sm text-text-primary hover:text-cambridge transition-colors"
-                  >
-                    <span className="text-cambridge font-bold">→</span>{stephanie.email}</a>
-                  <p className="flex items-center gap-f13 text-body-sm text-text-tertiary">
-                    <span className="text-cambridge font-bold">→</span>
-                    Mon–Fri · 10:00 AM – 4:00 PM
-                  </p>
-                </div>
-              </div>
-            </aside>
-          </div>
+          <ContactForm />
         </FadeIn>
       </section>
 
@@ -237,11 +182,11 @@ export default function ContactPage() {
               <p className="text-overline text-cambridge mb-f8">Where we are</p>
               <h2 className="text-h2">
                 139 N. Court Street, {" "}
-                <span className="text-text-secondary">and 500+ members across Medina County</span>
+                <span className="text-text-secondary">across Medina County</span>
               </h2>
               <p className="text-body text-text-secondary mt-f13">
-                Click the hub to open directions, or explore the network
-                radiating across every community we serve.
+                The network radiates from our downtown Medina hub across every
+                community we serve.
               </p>
             </div>
 

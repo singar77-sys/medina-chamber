@@ -162,7 +162,7 @@ export function CommunityInvestors() {
         {/* Footer note */}
         <FadeIn delay={200}>
           <p className="mt-10 text-caption text-text-tertiary text-center">
-            {investors.length} Community Investors · Greater Medina Chamber of Commerce ·{" "}
+            Community Investors · Greater Medina Chamber of Commerce ·{" "}
             <Link
               href="/membership/benefits"
               className="hover:text-cambridge transition-colors underline underline-offset-2"

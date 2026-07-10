@@ -6,6 +6,7 @@ import { safeJsonLd } from "@/lib/json-ld";
 import { getActiveTiers } from "@/lib/membership-tiers";
 import { stephanie, jaclyn } from "@/data/staff";
 import { mailto } from "@/lib/format";
+import { CommunityInvestors } from "@/components/CommunityInvestors";
 
 export const metadata: Metadata = {
   title: "Community Investor Membership",
@@ -26,19 +27,19 @@ const ciExclusives = [
     title: "Investor Member Spotlight",
     where: "Social media, email newsletter, and chamber website",
     description:
-      "Your business is featured across all three of the chamber's primary channels — not just one. Social posts, email placement, and a dedicated website spotlight that stays live. This is the chamber actively promoting your brand to its full 500+ member network and the broader Medina County audience.",
+      "Your business is featured across all three of the chamber's primary channels — not just one. Social posts, email placement, and a dedicated website spotlight that stays live. This is the chamber actively promoting your brand to its full member network and the broader Medina County audience.",
   },
   {
-    title: "2 Complimentary Luncheon Tickets Monthly",
+    title: "Complimentary Member Luncheon Tickets",
     where: "Member Luncheons",
     description:
-      "Two free tickets to chamber member luncheons every month — events that Business Essentials and Visibility Plus members pay to attend. Over a membership year, that's meaningful savings and consistent face time with the chamber's most active and engaged members.",
+      "Complimentary tickets to chamber member luncheons — events that Business Essentials and Visibility Plus members pay to attend. Over a membership year, that's real savings and consistent face time with the chamber's most active and engaged members.",
   },
   {
     title: "Anytime Access to Member Mailing List",
     where: "Full member directory",
     description:
-      "Community Investors can access the chamber's full member mailing list at any time — not just on request cycles. Direct outreach to 500+ Medina County businesses when you need it, for partnerships, promotions, or vendor sourcing.",
+      "Community Investors can access the chamber's full member mailing list at any time — not just on request cycles. Direct outreach to Medina County businesses when you need it, for partnerships, promotions, or vendor sourcing.",
   },
   {
     title: "Exclusive Special Events Invitations",
@@ -66,15 +67,6 @@ const whoItsFor = [
   "Businesses that send multiple people to chamber events each month",
 ];
 
-const notableMembers = [
-  "Summa Health",
-  "Cleveland Clinic",
-  "Westfield Insurance",
-  "Rea & Associates",
-  "Sandridge Food Corporation",
-  "SFS Group",
-];
-
 export default async function CommunityInvestorPage() {
   const tiers = await getActiveTiers();
   const ciTier = tiers.find((t) => t.key === "community_investor");
@@ -84,7 +76,7 @@ export default async function CommunityInvestorPage() {
     "@type": "Product",
     name: "Community Investor Membership",
     description:
-      "Greater Medina Chamber of Commerce top-tier membership with investor spotlights, monthly luncheon tickets, anytime mailing list access, and exclusive event invitations.",
+      "Greater Medina Chamber of Commerce top-tier membership with investor spotlights, complimentary luncheon tickets, anytime mailing list access, and exclusive event invitations.",
     url: "https://medinachamber.com/membership/community-investor",
     offers: {
       "@type": "Offer",
@@ -178,12 +170,12 @@ export default async function CommunityInvestorPage() {
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f89 pb-f55 lg:pt-f144 lg:pb-f89">
         <FadeIn>
           <div className="max-w-2xl mb-f34">
-            <p className="text-overline text-cambridge mb-f8">Exclusive to this tier</p>
-            <h2 className="text-h2">What you get that no one else does</h2>
+            <p className="text-overline text-cambridge mb-f8">At the leadership level</p>
+            <h2 className="text-h2">The benefits of investing deeper</h2>
             <p className="text-body text-text-secondary mt-f13 leading-relaxed">
               Community Investor builds on everything in Business Essentials and
-              Visibility Plus, then adds four benefits that exist only at this
-              level.
+              Visibility Plus, then adds four ways to invest more deeply in
+              Medina County&apos;s business community.
             </p>
           </div>
           <div className="grid md:grid-cols-2 gap-f21">
@@ -296,62 +288,35 @@ export default async function CommunityInvestorPage() {
       {/* Who it's for */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
-          <div className="grid lg:grid-cols-2 gap-f34 items-start">
-            <div>
-              <p className="text-overline text-cambridge mb-f8">Is this the right fit?</p>
-              <h2 className="text-h2">Who belongs at this level</h2>
-              <p className="text-body text-text-secondary mt-f13 leading-relaxed">
-                Community Investor isn&apos;t the right tier for every business.
-                It&apos;s designed for leaders who want their name attached to
-                the chamber&apos;s public work — and who can put the visibility
-                and access to use.
-              </p>
-              <ul className="mt-f21 space-y-f13">
-                {whoItsFor.map((item) => (
-                  <li key={item} className="flex items-start gap-f13 text-body-sm text-text-primary">
-                    <span className="mt-[0.35em] w-1.5 h-1.5 rounded-full bg-cambridge shrink-0" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-f21 text-body-sm text-text-secondary leading-relaxed">
-                If you&apos;re a first-year member or a small team still finding
-                your footing,{" "}
-                <Link href="/membership/pricing" className="text-cambridge hover:text-cambridge/80 transition-colors">
-                  Business Essentials
-                </Link>{" "}
-                is the right starting point. There&apos;s no pressure to start
-                at the top — but when you&apos;re ready to lead, this is the tier.
-              </p>
-            </div>
-
-            {/* Notable members */}
-            <div className="p-f21 lg:p-f34 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-              <p className="text-caption font-bold text-cambridge uppercase tracking-wider mb-f13">
-                Organizations at this tier
-              </p>
-              <p className="text-body-sm text-text-secondary mb-f21 leading-relaxed">
-                Many of Medina County&apos;s largest employers, most visible
-                brands, and longest-tenured chamber members are Community
-                Investors.
-              </p>
-              <div className="grid grid-cols-2 gap-f8">
-                {notableMembers.map((name) => (
-                  <div
-                    key={name}
-                    className="px-f13 py-f8 bg-bg-primary border border-border-secondary rounded-[var(--radius-md)] text-body-sm font-medium text-text-primary"
-                  >
-                    {name}
-                  </div>
-                ))}
-              </div>
-              <p className="mt-f13 text-caption text-text-tertiary">
-                + many more across healthcare, finance, manufacturing, and professional services
-              </p>
-            </div>
+          <div className="max-w-2xl">
+            <p className="text-overline text-cambridge mb-f8">Is this the right fit?</p>
+            <h2 className="text-h2">Who belongs at this level</h2>
+            <p className="text-body text-text-secondary mt-f13 leading-relaxed">
+              Community Investor isn&apos;t the right tier for every business.
+              It&apos;s designed for leaders who want their name attached to
+              the chamber&apos;s public work — and who can put the visibility
+              and access to use.
+            </p>
+            <ul className="mt-f21 space-y-f13">
+              {whoItsFor.map((item) => (
+                <li key={item} className="flex items-start gap-f13 text-body-sm text-text-primary">
+                  <span className="mt-[0.35em] w-1.5 h-1.5 rounded-full bg-cambridge shrink-0" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-f21 text-body-sm text-text-secondary leading-relaxed">
+              Not sure it&apos;s the right fit yet? That&apos;s exactly what a
+              conversation is for. Wherever you&apos;re starting from, there&apos;s
+              a place for you at the chamber — reach out and we&apos;ll help you
+              find where you belong.
+            </p>
           </div>
         </FadeIn>
       </section>
+
+      {/* Community Investors — the full logo wall, mirroring the home page */}
+      <CommunityInvestors />
 
       {/* CTA */}
       <section className="bg-oxford border-t border-white/10 py-f55 lg:py-f89">

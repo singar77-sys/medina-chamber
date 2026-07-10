@@ -197,10 +197,9 @@ export default function AdvocacyPage() {
                 <h2 className="text-h2">Candidate Interview Program</h2>
                 <p className="text-body-lg text-text-secondary mt-f13">
                   Every election cycle, the chamber conducts structured candidate
-                  interviews and shares the results with the business community.
-                  We&apos;ve hosted documented interviews in 2019, 2020, 2021,
-                  2023, 2024, and 2025, giving members consistent, objective
-                  information when it matters most.
+                  interviews and shares the results with the business community,
+                  giving members consistent, objective information when it
+                  matters most.
                 </p>
               </div>
               <div className="space-y-f21">

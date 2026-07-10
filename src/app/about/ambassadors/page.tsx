@@ -128,11 +128,11 @@ export default function AmbassadorsPage() {
                 The ambassador roster is being refreshed. Check back soon.
               </p>
             ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-f21">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-f13">
               {ambassadors.map((a) => (
                 <article
                   key={a.slug}
-                  style={{ contentVisibility: "auto", containIntrinsicSize: "0 480px" }}
+                  style={{ contentVisibility: "auto", containIntrinsicSize: "0 340px" }}
                   className="group overflow-hidden bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)] hover:border-cambridge/40 transition-colors"
                 >
                   <div className="relative w-full aspect-[3/4] overflow-hidden">
@@ -144,7 +144,7 @@ export default function AmbassadorsPage() {
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                   </div>
-                  <div className="p-f21">
+                  <div className="p-f13">
                     <h3 className="text-body font-bold text-text-primary">
                       {a.name}
                     </h3>

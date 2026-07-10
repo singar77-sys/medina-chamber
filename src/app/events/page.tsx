@@ -145,7 +145,7 @@ export default function EventsPage() {
       </section>
 
       {/* Upcoming Events */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      <section id="upcoming-events" className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
           <div className="flex items-end justify-between mb-f21">
             <h2 className="text-h2">Upcoming Events</h2>
@@ -201,8 +201,19 @@ export default function EventsPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
             <h2 className="text-h2 mb-f8">Regular Programming</h2>
-            <p className="text-body-lg text-text-secondary mb-f21">
+            <p className="text-body-lg text-text-secondary mb-f8">
               Variety programs on a variety of dates — stay as busy as you want to be.
+            </p>
+            <p className="text-body-sm text-text-tertiary mb-f21">
+              These programs recur monthly, but dates, times, and venues can change.
+              Always confirm against the{" "}
+              <a
+                href="#upcoming-events"
+                className="text-cambridge underline underline-offset-2 hover:text-cambridge/80 transition-colors"
+              >
+                upcoming events calendar
+              </a>{" "}
+              before you attend.
             </p>
             <div className="grid sm:grid-cols-2 gap-f21">
               {[
@@ -320,7 +331,7 @@ export default function EventsPage() {
           <div className="mt-f55">
             <p className="text-overline text-cambridge mb-f8">Mark Your Calendar</p>
             <h2 className="text-h2 mb-f21">Annual Signature Events</h2>
-            <div className="grid md:grid-cols-2 gap-f21">
+            <div className="grid md:grid-cols-3 gap-f21">
               {/* Golf Outing */}
               {nextGolf ? (
                 <Link
@@ -361,14 +372,34 @@ export default function EventsPage() {
                 className="group relative overflow-hidden bg-oxford rounded-[var(--radius-lg)] p-f21 flex flex-col min-h-[260px]"
               >
                 <span aria-hidden className="absolute -bottom-4 -right-2 text-[5.5rem] font-black leading-none text-cambridge/[0.13] select-none pointer-events-none uppercase tracking-tight">
-                  FALL
+                  NOV
                 </span>
-                <p className="text-caption font-bold text-cambridge uppercase tracking-wider">Annual · Fall</p>
+                <p className="text-caption font-bold text-cambridge uppercase tracking-wider">November 10, 2026</p>
                 <h3 className="text-h3 text-white mt-f8 leading-tight">ATHENA Awards</h3>
                 <p className="text-white/55 text-body-sm mt-f13 leading-relaxed flex-1">
-                  Honoring women who demonstrate excellence in leadership, community
-                  service, and mentorship across Medina County. Co-hosted with the
-                  Medina County Women&apos;s Journal.
+                  Honoring Medina County leaders who lead with excellence and
+                  actively help women reach their full leadership potential.
+                  Co-hosted with WJ Creative Studio.
+                </p>
+                <p className="mt-f21 text-body-sm font-bold text-cambridge group-hover:translate-x-1 transition-transform">
+                  Learn more →
+                </p>
+              </Link>
+
+              {/* Social Connect */}
+              <Link
+                href="/programs/social-connect"
+                className="group relative overflow-hidden bg-oxford rounded-[var(--radius-lg)] p-f21 flex flex-col min-h-[260px]"
+              >
+                <span aria-hidden className="absolute -bottom-4 -right-2 text-[5.5rem] font-black leading-none text-cambridge/[0.13] select-none pointer-events-none uppercase tracking-tight">
+                  EXPO
+                </span>
+                <p className="text-caption font-bold text-cambridge uppercase tracking-wider">Annual · Foundry Social</p>
+                <h3 className="text-h3 text-white mt-f8 leading-tight">Social Connect</h3>
+                <p className="text-white/55 text-body-sm mt-f13 leading-relaxed flex-1">
+                  The chamber&apos;s signature networking night at Foundry Social, early-access
+                  networking, the Foundry Faceoff competition, and a Business Circuit Expo
+                  open to the public.
                 </p>
                 <p className="mt-f21 text-body-sm font-bold text-cambridge group-hover:translate-x-1 transition-transform">
                   Learn more →

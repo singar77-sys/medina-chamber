@@ -686,7 +686,7 @@ export function MemberGraph({ members }: MemberGraphProps) {
 
           const subFs = Math.max(9 / globalScale, 1.1);
           drawLabelPill(
-            ctx, `${count} members`, x,
+            ctx, "Members", x,
             y + r + (fs * 1.65 + 7) / globalScale,
             subFs, 0.70, `rgba(${C.catRgb},0.85)`,
           );
@@ -931,7 +931,7 @@ export function MemberGraph({ members }: MemberGraphProps) {
               All industries
             </button>
             <span style={{ fontSize: 11, color: "var(--text-tertiary)" }}>
-              {focusMembers.length} members
+              Members
             </span>
           </>
         ) : (
@@ -941,9 +941,6 @@ export function MemberGraph({ members }: MemberGraphProps) {
               textTransform: "uppercase", letterSpacing: "0.12em",
             }}>
               Industries
-            </span>
-            <span style={{ fontSize: 11, color: "var(--text-tertiary)" }}>
-              {filteredCategories.length}
             </span>
           </>
         )}
@@ -1140,7 +1137,7 @@ export function MemberGraph({ members }: MemberGraphProps) {
               </h2>
             </div>
             <p style={{ margin: 0, fontSize: 11.5, color: "var(--text-tertiary)" }}>
-              {members.length} members · {sortedCategories.length} industries
+              Every member, mapped by industry
             </p>
           </div>
           {sidebarContent}
@@ -1255,10 +1252,10 @@ export function MemberGraph({ members }: MemberGraphProps) {
               color: "rgba(131,188,169,0.72)", textTransform: "uppercase", whiteSpace: "nowrap",
             }}>
               {activeCategory
-                ? `${activeCategory} · ${focusMembers.length} members · tap to open`
+                ? `${activeCategory} · tap to open`
                 : globeMode === "members"
-                  ? `${members.length} members · tap to open`
-                  : `Top ${Math.min(TOP_N, sortedCategories.length)} industries · tap to explore`}
+                  ? `Members · tap to open`
+                  : `Top industries · tap to explore`}
             </p>
           </div>
         </div>
@@ -1334,8 +1331,8 @@ export function MemberGraph({ members }: MemberGraphProps) {
                   : "0 0 8px rgba(0,184,148,0.8)",
               }} />
               {activeCategory
-                ? `${activeCategory}, ${focusMembers.length} members`
-                : `${members.length} members · ${sortedCategories.length} industries`}
+                ? `${activeCategory}`
+                : `Members by industry`}
             </span>
             <span style={{ display: "flex", alignItems: "center", gap: 3, opacity: 0.6, fontSize: 11 }}>
               Browse

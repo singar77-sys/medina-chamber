@@ -45,13 +45,13 @@ const committees: Committee[] = [
     name: "Golf Committee",
     tag: null,
     description:
-      "Plans and executes the chamber's annual golf outing, the largest fundraiser of the year. Responsible for fostering community connections and creating a great experience for every participant.",
+      "Plans and executes the chamber's annual golf outing, the chamber's flagship event and a major fundraiser. Responsible for fostering community connections and creating a great experience for every participant.",
   },
   {
     name: "Athena Leadership Awards Committee",
     tag: null,
     description:
-      "Organizes the annual Athena Awards alongside the Medina County Women's Journal, including speaker recruitment, sponsorships, vendor coordination, and full event logistics.",
+      "Organizes the annual Athena Awards alongside WJ Creative Studio, including speaker recruitment, sponsorships, vendor coordination, and full event logistics.",
   },
   {
     name: "Safety Council",

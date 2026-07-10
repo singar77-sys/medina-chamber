@@ -19,17 +19,18 @@ export const metadata: Metadata = {
 };
 
 const board = [
-  { name: "Julie McNabb", title: "Board President" },
-  { name: "Steve Allison", title: "Board Chair" },
-  { name: "Malorie Kormos", title: "Board of Directors" },
-  { name: "Steve Ferris", title: "Board of Directors" },
-  { name: "Terry Blascak", title: "Board of Directors" },
-  { name: "David Ferrell", title: "Board of Directors" },
-  { name: "Kathy Elseser", title: "Board of Directors" },
-  { name: "Randy Fuerst", title: "Board of Directors" },
-  { name: "Brian Harr", title: "Board of Directors" },
-  { name: "Nick Howell", title: "Board of Directors" },
-  { name: "Dan Calvin", title: "Past Board President" },
+  { name: "Steve Allison", title: "President", company: "Fire-Dex" },
+  { name: "Malorie Kormos", title: "President Elect", company: "Catholic Charities Diocese of Cleveland" },
+  { name: "Julie McNabb", title: "Immediate Past President", company: "JK Gift Shop / Interior Design Studio" },
+  { name: "Terry Blascak", title: "Board of Directors", company: "Huntington Bank" },
+  { name: "David Ferrell", title: "Board of Directors", company: "Philpott Solutions Group" },
+  { name: "Steve Ferris", title: "Board of Directors", company: "Discount Drug Mart" },
+  { name: "Kathy Elseser", title: "Board of Directors", company: "Community Energy Advisors" },
+  { name: "Julie Simon", title: "Board of Directors", company: "Cleveland Clinic Medina Hospital" },
+  { name: "Brian Harr", title: "Board of Directors", company: "Commercial & Savings Bank" },
+  { name: "Mark Herwick", title: "Board of Directors", company: "Homestead Insurance Agency" },
+  { name: "Nick Howell", title: "Board of Directors", company: "National Design Mart" },
+  { name: "Kaleigh Huffman", title: "Board of Directors", company: "Critchfield, Critchfield & Johnston" },
 ];
 
 const staffBios = [
@@ -152,7 +153,7 @@ export default function BoardPage() {
             <div className="mb-f21 flex items-end justify-between gap-f21 flex-wrap">
               <div>
                 <p className="text-overline text-cambridge mb-f8">
-                  Board Members
+                  2026 Board of Directors
                 </p>
                 <h2 className="text-h2">{board.length} Volunteer Leaders</h2>
               </div>
@@ -164,19 +165,17 @@ export default function BoardPage() {
               {board.map((m) => (
                 <div
                   key={m.name}
-                  className="flex items-start gap-f13 p-f21 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]"
+                  className="p-f21 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]"
                 >
-                  <div className="w-10 h-10 rounded-full bg-oxford/10 [[data-theme=dark]_&]:bg-cambridge/15 flex items-center justify-center shrink-0 text-body-sm font-bold text-oxford [[data-theme=dark]_&]:text-cambridge">
-                    {m.name.split(" ").map((n) => n[0]).join("").substring(0, 2)}
-                  </div>
-                  <div>
-                    <p className="text-body font-bold text-text-primary">
-                      {m.name}
-                    </p>
-                    <p className="text-caption text-text-tertiary mt-f3">
-                      {m.title}
-                    </p>
-                  </div>
+                  <p className="text-body font-bold text-text-primary">
+                    {m.name}
+                  </p>
+                  <p className="text-caption text-cambridge font-bold mt-f3">
+                    {m.title}
+                  </p>
+                  <p className="text-caption text-text-tertiary mt-f3">
+                    {m.company}
+                  </p>
                 </div>
               ))}
             </div>
@@ -217,9 +216,6 @@ export default function BoardPage() {
               <div className="space-y-f13">
                 <ButtonLink href="/about/contact" size="md" className="w-full justify-center">
                   Get in Touch →
-                </ButtonLink>
-                <ButtonLink href="/about/ambassadors" variant="ghost" size="md" className="w-full justify-center">
-                  Meet the Ambassadors
                 </ButtonLink>
               </div>
             </div>

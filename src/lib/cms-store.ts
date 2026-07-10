@@ -221,7 +221,7 @@ const _plusAdded = [
 ];
 const _investorAdded = [
   "Investor member spotlight (social, email, & website)",
-  "2 free tickets to monthly luncheons",
+  "2 free tickets to member luncheons",
   "Access to local & state legislator events & introductions",
   "Recognition at all events as Investor",
 ];
@@ -255,7 +255,7 @@ export const DEFAULT_PRICING: Omit<PricingConfig, "updatedAt"> = {
       name: "Community Investor",
       price: 1145,
       tagline:
-        "Lead from the front: VIP spotlights, two luncheon tickets monthly, and direct access to legislator events, with recognition at every Chamber event.",
+        "Lead from the front: VIP spotlights, complimentary luncheon tickets, and direct access to legislator events, with recognition at every Chamber event.",
       who: "Established firms prioritizing policy access, high-profile recognition, and year-round VIP presence.",
       benefits: [..._essentialsBenefits, ..._plusAdded],
       addedBenefits: _investorAdded,
@@ -273,7 +273,7 @@ export const DEFAULT_PRICING: Omit<PricingConfig, "updatedAt"> = {
     },
     {
       q: "Do Investors get ongoing event perks?",
-      a: "Yes, two free luncheon tickets every month plus recognition at all events.",
+      a: "Yes, complimentary luncheon tickets plus recognition at all events.",
     },
     {
       q: "What's the Certificate of Origin benefit?",

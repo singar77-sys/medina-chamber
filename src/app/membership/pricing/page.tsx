@@ -18,7 +18,7 @@ const PRICING_FAQS = [
   },
   {
     q: "Do Investors get ongoing event perks?",
-    a: "Yes, two free luncheon tickets every month plus recognition at all events.",
+    a: "Yes, complimentary luncheon tickets plus recognition at all events.",
   },
   {
     q: "What's the Certificate of Origin benefit?",

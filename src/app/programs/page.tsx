@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Programs | Greater Medina Chamber of Commerce",
     description:
-      "Compass leadership, Social Connect, Golf Outing, Athena Awards, Safety Council, and rental space, programs that power Medina County's business community.",
+      "Compass leadership, Social Connect, Golf Outing, Athena Awards, and Safety Council, programs that power Medina County's business community.",
   },
   alternates: { canonical: "/programs" },
 };
@@ -43,7 +43,7 @@ const programs = [
     category: "Recognition",
     href: "/programs/athena-awards",
     description:
-      "Annual ceremony honoring exceptional women leaders in Medina County. Co-hosted with the Medina County Women's Journal.",
+      "Annual ceremony honoring Medina County leaders who lead with excellence and champion the advancement of women. Co-hosted with WJ Creative Studio.",
   },
   {
     name: "Safety Council",
@@ -51,13 +51,6 @@ const programs = [
     href: "/programs/safety-council",
     description:
       "Monthly safety education meetings in partnership with the Ohio BWC, enrollment free for chamber members, with BWC group rebate eligibility for participating employers.",
-  },
-  {
-    name: "Rental Space",
-    category: "Meeting Space",
-    href: "/programs/rental-space",
-    description:
-      "Two professional meeting spaces in downtown Medina, The Vault (up to 16) and the Main Room (up to 50). Free parking, Wi-Fi, and AV included.",
   },
 ];
 
@@ -75,7 +68,6 @@ export default function ProgramsPage() {
       { "@type": "WebPage", name: "Annual Golf Outing", url: "https://medinachamber.com/programs/golf-outing" },
       { "@type": "WebPage", name: "Athena Awards", url: "https://medinachamber.com/programs/athena-awards" },
       { "@type": "WebPage", name: "Medina County Safety Council", url: "https://medinachamber.com/programs/safety-council" },
-      { "@type": "WebPage", name: "Meeting & Rental Space", url: "https://medinachamber.com/programs/rental-space" },
     ],
   };
 

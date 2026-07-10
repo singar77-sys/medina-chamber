@@ -21,10 +21,10 @@ export const metadata: Metadata = {
 const sponsorships = [
   {
     event: "Golf Outing",
-    tag: "Largest Fundraiser",
+    tag: "Flagship Event",
     href: "/programs/golf-outing",
     description:
-      "The chamber's largest fundraiser of the year. Sponsorship options include hole/tee sponsors, Par 3 \"spend the day\" sponsors, comfort station sponsors, and raffle prize donations. Maximum exposure with Medina County's business community in one afternoon.",
+      "The chamber's flagship outing of the year and a major driver of the funding behind Chamber programs. Sponsorship options include hole/tee sponsors, Par 3 \"spend the day\" sponsors, comfort station sponsors, and raffle prize donations. Maximum exposure with Medina County's business community in one afternoon.",
     contact: stephanie.email,
     options: [
       "Hole / Tee Sponsor",
@@ -35,10 +35,10 @@ const sponsorships = [
   },
   {
     event: "Athena Leadership Awards",
-    tag: "Annual Ceremony",
+    tag: "Premier Audience",
     href: "/programs/athena-awards",
     description:
-      "Annual awards ceremony co-hosted with the Medina County Women's Journal. Various sponsorship tiers available to put your brand in front of Medina County's most influential business and community leaders.",
+      "Annual awards ceremony co-hosted with WJ Creative Studio. Various sponsorship tiers available to put your brand in front of Medina County's most influential business and community leaders.",
     contact: jaclyn.email,
     options: [
       "Presenting Sponsor",
@@ -49,7 +49,7 @@ const sponsorships = [
   },
   {
     event: "Member Meetings",
-    tag: "$100 + lunch fees",
+    tag: "Podium & Spotlight",
     href: "/events",
     description:
       "Monthly member meetings bring together the chamber's business community for programming, networking, and updates. Table sponsorships include a display table, a 30-second podium commercial, and logo placement on the event registration page and all promotional emails and social media.",
@@ -63,7 +63,7 @@ const sponsorships = [
   },
   {
     event: "Safety Council Meetings",
-    tag: "Monthly",
+    tag: "Employer Reach",
     href: "/programs/safety-council",
     description:
       "Monthly workplace safety meetings at Williams on the Lake. Sponsors get a display table, podium time, and logo placement on the Safety Council website and promotional materials, reaching Medina County's employer community every month.",
@@ -83,7 +83,6 @@ const ribbonCuttingDetails = [
     items: [
       "Grand openings (within first year of business)",
       "New locations",
-      "Ownership or management changes",
       "Renovations or expansions",
     ],
   },
@@ -91,7 +90,7 @@ const ribbonCuttingDetails = [
     title: "What's Included",
     items: [
       "Chamber staff and ambassador attendance",
-      "Ceremonial scissors and ribbon",
+      "Ceremonial ribbon and the chamber's giant scissors for the big cut",
       "Promotional graphics in the chamber's weekly email",
       "Facebook post with event photos",
     ],
@@ -158,6 +157,41 @@ export default function SponsorshipsPage() {
         </div>
       </section>
 
+      {/* Ribbon Cuttings */}
+      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <FadeIn>
+            <p className="text-overline text-cambridge mb-f8">Ribbon Cuttings</p>
+            <h2 className="text-h2">Celebrate Your Milestone</h2>
+            <p className="text-body text-text-secondary max-w-2xl leading-relaxed mt-f13 mb-f21">
+              The chamber shows up for your big moments. Grand openings, new
+              locations, renovations, and expansions all qualify for a ribbon
+              cutting, with chamber staff, ambassadors, and social media coverage
+              included.
+            </p>
+            <div className="grid md:grid-cols-3 gap-f21">
+              {ribbonCuttingDetails.map((section, i) => (
+                <FadeIn key={section.title} delay={i * 80}>
+                  <div className="p-f21 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]">
+                    <h4 className="text-h4 mb-f8">{section.title}</h4>
+                    <ul className="space-y-f8">
+                      {section.items.map((item) => (
+                        <li key={item} className="flex items-start gap-f8 text-body-sm text-text-secondary">
+                          <svg className="w-4 h-4 text-cambridge shrink-0 mt-f3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                            <path d="M20 6L9 17l-5-5" />
+                          </svg>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </FadeIn>
+              ))}
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
       {/* Sponsorship cards */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
@@ -212,41 +246,6 @@ export default function SponsorshipsPage() {
             ))}
           </div>
         </FadeIn>
-      </section>
-
-      {/* Ribbon Cuttings */}
-      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <FadeIn>
-            <p className="text-overline text-cambridge mb-f8">Ribbon Cuttings</p>
-            <h2 className="text-h2">Celebrate Your Milestone</h2>
-            <p className="text-body text-text-secondary max-w-2xl leading-relaxed mt-f13 mb-f21">
-              The chamber shows up for your big moments. Grand openings, new
-              locations, renovations, and expansions all qualify for a ribbon
-              cutting, with chamber staff, ambassadors, and social media coverage
-              included.
-            </p>
-            <div className="grid md:grid-cols-3 gap-f21">
-              {ribbonCuttingDetails.map((section, i) => (
-                <FadeIn key={section.title} delay={i * 80}>
-                  <div className="p-f21 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]">
-                    <h4 className="text-h4 mb-f8">{section.title}</h4>
-                    <ul className="space-y-f8">
-                      {section.items.map((item) => (
-                        <li key={item} className="flex items-start gap-f8 text-body-sm text-text-secondary">
-                          <svg className="w-4 h-4 text-cambridge shrink-0 mt-f3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                            <path d="M20 6L9 17l-5-5" />
-                          </svg>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </FadeIn>
-              ))}
-            </div>
-          </FadeIn>
-        </div>
       </section>
 
       {/* Become a sponsor — intake form */}

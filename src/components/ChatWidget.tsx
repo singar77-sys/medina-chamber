@@ -154,7 +154,7 @@ function contextForPath(pathname: string): PageContext {
   // Default — homepage / everything else.
   return {
     greeting: "Your Medina Chamber concierge.",
-    subtitle: "500+ members, live events, every program, ask me anything.",
+    subtitle: "Live events, every program, ask me anything.",
     prompts: [...DEFAULT_PROMPTS],
     showPortalCta: true,
   };

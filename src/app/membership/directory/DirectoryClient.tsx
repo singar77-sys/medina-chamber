@@ -211,9 +211,7 @@ function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
       {!isFiltered ? (
         // ── BROWSE MODE ──────────────────────────────
         <BrowseBand
-          industries={industries}
           visibleIndustries={browseIndustries}
-          memberCount={members.length}
           active={activeCategory}
           onSelect={selectCategory}
           onSeeAll={() => setShowAll(true)}
@@ -225,7 +223,6 @@ function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
         <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f34">
           <IndustryChipStrip
             industries={refineIndustries}
-            totalCount={industries.length}
             active={activeCategory}
             onSelect={selectCategory}
             variant="refine"
@@ -235,8 +232,9 @@ function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
               individually removable, so nothing can get invisibly stuck. */}
           <div className="mt-f21 flex flex-wrap items-center gap-x-f13 gap-y-f8">
             <p className="text-caption text-text-tertiary shrink-0">
-              <span className="font-bold text-text-primary">{filtered.length}</span>{" "}
-              of {members.length} members
+              <span className="font-bold text-text-primary">
+                {activeCategory ?? "All members"}
+              </span>
               {search.trim() && !searchError && semanticSlugs && (
                 <span className="ml-2 text-cambridge">· smart match</span>
               )}

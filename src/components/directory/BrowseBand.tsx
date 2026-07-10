@@ -3,16 +3,11 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { IndustryChipStrip } from "./IndustryChipStrip";
-import { getCommunityInvestors } from "@/data/members";
 import { useTheme } from "@/components/ThemeProvider";
 
 interface BrowseBandProps {
-  /** Full category list sorted by member count (descending). */
-  industries: ReadonlyArray<{ category: string; count: number }>;
   /** Industries currently shown (top slice or full list). */
   visibleIndustries: ReadonlyArray<{ category: string; count: number }>;
-  /** Total member count (for the CTA label). */
-  memberCount: number;
   /** Currently active category (null if none). */
   active: string | null;
   /** Called when an industry chip is clicked. */
@@ -26,9 +21,7 @@ interface BrowseBandProps {
 }
 
 export function BrowseBand({
-  industries,
   visibleIndustries,
-  memberCount,
   active,
   onSelect,
   onSeeAll,
@@ -36,7 +29,6 @@ export function BrowseBand({
   onToggleExpand,
 }: BrowseBandProps) {
   const { theme } = useTheme();
-  const investorCount = getCommunityInvestors().length;
 
   return (
     <section
@@ -52,7 +44,7 @@ export function BrowseBand({
           Every trade. <span className="text-cambridge">Every town.</span>
         </h2>
         <p className="text-body-lg text-text-secondary mt-f13">
-          {memberCount}+ member businesses across Medina County.
+          Member businesses from every corner of Medina County.
         </p>
 
         {/* Industry chips */}
@@ -73,13 +65,12 @@ export function BrowseBand({
             >
               {expanded
                 ? "Show fewer"
-                : <>All {industries.length} categories <span aria-hidden="true">→</span></>}
+                : <>All categories <span aria-hidden="true">→</span></>}
             </button>
           </div>
 
           <IndustryChipStrip
             industries={visibleIndustries}
-            totalCount={industries.length}
             active={active}
             onSelect={onSelect}
             variant="refine"
@@ -92,7 +83,7 @@ export function BrowseBand({
         {/* Bottom bar: CTA + CI ribbon */}
         <div className="mt-f55 pt-f34 border-t border-border-primary flex flex-col gap-f21 sm:flex-row sm:items-center sm:justify-between">
           <Button variant="primary" size="md" onClick={onSeeAll}>
-            Browse all {memberCount}+ members{" "}
+            Browse all members{" "}
             <span aria-hidden="true" className="ml-f5">→</span>
           </Button>
 
@@ -102,7 +93,7 @@ export function BrowseBand({
               href="/membership/community-investor"
               className="font-bold text-text-primary hover:text-cambridge transition-colors duration-200"
             >
-              {investorCount} Community Investors
+              our Community Investors
             </Link>
             {" "}— the businesses leading Medina County.
           </p>

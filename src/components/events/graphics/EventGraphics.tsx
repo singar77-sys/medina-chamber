@@ -993,7 +993,7 @@ export function GolfOutingGraphic({
         padding: isStory ? "60px 64px 64px" : isSquare ? "44px 56px 48px" : "32px 56px 36px",
         display: "flex", flexDirection: "column", justifyContent: "space-between",
       }}>
-        {/* Top rail — overline only (38th annual). The icon moves to
+        {/* Top rail — overline only (annual). The icon moves to
             the credit row at the bottom, cinema-poster style. */}
         <div>
           <p style={{
@@ -1001,7 +1001,7 @@ export function GolfOutingGraphic({
             letterSpacing: "0.24em", color: BRAND.coquelicot,
             textTransform: "uppercase", margin: 0,
           }}>
-            38th Annual
+            Annual
           </p>
         </div>
 

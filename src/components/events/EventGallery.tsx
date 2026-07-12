@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import type { MediaItem } from "@/lib/media-store";
 
@@ -12,7 +12,30 @@ interface Props {
 export function EventGallery({ photos, title = "Photos" }: Props) {
   const [lightbox, setLightbox] = useState<number | null>(null);
 
+  // Accessible focus management: the lightbox <div> is focused on open so
+  // its onKeyDown (Escape + Arrow nav) is live immediately, and focus is
+  // returned to the thumbnail that opened it on close.
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const triggerRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const isOpen = lightbox !== null;
+
+  // Keyed on isOpen — not the index — so navigating between photos while
+  // the lightbox is open does not steal focus back to the overlay.
+  useEffect(() => {
+    if (!isOpen) return;
+    requestAnimationFrame(() => dialogRef.current?.focus());
+  }, [isOpen]);
+
   if (photos.length === 0) return null;
+
+  function close() {
+    const i = lightbox;
+    setLightbox(null);
+    // Restore focus to the thumbnail for the photo last viewed.
+    if (i !== null) {
+      requestAnimationFrame(() => triggerRefs.current[i]?.focus());
+    }
+  }
 
   function prev() {
     setLightbox((i) => (i === null ? null : (i - 1 + photos.length) % photos.length));
@@ -25,7 +48,7 @@ export function EventGallery({ photos, title = "Photos" }: Props) {
   function handleKey(e: React.KeyboardEvent) {
     if (e.key === "ArrowLeft") prev();
     if (e.key === "ArrowRight") next();
-    if (e.key === "Escape") setLightbox(null);
+    if (e.key === "Escape") close();
   }
 
   const cols =
@@ -46,6 +69,9 @@ export function EventGallery({ photos, title = "Photos" }: Props) {
         {photos.map((photo, i) => (
           <button
             key={photo.url}
+            ref={(el) => {
+              triggerRefs.current[i] = el;
+            }}
             className="relative aspect-[4/3] rounded-lg overflow-hidden cursor-pointer group focus-visible:ring-2 focus-visible:ring-cambridge focus-visible:outline-none"
             onClick={() => setLightbox(i)}
             aria-label={`View photo ${i + 1} of ${photos.length}${photo.caption ? `: ${photo.caption}` : ""}`}
@@ -71,8 +97,9 @@ export function EventGallery({ photos, title = "Photos" }: Props) {
       {lightbox !== null && (
         // eslint-disable-next-line jsx-a11y/no-static-element-interactions
         <div
+          ref={dialogRef}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
-          onClick={() => setLightbox(null)}
+          onClick={close}
           onKeyDown={handleKey}
           // biome-ignore lint/a11y/noNoninteractiveTabindex: lightbox overlay needs focus for keyboard nav
           tabIndex={-1}
@@ -102,7 +129,7 @@ export function EventGallery({ photos, title = "Photos" }: Props) {
 
           {/* Close */}
           <button
-            onClick={() => setLightbox(null)}
+            onClick={close}
             className="absolute top-4 right-4 text-white/70 hover:text-white text-2xl leading-none w-11 h-11 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors"
             aria-label="Close lightbox"
           >

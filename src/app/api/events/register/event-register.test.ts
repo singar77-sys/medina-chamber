@@ -3,6 +3,9 @@ import { events, eventTickets } from "@/lib/db/schema";
 
 // Stripe client throws at import without a key — stub before importing the route.
 vi.stubEnv("STRIPE_SECRET_KEY", "sk_test_dummy_key_for_unit_tests");
+// The dormant-backend guard 404s this route unless internal transactions are on;
+// these tests exercise the transactional path that runs once the flag is set.
+vi.stubEnv("INTERNAL_TRANSACTIONS_ENABLED", "true");
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
 
@@ -139,6 +142,16 @@ function asMember() {
   cookieGet.mockReturnValue({ value: "tok" });
   verifyPortalSession.mockResolvedValue(SESSION);
 }
+
+describe("POST /api/events/register — dormant backend", () => {
+  it("404s before any work when internal transactions are disabled", async () => {
+    vi.stubEnv("INTERNAL_TRANSACTIONS_ENABLED", "");
+    const res = await POST(req({ eventId: "evt_1", guestName: "A", guestEmail: "a@b.co" }));
+    expect(res.status).toBe(404);
+    expect(select).not.toHaveBeenCalled();
+    vi.stubEnv("INTERNAL_TRANSACTIONS_ENABLED", "true");
+  });
+});
 
 describe("POST /api/events/register — validation & gating", () => {
   it("400s without an eventId", async () => {

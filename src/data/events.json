@@ -6,11 +6,11 @@
       "slug": "the-compass-program",
       "eventId": "1746719",
       "title": "The Compass Program",
-      "dateISO": "",
-      "dayOfWeek": "",
-      "month": "",
-      "day": 0,
-      "year": 0,
+      "dateISO": "2026-09-09",
+      "dayOfWeek": "Wednesday",
+      "month": "September",
+      "day": 9,
+      "year": 2026,
       "startTime": "",
       "endTime": "",
       "dateString": "Wednesday, September 9, 2026",
@@ -32,11 +32,11 @@
       "slug": "fy27-safety-council-enrollment-or-renewal-2026-2027-rebate-program",
       "eventId": "1747261",
       "title": "FY27 Safety Council Enrollment or Renewal 2026-2027 Rebate Program",
-      "dateISO": "",
-      "dayOfWeek": "",
-      "month": "",
-      "day": 0,
-      "year": 0,
+      "dateISO": "2026-09-30",
+      "dayOfWeek": "Wednesday",
+      "month": "September",
+      "day": 30,
+      "year": 2026,
       "startTime": "",
       "endTime": "",
       "dateString": "Wednesday, September 30, 2026",
@@ -81,7 +81,7 @@
       "scrapedAt": "2026-06-18T09:13:29.351Z"
     },
     {
-      "slug": "raising-the-bar",
+      "slug": "raising-the-bar-june-2026",
       "eventId": "1725432",
       "title": "Raising the Bar",
       "dateISO": "2026-06-11",
@@ -341,7 +341,7 @@
       "scrapedAt": "2026-06-18T09:13:12.655Z"
     },
     {
-      "slug": "get-to-know-the-chamber",
+      "slug": "get-to-know-the-chamber-july-2026",
       "eventId": "1764544",
       "title": "Get to Know the Chamber",
       "dateISO": "2026-07-28",
@@ -393,7 +393,7 @@
       "scrapedAt": "2026-06-18T09:13:13.772Z"
     },
     {
-      "slug": "raising-the-bar",
+      "slug": "raising-the-bar-august-2026",
       "eventId": "1763666",
       "title": "Raising the Bar",
       "dateISO": "2026-08-13",
@@ -653,7 +653,7 @@
       "scrapedAt": "2026-06-18T09:13:20.205Z"
     },
     {
-      "slug": "raising-the-bar",
+      "slug": "raising-the-bar-october-2026",
       "eventId": "1763673",
       "title": "Raising the Bar",
       "dateISO": "2026-10-08",
@@ -731,7 +731,7 @@
       "scrapedAt": "2026-06-18T09:13:21.812Z"
     },
     {
-      "slug": "get-to-know-the-chamber",
+      "slug": "get-to-know-the-chamber-october-2026",
       "eventId": "1764548",
       "title": "Get to Know the Chamber",
       "dateISO": "2026-10-28",
@@ -861,7 +861,7 @@
       "scrapedAt": "2026-06-18T09:13:24.473Z"
     },
     {
-      "slug": "raising-the-bar",
+      "slug": "raising-the-bar-december-2026",
       "eventId": "1763680",
       "title": "Raising the Bar",
       "dateISO": "2026-12-08",

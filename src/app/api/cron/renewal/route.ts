@@ -1,3 +1,6 @@
+// NOTE: The "/api/cron/renewal" entry was removed from vercel.json — this route is
+// unscheduled and dormant until the GrowthZone cutover (runRenewalEngine also has a
+// RENEWALS_ENABLED kill switch). The handler is kept so the cron can be re-enabled later.
 /**
  * GET /api/cron/renewal
  * ─────────────────────

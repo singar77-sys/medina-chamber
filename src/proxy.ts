@@ -168,6 +168,13 @@ export async function proxy(request: NextRequest) {
   return response;
 }
 
+// NOTE: this matcher skips prefetch requests (the `missing` block below), so the
+// proxy — including its /admin redirect guard above — does NOT run for a request
+// that carries a prefetch header. That is SAFE for auth: every /admin page now
+// self-guards at the layout level (src/app/admin/(dashboard)/layout.tsx redirects
+// to /admin/login unless the session is valid AND a current admin), so the proxy
+// guard is defense-in-depth, not the sole gate. The prefetch exclusion only trims
+// CSP/nonce CPU work on prefetches, which render no scripts — it grants no access.
 export const config = {
   matcher: [
     // Run on every page request EXCEPT:

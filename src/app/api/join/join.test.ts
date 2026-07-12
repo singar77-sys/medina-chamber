@@ -2,6 +2,9 @@ import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { contacts, membershipTiers } from "@/lib/db/schema";
 
 vi.stubEnv("STRIPE_SECRET_KEY", "sk_test_dummy_key_for_unit_tests");
+// The dormant-backend guard 404s this route unless internal transactions are on;
+// these tests exercise the transactional path that runs once the flag is set.
+vi.stubEnv("INTERNAL_TRANSACTIONS_ENABLED", "true");
 
 vi.mock("@sentry/nextjs", () => ({ captureMessage: vi.fn(), captureException: vi.fn() }));
 vi.mock("@/lib/rate-limit", () => ({
@@ -83,6 +86,16 @@ function req(body: unknown): Request {
     body: JSON.stringify(body),
   });
 }
+
+describe("POST /api/join — dormant backend", () => {
+  it("404s before any work when internal transactions are disabled", async () => {
+    vi.stubEnv("INTERNAL_TRANSACTIONS_ENABLED", "");
+    const res = await POST(req(VALID));
+    expect(res.status).toBe(404);
+    expect(createPendingMember).not.toHaveBeenCalled();
+    vi.stubEnv("INTERNAL_TRANSACTIONS_ENABLED", "true");
+  });
+});
 
 describe("POST /api/join — anti-spam", () => {
   it("silently 200s a honeypot hit and touches nothing", async () => {

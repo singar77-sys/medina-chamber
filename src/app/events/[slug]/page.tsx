@@ -61,14 +61,19 @@ export default async function EventPage(
   ]);
   const event = override ? { ...base, ...override } : base;
 
-  // JSON-LD Event schema for Google rich results
+  // JSON-LD Event schema for Google rich results.
+  // startDate/endDate/eventStatus are only emitted when the event has a real
+  // calendar date — a blank dateISO would otherwise yield an invalid
+  // "T00:00:00" startDate that Google rejects.
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Event",
     name: event.title,
-    startDate: `${event.dateISO}T${to24h(event.startTime)}`,
-    endDate: `${event.dateISO}T${to24h(event.endTime)}`,
-    eventStatus: "https://schema.org/EventScheduled",
+    ...(event.dateISO && {
+      startDate: `${event.dateISO}T${to24h(event.startTime)}`,
+      endDate: `${event.dateISO}T${to24h(event.endTime)}`,
+      eventStatus: "https://schema.org/EventScheduled",
+    }),
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
     location: {
       "@type": "Place",

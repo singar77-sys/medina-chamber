@@ -228,7 +228,7 @@ export default function EventsPage() {
                   name: "Safety Council",
                   freq: "3rd Tuesday",
                   time: "11:30 AM – 1:00 PM",
-                  price: "$20 per person",
+                  price: "$24 per person",
                   desc: "Monthly OSHA-aligned safety training with rotating expert speakers, PPE, AI in hazard prediction, workplace risk assessment. Counts toward BWC group rebate eligibility.",
                 },
                 {

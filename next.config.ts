@@ -143,12 +143,19 @@ const nextConfig: NextConfig = {
       { source: "/social-connect", destination: "/programs/social-connect", permanent: true },
       { source: "/compass-program", destination: "/programs/compass", permanent: true },
       { source: "/committees-and-councils", destination: "/membership/committees", permanent: true },
+      { source: "/committees", destination: "/membership/committees", permanent: true },
       { source: "/member-benefits", destination: "/membership/benefits", permanent: true },
       { source: "/savings-programs", destination: "/membership/savings", permanent: true },
       { source: "/pricing", destination: "/membership/pricing", permanent: true },
       { source: "/sponsorship", destination: "/events/sponsorships", permanent: true },
       { source: "/chamber-news", destination: "/news/blog", permanent: true },
       { source: "/member-directory", destination: "/membership/directory", permanent: true },
+
+      // — Membership hub shim — there's no /membership index page yet, but
+      //   several sub-pages link "← Back to Membership" to /membership. Send it
+      //   to the benefits page for now. Non-permanent (307) on purpose: a real
+      //   hub page may take this path later, and a cached 308 would block it.
+      { source: "/membership", destination: "/membership/benefits", permanent: false },
 
       // — Member-spotlight blog posts → the member-news hub —
       ...spotlightSlugs.map((slug) => ({

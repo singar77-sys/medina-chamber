@@ -35,7 +35,7 @@ const tiers = [
 ];
 
 const requirements = [
-  "Enroll by the annual deadline (July 31 for FY26)",
+  "Enroll by the annual deadline (July 31 for FY27)",
   "Attend 10 in-person safety council meetings during the fiscal year",
   "Earn up to 4 additional credits via approved safety training or BWC consultation visits",
   "Pre-register for each meeting by 5:00 PM on the Friday before",
@@ -126,7 +126,7 @@ export default async function SafetyCouncilPage() {
                 transition-colors
               "
             >
-              Check FY26 Attendance →
+              Safety Council Attendance →
             </Link>
           </div>
 
@@ -182,7 +182,7 @@ export default async function SafetyCouncilPage() {
                 </div>
                 <div>
                   <p className="text-caption text-text-tertiary uppercase tracking-wider">Per-Meeting Cost</p>
-                  <p className="text-body font-bold text-text-primary mt-f3">$20 per person</p>
+                  <p className="text-body font-bold text-text-primary mt-f3">$24 per person</p>
                 </div>
                 <div className="pt-f13 border-t border-border-secondary">
                   <p className="text-body-sm text-text-tertiary">
@@ -201,7 +201,7 @@ export default async function SafetyCouncilPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
             <h2 className="text-overline text-cambridge mb-f21">
-              Participation Options, FY26
+              Participation Options, FY27
             </h2>
             <div className="grid sm:grid-cols-2 gap-f21 max-w-3xl">
               {tiers.map((t) => (
@@ -238,7 +238,7 @@ export default async function SafetyCouncilPage() {
               ))}
             </div>
             <p className="text-body-sm text-text-tertiary mt-f13">
-              All companies, new and returning, must register to participate in the FY26 BWC Rebate Program.
+              All companies, new and returning, must register to participate in the FY27 BWC Rebate Program.
             </p>
           </FadeIn>
         </div>
@@ -279,7 +279,7 @@ export default async function SafetyCouncilPage() {
               <h3 className="text-h3">Ready to enroll?</h3>
               <p className="text-body text-text-secondary mt-f8 leading-relaxed">
                 Contact the chamber to get started with Safety Council enrollment
-                for FY26. Chamber members enroll at no cost, non-members can
+                for FY27. Chamber members enroll at no cost, non-members can
                 join the chamber and get the Safety Council included.
               </p>
               <div className="mt-f21 space-y-f13">

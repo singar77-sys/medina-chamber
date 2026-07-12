@@ -1,3 +1,6 @@
+// NOTE: The "/api/cron/join-sweep" entry was removed from vercel.json — this route is
+// unscheduled and dormant until the GrowthZone cutover (it only sweeps rows that the
+// dormant /api/join creates). The handler is kept so the cron can be re-enabled later.
 /**
  * GET /api/cron/join-sweep
  * ────────────────────────

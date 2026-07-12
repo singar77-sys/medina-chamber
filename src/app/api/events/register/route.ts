@@ -61,6 +61,13 @@ function str(body: Record<string, unknown>, key: string): string | undefined {
 }
 
 export async function POST(req: Request): Promise<Response> {
+  // Dormant pre-cutover: this internal Stripe transaction endpoint must not be
+  // publicly invokable while GrowthZone remains the live system of record. Behave
+  // as if the route doesn't exist (404) before any DB write or Stripe call.
+  if (process.env.INTERNAL_TRANSACTIONS_ENABLED !== "true") {
+    return Response.json({ error: "Not found" }, { status: 404 });
+  }
+
   // Public endpoint — rate limit per IP (~10/min), fail-open.
   const limited = await limitEventRegister(req);
   if (limited) return limited;

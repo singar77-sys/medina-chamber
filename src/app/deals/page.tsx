@@ -57,8 +57,8 @@ export default async function DealsPage() {
               <span className="block text-accent">Deals</span>
             </h1>
             <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
-              Exclusive offers from Greater Medina Chamber members. Support local — and save. Chamber
-              members can post their own deal from the member portal.
+              Exclusive offers from Greater Medina Chamber members. Support local — and save. Members
+              can post their own Hot Deal through GrowthZone.
             </p>
           </div>
         </div>

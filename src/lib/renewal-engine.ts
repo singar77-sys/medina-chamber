@@ -57,6 +57,24 @@ function addYears(d: Date, n: number): Date {
 // ── Main entry ─────────────────────────────────────────────────────────────────
 
 export async function runRenewalEngine(): Promise<RenewalResult> {
+  // Kill switch — the billing/email backend is dormant until the GrowthZone
+  // cutover. Belt-and-suspenders on top of removing the cron from vercel.json:
+  // if invoked at all, do nothing (no invoicing, no dunning emails, no status
+  // transitions) unless explicitly enabled.
+  if (process.env.RENEWALS_ENABLED !== "true") {
+    console.log("[renewal] disabled — skipping (dormant backend)");
+    return {
+      invoicesCreated: 0,
+      notices30Sent: 0,
+      notices7Sent: 0,
+      markedPastDue: 0,
+      markedLapsed: 0,
+      errors: 0,
+      errorDetails: [],
+      durationMs: 0,
+    };
+  }
+
   const started = Date.now();
   const result: RenewalResult = {
     invoicesCreated: 0,
@@ -201,7 +219,7 @@ async function sendRenewalNotices(today: Date, daysOut: number, result: RenewalR
         continue;
       }
 
-      await resend.emails.send({
+      const { error: sendError } = await resend.emails.send({
         from: "Medina Chamber <noreply@medinaohchamber.com>",
         to:   contact.email,
         subject: daysOut === 30
@@ -218,6 +236,22 @@ async function sendRenewalNotices(today: Date, daysOut: number, result: RenewalR
           daysOut,
         }),
       });
+
+      // Resend returns { data, error } instead of throwing on a send failure — a
+      // present error means the email never went out, so record it and skip
+      // BEFORE stamping the invoice as notified. Otherwise the member is silently
+      // never emailed yet renewal_notice_sent_days marks the stage done, so the
+      // next run skips them too and the notice is lost forever.
+      if (sendError) {
+        result.errors++;
+        result.errorDetails.push({
+          membershipId: row.membership_id,
+          phase: `notice_${daysOut}d`,
+          error: sendError.message,
+        });
+        console.error(`[renewal] ${daysOut}d notice send failed → ${contact.email} (${row.org_name}): ${sendError.message}`);
+        continue;
+      }
 
       // Mark this stage sent so a same-day re-run / retry won't re-email it.
       await db.execute(sql`

@@ -8,19 +8,29 @@
  */
 
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { AdminNav } from "@/components/admin/AdminNav";
 import { ADMIN_COOKIE, readSession } from "@/lib/admin-session";
+import { isCurrentAdmin } from "@/lib/admin-users";
 
 export default async function AdminDashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Surface who's signed in (per-admin accounts). The proxy already gated this
-  // route; here we just read the name off the verified session for display.
+  // Self-guard every admin page at the layer that actually renders it. The proxy
+  // is a defense-in-depth CSP/redirect layer, but its matcher intentionally skips
+  // prefetch requests, so it must NOT be the only /admin auth gate — a request
+  // carrying a prefetch header would otherwise reach these pages unchecked. Mirror
+  // the proxy's check here: valid = signed+unexpired session AND still a current
+  // admin. /admin/login lives OUTSIDE this (dashboard) route group, so redirecting
+  // to it does not re-enter this layout (no loop).
   const token = (await cookies()).get(ADMIN_COOKIE)?.value;
   const session = token ? await readSession(token) : null;
-  const adminName = session?.sub ?? "Admin";
+  if (!session || !isCurrentAdmin(session.sub)) redirect("/admin/login");
+
+  // Surface who's signed in (per-admin accounts) off the verified session.
+  const adminName = session.sub ?? "Admin";
   return (
     <div
       data-theme="light"

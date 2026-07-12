@@ -52,6 +52,13 @@ const MAX = {
 };
 
 export async function POST(req: NextRequest): Promise<Response> {
+  // Dormant pre-cutover: this internal Stripe transaction endpoint must not be
+  // publicly invokable while GrowthZone remains the live system of record. Behave
+  // as if the route doesn't exist (404) before any DB write or Stripe call.
+  if (process.env.INTERNAL_TRANSACTIONS_ENABLED !== "true") {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   const limited = await applyRateLimit(req, joinLimiter);
   if (limited) return limited;
 

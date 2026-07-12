@@ -44,8 +44,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/membership/benefits`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/membership/pricing`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/membership/committees`, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${BASE_URL}/membership/community-investor`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/membership/savings`, changeFrequency: "monthly", priority: 0.6 },
-    { url: `${BASE_URL}/deals`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${BASE_URL}/membership/first-30-days`, changeFrequency: "monthly", priority: 0.7 },
     // About
     { url: `${BASE_URL}/about`, changeFrequency: "monthly", priority: 0.6 },
@@ -75,6 +75,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/chamberbot`, changeFrequency: "monthly", priority: 0.7 },
     // Policy / legal
     { url: `${BASE_URL}/accessibility`, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${BASE_URL}/privacy`, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${BASE_URL}/terms`, changeFrequency: "yearly", priority: 0.3 },
   ];
 
   // Dynamic detail pages — `lastModified` reflects each record's own publish

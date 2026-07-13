@@ -294,6 +294,14 @@ export default function MedinaMeansBusinessPage() {
                     See All Issues
                   </Link>
                 </div>
+                <p className="mt-6 text-body-sm">
+                  <Link
+                    href="/events/sponsorships#advertising-rates"
+                    className="font-bold text-cambridge hover:text-cambridge/80 transition-colors"
+                  >
+                    See magazine advertising rates →
+                  </Link>
+                </p>
               </div>
             </FadeIn>
           </div>

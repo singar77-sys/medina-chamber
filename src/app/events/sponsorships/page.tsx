@@ -9,7 +9,7 @@ import { SponsorshipForm } from "./SponsorshipForm";
 export const metadata: Metadata = {
   title: "Sponsorships & Ribbon Cuttings",
   description:
-    "Sponsor Greater Medina Chamber events to reach Medina County's business community, Golf Outing, Athena Awards, Member Meetings, and Safety Council. Ribbon cuttings celebrate member milestones.",
+    "Advertise in the Medina Means Business magazine and e-newsletter, and sponsor Greater Medina Chamber events, Golf Outing, Athena Awards, Member Meetings, and Safety Council. Published ad rates plus ribbon cuttings for Medina County businesses.",
   openGraph: {
     title: "Sponsorships & Ribbon Cuttings | Greater Medina Chamber of Commerce",
     description:
@@ -18,7 +18,17 @@ export const metadata: Metadata = {
   alternates: { canonical: "/events/sponsorships" },
 };
 
-const sponsorships = [
+interface SponsorshipCard {
+  event: string;
+  tag: string;
+  href: string;
+  description: string;
+  contact: string;
+  options: string[];
+  price?: string;
+}
+
+const sponsorships: SponsorshipCard[] = [
   {
     event: "Golf Outing",
     tag: "Flagship Event",
@@ -51,6 +61,7 @@ const sponsorships = [
     event: "Member Meetings",
     tag: "Podium & Spotlight",
     href: "/events",
+    price: "$100 table sponsorship · $75 non-profit · +$25 per attendee for lunch · limited to 3 per meeting",
     description:
       "Monthly member meetings bring together the chamber's business community for programming, networking, and updates. Table sponsorships include a display table, a 30-second podium commercial, and logo placement on the event registration page and all promotional emails and social media.",
     contact: stephanie.email,
@@ -106,6 +117,52 @@ const ribbonCuttingDetails = [
   },
 ];
 
+const MAGAZINE_AD_EMAIL = "wjcsproduction@outlook.com";
+const NEWSLETTER_AD_EMAIL = "memberservices@medinaohchamber.com";
+
+const magazineStats = [
+  { value: "Quarterly", label: "Digital interactive issues" },
+  { value: "9,000+", label: "Subscribers & followers" },
+  { value: "3,000", label: "Avg. monthly site visitors" },
+];
+
+const magazineRates = [
+  {
+    tier: "Issue Sponsor",
+    price: "$675",
+    spec: "Full-page insertion plus an email release banner ad, three social sponsor mentions, and a cover headline spotlight.",
+    featured: true,
+  },
+  { tier: "Full Page", price: "$300", spec: "8.5\"w x 11\"h. Includes one social highlight." },
+  { tier: "Half Page", price: "$150", spec: "8\"w x 5\"h. Includes one social group highlight." },
+  { tier: "Quarter Page", price: "$75", spec: "3.875\"w x 5\"h. Includes one social group highlight." },
+];
+
+const magazinePremium = [
+  { label: "Inside Front Cover (L or R)", price: "+$100" },
+  { label: "Back Cover", price: "+$50" },
+  { label: "Cover Headline Link", price: "+$75" },
+];
+
+const magazineDeadlines = [
+  { q: "Q1", submit: "Mar 10", release: "Apr 10" },
+  { q: "Q2", submit: "Jun 15", release: "Jul 15" },
+  { q: "Q3", submit: "Sep 15", release: "Oct 15" },
+  { q: "Q4", submit: "Dec 15", release: "Jan 15" },
+];
+
+const newsletterRates = [
+  { tier: "Single Ad Insertion", price: "$50", spec: "One-time ad with website link. 4\"w x 6\"h." },
+  {
+    tier: "Triple Ad Insertion",
+    price: "$125",
+    note: "Non-profit rate: $75",
+    spec: "Three insertions with website link. 4\"w x 6\"h.",
+  },
+  { tier: "Chamber Ad Spotlight", price: "$150", spec: "Featured article, photo, and website link. 1,000-word limit." },
+  { tier: "Annual Newsletter Sponsor", price: "$240", spec: "12-month business-card ad with website link. 3.5\"w x 2\"h." },
+];
+
 export default function SponsorshipsPage() {
   return (
     <>
@@ -139,7 +196,7 @@ export default function SponsorshipsPage() {
             at the events they actually attend. Or celebrate your business
             milestone with a chamber ribbon cutting.
           </p>
-          <div className="mt-f21">
+          <div className="mt-f21 flex flex-wrap gap-f13">
             <a
               href="#become-a-sponsor"
               className="
@@ -151,6 +208,18 @@ export default function SponsorshipsPage() {
               "
             >
               Become a Sponsor →
+            </a>
+            <a
+              href="#advertising-rates"
+              className="
+                inline-flex items-center px-f21 py-f13
+                border border-border-primary hover:border-text-tertiary
+                text-text-primary font-bold text-body-sm
+                rounded-[var(--radius-md)]
+                transition-colors
+              "
+            >
+              View Advertising Rates
             </a>
           </div>
           </div>
@@ -206,6 +275,9 @@ export default function SponsorshipsPage() {
                         {s.tag}
                       </span>
                       <h2 className="text-h3 mt-f3">{s.event}</h2>
+                      {s.price && (
+                        <p className="text-body-sm text-text-tertiary mt-f3">{s.price}</p>
+                      )}
                     </div>
                     <Link
                       href={s.href}
@@ -246,6 +318,169 @@ export default function SponsorshipsPage() {
             ))}
           </div>
         </FadeIn>
+      </section>
+
+      {/* Advertising Rates — magazine + e-newsletter */}
+      <section
+        id="advertising-rates"
+        className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89 scroll-mt-f89"
+      >
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <FadeIn>
+            <p className="text-overline text-cambridge mb-f8">Advertising Rates</p>
+            <h2 className="text-h2">Medina Means Business Magazine</h2>
+            <p className="text-body text-text-secondary max-w-2xl leading-relaxed mt-f13">
+              The chamber&apos;s quarterly digital magazine puts your brand in front of
+              Medina County&apos;s most engaged business audience, with extended shelf
+              life, clickable links, and Chamber-branded credibility. All rates are for a
+              one-time insertion.
+            </p>
+          </FadeIn>
+
+          {/* Publication stats */}
+          <div className="mt-f21 grid grid-cols-3 gap-f13 max-w-2xl">
+            {magazineStats.map((s, i) => (
+              <FadeIn key={s.label} delay={i * 70}>
+                <div className="p-f21 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)] text-center h-full">
+                  <p className="text-h3 text-oxford [[data-theme=dark]_&]:text-cambridge leading-none">
+                    {s.value}
+                  </p>
+                  <p className="text-caption text-text-tertiary mt-f8 uppercase tracking-wider">
+                    {s.label}
+                  </p>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+
+          {/* Magazine display ad rates */}
+          <div className="mt-f34 grid sm:grid-cols-2 lg:grid-cols-4 gap-f21">
+            {magazineRates.map((r, i) => (
+              <FadeIn key={r.tier} delay={i * 60}>
+                <div
+                  className={`flex flex-col h-full p-f21 rounded-[var(--radius-lg)] border ${
+                    r.featured
+                      ? "bg-oxford border-cambridge"
+                      : "bg-bg-primary border-border-secondary"
+                  }`}
+                >
+                  <p
+                    className={`text-caption font-bold uppercase tracking-wider ${
+                      r.featured ? "text-cambridge" : "text-text-tertiary"
+                    }`}
+                  >
+                    {r.tier}
+                  </p>
+                  <p
+                    className={`text-display leading-none mt-f8 ${
+                      r.featured ? "text-white" : "text-text-primary"
+                    }`}
+                  >
+                    {r.price}
+                  </p>
+                  <p
+                    className={`text-body-sm mt-f13 leading-relaxed ${
+                      r.featured ? "text-white/80" : "text-text-secondary"
+                    }`}
+                  >
+                    {r.spec}
+                  </p>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+
+          {/* Premium placement + schedule */}
+          <div className="mt-f21 grid md:grid-cols-2 gap-f21">
+            <div className="p-f21 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]">
+              <p className="text-caption font-bold text-text-tertiary uppercase tracking-wider mb-f13">
+                Premium Placement (full-page ads only)
+              </p>
+              <ul className="space-y-f8">
+                {magazinePremium.map((p) => (
+                  <li
+                    key={p.label}
+                    className="flex items-center justify-between gap-f8 text-body-sm text-text-secondary border-b border-border-secondary pb-f8"
+                  >
+                    <span>{p.label}</span>
+                    <span className="font-bold text-text-primary">{p.price}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="text-caption text-text-tertiary mt-f13 leading-relaxed">
+                First-come, first-served with limited availability. Save 5% with a
+                full-year (4-issue) commitment paid in full.
+              </p>
+            </div>
+
+            <div className="p-f21 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]">
+              <p className="text-caption font-bold text-text-tertiary uppercase tracking-wider mb-f13">
+                Submission &amp; Release Schedule
+              </p>
+              <ul className="space-y-f8">
+                {magazineDeadlines.map((d) => (
+                  <li
+                    key={d.q}
+                    className="flex items-center justify-between gap-f8 text-body-sm text-text-secondary border-b border-border-secondary pb-f8"
+                  >
+                    <span className="font-bold text-text-primary">{d.q}</span>
+                    <span>Submit {d.submit}</span>
+                    <span className="text-text-tertiary">Release {d.release}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="text-caption text-text-tertiary mt-f13">
+                Confirm current-year dates when you reserve your spot.
+              </p>
+            </div>
+          </div>
+
+          <FadeIn>
+            <a
+              href={`mailto:${MAGAZINE_AD_EMAIL}`}
+              className="inline-block mt-f21 text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
+            >
+              Reserve a magazine ad — {MAGAZINE_AD_EMAIL} →
+            </a>
+          </FadeIn>
+
+          {/* E-Newsletter */}
+          <div className="mt-f55">
+            <FadeIn>
+              <h3 className="text-h3">E-Newsletter Advertising</h3>
+              <p className="text-body-sm text-text-secondary max-w-2xl leading-relaxed mt-f8">
+                Reach the chamber&apos;s member inbox directly. Every e-newsletter ad
+                includes a website link.
+              </p>
+            </FadeIn>
+            <div className="mt-f21 grid sm:grid-cols-2 lg:grid-cols-4 gap-f21">
+              {newsletterRates.map((r, i) => (
+                <FadeIn key={r.tier} delay={i * 60}>
+                  <div className="flex flex-col h-full p-f21 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]">
+                    <p className="text-caption font-bold text-text-tertiary uppercase tracking-wider">
+                      {r.tier}
+                    </p>
+                    <p className="text-h2 leading-none mt-f8 text-text-primary">{r.price}</p>
+                    {r.note && (
+                      <p className="text-caption text-cambridge font-bold mt-f3">{r.note}</p>
+                    )}
+                    <p className="text-body-sm text-text-secondary mt-f13 leading-relaxed">
+                      {r.spec}
+                    </p>
+                  </div>
+                </FadeIn>
+              ))}
+            </div>
+            <FadeIn>
+              <a
+                href={`mailto:${NEWSLETTER_AD_EMAIL}`}
+                className="inline-block mt-f21 text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
+              >
+                Book an e-newsletter ad — {NEWSLETTER_AD_EMAIL} →
+              </a>
+            </FadeIn>
+          </div>
+        </div>
       </section>
 
       {/* Become a sponsor — intake form */}

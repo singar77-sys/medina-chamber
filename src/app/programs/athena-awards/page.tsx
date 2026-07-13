@@ -112,7 +112,7 @@ export default function AthenaAwardsPage() {
             alt=""
             fill
             priority
-            className="object-cover object-top opacity-[0.33]"
+            className="object-cover object-top lg:object-[center_28%] opacity-[0.33]"
             sizes="100vw"
             quality={60}
           />

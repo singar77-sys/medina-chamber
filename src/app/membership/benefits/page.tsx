@@ -32,7 +32,7 @@ const coreBenefits = [
   {
     title: "Networking Events",
     description:
-      "Access to monthly member meetings, mixers, Social Connect at Foundry Social, the annual Golf Outing, Athena Awards, and more. These are the rooms where Medina County business gets done.",
+      "Access to regular member meetings, mixers, Social Connect at Foundry Social, the annual Golf Outing, Athena Awards, and more. These are the rooms where Medina County business gets done.",
     link: { label: "See upcoming events", href: "/events" },
   },
   {

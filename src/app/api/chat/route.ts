@@ -112,7 +112,7 @@ PROGRAMS:
 - Compass Professional Development Program (medinachamber.com/programs/compass), 5-session leadership development program, $995/participant, Feb–May at the chamber; contact to get on next cohort list
 - Social Connect (medinachamber.com/programs/social-connect), signature networking at Foundry Social (333 Foundry St); Early Access + Faceoff (ticketed) + Business Circuit Expo (free & public)
 - Annual Golf Outing (medinachamber.com/programs/golf-outing), Mon July 20, 2026 @ Westfield Country Club, 18-hole shotgun scramble, 11 AM start; $230 member / $260 non-member; sponsorships via Stephanie
-- Athena Awards (medinachamber.com/programs/athena-awards), honors women leaders in Medina County; $40 member / $55 non-member; registration required; sponsorship via Jaclyn
+- Athena Awards (medinachamber.com/programs/athena-awards), honors Medina County leaders of any gender who champion the advancement of women; $40 member / $55 non-member; registration required; sponsorship via Jaclyn
 - Safety Council (medinachamber.com/programs/safety-council), Ohio BWC rebate program; FREE for chamber members ($100 for non-members); monthly meetings 3rd Tuesday 11:30–1 at Williams on the Lake; enroll by July 31, attend 10 meetings for BWC rebate; safety@medinaohchamber.com
 - Rental Space (medinachamber.com/programs/rental-space), The Vault (16-seat conference room with distinctive vault door) · Main Room (50-seat training space); includes tables, 98" TV, Wi-Fi, coffee, free parking; Mon–Fri 7:30–5:30 (rental space access); book via memberservices@medinaohchamber.com
 

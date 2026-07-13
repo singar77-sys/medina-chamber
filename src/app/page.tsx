@@ -396,7 +396,7 @@ export default function HomePage() {
           aria-hidden="true"
         >
           <Image
-            src="/images/photos/networking.webp"
+            src="/images/events/networking.webp"
             alt=""
             fill
             className="object-cover opacity-[0.10]"

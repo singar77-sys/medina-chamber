@@ -2,21 +2,21 @@
  * Formats live chamber facts for injection into ChamberBot's system prompt.
  *
  * Architecture:
- *   membership_tiers table (DB) → getActiveTiers() → this function → bot system prompt
- *   Same data feeds pricing/page.tsx — one source of truth.
+ *   cms-store DEFAULT_PRICING (+ Redis override) → getCmsPricing() → this function → bot system prompt
+ *   Same source feeds pricing/page.tsx and the admin editor — one source of truth.
  *
  * Caching: module-level, 5-min TTL. Works per edge isolate — acceptable for
  * data that changes at most a few times per year.
  */
 
-import { getActiveTiers, type TierDisplay } from "@/lib/membership-tiers";
+import { getCmsPricing, DEFAULT_PRICING, type PricingTier } from "@/lib/cms-store";
 
 const FACTS_TTL_MS = 5 * 60 * 1000;
 let cached: { value: string | null; expiresAt: number } | null = null;
 
-function buildBlock(tiers: TierDisplay[]): string {
+function buildBlock(tiers: PricingTier[]): string {
   if (tiers.length < 3) return "";
-  // Tiers are sorted by sortOrder: standard, visibility_plus, community_investor
+  // Tiers come in display order: essentials, plus (featured), investor
   return [
     "CURRENT MEMBERSHIP PRICING (authoritative, these values override any pricing mentioned earlier in this prompt):",
     ...tiers.map((t) => `- ${t.name}: $${t.price.toLocaleString("en-US")}/year`),
@@ -34,7 +34,7 @@ export async function formatChamberFactsForPrompt(): Promise<string | null> {
   if (cached && cached.expiresAt > now) return cached.value;
 
   try {
-    const tiers = await getActiveTiers();
+    const tiers = ((await getCmsPricing()) ?? DEFAULT_PRICING).tiers;
     const value = buildBlock(tiers);
     cached = { value: value || null, expiresAt: now + FACTS_TTL_MS };
     return cached.value;

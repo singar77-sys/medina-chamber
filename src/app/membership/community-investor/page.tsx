@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
-import { getActiveTiers } from "@/lib/membership-tiers";
+import { getCmsPricing, DEFAULT_PRICING } from "@/lib/cms-store";
 import { stephanie, jaclyn } from "@/data/staff";
 import { mailto } from "@/lib/format";
 import { CommunityInvestors } from "@/components/CommunityInvestors";
@@ -68,8 +68,8 @@ const whoItsFor = [
 ];
 
 export default async function CommunityInvestorPage() {
-  const tiers = await getActiveTiers();
-  const ciTier = tiers.find((t) => t.key === "community_investor");
+  const tiers = ((await getCmsPricing()) ?? DEFAULT_PRICING).tiers;
+  const ciTier = tiers.find((t) => t.key === "investor");
 
   const jsonLd = {
     "@context": "https://schema.org",

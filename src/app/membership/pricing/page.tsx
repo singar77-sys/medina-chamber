@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
-import { getActiveTiers } from "@/lib/membership-tiers";
+import { getCmsPricing, DEFAULT_PRICING } from "@/lib/cms-store";
 import { stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
 
@@ -33,7 +33,7 @@ const PRICING_FAQS = [
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const tiers = await getActiveTiers();
+  const tiers = ((await getCmsPricing()) ?? DEFAULT_PRICING).tiers;
   const [e, p, i] = tiers;
   const desc = e && p && i
     ? `Three Greater Medina Chamber of Commerce membership tiers: ${e.name} ($${e.price}/year), ${p.name} ($${p.price}/year), and ${i.name} ($${i.price}/year). Choose the level that fits your goals.`
@@ -52,9 +52,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function PricingPage() {
-  const tiers = await getActiveTiers();
+  const tiers = ((await getCmsPricing()) ?? DEFAULT_PRICING).tiers;
   const faqs = PRICING_FAQS;
-  const essentialsTier = tiers.find((t) => t.key === "standard");
+  const essentialsTier = tiers.find((t) => t.key === "essentials");
   const essentialsBenefits = essentialsTier?.benefits ?? [];
 
   const faqJsonLd = {

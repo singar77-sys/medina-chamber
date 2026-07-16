@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T07:14:07.292Z",
+  "generatedAt": "2026-07-16T07:22:49.713Z",
   "totalJobs": 8,
   "jobs": [
     {
@@ -16,7 +16,7 @@
       "dateRaw": "7/6/2026",
       "dateISO": "2026-07-06",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/experienced-detailer-342150",
-      "scrapedAt": "2026-07-15T07:14:03.923Z"
+      "scrapedAt": "2026-07-16T07:22:45.536Z"
     },
     {
       "slug": "women-s-health-nurse-practitioner",
@@ -32,7 +32,7 @@
       "dateRaw": "6/30/2026",
       "dateISO": "2026-06-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/women-s-health-nurse-practitioner-341236",
-      "scrapedAt": "2026-07-15T07:14:04.403Z"
+      "scrapedAt": "2026-07-16T07:22:46.155Z"
     },
     {
       "slug": "customer-service-representative-ft",
@@ -48,7 +48,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/customer-service-representative-ft-340861",
-      "scrapedAt": "2026-07-15T07:14:04.877Z"
+      "scrapedAt": "2026-07-16T07:22:46.770Z"
     },
     {
       "slug": "material-control-ft",
@@ -64,7 +64,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/material-control-ft-340864",
-      "scrapedAt": "2026-07-15T07:14:05.361Z"
+      "scrapedAt": "2026-07-16T07:22:47.355Z"
     },
     {
       "slug": "workforce-development-specialist-medina-county",
@@ -80,7 +80,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/workforce-development-specialist-medina-county-340917",
-      "scrapedAt": "2026-07-15T07:14:05.830Z"
+      "scrapedAt": "2026-07-16T07:22:47.938Z"
     },
     {
       "slug": "remodeling-apprentice",
@@ -96,7 +96,7 @@
       "dateRaw": "6/25/2026",
       "dateISO": "2026-06-25",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/remodeling-apprentice-340477",
-      "scrapedAt": "2026-07-15T07:14:06.303Z"
+      "scrapedAt": "2026-07-16T07:22:48.530Z"
     },
     {
       "slug": "assembly-technician-metal-shop",
@@ -112,7 +112,7 @@
       "dateRaw": "6/22/2026",
       "dateISO": "2026-06-22",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/assembly-technician-metal-shop-339567",
-      "scrapedAt": "2026-07-15T07:14:06.786Z"
+      "scrapedAt": "2026-07-16T07:22:49.110Z"
     },
     {
       "slug": "catering-event-staff",
@@ -128,7 +128,7 @@
       "dateRaw": "4/30/2026",
       "dateISO": "2026-04-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/catering-event-staff-328997",
-      "scrapedAt": "2026-07-15T07:14:07.287Z"
+      "scrapedAt": "2026-07-16T07:22:49.706Z"
     }
   ]
 }

@@ -11,12 +11,13 @@
  * scripts/pull-tier-overrides.mjs (documented in repo) or by hitting
  * the admin API from an authenticated browser session.
  *
- * Last sync: 2026-04-22
+ * Last sync: 2026-04-22 (full); Medwick Construction added manually 2026-07-15
  * Source: GrowthZone admin dashboard (Mark authenticated)
- * Counts: CI 33, VP 98
+ * Counts: CI 34, VP 98
  */
 
 export const COMMUNITY_INVESTOR_SLUGS: ReadonlySet<string> = new Set([
+  "medwick-construction",
   "first-financial-bank",
   "trillium-creek-dermatology",
   "the-foundry-social-high-voltage-karting-mad-brewing",

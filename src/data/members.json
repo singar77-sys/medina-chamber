@@ -4525,6 +4525,22 @@
       "membershipTier": 10
     },
     {
+      "name": "Medwick Construction",
+      "chamberSlug": "medwick-construction",
+      "gzSlug": "medwick-construction-4898394",
+      "gzUrl": "https://business.medinachamber.com/list/Details/medwick-construction-4898394",
+      "address": "",
+      "phone": "(330) 635-3744",
+      "website": "http://medwickconstruction.com/",
+      "logoUrl": "/images/members/medwick-construction.webp",
+      "description": "",
+      "categories": [
+        "Construction Companies, General Contractors/Dev"
+      ],
+      "social": {},
+      "membershipTier": 2
+    },
+    {
       "name": "Medwick Pest Control",
       "chamberSlug": "medwick-pest-control",
       "gzSlug": "medwick-pest-control-4508949",

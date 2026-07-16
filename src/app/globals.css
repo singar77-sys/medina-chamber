@@ -368,6 +368,9 @@ summary,
   .ci-marquee-track {
     animation: none !important;
     flex-wrap: wrap;
+    /* Tiles carry their horizontal spacing as mr-3 (see CommunityInvestors),
+       so wrapped lines need their vertical spacing restored here. */
+    row-gap: 0.75rem;
   }
   /* hide duplicates when not scrolling */
   .ci-marquee-dupe { display: none; }

@@ -34,7 +34,9 @@ function buildLogoMap(): Map<string, string> {
 const MEMBER_LOGOS = buildLogoMap();
 
 // Row 2 runs slightly slower to give the three tracks a natural rhythm.
-const ROW_DURATIONS = [30, 37, 30] as const;
+// Durations are deliberately long: a logo wall is for dwelling on, not
+// reading at speed — each tile should stay legible as it passes.
+const ROW_DURATIONS = [52, 62, 52] as const;
 const ROW_DIRECTIONS = ["right", "left", "right"] as const;
 
 interface LogoTileProps {
@@ -52,7 +54,7 @@ function LogoTile({ m, ghost = false }: LogoTileProps) {
       className={`
         ci-card
         flex-shrink-0 flex items-center justify-center
-        w-36 h-[4.5rem] px-3
+        w-36 h-[4.5rem] px-3 mr-3
         bg-white border border-black/8 hover:border-cambridge/60
         rounded-[var(--radius-md)]
         transition-colors duration-200
@@ -139,8 +141,19 @@ export function CommunityInvestors() {
                   role="region"
                   aria-label={`Community investor logos, row ${ri + 1}`}
                 >
+                  {/* `w-max` is load-bearing: translateX(-50%) resolves
+                      against the track's OWN width. Without it the track is a
+                      block box clamped to the container (~1078px), so -50%
+                      shifted only ~539px — barely 3 tiles — then snapped back,
+                      and the last tiles of each row never scrolled into view.
+                      w-max sizes the track to its content (2 sets), making
+                      -50% exactly one set: a seamless loop where every tile
+                      gets a full pass.
+                      No flex `gap` either: it puts N-1 gaps between 2N tiles,
+                      leaving -50% a half-gap short. Spacing lives on each tile
+                      (mr-3) so every child is a uniform width. */}
                   <div
-                    className="ci-marquee-track flex gap-3"
+                    className="ci-marquee-track flex w-max"
                     data-direction={direction}
                     style={{ "--ci-dur": `${dur}s` } as CSSProperties}
                   >

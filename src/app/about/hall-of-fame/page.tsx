@@ -2,19 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
-import { getAvatarColor } from "@/data/members";
-
-/**
- * First + last name initial. Unlike the business-name getInitials (first two
- * words), this skips middle names, quoted nicknames, and initials so
- * "Norbert “Nobby” Lewandowski" reads as NL, not N + the opening quote mark.
- */
-function personInitials(name: string): string {
-  const words = name.replace(/[“”"'‘’]/g, "").trim().split(/\s+/).filter(Boolean);
-  const first = words[0]?.[0] ?? "";
-  const last = words[words.length - 1]?.[0] ?? "";
-  return (first + last).toUpperCase();
-}
+import { InducteeGrid } from "./InducteeGrid";
+import { type Inductee } from "./shared";
 
 export const metadata: Metadata = {
   title: "Hall of Fame",
@@ -27,15 +16,6 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: "/about/hall-of-fame" },
 };
-
-interface Inductee {
-  name: string;
-  /** Omitted for inductees without a photo yet — falls back to an initials avatar. */
-  photo?: string;
-  year?: number;
-  category?: "Posthumous Individual" | "Living Individual" | "Outstanding Organization";
-  bio?: string;
-}
 
 const inductees: Inductee[] = [
   { name: "Elbridge Moxley",        photo: "/images/people/hall-of-fame/elbridge-moxley-medina-chamber.jpg" },
@@ -128,8 +108,6 @@ const inductees: Inductee[] = [
     bio: "For more than 100 years, has preserved Medina County's documents, artifacts, oral histories, and photographs. Restored and operates two public museums — the 1886 John Smart House and the 1890 McDowell-Phillips House — both honored with local and State of Ohio awards.",
   },
 ];
-
-const class2023 = inductees.filter((i) => i.year === 2023);
 
 const categories = [
   {
@@ -229,91 +207,17 @@ export default function HallOfFamePage() {
         </FadeIn>
       </section>
 
-      {/* Class of 2023 spotlight */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
-        <FadeIn>
-          <p className="text-overline text-cambridge mb-f8">Newest Class</p>
-          <h2 className="text-h2 mb-f21">2023 Inductees</h2>
-          <div className="grid md:grid-cols-2 gap-f21">
-            {class2023.map((inductee) => {
-              const initials = personInitials(inductee.name);
-              const avatarColor = getAvatarColor(inductee.name);
-              return (
-                <div
-                  key={inductee.name}
-                  className="flex gap-f21 p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
-                >
-                  <div className={`relative w-20 h-20 shrink-0 rounded-full overflow-hidden flex items-center justify-center ${avatarColor.bg}`}>
-                    {inductee.photo ? (
-                      <Image
-                        src={inductee.photo}
-                        alt={`${inductee.name}, Greater Medina Chamber of Commerce Hall of Fame inductee`}
-                        fill
-                        className="object-cover object-top"
-                        sizes="80px"
-                      />
-                    ) : (
-                      <span className={`text-h4 font-bold select-none ${avatarColor.text}`}>
-                        {initials}
-                      </span>
-                    )}
-                  </div>
-                  <div>
-                    <p className="text-caption text-cambridge font-bold uppercase tracking-wider">
-                      {inductee.category}
-                    </p>
-                    <h3 className="text-h4 mt-f3">{inductee.name}</h3>
-                    <p className="text-body-sm text-text-secondary mt-f8 leading-relaxed">
-                      {inductee.bio}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </FadeIn>
-      </section>
-
       {/* Inductees grid */}
       <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
-            <h2 className="text-overline text-cambridge mb-f21">
+            <h2 className="text-overline text-cambridge mb-f8">
               Inductees, {inductees.length} Honorees
             </h2>
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-f13 lg:gap-f21">
-              {inductees.map((inductee) => {
-                const initials = personInitials(inductee.name);
-                const avatarColor = getAvatarColor(inductee.name);
-                return (
-                <figure key={inductee.name} className="flex flex-col items-center gap-f8 m-0">
-                  <div className="relative w-full aspect-square overflow-hidden rounded-[var(--radius-lg)] bg-bg-primary border border-border-secondary">
-                    {inductee.photo ? (
-                      <Image
-                        src={inductee.photo}
-                        alt={`${inductee.name}, Greater Medina Chamber of Commerce Hall of Fame inductee`}
-                        fill
-                        className="object-cover object-top"
-                        sizes="(max-width: 640px) 33vw, (max-width: 768px) 25vw, (max-width: 1024px) 20vw, 16vw"
-                      />
-                    ) : (
-                      <div className={`absolute inset-0 flex items-center justify-center ${avatarColor.bg}`}>
-                        <span className={`text-h3 font-bold select-none ${avatarColor.text}`}>
-                          {initials}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                  <p className="text-caption font-bold text-text-primary text-center leading-snug">
-                    {inductee.name}
-                  </p>
-                  <figcaption className="sr-only">
-                    {inductee.name}, Greater Medina Chamber of Commerce Hall of Fame inductee, Medina County, Ohio business leader
-                  </figcaption>
-                </figure>
-                );
-              })}
-            </div>
+            <p className="text-body-sm text-text-tertiary mb-f21">
+              Highlighted profiles are clickable for the full story.
+            </p>
+            <InducteeGrid inductees={inductees} />
           </FadeIn>
         </div>
       </section>

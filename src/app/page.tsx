@@ -272,8 +272,8 @@ export default function HomePage() {
                  Suite A, Medina, OH, 44256" is wider than 1/3 of the
                  container at < ~1280px. min-w-0 lets the track shrink
                  and the truncate handles the overflow inside the card. */
-              <FadeIn key={event.slug} delay={i * 100} className="min-w-0">
-                <TiltCard className="min-w-0">
+              <FadeIn key={event.slug} delay={i * 100} className="h-full min-w-0">
+                <TiltCard className="h-full min-w-0">
                 <Link
                   href={`/events/${event.slug}`}
                   className="

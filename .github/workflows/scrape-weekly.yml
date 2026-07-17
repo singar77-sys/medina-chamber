@@ -1,11 +1,14 @@
-# Weekly data refresh — members + websites + ratings + Upstash sync.
+# Weekly data refresh — members + websites + ratings + Upstash sync + blog.
 #
 # All datasets are slow-moving (1–3 changes per week typically) and
 # share a critical dependency on members.json — the websites and ratings
 # scrapers iterate the member list, and the Upstash vector index covers
-# every member.
+# every member. The blog scrape (src/data/blog.json) is independent of
+# all of that — it's just here because "weekly" is the right cadence and
+# this workflow already exists.
 #
-# Order of operations (do NOT rearrange):
+# Order of operations (do NOT rearrange steps 1-4 — everything after is
+# independent and order-agnostic):
 #   1. Scrape members              → writes src/data/members.json
 #   2. Smoke-check the new members.json (catch broken scrapes loudly)
 #   3. Scrape member websites      → writes src/data/member-websites.json
@@ -13,7 +16,8 @@
 #       text into the embedding input)
 #   4. Sync vectors to Upstash     → server-side BAAI/bge-large dense + BM25
 #   5. Scrape Google ratings       → writes src/data/member-ratings.json
-#   6. Commit data files together
+#   6. Scrape business blog        → writes src/data/blog.json
+#   7. Commit data files together
 #
 # Manual run: GitHub → Actions → "Weekly data refresh" → "Run workflow"
 
@@ -103,6 +107,14 @@ jobs:
         run: pnpm scrape:ratings
         continue-on-error: true
 
+      # ── Step 6: scrape the business blog ─────────────────────
+      # Independent of the member pipeline above. Was previously
+      # manual-only and went stale for 3+ months (last scraped April,
+      # still showing April/March posts in July) before anyone noticed.
+      - name: Scrape business blog
+        run: pnpm scrape:blog
+        continue-on-error: true
+
       - name: Show diff (for log visibility)
         run: |
           echo "=== Files changed ==="
@@ -121,11 +133,13 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add src/data/members.json \
                   src/data/member-websites.json \
-                  src/data/member-ratings.json
+                  src/data/member-ratings.json \
+                  src/data/blog.json
           git commit -m "chore(data): weekly scrape — $(date -u +%Y-%m-%d)
 
-          Auto-refresh of member directory, websites, and Google ratings.
-          Vectors synced to Upstash separately (no JSON file).
+          Auto-refresh of member directory, websites, Google ratings, and
+          the business blog. Vectors synced to Upstash separately (no
+          JSON file).
           Triggered by .github/workflows/scrape-weekly.yml."
           git push origin main
 

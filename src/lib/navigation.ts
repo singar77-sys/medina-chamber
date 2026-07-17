@@ -58,6 +58,11 @@ export const navigation: NavItem[] = [
         href: "/events/sponsorships",
         description: "Celebrate milestones with the Chamber",
       },
+      {
+        label: "Reflections of Italy",
+        href: "/programs/italy-trip",
+        description: "10-day chamber group trip to Italy, Oct 2027",
+      },
     ],
   },
   {
@@ -165,6 +170,7 @@ export const searchablePages: { label: string; href: string; keywords: string }[
   { label: "Athena Awards", href: "/programs/athena-awards", keywords: "women leadership award ceremony" },
   { label: "Golf Outing", href: "/programs/golf-outing", keywords: "golf scramble tournament summer" },
   { label: "Sponsorships & Ribbon Cuttings", href: "/events/sponsorships", keywords: "sponsor ribbon cutting grand opening" },
+  { label: "Reflections of Italy", href: "/programs/italy-trip", keywords: "italy trip travel group vacation collette rome venice tuscany florence vatican" },
   // Membership
   { label: "Member Benefits", href: "/membership/benefits", keywords: "why join perks advantage" },
   { label: "Pricing & Tiers", href: "/membership/pricing", keywords: "cost price tier level investment" },

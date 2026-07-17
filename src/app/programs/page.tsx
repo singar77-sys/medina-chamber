@@ -52,6 +52,13 @@ const programs = [
     description:
       "Monthly safety education meetings in partnership with the Ohio BWC, enrollment free for chamber members, with BWC group rebate eligibility for participating employers.",
   },
+  {
+    name: "Reflections of Italy",
+    category: "Group Travel",
+    href: "/programs/italy-trip",
+    description:
+      "10-day chamber group trip to Italy with Collette, October 10-19, 2027. Rome, the Vatican, Cortona, Florence, Chianti, and Venice. From $5,999 per person.",
+  },
 ];
 
 export default function ProgramsPage() {
@@ -68,6 +75,7 @@ export default function ProgramsPage() {
       { "@type": "WebPage", name: "Annual Golf Outing", url: "https://medinachamber.com/programs/golf-outing" },
       { "@type": "WebPage", name: "Athena Awards", url: "https://medinachamber.com/programs/athena-awards" },
       { "@type": "WebPage", name: "Medina County Safety Council", url: "https://medinachamber.com/programs/safety-council" },
+      { "@type": "WebPage", name: "Reflections of Italy", url: "https://medinachamber.com/programs/italy-trip" },
     ],
   };
 

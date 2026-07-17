@@ -27,7 +27,7 @@
       "address": "1141 Lafayette Road, Medina, OH, 44256",
       "phone": "(330) 722-3141",
       "website": "http://www.armstrongonewire.com/",
-      "logoUrl": "https://res.cloudinary.com/micronetonline/image/upload/c_crop,h_2482,w_2482,x_0,y_0/f_auto/q_auto/v1754597076/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/68234919c068461b817c5c2d0453b96f/ArmstrongFB.png",
+      "logoUrl": "/images/members/logos/armstrong.jpg",
       "description": "Armstrong is a 3rd generation, family-owned and operated company and is your local provider of whole home video, fiber internet & talk services delivered to you on our unmatched fiber-optic network powered by 10G technology. Armstrong provides Internet, Telephone and Television service through our advanced fiber optic network to both residential homes and businesses. Armstrong's fiber network delivers the performance, reliability and security required for business-critical IT and connectivity solutions.",
       "categories": [
         "Computer Services/Internet Provider",
@@ -67,7 +67,7 @@
       "address": "623 West Liberty St., Medina, OH, 44256-2225",
       "phone": "(330) 725-6677",
       "website": "http://www.rootcandles.com/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/a-i-root-company-dba-root-candles.webp",
       "description": "The Best Candle in America",
       "categories": [
         "Manufacturing"
@@ -747,7 +747,7 @@
       "address": "3337 Medina Road, Medina, OH, 44256",
       "phone": "(330) 722-7888",
       "website": "http://www.bil-jac.com/",
-      "logoUrl": "",
+      "logoUrl": "/images/members/logos/bil-jac-foods-inc.png",
       "description": "",
       "categories": [
         "Manufacturing"

@@ -27,10 +27,10 @@ const TEST_MODE = args.includes('--test');
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
-async function fetchPage(offset = 0) {
-  const url = offset === 0
-    ? `${BASE_URL}?format=json`
-    : `${BASE_URL}?format=json&offset=${offset}`;
+async function fetchPage(offset) {
+  const url = offset
+    ? `${BASE_URL}?format=json&offset=${offset}`
+    : `${BASE_URL}?format=json`;
   const res = await fetch(url, {
     headers: {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -84,7 +84,7 @@ console.log('====================================================');
 
 // Get first page to find total count
 console.log('  Fetching first page...');
-const firstPage = await fetchPage(0);
+const firstPage = await fetchPage();
 const totalItems = firstPage.collection?.itemCount || firstPage.items?.length || 0;
 const firstItems = firstPage.items || [];
 
@@ -92,12 +92,19 @@ console.log(`  Total posts: ${totalItems}`);
 
 let allItems = [...firstItems];
 
-if (!TEST_MODE && totalItems > PAGE_SIZE) {
-  const totalPages = Math.ceil(totalItems / PAGE_SIZE);
-  console.log(`  Fetching ${totalPages - 1} additional pages...\n`);
+// Squarespace paginates this collection with an opaque cursor (a publish-date
+// timestamp), not a numeric index — each response's pagination.nextPageOffset
+// must be passed back verbatim as the next request's offset. Walk forward
+// following that cursor until pagination.nextPage is no longer true.
+let pagination = firstPage.pagination;
 
-  for (let page = 1; page < totalPages; page++) {
-    const offset = page * PAGE_SIZE;
+if (!TEST_MODE && pagination?.nextPage) {
+  const totalPages = Math.ceil(totalItems / PAGE_SIZE);
+  console.log(`  Fetching up to ${totalPages - 1} additional pages...\n`);
+
+  let page = 1;
+  while (pagination?.nextPage) {
+    const offset = pagination.nextPageOffset;
     try {
       await sleep(DELAY_MS);
       const data = await fetchPage(offset);
@@ -105,8 +112,11 @@ if (!TEST_MODE && totalItems > PAGE_SIZE) {
       allItems = allItems.concat(items);
       const pct = Math.round(((page + 1) / totalPages) * 100);
       console.log(`  [${String(pct).padStart(3)}%] Page ${page + 1}/${totalPages} — ${items.length} posts`);
+      pagination = data.pagination;
+      page++;
     } catch (err) {
       console.log(`  [ERR] Page ${page + 1} failed: ${err.message}`);
+      break; // pagination is cursor-based — without this page's response we have no cursor to continue from
     }
   }
 } else if (TEST_MODE) {

@@ -178,37 +178,25 @@ export default function ContactPage() {
       <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
-            <div className="max-w-3xl mb-f34">
-              <p className="text-overline text-cambridge mb-f8">Where we are</p>
-              <h2 className="text-h2">
-                139 N. Court Street, {" "}
-                <span className="text-text-secondary">across Medina County</span>
-              </h2>
-              <p className="text-body text-text-secondary mt-f13">
-                The network radiates from our downtown Medina hub across every
-                community we serve.
-              </p>
-            </div>
-
-            {/* Relative wrapper so the address card can float over the map.
-                The map reserves an empty left margin (CARD_ZONE_W) for this
-                card, so on wide screens it covers no nodes. Below lg the SVG
-                scales down but the card can't — at ~800px it swallowed half
-                the map and three communities — so there it stacks underneath
-                instead of floating. */}
-            <div className="relative">
-              <MedinaNetworkMap />
-              <div
-                className="
-                  mt-f13 lg:mt-0
-                  lg:absolute lg:bottom-5 lg:left-5 z-10
-                  lg:max-w-[260px]
-                  bg-bg-primary backdrop-blur-md
-                  border border-cambridge/50
-                  rounded-[var(--radius-md)]
-                  p-f21 shadow-xl
-                "
-              >
+            {/* The address sits in the header rather than floating over the
+                map: it used to cover the map's bottom-left corner (and half
+                the map on narrower screens), and this header row had unused
+                space to its right anyway. Suite/zip, hours and the
+                directions link live ONLY here — the h2 carries the street
+                alone — so don't drop this block without rehoming them. */}
+            <div className="mb-f34 flex flex-col gap-f21 md:flex-row md:items-end md:justify-between">
+              <div className="max-w-3xl">
+                <p className="text-overline text-cambridge mb-f8">Where we are</p>
+                <h2 className="text-h2">
+                  139 N. Court Street, {" "}
+                  <span className="text-text-secondary">across Medina County</span>
+                </h2>
+                <p className="text-body text-text-secondary mt-f13">
+                  The network radiates from our downtown Medina hub across every
+                  community we serve.
+                </p>
+              </div>
+              <div className="shrink-0 md:text-right">
                 <p className="text-caption font-bold text-text-primary mb-f3">Chamber Headquarters</p>
                 <p className="text-caption text-text-secondary leading-relaxed">
                   139 N. Court Street, Suite A
@@ -228,6 +216,8 @@ export default function ContactPage() {
                 </a>
               </div>
             </div>
+
+            <MedinaNetworkMap />
           </FadeIn>
         </div>
       </section>

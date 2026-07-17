@@ -2587,12 +2587,15 @@ body {
 .mnm-wrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 1200 / 440;
+  /* Must match VIEW_W / VIEW_H in MedinaNetworkMap. Roughly square
+     because the county is ~1.1:1 — the old 2.7:1 banner left the map
+     stranded in dead space, since it can only ever fill the height. */
+  aspect-ratio: 1200 / 900;
   /* The warm glow sits under the HQ dot. Medina city is east of the
-     county's centre, so the projected HQ lands at ~68% across / ~42%
+     county's centre, so the projected HQ lands at ~63% across / ~40%
      down — keep this in step with HQ_POS in MedinaNetworkMap. */
   background:
-    radial-gradient(ellipse at 68% 42%, rgba(255, 64, 0, 0.06), transparent 60%),
+    radial-gradient(ellipse at 63% 40%, rgba(255, 64, 0, 0.06), transparent 60%),
     linear-gradient(180deg, #050b18 0%, #0C1B33 55%, #030814 100%);
   border: 1px solid rgba(131, 188, 169, 0.15);
   border-radius: var(--radius-lg);
@@ -2635,10 +2638,9 @@ body {
 }
 
 .mnm-label {
-  /* 11px, not 13: the map now carries 21 communities on ~100px centres.
-     Keep in step with LABEL_CHAR_W / LABEL_H in MedinaNetworkMap — the
+  /* Keep in step with LABEL_CHAR_W / LABEL_H in MedinaNetworkMap — the
      label collision pass measures against these numbers. */
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.02em;
   pointer-events: none;

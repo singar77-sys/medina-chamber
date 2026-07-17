@@ -80,20 +80,24 @@ const PLACES: Place[] = [
 ];
 
 /* ── Canvas layout ───────────────────────────────────────────────────
- * The canvas is much wider (2.7:1) than the county is (~1.1:1), so the
- * projected map can never fill it. Rather than stretch the geography to
- * paper over that, we fit the county to the canvas HEIGHT and let the
- * leftover width be honest empty margin — which is what gives the
- * floating address card somewhere to sit without covering a node.
+ * The county is ~1.1:1, so the canvas has to be roughly square for the
+ * map to fill it — the map is limited by canvas HEIGHT, never width.
+ * The original 1200x440 banner could therefore only ever fill ~39% of
+ * its own width, which is what made it look marooned in dead space.
  *
- * CARD_ZONE_W is reserved for that card (see the contact page). Keep it
- * in sync with the card's max-width there.
+ * At 1200x900 the county spans ~77% of the width and ~93% of the height.
+ * Going fuller still means a taller section: 100% width fill would need
+ * a ~1100-tall canvas (i.e. a full screen on most laptops).
+ *
+ * Nothing floats over the map any more — the address moved up into the
+ * section header — so the whole canvas belongs to the geography.
+ *
+ * Keep `aspect-ratio` on .mnm-wrap in globals.css in step with these.
  */
 const VIEW_W = 1200;
-const VIEW_H = 440;
-const CARD_ZONE_W = 290;
-const MAP_TOP = 34;
-const MAP_BOTTOM = 414;
+const VIEW_H = 900;
+const MAP_TOP = 30;
+const MAP_BOTTOM = 870;
 
 /* ── Projection ──────────────────────────────────────────────────────
  * Equirectangular, centered on HQ. Over a 35km-wide county the
@@ -135,8 +139,8 @@ const KM_MAX_Y = Math.max(...KM_POINTS.map((p) => p.y));
 /** One scale for both axes — this is what keeps the county's shape true. */
 const SCALE = (MAP_BOTTOM - MAP_TOP) / (KM_MAX_Y - KM_MIN_Y);
 const MAP_W = (KM_MAX_X - KM_MIN_X) * SCALE;
-/** Centre the map in whatever room is left once the card zone is reserved. */
-const MAP_LEFT = CARD_ZONE_W + (VIEW_W - CARD_ZONE_W - MAP_W) / 2;
+/** Centre the map in the canvas. */
+const MAP_LEFT = (VIEW_W - MAP_W) / 2;
 
 function project(lat: number, lon: number) {
   const { x, y } = toKm(lat, lon);
@@ -167,18 +171,18 @@ const HQ_POS = project(HQ_COORD.lat, HQ_COORD.lon);
  * Pure math over a constant list, evaluated once at module load, so the
  * server and client always agree.
  */
-const LABEL_CHAR_W = 5.75; // ≈ advance width per char at 11px/600
-const LABEL_H = 11;
-const DOT_R = 7;
+const LABEL_CHAR_W = 7.3; // ≈ advance width per char at 14px/600
+const LABEL_H = 14;
+const DOT_R = 9;
 
 /** Ordered by preference: below, above, then out to either side. */
 const LABEL_CANDIDATES = [
-  { anchor: "middle", dx: 0, dy: 18 },
-  { anchor: "middle", dx: 0, dy: -12 },
-  { anchor: "start", dx: 10, dy: 4 },
-  { anchor: "end", dx: -10, dy: 4 },
-  { anchor: "middle", dx: 0, dy: 28 },
-  { anchor: "middle", dx: 0, dy: -22 },
+  { anchor: "middle", dx: 0, dy: 24 },
+  { anchor: "middle", dx: 0, dy: -16 },
+  { anchor: "start", dx: 13, dy: 5 },
+  { anchor: "end", dx: -13, dy: 5 },
+  { anchor: "middle", dx: 0, dy: 37 },
+  { anchor: "middle", dx: 0, dy: -29 },
 ] as const;
 
 interface Box {
@@ -199,11 +203,17 @@ function labelBox(cx: number, cy: number, name: string, c: (typeof LABEL_CANDIDA
 
 const POSITIONED = PLACES.map((p) => ({ ...p, ...project(p.lat, p.lon) }));
 
-/** Every dot is an obstacle — including HQ and its label. */
+/** Decorative compass, top-right. Declared here so labels route around it. */
+const COMPASS_X = VIEW_W - 78;
+const COMPASS_Y = 62;
+
+/** Every dot is an obstacle — plus HQ, its label, and the compass. */
 const OBSTACLES: Box[] = [
   ...POSITIONED.map((p) => ({ x1: p.x - DOT_R, y1: p.y - DOT_R, x2: p.x + DOT_R, y2: p.y + DOT_R })),
-  { x1: HQ_POS.x - 14, y1: HQ_POS.y - 14, x2: HQ_POS.x + 14, y2: HQ_POS.y + 14 },
-  { x1: HQ_POS.x - 46, y1: HQ_POS.y - 33, x2: HQ_POS.x + 46, y2: HQ_POS.y - 16 }, // HQ label
+  { x1: HQ_POS.x - 18, y1: HQ_POS.y - 18, x2: HQ_POS.x + 18, y2: HQ_POS.y + 18 },
+  { x1: HQ_POS.x - 52, y1: HQ_POS.y - 38, x2: HQ_POS.x + 52, y2: HQ_POS.y - 18 }, // HQ label
+  // Hinckley is the county's NE corner and lands right under the compass.
+  { x1: COMPASS_X - 26, y1: COMPASS_Y - 32, x2: COMPASS_X + 26, y2: COMPASS_Y + 26 },
 ];
 
 const NODES: PlacedNode[] = (() => {
@@ -368,16 +378,16 @@ export function MedinaNetworkMap() {
               onMouseLeave={() => setHoveredKey((k) => (k === c.key ? null : k))}
             >
               <title>{c.covers ? `${c.name} (incl. ${c.covers})` : c.name}</title>
-              <circle cx={c.x} cy={c.y} r={16} fill="transparent" />
+              <circle cx={c.x} cy={c.y} r={20} fill="transparent" />
               <circle
                 cx={c.x}
                 cy={c.y}
-                r={5.5}
+                r={7}
                 fill="none"
                 stroke={isActive ? "#FF4000" : "rgba(131, 188, 169, 0.9)"}
-                strokeWidth={1.2}
+                strokeWidth={1.4}
               />
-              <circle cx={c.x} cy={c.y} r={2.4} fill={isActive ? "#FF4000" : "#83BCA9"} />
+              <circle cx={c.x} cy={c.y} r={3} fill={isActive ? "#FF4000" : "#83BCA9"} />
               <text
                 x={c.labelX}
                 y={c.labelY}
@@ -394,17 +404,17 @@ export function MedinaNetworkMap() {
         {/* Layer 6 — HQ (gentle breath). Non-clickable for now; the
             floating address card carries the Get-directions link. */}
         <g className="mnm-hq">
-          <circle cx={HQ_POS.x} cy={HQ_POS.y} r={13} className="mnm-hq-breath" fill="rgba(255, 64, 0, 0.22)" />
-          <circle cx={HQ_POS.x} cy={HQ_POS.y} r={9} fill="#FF4000" />
-          <circle cx={HQ_POS.x} cy={HQ_POS.y} r={3.5} fill="#FFFFFF" />
-          <text x={HQ_POS.x} y={HQ_POS.y - 20} textAnchor="middle" className="mnm-hq-label">
+          <circle cx={HQ_POS.x} cy={HQ_POS.y} r={16} className="mnm-hq-breath" fill="rgba(255, 64, 0, 0.22)" />
+          <circle cx={HQ_POS.x} cy={HQ_POS.y} r={11} fill="#FF4000" />
+          <circle cx={HQ_POS.x} cy={HQ_POS.y} r={4} fill="#FFFFFF" />
+          <text x={HQ_POS.x} y={HQ_POS.y - 24} textAnchor="middle" className="mnm-hq-label">
             Chamber HQ
           </text>
         </g>
 
-        {/* Layer 7 — compass. Sits in the right-hand margin, clear of both
-            the map and the card zone. */}
-        <g className="mnm-compass" transform={`translate(${VIEW_W - 78} 62)`}>
+        {/* Layer 7 — compass, top-right. Registered in OBSTACLES so node
+            labels route around it rather than run underneath. */}
+        <g className="mnm-compass" transform={`translate(${COMPASS_X} ${COMPASS_Y})`}>
           <circle r="22" fill="rgba(12, 27, 51, 0.5)" stroke="rgba(131, 188, 169, 0.3)" strokeWidth="1" />
           <line x1="0" y1="-14" x2="0" y2="14" stroke="rgba(131, 188, 169, 0.5)" strokeWidth="0.8" />
           <line x1="-14" y1="0" x2="14" y2="0" stroke="rgba(131, 188, 169, 0.5)" strokeWidth="0.8" />

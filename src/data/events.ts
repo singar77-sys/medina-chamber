@@ -62,8 +62,10 @@ export function formatShortDate(event: ChamberEvent): string {
  * Leaves the full title intact on event detail pages, JSON-LD, and
  * anywhere else the canonical name matters for SEO / accessibility.
  *
- * Only strips if the suffix is a recognised separator + full month name
- * + 4-digit year. "Eggs & Expertise: Canva 101" stays whole.
+ * Strips a recognised separator + full month name + 4-digit year (e.g.
+ * "- April 2026"), or a bare trailing 4-digit year on its own (e.g.
+ * "Annual Chamber Golf Outing 2026" -> "Annual Chamber Golf Outing").
+ * "Eggs & Expertise: Canva 101" stays whole — 101 isn't a 4-digit year.
  */
 export function shortenEventTitle(title: string): string {
   return title
@@ -71,6 +73,7 @@ export function shortenEventTitle(title: string): string {
       /\s*[-, –:·]\s*(?:january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{4}\s*$/i,
       "",
     )
+    .replace(/\s+(?:19|20)\d{2}\s*$/, "")
     .trim();
 }
 

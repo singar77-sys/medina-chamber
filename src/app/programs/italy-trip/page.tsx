@@ -257,7 +257,7 @@ export default function ItalyTripPage() {
                   <p className="text-caption text-text-tertiary uppercase tracking-wider">
                     {p.tier}
                   </p>
-                  <p className="text-display mt-f8">{p.price}</p>
+                  <p className="text-h1 mt-f8 whitespace-nowrap">{p.price}</p>
                   <p className="text-body-sm text-text-tertiary mt-f3 line-through">{p.was}</p>
                 </div>
               ))}

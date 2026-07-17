@@ -67,6 +67,21 @@ const coreBenefits = [
   },
 ];
 
+const guidebooks = [
+  {
+    title: "New Member Guidebook",
+    description:
+      "Your benefits, your first 30 days, and the chamber's event guide, everything a new member needs in one place.",
+    file: "/documents/membership/new-member-guidebook.pdf",
+  },
+  {
+    title: "Prospective Member Guidebook",
+    description:
+      "Considering the chamber? See the networking, savings, and advocacy membership unlocks before you join.",
+    file: "/documents/membership/prospective-member-guidebook.pdf",
+  },
+];
+
 const extraBenefits = [
   {
     title: "Free Notary Services",
@@ -194,6 +209,55 @@ export default function BenefitsPage() {
                   )}
                 </div>
               </FadeIn>
+            ))}
+          </div>
+        </FadeIn>
+      </section>
+
+      {/* Member guidebooks — downloadable PDFs */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pb-f89 lg:pb-f144">
+        <FadeIn>
+          <h2 className="text-overline text-cambridge mb-f21">Member Guidebooks</h2>
+          <div className="grid sm:grid-cols-2 gap-f21">
+            {guidebooks.map((g) => (
+              <div
+                key={g.title}
+                className="flex flex-col p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
+              >
+                <h3 className="text-h4 mb-f8">{g.title}</h3>
+                <p className="text-body-sm text-text-secondary leading-relaxed flex-1">
+                  {g.description}
+                </p>
+                <div className="mt-f13 flex flex-wrap gap-f13">
+                  <a
+                    href={g.file}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="
+                      inline-flex items-center px-f13 py-f8
+                      bg-accent hover:bg-accent-hover
+                      text-white font-bold text-body-sm
+                      rounded-[var(--radius-md)]
+                      transition-colors
+                    "
+                  >
+                    View PDF →
+                  </a>
+                  <a
+                    href={g.file}
+                    download
+                    className="
+                      inline-flex items-center px-f13 py-f8
+                      border border-border-primary hover:border-text-tertiary
+                      text-text-primary font-bold text-body-sm
+                      rounded-[var(--radius-md)]
+                      transition-colors
+                    "
+                  >
+                    Download
+                  </a>
+                </div>
+              </div>
             ))}
           </div>
         </FadeIn>

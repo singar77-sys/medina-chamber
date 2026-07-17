@@ -90,9 +90,21 @@ export function RentalSpaceCards() {
   function closeRoom() {
     const i = activeIndex;
     setActiveIndex(null);
-    // Return focus to the card that opened the modal.
+    // Return focus to the card that opened the modal. preventScroll is
+    // required here: the scroll lock (below) is still mid-teardown on
+    // this frame — body is still position:fixed with the real scroll
+    // position stashed in a negative `top` offset, so the window's
+    // actual scrollTop reads 0. A default .focus() call scrolls that
+    // (locked-at-zero) window toward the button immediately, then the
+    // lock's cleanup restores the true saved position a beat later —
+    // net effect, a visible jump to the page top that then slides back
+    // down. preventScroll skips the browser's scroll-into-view entirely
+    // and leaves the single scroll-lock restoration as the only thing
+    // moving the viewport.
     if (i !== null) {
-      requestAnimationFrame(() => triggerRefs.current[i]?.focus());
+      requestAnimationFrame(() =>
+        triggerRefs.current[i]?.focus({ preventScroll: true }),
+      );
     }
   }
 

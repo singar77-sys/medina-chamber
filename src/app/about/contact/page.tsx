@@ -190,13 +190,19 @@ export default function ContactPage() {
               </p>
             </div>
 
-            {/* Relative wrapper so the address card can float over the map */}
+            {/* Relative wrapper so the address card can float over the map.
+                The map reserves an empty left margin (CARD_ZONE_W) for this
+                card, so on wide screens it covers no nodes. Below lg the SVG
+                scales down but the card can't — at ~800px it swallowed half
+                the map and three communities — so there it stacks underneath
+                instead of floating. */}
             <div className="relative">
               <MedinaNetworkMap />
               <div
                 className="
-                  absolute bottom-5 left-5 z-10
-                  max-w-[260px]
+                  mt-f13 lg:mt-0
+                  lg:absolute lg:bottom-5 lg:left-5 z-10
+                  lg:max-w-[260px]
                   bg-bg-primary backdrop-blur-md
                   border border-cambridge/50
                   rounded-[var(--radius-md)]

@@ -5,76 +5,224 @@ import { useState } from "react";
 /**
  * MedinaNetworkMap — stylized Medina County network.
  *
- * Six member communities around a central HQ, each connected by a
- * gentle curved path. A glowing coquelicot orb rides each curve from
- * HQ outward on a staggered loop, so the connections are always
+ * Every community the chamber serves, connected to the downtown Medina
+ * HQ by a gentle curved path. A glowing coquelicot orb rides each curve
+ * from HQ outward on a staggered loop, so the connections are always
  * visible AND the network reads as actively flowing.
+ *
+ * Node placement is PROJECTED FROM REAL COORDINATES (see PLACES), not
+ * hand-tuned. An earlier hand-placed version claimed to follow compass
+ * bearings but didn't: Valley City (really NNW) and Lafayette (really
+ * SW) were both drawn east of HQ, ~90-100° wrong. Deriving x/y from
+ * lat/lon makes that class of mistake impossible and means adding a
+ * community is a one-line data change.
  *
  * Uses SVG `<animateMotion>` for the orbs — simple, GPU-accelerated,
  * and the orb follows the exact path we've drawn (no drift).
+ *
+ * Accessibility: nodes are non-interactive (redesign pending), so they
+ * are plain <g> groups with a <title> rather than links.
  */
 
-type NodeKey =
-  | "hq"
-  | "brunswick"
-  | "valley-city"
-  | "granger"
-  | "lafayette"
-  | "wadsworth"
-  | "rittman"
-  | "seville"
-  | "lodi";
+/** Geocoded from 139 N. Court Street, Suite A, Medina OH 44256. */
+const HQ_COORD = { lat: 41.14019, lon: -81.8641 } as const;
 
-interface NetworkNode {
-  key: NodeKey;
+interface Place {
+  key: string;
   name: string;
-  x: number;
-  y: number;
-  anchor: "start" | "middle" | "end";
-  dy?: number;
+  lat: number;
+  lon: number;
+  /**
+   * Nearby subdivision(s) this dot stands in for. Medina County stacks
+   * villages inside townships (Lodi sits in Harrisville Twp, Valley City
+   * in Liverpool Twp, and so on) — at map scale their centers are within
+   * a few px, so drawing both would just print one label on top of the
+   * other. We keep the name people would actually search for and name
+   * the absorbed subdivision in the tooltip.
+   */
+  covers?: string;
 }
 
 /**
- * HQ coordinates are chosen to land on the "MEDINA CHAMBER" logo in
- * the ghosted chamber-building photo behind the map. The photo is
- * `preserveAspectRatio="xMidYMid slice"` so its logo naturally sits
- * around ~y=150 in this 1200×440 viewBox — HQ is anchored there.
+ * Medina County's civil subdivisions — 4 cities, 7 villages, 17
+ * townships and 2 CDPs, per the county's Wikipedia article. Coordinates
+ * are from Wikipedia infoboxes and OpenStreetMap/Nominatim.
  *
- * If this CSS `transform-origin` on `.mnm-hq-breath` is ever updated
- * away from 550px 150px, match it to these constants.
+ * Ordered north → south purely for readability; render order doesn't
+ * matter since positions come from the coordinates.
  */
-const HQ_X = 550;
-const HQ_Y = 150;
+const PLACES: Place[] = [
+  // ── north tier (Cuyahoga county line) ──────────────────────────────
+  { key: "brunswick",        name: "Brunswick",        lat: 41.24568, lon: -81.82754, covers: "Brunswick Hills Twp" },
+  { key: "hinckley",         name: "Hinckley Twp",     lat: 41.23929, lon: -81.73513 },
+  { key: "valley-city",      name: "Valley City",      lat: 41.23763, lon: -81.92876, covers: "Liverpool Twp" },
+  // ── north-central ──────────────────────────────────────────────────
+  { key: "litchfield",       name: "Litchfield Twp",   lat: 41.16876, lon: -82.02401 },
+  { key: "york",             name: "York Twp",         lat: 41.16843, lon: -81.92646 },
+  { key: "medina-twp",       name: "Medina Twp",       lat: 41.16843, lon: -81.83153 },
+  { key: "granger",          name: "Granger Twp",      lat: 41.16882, lon: -81.73560 },
+  // ── central ────────────────────────────────────────────────────────
+  { key: "spencer",          name: "Spencer",          lat: 41.09972, lon: -82.12556, covers: "Spencer Twp" },
+  { key: "chatham",          name: "Chatham Twp",      lat: 41.09971, lon: -82.02552 },
+  { key: "lafayette",        name: "Lafayette Twp",    lat: 41.09922, lon: -81.93514 },
+  { key: "montville",        name: "Montville Twp",    lat: 41.09935, lon: -81.83194 },
+  { key: "sharon-center",    name: "Sharon Center",    lat: 41.09978, lon: -81.73569, covers: "Sharon Twp" },
+  { key: "chippewa-lake",    name: "Chippewa Lake",    lat: 41.07361, lon: -81.90472, covers: "Gloria Glens Park" },
+  // ── south tier (Wayne / Ashland county line) ───────────────────────
+  { key: "homer",            name: "Homer Twp",        lat: 41.02888, lon: -82.12494 },
+  { key: "lodi",             name: "Lodi",             lat: 41.03528, lon: -82.00694, covers: "Harrisville Twp" },
+  { key: "westfield-center", name: "Westfield Center", lat: 41.02833, lon: -81.93139, covers: "Westfield Twp" },
+  { key: "seville",          name: "Seville",          lat: 41.02639, lon: -81.87556 },
+  { key: "guilford",         name: "Guilford Twp",     lat: 41.02554, lon: -81.82225 },
+  { key: "wadsworth",        name: "Wadsworth",        lat: 41.01944, lon: -81.74306, covers: "Wadsworth Twp" },
+  { key: "rittman",          name: "Rittman",          lat: 40.98611, lon: -81.79583 },
+  { key: "creston",          name: "Creston",          lat: 40.97667, lon: -81.90000 },
+];
 
-const HQ: NetworkNode = { key: "hq", name: "Chamber HQ", x: HQ_X, y: HQ_Y, anchor: "middle" };
+/* ── Canvas layout ───────────────────────────────────────────────────
+ * The canvas is much wider (2.7:1) than the county is (~1.1:1), so the
+ * projected map can never fill it. Rather than stretch the geography to
+ * paper over that, we fit the county to the canvas HEIGHT and let the
+ * leftover width be honest empty margin — which is what gives the
+ * floating address card somewhere to sit without covering a node.
+ *
+ * CARD_ZONE_W is reserved for that card (see the contact page). Keep it
+ * in sync with the card's max-width there.
+ */
+const VIEW_W = 1200;
+const VIEW_H = 440;
+const CARD_ZONE_W = 290;
+const MAP_TOP = 34;
+const MAP_BOTTOM = 414;
+
+/* ── Projection ──────────────────────────────────────────────────────
+ * Equirectangular, centered on HQ. Over a 35km-wide county the
+ * distortion is far below one pixel, and unlike a stretched fit it
+ * preserves true bearings — north is up and west is left, always.
+ */
+const KM_PER_DEG_LAT = 110.99;
+/**
+ * 111.32 × cos(HQ latitude), PRE-COMPUTED ON PURPOSE — do not inline the
+ * Math.cos call. ECMAScript lets each engine approximate cos() its own
+ * way, so Node and the browser disagreed in the last bits, every derived
+ * coordinate inherited the drift, and React reported a hydration
+ * mismatch on the rendered attributes. A literal is identical everywhere.
+ * Recompute only if HQ_COORD.lat changes.
+ */
+const KM_PER_DEG_LON = 83.83532493872994;
+
+/** Offset from HQ in kilometres: +x east, +y north. */
+function toKm(lat: number, lon: number) {
+  return {
+    x: (lon - HQ_COORD.lon) * KM_PER_DEG_LON,
+    y: (lat - HQ_COORD.lat) * KM_PER_DEG_LAT,
+  };
+}
 
 /**
- * Eight nodes, mapped 1:1 with the chamber's official service areas
- * (Brunswick, Valley City, Granger, Lafayette, Wadsworth, Rittman,
- * Seville, Lodi). Placement follows real-world compass bearing from
- * the HQ in downtown Medina.
- *
- * Service-area absorptions — some townships share dots with adjacent
- * cities so the map reads as geography rather than administrative
- * boundaries:
- *   • HQ dot  covers Medina city + Medina Township + Montville Township
- *     (Montville wraps Medina on three sides — same footprint).
- *   • Brunswick dot covers Brunswick city + Brunswick Hills Township
- *     (Hills is the unincorporated ring around the city).
- *
- * The dedicated /community pages for Montville, Granger, and Lafayette
- * all render on hit — the empty-state template was wired up earlier.
+ * Round every coordinate before it reaches the DOM. Belt-and-braces
+ * against the hydration mismatch above: at 2dp no plausible float drift
+ * can change the string React renders.
  */
-const COMMUNITIES: NetworkNode[] = [
-  { key: "brunswick",   name: "Brunswick",    x: 890, y: 50,  anchor: "start",  dy: -10 }, // NE  (incl. Brunswick Hills Twp)
-  { key: "valley-city", name: "Valley City",  x: 700, y: 80,  anchor: "middle", dy: -16 }, // N
-  { key: "granger",     name: "Granger Twp",  x: 830, y: 150, anchor: "start",  dy: -14 }, // E   (between HQ and Brunswick)
-  { key: "lafayette",   name: "Lafayette",    x: 680, y: 270, anchor: "start",  dy: -14 }, // SE  (just S of HQ, E of Seville)
-  { key: "wadsworth",   name: "Wadsworth",    x: 920, y: 320, anchor: "start",  dy: 18 },  // SE
-  { key: "rittman",     name: "Rittman",      x: 840, y: 400, anchor: "start",  dy: 20 },  // S/SE
-  { key: "seville",     name: "Seville",      x: 470, y: 390, anchor: "middle", dy: 26 },  // S   (moved left to open room for Lafayette)
-  { key: "lodi",        name: "Lodi",         x: 220, y: 370, anchor: "end",    dy: 24 },  // SW
+const px = (n: number) => Math.round(n * 100) / 100;
+
+const KM_POINTS = [toKm(HQ_COORD.lat, HQ_COORD.lon), ...PLACES.map((p) => toKm(p.lat, p.lon))];
+const KM_MIN_X = Math.min(...KM_POINTS.map((p) => p.x));
+const KM_MAX_X = Math.max(...KM_POINTS.map((p) => p.x));
+const KM_MIN_Y = Math.min(...KM_POINTS.map((p) => p.y));
+const KM_MAX_Y = Math.max(...KM_POINTS.map((p) => p.y));
+
+/** One scale for both axes — this is what keeps the county's shape true. */
+const SCALE = (MAP_BOTTOM - MAP_TOP) / (KM_MAX_Y - KM_MIN_Y);
+const MAP_W = (KM_MAX_X - KM_MIN_X) * SCALE;
+/** Centre the map in whatever room is left once the card zone is reserved. */
+const MAP_LEFT = CARD_ZONE_W + (VIEW_W - CARD_ZONE_W - MAP_W) / 2;
+
+function project(lat: number, lon: number) {
+  const { x, y } = toKm(lat, lon);
+  return {
+    x: px(MAP_LEFT + (x - KM_MIN_X) * SCALE),
+    y: px(MAP_TOP + (KM_MAX_Y - y) * SCALE), // SVG y grows downward
+  };
+}
+
+interface PlacedNode extends Place {
+  x: number;
+  y: number;
+  anchor: "start" | "middle" | "end";
+  labelX: number;
+  labelY: number;
+}
+
+const HQ_POS = project(HQ_COORD.lat, HQ_COORD.lon);
+
+/* ── Label placement ─────────────────────────────────────────────────
+ * These are survey-grid townships roughly 8km apart, which leaves only
+ * ~100px between neighbouring dots. A fixed rule ("push the label
+ * outward from the centre") fails here, because outward is precisely
+ * where the next community sits — it put five labels on top of their
+ * neighbours' dots. So instead: try a handful of offsets per node and
+ * take the first that collides with nothing already on the map.
+ *
+ * Pure math over a constant list, evaluated once at module load, so the
+ * server and client always agree.
+ */
+const LABEL_CHAR_W = 5.75; // ≈ advance width per char at 11px/600
+const LABEL_H = 11;
+const DOT_R = 7;
+
+/** Ordered by preference: below, above, then out to either side. */
+const LABEL_CANDIDATES = [
+  { anchor: "middle", dx: 0, dy: 18 },
+  { anchor: "middle", dx: 0, dy: -12 },
+  { anchor: "start", dx: 10, dy: 4 },
+  { anchor: "end", dx: -10, dy: 4 },
+  { anchor: "middle", dx: 0, dy: 28 },
+  { anchor: "middle", dx: 0, dy: -22 },
+] as const;
+
+interface Box {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+}
+
+const hits = (a: Box, b: Box) => a.x1 < b.x2 && a.x2 > b.x1 && a.y1 < b.y2 && a.y2 > b.y1;
+
+function labelBox(cx: number, cy: number, name: string, c: (typeof LABEL_CANDIDATES)[number]): Box {
+  const w = name.length * LABEL_CHAR_W;
+  const x = c.anchor === "middle" ? cx - w / 2 : c.anchor === "start" ? cx + c.dx : cx + c.dx - w;
+  const baseline = cy + c.dy;
+  return { x1: x, y1: baseline - LABEL_H + 2, x2: x + w, y2: baseline + 3 };
+}
+
+const POSITIONED = PLACES.map((p) => ({ ...p, ...project(p.lat, p.lon) }));
+
+/** Every dot is an obstacle — including HQ and its label. */
+const OBSTACLES: Box[] = [
+  ...POSITIONED.map((p) => ({ x1: p.x - DOT_R, y1: p.y - DOT_R, x2: p.x + DOT_R, y2: p.y + DOT_R })),
+  { x1: HQ_POS.x - 14, y1: HQ_POS.y - 14, x2: HQ_POS.x + 14, y2: HQ_POS.y + 14 },
+  { x1: HQ_POS.x - 46, y1: HQ_POS.y - 33, x2: HQ_POS.x + 46, y2: HQ_POS.y - 16 }, // HQ label
 ];
+
+const NODES: PlacedNode[] = (() => {
+  const taken: Box[] = [];
+  return POSITIONED.map((p) => {
+    const pick =
+      LABEL_CANDIDATES.find((c) => {
+        const b = labelBox(p.x, p.y, p.name, c);
+        return !OBSTACLES.some((o) => hits(b, o)) && !taken.some((t) => hits(b, t));
+      }) ?? LABEL_CANDIDATES[0];
+    taken.push(labelBox(p.x, p.y, p.name, pick));
+    return {
+      ...p,
+      anchor: pick.anchor,
+      labelX: px(pick.anchor === "middle" ? p.x : p.x + pick.dx),
+      labelY: px(p.y + pick.dy),
+    };
+  });
+})();
 
 /**
  * Build a gentle quadratic-Bezier path between HQ and a community.
@@ -82,30 +230,31 @@ const COMMUNITIES: NetworkNode[] = [
  * fraction of that line's length, rotated consistently clockwise so
  * the whole network reads as a unified swirl rather than random bends.
  */
-function curvedPath(from: NetworkNode, to: NetworkNode): string {
+function curvedPath(from: { x: number; y: number }, to: { x: number; y: number }): string {
   const dx = to.x - from.x;
   const dy = to.y - from.y;
   const midX = (from.x + to.x) / 2;
   const midY = (from.y + to.y) / 2;
-  // Perpendicular offset (rotate dx,dy by 90° clockwise, scale by 0.18)
-  const perpX = -dy * 0.18;
-  const perpY = dx * 0.18;
-  const cx = midX + perpX;
-  const cy = midY + perpY;
-  return `M ${from.x} ${from.y} Q ${cx} ${cy} ${to.x} ${to.y}`;
+  // Perpendicular offset (rotate dx,dy by 90° clockwise, scale by 0.14)
+  const cx = midX + -dy * 0.14;
+  const cy = midY + dx * 0.14;
+  return `M ${from.x.toFixed(1)} ${from.y.toFixed(1)} Q ${cx.toFixed(1)} ${cy.toFixed(1)} ${to.x.toFixed(1)} ${to.y.toFixed(1)}`;
 }
 
+/** Orbs share one travel time; staggering by dur/N spaces them evenly. */
+const ORB_DUR = 7;
+
 export function MedinaNetworkMap() {
-  const [hoveredKey, setHoveredKey] = useState<NodeKey | null>(null);
+  const [hoveredKey, setHoveredKey] = useState<string | null>(null);
 
   return (
     <div className="mnm-wrap">
       <svg
-        viewBox="0 0 1200 440"
+        viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
         preserveAspectRatio="xMidYMid meet"
         className="mnm-svg"
         role="img"
-        aria-label="Stylized map of Medina County showing the Chamber headquarters connected by flowing paths to six member communities: Brunswick, Valley City, Wadsworth, Rittman, Seville, and Lodi"
+        aria-label={`Stylized map of Medina County showing the Chamber headquarters in downtown Medina connected by flowing paths to ${NODES.length} communities across the county: ${NODES.map((n) => n.name).join(", ")}.`}
       >
         <defs>
           {/* Sparse dot-grid backdrop */}
@@ -124,13 +273,8 @@ export function MedinaNetworkMap() {
 
           {/* Each community's unique curved path — referenced by its
               orb's <animateMotion> via <mpath>. */}
-          {COMMUNITIES.map((c) => (
-            <path
-              key={`def-${c.key}`}
-              id={`mnm-path-${c.key}`}
-              d={curvedPath(HQ, c)}
-              fill="none"
-            />
+          {NODES.map((c) => (
+            <path key={`def-${c.key}`} id={`mnm-path-${c.key}`} d={curvedPath(HQ_POS, c)} fill="none" />
           ))}
         </defs>
 
@@ -141,18 +285,26 @@ export function MedinaNetworkMap() {
           href="/images/photos/chamber-building-exterior.jpg"
           x="0"
           y="0"
-          width="1200"
-          height="440"
+          width={VIEW_W}
+          height={VIEW_H}
           preserveAspectRatio="xMidYMid slice"
           className="mnm-photo"
         />
 
         {/* Layer 1 — dot-grid backdrop */}
-        <rect width="1200" height="440" fill="url(#mnm-grid)" />
+        <rect width={VIEW_W} height={VIEW_H} fill="url(#mnm-grid)" />
 
-        {/* Layer 2 — loose county reference ring */}
-        <path
-          d="M 100 120 Q 260 40 540 50 Q 830 40 1080 110 Q 1130 220 1080 340 Q 980 410 700 410 Q 380 420 200 360 Q 80 270 100 120 Z"
+        {/* Layer 2 — county field. A rounded rectangle around the
+            projected bounds, NOT a traced county outline: Medina County
+            is a survey-grid county and close to rectangular, so this
+            reads as "the county" without pretending to be its true
+            border (the previous hand-drawn blob wasn't its shape). */}
+        <rect
+          x={px(MAP_LEFT - 26)}
+          y={MAP_TOP - 20}
+          width={px(MAP_W + 52)}
+          height={MAP_BOTTOM - MAP_TOP + 40}
+          rx="26"
           fill="none"
           stroke="rgba(131, 188, 169, 0.22)"
           strokeWidth="1.2"
@@ -160,57 +312,53 @@ export function MedinaNetworkMap() {
         />
 
         {/* Layer 3 — visible connection curves (always drawn) */}
-        {COMMUNITIES.map((c) => {
+        {NODES.map((c) => {
           const isActive = hoveredKey === c.key;
           return (
             <use
               key={`line-${c.key}`}
               href={`#mnm-path-${c.key}`}
-              stroke={isActive ? "#FF4000" : "rgba(131, 188, 169, 0.48)"}
-              strokeWidth={isActive ? 1.8 : 1.2}
+              stroke={isActive ? "#FF4000" : "rgba(131, 188, 169, 0.42)"}
+              strokeWidth={isActive ? 1.8 : 1}
               fill="none"
               className="mnm-curve"
             />
           );
         })}
 
-        {/* Layer 4 — traveling orbs (one per connection, staggered) */}
-        {COMMUNITIES.map((c, i) => (
-          <circle
-            key={`orb-${c.key}`}
-            r={4}
-            fill="#FF4000"
-            filter="url(#mnm-orb-glow)"
-            opacity={0}
-            className="mnm-orb"
-          >
-            <animateMotion
-              dur="6s"
-              begin={`${i * 1}s`}
-              repeatCount="indefinite"
-              keyPoints="0;1"
-              keyTimes="0;1"
-              calcMode="linear"
-            >
-              <mpath href={`#mnm-path-${c.key}`} />
-            </animateMotion>
-            <animate
-              attributeName="opacity"
-              values="0;1;1;0"
-              keyTimes="0;0.1;0.9;1"
-              dur="6s"
-              begin={`${i * 1}s`}
-              repeatCount="indefinite"
-            />
-          </circle>
-        ))}
+        {/* Layer 4 — traveling orbs (one per connection, evenly staggered) */}
+        {NODES.map((c, i) => {
+          const begin = `${((i * ORB_DUR) / NODES.length).toFixed(2)}s`;
+          return (
+            <circle key={`orb-${c.key}`} r={3.5} fill="#FF4000" filter="url(#mnm-orb-glow)" opacity={0} className="mnm-orb">
+              <animateMotion
+                dur={`${ORB_DUR}s`}
+                begin={begin}
+                repeatCount="indefinite"
+                keyPoints="0;1"
+                keyTimes="0;1"
+                calcMode="linear"
+              >
+                <mpath href={`#mnm-path-${c.key}`} />
+              </animateMotion>
+              <animate
+                attributeName="opacity"
+                values="0;1;1;0"
+                keyTimes="0;0.1;0.9;1"
+                dur={`${ORB_DUR}s`}
+                begin={begin}
+                repeatCount="indefinite"
+              />
+            </circle>
+          );
+        })}
 
         {/* Layer 5 — community nodes. Interactivity is intentionally OFF
             for now (map is being redesigned): these are plain <g> groups,
             not links. Hover still highlights the node + its curve. To
             re-enable navigation later, wrap each in an SVG <a> to
             /community/{c.key} with a client-side onClick intercept. */}
-        {COMMUNITIES.map((c) => {
+        {NODES.map((c) => {
           const isActive = hoveredKey === c.key;
           return (
             <g
@@ -219,24 +367,20 @@ export function MedinaNetworkMap() {
               onMouseEnter={() => setHoveredKey(c.key)}
               onMouseLeave={() => setHoveredKey((k) => (k === c.key ? null : k))}
             >
-              <circle cx={c.x} cy={c.y} r={22} fill="transparent" />
+              <title>{c.covers ? `${c.name} (incl. ${c.covers})` : c.name}</title>
+              <circle cx={c.x} cy={c.y} r={16} fill="transparent" />
               <circle
                 cx={c.x}
                 cy={c.y}
-                r={7}
+                r={5.5}
                 fill="none"
                 stroke={isActive ? "#FF4000" : "rgba(131, 188, 169, 0.9)"}
-                strokeWidth={1.4}
+                strokeWidth={1.2}
               />
-              <circle
-                cx={c.x}
-                cy={c.y}
-                r={3}
-                fill={isActive ? "#FF4000" : "#83BCA9"}
-              />
+              <circle cx={c.x} cy={c.y} r={2.4} fill={isActive ? "#FF4000" : "#83BCA9"} />
               <text
-                x={c.x + (c.anchor === "end" ? -12 : c.anchor === "start" ? 12 : 0)}
-                y={c.y + (c.dy ?? 0)}
+                x={c.labelX}
+                y={c.labelY}
                 textAnchor={c.anchor}
                 className="mnm-label"
                 style={{ fill: isActive ? "#ffffff" : "rgba(255, 255, 255, 0.62)" }}
@@ -248,34 +392,26 @@ export function MedinaNetworkMap() {
         })}
 
         {/* Layer 6 — HQ (gentle breath). Non-clickable for now; the
-            floating address card below carries the Get-directions link. */}
+            floating address card carries the Get-directions link. */}
         <g className="mnm-hq">
-          <circle
-            cx={HQ.x}
-            cy={HQ.y}
-            r={14}
-            className="mnm-hq-breath"
-            fill="rgba(255, 64, 0, 0.22)"
-          />
-          <circle cx={HQ.x} cy={HQ.y} r={10} fill="#FF4000" />
-          <circle cx={HQ.x} cy={HQ.y} r={4}  fill="#FFFFFF" />
-          <text
-            x={HQ.x}
-            y={HQ.y + 34}
-            textAnchor="middle"
-            className="mnm-hq-label"
-          >
+          <circle cx={HQ_POS.x} cy={HQ_POS.y} r={13} className="mnm-hq-breath" fill="rgba(255, 64, 0, 0.22)" />
+          <circle cx={HQ_POS.x} cy={HQ_POS.y} r={9} fill="#FF4000" />
+          <circle cx={HQ_POS.x} cy={HQ_POS.y} r={3.5} fill="#FFFFFF" />
+          <text x={HQ_POS.x} y={HQ_POS.y - 20} textAnchor="middle" className="mnm-hq-label">
             Chamber HQ
           </text>
         </g>
 
-        {/* Layer 7 — compass (decorative, for directional context) */}
-        <g className="mnm-compass" transform="translate(60 60)">
+        {/* Layer 7 — compass. Sits in the right-hand margin, clear of both
+            the map and the card zone. */}
+        <g className="mnm-compass" transform={`translate(${VIEW_W - 78} 62)`}>
           <circle r="22" fill="rgba(12, 27, 51, 0.5)" stroke="rgba(131, 188, 169, 0.3)" strokeWidth="1" />
           <line x1="0" y1="-14" x2="0" y2="14" stroke="rgba(131, 188, 169, 0.5)" strokeWidth="0.8" />
           <line x1="-14" y1="0" x2="14" y2="0" stroke="rgba(131, 188, 169, 0.5)" strokeWidth="0.8" />
           <polygon points="0,-16 -4,-6 4,-6" fill="#FF4000" />
-          <text x="0" y="-20" textAnchor="middle" className="mnm-compass-label">N</text>
+          <text x="0" y="-20" textAnchor="middle" className="mnm-compass-label">
+            N
+          </text>
         </g>
       </svg>
     </div>

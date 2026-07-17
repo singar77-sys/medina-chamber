@@ -2588,8 +2588,11 @@ body {
   position: relative;
   width: 100%;
   aspect-ratio: 1200 / 440;
+  /* The warm glow sits under the HQ dot. Medina city is east of the
+     county's centre, so the projected HQ lands at ~68% across / ~42%
+     down — keep this in step with HQ_POS in MedinaNetworkMap. */
   background:
-    radial-gradient(ellipse at 46% 52%, rgba(255, 64, 0, 0.06), transparent 60%),
+    radial-gradient(ellipse at 68% 42%, rgba(255, 64, 0, 0.06), transparent 60%),
     linear-gradient(180deg, #050b18 0%, #0C1B33 55%, #030814 100%);
   border: 1px solid rgba(131, 188, 169, 0.15);
   border-radius: var(--radius-lg);
@@ -2632,9 +2635,12 @@ body {
 }
 
 .mnm-label {
-  font-size: 13px;
+  /* 11px, not 13: the map now carries 21 communities on ~100px centres.
+     Keep in step with LABEL_CHAR_W / LABEL_H in MedinaNetworkMap — the
+     label collision pass measures against these numbers. */
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   pointer-events: none;
   transition: fill 250ms ease;
 }
@@ -2651,7 +2657,12 @@ body {
 /* HQ breath — one gentle ring slowly pulsing opacity + scale.
    transform-origin MUST match HQ_X / HQ_Y in MedinaNetworkMap.tsx. */
 .mnm-hq-breath {
-  transform-origin: 550px 150px;
+  /* `center`, not a user-space coordinate: with transform-box: fill-box
+     the origin resolves against this circle's own ~26px box, so the old
+     `550px 150px` put it hundreds of px outside and scale() hurled the
+     ring ~280px across the map instead of pulsing on the HQ dot. Keeping
+     it centred means the HQ position can move without touching this. */
+  transform-origin: center;
   transform-box: fill-box;
   animation: mnmBreath 3.6s ease-in-out infinite;
   will-change: transform, opacity;

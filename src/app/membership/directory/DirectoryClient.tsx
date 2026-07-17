@@ -151,25 +151,39 @@ function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
     };
   }, [search, activeCategory]);
 
-  const filtered = useMemo(() => {
-    if (semanticSlugs && search.trim()) {
-      const bySlug = new Map(members.map((m) => [m.chamberSlug, m]));
-      return semanticSlugs
-        .map((slug) => bySlug.get(slug))
-        .filter((m): m is Member => !!m);
+  // null = "a query is typed but the debounced semantic search hasn't
+  // resolved yet" — genuinely unknown, NOT the same as zero results.
+  // Without this distinction, every keystroke briefly falls through to the
+  // naive keyword fallback below (meant only for when /api/search errors)
+  // before the real semantic results replace it — for a query like
+  // "roofers" that fallback usually finds nothing, so the empty state
+  // flashed on screen for the length of the 280ms debounce + fetch.
+  const filtered = useMemo((): Member[] | null => {
+    if (search.trim()) {
+      if (semanticSlugs) {
+        const bySlug = new Map(members.map((m) => [m.chamberSlug, m]));
+        return semanticSlugs
+          .map((slug) => bySlug.get(slug))
+          .filter((m): m is Member => !!m);
+      }
+      if (searchError) {
+        let result = members;
+        if (activeCategory) {
+          result = result.filter((m) => m.categories.includes(activeCategory));
+        }
+        return keywordFilter(result, search);
+      }
+      return null;
     }
     let result = members;
     if (activeCategory) {
       result = result.filter((m) => m.categories.includes(activeCategory));
     }
-    if (search.trim()) {
-      result = keywordFilter(result, search);
-    }
-    if (!search.trim() && !activeCategory) {
+    if (!activeCategory) {
       return [...result].sort((a, b) => a.membershipTier - b.membershipTier);
     }
     return result;
-  }, [members, search, activeCategory, semanticSlugs]);
+  }, [members, search, activeCategory, semanticSlugs, searchError]);
 
   const isFiltered = !!search.trim() || !!activeCategory || showAll;
 
@@ -268,7 +282,22 @@ function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
             </button>
           </div>
 
-          {filtered.length > 0 ? (
+          {filtered === null ? (
+            // Waiting on the debounced semantic search — skeleton, not
+            // an empty state, so a real result never gets mistaken for
+            // "no members found" mid-search.
+            <div
+              className="mt-f13 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-f13"
+              aria-hidden="true"
+            >
+              {Array.from({ length: 8 }, (_, i) => (
+                <div
+                  key={i}
+                  className="h-40 rounded-[var(--radius-lg)] border border-border-secondary bg-bg-secondary animate-pulse"
+                />
+              ))}
+            </div>
+          ) : filtered.length > 0 ? (
             <div className="mt-f13 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-f13">
               {filtered.map((member) => (
                 <MemberCard key={member.chamberSlug} member={member} />

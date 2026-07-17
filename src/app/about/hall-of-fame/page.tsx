@@ -2,6 +2,19 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
+import { getAvatarColor } from "@/data/members";
+
+/**
+ * First + last name initial. Unlike the business-name getInitials (first two
+ * words), this skips middle names, quoted nicknames, and initials so
+ * "Norbert “Nobby” Lewandowski" reads as NL, not N + the opening quote mark.
+ */
+function personInitials(name: string): string {
+  const words = name.replace(/[“”"'‘’]/g, "").trim().split(/\s+/).filter(Boolean);
+  const first = words[0]?.[0] ?? "";
+  const last = words[words.length - 1]?.[0] ?? "";
+  return (first + last).toUpperCase();
+}
 
 export const metadata: Metadata = {
   title: "Hall of Fame",
@@ -15,7 +28,16 @@ export const metadata: Metadata = {
   alternates: { canonical: "/about/hall-of-fame" },
 };
 
-const inductees = [
+interface Inductee {
+  name: string;
+  /** Omitted for inductees without a photo yet — falls back to an initials avatar. */
+  photo?: string;
+  year?: number;
+  category?: "Posthumous Individual" | "Living Individual" | "Outstanding Organization";
+  bio?: string;
+}
+
+const inductees: Inductee[] = [
   { name: "Elbridge Moxley",        photo: "/images/people/hall-of-fame/elbridge-moxley-medina-chamber.jpg" },
   { name: "Elijah Boardman",        photo: "/images/people/hall-of-fame/elijah-boardman-medina-chamber.jpg" },
   { name: "Fred Greenwood",         photo: "/images/people/hall-of-fame/fred-greenwood-medina-chamber.jpg" },
@@ -55,7 +77,59 @@ const inductees = [
   { name: "Lloyd Vaughn",           photo: "/images/people/hall-of-fame/lloyd-vaughn-medina-chamber.jpg" },
   { name: "Gary Hallman",           photo: "/images/people/hall-of-fame/gary-hallman-medina-chamber.jpg" },
   { name: "Friends of the Cemetery", photo: "/images/people/hall-of-fame/friends-of-the-cemetery-medina-chamber.jpg" },
+
+  // Class of 2023
+  {
+    name: "Michael K. Baach",
+    year: 2023,
+    category: "Living Individual",
+    bio: "Former President and CEO of Philpott Solutions Group and Executive Vice President and co-founder of Corrpro Companies, which grew into a $200 million publicly traded corrosion-engineering leader. Past Chairman of the Greater Medina Chamber of Commerce Board, with service on the boards of Southwest General Health Center, Hospice of Medina County, and the National Association of Corrosion Engineers. Partnered with the University of Akron to launch the nation's first Corrosion Engineering undergraduate program.",
+  },
+  {
+    name: "James Cameron Gowe",
+    year: 2023,
+    category: "Posthumous Individual",
+    bio: "Led 620 Corporation and 620 Construction, building many of Medina's commercial and industrial properties, and partnered with his family to restore Medina's aging housing stock, including the King-Deibel family home on North Broadway. A steady supporter of the American Red Cross, Project LEARN, Feeding Medina County, and the Children's Center of Medina County.",
+  },
+  {
+    name: "Norbert “Nobby” Lewandowski",
+    year: 2023,
+    category: "Living Individual",
+    bio: "Kent State University's first baseball scholarship recipient and a former professional pitcher in the Pittsburgh Pirates organization, later a CPA and co-owner of Lewandowski & Company. Co-founded the Medina County Community Fund in 1994, which has awarded more than $700,000 in grants to local nonprofits, and now travels the country as a motivational speaker and business coach through “Nobby Speaks.”",
+  },
+  {
+    name: "Debra Lynn-Schmitz",
+    year: 2023,
+    category: "Living Individual",
+    bio: "Spent 26 years with the Greater Medina Chamber of Commerce — 7 as Events & Communications Manager and 19 as Executive Director — guiding the chamber to national accreditation through the U.S. Chamber of Commerce. Chaired the Chamber of Commerce Executives of Ohio board and helped found Main Street Medina and bring the Young Entrepreneurs Academy to Medina.",
+  },
+  {
+    name: "Jeffrey J. Palker",
+    year: 2023,
+    category: "Living Individual",
+    bio: "A career banker at Old Phoenix Bank who rose from teller to senior loan officer, and a past Chairman of the Greater Medina Chamber of Commerce Board. Founding Treasurer of the Hospice of Medina County board and the Medina County Performing Arts Foundation, and helped bring the Ohio Ballet, Cleveland Jazz Orchestra, and U.S. Air Force Band of Flight to Medina's public square.",
+  },
+  {
+    name: "Robert A. Rapp",
+    year: 2023,
+    category: "Living Individual",
+    bio: "Owner of Homestead Insurance Agency and a Vietnam veteran, following three generations of family Hall of Fame inductees. Served as Board President of both the Medina Area and Brunswick Area Chambers of Commerce, chaired the Medina County Community Fund board, and is a graduate of Leadership Medina County's charter class.",
+  },
+  {
+    name: "Becky L. Shotwell",
+    year: 2023,
+    category: "Living Individual",
+    bio: "President and owner of Stop 'n Go of Medina Inc., growing the company to ten locations, and a past Board President of the Ohio Association of Convenience Stores. Medina Rotary Club's first female member and founding president of the Medina Sunrise Rotary, with sixteen years on the Medina General Hospital Board of Trustees.",
+  },
+  {
+    name: "Medina County Historical Society",
+    year: 2023,
+    category: "Outstanding Organization",
+    bio: "For more than 100 years, has preserved Medina County's documents, artifacts, oral histories, and photographs. Restored and operates two public museums — the 1886 John Smart House and the 1890 McDowell-Phillips House — both honored with local and State of Ohio awards.",
+  },
 ];
+
+const class2023 = inductees.filter((i) => i.year === 2023);
 
 const categories = [
   {
@@ -155,6 +229,51 @@ export default function HallOfFamePage() {
         </FadeIn>
       </section>
 
+      {/* Class of 2023 spotlight */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+        <FadeIn>
+          <p className="text-overline text-cambridge mb-f8">Newest Class</p>
+          <h2 className="text-h2 mb-f21">2023 Inductees</h2>
+          <div className="grid md:grid-cols-2 gap-f21">
+            {class2023.map((inductee) => {
+              const initials = personInitials(inductee.name);
+              const avatarColor = getAvatarColor(inductee.name);
+              return (
+                <div
+                  key={inductee.name}
+                  className="flex gap-f21 p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
+                >
+                  <div className={`relative w-20 h-20 shrink-0 rounded-full overflow-hidden flex items-center justify-center ${avatarColor.bg}`}>
+                    {inductee.photo ? (
+                      <Image
+                        src={inductee.photo}
+                        alt={`${inductee.name}, Greater Medina Chamber of Commerce Hall of Fame inductee`}
+                        fill
+                        className="object-cover object-top"
+                        sizes="80px"
+                      />
+                    ) : (
+                      <span className={`text-h4 font-bold select-none ${avatarColor.text}`}>
+                        {initials}
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-caption text-cambridge font-bold uppercase tracking-wider">
+                      {inductee.category}
+                    </p>
+                    <h3 className="text-h4 mt-f3">{inductee.name}</h3>
+                    <p className="text-body-sm text-text-secondary mt-f8 leading-relaxed">
+                      {inductee.bio}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </FadeIn>
+      </section>
+
       {/* Inductees grid */}
       <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -163,16 +282,27 @@ export default function HallOfFamePage() {
               Inductees, {inductees.length} Honorees
             </h2>
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-f13 lg:gap-f21">
-              {inductees.map((inductee) => (
+              {inductees.map((inductee) => {
+                const initials = personInitials(inductee.name);
+                const avatarColor = getAvatarColor(inductee.name);
+                return (
                 <figure key={inductee.name} className="flex flex-col items-center gap-f8 m-0">
                   <div className="relative w-full aspect-square overflow-hidden rounded-[var(--radius-lg)] bg-bg-primary border border-border-secondary">
-                    <Image
-                      src={inductee.photo}
-                      alt={`${inductee.name}, Greater Medina Chamber of Commerce Hall of Fame inductee`}
-                      fill
-                      className="object-cover object-top"
-                      sizes="(max-width: 640px) 33vw, (max-width: 768px) 25vw, (max-width: 1024px) 20vw, 16vw"
-                    />
+                    {inductee.photo ? (
+                      <Image
+                        src={inductee.photo}
+                        alt={`${inductee.name}, Greater Medina Chamber of Commerce Hall of Fame inductee`}
+                        fill
+                        className="object-cover object-top"
+                        sizes="(max-width: 640px) 33vw, (max-width: 768px) 25vw, (max-width: 1024px) 20vw, 16vw"
+                      />
+                    ) : (
+                      <div className={`absolute inset-0 flex items-center justify-center ${avatarColor.bg}`}>
+                        <span className={`text-h3 font-bold select-none ${avatarColor.text}`}>
+                          {initials}
+                        </span>
+                      </div>
+                    )}
                   </div>
                   <p className="text-caption font-bold text-text-primary text-center leading-snug">
                     {inductee.name}
@@ -181,7 +311,8 @@ export default function HallOfFamePage() {
                     {inductee.name}, Greater Medina Chamber of Commerce Hall of Fame inductee, Medina County, Ohio business leader
                   </figcaption>
                 </figure>
-              ))}
+                );
+              })}
             </div>
           </FadeIn>
         </div>

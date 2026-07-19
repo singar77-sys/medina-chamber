@@ -5,8 +5,9 @@ import dynamic from "next/dynamic";
 
 /**
  * DeferredGlobals — mounts the site's non-critical, always-present client
- * widgets (chat, command palette, keyword hotkey, birthday confetti) AFTER
- * first paint so their JavaScript stays out of the initial bundle path.
+ * widgets (chat, command palette, keyword hotkey, birthday confetti,
+ * weather ambience) AFTER first paint so their JavaScript stays out of
+ * the initial bundle path.
  *
  * Why a wrapper: the root layout is a Server Component, and `next/dynamic`
  * with `ssr: false` is only allowed inside a Client Component. Consolidating
@@ -39,6 +40,10 @@ const KeywordHotkey = dynamic(
 );
 const BirthdayConfetti = dynamic(
   () => import("@/components/BirthdayConfetti").then((m) => m.BirthdayConfetti),
+  { ssr: false },
+);
+const MedinaAmbience = dynamic(
+  () => import("@/components/weather/MedinaAmbience").then((m) => m.MedinaAmbience),
   { ssr: false },
 );
 
@@ -99,6 +104,7 @@ export function DeferredGlobals() {
       <CommandPalette />
       <KeywordHotkey />
       <BirthdayConfetti />
+      <MedinaAmbience />
     </>
   );
 }

@@ -16,7 +16,9 @@
  */
 
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { requireAdminSession } from "@/lib/admin-auth";
+import { CMS_BLOG_TAG } from "@/lib/cms-blog";
 import {
   getCmsBlogPost,
   saveCmsBlogPost,
@@ -104,6 +106,7 @@ export async function POST(req: Request): Promise<Response> {
   };
 
   await saveCmsBlogPost(post);
+  revalidateTag(CMS_BLOG_TAG, "max");
   return NextResponse.json({ post }, { status: 201 });
 }
 
@@ -138,6 +141,7 @@ export async function PUT(req: Request): Promise<Response> {
   };
 
   await saveCmsBlogPost(post);
+  revalidateTag(CMS_BLOG_TAG, "max");
   return NextResponse.json({ post });
 }
 
@@ -153,5 +157,6 @@ export async function DELETE(req: Request): Promise<Response> {
   if (!existing) return NextResponse.json({ error: "Post not found." }, { status: 404 });
 
   await deleteCmsBlogPost(slug);
+  revalidateTag(CMS_BLOG_TAG, "max");
   return NextResponse.json({ ok: true });
 }

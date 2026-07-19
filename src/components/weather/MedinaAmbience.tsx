@@ -16,6 +16,10 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
  * Session-storage guard: the effect fires ONCE per session — no
  * repeat on route changes or returning-to-tab. Respects
  * prefers-reduced-motion (renders nothing for those users).
+ *
+ * Must never touch data-theme: a post-hydration theme flip swaps the
+ * theme-paired hero images and makes the landing hero blink (the bug
+ * that got this component unmounted in ab0b9fb).
  */
 
 type Condition = "clear" | "cloudy" | "fog" | "rain" | "snow" | "thunder";
@@ -90,27 +94,6 @@ export function MedinaAmbience() {
         const data: MedinaWeather = hasOverride
           ? { ...raw, condition: override as Condition }
           : raw;
-
-        // AUTO-THEME: if the visitor hasn't explicitly picked a theme,
-        // match Medina's current day/night state. The ThemeProvider
-        // respects their stored choice — we only overwrite when none
-        // exists. We don't write to localStorage (stays "unchosen").
-        try {
-          const stored = localStorage.getItem("mc-theme");
-          if (!stored) {
-            const target = data.isDay ? "light" : "dark";
-            const current = document.documentElement.getAttribute("data-theme");
-            if (current !== target) {
-              document.documentElement.setAttribute("data-theme-transitioning", "");
-              document.documentElement.setAttribute("data-theme", target);
-              requestAnimationFrame(() =>
-                document.documentElement.removeAttribute("data-theme-transitioning"),
-              );
-            }
-          }
-        } catch {
-          /* localStorage can throw in embedded contexts — ignore */
-        }
 
         // Mark session as handled regardless of whether there's an
         // effect to play.

@@ -2,8 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getRecentArticles, formatArticleDate } from "@/data/member-news";
-import { getRecentBlogPosts, formatBlogDate } from "@/data/blog";
+import { formatBlogDate } from "@/data/blog";
+import { getAllBlogPosts } from "@/lib/cms-blog";
 import { FadeIn } from "@/components/FadeIn";
+
+// ISR so admin-authored CMS blog posts appear without a redeploy.
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Medina County Business News",
@@ -19,7 +23,7 @@ export const metadata: Metadata = {
 
 const channels = [
   {
-    label: "Business Blog",
+    label: "Blog",
     href: "/news/blog",
     title: "Business Blog",
     description: "Weekly tips and strategy for small business owners in Medina County.",
@@ -44,8 +48,8 @@ const channels = [
   },
 ];
 
-export default function NewsPage() {
-  const recentBlogPosts = getRecentBlogPosts(3);
+export default async function NewsPage() {
+  const recentBlogPosts = (await getAllBlogPosts()).slice(0, 3);
   const recentMemberNews = getRecentArticles(3);
 
   return (

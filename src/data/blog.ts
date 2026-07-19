@@ -22,10 +22,6 @@ export function getBlogPostBySlug(slug: string): BlogPost | undefined {
   return blogPosts.find((p) => p.slug === slug);
 }
 
-export function getRecentBlogPosts(count = 6): BlogPost[] {
-  return blogPosts.slice(0, count);
-}
-
 /** "April 6, 2026" */
 export function formatBlogDate(post: BlogPost): string {
   if (!post.dateISO) return post.dateRaw;

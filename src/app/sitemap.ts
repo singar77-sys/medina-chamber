@@ -3,10 +3,14 @@ import { members } from "@/data/members";
 import { activeCommunities } from "@/data/communities";
 import { jobs } from "@/data/jobs";
 import { events } from "@/data/events";
-import { blogPosts } from "@/data/blog";
+import { getAllBlogPosts } from "@/lib/cms-blog";
 import { memberNewsArticles } from "@/data/member-news";
 
 const BASE_URL = "https://medinachamber.com";
+
+// Regenerate hourly — the CMS blog lookup shouldn't make every crawler
+// request hit Redis.
+export const revalidate = 3600;
 
 /**
  * Parse a record's publish date (YYYY-MM-DD, may carry a time suffix) into a
@@ -20,7 +24,7 @@ function parseRecordDate(dateISO: string | undefined): Date | undefined {
   return Number.isNaN(d.getTime()) ? undefined : d;
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static marketing/legal pages. No per-record modification signal exists,
   // so `lastModified` is intentionally omitted rather than faked with the
   // build time — priority + changeFrequency still guide crawl scheduling.
@@ -40,6 +44,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/programs/social-connect`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/programs/safety-council`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/programs/rental-space`, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${BASE_URL}/programs/italy-trip`, changeFrequency: "monthly", priority: 0.7 },
     // Membership
     { url: `${BASE_URL}/membership/benefits`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/membership/pricing`, changeFrequency: "monthly", priority: 0.7 },
@@ -71,6 +76,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/resources/start-a-business`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE_URL}/resources/business-grants`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE_URL}/resources/workforce`, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE_URL}/resources/library`, changeFrequency: "weekly", priority: 0.6 },
     // ChamberBot — dedicated immersive AI experience
     { url: `${BASE_URL}/chamberbot`, changeFrequency: "monthly", priority: 0.7 },
     // Policy / legal
@@ -102,7 +108,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  const blogPages: MetadataRoute.Sitemap = blogPosts.map((p) => ({
+  // CMS-authored posts merged with the scraped archive (CMS wins on slug).
+  const blogPages: MetadataRoute.Sitemap = (await getAllBlogPosts()).map((p) => ({
     url: `${BASE_URL}/news/blog/${p.slug}`,
     lastModified: parseRecordDate(p.dateISO),
     changeFrequency: "monthly",

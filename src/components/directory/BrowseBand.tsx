@@ -73,7 +73,6 @@ export function BrowseBand({
             industries={visibleIndustries}
             active={active}
             onSelect={onSelect}
-            variant="refine"
             appearance={theme === "dark" ? "dark" : "light"}
             expanded={expanded}
             layoutMode="grid"

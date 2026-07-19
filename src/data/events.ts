@@ -79,8 +79,12 @@ export function shortenEventTitle(title: string): string {
 
 /** Meta description for an event page */
 export function eventMetaDescription(event: ChamberEvent): string {
-  const date = `${event.dayOfWeek}, ${event.month} ${event.day}, ${event.year}`;
-  const time = `${event.startTime}–${event.endTime}`;
+  const date = event.dateISO
+    ? `${event.dayOfWeek}, ${event.month} ${event.day}, ${event.year}`
+    : event.dateString;
+  const when = event.startTime
+    ? `${date} from ${event.startTime}–${event.endTime}`
+    : date;
   const loc = event.city ? `in ${event.city}, OH` : "at the Chamber office";
-  return `${event.title}, ${date} from ${time} ${loc}. Hosted by the Greater Medina Chamber of Commerce.`;
+  return `${event.title}, ${when} ${loc}. Hosted by the Greater Medina Chamber of Commerce.`;
 }

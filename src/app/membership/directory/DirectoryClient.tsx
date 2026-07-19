@@ -239,7 +239,6 @@ function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
             industries={refineIndustries}
             active={activeCategory}
             onSelect={selectCategory}
-            variant="refine"
           />
 
           {/* Active filters — every applied filter is visible and

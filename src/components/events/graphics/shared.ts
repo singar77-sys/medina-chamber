@@ -12,10 +12,8 @@ import type { CSSProperties } from "react";
 
 export type GraphicMode = "social" | "square" | "story";
 
-export const GRAPHIC_MODES = ["social", "square", "story"] as const;
-
 /** Canvas dimensions per mode — the "design-intent" pixels each graphic
- *  renders into. Display-time scaling is handled by <GraphicFrame/>. */
+ *  renders into. Display-time scaling is handled by <FluidGraphicFrame/>. */
 export const GRAPHIC_DIMS: Record<GraphicMode, { w: number; h: number }> = {
   social: { w: 1200, h: 630 },
   square: { w: 1080, h: 1080 },

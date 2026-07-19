@@ -6,7 +6,7 @@ import { activeCommunities } from "@/data/communities";
 export const metadata: Metadata = {
   title: "Medina County Business Communities",
   description:
-    "Explore business resources and Chamber member businesses in Medina, Brunswick, Wadsworth, Lodi, Seville, Valley City, Hinckley, Rittman, and Lafayette Township. The Greater Medina Chamber serves all of Medina County.",
+    "Explore business resources and Chamber member businesses in Medina, Brunswick, Wadsworth, and communities across Medina County. The Greater Medina Chamber serves all of Medina County.",
   openGraph: {
     title: "Medina County Business Communities, Greater Medina Chamber",
     description:

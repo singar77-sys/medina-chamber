@@ -38,6 +38,15 @@ function formatCents(cents: number): string {
   });
 }
 
+function formatDollars(cents: number): string {
+  return (cents / 100).toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
 function formatDate(iso: string | null | undefined): string {
   if (!iso) return "—";
   const [year, month, day] = iso.split("-").map(Number);
@@ -100,7 +109,6 @@ export default async function PortalDashboardPage() {
         email: contacts.email,
         title: contacts.title,
         isPrimaryContact: contacts.isPrimaryContact,
-        portalClaimedAt: contacts.portalClaimedAt,
       })
       .from(contacts)
       .where(eq(contacts.id, session.contactId))
@@ -109,16 +117,8 @@ export default async function PortalDashboardPage() {
     db
       .select({
         name: organizations.name,
-        logoUrl: organizations.logoUrl,
         phone: organizations.phone,
-        email: organizations.email,
         websiteUrl: organizations.websiteUrl,
-        address1: organizations.address1,
-        city: organizations.city,
-        state: organizations.state,
-        zip: organizations.zip,
-        membershipTier: organizations.membershipTier,
-        status: organizations.status,
       })
       .from(organizations)
       .where(eq(organizations.id, session.organizationId))
@@ -127,7 +127,6 @@ export default async function PortalDashboardPage() {
     db
       .select({
         status: memberships.status,
-        billingCycle: memberships.billingCycle,
         startDate: memberships.startDate,
         renewalDate: memberships.renewalDate,
         tierName: membershipTiers.name,
@@ -144,11 +143,9 @@ export default async function PortalDashboardPage() {
       .select({
         id: invoices.id,
         amountCents: invoices.amountCents,
-        amountPaidCents: invoices.amountPaidCents,
         status: invoices.status,
         description: invoices.description,
         dueDate: invoices.dueDate,
-        paidAt: invoices.paidAt,
         createdAt: invoices.createdAt,
       })
       .from(invoices)
@@ -423,7 +420,7 @@ export default async function PortalDashboardPage() {
                         {badge.label}
                       </span>
                       <span className="text-sm font-bold text-text-primary tabular-nums">
-                        {formatCents(inv.amountCents)}
+                        {formatDollars(inv.amountCents)}
                       </span>
                     </div>
                   </div>
@@ -441,7 +438,7 @@ export default async function PortalDashboardPage() {
           >
             <span className="text-xl">🗂️</span>
             <div>
-              <p className="text-sm font-bold text-text-primary hover:text-text-secondary">
+              <p className="text-sm font-bold text-text-primary group-hover:text-cambridge transition-colors">
                 Member Directory
               </p>
               <p className="text-xs text-text-tertiary">Browse all members</p>
@@ -454,7 +451,7 @@ export default async function PortalDashboardPage() {
           >
             <span className="text-xl">📅</span>
             <div>
-              <p className="text-sm font-bold text-text-primary hover:text-text-secondary">
+              <p className="text-sm font-bold text-text-primary group-hover:text-cambridge transition-colors">
                 Events
               </p>
               <p className="text-xs text-text-tertiary">Upcoming chamber events</p>
@@ -467,7 +464,7 @@ export default async function PortalDashboardPage() {
           >
             <span className="text-xl">❖</span>
             <div>
-              <p className="text-sm font-bold text-text-primary hover:text-text-secondary">
+              <p className="text-sm font-bold text-text-primary group-hover:text-cambridge transition-colors">
                 Committees
               </p>
               <p className="text-xs text-text-tertiary">Join a committee</p>
@@ -480,7 +477,7 @@ export default async function PortalDashboardPage() {
           >
             <span className="text-xl">✦</span>
             <div>
-              <p className="text-sm font-bold text-text-primary hover:text-text-secondary">
+              <p className="text-sm font-bold text-text-primary group-hover:text-cambridge transition-colors">
                 My Deals
               </p>
               <p className="text-xs text-text-tertiary">Post a member deal</p>
@@ -493,7 +490,7 @@ export default async function PortalDashboardPage() {
           >
             <span className="text-xl">📚</span>
             <div>
-              <p className="text-sm font-bold text-text-primary hover:text-text-secondary">
+              <p className="text-sm font-bold text-text-primary group-hover:text-cambridge transition-colors">
                 Resources
               </p>
               <p className="text-xs text-text-tertiary">Member resource library</p>
@@ -506,7 +503,7 @@ export default async function PortalDashboardPage() {
           >
             <span className="text-xl">📊</span>
             <div>
-              <p className="text-sm font-bold text-text-primary hover:text-text-secondary">
+              <p className="text-sm font-bold text-text-primary group-hover:text-cambridge transition-colors">
                 Your ROI
               </p>
               <p className="text-xs text-text-tertiary">Engagement summary</p>
@@ -519,7 +516,7 @@ export default async function PortalDashboardPage() {
           >
             <span className="text-xl">✉️</span>
             <div>
-              <p className="text-sm font-bold text-text-primary hover:text-text-secondary">
+              <p className="text-sm font-bold text-text-primary group-hover:text-cambridge transition-colors">
                 Contact Us
               </p>
               <p className="text-xs text-text-tertiary">office@medinaohchamber.com</p>

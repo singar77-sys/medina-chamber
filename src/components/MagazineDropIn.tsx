@@ -33,7 +33,7 @@ export function MagazineDropIn() {
      */
     <div
       className="fixed right-6 z-40 w-64"
-      style={{ top: "6rem", perspective: "900px" }}
+      style={{ top: "6rem", perspective: "900px", visibility: visible ? "visible" : "hidden" }}
       role="complementary"
       aria-label="Magazine announcement"
     >

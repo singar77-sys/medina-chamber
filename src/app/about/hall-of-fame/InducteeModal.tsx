@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { InducteeAvatar } from "./InducteeAvatar";
 import { type Inductee } from "./shared";
 
@@ -10,6 +11,26 @@ export function InducteeModal({
   inductee: Inductee;
   onClose: () => void;
 }) {
+  // Accessible focus management (EventGallery convention): focus the panel on
+  // open so keyboard users land inside the dialog, close on Escape from
+  // anywhere (document-level listener, like CommandPalette), and restore
+  // focus to the triggering element on close.
+  const panelRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const trigger = document.activeElement as HTMLElement | null;
+    requestAnimationFrame(() => panelRef.current?.focus());
+
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      trigger?.focus();
+    };
+  }, [onClose]);
+
   return (
     <>
       {/* Backdrop */}
@@ -20,6 +41,11 @@ export function InducteeModal({
 
       {/* Slide-in panel */}
       <div
+        ref={panelRef}
+        tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="inductee-modal-title"
         className="fixed right-0 top-0 bottom-0 z-50 w-full max-w-sm bg-bg-primary border-l border-border-secondary shadow-2xl flex flex-col overflow-hidden"
         style={{ paddingTop: "env(safe-area-inset-top)" }}
       >
@@ -31,10 +57,10 @@ export function InducteeModal({
             imgSizes="56px"
           />
           <div className="flex-1 min-w-0">
-            <h2 className="text-h4 leading-tight">{inductee.name}</h2>
+            <h2 id="inductee-modal-title" className="text-h4 leading-tight">{inductee.name}</h2>
             {inductee.category && (
               <p className="text-caption text-cambridge font-bold uppercase tracking-wider mt-f3">
-                {inductee.category}
+                {inductee.category}{inductee.year ? ` · Class of ${inductee.year}` : ""}
               </p>
             )}
           </div>

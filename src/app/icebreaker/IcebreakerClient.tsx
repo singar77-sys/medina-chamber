@@ -51,9 +51,11 @@ export function IcebreakerClient({ questions }: { questions: string[] }) {
     setUsedIndices((prev) => {
       const next = new Set(prev);
       next.add(currentQ);
-      // If all used, reset
+      // If all used, reset (but keep the on-screen question excluded so
+      // "Next Question" can't immediately re-serve it)
       if (next.size >= questions.length) {
         next.clear();
+        if (questions.length > 1) next.add(currentQ);
       }
       // Pick a random unused index
       const available = questions
@@ -179,8 +181,8 @@ export function IcebreakerClient({ questions }: { questions: string[] }) {
                 bg-accent hover:bg-accent-hover
                 text-white font-bold text-body
                 rounded-[var(--radius-md)]
-                transition-colors cursor-pointer
-                active:scale-95 transition-transform
+                transition cursor-pointer
+                active:scale-95
               "
             >
               Next Question →

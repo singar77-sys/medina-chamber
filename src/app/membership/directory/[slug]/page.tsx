@@ -29,7 +29,7 @@ export async function generateMetadata(
   const member = found?.member ?? getMemberBySlug(slug);
   if (!member) return { title: "Member Not Found" };
 
-  const city = extractCity(member.address) || "Medina";
+  const city = member.city || extractCity(member.address) || "Medina";
   const descBase = member.description
     ? member.description.substring(0, 140)
     : `${member.name} is a member of the Greater Medina Chamber of Commerce located in ${city}, Ohio.`;
@@ -67,8 +67,13 @@ export default async function MemberPage(
   const member = found?.member ?? getMemberBySlug(slug);
   if (!member) notFound();
 
-  const city = extractCity(member.address);
+  const city = member.city || extractCity(member.address);
   const initials = getInitials(member.name);
+  // Static-fallback members aren't in the DB, so /go/org would 302 back to
+  // the directory — link their raw external URL instead, validated the same
+  // way the route validates its destination (http(s) only).
+  const externalSite = /^https?:\/\//i.test(member.website) ? member.website : null;
+  const websiteHref = found ? `/go/org/${member.chamberSlug}` : externalSite;
   const logoAbsoluteUrl = member.logoUrl
     ? member.logoUrl.startsWith("http")
       ? member.logoUrl
@@ -85,7 +90,7 @@ export default async function MemberPage(
     address: member.address
       ? {
           "@type": "PostalAddress",
-          streetAddress: member.address.split(",")[0]?.trim(),
+          streetAddress: member.address1 ?? (member.city ? undefined : member.address.split(",")[0]?.trim()),
           addressLocality: city,
           addressRegion: "OH",
           addressCountry: "US",
@@ -100,7 +105,7 @@ export default async function MemberPage(
     },
   };
 
-  const hasSocial = Object.keys(member.social).length > 0;
+  const hasSocial = [member.social.facebook, member.social.linkedin, member.social.instagram, member.social.twitter, member.social.youtube].some(Boolean);
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -127,7 +132,7 @@ export default async function MemberPage(
       <div className="mx-auto max-w-5xl px-6 lg:px-8 py-12 lg:py-20">
 
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-caption text-text-tertiary mb-10">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-caption text-text-tertiary mb-10">
           <Link href="/membership/directory" className="hover:text-text-primary transition-colors">
             Member Directory
           </Link>
@@ -219,9 +224,9 @@ export default async function MemberPage(
                 </a>
               )}
 
-              {member.website && (
+              {websiteHref && (
                 <a
-                  href={`/go/org/${member.chamberSlug}`}
+                  href={websiteHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2.5 text-body-sm text-text-secondary hover:text-accent transition-colors group"
@@ -236,9 +241,9 @@ export default async function MemberPage(
 
             {/* CTA buttons */}
             <div className="mt-6 flex flex-wrap gap-3">
-              {member.website && (
+              {websiteHref && (
                 <a
-                  href={`/go/org/${member.chamberSlug}`}
+                  href={websiteHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="

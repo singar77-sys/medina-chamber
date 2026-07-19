@@ -7,7 +7,7 @@ interface MemberCardProps {
 }
 
 export function MemberCard({ member }: MemberCardProps) {
-  const city = extractCity(member.address);
+  const city = member.city || extractCity(member.address);
   const avatarInitial = getAvatarInitial(member.name);
   const avatarColor = getAvatarColor(member.name);
   const primaryCategory = member.categories[0] ?? "";

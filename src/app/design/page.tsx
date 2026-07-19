@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { IceCube } from "@/components/IceCube";
-import { Button, ButtonLink } from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 
 /* ─── Swatch Component ─────────────────────────────────── */
 
@@ -267,7 +267,7 @@ export default function FoundationPage() {
                 },
                 {
                   title: "Athena Awards",
-                  desc: "Honoring women who demonstrate excellence in leadership and community service.",
+                  desc: "Honoring leaders who demonstrate professional excellence and actively help women reach their full leadership potential.",
                   tag: "Awards",
                 },
               ].map((card) => (

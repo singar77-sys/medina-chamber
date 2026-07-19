@@ -18,6 +18,16 @@ function slugify(s: string) {
     .slice(0, 80);
 }
 
+const Field = ({
+  label, error, children,
+}: { label: string; error?: string; children: React.ReactNode }) => (
+  <div>
+    <label className="block text-sm font-medium text-text-primary mb-1">{label}</label>
+    {children}
+    {error && <p className="text-xs text-red-600 mt-1">{error}</p>}
+  </div>
+);
+
 export function BlogEditor({ post, mode }: Props) {
   const router = useRouter();
   const [title, setTitle] = useState(post?.title ?? "");
@@ -106,16 +116,6 @@ export function BlogEditor({ post, mode }: Props) {
       setDeleting(false);
     }
   }
-
-  const Field = ({
-    label, error, children,
-  }: { label: string; error?: string; children: React.ReactNode }) => (
-    <div>
-      <label className="block text-sm font-medium text-text-primary mb-1">{label}</label>
-      {children}
-      {error && <p className="text-xs text-red-600 mt-1">{error}</p>}
-    </div>
-  );
 
   const inputCls = "w-full text-sm px-3 py-2 border border-border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-cambridge/40";
 

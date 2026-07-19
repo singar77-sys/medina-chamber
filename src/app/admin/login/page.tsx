@@ -63,10 +63,11 @@ export default function AdminLoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-f13">
             <div>
-              <label className="block text-body-sm font-bold text-text-primary mb-f5">
+              <label htmlFor="admin-password" className="block text-body-sm font-bold text-text-primary mb-f5">
                 Password
               </label>
               <input
+                id="admin-password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

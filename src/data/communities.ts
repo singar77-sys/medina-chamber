@@ -184,9 +184,10 @@ export const communities = allCommunities;
  * renders as a clean prospect page: hero, stats (showing 0 members),
  * "Why {city} businesses join," and the apply CTA.
  *
- * The map on /about/contact links to /community/rittman, and the
- * homepage event/community surfaces still use `activeCommunities` so
- * they don't advertise empty cities as if they were populated.
+ * If map-node navigation is re-enabled on /about/contact, nodes would
+ * link to /community/{slug} (clicks are intentionally off for now), and
+ * the homepage event/community surfaces still use `activeCommunities`
+ * so they don't advertise empty cities as if they were populated.
  */
 export function getCommunityBySlug(slug: string): Community | undefined {
   return allCommunities.find((c) => c.slug === slug);

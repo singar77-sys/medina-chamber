@@ -141,7 +141,7 @@ export default function AmbassadorsPage() {
                       alt={`${a.name}, ${a.title} at ${a.company}`}
                       fill
                       className="object-cover object-[center_25%] motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:group-hover:scale-[1.03]"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 214px"
                     />
                   </div>
                   <div className="p-f13">

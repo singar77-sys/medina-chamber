@@ -47,7 +47,7 @@ export function NamingModal({ files, defaultDescription = "", onConfirm, onCance
 
   const altPreview = hasDescription
     ? `Greater Medina Chamber of Commerce ${toTitleCase(description)} ${year}`
-    : ", ";
+    : "—";
 
   // Object URLs for thumbnail previews (revoke on unmount)
   const [previews] = useState<string[]>(() =>

@@ -94,9 +94,7 @@ export default function PortalLoginPage({
               {/* Link error from magic link verification failure */}
               {linkError && (
                 <p className="text-body-sm text-red-600 bg-red-50 px-f13 py-f8 rounded-[var(--radius-sm)] border border-red-200 mb-f13">
-                  {linkError === "invalid_link"
-                    ? "That link has expired or is invalid. Please request a new one."
-                    : "We couldn't find your account. Contact the chamber if you need help."}
+                  That link has expired or is invalid. Please request a new one.
                 </p>
               )}
 

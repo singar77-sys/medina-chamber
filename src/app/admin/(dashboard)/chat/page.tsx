@@ -76,8 +76,9 @@ export default async function ChatLogPage({
         className="flex flex-wrap items-end gap-3 mb-5 p-4 bg-white border border-gray-200 rounded-xl"
       >
         <div>
-          <label className="block text-xs text-gray-500 mb-1">From</label>
+          <label htmlFor="chat-from" className="block text-xs text-gray-500 mb-1">From</label>
           <input
+            id="chat-from"
             type="date"
             name="from"
             defaultValue={from}
@@ -85,8 +86,9 @@ export default async function ChatLogPage({
           />
         </div>
         <div>
-          <label className="block text-xs text-gray-500 mb-1">To</label>
+          <label htmlFor="chat-to" className="block text-xs text-gray-500 mb-1">To</label>
           <input
+            id="chat-to"
             type="date"
             name="to"
             defaultValue={to}
@@ -95,8 +97,9 @@ export default async function ChatLogPage({
         </div>
         {allTopics.length > 0 && (
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Topic</label>
+            <label htmlFor="chat-topic" className="block text-xs text-gray-500 mb-1">Topic</label>
             <select
+              id="chat-topic"
               name="topic"
               defaultValue={topicFilter}
               className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#83BCA9]"

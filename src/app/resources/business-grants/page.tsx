@@ -130,7 +130,7 @@ export default function BusinessGrantsPage() {
         subtitle="State, federal, and local programs that help Medina County businesses start, grow, and hire."
         image="/images/photos/medina-square-aerial-summer.jpg"
         breadcrumb={
-          <nav className="flex items-center gap-2 text-caption text-text-tertiary">
+          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-caption text-text-tertiary">
             <Link href="/resources" className="hover:text-text-primary transition-colors">
               Resources
             </Link>
@@ -242,7 +242,7 @@ export default function BusinessGrantsPage() {
                 key={s.name}
                 className="flex items-start gap-3 p-4 bg-bg-primary border border-border-secondary rounded-[var(--radius-md)]"
               >
-                <svg className="w-4 h-4 shrink-0 mt-0.5 text-cambridge" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <svg aria-hidden="true" className="w-4 h-4 shrink-0 mt-0.5 text-cambridge" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M20 6L9 17l-5-5" />
                 </svg>
                 <div>

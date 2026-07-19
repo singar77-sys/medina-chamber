@@ -214,10 +214,44 @@ for (let i = 0; i < eventStubs.length; i++) {
   if (i < eventStubs.length - 1) await sleep(DELAY_MS);
 }
 
-// Step 3: Sort by date ascending
+// Step 3: De-duplicate slugs. GrowthZone slugs are only unique when GrowthZone
+// itself embeds a month-year suffix (e.g. safety-council-meeting-july-2026);
+// recurring events like "raising-the-bar" reuse one bare slug across
+// occurrences, which would make every card link to the first occurrence.
+// Rewrite duplicates to the existing sibling convention, then assert uniqueness.
+const slugCounts = new Map();
+for (const event of events) {
+  slugCounts.set(event.slug, (slugCounts.get(event.slug) ?? 0) + 1);
+}
+const takenSlugs = new Set(events.map((e) => e.slug));
+for (const event of events) {
+  if (slugCounts.get(event.slug) > 1) {
+    const base = event.slug;
+    const suffix = event.month && event.year
+      ? `-${event.month.toLowerCase()}-${event.year}`
+      : '';
+    takenSlugs.delete(base); // every member of the group gets renamed
+    let renamed = suffix && !base.endsWith(suffix)
+      ? `${base}${suffix}`
+      : `${base}-${event.eventId}`; // fallback: no month/year, or slug already suffixed
+    if (takenSlugs.has(renamed)) renamed = `${base}-${event.eventId}`;
+    takenSlugs.add(renamed);
+    console.log(`  ↻  slug collision: ${base} → ${renamed}`);
+    event.slug = renamed;
+  }
+}
+const finalSlugs = new Set();
+for (const event of events) {
+  if (finalSlugs.has(event.slug)) {
+    throw new Error(`Duplicate event slug after de-duplication: "${event.slug}" — resolve manually before saving.`);
+  }
+  finalSlugs.add(event.slug);
+}
+
+// Step 4: Sort by date ascending
 events.sort((a, b) => a.dateISO.localeCompare(b.dateISO));
 
-// Step 4: Save
+// Step 5: Save
 const output = {
   generatedAt: new Date().toISOString(),
   totalEvents: events.length,

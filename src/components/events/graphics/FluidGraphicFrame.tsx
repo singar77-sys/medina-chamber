@@ -4,7 +4,7 @@ import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { GRAPHIC_DIMS, type GraphicMode } from "./shared";
 
 /**
- * Responsive sibling of GraphicFrame. Fills its container's width,
+ * Responsive graphic scaler. Fills its container's width,
  * maintains the graphic's design aspect ratio, and CSS-transform-scales
  * the fixed-px interior to match. Use this when the graphic needs to
  * live inside a responsive card / grid cell whose width isn't known at

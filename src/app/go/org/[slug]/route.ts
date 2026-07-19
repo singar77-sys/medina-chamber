@@ -29,17 +29,24 @@ export async function GET(
   const origin = new URL(req.url).origin;
   const back = NextResponse.redirect(`${origin}/membership/directory`, 302);
 
-  const [org] = await db
-    .select({ id: organizations.id, websiteUrl: organizations.websiteUrl })
-    .from(organizations)
-    .where(
-      and(
-        eq(organizations.slug, slug),
-        eq(organizations.status, "active"),
-        isNull(organizations.deletedAt),
-      ),
-    )
-    .limit(1);
+  let org: { id: string; websiteUrl: string | null } | undefined;
+  try {
+    [org] = await db
+      .select({ id: organizations.id, websiteUrl: organizations.websiteUrl })
+      .from(organizations)
+      .where(
+        and(
+          eq(organizations.slug, slug),
+          eq(organizations.status, "active"),
+          isNull(organizations.deletedAt),
+        ),
+      )
+      .limit(1);
+  } catch (err) {
+    // DB unreachable — degrade to the directory redirect instead of a 500.
+    console.error("[go/org] lookup failed:", err);
+    return back;
+  }
 
   const dest = org ? safeHttpUrl(org.websiteUrl) : null;
   if (!org || !dest) return back;

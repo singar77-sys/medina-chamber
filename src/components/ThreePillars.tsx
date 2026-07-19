@@ -127,6 +127,23 @@ function PillarGrid() {
     let raf = 0;
     let live = false;
 
+    const tick = () => {
+      cx += (tx - cx) * 0.08;
+      cy += (ty - cy) * 0.08;
+      grid.style.setProperty("--tp-sx", cx.toFixed(3));
+      grid.style.setProperty("--tp-sy", cy.toFixed(3));
+      // Settled — stop looping; ensureRunning restarts when targets change.
+      if (Math.abs(tx - cx) < 0.001 && Math.abs(ty - cy) < 0.001) {
+        raf = 0;
+        return;
+      }
+      raf = requestAnimationFrame(tick);
+    };
+
+    const ensureRunning = () => {
+      if (raf === 0) raf = requestAnimationFrame(tick);
+    };
+
     const onMove = (e: PointerEvent) => {
       const rect = grid.getBoundingClientRect();
       tx = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
@@ -135,20 +152,15 @@ function PillarGrid() {
         live = true;
         grid.classList.add("tp-grid--live");
       }
+      ensureRunning();
     };
     const onLeave = () => {
       live = false;
       tx = 0.5;
       ty = 0.5;
       grid.classList.remove("tp-grid--live");
-    };
-
-    const tick = () => {
-      cx += (tx - cx) * 0.08;
-      cy += (ty - cy) * 0.08;
-      grid.style.setProperty("--tp-sx", cx.toFixed(3));
-      grid.style.setProperty("--tp-sy", cy.toFixed(3));
-      raf = requestAnimationFrame(tick);
+      // Restart so the shared cursor props ease back to center.
+      ensureRunning();
     };
 
     grid.addEventListener("pointermove", onMove);
@@ -202,25 +214,6 @@ function PillarCard({ pillar }: { pillar: Pillar }) {
     let cly = 0.5;
     let raf = 0;
 
-    const onEnter = () => card.classList.add("tp-card--hover");
-    const onMove = (e: PointerEvent) => {
-      const rect = card.getBoundingClientRect();
-      const nx = (e.clientX - rect.left) / rect.width;
-      const ny = (e.clientY - rect.top) / rect.height;
-      // "Look at cursor" tilt: top forward when cursor at top, etc.
-      trx = (ny - 0.5) * 8; // negative when cursor near top
-      try_ = -(nx - 0.5) * 10; // negative when cursor near right
-      tlx = nx;
-      tly = ny;
-    };
-    const onLeave = () => {
-      card.classList.remove("tp-card--hover");
-      trx = 0;
-      try_ = 0;
-      tlx = 0.5;
-      tly = 0.5;
-    };
-
     const tick = () => {
       crx += (trx - crx) * 0.1;
       cry += (try_ - cry) * 0.1;
@@ -230,7 +223,46 @@ function PillarCard({ pillar }: { pillar: Pillar }) {
       card.style.setProperty("--tp-ry", cry.toFixed(2) + "deg");
       card.style.setProperty("--tp-lx", clx.toFixed(3));
       card.style.setProperty("--tp-ly", cly.toFixed(3));
+      // Settled — stop looping; ensureRunning restarts when targets change.
+      if (
+        Math.abs(trx - crx) < 0.01 &&
+        Math.abs(try_ - cry) < 0.01 &&
+        Math.abs(tlx - clx) < 0.001 &&
+        Math.abs(tly - cly) < 0.001
+      ) {
+        raf = 0;
+        return;
+      }
       raf = requestAnimationFrame(tick);
+    };
+
+    const ensureRunning = () => {
+      if (raf === 0) raf = requestAnimationFrame(tick);
+    };
+
+    const onEnter = () => {
+      card.classList.add("tp-card--hover");
+      ensureRunning();
+    };
+    const onMove = (e: PointerEvent) => {
+      const rect = card.getBoundingClientRect();
+      const nx = (e.clientX - rect.left) / rect.width;
+      const ny = (e.clientY - rect.top) / rect.height;
+      // "Look at cursor" tilt: top forward when cursor at top, etc.
+      trx = (ny - 0.5) * 8; // negative when cursor near top
+      try_ = -(nx - 0.5) * 10; // negative when cursor near right
+      tlx = nx;
+      tly = ny;
+      ensureRunning();
+    };
+    const onLeave = () => {
+      card.classList.remove("tp-card--hover");
+      trx = 0;
+      try_ = 0;
+      tlx = 0.5;
+      tly = 0.5;
+      // Restart so the tilt + spotlight ease back to rest.
+      ensureRunning();
     };
 
     card.addEventListener("pointerenter", onEnter);

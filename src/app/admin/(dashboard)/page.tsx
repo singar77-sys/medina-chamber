@@ -72,7 +72,7 @@ export default async function AdminDashboardPage() {
             <ul className="space-y-1.5">
               {topTopics.map(([topic, count]) => (
                 <li key={topic} className="flex items-center gap-2">
-                  <span className="text-caption text-text-tertiary w-28 capitalize">{topic.replace("-", " ")}</span>
+                  <span className="text-caption text-text-tertiary w-28 capitalize">{topic.replace(/-/g, " ")}</span>
                   <div className="flex-1 bg-bg-tertiary rounded-full h-2">
                     <div
                       className="h-2 rounded-full bg-cambridge"
@@ -91,10 +91,10 @@ export default async function AdminDashboardPage() {
       <Section title="Recent Blog Posts" href="/admin/blog">
         <div className="space-y-1">
           {cmsPosts.slice(0, 2).map((p) => (
-            <BlogRow key={p.slug} slug={p.slug} title={p.title} date={p.dateISO} badge="CMS" />
+            <BlogRow key={p.slug} title={p.title} date={p.dateISO} badge="CMS" />
           ))}
           {recentStaticPosts.map((p) => (
-            <BlogRow key={p.slug} slug={p.slug} title={p.title} date={p.dateISO} badge="Scraped" />
+            <BlogRow key={p.slug} title={p.title} date={p.dateISO} badge="Scraped" />
           ))}
         </div>
       </Section>
@@ -147,7 +147,7 @@ function Section({
   );
 }
 
-function BlogRow({ slug, title, date, badge }: { slug: string; title: string; date: string; badge: string }) {
+function BlogRow({ title, date, badge }: { title: string; date: string; badge: string }) {
   return (
     <div className="flex items-center gap-2 py-1.5 text-body-sm">
       <span

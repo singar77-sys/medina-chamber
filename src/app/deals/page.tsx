@@ -31,7 +31,7 @@ export default async function DealsPage() {
   }
 
   return (
-    <main>
+    <>
       <section className="relative overflow-hidden pt-f144 pb-f89 min-h-[42rem]">
         {/* Ghosted downtown Medina car-show / storefronts backdrop */}
         <div
@@ -109,6 +109,6 @@ export default async function DealsPage() {
           </div>
         )}
       </section>
-    </main>
+    </>
   );
 }

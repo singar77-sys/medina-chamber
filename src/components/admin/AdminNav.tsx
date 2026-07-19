@@ -88,11 +88,13 @@ export function AdminNav({ adminName }: { adminName?: string }) {
           </p>
         )}
         <a
-          href="/admin/notify"
+          href="/"
+          target="_blank"
+          rel="noopener noreferrer"
           className="flex items-center gap-2 px-3 py-2 rounded-md text-xs mb-1 transition-colors"
           style={{ color: "var(--color-text-tertiary)" }}
         >
-          <span style={{ color: "var(--color-cambridge)" }}>⟳</span>
+          <span style={{ color: "var(--color-cambridge)" }}>↗</span>
           View public site
         </a>
         <button

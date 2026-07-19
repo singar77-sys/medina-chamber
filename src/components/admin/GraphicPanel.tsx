@@ -115,12 +115,12 @@ export function GraphicPanel({
                     value={
                       currentInfo.dayOfWeek && currentInfo.month && currentInfo.day
                         ? `${currentInfo.dayOfWeek}, ${currentInfo.month} ${currentInfo.day}${currentInfo.year ? `, ${currentInfo.year}` : ""}`
-                        : ", "
+                        : "—"
                     }
                   />
-                  <InfoRow label="Time" value={currentInfo.time ?? ", "} />
-                  <InfoRow label="Venue" value={currentInfo.venue ?? ", "} />
-                  <InfoRow label="Note" value={currentInfo.note ?? ", "} />
+                  <InfoRow label="Time" value={currentInfo.time ?? "—"} />
+                  <InfoRow label="Venue" value={currentInfo.venue ?? "—"} />
+                  <InfoRow label="Note" value={currentInfo.note ?? "—"} />
                 </div>
               </div>
             </>

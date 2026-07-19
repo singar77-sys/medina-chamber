@@ -128,10 +128,6 @@ export async function getEventPhotosWithFallback(slug: string): Promise<MediaIte
   return getEventPhotos(typeSlug);
 }
 
-export async function deleteEventPhoto(slug: string, url: string): Promise<void> {
-  return deleteMediaItem(url, slug);
-}
-
 /**
  * Delete a media item from Blob storage and Redis.
  * Works for both event-tagged photos and global-feed-only items.

@@ -142,7 +142,7 @@ export default function StartABusinessPage() {
         subtitle="A practical step-by-step guide to launching a business in Medina County, Ohio, from choosing a structure to getting your first customer."
         image="/images/photos/downtown-medina.jpg"
         breadcrumb={
-          <nav className="flex items-center gap-2 text-caption text-text-tertiary">
+          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-caption text-text-tertiary">
             <Link href="/resources" className="hover:text-text-primary transition-colors">
               Resources
             </Link>

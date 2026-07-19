@@ -136,6 +136,7 @@ const nextConfig: NextConfig = {
       { source: "/hall-of-fame", destination: "/about/hall-of-fame", permanent: true },
       { source: "/chamber-ambassadors", destination: "/about/ambassadors", permanent: true },
       { source: "/medina-safety-council", destination: "/programs/safety-council", permanent: true },
+      { source: "/programs/safety-council/fy26", destination: "/programs/safety-council", permanent: true },
       { source: "/rental-space", destination: "/programs/rental-space", permanent: true },
       { source: "/athena-awards", destination: "/programs/athena-awards", permanent: true },
       { source: "/golfouting2026", destination: "/programs/golf-outing", permanent: true },

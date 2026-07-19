@@ -49,6 +49,23 @@ export function MouseGradient({
     let raf = 0;
     let isInside = false;
 
+    const animate = () => {
+      // Smooth easing toward target
+      currentX += (targetX - currentX) * 0.12;
+      currentY += (targetY - currentY) * 0.12;
+      glow.style.background = `radial-gradient(${radius}px circle at ${currentX.toFixed(1)}px ${currentY.toFixed(1)}px, ${color}, transparent)`;
+      // Settled — stop looping; onMove restarts when the target changes.
+      if (Math.abs(targetX - currentX) < 0.1 && Math.abs(targetY - currentY) < 0.1) {
+        raf = 0;
+        return;
+      }
+      raf = requestAnimationFrame(animate);
+    };
+
+    const ensureRunning = () => {
+      if (raf === 0) raf = requestAnimationFrame(animate);
+    };
+
     const onMove = (e: MouseEvent) => {
       const rect = container.getBoundingClientRect();
       targetX = e.clientX - rect.left;
@@ -59,19 +76,12 @@ export function MouseGradient({
         currentY = targetY;
         glow.style.opacity = "1";
       }
+      ensureRunning();
     };
 
     const onLeave = () => {
       isInside = false;
       glow.style.opacity = "0";
-    };
-
-    const animate = () => {
-      // Smooth easing toward target
-      currentX += (targetX - currentX) * 0.12;
-      currentY += (targetY - currentY) * 0.12;
-      glow.style.background = `radial-gradient(${radius}px circle at ${currentX.toFixed(1)}px ${currentY.toFixed(1)}px, ${color}, transparent)`;
-      raf = requestAnimationFrame(animate);
     };
 
     container.addEventListener("mousemove", onMove);

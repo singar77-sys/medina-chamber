@@ -17,10 +17,9 @@ export const revalidate = 86400;
 
 // ── Static generation ─────────────────────────────────────────────
 // Prerender every defined community, including ones with zero current
-// members. The Rittman node on the contact-page map links here, and
-// SEO-target cities (Rittman, Hinckley, Lafayette) need an indexable
-// landing page to compete for "{city} OH chamber" searches even
-// before the first member from that city joins.
+// members. SEO-target cities (Rittman, Hinckley, Lafayette) need an
+// indexable landing page to compete for "{city} OH chamber" searches
+// even before the first member from that city joins.
 export function generateStaticParams() {
   return communities.map((c) => ({ slug: c.slug }));
 }
@@ -65,7 +64,8 @@ export default async function CommunityPage(
     return a.name.localeCompare(b.name);
   });
 
-  const upcoming = getUpcomingEvents().slice(0, 4);
+  const allUpcoming = getUpcomingEvents();
+  const upcoming = allUpcoming.slice(0, 4);
 
   // Top categories in this city
   const categoryCounts: Record<string, number> = {};
@@ -102,7 +102,7 @@ export default async function CommunityPage(
         subtitle={community.description}
         image="/images/photos/downtown-medina-2.jpg"
         breadcrumb={
-          <nav className="flex items-center gap-2 text-caption text-text-tertiary">
+          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-caption text-text-tertiary">
             <Link href="/community" className="hover:text-text-primary transition-colors">
               Communities
             </Link>
@@ -116,10 +116,12 @@ export default async function CommunityPage(
 
         {/* Stats strip */}
         <section className="mt-12 grid grid-cols-2 gap-4">
-          <div className="p-5 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] text-center">
-            <p className="text-h2 text-cambridge">{upcoming.length}</p>
-            <p className="text-caption text-text-tertiary mt-1">Upcoming Events</p>
-          </div>
+          {allUpcoming.length > 0 && (
+            <div className="p-5 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] text-center">
+              <p className="text-h2 text-cambridge">{allUpcoming.length}</p>
+              <p className="text-caption text-text-tertiary mt-1">Upcoming Events</p>
+            </div>
+          )}
           <div className="p-5 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] text-center">
             <p className="text-h2 text-cambridge">1938</p>
             <p className="text-caption text-text-tertiary mt-1">Chamber Est.</p>
@@ -218,7 +220,7 @@ export default async function CommunityPage(
                   <div className="flex-1 min-w-0">
                     {isVisibilityPlus(m) && (
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 mb-1.5 bg-amber-50 border border-amber-200 rounded-full text-[10px] font-bold text-amber-700 uppercase tracking-wide">
-                        <svg className="w-2.5 h-2.5 text-amber-500" viewBox="0 0 16 16" fill="currentColor">
+                        <svg aria-hidden="true" className="w-2.5 h-2.5 text-amber-500" viewBox="0 0 16 16" fill="currentColor">
                           <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
                         </svg>
                         Visibility Plus

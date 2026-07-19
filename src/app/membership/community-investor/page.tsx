@@ -49,15 +49,6 @@ const ciExclusives = [
   },
 ];
 
-const alsoIncluded = [
-  "Everything in Business Essentials (14 benefits)",
-  "Everything in Visibility Plus (4 additional benefits)",
-  "E-Newsletter Ad Placement (4/year)",
-  "Free Certificate of Origin (Non-Freight Forwarders)",
-  "Enhanced Online Directory Listing",
-  "Custom Digital Membership Sticker Video",
-];
-
 const whoItsFor = [
   "CEOs and founders of mid-to-large Medina County employers",
   "Businesses whose success is tied to local policy — developers, manufacturers, financial services, healthcare",

@@ -240,7 +240,7 @@ const COMMANDS: Command[] = [
   },
   {
     id: "jobs",
-    label: "Jobs Board",
+    label: "Job Board",
     group: "News & About",
     href: "/jobs",
     keywords: ["hiring", "careers"],

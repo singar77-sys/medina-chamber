@@ -7,6 +7,10 @@
  * URL we redirect to. Preserves the anti-spam from the old apply form verbatim:
  * the off-screen honeypot (website_confirm) and the form-load timestamp
  * (formLoadedAt) the server checks against MIN_FILL_MS.
+ *
+ * DORMANT by design (go-live strategy, commit 0e19bca): the join CTA points
+ * to GrowthZone until the backend cutover. Intentionally unimported — do not
+ * remove in dead-code sweeps.
  */
 
 import { useState } from "react";

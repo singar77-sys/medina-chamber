@@ -10,6 +10,11 @@ export interface Member {
   gzSlug: string;
   gzUrl: string;
   address: string;
+  /** Structured city/street from the DB directory path (src/lib/directory.ts).
+   *  Absent for hand-maintained members.json records, which only carry the
+   *  joined `address` string. */
+  city?: string;
+  address1?: string;
   phone: string;
   website: string;
   logoUrl: string;

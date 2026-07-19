@@ -5,9 +5,6 @@
  * component. Returns a plain `{ mode }`-accepting component so callers
  * don't need to think about per-graphic props — event-info and topic
  * bindings are wrapped internally.
- *
- * The EVENT_GRAPHICS array drives the /events/graphics showcase page,
- * iterating through every event type the chamber publishes graphics for.
  */
 
 import type { ComponentType, FC } from "react";
@@ -25,13 +22,6 @@ import {
   SafetyCouncilGraphic,
   SocialConnectGraphic,
 } from "./EventGraphics";
-
-export interface EventGraphicEntry {
-  key: string;
-  title: string;
-  palette: "dark" | "light";
-  Component: ComponentType<{ mode?: GraphicMode }>;
-}
 
 /**
  * Minimal event shape the router needs. Pages pass their full event
@@ -173,18 +163,3 @@ export function getEventGraphicRenderer(
   }
   return null;
 }
-
-/** Ordered registry — drives the /events/graphics showcase page. */
-export const EVENT_GRAPHICS: EventGraphicEntry[] = [
-  { key: "networking-wow",  title: "Networking WOW",         palette: "dark",  Component: NetworkingWowGraphic },
-  { key: "safety-council",  title: "Safety Council",         palette: "dark",  Component: SafetyCouncilGraphic },
-  { key: "chamber-chat",    title: "Chamber Chat",           palette: "dark",  Component: ChamberChatGraphic },
-  { key: "member-meeting",  title: "Member Meeting",         palette: "light", Component: MemberMeetingGraphic },
-  { key: "golf-outing",     title: "Golf Outing",            palette: "light", Component: GolfOutingGraphic },
-  { key: "athena-awards",   title: "Athena Awards",          palette: "dark",  Component: AthenaAwardsGraphic },
-  { key: "social-connect",  title: "Social Connect",         palette: "dark",  Component: SocialConnectGraphic },
-  { key: "ribbon-cutting",  title: "Ribbon Cutting",         palette: "light", Component: RibbonCuttingGraphic },
-  { key: "business-brew",   title: "Business Brew",          palette: "light", Component: BusinessBrewGraphic },
-  { key: "get-to-know",     title: "Get to Know the Chamber", palette: "light", Component: GetToKnowGraphic },
-  { key: "eggs-expertise",  title: "Eggs & Expertise",       palette: "dark",  Component: EggsExpertiseGraphic },
-];

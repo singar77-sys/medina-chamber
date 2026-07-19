@@ -29,7 +29,7 @@ const inductees: Inductee[] = [
   { name: "Freda Snyder",           photo: "/images/people/hall-of-fame/freda-snyder-medina-chamber.jpg" },
   { name: "Windsor Kellogg",        photo: "/images/people/hall-of-fame/windsor-kellogg-medina-chamber.jpg" },
   { name: "A.I. Root",              photo: "/images/people/hall-of-fame/a-i-root-medina-chamber.jpg" },
-  { name: "Sydney Fenn",            photo: "/images/people/hall-of-fame/syndey-fenn-medina-chamber.jpg" },
+  { name: "Sydney Fenn",            photo: "/images/people/hall-of-fame/sydney-fenn-medina-chamber.jpg" },
   { name: "William C. Henschel",    photo: "/images/people/hall-of-fame/william-c-henschel-medina-chamber.jpg" },
   { name: "Andrew Karson",          photo: "/images/people/hall-of-fame/andrew-karson-medina-chamber.jpg" },
   { name: "Elmer Zarney",           photo: "/images/people/hall-of-fame/elmer-zarney-medina-chamber.jpg" },

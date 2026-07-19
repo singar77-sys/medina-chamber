@@ -214,7 +214,7 @@ export default function ItalyTripPage() {
               <ul className="space-y-f8">
                 {highlights.map((item) => (
                   <li key={item} className="flex items-start gap-f8 text-body text-text-primary">
-                    <svg className="w-5 h-5 text-cambridge mt-f3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <svg aria-hidden="true" className="w-5 h-5 text-cambridge mt-f3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path d="M20 6L9 17l-5-5" />
                     </svg>
                     {item}

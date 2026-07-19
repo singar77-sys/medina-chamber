@@ -75,11 +75,11 @@ export default async function AdminEventPage({ params }: Props) {
       ) : (
         <div className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-sm text-gray-400">
           No social graphic template for this event type.{" "}
-          <span className="text-gray-500">Upload a custom graphic below or build a template in</span>{" "}
+          <span className="text-gray-500">Build one in</span>{" "}
           <Link href="/admin/graphic-templates" className="text-[#83BCA9] hover:underline">
             Graphic Templates
           </Link>
-          .
+          <span className="text-gray-500">, then return here to preview it or upload a custom image.</span>
         </div>
       )}
 

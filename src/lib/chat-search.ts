@@ -155,38 +155,6 @@ function scoreMatch(member: Member, terms: string[]): number {
 }
 
 /**
- * Return up to `limit` members most relevant to the query.
- * Website content boosts scoring separately inside formatEnrichedMember.
- */
-export function searchMembersForContext(query: string, limit = 8): Member[] {
-  const terms = expandTerms(
-    query
-      .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, " ")
-      .split(/\s+/)
-      .filter((t) => t.length >= 2 && !STOPWORDS.has(t)),
-  );
-
-  if (terms.length === 0) return [];
-
-  return members
-    .map((m) => ({ member: m, score: scoreMatch(m, terms) }))
-    .filter(({ score }) => score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, limit)
-    .map(({ member }) => member);
-}
-
-/**
- * Format matched members into a prompt-ready string.
- * Pulls in website-scraped data automatically when available.
- */
-export function formatMembersForPrompt(matched: Member[]): string {
-  if (matched.length === 0) return "";
-  return matched.map(formatEnrichedMember).join("\n\n");
-}
-
-/**
  * Return matching members split into three tier buckets —
  * Community Investor (chamber leadership, $1,145/yr), Visibility Plus
  * ($575/yr), and Other (everything else).

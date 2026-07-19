@@ -39,7 +39,7 @@ export default async function ChatDetailPage({
   return (
     <div className="px-6 py-6 max-w-3xl">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-xs text-gray-400 mb-5">
+      <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-gray-400 mb-5">
         <Link href="/admin/chat" className="hover:text-gray-600 transition-colors">
           Chat Log
         </Link>

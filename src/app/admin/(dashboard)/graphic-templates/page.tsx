@@ -4,7 +4,7 @@ import { GraphicTemplatesClient } from "./GraphicTemplatesClient";
 export const dynamic = "force-dynamic";
 
 export default async function GraphicTemplatesPage() {
-  const [templates] = await Promise.all([listGraphicTemplates()]);
+  const templates = await listGraphicTemplates();
 
   return <GraphicTemplatesClient initialTemplates={templates} />;
 }

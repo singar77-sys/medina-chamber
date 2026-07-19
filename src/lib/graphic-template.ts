@@ -154,8 +154,11 @@ export async function deleteGraphicTemplate(id: string): Promise<void> {
   );
 }
 
-/** Returns the most recently saved template for a given event type, or null. */
-export async function getTemplateForEventType(eventTypeSlug: string): Promise<GraphicConfig | null> {
+/** Returns the most recently saved template for a given event type, or null.
+ *  Matches by containment: event instance slugs (e.g.
+ *  "annual-chamber-golf-outing-2026") contain their type slug ("golf-outing"),
+ *  mirroring how the graphics registry routes events. */
+export async function getTemplateForEventType(eventSlug: string): Promise<GraphicConfig | null> {
   const all = await listGraphicTemplates();
-  return all.find((t) => t.eventTypeSlug === eventTypeSlug) ?? null;
+  return all.find((t) => eventSlug === t.eventTypeSlug || eventSlug.includes(t.eventTypeSlug)) ?? null;
 }

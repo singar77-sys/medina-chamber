@@ -77,24 +77,48 @@ export function MediaLibraryClient({ items: initialItems }: Props) {
     const params = new URLSearchParams({ url });
     if (eventSlug) params.set("eventSlug", eventSlug);
 
-    await fetch(`/api/admin/media?${params.toString()}`, {
-      method: "DELETE",
-      credentials: "same-origin",
-    });
-
-    setItems((prev) => prev.filter((i) => i.url !== url));
+    try {
+      const res = await fetch(`/api/admin/media?${params.toString()}`, {
+        method: "DELETE",
+        credentials: "same-origin",
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        setUploadErrors([`Delete failed: ${data?.error ?? `HTTP ${res.status}`}`]);
+        return;
+      }
+      setItems((prev) => prev.filter((i) => i.url !== url));
+    } catch (err) {
+      setUploadErrors([
+        `Delete failed: ${err instanceof Error ? err.message : "network error"}`,
+      ]);
+    }
   }
 
+  // Swallows errors (surfaced via uploadErrors) rather than rethrowing —
+  // MediaCard.saveAlt awaits this with no try/catch, and a rejection would
+  // leave its saving state stuck and the alt input permanently disabled.
   async function updateAlt(url: string, eventSlug: string | undefined, alt: string) {
-    await fetch("/api/admin/media", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "same-origin",
-      body: JSON.stringify({ url, eventSlug, alt }),
-    });
-    setItems((prev) => prev.map((i) => (i.url === url ? { ...i, alt } : i)));
+    try {
+      const res = await fetch("/api/admin/media", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "same-origin",
+        body: JSON.stringify({ url, eventSlug, alt }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        setUploadErrors([`Couldn't save alt text: ${data?.error ?? `HTTP ${res.status}`}`]);
+        return;
+      }
+      setItems((prev) => prev.map((i) => (i.url === url ? { ...i, alt } : i)));
+    } catch (err) {
+      setUploadErrors([
+        `Couldn't save alt text: ${err instanceof Error ? err.message : "network error"}`,
+      ]);
+    }
   }
 
   function formatBytes(bytes: number) {
@@ -207,12 +231,14 @@ export function MediaLibraryClient({ items: initialItems }: Props) {
         <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 mb-2">
           <div className="flex items-start justify-between gap-2">
             <div>
-              <p className="text-sm font-medium text-red-800 mb-1">Upload failed</p>
+              <p className="text-sm font-medium text-red-800 mb-1">Something went wrong</p>
               {uploadErrors.map((e, i) => (
                 <p key={i} className="text-xs text-red-700">{e}</p>
               ))}
             </div>
             <button
+              type="button"
+              aria-label="Dismiss upload errors"
               onClick={() => setUploadErrors([])}
               className="text-red-400 hover:text-red-600 text-lg leading-none shrink-0"
             >

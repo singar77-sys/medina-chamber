@@ -20,6 +20,7 @@ interface Issue {
   title: string;
   quarter: string;
   date: string;
+  dateISO: string;
   url: string;
   latest: boolean;
 }
@@ -29,6 +30,7 @@ const issues: Issue[] = [
     title: "Volume 2, Issue 1",
     quarter: "Spring 2026",
     date: "April 2026",
+    dateISO: "2026-04",
     url: "https://wjcspub.hflip.co/mmbmagazine",
     latest: true,
   },
@@ -36,6 +38,7 @@ const issues: Issue[] = [
     title: "Impact",
     quarter: "Q4 2025",
     date: "October 2025",
+    dateISO: "2025-10",
     url: "https://wjcspub.hflip.co/2025Q4Impact",
     latest: false,
   },
@@ -43,6 +46,7 @@ const issues: Issue[] = [
     title: "Growth",
     quarter: "Q3 2025",
     date: "July 2025",
+    dateISO: "2025-07",
     url: "https://wjcspub.hflip.co/2025Q3Growth",
     latest: false,
   },
@@ -50,6 +54,7 @@ const issues: Issue[] = [
     title: "Thrive",
     quarter: "Q2 2025",
     date: "April 2025",
+    dateISO: "2025-04",
     url: "https://wjcspub.hflip.co/2025Q2Thrive",
     latest: false,
   },
@@ -88,11 +93,10 @@ export default function MagazinePage() {
       name: "Greater Medina Chamber of Commerce",
       url: "https://medinachamber.com",
     },
-    issn: undefined,
     workExample: issues.map((i) => ({
       "@type": "PublicationIssue",
       issueNumber: i.quarter,
-      datePublished: i.date,
+      datePublished: i.dateISO,
       name: i.title,
       url: i.url,
     })),

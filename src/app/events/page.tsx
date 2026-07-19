@@ -145,7 +145,7 @@ export default function EventsPage() {
       </section>
 
       {/* Upcoming Events */}
-      <section id="upcoming-events" className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      <section id="upcoming-events" className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144 scroll-mt-f89">
         <FadeIn>
           <div className="flex items-end justify-between mb-f21">
             <h2 className="text-h2">Upcoming Events</h2>
@@ -160,7 +160,7 @@ export default function EventsPage() {
             /* gap-f21 — card grid gap */
             <div className="grid gap-f21 lg:grid-cols-2">
               {upcoming.map((event) => (
-                <EventCard key={event.slug} event={event} />
+                <EventCard key={event.eventId} event={event} />
               ))}
             </div>
           ) : (
@@ -315,9 +315,7 @@ export default function EventsPage() {
                     {nextEggs.title}
                   </h3>
                   <p className="text-body-sm text-text-secondary leading-relaxed flex-1">
-                    Hands-on morning workshop over a Chick-fil-A breakfast. June&apos;s
-                    session: Canva 101 with Emily Grimm — practical graphic design
-                    for social posts, flyers, and marketing materials.
+                    Hands-on morning workshop over a Chick-fil-A breakfast.
                   </p>
                   <p className="mt-f13 text-body-sm font-bold text-cambridge group-hover:translate-x-1 transition-transform">
                     Register →
@@ -357,8 +355,8 @@ export default function EventsPage() {
                 </Link>
               ) : (
                 <div className="relative overflow-hidden bg-oxford rounded-[var(--radius-lg)] p-f21 flex flex-col min-h-[260px]">
-                  <span aria-hidden className="absolute -bottom-3 -right-1 text-[8rem] font-black leading-none text-white/[0.045] select-none pointer-events-none tabular-nums">20</span>
-                  <p className="text-caption font-bold text-cambridge uppercase tracking-wider">July 2026 · Westfield Country Club</p>
+                  <span aria-hidden className="absolute -bottom-4 -right-2 text-[5.5rem] font-black leading-none text-cambridge/[0.13] select-none pointer-events-none uppercase tracking-tight">GOLF</span>
+                  <p className="text-caption font-bold text-cambridge uppercase tracking-wider">Annual · Westfield Country Club</p>
                   <h3 className="text-h3 text-white mt-f8 leading-tight">Annual Chamber<br />Golf Outing</h3>
                   <p className="text-white/55 text-body-sm mt-f13 leading-relaxed flex-1">
                     18-hole shotgun scramble. Cart, boxed lunch, on-course beer tickets, and post-round dinner.

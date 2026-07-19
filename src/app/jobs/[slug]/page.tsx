@@ -146,7 +146,7 @@ export default async function JobDetailPage(
 
       <div className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-caption text-text-tertiary mb-10">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-caption text-text-tertiary mb-10">
           <Link href="/jobs" className="hover:text-text-primary transition-colors">
             Job Board
           </Link>

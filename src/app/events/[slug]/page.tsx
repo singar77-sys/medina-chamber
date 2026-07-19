@@ -61,6 +61,20 @@ export default async function EventPage(
   ]);
   const event = override ? { ...base, ...override } : base;
 
+  // Events scraped without structured date fields (blank dateISO/month/day)
+  // still carry a human-readable dateString — fall back to it so the page
+  // never renders ", 0, 0".
+  const dateText = event.dateISO
+    ? `${event.dayOfWeek}, ${event.month} ${event.day}, ${event.year}`
+    : event.dateString;
+
+  // Only name the venue when we actually know it: an explicit `venue` field,
+  // or the street matching the chamber office at 139 N Court St. Off-site
+  // events get an address-only location rather than a wrong venue name.
+  const isChamberOffice = /139\s+N(?:orth|\.)?\s*\.?\s*Court\s+St/i.test(event.street);
+  const venueName =
+    event.venue ?? (isChamberOffice ? "Greater Medina Chamber of Commerce" : undefined);
+
   // JSON-LD Event schema for Google rich results.
   // startDate/endDate/eventStatus are only emitted when the event has a real
   // calendar date — a blank dateISO would otherwise yield an invalid
@@ -77,7 +91,7 @@ export default async function EventPage(
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
     location: {
       "@type": "Place",
-      name: "Greater Medina Chamber of Commerce",
+      ...(venueName && { name: venueName }),
       address: {
         "@type": "PostalAddress",
         streetAddress: event.street,
@@ -141,7 +155,7 @@ export default async function EventPage(
 
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f89 pb-f89 lg:pb-f144">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-caption text-text-tertiary mb-f21">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-caption text-text-tertiary mb-f21">
           <Link href="/events" className="hover:text-text-primary transition-colors">
             Events
           </Link>
@@ -153,14 +167,16 @@ export default async function EventPage(
           {/* Main column */}
           <article>
             <p className="text-overline text-cambridge mb-f8">
-              {event.dayOfWeek}, {event.month} {event.day}, {event.year}
+              {dateText}
             </p>
 
             <h1 className="text-display leading-tight">{event.title}</h1>
 
-            <p className="text-h4 text-text-secondary mt-f8">
-              {event.startTime} – {event.endTime}
-            </p>
+            {event.startTime && (
+              <p className="text-h4 text-text-secondary mt-f8">
+                {event.startTime} – {event.endTime}
+              </p>
+            )}
 
             {/* Hero — prefer the branded SVG graphic; fall back to the
                 cloudinary event image only if the slug doesn't map to one
@@ -171,20 +187,20 @@ export default async function EventPage(
                   <Graphic mode="social" />
                 </FluidGraphicFrame>
                 <figcaption className="sr-only">
-                  {event.title}, Greater Medina Chamber of Commerce event on {event.dayOfWeek}, {event.month} {event.day}, {event.year} in Medina, Ohio
+                  {event.title}, Greater Medina Chamber of Commerce event on {dateText} in Medina, Ohio
                 </figcaption>
               </figure>
             ) : event.image ? (
               <figure className="mt-f21 rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary m-0">
                 <Image
                   src={event.image}
-                  alt={`${event.title}, ${event.dayOfWeek}, ${event.month} ${event.day}, ${event.year} at the Greater Medina Chamber of Commerce in Medina, Ohio`}
+                  alt={`${event.title}, ${dateText} at the Greater Medina Chamber of Commerce in Medina, Ohio`}
                   width={720}
                   height={360}
                   className="object-contain w-full max-h-72 bg-bg-secondary"
                 />
                 <figcaption className="sr-only">
-                  {event.title}, Greater Medina Chamber of Commerce event on {event.dayOfWeek}, {event.month} {event.day}, {event.year} in Medina, Ohio
+                  {event.title}, Greater Medina Chamber of Commerce event on {dateText} in Medina, Ohio
                 </figcaption>
               </figure>
             ) : null}
@@ -193,9 +209,9 @@ export default async function EventPage(
             <div className="mt-f34">
               <h2 className="text-h3 mb-f13">Location</h2>
               <div className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-                <p className="text-body font-bold">
-                  {event.venue ?? "Greater Medina Chamber of Commerce"}
-                </p>
+                {venueName && (
+                  <p className="text-body font-bold">{venueName}</p>
+                )}
                 <p className="text-body-sm text-text-secondary mt-f3">
                   {event.street}
                 </p>
@@ -260,11 +276,15 @@ export default async function EventPage(
             <div className="sticky top-f21 p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
               <div className="text-center mb-f13">
                 <div className="inline-block bg-cambridge/20 px-3 py-1 rounded-full text-cambridge text-caption font-bold mb-f8">
-                  {event.month.substring(0, 3)} {event.day}
+                  {event.dateISO
+                    ? `${event.month.substring(0, 3)} ${event.day}`
+                    : event.dateString}
                 </div>
-                <p className="text-body font-bold text-text-primary">
-                  {event.startTime} – {event.endTime}
-                </p>
+                {event.startTime && (
+                  <p className="text-body font-bold text-text-primary">
+                    {event.startTime} – {event.endTime}
+                  </p>
+                )}
               </div>
 
               {/* Registration is handled in GrowthZone (the live system of record).

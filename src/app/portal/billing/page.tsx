@@ -73,7 +73,7 @@ export default async function PortalBillingPage({
 
   const [contactRows, orgRows, invoiceRows] = await Promise.all([
     db
-      .select({ firstName: contacts.firstName, lastName: contacts.lastName })
+      .select({ id: contacts.id })
       .from(contacts)
       .where(eq(contacts.id, session.contactId))
       .limit(1),

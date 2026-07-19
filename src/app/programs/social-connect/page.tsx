@@ -58,28 +58,17 @@ const audience = [
 export default function SocialConnectPage() {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Event",
+    "@type": "Service",
     name: "Social Connect",
     description:
       "The Greater Medina Chamber's signature networking event. Professional networking, the Foundry Faceoff competition, and a public Business Circuit Expo at Foundry Social in Medina, Ohio.",
-    organizer: {
+    provider: {
       "@type": "Organization",
       name: "Greater Medina Chamber of Commerce",
       url: "https://medinachamber.com",
     },
-    location: {
-      "@type": "Place",
-      name: "Foundry Social",
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: "333 Foundry Street",
-        addressLocality: "Medina",
-        addressRegion: "OH",
-        postalCode: "44256",
-        addressCountry: "US",
-      },
-    },
-    eventStatus: "https://schema.org/EventScheduled",
+    areaServed: { "@type": "AdministrativeArea", name: "Medina County, Ohio" },
+    serviceType: "Business Networking Event",
     url: "https://medinachamber.com/programs/social-connect",
   };
 

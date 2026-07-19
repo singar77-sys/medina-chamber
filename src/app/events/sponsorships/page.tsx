@@ -63,7 +63,7 @@ const sponsorships: SponsorshipCard[] = [
     href: "/events",
     price: "$100 table sponsorship · $75 non-profit · +$25 per attendee for lunch · limited to 3 per meeting",
     description:
-      "Monthly member meetings bring together the chamber's business community for programming, networking, and updates. Table sponsorships include a display table, a 30-second podium commercial, and logo placement on the event registration page and all promotional emails and social media.",
+      "Regular member meetings bring together the chamber's business community for programming, networking, and updates. Table sponsorships include a display table, a 30-second podium commercial, and logo placement on the event registration page and all promotional emails and social media.",
     contact: stephanie.email,
     options: [
       "Display table at the event",

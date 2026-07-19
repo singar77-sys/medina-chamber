@@ -12,7 +12,7 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { verifyPortalSession, PORTAL_COOKIE } from "@/lib/portal-session";
-import { getEventBySlug } from "@/data/events";
+import { getEventBySlug, type ChamberEvent } from "@/data/events";
 import {
   getRegisterableEvent,
   registrationIsOpen,
@@ -22,15 +22,21 @@ import { RegistrationForm } from "./RegistrationForm";
 
 export const dynamic = "force-dynamic";
 
-function formatWhen(d: Date): string {
-  return d.toLocaleString("en-US", {
+// Imported events store a date-only startsAt (midnight UTC), so formatting the
+// Date in Eastern time would display the previous calendar day. Prefer the
+// static scrape's human-readable date/time fields (the same title + dateISO
+// bridge notify-registration uses); fall back to a UTC date-only format.
+function formatWhen(staticEvent: ChamberEvent | undefined, startsAt: Date): string {
+  if (staticEvent) {
+    const date = `${staticEvent.dayOfWeek}, ${staticEvent.month} ${staticEvent.day}, ${staticEvent.year}`;
+    return staticEvent.startTime ? `${date} · ${staticEvent.startTime}` : date;
+  }
+  return startsAt.toLocaleDateString("en-US", {
     weekday: "long",
     month: "long",
     day: "numeric",
     year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-    timeZone: "America/New_York",
+    timeZone: "UTC",
   });
 }
 
@@ -47,9 +53,10 @@ export default async function EventRegisterPage({
 }) {
   const { slug } = await params;
 
-  // The URL slug is the static (public) slug; resolve it to the DB event via the
-  // shared GrowthZone id (static eventId === DB gzId), since the two systems'
-  // slug conventions differ.
+  // The URL slug is the static (public) slug; resolve it to the DB event by the
+  // (title + dateISO) natural key — neither slugs nor ids are shared between the
+  // static scrape and the DB import (the import synthesizes gzIds; see
+  // src/lib/events/db-events.ts).
   const staticEvent = getEventBySlug(slug);
   const [event, member] = await Promise.all([
     staticEvent
@@ -65,7 +72,7 @@ export default async function EventRegisterPage({
 
   return (
     <section className="mx-auto max-w-2xl px-6 lg:px-8 pt-f55 pb-f89">
-      <nav className="flex items-center gap-2 text-caption text-text-tertiary mb-f21">
+      <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-caption text-text-tertiary mb-f21">
         <Link href="/events" className="hover:text-text-primary transition-colors">
           Events
         </Link>
@@ -78,7 +85,7 @@ export default async function EventRegisterPage({
       </nav>
 
       <h1 className="text-h2 leading-tight">{event.title}</h1>
-      <p className="text-body text-text-secondary mt-f8">{formatWhen(event.startsAt)}</p>
+      <p className="text-body text-text-secondary mt-f8">{formatWhen(staticEvent, event.startsAt)}</p>
       {event.location && (
         <p className="text-body-sm text-text-tertiary mt-f3">{event.location}</p>
       )}

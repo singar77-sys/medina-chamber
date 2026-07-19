@@ -1166,8 +1166,8 @@ body {
 }
 
 /* Hide the icon-only trigger on desktop — the ⌘K pill is the desktop
-   surface. Matches Tailwind's sm: breakpoint (640px). */
-@media (min-width: 640px) {
+   surface. Matches Tailwind's lg: breakpoint (1024px). */
+@media (min-width: 1024px) {
   .cmdk-navtrigger--icon { display: none; }
 }
 
@@ -1660,28 +1660,6 @@ body {
   }
 }
 
-/* Promoted Join CTA pill */
-.ftr-cta {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.6rem 1.1rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: #fff;
-  background: var(--accent);
-  border-radius: var(--radius-md);
-  transition:
-    background-color 200ms ease,
-    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.ftr-cta:hover,
-.ftr-cta:focus-visible {
-  background: var(--accent-hover);
-  transform: translateY(-1px);
-}
-
 /* ─── Hunter Systems build credit ─────────────────────────── */
 
 .hs-credit {
@@ -1722,7 +1700,7 @@ body {
 }
 
 .hs-credit:hover .hs-mark__word {
-  color: #fff;
+  color: var(--text-primary);
 }
 
 /* Gentle opacity breath — no glow, no text-shadow. Just presence. */
@@ -1737,8 +1715,7 @@ body {
     animation: none !important;
     opacity: 1;
   }
-  .ftr-social,
-  .ftr-cta {
+  .ftr-social {
     transition: none !important;
   }
 }

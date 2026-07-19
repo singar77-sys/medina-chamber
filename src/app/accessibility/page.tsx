@@ -209,8 +209,8 @@ export default function AccessibilityPage() {
               className="text-cambridge hover:text-cambridge/80 underline underline-offset-2 transition-colors"
             >
               Web Content Accessibility Guidelines (WCAG) 2.1
-            </a>{" "}
-           , published by the World Wide Web Consortium (W3C)
+            </a>
+            , published by the World Wide Web Consortium (W3C)
           </li>
           <li>
             <a
@@ -220,8 +220,8 @@ export default function AccessibilityPage() {
               className="text-cambridge hover:text-cambridge/80 underline underline-offset-2 transition-colors"
             >
               Americans with Disabilities Act (ADA)
-            </a>{" "}
-           , U.S. federal civil rights law
+            </a>
+            , U.S. federal civil rights law
           </li>
           <li>
             <a
@@ -231,8 +231,8 @@ export default function AccessibilityPage() {
               className="text-cambridge hover:text-cambridge/80 underline underline-offset-2 transition-colors"
             >
               Section 508 of the Rehabilitation Act
-            </a>{" "}
-           , U.S. federal accessibility standard
+            </a>
+            , U.S. federal accessibility standard
           </li>
         </ul>
       </section>

@@ -4,10 +4,9 @@
  * (1080×1920).
  *
  * Shared primitives (types, brand hex, asset URLs, pick helper, container
- * styles, FONT/SCRIPT stacks) live in ./shared. The <GraphicFrame/>
- * scaler is in ./GraphicFrame. Event routing + the EVENT_GRAPHICS
- * registry are in ./registry. This file is just the eleven graphic
- * component implementations.
+ * styles, FONT/SCRIPT stacks) live in ./shared. The <FluidGraphicFrame/>
+ * scaler is in ./FluidGraphicFrame. Event routing is in ./registry. This
+ * file is just the eleven graphic component implementations.
  */
 
 import type { CSSProperties } from "react";
@@ -1309,12 +1308,12 @@ export function BusinessBrewGraphic({
     may:"05",     june:"06",     july:"07",      august:"08",
     september:"09", october:"10", november:"11", december:"12",
   };
-  const issueNo  = eventInfo?.month ? (MONTH_NUM[eventInfo.month.toLowerCase()] ?? ", ") : ", ";
-  const issueYr  = eventInfo?.year  ? String(eventInfo.year) : ", ";
+  const issueNo  = eventInfo?.month ? (MONTH_NUM[eventInfo.month.toLowerCase()] ?? "") : "";
+  const issueYr  = eventInfo?.year  ? String(eventInfo.year) : "";
   const dayShort = eventInfo?.dayOfWeek?.substring(0, 3).toUpperCase() ?? "";
   const monShort = eventInfo?.month?.substring(0, 3).toUpperCase() ?? "";
   const whenDate = [dayShort, (monShort && eventInfo?.day) ? `${monShort} ${eventInfo.day}` : ""]
-    .filter(Boolean).join(" · ") || ", ";
+    .filter(Boolean).join(" · ");
   const timeLine = eventInfo?.time ?? "";
   const hasVenue = !!eventInfo?.venue;
 
@@ -1351,7 +1350,7 @@ export function BusinessBrewGraphic({
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
               <div>
                 <div style={{ fontSize: 16, letterSpacing: 5, color: BRAND.cambridge, fontWeight: 700, marginBottom: 8 }}>WHEN</div>
-                <div style={{ fontSize: 64, fontWeight: 700, lineHeight: 0.95, letterSpacing: 1 }}>{whenDate}</div>
+                <div style={{ fontSize: 64, fontWeight: 700, lineHeight: 0.95, letterSpacing: 1 }}>{whenDate || "—"}</div>
                 {timeLine && <div style={{ fontSize: 26, marginTop: 6, opacity: 0.9 }}>{timeLine}</div>}
               </div>
               {hasVenue && (
@@ -1368,7 +1367,7 @@ export function BusinessBrewGraphic({
               display: "flex", justifyContent: "space-between", alignItems: "center",
             }}>
               <div style={{ fontSize: 18, letterSpacing: 3, opacity: 0.85 }}>Free to attend · RSVP preferred</div>
-              <div style={{ fontSize: 18, letterSpacing: 4, color: BRAND.cambridge, fontWeight: 700 }}>MEDINACHAMBER.ORG</div>
+              <div style={{ fontSize: 18, letterSpacing: 4, color: BRAND.cambridge, fontWeight: 700 }}>MEDINACHAMBER.COM</div>
             </div>
           </div>
         </div>
@@ -1414,7 +1413,7 @@ export function BusinessBrewGraphic({
             position: "absolute", bottom: 0, left: 0, right: 0, height: 380,
             background: BRAND.oxford, color: BRAND.cream, padding: "50px 80px",
           }}>
-            <div style={{ fontSize: 74, fontWeight: 700, letterSpacing: 1, lineHeight: 1 }}>{whenDate}</div>
+            <div style={{ fontSize: 74, fontWeight: 700, letterSpacing: 1, lineHeight: 1 }}>{whenDate || "—"}</div>
             {timeLine && <div style={{ fontSize: 40, marginTop: 10, color: BRAND.cambridge, letterSpacing: 3, fontWeight: 700 }}>{timeLine}</div>}
             {hasVenue && (
               <div style={{ fontSize: 28, marginTop: 20, opacity: 0.9, lineHeight: 1.3 }}>
@@ -1427,7 +1426,7 @@ export function BusinessBrewGraphic({
               display: "flex", justifyContent: "space-between", alignItems: "center",
             }}>
               <div style={{ fontSize: 20, letterSpacing: 3, opacity: 0.85 }}>Free · RSVP preferred</div>
-              <div style={{ fontSize: 20, letterSpacing: 4, color: BRAND.cambridge, fontWeight: 700 }}>MEDINACHAMBER.ORG</div>
+              <div style={{ fontSize: 20, letterSpacing: 4, color: BRAND.cambridge, fontWeight: 700 }}>MEDINACHAMBER.COM</div>
             </div>
           </div>
         </div>
@@ -1465,7 +1464,9 @@ export function BusinessBrewGraphic({
           paddingBottom: Y(40), borderBottom: `${S(3)}px solid ${BRAND.oxford}`,
         }}>
           <span>GREATER MEDINA CHAMBER · MONTHLY NETWORKING</span>
-          <span style={{ color: BRAND.coquelicot }}>NO. {issueNo}, {issueYr}</span>
+          {issueNo && issueYr && (
+            <span style={{ color: BRAND.coquelicot }}>NO. {issueNo}, {issueYr}</span>
+          )}
         </div>
         {/* Bee-mug */}
         {/* eslint-disable-next-line @next/next/no-img-element */}

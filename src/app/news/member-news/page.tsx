@@ -35,7 +35,11 @@ export default function MemberNewsPage() {
         headline: a.title,
         url: `https://medinachamber.com/news/member-news/${a.slug}`,
         ...(a.thumbnail
-          ? { image: `https://medinachamber.com${a.thumbnail}` }
+          ? {
+              image: a.thumbnail.startsWith("http")
+                ? a.thumbnail
+                : `https://medinachamber.com${a.thumbnail}`,
+            }
           : {}),
         ...(a.memberName
           ? {
@@ -136,6 +140,8 @@ export default function MemberNewsPage() {
                       ) : (
                         <div className="h-44 bg-oxford/10 flex items-center justify-center shrink-0">
                           <svg
+                            aria-hidden="true"
+                            focusable="false"
                             className="w-10 h-10 text-text-tertiary"
                             viewBox="0 0 24 24"
                             fill="currentColor"

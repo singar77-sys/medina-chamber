@@ -125,7 +125,7 @@ export default async function BlogPostPage(
 
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f89 pb-f89 lg:pb-f144">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-caption text-text-tertiary mb-f21">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-caption text-text-tertiary mb-f21">
           <Link href="/news/blog" className="hover:text-text-primary transition-colors">
             Blog
           </Link>

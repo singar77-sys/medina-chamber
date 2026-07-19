@@ -20,7 +20,7 @@ const sections = [
     id: "post-jobs",
     label: "Post Jobs",
     title: "Reach Medina County job seekers",
-    body: "Chamber members can post open positions on the Medina Chamber jobs board at no additional cost. Listings are visible to job seekers browsing medina-specific openings and are indexed by search engines, putting your opening in front of people actively searching for work in Medina County.",
+    body: "Chamber members can post open positions on the Medina Chamber jobs board at no additional cost. Listings are visible to job seekers browsing Medina-specific openings and are indexed by search engines, putting your opening in front of people actively searching for work in Medina County.",
     action: {
       label: "View Job Board",
       href: "/jobs",
@@ -45,7 +45,7 @@ const sections = [
     secondaryAction: null,
   },
   {
-    id: "techecred",
+    id: "techcred",
     label: "Ohio TechCred",
     title: "Reimburse your team's tech credentials",
     body: "Ohio TechCred reimburses up to $2,000 per employee per credential for tech-focused certifications and training. The program covers 150+ credentials in IT, cybersecurity, advanced manufacturing, and data. Employers apply quarterly and get reimbursed after employees complete approved credentials. There's no cap on total credentials, a business with 20 employees could receive $40,000 in a single round.",
@@ -71,8 +71,8 @@ const sections = [
   {
     id: "safety-council",
     label: "Safety Council",
-    title: "Workplace safety training, included with membership",
-    body: "Chamber members participate in the Medina County Safety Council at no additional charge. Monthly meetings cover workplace safety regulations, OSHA compliance, and industry-specific hazard management. Participation also qualifies members for the Ohio BWC Group Rebate Program, a percentage refund on workers' comp premiums based on group performance.",
+    title: "Workplace safety training, free enrollment for members",
+    body: "Chamber members enroll in the Medina County Safety Council at no annual cost — non-members pay $100 per year — and meetings are $24 per person. Monthly meetings cover workplace safety regulations, OSHA compliance, and industry-specific hazard management. Participation also qualifies members for the Ohio BWC Group Rebate Program, a percentage refund on workers' comp premiums based on group performance.",
     action: {
       label: "About the Safety Council",
       href: "/programs/safety-council",
@@ -83,7 +83,7 @@ const sections = [
 ];
 
 const quickLinks = [
-  { label: "Chamber Jobs Board", href: "/jobs", internal: true },
+  { label: "Chamber Job Board", href: "/jobs", internal: true },
   { label: "OhioMeansJobs", href: "https://ohiomeansjobs.ohio.gov/", internal: false },
   { label: "Ohio TechCred", href: "https://techcred.ohio.gov/", internal: false },
   { label: "Ohio BWC", href: "https://www.bwc.ohio.gov/", internal: false },
@@ -102,7 +102,7 @@ export default function WorkforcePage() {
         image="/images/photos/backgrounds/community-conversation.webp"
         objectPosition="center 40%"
         breadcrumb={
-          <nav className="flex items-center gap-2 text-caption text-text-tertiary">
+          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-caption text-text-tertiary">
             <Link href="/resources" className="hover:text-text-primary transition-colors">
               Resources
             </Link>
@@ -144,6 +144,7 @@ export default function WorkforcePage() {
         {sections.map((s) => (
           <div
             key={s.id}
+            id={s.id}
             className="p-8 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
           >
             <span className="text-caption font-bold uppercase tracking-wider text-cambridge">

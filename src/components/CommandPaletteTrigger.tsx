@@ -7,7 +7,7 @@
  * state coupling.
  *
  * Renders as:
- *   - Desktop (sm+): search icon + "Search" text + ⌘K kbd
+ *   - Desktop (lg+): search icon + "Search" text + ⌘K kbd
  *   - Mobile:        icon-only circular button (same size as ThemeToggle)
  *
  * Place in the Header right rail.

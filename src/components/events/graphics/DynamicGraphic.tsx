@@ -7,7 +7,7 @@
  * cleanly at social (1200×630), square (1080×1080), and story (1080×1920).
  */
 
-import type { CSSProperties } from "react";
+import { useId, type CSSProperties } from "react";
 import {
   BRAND,
   ASSETS,
@@ -46,13 +46,12 @@ const STARS = (() => {
 function PatternDef({
   pattern,
   color,
-  mode,
+  id,
 }: {
   pattern: PatternType;
   color: string;
-  mode: GraphicMode;
+  id: string;
 }) {
-  const id = `dg-pat-${mode}`;
   if (pattern === "grid") {
     return (
       <pattern id={id} width="60" height="60" patternUnits="userSpaceOnUse">
@@ -328,8 +327,13 @@ export function DynamicGraphic({
       }
     : null;
 
-  // SVG gradient id
-  const gradId = `dg-grad-${mode}`;
+  // SVG def ids — namespaced per instance (not just per mode) so multiple
+  // DynamicGraphics on one page (e.g. the admin template list) don't all
+  // resolve url(#...) to the first instance's defs. React 19 useId emits
+  // guillemet-wrapped ids («r0»), so strip non-safe chars before embedding.
+  const uid = useId().replace(/[^a-zA-Z0-9_-]/g, "");
+  const gradId = `dg-grad-${mode}-${uid}`;
+  const patId = `dg-pat-${mode}-${uid}`;
   const hasGradient = !!background.gradient;
   const hasPattern =
     background.pattern && background.pattern !== "none" && background.pattern !== "stars";
@@ -365,7 +369,7 @@ export function DynamicGraphic({
           {glows?.map((g, i) => (
             <radialGradient
               key={i}
-              id={`dg-glow-${mode}-${i}`}
+              id={`dg-glow-${mode}-${uid}-${i}`}
               cx={`${g.cx}%`}
               cy={`${g.cy}%`}
               r={`${g.radius}%`}
@@ -380,7 +384,7 @@ export function DynamicGraphic({
             <PatternDef
               pattern={background.pattern!}
               color={background.patternColor ?? "#ffffff"}
-              mode={mode}
+              id={patId}
             />
           )}
         </defs>
@@ -393,7 +397,7 @@ export function DynamicGraphic({
           <rect
             width={W}
             height={H}
-            fill={`url(#dg-pat-${mode})`}
+            fill={`url(#${patId})`}
             opacity={background.patternOpacity ?? 0.25}
           />
         )}
@@ -416,7 +420,7 @@ export function DynamicGraphic({
 
         {/* Atmospheric glows */}
         {glows?.map((_, i) => (
-          <rect key={i} width={W} height={H} fill={`url(#dg-glow-${mode}-${i})`} />
+          <rect key={i} width={W} height={H} fill={`url(#dg-glow-${mode}-${uid}-${i})`} />
         ))}
 
         {/* Decorative shapes */}

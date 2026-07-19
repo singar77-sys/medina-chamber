@@ -34,11 +34,17 @@ export function GraphicTemplatesClient({ initialTemplates }: Props) {
     if (!confirm("Delete this template? Events will fall back to the built-in graphic.")) return;
     setDeletingId(id);
     try {
-      await fetch(`/api/admin/graphic-templates?id=${encodeURIComponent(id)}`, {
+      const res = await fetch(`/api/admin/graphic-templates?id=${encodeURIComponent(id)}`, {
         method: "DELETE",
         credentials: "same-origin",
       });
+      if (!res.ok) {
+        alert("Failed to delete template. Please try again.");
+        return;
+      }
       setTemplates((prev) => prev.filter((t) => t.id !== id));
+    } catch {
+      alert("Failed to delete template. Check your connection and try again.");
     } finally {
       setDeletingId(null);
     }
@@ -156,7 +162,7 @@ function TemplateCard({
 
           <div className="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100">
             <Link
-              href={`/admin/events?type=${template.eventTypeSlug}`}
+              href="/admin/events"
               className="text-xs text-[#83BCA9] hover:underline"
             >
               View events →

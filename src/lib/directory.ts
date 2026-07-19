@@ -67,6 +67,8 @@ function toMember(o: OrgRow, cats: string[]): Member {
     gzSlug: "",
     gzUrl: "",
     address: [o.address1, o.city, o.state, o.zip].filter(Boolean).join(", "),
+    city: o.city ?? undefined,
+    address1: o.address1 ?? undefined,
     phone: o.phone ?? "",
     website: o.websiteUrl ?? "",
     logoUrl: o.logoUrl ?? "",

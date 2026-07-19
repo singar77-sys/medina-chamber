@@ -409,14 +409,15 @@ export function ChamberBotPortal({
     setMounted(true);
   }, []);
 
-  // Live EST clock — ticks every second
+  // Live ET clock — ticks every second
   useEffect(() => {
     const tick = () => {
-      const d = new Date();
-      const hh = String(d.getHours()).padStart(2, "0");
-      const mm = String(d.getMinutes()).padStart(2, "0");
-      const ss = String(d.getSeconds()).padStart(2, "0");
-      setClock(`${hh}:${mm}:${ss}`);
+      setClock(
+        new Date().toLocaleTimeString("en-US", {
+          timeZone: "America/New_York",
+          hourCycle: "h23",
+        }),
+      );
     };
     tick();
     const id = setInterval(tick, 1000);
@@ -718,7 +719,7 @@ export function ChamberBotPortal({
           </div>
         </div>
         <div className="hud-right">
-          <div className="hud-chip mono">EST {clock}</div>
+          <div className="hud-chip mono">ET {clock}</div>
           <div className="hud-chip mono">SINCE 1938</div>
           <button
             type="button"

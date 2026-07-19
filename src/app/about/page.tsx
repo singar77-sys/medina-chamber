@@ -6,6 +6,10 @@ import { safeJsonLd } from "@/lib/json-ld";
 import { chamberOffice, jaclyn, stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
 
+// ISR: re-render daily so the "years later" count (new Date() at build time)
+// refreshes each New Year instead of freezing until the next deploy.
+export const revalidate = 86400;
+
 export const metadata: Metadata = {
   title: "About the Chamber",
   description:
@@ -224,8 +228,8 @@ export default async function AboutPage() {
                   business advocacy.
                 </p>
                 <p>
-                  {new Date().getFullYear() - 1938} years later, that dual
-                  approach still defines us. Medina County businesses are
+                  Nearly nine decades later, that dual approach still defines
+                  us. Medina County businesses are
                   better connected and better represented for it. We&apos;re not a
                   networking club, we&apos;re the infrastructure that helps Medina
                   businesses flourish.

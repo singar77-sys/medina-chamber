@@ -5,12 +5,8 @@
  * directory by that category via the onSelect callback (client-side
  * filter state in DirectoryClient).
  *
- * Two variants:
- *   - "browse" (default): full section with "Browse by industry" header,
- *     used on the unfiltered directory landing view.
- *   - "refine": compact chip row with no header or section padding, used
- *     at the top of search/filter results so the results grid stays high
- *     on the page.
+ * Compact chip row with no header or section padding, used at the top
+ * of search/filter results so the results grid stays high on the page.
  *
  * Future enhancement: switch chips to <Link> elements pointing at
  * /membership/directory/industry/[slug] once those static pages are built.
@@ -22,14 +18,8 @@ interface IndustryChipStripProps {
   active: string | null;
   /** Called when a chip is clicked. Passes null to clear. */
   onSelect: (category: string | null) => void;
-  /** Optional: renders a "See all members" link under the chips (browse only). */
-  onSeeAll?: () => void;
-  /** Layout variant — see component docblock. */
-  variant?: "browse" | "refine";
-  /** Whether the full category list is currently shown (browse only). */
+  /** Whether the full category list is currently shown. */
   expanded?: boolean;
-  /** Optional: makes the count badge a toggle for the full list (browse only). */
-  onToggleExpand?: () => void;
   /** "dark" renders glass chips for oxford-navy band backgrounds. */
   appearance?: "light" | "dark";
   /** "grid" snaps chips into a fixed-column grid (use in browse band). */
@@ -40,10 +30,7 @@ export function IndustryChipStrip({
   industries,
   active,
   onSelect,
-  onSeeAll,
-  variant = "browse",
   expanded = false,
-  onToggleExpand,
   appearance = "light",
   layoutMode = "flex",
 }: IndustryChipStripProps) {
@@ -99,62 +86,5 @@ export function IndustryChipStrip({
     </div>
   );
 
-  if (variant === "refine") {
-    return <div aria-label="Refine by industry">{chips}</div>;
-  }
-
-  return (
-    <section
-      aria-labelledby="industries-heading"
-      className="mx-auto max-w-7xl px-6 lg:px-8 py-f34"
-    >
-      <header className="flex items-baseline justify-between mb-f13">
-        <h2 id="industries-heading" className="text-h3">
-          Browse by industry
-        </h2>
-        {onToggleExpand ? (
-          <button
-            type="button"
-            onClick={onToggleExpand}
-            aria-expanded={expanded}
-            className="
-              text-caption text-text-tertiary hover:text-accent
-              underline underline-offset-4 transition-colors duration-200
-              focus-visible:outline-none focus-visible:text-accent
-            "
-          >
-            {expanded ? (
-              "Show top industries"
-            ) : (
-              <>
-                All categories <span aria-hidden="true">→</span>
-              </>
-            )}
-          </button>
-        ) : (
-          <span className="text-caption text-text-tertiary">
-            All categories
-          </span>
-        )}
-      </header>
-
-      {chips}
-
-      {onSeeAll && (
-        <div className="mt-f13">
-          <button
-            type="button"
-            onClick={onSeeAll}
-            className="
-              text-caption text-text-tertiary hover:text-accent
-              underline underline-offset-4 transition-colors duration-200
-              focus-visible:outline-none focus-visible:text-accent
-            "
-          >
-            See all members <span aria-hidden="true">→</span>
-          </button>
-        </div>
-      )}
-    </section>
-  );
+  return <div aria-label="Refine by industry">{chips}</div>;
 }

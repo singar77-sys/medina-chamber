@@ -6,6 +6,11 @@ import { FadeIn } from "@/components/FadeIn";
 import { CountUp } from "@/components/CountUp";
 
 import { safeJsonLd } from "@/lib/json-ld";
+
+// ISR: re-render daily so the "years of advocacy" count (new Date() at build
+// time) refreshes each New Year instead of freezing until the next deploy.
+export const revalidate = 86400;
+
 export const metadata: Metadata = {
   title: "Medina Means Business",
   description:

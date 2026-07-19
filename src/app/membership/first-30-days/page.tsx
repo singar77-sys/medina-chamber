@@ -186,7 +186,7 @@ export default function First30DaysPage() {
         image="/images/photos/backgrounds/mentorship-laptop.webp"
         objectPosition="center 25%"
         breadcrumb={
-          <nav className="flex items-center gap-2 text-caption text-text-tertiary">
+          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-caption text-text-tertiary">
             <Link
               href="/membership/benefits"
               className="hover:text-text-primary transition-colors"

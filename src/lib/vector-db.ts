@@ -28,23 +28,3 @@ export function getVectorIndex(): Index {
   _index = new Index({ url, token });
   return _index;
 }
-
-/**
- * Returns true if the Upstash index has a managed embedding model
- * configured (we send raw text). False = we provide vectors ourselves.
- *
- * Result is cached for the lifetime of the isolate.
- */
-let _isManaged: boolean | null = null;
-export async function isManagedEmbedding(): Promise<boolean> {
-  if (_isManaged !== null) return _isManaged;
-  const info = await getVectorIndex().info();
-  // Upstash sets denseIndex.embeddingModel to a model name when managed,
-  // and to "Custom" when we provide vectors ourselves.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const model = (info as any)?.denseIndex?.embeddingModel
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ?? (info as any)?.embeddingModel;
-  _isManaged = typeof model === "string" && model.toLowerCase() !== "custom";
-  return _isManaged;
-}

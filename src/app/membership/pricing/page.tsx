@@ -7,29 +7,6 @@ import { getCmsPricing, DEFAULT_PRICING } from "@/lib/cms-store";
 import { stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
 
-const PRICING_FAQS = [
-  {
-    q: "Do I qualify for group health insurance?",
-    a: "Available for employers with 2–49 employees. Details provided during onboarding.",
-  },
-  {
-    q: "What's included in member spotlights?",
-    a: "Visibility Plus spotlights run on social and email. Community Investor spotlights run on social, email, and the chamber website.",
-  },
-  {
-    q: "Do Investors get ongoing event perks?",
-    a: "Yes, complimentary luncheon tickets plus recognition at all events.",
-  },
-  {
-    q: "What's the Certificate of Origin benefit?",
-    a: "Free for non-freight forwarders on Visibility Plus and Community Investor tiers.",
-  },
-  {
-    q: "How do I upgrade later?",
-    a: "Contact Stephanie Mueller at any time. Upgrades are prorated based on where you are in your membership year.",
-  },
-] as const;
-
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -52,8 +29,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function PricingPage() {
-  const tiers = ((await getCmsPricing()) ?? DEFAULT_PRICING).tiers;
-  const faqs = PRICING_FAQS;
+  const { tiers, faqs } = (await getCmsPricing()) ?? DEFAULT_PRICING;
   const essentialsTier = tiers.find((t) => t.key === "essentials");
   const essentialsBenefits = essentialsTier?.benefits ?? [];
 
@@ -217,7 +193,7 @@ export default async function PricingPage() {
                       }`}
                     >
                       <p className="text-caption font-bold text-cambridge mb-f8">
-                        {tier.key === "community_investor"
+                        {tier.key === "investor"
                           ? "Everything in Visibility Plus, plus"
                           : "Everything in Essentials, plus"}
                       </p>

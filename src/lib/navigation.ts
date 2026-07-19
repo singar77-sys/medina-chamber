@@ -157,63 +157,6 @@ export const navigation: NavItem[] = [
   },
 ];
 
-/**
- * All searchable pages — used by the search overlay.
- * Includes everything from nav plus pages only reachable
- * via page links or footer.
- */
-export const searchablePages: { label: string; href: string; keywords: string }[] = [
-  // Directory
-  { label: "Member Directory", href: "/membership/directory", keywords: "find business search company local medina" },
-  // Events
-  { label: "Upcoming Events", href: "/events", keywords: "calendar networking mixer workshop" },
-  { label: "Athena Awards", href: "/programs/athena-awards", keywords: "women leadership award ceremony" },
-  { label: "Golf Outing", href: "/programs/golf-outing", keywords: "golf scramble tournament summer" },
-  { label: "Sponsorships & Ribbon Cuttings", href: "/events/sponsorships", keywords: "sponsor ribbon cutting grand opening" },
-  { label: "Reflections of Italy", href: "/programs/italy-trip", keywords: "italy trip travel group vacation collette rome venice tuscany florence vatican" },
-  // Membership
-  { label: "Member Benefits", href: "/membership/benefits", keywords: "why join perks advantage" },
-  { label: "Pricing & Tiers", href: "/membership/pricing", keywords: "cost price tier level investment" },
-  { label: "Join the Chamber", href: "/membership/join", keywords: "join apply sign up membership application" },
-  { label: "First 30 Days Onboarding", href: "/membership/first-30-days", keywords: "new member onboarding first 30 days checklist welcome orientation getting started" },
-  { label: "Savings Programs", href: "/membership/savings", keywords: "discount deal savings insurance" },
-  { label: "Committees & Councils", href: "/membership/committees", keywords: "committee council volunteer leadership board" },
-  // Programs
-  { label: "Compass Professional Development Program", href: "/programs/compass", keywords: "professional development program compass" },
-  { label: "Social Connect", href: "/programs/social-connect", keywords: "social networking casual meetup" },
-  { label: "Safety Council", href: "/programs/safety-council", keywords: "osha safety compliance workplace" },
-  { label: "Rental Space", href: "/programs/rental-space", keywords: "rent room venue space building event" },
-  // News
-  { label: "Chamber News", href: "/news", keywords: "news update announcement" },
-  { label: "Member Announcements", href: "/news/member-news", keywords: "member news jobs hiring milestone" },
-  { label: "Job Board", href: "/jobs", keywords: "jobs hiring employment career work position opening" },
-  { label: "Magazine", href: "/news/magazine", keywords: "medina means business magazine publication" },
-  // About
-  { label: "About the Chamber", href: "/about", keywords: "about history mission" },
-  { label: "Advocacy", href: "/about/advocacy", keywords: "advocacy government policy legislation" },
-  { label: "Hall of Fame", href: "/about/hall-of-fame", keywords: "hall fame honor legacy" },
-  { label: "Board of Directors", href: "/about/board", keywords: "board directors leadership president julie mcnabb governance" },
-  { label: "Chamber Ambassadors", href: "/about/ambassadors", keywords: "ambassador ambassadors volunteer welcome ribbon cutting new member" },
-  { label: "Contact", href: "/about/contact", keywords: "contact phone email address location" },
-  // Brand
-  { label: "Medina Means Business", href: "/medina-means-business", keywords: "medina means business tagline brand magazine statement slogan" },
-  // Resources
-  { label: "Business Resources", href: "/resources", keywords: "resources guide programs tools medina county" },
-  { label: "Start a Business in Medina County", href: "/resources/start-a-business", keywords: "start business medina ohio llc register license launch new" },
-  { label: "Business Grants & Funding", href: "/resources/business-grants", keywords: "grant funding loan sba usda jobsohio finance money capital" },
-  { label: "Workforce & Hiring Resources", href: "/resources/workforce", keywords: "hire workforce jobs training ohiomeansjobs techecred employees" },
-  { label: "Resource Library", href: "/resources/library", keywords: "resource library documents forms links downloads tools programs guides" },
-  // Communities
-  { label: "Medina County Communities", href: "/community", keywords: "community area city township county medina" },
-  { label: "Medina Businesses", href: "/community/medina", keywords: "medina ohio business downtown square" },
-  { label: "Brunswick Businesses", href: "/community/brunswick", keywords: "brunswick ohio business chamber" },
-  { label: "Wadsworth Businesses", href: "/community/wadsworth", keywords: "wadsworth ohio business chamber" },
-  { label: "Lodi Businesses", href: "/community/lodi", keywords: "lodi ohio business village" },
-  { label: "Seville Businesses", href: "/community/seville", keywords: "seville ohio business" },
-  { label: "Valley City Businesses", href: "/community/valley-city", keywords: "valley city ohio business" },
-  { label: "Hinckley Businesses", href: "/community/hinckley", keywords: "hinckley ohio business buzzard" },
-];
-
 export const ctaLink = {
   label: "Join Now",
   href: "/membership/join",

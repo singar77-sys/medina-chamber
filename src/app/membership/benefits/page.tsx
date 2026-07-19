@@ -62,7 +62,7 @@ const coreBenefits = [
   {
     title: "Safety Council Access",
     description:
-      "Chamber members participate in the Medina County Safety Council at no additional charge, monthly workplace safety education meetings and eligibility for the Ohio BWC Group Rebate Program.",
+      "Chamber members enroll in the Medina County Safety Council at no annual cost — meetings are $24 per person — with monthly workplace safety education and eligibility for the Ohio BWC Group Rebate Program.",
     link: { label: "About the Safety Council", href: "/programs/safety-council" },
   },
 ];
@@ -101,7 +101,7 @@ const extraBenefits = [
   {
     title: "Member Rate on Events",
     description:
-      "Discounted registration for chamber events including the Golf Outing and Athena Awards. Safety Council membership is included at no additional charge.",
+      "Discounted registration for chamber events including the Golf Outing and Athena Awards. Safety Council enrollment is included at no annual cost (meetings are $24 per person).",
   },
 ];
 

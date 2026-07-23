@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-22T07:33:51.147Z",
-  "totalJobs": 10,
+  "generatedAt": "2026-07-23T07:32:49.620Z",
+  "totalJobs": 9,
   "jobs": [
     {
       "slug": "insurance-sales-representative",
@@ -16,7 +16,7 @@
       "dateRaw": "7/13/2026",
       "dateISO": "2026-07-13",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/insurance-sales-representative-343823",
-      "scrapedAt": "2026-07-22T07:33:45.949Z"
+      "scrapedAt": "2026-07-23T07:32:44.958Z"
     },
     {
       "slug": "receptionist",
@@ -32,7 +32,7 @@
       "dateRaw": "7/10/2026",
       "dateISO": "2026-07-10",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/receptionist-343540",
-      "scrapedAt": "2026-07-22T07:33:46.488Z"
+      "scrapedAt": "2026-07-23T07:32:45.563Z"
     },
     {
       "slug": "experienced-detailer",
@@ -48,7 +48,7 @@
       "dateRaw": "7/6/2026",
       "dateISO": "2026-07-06",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/experienced-detailer-342150",
-      "scrapedAt": "2026-07-22T07:33:47.111Z"
+      "scrapedAt": "2026-07-23T07:32:46.151Z"
     },
     {
       "slug": "women-s-health-nurse-practitioner",
@@ -64,7 +64,7 @@
       "dateRaw": "6/30/2026",
       "dateISO": "2026-06-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/women-s-health-nurse-practitioner-341236",
-      "scrapedAt": "2026-07-22T07:33:47.693Z"
+      "scrapedAt": "2026-07-23T07:32:46.695Z"
     },
     {
       "slug": "customer-service-representative-ft",
@@ -80,7 +80,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/customer-service-representative-ft-340861",
-      "scrapedAt": "2026-07-22T07:33:48.292Z"
+      "scrapedAt": "2026-07-23T07:32:47.260Z"
     },
     {
       "slug": "material-control-ft",
@@ -96,7 +96,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/material-control-ft-340864",
-      "scrapedAt": "2026-07-22T07:33:48.870Z"
+      "scrapedAt": "2026-07-23T07:32:47.839Z"
     },
     {
       "slug": "workforce-development-specialist-medina-county",
@@ -112,7 +112,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/workforce-development-specialist-medina-county-340917",
-      "scrapedAt": "2026-07-22T07:33:49.431Z"
+      "scrapedAt": "2026-07-23T07:32:48.441Z"
     },
     {
       "slug": "remodeling-apprentice",
@@ -128,23 +128,7 @@
       "dateRaw": "6/25/2026",
       "dateISO": "2026-06-25",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/remodeling-apprentice-340477",
-      "scrapedAt": "2026-07-22T07:33:49.996Z"
-    },
-    {
-      "slug": "assembly-technician-metal-shop",
-      "jobId": "339567",
-      "title": "Assembly Technician - Metal Shop",
-      "subtitle": "",
-      "body": "At Fittings Metal Collection, we design and build handcrafted metal shelving, wine racking, and architectural accents for luxury homes and hospitality spaces across the country. Every piece that leaves our shop carries the standard of a company that has delivered artisan-level craftsmanship for 40 years.\nWe're looking for someone who takes pride in doing things right &mdash; detail-oriented and comfortable working with their hands &mdash; and wants to be part of a small shop team where your work shows in every finished piece.\nWhat You'll Do\nPull and prepare parts accurately from work orders and assemble metal componentsInspect completed assemblies for quality, fit, and finishMaintain organized inventory and communicate material needs to your supervisorSafely operate shop equipment including saws, sanders, and hand toolsPackage and prepare finished products for shipment so they arrive in perfect conditionKeep a clean, organized, and safe workspaceWhat We're Looking For\nSome experience in assembly, fabrication, manufacturing, or a hands-on trade (1 year preferred, but we'll train the right person)Mechanical aptitude and comfort with hand and power toolsStrong attention to detail &mdash; you notice when something's off, and you fix itReliable, organized, and able to work both independently and with a teamAble to lift up to 50 lbs and stand for a full shiftAbout Architectural Justice & Fittings\nFor 40 years, Architectural Justice has delivered artisan-level remodeling, custom interiors, and distinctive design. In 2021, the company launched Fittings Metal Collection, which designs and manufactures handcrafted metal shelving, wine racking, and architectural accents for luxury residential and hospitality spaces across the country.\nThis position is employed by Architectural Justice and works directly with the Fittings team in our metal shop, where craftsmanship, attention to detail, and teamwork are essential to delivering high-quality products to our customers.",
-      "tags": [],
-      "location": "",
-      "applyUrl": "",
-      "companyName": "Architectural Justice",
-      "companySlug": "",
-      "dateRaw": "6/22/2026",
-      "dateISO": "2026-06-22",
-      "detailUrl": "https://business.medinachamber.com/jobs/Details/assembly-technician-metal-shop-339567",
-      "scrapedAt": "2026-07-22T07:33:50.567Z"
+      "scrapedAt": "2026-07-23T07:32:49.029Z"
     },
     {
       "slug": "catering-event-staff",
@@ -160,7 +144,7 @@
       "dateRaw": "4/30/2026",
       "dateISO": "2026-04-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/catering-event-staff-328997",
-      "scrapedAt": "2026-07-22T07:33:51.135Z"
+      "scrapedAt": "2026-07-23T07:32:49.612Z"
     }
   ]
 }

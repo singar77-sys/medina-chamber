@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-25T07:15:40.340Z",
-  "totalJobs": 8,
+  "generatedAt": "2026-07-26T07:34:42.013Z",
+  "totalJobs": 7,
   "jobs": [
     {
       "slug": "insurance-sales-representative",
@@ -16,7 +16,7 @@
       "dateRaw": "7/13/2026",
       "dateISO": "2026-07-13",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/insurance-sales-representative-343823",
-      "scrapedAt": "2026-07-25T07:15:36.480Z"
+      "scrapedAt": "2026-07-26T07:34:38.462Z"
     },
     {
       "slug": "receptionist",
@@ -32,7 +32,7 @@
       "dateRaw": "7/10/2026",
       "dateISO": "2026-07-10",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/receptionist-343540",
-      "scrapedAt": "2026-07-25T07:15:37.028Z"
+      "scrapedAt": "2026-07-26T07:34:39.049Z"
     },
     {
       "slug": "women-s-health-nurse-practitioner",
@@ -48,7 +48,7 @@
       "dateRaw": "6/30/2026",
       "dateISO": "2026-06-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/women-s-health-nurse-practitioner-341236",
-      "scrapedAt": "2026-07-25T07:15:37.558Z"
+      "scrapedAt": "2026-07-26T07:34:39.642Z"
     },
     {
       "slug": "customer-service-representative-ft",
@@ -64,7 +64,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/customer-service-representative-ft-340861",
-      "scrapedAt": "2026-07-25T07:15:38.130Z"
+      "scrapedAt": "2026-07-26T07:34:40.236Z"
     },
     {
       "slug": "material-control-ft",
@@ -80,7 +80,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/material-control-ft-340864",
-      "scrapedAt": "2026-07-25T07:15:38.679Z"
+      "scrapedAt": "2026-07-26T07:34:40.831Z"
     },
     {
       "slug": "workforce-development-specialist-medina-county",
@@ -96,23 +96,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/workforce-development-specialist-medina-county-340917",
-      "scrapedAt": "2026-07-25T07:15:39.160Z"
-    },
-    {
-      "slug": "remodeling-apprentice",
-      "jobId": "340477",
-      "title": "Remodeling Apprentice",
-      "subtitle": "",
-      "body": "Job description:\nArchitectural Justice is seeking a motivated and reliable Remodeling Apprentice to support our Lead Installer in residential remodeling projects. This is an ideal opportunity for someone looking to grow in the remodeling and construction industry by learning hands-on from experienced professionals in a creative and dynamic environment.\nPosition Overview:\nAs a Remodeling Apprentice, you will assist with various aspects of residential remodeling, including cabinet installation, trim work, flooring, tile, and granite countertop installation. You&rsquo;ll work closely with our skilled Lead Installer to develop your craft and gain experience across a variety of interior remodeling disciplines.\nResponsibilities May Include:\nAssisting with demolition, site prep, and material handlingSupporting framing, cabinet, and trim installationHelping install flooring, tile, and drywallLearning proper techniques for granite countertop handling and placementAssisting with minor plumbing and electrical work under supervisionMaintaining clean and organized job sitesFollowing safety procedures and taking pride in quality workmanshipQualifications:\nWillingness to learn and take directionThe ability to lift 100 pounds safelyBasic knowledge of hand and power toolsAbility to read a tape measure and work with fractionsFamiliarity with construction drawings/blue printsGood attitude, strong work ethic, and attention to detailPunctuality and reliable transportation requiredPrevious experience or training in a construction tradeWhy Join Architectural Justice?\nLearn directly from experienced remodeling professionalsGain experience across multiple trades including carpentry, cabinetry, tile, and stone installationWork on unique, high-quality residential remodeling projectsOpportunities for advancement and skill developmentJoin a team that values craftsmanship, creativity, and attention to detailArchitectural Justice is an award-winning design-build remodeling company serving Northeast Ohio for nearly 40 years. With in-house designers, craftsmen, cabinetmakers, stone fabricators, and installers, we create exceptional kitchens, bathrooms, and living spaces while maintaining the highest standards of craftsmanship and customer service. Learn more at www.architecturaljustice.com.",
-      "tags": [],
-      "location": "",
-      "applyUrl": "",
-      "companyName": "Architectural Justice",
-      "companySlug": "",
-      "dateRaw": "6/25/2026",
-      "dateISO": "2026-06-25",
-      "detailUrl": "https://business.medinachamber.com/jobs/Details/remodeling-apprentice-340477",
-      "scrapedAt": "2026-07-25T07:15:39.787Z"
+      "scrapedAt": "2026-07-26T07:34:41.413Z"
     },
     {
       "slug": "catering-event-staff",
@@ -128,7 +112,7 @@
       "dateRaw": "4/30/2026",
       "dateISO": "2026-04-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/catering-event-staff-328997",
-      "scrapedAt": "2026-07-25T07:15:40.333Z"
+      "scrapedAt": "2026-07-26T07:34:42.006Z"
     }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-26T07:34:42.013Z",
+  "generatedAt": "2026-07-27T08:30:12.182Z",
   "totalJobs": 7,
   "jobs": [
     {
@@ -16,7 +16,7 @@
       "dateRaw": "7/13/2026",
       "dateISO": "2026-07-13",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/insurance-sales-representative-343823",
-      "scrapedAt": "2026-07-26T07:34:38.462Z"
+      "scrapedAt": "2026-07-27T08:30:09.134Z"
     },
     {
       "slug": "receptionist",
@@ -32,7 +32,7 @@
       "dateRaw": "7/10/2026",
       "dateISO": "2026-07-10",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/receptionist-343540",
-      "scrapedAt": "2026-07-26T07:34:39.049Z"
+      "scrapedAt": "2026-07-27T08:30:09.655Z"
     },
     {
       "slug": "women-s-health-nurse-practitioner",
@@ -48,7 +48,7 @@
       "dateRaw": "6/30/2026",
       "dateISO": "2026-06-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/women-s-health-nurse-practitioner-341236",
-      "scrapedAt": "2026-07-26T07:34:39.642Z"
+      "scrapedAt": "2026-07-27T08:30:10.180Z"
     },
     {
       "slug": "customer-service-representative-ft",
@@ -64,7 +64,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/customer-service-representative-ft-340861",
-      "scrapedAt": "2026-07-26T07:34:40.236Z"
+      "scrapedAt": "2026-07-27T08:30:10.668Z"
     },
     {
       "slug": "material-control-ft",
@@ -80,7 +80,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/material-control-ft-340864",
-      "scrapedAt": "2026-07-26T07:34:40.831Z"
+      "scrapedAt": "2026-07-27T08:30:11.165Z"
     },
     {
       "slug": "workforce-development-specialist-medina-county",
@@ -96,7 +96,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/workforce-development-specialist-medina-county-340917",
-      "scrapedAt": "2026-07-26T07:34:41.413Z"
+      "scrapedAt": "2026-07-27T08:30:11.685Z"
     },
     {
       "slug": "catering-event-staff",
@@ -112,7 +112,7 @@
       "dateRaw": "4/30/2026",
       "dateISO": "2026-04-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/catering-event-staff-328997",
-      "scrapedAt": "2026-07-26T07:34:42.006Z"
+      "scrapedAt": "2026-07-27T08:30:12.174Z"
     }
   ]
 }

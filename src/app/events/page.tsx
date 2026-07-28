@@ -57,37 +57,31 @@ function EventCard({ event }: { event: ReturnType<typeof getUpcomingEvents>[numb
         </div>
       ) : null}
 
-      <div className="flex gap-f13 p-f21">
+      <div className="flex gap-f8 p-f13">
         {/* Date badge */}
-        <div className="flex-shrink-0 w-16 text-center">
-          <div className="bg-oxford text-white rounded-[var(--radius-md)] py-2 px-1">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-cambridge leading-none">
+        <div className="flex-shrink-0 w-12 text-center">
+          <div className="bg-oxford text-white rounded-[var(--radius-md)] py-1.5 px-1">
+            <p className="text-[9px] font-bold uppercase tracking-widest text-cambridge leading-none">
               {event.month.substring(0, 3)}
             </p>
-            <p className="text-2xl font-bold leading-tight mt-0.5">{event.day}</p>
-            <p className="text-[10px] text-text-tertiary leading-none">{event.year}</p>
+            <p className="text-lg font-bold leading-tight mt-0.5">{event.day}</p>
           </div>
-          <p className="text-[10px] text-text-tertiary mt-f8 font-medium">
+          <p className="text-[9px] text-text-tertiary mt-f3 font-medium">
             {event.dayOfWeek.substring(0, 3).toUpperCase()}
           </p>
         </div>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          <h3 className="text-h4 group-hover:text-accent transition-colors line-clamp-2">
+          <h3 className="text-body font-bold leading-snug group-hover:text-accent transition-colors line-clamp-2">
             {event.title}
           </h3>
-          <p className="text-body-sm text-text-secondary mt-f3">
+          <p className="text-caption text-text-secondary mt-f3">
             {event.startTime}–{event.endTime}
           </p>
           {event.location && (
             <p className="text-caption text-text-tertiary mt-f3 truncate">
               {event.location}
-            </p>
-          )}
-          {event.pricing && (
-            <p className="text-caption text-cambridge mt-f8 font-medium">
-              {event.pricing.split("\n")[0]}
             </p>
           )}
         </div>
@@ -98,7 +92,8 @@ function EventCard({ event }: { event: ReturnType<typeof getUpcomingEvents>[numb
 
 export default function EventsPage() {
   const allUpcoming = getUpcomingEvents();
-  const upcoming = allUpcoming.slice(0, 6);
+  const upcoming = allUpcoming.slice(0, 9);
+  const laterEvents = allUpcoming.slice(9);
   const hasEvents = upcoming.length > 0;
 
   const nextGolf = allUpcoming.find((e) => e.slug.startsWith("annual-chamber-golf"));
@@ -157,8 +152,8 @@ export default function EventsPage() {
           </div>
 
           {hasEvents ? (
-            /* gap-f21 — card grid gap */
-            <div className="grid gap-f21 lg:grid-cols-2">
+            /* gap-f13 — compact card grid gap */
+            <div className="grid gap-f13 sm:grid-cols-2 lg:grid-cols-3">
               {upcoming.map((event) => (
                 <EventCard key={event.eventId} event={event} />
               ))}
@@ -185,13 +180,37 @@ export default function EventsPage() {
             </div>
           )}
 
-          {allUpcoming.length > 6 && (
-            /* mt-f21 — grid→trailing note */
-            <p className="mt-f21 text-caption text-text-tertiary text-center">
-              Plus {allUpcoming.length - 6} more upcoming events, new events roll
-              onto this list as they approach. Check back weekly or follow the
-              chamber for announcements.
-            </p>
+          {laterEvents.length > 0 && (
+            <div className="mt-f34">
+              <h3 className="text-overline text-cambridge mb-f13">
+                More on the calendar
+              </h3>
+              <ul className="border-t border-border-secondary">
+                {laterEvents.map((event) => (
+                  <li key={event.eventId} className="border-b border-border-secondary">
+                    <Link
+                      href={`/events/${event.slug}`}
+                      className="group flex items-baseline gap-f13 py-f8 min-w-0"
+                    >
+                      <span className="flex-shrink-0 w-24 text-caption font-bold text-cambridge tabular-nums">
+                        {event.month.substring(0, 3)} {event.day}, {event.year}
+                      </span>
+                      <span className="text-body-sm font-medium text-text-primary group-hover:text-accent transition-colors truncate">
+                        {event.title}
+                      </span>
+                      {event.startTime && (
+                        <span className="hidden sm:inline flex-shrink-0 ml-auto text-caption text-text-tertiary">
+                          {event.startTime}
+                        </span>
+                      )}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-f13 text-caption text-text-tertiary">
+                New events are added as the chamber announces them.
+              </p>
+            </div>
           )}
         </FadeIn>
       </section>

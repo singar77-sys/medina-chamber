@@ -1,7 +1,23 @@
 {
-  "generatedAt": "2026-07-27T08:30:12.182Z",
-  "totalJobs": 7,
+  "generatedAt": "2026-07-28T07:37:47.105Z",
+  "totalJobs": 8,
   "jobs": [
+    {
+      "slug": "esol-instructor",
+      "jobId": "346357",
+      "title": "ESOL Instructor",
+      "subtitle": "",
+      "body": "We're hiring a Part-time ESOL Instructor to join our team. \nThe ESOL Instructor at Project: LEARN of Medina County provides high-quality English language instruction to adult\nlearners whose first language is not English. The instructor creates a supportive, student-centered learning environment\nthat helps students strengthen their English proficiency in speaking, listening, reading, and writing.\nIf you are interested in this opportunity&mdash;or know someone who may be a great fit&mdash;we would greatly appreciate you reaching out to julie.alexander@projectlearnmedina.org.",
+      "tags": [],
+      "location": "",
+      "applyUrl": "",
+      "companyName": "Project: LEARN of Medina County",
+      "companySlug": "",
+      "dateRaw": "7/27/2026",
+      "dateISO": "2026-07-27",
+      "detailUrl": "https://business.medinachamber.com/jobs/Details/esol-instructor-346357",
+      "scrapedAt": "2026-07-28T07:37:43.437Z"
+    },
     {
       "slug": "insurance-sales-representative",
       "jobId": "343823",
@@ -16,7 +32,7 @@
       "dateRaw": "7/13/2026",
       "dateISO": "2026-07-13",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/insurance-sales-representative-343823",
-      "scrapedAt": "2026-07-27T08:30:09.134Z"
+      "scrapedAt": "2026-07-28T07:37:43.986Z"
     },
     {
       "slug": "receptionist",
@@ -32,7 +48,7 @@
       "dateRaw": "7/10/2026",
       "dateISO": "2026-07-10",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/receptionist-343540",
-      "scrapedAt": "2026-07-27T08:30:09.655Z"
+      "scrapedAt": "2026-07-28T07:37:44.496Z"
     },
     {
       "slug": "women-s-health-nurse-practitioner",
@@ -48,7 +64,7 @@
       "dateRaw": "6/30/2026",
       "dateISO": "2026-06-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/women-s-health-nurse-practitioner-341236",
-      "scrapedAt": "2026-07-27T08:30:10.180Z"
+      "scrapedAt": "2026-07-28T07:37:45.008Z"
     },
     {
       "slug": "customer-service-representative-ft",
@@ -64,7 +80,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/customer-service-representative-ft-340861",
-      "scrapedAt": "2026-07-27T08:30:10.668Z"
+      "scrapedAt": "2026-07-28T07:37:45.506Z"
     },
     {
       "slug": "material-control-ft",
@@ -80,7 +96,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/material-control-ft-340864",
-      "scrapedAt": "2026-07-27T08:30:11.165Z"
+      "scrapedAt": "2026-07-28T07:37:46.061Z"
     },
     {
       "slug": "workforce-development-specialist-medina-county",
@@ -96,7 +112,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/workforce-development-specialist-medina-county-340917",
-      "scrapedAt": "2026-07-27T08:30:11.685Z"
+      "scrapedAt": "2026-07-28T07:37:46.571Z"
     },
     {
       "slug": "catering-event-staff",
@@ -112,7 +128,7 @@
       "dateRaw": "4/30/2026",
       "dateISO": "2026-04-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/catering-event-staff-328997",
-      "scrapedAt": "2026-07-27T08:30:12.174Z"
+      "scrapedAt": "2026-07-28T07:37:47.093Z"
     }
   ]
 }

@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { getUpcomingEvents } from "@/data/events";
-import { getEventGraphicRenderer } from "@/components/events/graphics/registry";
-import { FluidGraphicFrame } from "@/components/events/graphics/FluidGraphicFrame";
+import { getUpcomingEvents, shortenEventTitle } from "@/data/events";
+import { EventsCalendar } from "@/components/events/EventsCalendar";
 import { FadeIn } from "@/components/FadeIn";
 
 // ISR: the upcoming/past split is derived from `new Date()` against static
@@ -24,77 +23,23 @@ export const metadata: Metadata = {
   alternates: { canonical: "/events" },
 };
 
-function EventCard({ event }: { event: ReturnType<typeof getUpcomingEvents>[number] }) {
-  const Graphic = getEventGraphicRenderer(event);
-
-  return (
-    <Link
-      href={`/events/${event.slug}`}
-      className="
-        group flex flex-col min-w-0 overflow-hidden
-        bg-bg-secondary border border-border-secondary
-        rounded-[var(--radius-lg)]
-        hover:border-cambridge/40 hover:shadow-cambridge
-        transition-all
-      "
-    >
-      {/* SVG event-type graphic — falls back to cloudinary thumbnail */}
-      {Graphic ? (
-        <div className="border-b border-border-secondary">
-          <FluidGraphicFrame mode="social">
-            <Graphic mode="social" />
-          </FluidGraphicFrame>
-        </div>
-      ) : event.image ? (
-        <div className="border-b border-border-secondary aspect-[1200/630] bg-bg-tertiary">
-          <Image
-            src={event.image}
-            alt={`${event.title}, Greater Medina Chamber of Commerce event in Medina, Ohio`}
-            width={1200}
-            height={630}
-            className="object-contain w-full h-full"
-          />
-        </div>
-      ) : null}
-
-      <div className="flex gap-f8 p-f13">
-        {/* Date badge */}
-        <div className="flex-shrink-0 w-12 text-center">
-          <div className="bg-oxford text-white rounded-[var(--radius-md)] py-1.5 px-1">
-            <p className="text-[9px] font-bold uppercase tracking-widest text-cambridge leading-none">
-              {event.month.substring(0, 3)}
-            </p>
-            <p className="text-lg font-bold leading-tight mt-0.5">{event.day}</p>
-          </div>
-          <p className="text-[9px] text-text-tertiary mt-f3 font-medium">
-            {event.dayOfWeek.substring(0, 3).toUpperCase()}
-          </p>
-        </div>
-
-        {/* Content */}
-        <div className="flex-1 min-w-0">
-          <h3 className="text-body font-bold leading-snug group-hover:text-accent transition-colors line-clamp-2">
-            {event.title}
-          </h3>
-          <p className="text-caption text-text-secondary mt-f3">
-            {event.startTime}–{event.endTime}
-          </p>
-          {event.location && (
-            <p className="text-caption text-text-tertiary mt-f3 truncate">
-              {event.location}
-            </p>
-          )}
-        </div>
-      </div>
-    </Link>
-  );
-}
-
 export default function EventsPage() {
   const allUpcoming = getUpcomingEvents();
-  const upcoming = allUpcoming.slice(0, 9);
-  const laterEvents = allUpcoming.slice(9);
-  const hasEvents = upcoming.length > 0;
+  const hasEvents = allUpcoming.length > 0;
+
+  // Slim, serializable props for the client calendar — titles shortened
+  // server-side so events.json (and shortenEventTitle) stay out of the
+  // client bundle. Sorted ascending so the calendar's month range is right.
+  const todayISO = new Date().toISOString().split("T")[0];
+  const calendarEvents = allUpcoming
+    .map((e) => ({
+      slug: e.slug,
+      title: shortenEventTitle(e.title),
+      dateISO: e.dateISO,
+      startTime: e.startTime,
+      location: e.location,
+    }))
+    .sort((a, b) => a.dateISO.localeCompare(b.dateISO));
 
   const nextGolf = allUpcoming.find((e) => e.slug.startsWith("annual-chamber-golf"));
   const nextEggs = allUpcoming.find((e) => e.slug.startsWith("eggs-expertise"));
@@ -146,18 +91,17 @@ export default function EventsPage() {
             <h2 className="text-h2">Upcoming Events</h2>
             {hasEvents && (
               <p className="text-body-sm text-text-tertiary">
-                Next {upcoming.length} of {allUpcoming.length}
+                {allUpcoming.length} upcoming events
               </p>
             )}
           </div>
 
           {hasEvents ? (
-            /* gap-f13 — compact card grid gap */
-            <div className="grid gap-f13 sm:grid-cols-2 lg:grid-cols-3">
-              {upcoming.map((event) => (
-                <EventCard key={event.eventId} event={event} />
-              ))}
-            </div>
+            <EventsCalendar
+              events={calendarEvents}
+              initialYm={todayISO.slice(0, 7)}
+              todayISO={todayISO}
+            />
           ) : (
             <div className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] text-center">
               <p className="text-body-lg text-text-secondary">
@@ -180,38 +124,6 @@ export default function EventsPage() {
             </div>
           )}
 
-          {laterEvents.length > 0 && (
-            <div className="mt-f34">
-              <h3 className="text-overline text-cambridge mb-f13">
-                More on the calendar
-              </h3>
-              <ul className="border-t border-border-secondary">
-                {laterEvents.map((event) => (
-                  <li key={event.eventId} className="border-b border-border-secondary">
-                    <Link
-                      href={`/events/${event.slug}`}
-                      className="group flex items-baseline gap-f13 py-f8 min-w-0"
-                    >
-                      <span className="flex-shrink-0 w-24 text-caption font-bold text-cambridge tabular-nums">
-                        {event.month.substring(0, 3)} {event.day}, {event.year}
-                      </span>
-                      <span className="text-body-sm font-medium text-text-primary group-hover:text-accent transition-colors truncate">
-                        {event.title}
-                      </span>
-                      {event.startTime && (
-                        <span className="hidden sm:inline flex-shrink-0 ml-auto text-caption text-text-tertiary">
-                          {event.startTime}
-                        </span>
-                      )}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-f13 text-caption text-text-tertiary">
-                New events are added as the chamber announces them.
-              </p>
-            </div>
-          )}
         </FadeIn>
       </section>
 

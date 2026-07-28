@@ -90,6 +90,11 @@ export const navigation: NavItem[] = [
         description: "Mentorship, networking, safety, and Compass",
       },
       {
+        label: "Safety Council",
+        href: "/programs/safety-council",
+        description: "Monthly safety training and BWC rebate eligibility",
+      },
+      {
         label: "Rental Space",
         href: "/programs/rental-space",
         description: "Book a meeting room in downtown Medina",

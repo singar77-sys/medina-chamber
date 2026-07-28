@@ -3,8 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
-import { getStaticPhotos } from "@/lib/static-media";
-import { EventGallery } from "@/components/events/EventGallery";
 
 export const metadata: Metadata = {
   title: "Medina County Safety Council",
@@ -41,12 +39,7 @@ const requirements = [
   "Pre-register for each meeting by 5:00 PM on the Friday before",
 ];
 
-export default async function SafetyCouncilPage() {
-  const plaquePhotos = await getStaticPhotos(
-    "programs/safety-council",
-    "Business receiving a BWC Group Rebate award at the Medina County Safety Council, Medina Ohio",
-  );
-
+export default function SafetyCouncilPage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -312,17 +305,6 @@ export default async function SafetyCouncilPage() {
           </div>
         </FadeIn>
       </section>
-
-      {/* BWC award recipient photos */}
-      {plaquePhotos.length > 0 && (
-        <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55">
-          <FadeIn>
-            <p className="text-overline text-cambridge mb-f8">Recognition</p>
-            <h2 className="text-h2 mb-f21">Award Recipients</h2>
-            <EventGallery photos={plaquePhotos} title="" />
-          </FadeIn>
-        </section>
-      )}
 
       {/* Chamber members enroll free — ghosted safety-gear section background */}
       <section className="relative overflow-hidden py-f55 lg:py-f89">

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T07:42:32.115Z",
+  "generatedAt": "2026-07-30T07:34:26.639Z",
   "totalJobs": 8,
   "jobs": [
     {
@@ -16,7 +16,7 @@
       "dateRaw": "7/27/2026",
       "dateISO": "2026-07-27",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/esol-instructor-346357",
-      "scrapedAt": "2026-07-29T07:42:28.163Z"
+      "scrapedAt": "2026-07-30T07:34:22.489Z"
     },
     {
       "slug": "insurance-sales-representative",
@@ -32,7 +32,7 @@
       "dateRaw": "7/13/2026",
       "dateISO": "2026-07-13",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/insurance-sales-representative-343823",
-      "scrapedAt": "2026-07-29T07:42:28.705Z"
+      "scrapedAt": "2026-07-30T07:34:23.039Z"
     },
     {
       "slug": "receptionist",
@@ -48,7 +48,7 @@
       "dateRaw": "7/10/2026",
       "dateISO": "2026-07-10",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/receptionist-343540",
-      "scrapedAt": "2026-07-29T07:42:29.256Z"
+      "scrapedAt": "2026-07-30T07:34:23.600Z"
     },
     {
       "slug": "women-s-health-nurse-practitioner",
@@ -64,7 +64,7 @@
       "dateRaw": "6/30/2026",
       "dateISO": "2026-06-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/women-s-health-nurse-practitioner-341236",
-      "scrapedAt": "2026-07-29T07:42:29.794Z"
+      "scrapedAt": "2026-07-30T07:34:24.188Z"
     },
     {
       "slug": "customer-service-representative-ft",
@@ -80,7 +80,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/customer-service-representative-ft-340861",
-      "scrapedAt": "2026-07-29T07:42:30.356Z"
+      "scrapedAt": "2026-07-30T07:34:24.887Z"
     },
     {
       "slug": "material-control-ft",
@@ -96,7 +96,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/material-control-ft-340864",
-      "scrapedAt": "2026-07-29T07:42:30.893Z"
+      "scrapedAt": "2026-07-30T07:34:25.461Z"
     },
     {
       "slug": "workforce-development-specialist-medina-county",
@@ -112,7 +112,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/workforce-development-specialist-medina-county-340917",
-      "scrapedAt": "2026-07-29T07:42:31.514Z"
+      "scrapedAt": "2026-07-30T07:34:26.058Z"
     },
     {
       "slug": "catering-event-staff",
@@ -128,7 +128,7 @@
       "dateRaw": "4/30/2026",
       "dateISO": "2026-04-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/catering-event-staff-328997",
-      "scrapedAt": "2026-07-29T07:42:32.103Z"
+      "scrapedAt": "2026-07-30T07:34:26.627Z"
     }
   ]
 }

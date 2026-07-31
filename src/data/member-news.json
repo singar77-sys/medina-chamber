@@ -1,25 +1,82 @@
 {
-  "generatedAt": "2026-07-30T07:34:21.177Z",
-  "totalArticles": 9,
+  "generatedAt": "2026-07-31T07:49:57.021Z",
+  "totalArticles": 10,
   "articles": [
     {
-      "slug": "project-learn-of-medina-county-is-hiring",
-      "articleId": "346303",
-      "title": "Project: LEARN of Medina County is hiring!",
-      "subtitle": "Additional Info",
-      "body": "We're hiring a Part-time ESOL Instructor to join our team. \n\np.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.8px 'Times New Roman'; color: #000000}\n\nThe ESOL Instructor at Project: LEARN of Medina County provides high-quality English language instruction to adult\nlearners whose first language is not English. The instructor creates a supportive, student-centered learning environment\nthat helps students strengthen their English proficiency in speaking, listening, reading, and writing.\nIf you are interested in this opportunity&mdash;or know someone who may be a great fit&mdash;we would greatly appreciate you reaching out to julie.alexander@projectlearnmedina.org.",
-      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_784,w_1764,x_0,y_0/q_auto/f_auto/q_auto/v1785176335/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/cdb85e3e4edb491bb57cc5f15cba754a/Project-Learn-Logo-Main.png",
+      "slug": "1st-annual-fundraising-car-show",
+      "articleId": "347096",
+      "title": "1st Annual Fundraising Car Show",
+      "subtitle": "Enter your car or come check out the show!",
+      "body": "Don't miss the 1st Annual Fundraising Car Show hosted by the Medina Odd Fellows!",
+      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_2048,w_2048,x_0,y_0/q_auto/f_auto/q_auto/v1785423508/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/94e6c419c14a42e480a489b848eab88e/Medina-Odd-Fellows.jpg",
       "tags": [
-        "By\r\n                            Jenny Young",
-        "7/27/2026"
+        "By\r\n                            Medina Odd Fellows",
+        "7/30/2026"
       ],
-      "memberName": "Jenny Young",
-      "memberSlug": "",
-      "dateRaw": "7/27/2026",
-      "dateISO": "2026-07-27",
-      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_784,w_1764,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785176335/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/cdb85e3e4edb491bb57cc5f15cba754a/Project-Learn-Logo-Main.png",
-      "detailUrl": "https://business.medinachamber.com/news/Details/project-learn-of-medina-county-is-hiring-346303",
-      "scrapedAt": "2026-07-30T07:34:06.430Z"
+      "memberName": "Medina Odd Fellows",
+      "memberSlug": "32622412",
+      "dateRaw": "7/30/2026",
+      "dateISO": "2026-07-30",
+      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_2048,w_2048,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785423508/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/94e6c419c14a42e480a489b848eab88e/Medina-Odd-Fellows.jpg",
+      "detailUrl": "https://business.medinachamber.com/news/Details/1st-annual-fundraising-car-show-347096",
+      "scrapedAt": "2026-07-31T07:49:52.321Z"
+    },
+    {
+      "slug": "medina-county-fair-parking-fundraiser",
+      "articleId": "347100",
+      "title": "Medina County Fair Parking Fundraiser",
+      "subtitle": "Support a great cause while attending the Medina County Fair!",
+      "body": "Attending the Medina County Fair? Support a great cause by parking with the Medina Odd Fellows!",
+      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_2048,w_2048,x_0,y_0/q_auto/f_auto/q_auto/v1785423789/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/4ab7f2bd63e54517b57f7d160e838be9/Medina-Odd-Fellows.jpg",
+      "tags": [
+        "By\r\n                            Medina Odd Fellows",
+        "7/30/2026"
+      ],
+      "memberName": "Medina Odd Fellows",
+      "memberSlug": "32622412",
+      "dateRaw": "7/30/2026",
+      "dateISO": "2026-07-30",
+      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_2048,w_2048,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785423789/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/4ab7f2bd63e54517b57f7d160e838be9/Medina-Odd-Fellows.jpg",
+      "detailUrl": "https://business.medinachamber.com/news/Details/medina-county-fair-parking-fundraiser-347100",
+      "scrapedAt": "2026-07-31T07:49:52.818Z"
+    },
+    {
+      "slug": "medina-athletics-sponsorship-opportunities",
+      "articleId": "346803",
+      "title": "Medina Athletics Sponsorship Opportunities",
+      "subtitle": "Check out this great opportunity!",
+      "body": "a {    text-decoration: none;    color: #464feb; }\ntr th, tr td {    border: 1px solid #e6e6e6; }\ntr th {    background-color: #f5f5f5; }\n\na {    text-decoration: none;    color: #464feb; }\ntr th, tr td {    border: 1px solid #e6e6e6; }\ntr th {    background-color: #f5f5f5; }\n\na {    text-decoration: none;    color: #464feb; }\ntr th, tr td {    border: 1px solid #e6e6e6; }\ntr th {    background-color: #f5f5f5; }\n\na {    text-decoration: none;    color: #464feb; }\ntr th, tr td {    border: 1px solid #e6e6e6; }\ntr th {    background-color: #f5f5f5; }\n\na {    text-decoration: none;    color: #464feb; }\ntr th, tr td {    border: 1px solid #e6e6e6; }\ntr th {    background-color: #f5f5f5; }\n\na {    text-decoration: none;    color: #464feb; }\ntr th, tr td {    border: 1px solid #e6e6e6; }\ntr th {    background-color: #f5f5f5; }\nAs the fall sports season begins on August 1, we invite Chamber members, local businesses, and community supporters to join us in supporting Medina Athletics and cheering on our Medina Bees.\n\nThe impact of community support is remarkable. Over the past 10 years, the Medina Athletic Boosters have raised nearly $500,000 to help support athletic programs and offset expenses that school budgets simply cannot cover. In addition, the Boosters have contributed $20,000 annually to support Medina Prom for each of the last five years, helping create memorable experiences for our students beyond athletics.\n\nYour support has helped fund important projects and improvements across the district, including:\n\nA new AED to enhance student and spectator safety\nNew baseball and softball windscreens\nBrand-new scoreboards in both the gymnasium and Duke's Stadium\nFull funding for Medina's new Girls Flag Football Team\nCountless equipment, facility, and program enhancements that directly benefit our student-athletes\n\nAs we look toward the future, our goal is to raise even more support so that additional improvements can be made to athletic facilities and new capital projects. Every sponsorship and donation helps create opportunities to improve the student-athlete experience, and invest in facilities and equipment that will serve Medina students, families, and the community for years to come.\n\nBecome a Medina Athletic Booster Sponsor\n\nSupporting Medina Athletics is easy and provides a great opportunity to promote your business while giving back to the community. Businesses can gain valuable exposure through:\n\nAdvertising on the new LED Board at athletic events\nBusiness listings and advertisements on the Medina Athletics Website\nVisibility within the Medina Athletics App\nSponsorship opportunities at athletic events and Booster activities\n\nThousands of students, parents, alumni, and community members engage with Medina Athletics throughout the year, making sponsorship an effective way to showcase your support while increasing awareness of your business.\n\nTo learn more about sponsorship opportunities, memberships, or donations, visit www.medinaboosters.org or contact the Medina Athletic Boosters.\n\nSupport the Bees This Fall\n\nWe encourage everyone to come out and support the Bees in person this fall. Whether you're filling the stands on Friday nights, attending matches and competitions, becoming a sponsor, or making a donation, your involvement makes a lasting difference.\n\nThank you for investing in Medina's students, student-athletes, and the future of our community. Together, we can continue building on the success of the past decade and provide even greater opportunities for future generations of Medina Bees.\n\nGo Bees! 🐝\n\nKen Dworznik\nVP Sponsorship \nMedina Athletic Boosters\nboostervpsponsor@medinabees.org",
+      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1001,w_1400,x_0,y_0/q_auto/f_auto/q_auto/v1785292914/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/bce87398f55c4b779e58e8ec65279974/MAB-LOGO.jpg",
+      "tags": [
+        "By\r\n                            Medina Athletic Boosters",
+        "7/29/2026"
+      ],
+      "memberName": "Medina Athletic Boosters",
+      "memberSlug": "22529192",
+      "dateRaw": "7/29/2026",
+      "dateISO": "2026-07-29",
+      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1001,w_1400,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785292914/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/bce87398f55c4b779e58e8ec65279974/MAB-LOGO.jpg",
+      "detailUrl": "https://business.medinachamber.com/news/Details/medina-athletics-sponsorship-opportunities-346803",
+      "scrapedAt": "2026-07-31T07:49:53.338Z"
+    },
+    {
+      "slug": "host-your-holiday-party-at-the-club",
+      "articleId": "346683",
+      "title": "Host Your Holiday Party At the Club",
+      "subtitle": "It's not too early to start thinking about Holiday Parties!",
+      "body": "The holiday season is the perfect time to gather, celebrate, and create lasting memories and we'd love to host your event at Weymouth and Fox Meadow!\n\nWhether you're planning an intimate team gathering or a large company celebration, we offer a variety of beautiful event spaces that can accommodate groups of 20 to 450 guests. With multiple room options, we can help you find the perfect setting for your holiday party.\n\nTo make planning easy, the Clubs offer:\nDelicious in-house catering with customizable menu options\nMultiple event spaces for groups of 20&ndash;450 guests\nExclusive holiday party packages designed to fit a variety of styles and budgets\nA dedicated events team to assist you every step of the way\nHoliday dates fill quickly, so now is the perfect time to reserve your preferred date.\n\nIf you're ready to start planning or would like more information about our holiday packages, simply reply to this email and I would be happy to assist. We'd be delighted to help you create a memorable holiday celebration.\n\nWe look forward to celebrating with you this season!\n\nFeel free to email Allie with any questions at allie.stokes@arcisgolf.com",
+      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_159,w_292,x_0,y_0/q_auto/f_auto/q_auto/v1785263176/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/3c23413c8c584f86b8877f07009382cb/Weymouth-fox-duel-logo.png",
+      "tags": [
+        "By\r\n                            Weymouth Country Club",
+        "7/28/2026"
+      ],
+      "memberName": "Weymouth Country Club",
+      "memberSlug": "22529858",
+      "dateRaw": "7/28/2026",
+      "dateISO": "2026-07-28",
+      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_159,w_292,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785263176/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/3c23413c8c584f86b8877f07009382cb/Weymouth-fox-duel-logo.png",
+      "detailUrl": "https://business.medinachamber.com/news/Details/host-your-holiday-party-at-the-club-346683",
+      "scrapedAt": "2026-07-31T07:49:53.830Z"
     },
     {
       "slug": "celebrate-our-100th-issue-with-us",
@@ -38,26 +95,7 @@
       "dateISO": "2026-07-23",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_417,w_1500,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785160773/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/9ae82988f22d468ab9f4a86c9cb38d26/Joy-of-Medina-County-Magazine.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/celebrate-our-100th-issue-with-us-346007",
-      "scrapedAt": "2026-07-30T07:34:17.025Z"
-    },
-    {
-      "slug": "ribbon-cutting-for-hope-healing-s-mobile-advocacy-vehicle-7-29-10am",
-      "articleId": "344424",
-      "title": "Ribbon Cutting for Hope & Healing's Mobile Advocacy Vehicle, 7/29 @ 10AM",
-      "subtitle": "Join us to celebrate!",
-      "body": "You are invited to join Hope & Healing Survivor Resource Center for a special Ribbon Cutting Ceremony celebrating the launch of our new Mobile Advocacy Vehicle made possible with the support of the Medina County Commissioners. \n\nThis innovative resource represents a significant step forward in our mission to meet survivors where they are, bringing advocacy, crisis intervention, safety planning, case management, and connections to essential resources directly into neighborhoods across Medina County. By eliminating transportation barriers and increasing access to trauma-informed services, the Mobile Advocacy Vehicle will help ensure that more survivors can receive support when and where they need it most. \n\nWhat: Hope & Healing Mobile Advocacy Vehicle Ribbon Cutting When: Wed July 29th 10am &ndash; 11am Where: Medina County Administration Building \n144 N Broadway Street \nMedina, OH 44256 \n \nRSVP is requested through our secure online form here. \n\nWe invite the community to join us as we officially unveil this important new resource. The program will include brief remarks, the ceremonial ribbon cutting, and opportunities to tour the vehicle. \n\nThe Mobile Advocacy Vehicle was made possible through the generosity and partnership of community leaders who share our commitment to ensuring every survivor has access to compassionate, trauma-informed support, regardless of where they are. \n\nWe hope you will join us as we celebrate this exciting milestone and the expanded opportunities it creates to bring hope, healing, and safety directly into our community.",
-      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_351,w_1200,x_0,y_0/q_auto/f_auto/q_auto/v1784299777/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/c7b13f772e914051bb8b77bede3970db/hope-and-healing.jpg",
-      "tags": [
-        "By\r\n                            Hope & Healing Survivor Resource Center (Battered Women's Shelter and Rape Crisi",
-        "7/16/2026"
-      ],
-      "memberName": "Hope & Healing Survivor Resource Center (Battered Women's Shelter and Rape Crisi",
-      "memberSlug": "22529292",
-      "dateRaw": "7/16/2026",
-      "dateISO": "2026-07-16",
-      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_351,w_1200,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1784299777/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/c7b13f772e914051bb8b77bede3970db/hope-and-healing.jpg",
-      "detailUrl": "https://business.medinachamber.com/news/Details/ribbon-cutting-for-hope-healing-s-mobile-advocacy-vehicle-7-29-10am-344424",
-      "scrapedAt": "2026-07-30T07:34:17.647Z"
+      "scrapedAt": "2026-07-31T07:49:54.400Z"
     },
     {
       "slug": "launching-on-linkedin",
@@ -76,26 +114,7 @@
       "dateISO": "2026-07-07",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_224,w_599,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1783536565/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/d46c65cdb09f45e9ba1010134db40aeb/Transition-Consulting.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/launching-on-linkedin-342499",
-      "scrapedAt": "2026-07-30T07:34:18.242Z"
-    },
-    {
-      "slug": "bike-nite",
-      "articleId": "321884",
-      "title": "Bike Nite",
-      "subtitle": "Don't miss this weekly fun night!",
-      "body": "Every Thursday from 5pm-8pm, Bike Nite is back! Motorcycles of all shapes and sizes are welcome. $3 off Custom Built Combos as well as Happy Hour deals until 6pm",
-      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/q_auto/v1774649058/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/673b6f38b32244369eba5b153a97fac1/QS-L-Color-Logo-2.png",
-      "tags": [
-        "By\r\n                            Quaker Steak and Lube",
-        "7/1/2026"
-      ],
-      "memberName": "Quaker Steak and Lube",
-      "memberSlug": "30693401",
-      "dateRaw": "7/1/2026",
-      "dateISO": "2026-07-01",
-      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774649058/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/673b6f38b32244369eba5b153a97fac1/QS-L-Color-Logo-2.png",
-      "detailUrl": "https://business.medinachamber.com/news/Details/bike-nite-321884",
-      "scrapedAt": "2026-07-30T07:34:18.819Z"
+      "scrapedAt": "2026-07-31T07:49:54.902Z"
     },
     {
       "slug": "why-industry-experience-isn-t-always-the-most-important-factor-when-choosing-a-web-designer-or-agency",
@@ -114,7 +133,7 @@
       "dateISO": "2026-07-01",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1536,w_2047,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785257916/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/e4aadcb052a242138df1c8489ad66a60/Glow-up-New-Loog-withh-darker-bluejpg.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/why-industry-experience-isn-t-always-the-most-important-factor-when-choosing-a-web-designer-or-agency-341307",
-      "scrapedAt": "2026-07-30T07:34:19.451Z"
+      "scrapedAt": "2026-07-31T07:49:55.467Z"
     },
     {
       "slug": "van-s-tire-pros-dog-days-of-summer-gas-card-giveaway",
@@ -133,7 +152,7 @@
       "dateISO": "2026-07-01",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1500,w_1500,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1782917074/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/218439aa8d76446aa3e5f240bbd6775f/Vans.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/van-s-tire-pros-dog-days-of-summer-gas-card-giveaway-341496",
-      "scrapedAt": "2026-07-30T07:34:20.019Z"
+      "scrapedAt": "2026-07-31T07:49:55.965Z"
     },
     {
       "slug": "medina-lifestyle-july-explore-issue",
@@ -152,7 +171,7 @@
       "dateISO": "2026-06-30",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_248,w_813,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1782833708/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/73f9beeeff124af489964b7d91bad4b0/LOGO.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/medina-lifestyle-july-explore-issue-341171",
-      "scrapedAt": "2026-07-30T07:34:20.590Z"
+      "scrapedAt": "2026-07-31T07:49:56.469Z"
     },
     {
       "slug": "car-cruise-in",
@@ -171,7 +190,7 @@
       "dateISO": "2026-04-06",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775437512/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/62aa1d5146da4ab78eb0def384a2a8ee/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/car-cruise-in-323364",
-      "scrapedAt": "2026-07-30T07:34:21.165Z"
+      "scrapedAt": "2026-07-31T07:49:57.010Z"
     }
   ]
 }

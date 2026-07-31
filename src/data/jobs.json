@@ -1,7 +1,23 @@
 {
-  "generatedAt": "2026-07-30T07:34:26.639Z",
+  "generatedAt": "2026-07-31T07:50:01.952Z",
   "totalJobs": 8,
   "jobs": [
+    {
+      "slug": "legal-secretary-hoffee-wallace-law-firm-medina-oh",
+      "jobId": "347072",
+      "title": "Legal Secretary – Hoffee & Wallace Law Firm (Medina, OH)",
+      "subtitle": "",
+      "body": "Medina, Ohio &ndash; Legal Secretary &ndash; Hoffee & Wallace Law Firm\nOverview: Looking to hire a Legal Secretary for a full-time position in our downtown Medina office. Starting pay is $18.00 per hour. Schedule is Monday through Friday from 8:30 am to 4:30 pm. In person training will take place in our Wooster office for the first 2-3 weeks (length of training depends on prior experience).\nResponsibilities: Provide administrative support to one or more attorneys; Draft and proofread legal documents; File, organize, scan, copy, and fax legal documents in a timely manner; Answer phone calls, take notes/messages, and redirect calls when appropriate; Schedule consultations, hearings, meetings, and depositions; Preserve and update case record system; Facilitate meeting of deadlines by keeping agendas and providing reminders; Effectively communicate with witnesses, clients, colleagues, and court personnel; Greet visitors and perform initial screening of clients; Travel occasionally between Wooster and Medina firm offices.**\n**Initial training will also require travel to Wooster, Ohio. Must have reliable transportation.\nQualifications: Outstanding time management and written and oral communication skills; Ability to effectively prioritize and meet deadlines; Ability to multitask and be comfortable dealing with a diverse clientele; Proficient typing skills, including Microsoft Office programs, and ability to work with legal technology, court filings systems, and court docket; Ability to work as a team with attorneys and other colleagues; Courteous and professional demeanor in communications with clients and other professionals; Ability to maintain absolute and complete confidentiality of all client information; Reliable transportation.\nBenefits: Our office is closed for all major holidays and between the Christmas and New Years holidays. Office has a convenient downtown location in the Medina Square. Benefits include paid time off, sick leave, and employer matched retirement contributions.\nHow to Apply: E-mail your resume, cover letter, and list of references with contact information to chelsea@hoffeelawfirm.com \nSubject Line: HWLF Legal Secretary (Medina)\nDeadline: Accepting applications until filled.",
+      "tags": [],
+      "location": "",
+      "applyUrl": "",
+      "companyName": "Hoffee & Wallace Law Firm",
+      "companySlug": "",
+      "dateRaw": "7/30/2026",
+      "dateISO": "2026-07-30",
+      "detailUrl": "https://business.medinachamber.com/jobs/Details/legal-secretary-hoffee-wallace-law-firm-medina-oh-347072",
+      "scrapedAt": "2026-07-31T07:49:58.237Z"
+    },
     {
       "slug": "esol-instructor",
       "jobId": "346357",
@@ -16,7 +32,7 @@
       "dateRaw": "7/27/2026",
       "dateISO": "2026-07-27",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/esol-instructor-346357",
-      "scrapedAt": "2026-07-30T07:34:22.489Z"
+      "scrapedAt": "2026-07-31T07:49:58.754Z"
     },
     {
       "slug": "insurance-sales-representative",
@@ -32,23 +48,7 @@
       "dateRaw": "7/13/2026",
       "dateISO": "2026-07-13",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/insurance-sales-representative-343823",
-      "scrapedAt": "2026-07-30T07:34:23.039Z"
-    },
-    {
-      "slug": "receptionist",
-      "jobId": "343540",
-      "title": "Receptionist",
-      "subtitle": "",
-      "body": "HERTVIK INSURANCE GROUP - RECEPTIONIST\nMedina, OH 44256\n\nABOUT US\nHertvik Insurance is a leading independent agency, passionately serving clients nationwide with comprehensive insurance solutions. From auto to commercial, we empower individuals and businesses to secure their future. Join our energetic team committed to delivering unparalleled service, diverse products, and significant savings, making a tangible difference in our clients' lives.\n\nJOB DETAILS\nJob type: Full-time\nShift and schedule: Monday to Friday\n\nAPPLY ONLINE:\nhttps://www.indeed.com/viewjob?jk=e1bf8d29c5b00ded&tk=1jt6pnf2ng19k800&from=serp&vjs=3\n\nJOB OVERVIEW\nHertvik Insurance is looking for a receptionist that can help us exceed our client's expectations for outstanding service. You will be the first point of contact for our customers.\n\nIn addition to answering the phone, you will perform a variety of service and administrative duties. We will also help you learn a new industry with potential to advance into other positions.\n\nBENEFITS\nAnnual Base Salary + Bonus Opportunities\nPaid Time Off (PTO)\nHealth Insurance\nDental Insurance\nVision Insurance\nLife Insurance\nDisability Insurance\nHands on Training\nMon-Fri Schedule\nCareer Growth Opportunities\nEvenings Off\n\nREQUIREMENTS\nHigh school diploma or GED\nExcellent verbal communication\nGood telephone communication etiquette\nOrganized and resourceful\nCustomer-focused\nActive listener\nAdept at prioritizing, scheduling and multitasking\nAbility to handle office equipment, such as the telephone system, printer and the fax machine\nFast and eager learner\n\nRESPONSIBILITIES\nAnswering and transferring calls as necessary\nManaging security and telecommunications systems\nHandling queries and complaints via phone, email and general correspondence\nTaking and ensuring messages are passed to the appropriate staff member in time\nGreeting visitors\nVarious administrative tasks\nData entry projects\nManaging meeting room availability\nReceiving, sorting, distributing and dispatching daily mail\nHandling transcription, printing, photocopying and faxing\nCoordinating internal and external events\nMaintaining safety and hygiene standards of the reception area",
-      "tags": [],
-      "location": "",
-      "applyUrl": "",
-      "companyName": "Hertvik Insurance Group",
-      "companySlug": "",
-      "dateRaw": "7/10/2026",
-      "dateISO": "2026-07-10",
-      "detailUrl": "https://business.medinachamber.com/jobs/Details/receptionist-343540",
-      "scrapedAt": "2026-07-30T07:34:23.600Z"
+      "scrapedAt": "2026-07-31T07:49:59.291Z"
     },
     {
       "slug": "women-s-health-nurse-practitioner",
@@ -64,7 +64,7 @@
       "dateRaw": "6/30/2026",
       "dateISO": "2026-06-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/women-s-health-nurse-practitioner-341236",
-      "scrapedAt": "2026-07-30T07:34:24.188Z"
+      "scrapedAt": "2026-07-31T07:49:59.836Z"
     },
     {
       "slug": "customer-service-representative-ft",
@@ -80,7 +80,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/customer-service-representative-ft-340861",
-      "scrapedAt": "2026-07-30T07:34:24.887Z"
+      "scrapedAt": "2026-07-31T07:50:00.361Z"
     },
     {
       "slug": "material-control-ft",
@@ -96,7 +96,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/material-control-ft-340864",
-      "scrapedAt": "2026-07-30T07:34:25.461Z"
+      "scrapedAt": "2026-07-31T07:50:00.925Z"
     },
     {
       "slug": "workforce-development-specialist-medina-county",
@@ -112,7 +112,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/workforce-development-specialist-medina-county-340917",
-      "scrapedAt": "2026-07-30T07:34:26.058Z"
+      "scrapedAt": "2026-07-31T07:50:01.430Z"
     },
     {
       "slug": "catering-event-staff",
@@ -128,7 +128,7 @@
       "dateRaw": "4/30/2026",
       "dateISO": "2026-04-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/catering-event-staff-328997",
-      "scrapedAt": "2026-07-30T07:34:26.627Z"
+      "scrapedAt": "2026-07-31T07:50:01.944Z"
     }
   ]
 }

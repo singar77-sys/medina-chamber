@@ -1,7 +1,26 @@
 {
-  "generatedAt": "2026-07-31T07:49:57.021Z",
-  "totalArticles": 10,
+  "generatedAt": "2026-08-01T07:26:48.120Z",
+  "totalArticles": 8,
   "articles": [
+    {
+      "slug": "bike-nite",
+      "articleId": "321885",
+      "title": "Bike Nite",
+      "subtitle": "Don't miss this weekly fun night!",
+      "body": "Every Thursday from 5pm-8pm, Bike Nite is back! Motorcycles of all shapes and sizes are welcome. $3 off Custom Built Combos as well as Happy Hour deals until 6pm",
+      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/q_auto/v1774649265/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/08696adfe8014e348e3411fecd5205ae/QS-L-Color-Logo-2.png",
+      "tags": [
+        "By\r\n                            Quaker Steak and Lube",
+        "8/1/2026"
+      ],
+      "memberName": "Quaker Steak and Lube",
+      "memberSlug": "30693401",
+      "dateRaw": "8/1/2026",
+      "dateISO": "2026-08-01",
+      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774649265/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/08696adfe8014e348e3411fecd5205ae/QS-L-Color-Logo-2.png",
+      "detailUrl": "https://business.medinachamber.com/news/Details/bike-nite-321885",
+      "scrapedAt": "2026-08-01T07:26:44.131Z"
+    },
     {
       "slug": "1st-annual-fundraising-car-show",
       "articleId": "347096",
@@ -19,7 +38,7 @@
       "dateISO": "2026-07-30",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_2048,w_2048,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785423508/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/94e6c419c14a42e480a489b848eab88e/Medina-Odd-Fellows.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/1st-annual-fundraising-car-show-347096",
-      "scrapedAt": "2026-07-31T07:49:52.321Z"
+      "scrapedAt": "2026-08-01T07:26:44.658Z"
     },
     {
       "slug": "medina-county-fair-parking-fundraiser",
@@ -38,7 +57,7 @@
       "dateISO": "2026-07-30",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_2048,w_2048,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785423789/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/4ab7f2bd63e54517b57f7d160e838be9/Medina-Odd-Fellows.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/medina-county-fair-parking-fundraiser-347100",
-      "scrapedAt": "2026-07-31T07:49:52.818Z"
+      "scrapedAt": "2026-08-01T07:26:45.241Z"
     },
     {
       "slug": "medina-athletics-sponsorship-opportunities",
@@ -57,7 +76,7 @@
       "dateISO": "2026-07-29",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1001,w_1400,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785292914/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/bce87398f55c4b779e58e8ec65279974/MAB-LOGO.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/medina-athletics-sponsorship-opportunities-346803",
-      "scrapedAt": "2026-07-31T07:49:53.338Z"
+      "scrapedAt": "2026-08-01T07:26:45.807Z"
     },
     {
       "slug": "host-your-holiday-party-at-the-club",
@@ -76,7 +95,7 @@
       "dateISO": "2026-07-28",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_159,w_292,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785263176/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/3c23413c8c584f86b8877f07009382cb/Weymouth-fox-duel-logo.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/host-your-holiday-party-at-the-club-346683",
-      "scrapedAt": "2026-07-31T07:49:53.830Z"
+      "scrapedAt": "2026-08-01T07:26:46.388Z"
     },
     {
       "slug": "celebrate-our-100th-issue-with-us",
@@ -95,7 +114,7 @@
       "dateISO": "2026-07-23",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_417,w_1500,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785160773/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/9ae82988f22d468ab9f4a86c9cb38d26/Joy-of-Medina-County-Magazine.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/celebrate-our-100th-issue-with-us-346007",
-      "scrapedAt": "2026-07-31T07:49:54.400Z"
+      "scrapedAt": "2026-08-01T07:26:47.006Z"
     },
     {
       "slug": "launching-on-linkedin",
@@ -114,64 +133,7 @@
       "dateISO": "2026-07-07",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_224,w_599,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1783536565/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/d46c65cdb09f45e9ba1010134db40aeb/Transition-Consulting.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/launching-on-linkedin-342499",
-      "scrapedAt": "2026-07-31T07:49:54.902Z"
-    },
-    {
-      "slug": "why-industry-experience-isn-t-always-the-most-important-factor-when-choosing-a-web-designer-or-agency",
-      "articleId": "341307",
-      "title": "Why Industry Experience Isn't Always the Most Important Factor When Choosing a Web Designer or Agency",
-      "subtitle": "Learn how to find the right web designer!",
-      "body": "One of the most common questions we hear from prospective clients is:\n\n\"Have you worked in my industry before?\"\n\nIt's a fair question. When you're investing in a new website, it's natural to want a team that understands your business, your customers, and your industry.\n\nWhile industry experience can certainly be valuable, it's not always the deciding factor in creating a successful website. In fact, there are times when a fresh perspective can be one of the greatest advantages.\n\nThe Curse of Knowing Too MuchWhen you've spent years in your industry, certain concepts, terminology, and processes become second nature. What feels obvious to you may be completely unfamiliar to a potential customer visiting your website for the first time.\n\nThis is where an outside perspective becomes incredibly valuable.\n\nAt Glow Up Web Design, we intentionally ask questions that may seem simple, even obvious. Why? Because those are often the same questions your customers have.\n\nIf we don't immediately understand something, there's a good chance a first-time visitor won't either.\n\nOur job isn't just to make your website look good. Our job is to make your business easy to understand.\n\nYour Website Should Be Built for New Customers\n\nMany business owners unintentionally build websites for people who already know what they're looking for.\n\nThe problem is that your future customers don't have the same knowledge you do.\n\nA great website should guide visitors effortlessly from curiosity to confidence. It should clearly explain who you are, what you do, and why someone should choose your business.\n\nOne of our favorite principles is:\n\nIf a 12-year-old can quickly find the information they need and understand what your business does, you're probably doing it right.\nThat doesn't mean oversimplifying your expertise. It means communicating it clearly. \n\nWatch this simple demonstration from Vinh Quang Giang.\n\nFresh Eyes Lead to Better User ExperiencesBecause we work with businesses across many different industries, we're constantly exposed to new ideas, customer behaviors, and marketing strategies.\n\nWe've built websites for:- Professional services\n- Retail and e-commerce\n- Manufacturing companies\n- Nonprofits\n- Sports organizations\n- Creative professionals\n- And many more\n\nEvery project teaches us something new, and those lessons often help us create better solutions for future clients.\n\nSometimes the best ideas come from outside your industry.\n\nThe Risk of Industry-Specific Web Designer or AgenciesIndividuals or agencies that specialize exclusively in one niche often have extensive industry knowledge. That can be an asset.\n\nHowever, there can also be drawbacks.\n\nWhen repeatedly serving the same market, they sometimes rely on similar layouts, messaging, and design patterns from project to project. Over time, websites can begin to look and feel alike.\n\nIf every competitor in your industry is working with the same type of agency, standing out becomes more difficult.\n\nAt Glow Up, we believe every business has its own story, strengths, and personality. We build each website around those unique qualities rather than fitting clients into a predetermined template.\nA Website Is an Investment, Not an Expense\nWhen evaluating web design proposals, it's easy to focus solely on price.\n\nBut the real question isn't:\n\n\"How much does the website cost?\"\n\nThe better question is:\n\n\"What return will this website generate?\"\n\nA professionally designed website can:\n\n- Generate more qualified leads\n- Increase customer trust\n- Improve conversion rates\n- Support marketing efforts\n- Save time through automation and better user experiences\n\nThe goal isn't simply to launch a beautiful website. The goal is to create a digital asset that contributes to your business growth and delivers a positive return on investment over time.\n\nFinding the Right FitAt the end of the day, choosing a web design partner is about more than industry experience. It's about finding a team that is curious, strategic, communicative, and genuinely invested in helping your business succeed.\n\nWe love learning about new industries because every business has a unique story worth telling.\n\nAnd sometimes, the person asking the \"dumb questions\" is exactly the person who can help your customers find the answers they're looking for.\n\nIf you're considering a new website and want to explore whether we're the right fit, we'd love to have a pressure-free conversation. Please feel free to check us out at Glow Up Web Design.\n\nHonestly we are just a bunch of nerds who would love to share their passion with fellow business owners.",
-      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1536,w_2047,x_0,y_0/q_auto/f_auto/q_auto/v1785257916/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/e4aadcb052a242138df1c8489ad66a60/Glow-up-New-Loog-withh-darker-bluejpg.jpg",
-      "tags": [
-        "By\r\n                            Glow Up Web Design, LLC",
-        "7/1/2026"
-      ],
-      "memberName": "Glow Up Web Design, LLC",
-      "memberSlug": "34893328",
-      "dateRaw": "7/1/2026",
-      "dateISO": "2026-07-01",
-      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1536,w_2047,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785257916/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/e4aadcb052a242138df1c8489ad66a60/Glow-up-New-Loog-withh-darker-bluejpg.jpg",
-      "detailUrl": "https://business.medinachamber.com/news/Details/why-industry-experience-isn-t-always-the-most-important-factor-when-choosing-a-web-designer-or-agency-341307",
-      "scrapedAt": "2026-07-31T07:49:55.467Z"
-    },
-    {
-      "slug": "van-s-tire-pros-dog-days-of-summer-gas-card-giveaway",
-      "articleId": "341496",
-      "title": "Van's Tire Pros Dog Days of Summer - Gas Card Giveaway!",
-      "subtitle": "Check out this great summer promotion",
-      "body": "From now until July 31, with any purchase of select sets of 4 tires with Standard Installation, you will get a FREE $100 gas card!  Stop in or call the store to shop for your next set of tires!",
-      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1500,w_1500,x_0,y_0/q_auto/f_auto/q_auto/v1782917074/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/218439aa8d76446aa3e5f240bbd6775f/Vans.jpg",
-      "tags": [
-        "By\r\n                            Van's Auto Service & Tire Pros",
-        "7/1/2026"
-      ],
-      "memberName": "Van's Auto Service & Tire Pros",
-      "memberSlug": "22529888",
-      "dateRaw": "7/1/2026",
-      "dateISO": "2026-07-01",
-      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1500,w_1500,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1782917074/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/218439aa8d76446aa3e5f240bbd6775f/Vans.jpg",
-      "detailUrl": "https://business.medinachamber.com/news/Details/van-s-tire-pros-dog-days-of-summer-gas-card-giveaway-341496",
-      "scrapedAt": "2026-07-31T07:49:55.965Z"
-    },
-    {
-      "slug": "medina-lifestyle-july-explore-issue",
-      "articleId": "341171",
-      "title": "Medina Lifestyle July Explore Issue",
-      "subtitle": "Check out the latest issue!",
-      "body": "Read our July Issue - The Explore Issue!\nhttps://citylifestyle.com/medinacounty/issues/2026-07",
-      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_248,w_813,x_0,y_0/q_auto/f_auto/q_auto/v1782833708/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/73f9beeeff124af489964b7d91bad4b0/LOGO.png",
-      "tags": [
-        "By\r\n                            Medina County Lifestyle",
-        "6/30/2026"
-      ],
-      "memberName": "Medina County Lifestyle",
-      "memberSlug": "23489284",
-      "dateRaw": "6/30/2026",
-      "dateISO": "2026-06-30",
-      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_248,w_813,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1782833708/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/73f9beeeff124af489964b7d91bad4b0/LOGO.png",
-      "detailUrl": "https://business.medinachamber.com/news/Details/medina-lifestyle-july-explore-issue-341171",
-      "scrapedAt": "2026-07-31T07:49:56.469Z"
+      "scrapedAt": "2026-08-01T07:26:47.561Z"
     },
     {
       "slug": "car-cruise-in",
@@ -190,7 +152,7 @@
       "dateISO": "2026-04-06",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775437512/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/62aa1d5146da4ab78eb0def384a2a8ee/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/car-cruise-in-323364",
-      "scrapedAt": "2026-07-31T07:49:57.010Z"
+      "scrapedAt": "2026-08-01T07:26:48.113Z"
     }
   ]
 }

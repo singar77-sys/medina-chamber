@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-26T12:00:16.784Z",
-  "totalScraped": 494,
-  "successCount": 450,
-  "failCount": 2,
+  "generatedAt": "2026-08-02T11:59:39.826Z",
+  "totalScraped": 495,
+  "successCount": 453,
+  "failCount": 0,
   "members": [
     {
       "chamberSlug": "3m-company",
@@ -12817,6 +12817,30 @@
       "aboutText": "",
       "pagesScraped": [
         "home"
+      ]
+    },
+    {
+      "chamberSlug": "marketing-directions",
+      "website": "http://marketingdirectionsinc.com/",
+      "scrapedAt": "2026-08-02T11:59:35.017Z",
+      "title": "Marketing Agency in Medina Ohio | Marketing Directions, Inc.",
+      "metaDescription": "Marketing Directions is an Ohio design and marketing agency in Medina, helping businesses with websites, SEO, branding, advertising, and design.",
+      "h1": [
+        "LEADING YOU TO SUCCESS WITH MARKETING, DESIGN & advertising IN MEDINA, OHIO"
+      ],
+      "services": [
+        "LEADING YOU TO SUCCESS WITH DIGITAL MARKETING & ADVERTISING IN MEDINA, OHIO",
+        "Helping Brands Go Places",
+        "Ready to Grow Your Small Business?",
+        "What Do We Provide?",
+        "What Do We Create?"
+      ],
+      "listItems": [],
+      "homeText": "homeAdmin2026-05-06T16:50:01+00:00 LEADING YOU TO SUCCESS WITH MARKETING, DESIGN & advertising IN MEDINA, OHIO Marketing Directions is a full-service design and marketing agency located in historic Medina, Ohio. For more than 40 years, we have helped businesses grow through branding, advertising, creative design, and superior marketing solutions. We bring strategy, creativity, experience, and attention to detail together to help brands move in the right direction. “Helping Brands Go Places”. LEADING YOU TO SUCCESS WITH DIGITAL MARKETING & ADVERTISING IN MEDINA, OHIOWe are a small but mighty Digital Marketing & IT Services Agency located in historic Medina, Ohio. Our outstanding work ethic, creativity and attention to detail means we deliver results in a timely manner with superb quality and incredible value. Marketing Directions offers everything a brand needs to go in the right direction as today’s marketplace means having a partner that can adapt to change faster than ever. For more ",
+      "aboutText": "About UsAdmin2026-05-06T13:59:49+00:00 What Do We Provide? Art direction, graphic design and illustration Branding advice COMPASS™ (Our situation assessment process) Comprehensive I.T. services, support and security Copywriting, editing and proofreading Email management Marketing plan development Marketing services, support and consultation Media buying Online sales promotion development and management (rebates/incentives/fulfillment) Photography (in-house studio) Public relations SEO and custom analytic reporting Social media management and content creation Website analytics Website design, maintenance and security What Do We Create? Annual reports Brand identity graphics and themes Collateral Email marketing items Logo design Corporate identity Marketing/Sales Online advertising Outdoor advertising Packaging Presentations (large- and small-scale) Print advertising Retail point-of-sale items Signage Tradeshow booth design Training tools Video scripting and supervision Websites Want to talk with someone? Learn more? Contact Us",
+      "pagesScraped": [
+        "home",
+        "about"
       ]
     }
   ]

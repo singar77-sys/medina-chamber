@@ -1573,6 +1573,33 @@ body {
 
 .ftr {
   position: relative;
+  overflow: hidden;
+}
+
+/* Ambient wash — barely-there brand glows so the closing wordmark's
+   negative space doesn't read as a dead white (or navy) field. Works in
+   both themes: the tints sit on --bg-secondary at ≤6% strength. */
+.ftr::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 60% 42% at 50% 10%,
+      color-mix(in oklab, var(--coquelicot) 5%, transparent),
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 42% 36% at 10% 88%,
+      color-mix(in oklab, var(--cambridge) 6%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 38% 32% at 92% 55%,
+      color-mix(in oklab, var(--cambridge) 4%, transparent),
+      transparent 70%
+    );
 }
 
 /* Cambridge accent stripe between main grid and bottom bar */

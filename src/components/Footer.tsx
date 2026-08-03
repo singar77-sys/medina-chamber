@@ -50,7 +50,7 @@ export function Footer() {
 
   return (
     <footer className="ftr bg-bg-secondary border-t border-border-primary">
-      <div className="mx-auto max-w-5xl px-6 lg:px-8 pt-f55 lg:pt-f89 pb-f34 lg:pb-f55">
+      <div className="relative mx-auto max-w-5xl px-6 lg:px-8 pt-f55 lg:pt-f89 pb-f34 lg:pb-f55">
 
         {/* 0: Closing statement — bookends the hero */}
         <div className="text-center mb-f55">

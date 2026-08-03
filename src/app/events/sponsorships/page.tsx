@@ -262,7 +262,22 @@ export default function SponsorshipsPage() {
       </section>
 
       {/* Sponsorship cards */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      <section className="relative overflow-hidden py-f89 lg:py-f144">
+        {/* Ghosted ribbon-cutting backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/medina-chamber-ribbon-cutting.webp"
+            alt=""
+            fill
+            className="object-cover opacity-[0.10]"
+            sizes="100vw"
+            quality={60}
+          />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <FadeIn>
           <h2 className="text-overline text-cambridge mb-f21">Sponsorship Opportunities</h2>
           <div className="space-y-f21">
@@ -318,6 +333,7 @@ export default function SponsorshipsPage() {
             ))}
           </div>
         </FadeIn>
+        </div>
       </section>
 
       {/* Advertising Rates — magazine + e-newsletter */}

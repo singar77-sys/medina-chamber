@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { GazeboHero } from "@/components/GazeboHero";
 import { activeCommunities, getMembersByCity } from "@/data/communities";
@@ -101,8 +102,22 @@ export default function MedinaMeansBusinessPage() {
       </section>
 
       {/* It's not a slogan. It's a statement of fact. */}
-      <section className="bg-bg-secondary border-y border-border-secondary">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
+      <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary">
+        {/* Ghosted Medina Square storefronts backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/medina-square-storefronts.webp"
+            alt=""
+            fill
+            className="object-cover opacity-[0.10]"
+            sizes="100vw"
+            quality={60}
+          />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
           <FadeIn>
             <div className="max-w-3xl">
               <p className="text-overline text-cambridge mb-4">What it means</p>

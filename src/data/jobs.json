@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-02T07:31:13.690Z",
+  "generatedAt": "2026-08-03T08:28:32.863Z",
   "totalJobs": 5,
   "jobs": [
     {
@@ -16,7 +16,7 @@
       "dateRaw": "7/30/2026",
       "dateISO": "2026-07-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/legal-secretary-hoffee-wallace-law-firm-medina-oh-347072",
-      "scrapedAt": "2026-08-02T07:31:11.038Z"
+      "scrapedAt": "2026-08-03T08:28:30.576Z"
     },
     {
       "slug": "esol-instructor",
@@ -32,7 +32,7 @@
       "dateRaw": "7/27/2026",
       "dateISO": "2026-07-27",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/esol-instructor-346357",
-      "scrapedAt": "2026-08-02T07:31:11.601Z"
+      "scrapedAt": "2026-08-03T08:28:31.144Z"
     },
     {
       "slug": "insurance-sales-representative",
@@ -48,7 +48,7 @@
       "dateRaw": "7/13/2026",
       "dateISO": "2026-07-13",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/insurance-sales-representative-343823",
-      "scrapedAt": "2026-08-02T07:31:12.151Z"
+      "scrapedAt": "2026-08-03T08:28:31.746Z"
     },
     {
       "slug": "workforce-development-specialist-medina-county",
@@ -64,7 +64,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/workforce-development-specialist-medina-county-340917",
-      "scrapedAt": "2026-08-02T07:31:13.066Z"
+      "scrapedAt": "2026-08-03T08:28:32.287Z"
     },
     {
       "slug": "catering-event-staff",
@@ -80,7 +80,7 @@
       "dateRaw": "4/30/2026",
       "dateISO": "2026-04-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/catering-event-staff-328997",
-      "scrapedAt": "2026-08-02T07:31:13.678Z"
+      "scrapedAt": "2026-08-03T08:28:32.851Z"
     }
   ]
 }

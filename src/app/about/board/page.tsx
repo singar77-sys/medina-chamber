@@ -147,8 +147,22 @@ export default function BoardPage() {
       </section>
 
       {/* Board members */}
-      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+        {/* Ghosted vintage courthouse backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/medina-courthouse-vintage.webp"
+            alt=""
+            fill
+            className="object-cover opacity-[0.10]"
+            sizes="100vw"
+            quality={60}
+          />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
             <div className="mb-f21 flex items-end justify-between gap-f21 flex-wrap">
               <div>

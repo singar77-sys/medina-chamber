@@ -102,22 +102,8 @@ export default function MedinaMeansBusinessPage() {
       </section>
 
       {/* It's not a slogan. It's a statement of fact. */}
-      <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary">
-        {/* Ghosted Medina Square storefronts backdrop */}
-        <div
-          className="absolute inset-0 pointer-events-none select-none"
-          aria-hidden="true"
-        >
-          <Image
-            src="/images/photos/medina-square-storefronts.webp"
-            alt=""
-            fill
-            className="object-cover opacity-[0.10]"
-            sizes="100vw"
-            quality={60}
-          />
-        </div>
-        <div className="relative mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
+      <section className="bg-bg-secondary border-y border-border-secondary">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
           <FadeIn>
             <div className="max-w-3xl">
               <p className="text-overline text-cambridge mb-4">What it means</p>
@@ -179,7 +165,21 @@ export default function MedinaMeansBusinessPage() {
       </section>
 
       {/* Anchor Companies */}
-      <section className="bg-bg-secondary border-y border-border-secondary">
+      <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary">
+        {/* Ghosted Medina Square storefronts backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/medina-square-storefronts.webp"
+            alt=""
+            fill
+            className="object-cover opacity-[0.10]"
+            sizes="100vw"
+            quality={60}
+          />
+        </div>
         <div className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28 relative overflow-hidden">
           <div className="absolute -top-32 -right-32 w-96 h-96 bg-cambridge/10 rounded-full blur-3xl" />
           <FadeIn>
@@ -269,8 +269,22 @@ export default function MedinaMeansBusinessPage() {
       </section>
 
       {/* The Magazine */}
-      <section className="bg-bg-secondary border-y border-border-secondary">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
+      <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary">
+        {/* Ghosted vintage gazebo backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/medina-gazebo-vintage.webp"
+            alt=""
+            fill
+            className="object-cover opacity-[0.10]"
+            sizes="100vw"
+            quality={60}
+          />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
           <div className="grid lg:grid-cols-[1fr_auto] gap-10 items-center">
             <FadeIn>
               <div className="max-w-2xl">

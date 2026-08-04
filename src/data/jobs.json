@@ -1,7 +1,23 @@
 {
-  "generatedAt": "2026-08-03T08:28:32.863Z",
-  "totalJobs": 5,
+  "generatedAt": "2026-08-04T07:39:04.092Z",
+  "totalJobs": 6,
   "jobs": [
+    {
+      "slug": "orthodontic-assistant",
+      "jobId": "347436",
+      "title": "Orthodontic Assistant",
+      "subtitle": "",
+      "body": "At Mellion Orthodontics, we are a busy, highly respected and quality-oriented orthodontic practice that utilizes the latest technology to provide exceptional treatment and service to our patients. We are patient focused and team driven.\n\nOur team at Mellion Orthodontics strives to give our patients the best orthodontic care while providing a fun and unique patient experience. Drs. Zach, Alex and Joe are experts on growth, facial development, teeth and jaw alignment, and our practice is limited to orthodontics and dentofacial orthopedics. We are a family of orthodontists and want to make you feel like family, too. Mellion Orthodontics is proud to be the top Invisalign&reg; provider in Northeast Ohio and our doctors are in the top 1% of all Invisalign&reg; providers worldwide.\n\nWe are currently seeking to fill the part-time role of an Orthodontic Assistant in our Medina office which involves direct patient care with a variety of responsibilities that help our patients achieve great smiles with Invisalign&reg; and braces. To the right person, we offer a fun, challenging and rewarding career that offers great work-life balance. Check us out at www.mellionortho.com as well as on Facebook, Instagram, LinkedIn, YouTube & TikTok (@mellionsmiles). \n\nApplicants should fully complete the application to be considered for this position. Incomplete applications will not be reviewed.\n**Once you have completed your application, please be sure to check your junk/spam folders; your phone interview invitation may have been directed there.**\n\nIf you're the right candidate, you:\nThrive on a fast-paced environment and positivity Are passionate about customer service and serve our patients and families with a smile, compassion and sense of urgencyDemonstrate attention to detail and ask questions to ensure accuracyWork independently to achieve team goals and can quickly change course to do what is best for the teamValue your time and the time of others to keep patient appointments on scheduleAppreciate and contribute to a spotless work environment, ensuring the health and safety of all who step foot in our officeSeek a permanent, part-time position (approximately 24-30 hours/week)Job responsibilities may include but are not limited to:\nCommunicating clearly with patients and parentsScheduling appointmentsTaking detailed, accurate notes of patient visitsEducating patients on and demonstrating proper oral hygiene techniques and wearing elastics or Invisalign aligners Assisting the doctor in orthodontic procedures (arch-wire changes, placing and debonding of braces, placing Invisalign attachments, taking dental X-rays, capturing intraoral and facial photographs, and intraoral scans with iTero scanner, etc.)Sterilization of instruments and infection prevention throughout treatment area and officeLearning to anticipate needs of doctor and teammates to ensure an efficient workflow throughout the dayOrganizing and restocking treatment and storage areasOther responsibilities as neededQualifications:\nExperience in healthcare, dental or orthodontics preferred but not required; we will train the right candidateComfortable using computers and other office technologyApplicants are a minimum age of 18 years oldOther details:\n24-30 hours per week; no regular weekend/ evening hours; Our team participates in approximately 3-4 'off hours' events each year including a Continuing Education event (one weeknight), Kylie Rose's Run (one Sunday afternoon) and Greater Medina Chamber of Commerce events (one weeknight).Monthly and annual bonus opportunityUniform allowanceContinuing education opportunities401(k)Health insurance$18.50 per hour, for those without experience; hourly rate adjusted based on experienceApply here: https://mellionsmiles.easyapply.co/\n\n**Once you have applied for the position, please be sure to check your junk/spam folders; your phone interview invitation may have been directed there.**\ndental assistant, orthodontic assistant, dental, orthodontic dental assistant, clinical assistant",
+      "tags": [],
+      "location": "",
+      "applyUrl": "https://mellionsmiles.easyapply.co/",
+      "companyName": "Mellion Orthodontics - Fairlawn & Medina",
+      "companySlug": "",
+      "dateRaw": "7/31/2026",
+      "dateISO": "2026-07-31",
+      "detailUrl": "https://business.medinachamber.com/jobs/Details/orthodontic-assistant-347436",
+      "scrapedAt": "2026-08-04T07:39:01.219Z"
+    },
     {
       "slug": "legal-secretary-hoffee-wallace-law-firm-medina-oh",
       "jobId": "347072",
@@ -16,7 +32,7 @@
       "dateRaw": "7/30/2026",
       "dateISO": "2026-07-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/legal-secretary-hoffee-wallace-law-firm-medina-oh-347072",
-      "scrapedAt": "2026-08-03T08:28:30.576Z"
+      "scrapedAt": "2026-08-04T07:39:01.764Z"
     },
     {
       "slug": "esol-instructor",
@@ -32,7 +48,7 @@
       "dateRaw": "7/27/2026",
       "dateISO": "2026-07-27",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/esol-instructor-346357",
-      "scrapedAt": "2026-08-03T08:28:31.144Z"
+      "scrapedAt": "2026-08-04T07:39:02.327Z"
     },
     {
       "slug": "insurance-sales-representative",
@@ -48,7 +64,7 @@
       "dateRaw": "7/13/2026",
       "dateISO": "2026-07-13",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/insurance-sales-representative-343823",
-      "scrapedAt": "2026-08-03T08:28:31.746Z"
+      "scrapedAt": "2026-08-04T07:39:02.899Z"
     },
     {
       "slug": "workforce-development-specialist-medina-county",
@@ -64,7 +80,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/workforce-development-specialist-medina-county-340917",
-      "scrapedAt": "2026-08-03T08:28:32.287Z"
+      "scrapedAt": "2026-08-04T07:39:03.496Z"
     },
     {
       "slug": "catering-event-staff",
@@ -80,7 +96,7 @@
       "dateRaw": "4/30/2026",
       "dateISO": "2026-04-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/catering-event-staff-328997",
-      "scrapedAt": "2026-08-03T08:28:32.851Z"
+      "scrapedAt": "2026-08-04T07:39:04.080Z"
     }
   ]
 }

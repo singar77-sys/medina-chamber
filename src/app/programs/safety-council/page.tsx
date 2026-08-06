@@ -33,10 +33,10 @@ const tiers = [
 ];
 
 const requirements = [
-  "Enroll by the annual deadline (July 31 for FY27)",
+  "Enroll by the annual deadline for the program year",
   "Attend 10 in-person safety council meetings during the fiscal year",
   "Earn up to 4 additional credits via approved safety training or BWC consultation visits",
-  "Pre-register for each meeting by 5:00 PM on the Friday before",
+  "Advance registration required for each meeting — no walk-in registration on event day",
 ];
 
 export default function SafetyCouncilPage() {
@@ -179,8 +179,9 @@ export default function SafetyCouncilPage() {
                 </div>
                 <div className="pt-f13 border-t border-border-secondary">
                   <p className="text-body-sm text-text-tertiary">
-                    Pre-registration required by 5:00 PM on the Friday before
-                    each meeting. Walk-in registrations are not available.
+                    Advance registration required — walk-in registrations are
+                    not available. Cancellations must be received by 2:00 PM
+                    the Friday prior to avoid being billed.
                   </p>
                 </div>
               </div>

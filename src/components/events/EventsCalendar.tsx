@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 /**
@@ -11,8 +11,12 @@ import Link from "next/link";
  * events.json never ships to the client. Months span the current month
  * through the last month that has an upcoming event.
  *
- * `initialYm` and `todayISO` come from the server render (daily ISR), never
- * from client-side `new Date()`, so SSR and hydration always agree.
+ * `initialYm` and `todayISO` come from the server render (daily ISR) so SSR
+ * and hydration agree; todayISO only seeds the first paint — a useEffect
+ * re-derives "today" from the visitor's local clock after mount, since the
+ * server value is a UTC date frozen for up to 24h (it highlighted the wrong
+ * day for US-Eastern evenings). The visible month stays server-derived: a
+ * post-hydration month flip would be a jarring jump for a fringe case.
  */
 
 export interface CalendarEvent {
@@ -20,7 +24,6 @@ export interface CalendarEvent {
   title: string;
   dateISO: string; // YYYY-MM-DD
   startTime: string;
-  location: string;
 }
 
 const MONTH_NAMES = [
@@ -58,6 +61,14 @@ export function EventsCalendar({
   const lastYm = events.length ? ymOf(events[events.length - 1].dateISO) : initialYm;
   const months = monthRange(initialYm, lastYm);
   const [monthIdx, setMonthIdx] = useState(0);
+  const [today, setToday] = useState(todayISO);
+
+  useEffect(() => {
+    const d = new Date();
+    setToday(
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`,
+    );
+  }, []);
 
   const ym = months[monthIdx];
   const [year, month] = ym.split("-").map(Number);
@@ -124,7 +135,7 @@ export function EventsCalendar({
             return <div key={`pad-${i}`} className="bg-bg-secondary/60 min-h-[64px] sm:min-h-[96px] lg:min-h-[108px]" />;
           }
           const iso = `${ym}-${String(day).padStart(2, "0")}`;
-          const isToday = iso === todayISO;
+          const isToday = iso === today;
           const dayEvents = byDay.get(day) ?? [];
           return (
             <div key={iso} className="bg-bg-primary min-h-[64px] sm:min-h-[96px] lg:min-h-[108px] p-1 sm:p-1.5">

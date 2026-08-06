@@ -2,18 +2,17 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
-import { safeJsonLd } from "@/lib/json-ld";
 import { stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Annual Chamber Golf Outing",
   description:
-    "The Greater Medina Chamber of Commerce Annual Golf Outing, Monday, July 20, 2026 at Westfield Country Club. 18-hole scramble with lunch, on-course games, cocktail hour, and dinner. Chamber members $230, non-members $260.",
+    "The Greater Medina Chamber of Commerce Annual Golf Outing at Westfield Country Club. 18-hole scramble with lunch, on-course games, cocktail hour, and dinner. Chamber members $230, non-members $260.",
   openGraph: {
-    title: "Annual Chamber Golf Outing 2026 | Greater Medina Chamber of Commerce",
+    title: "Annual Chamber Golf Outing | Greater Medina Chamber of Commerce",
     description:
-      "July 20, 2026 at Westfield Country Club. 18-hole scramble, lunch, dinner, and networking with Medina County's business community.",
+      "The chamber's flagship outing at Westfield Country Club. 18-hole scramble, lunch, dinner, and networking with Medina County's business community.",
   },
   alternates: { canonical: "/programs/golf-outing" },
 };
@@ -41,55 +40,12 @@ const pricing = [
 ];
 
 export default function GolfOutingPage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SportsEvent",
-    name: "Greater Medina Chamber of Commerce Annual Golf Outing 2026",
-    startDate: "2026-07-20T09:30:00-04:00",
-    endDate: "2026-07-20T19:00:00-04:00",
-    sport: "Golf",
-    location: {
-      "@type": "SportsActivityLocation",
-      name: "Westfield Country Club",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Westfield Center",
-        addressRegion: "OH",
-        addressCountry: "US",
-      },
-    },
-    organizer: {
-      "@type": "Organization",
-      name: "Greater Medina Chamber of Commerce",
-      url: "https://medinachamber.com",
-    },
-    offers: [
-      {
-        "@type": "Offer",
-        name: "Chamber Members",
-        price: "230",
-        priceCurrency: "USD",
-        url: "https://business.medinachamber.com/ap/Events/Register/07FA922CxCwCR",
-      },
-      {
-        "@type": "Offer",
-        name: "Non-Members",
-        price: "260",
-        priceCurrency: "USD",
-        url: "https://business.medinachamber.com/ap/Events/Register/07FA922CxCwCR",
-      },
-    ],
-    url: "https://medinachamber.com/programs/golf-outing",
-  };
-
+  // SportsEvent JSON-LD intentionally absent: schema.org Event requires
+  // startDate, so the markup returns only once the next outing's date is
+  // announced (the 2026 outing was held July 20).
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
-      />
 
-      
       <section className="relative overflow-hidden pt-f144 pb-f89 min-h-[42rem]">
         {/* Ghosted golf-ball-at-sunset backdrop */}
         <div
@@ -120,10 +76,8 @@ export default function GolfOutingPage() {
               knowing.
             </p>
             <div className="mt-f21 flex flex-wrap gap-f13">
-            <a
-              href="https://business.medinachamber.com/ap/Events/Register/07FA922CxCwCR"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/events"
               className="
                 inline-flex items-center px-f21 py-f13
                 bg-accent hover:bg-accent-hover
@@ -132,10 +86,10 @@ export default function GolfOutingPage() {
                 transition-colors
               "
             >
-              Register Now →
-            </a>
-            <Link
-              href="/events"
+              See Upcoming Events →
+            </Link>
+            <a
+              href={mailto(stephanie.email)}
               className="
                 inline-flex items-center px-f21 py-f13
                 border border-border-primary hover:border-text-tertiary
@@ -144,8 +98,8 @@ export default function GolfOutingPage() {
                 transition-colors
               "
             >
-              All Events
-            </Link>
+              Ask About Next Year
+            </a>
             </div>
           </div>
         </div>
@@ -157,7 +111,7 @@ export default function GolfOutingPage() {
           {/* Info strip — gap-f21 between 3 cards */}
           <div className="grid sm:grid-cols-3 gap-f21">
             {[
-              { label: "Date", value: "Monday, July 20, 2026" },
+              { label: "When", value: "Annual — 2027 date\nto be announced" },
               { label: "Venue", value: "Westfield Country Club\nWestfield Center, OH" },
               { label: "Format", value: "18-Hole Shotgun Scramble" },
             ].map((item) => (
@@ -178,7 +132,7 @@ export default function GolfOutingPage() {
           <div className="mt-f34 grid lg:grid-cols-2 gap-f34">
             {/* Schedule */}
             <div>
-              <h2 className="text-overline text-cambridge mb-f21">Day-of Schedule</h2>
+              <h2 className="text-overline text-cambridge mb-f21">Typical Day-of Schedule</h2>
               <div className="space-y-f13">
                 {schedule.map((s, i) => (
                   <div key={i} className="flex items-start gap-f13">
@@ -191,10 +145,6 @@ export default function GolfOutingPage() {
                   </div>
                 ))}
               </div>
-              <p className="text-body-sm text-text-tertiary mt-f13">
-                Note: Dinner and cocktail hour will be held at Blair Center this
-                year due to clubhouse construction at Westfield Country Club.
-              </p>
             </div>
 
             {/* What's Included */}
@@ -249,14 +199,6 @@ export default function GolfOutingPage() {
               ))}
             </div>
 
-            <div className="mt-f21 max-w-2xl p-f13 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]">
-              <p className="text-body-sm text-text-secondary leading-relaxed">
-                <span className="font-bold text-text-primary">Refund policy: </span>
-                Invoices due within 30 days of registration. Refunds issued for
-                cancellations before July 6, 2026 less a $30 processing fee. No
-                refunds after July 6, 2026.
-              </p>
-            </div>
           </FadeIn>
         </div>
       </section>

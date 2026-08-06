@@ -40,7 +40,7 @@ const PILLARS: Pillar[] = [
     label: "Your Voice in Policy",
     title: "Advocacy that moves the needle.",
     desc:
-      "Monthly legislator meetings, candidate forums, voter education, and direct engagement with decision-makers at city, county, and state levels.",
+      "Legislator meetings, candidate forums, voter education, and direct engagement with decision-makers at city, county, and state levels.",
     href: "/about/advocacy",
     cta: "See Advocacy →",
     variant: "gauge",

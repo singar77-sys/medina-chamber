@@ -48,8 +48,9 @@ export interface EventLike {
  *  The "note" field on the plinth has three buckets derived from the
  *  event's pricing copy:
  *
- *    1. "Registration Required"   — events where the chamber explicitly
- *       blocks walk-ins (Networking WOW, Safety Council, paid programs).
+ *    1. "Registration Required"   — Safety Council (no walk-ins) and paid
+ *       programs like Networking WOW, where GrowthZone copy says advance
+ *       registration and payment are preferred and no-shows are billed.
  *    2. "Free · Walk-Ins Welcome" — free, casual events where copy says
  *       registration is preferred but not required (Chamber Chat,
  *       Business Brew, Get to Know).

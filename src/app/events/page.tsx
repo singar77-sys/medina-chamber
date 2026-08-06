@@ -37,7 +37,6 @@ export default function EventsPage() {
       title: shortenEventTitle(e.title),
       dateISO: e.dateISO,
       startTime: e.startTime,
-      location: e.location,
     }))
     .sort((a, b) => a.dateISO.localeCompare(b.dateISO));
 
@@ -91,7 +90,7 @@ export default function EventsPage() {
             <h2 className="text-h2">Upcoming Events</h2>
             {hasEvents && (
               <p className="text-body-sm text-text-tertiary">
-                {allUpcoming.length} upcoming events
+                {allUpcoming.length} upcoming event{allUpcoming.length === 1 ? "" : "s"}
               </p>
             )}
           </div>
@@ -167,7 +166,7 @@ export default function EventsPage() {
                   freq: "3rd Wednesday",
                   time: "8:30 – 10:00 AM",
                   price: "$14 members / $20 prospective",
-                  desc: "Watch Opportunities Work, structured morning networking with elevator pitches, group discussion, coffee and pastries. Advance registration required, no walk-ins.",
+                  desc: "Watch Opportunities Work, structured morning networking with elevator pitches, group discussion, coffee and pastries. Advance registration and payment preferred.",
                 },
                 {
                   name: "Safety Council",

@@ -199,20 +199,8 @@ export default function BoardPage() {
 
       {/* CTA */}
       <section className="relative overflow-hidden py-f55 lg:py-f89">
-        {/* Ghosted boardroom-discussion backdrop */}
-        <div
-          className="absolute inset-0 pointer-events-none select-none"
-          aria-hidden="true"
-        >
-          <Image
-            src="/images/photos/backgrounds/boardroom-discussion.webp"
-            alt=""
-            fill
-            className="object-cover opacity-[0.33]"
-            sizes="100vw"
-            quality={60}
-          />
-        </div>
+        {/* Backdrop removed 2026-08-03: the board band above carries the
+            courthouse ghost, and backdrops must alternate — never stack. */}
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
             <div className="grid lg:grid-cols-2 gap-f34 items-center">

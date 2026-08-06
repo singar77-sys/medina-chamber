@@ -390,21 +390,8 @@ export default function HomePage() {
 
       {/* Rental Space — py-f89 lg:py-f144 */}
       <section className="relative bg-bg-secondary border-y border-border-secondary py-f89 lg:py-f144 overflow-hidden">
-        {/* Ghosted meeting-room photo backdrop */}
-        <div
-          className="absolute inset-0 pointer-events-none select-none"
-          aria-hidden="true"
-        >
-          <Image
-            src="/images/events/networking.webp"
-            alt=""
-            fill
-            className="object-cover opacity-[0.10]"
-            sizes="100vw"
-            quality={60}
-          />
-        </div>
-
+        {/* Backdrop removed 2026-08-03: the Membership section below carries
+            a ghost, and backdrops must alternate — never stack. */}
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
             {/* Golden ratio columns: 1fr : φ (1.618fr) — exact divine proportion */}

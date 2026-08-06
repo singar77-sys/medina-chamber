@@ -256,20 +256,9 @@ export default async function AboutPage() {
 
       {/* Core Values */}
       <section className="relative overflow-hidden py-f89 lg:py-f144">
-        {/* Ghosted downtown Medina storefronts backdrop */}
-        <div
-          className="absolute inset-0 pointer-events-none select-none"
-          aria-hidden="true"
-        >
-          <Image
-            src="/images/about/medina-chamber-values-bg.webp"
-            alt=""
-            fill
-            className="object-cover opacity-[0.33]"
-            sizes="100vw"
-            quality={60}
-          />
-        </div>
+        {/* Backdrop removed 2026-08-03: adjacent sections (Our Story, Our
+            Team) carry ghosts, and backdrops must alternate with plain
+            sections — never stack. */}
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <FadeIn>
           <div className="max-w-2xl mb-f21">

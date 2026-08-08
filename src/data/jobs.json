@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-07T06:08:49.108Z",
+  "generatedAt": "2026-08-08T05:41:43.113Z",
   "totalJobs": 6,
   "jobs": [
     {
@@ -16,7 +16,7 @@
       "dateRaw": "7/31/2026",
       "dateISO": "2026-07-31",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/orthodontic-assistant-347436",
-      "scrapedAt": "2026-08-07T06:08:46.361Z"
+      "scrapedAt": "2026-08-08T05:41:40.201Z"
     },
     {
       "slug": "legal-secretary-hoffee-wallace-law-firm-medina-oh",
@@ -32,7 +32,7 @@
       "dateRaw": "7/30/2026",
       "dateISO": "2026-07-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/legal-secretary-hoffee-wallace-law-firm-medina-oh-347072",
-      "scrapedAt": "2026-08-07T06:08:46.893Z"
+      "scrapedAt": "2026-08-08T05:41:40.783Z"
     },
     {
       "slug": "esol-instructor",
@@ -48,7 +48,7 @@
       "dateRaw": "7/27/2026",
       "dateISO": "2026-07-27",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/esol-instructor-346357",
-      "scrapedAt": "2026-08-07T06:08:47.460Z"
+      "scrapedAt": "2026-08-08T05:41:41.359Z"
     },
     {
       "slug": "insurance-sales-representative",
@@ -64,7 +64,7 @@
       "dateRaw": "7/13/2026",
       "dateISO": "2026-07-13",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/insurance-sales-representative-343823",
-      "scrapedAt": "2026-08-07T06:08:48.012Z"
+      "scrapedAt": "2026-08-08T05:41:41.939Z"
     },
     {
       "slug": "workforce-development-specialist-medina-county",
@@ -80,7 +80,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/workforce-development-specialist-medina-county-340917",
-      "scrapedAt": "2026-08-07T06:08:48.567Z"
+      "scrapedAt": "2026-08-08T05:41:42.532Z"
     },
     {
       "slug": "catering-event-staff",
@@ -96,7 +96,7 @@
       "dateRaw": "4/30/2026",
       "dateISO": "2026-04-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/catering-event-staff-328997",
-      "scrapedAt": "2026-08-07T06:08:49.100Z"
+      "scrapedAt": "2026-08-08T05:41:43.105Z"
     }
   ]
 }

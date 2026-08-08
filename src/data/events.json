@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-07T06:08:39.531Z",
+  "generatedAt": "2026-08-08T05:41:32.746Z",
   "totalEvents": 28,
   "events": [
     {
@@ -26,7 +26,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/the-compass-program-1746719",
-      "scrapedAt": "2026-08-07T06:08:27.513Z"
+      "scrapedAt": "2026-08-08T05:41:20.619Z"
     },
     {
       "slug": "fy27-safety-council-enrollment-or-renewal-2026-2027-rebate-program",
@@ -52,7 +52,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/fy27-safety-council-enrollment-or-renewal-2026-2027-rebate-program-1747261",
-      "scrapedAt": "2026-08-07T06:08:29.843Z"
+      "scrapedAt": "2026-08-08T05:41:22.911Z"
     },
     {
       "slug": "raising-the-bar-august-2026",
@@ -74,11 +74,11 @@
       "zip": "44256",
       "pricing": "No cost to participate. Members and prospective members welcome! Registration preferred but not required.",
       "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_720,w_1280,x_0,y_0/q_auto/f_auto/q_auto/v1777668614/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/a05b1b29673846ccb3cd7915c766b5ea/2026-Raising-the-Bar-logo.png",
-      "registerUrl": "https://business.medinachamber.com/ap/Events/Register/6VFQxR1imC1CZ",
+      "registerUrl": "https://business.medinachamber.com/member-events/Details/raising-the-bar-1763666",
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/raising-the-bar-1763666",
-      "scrapedAt": "2026-08-07T06:08:24.004Z"
+      "scrapedAt": "2026-08-08T05:41:17.163Z"
     },
     {
       "slug": "safety-council-meeting-august-2026",
@@ -104,7 +104,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-august-2026-1753315",
-      "scrapedAt": "2026-08-07T06:08:24.556Z"
+      "scrapedAt": "2026-08-08T05:41:17.719Z"
     },
     {
       "slug": "networking-wow-august-2026",
@@ -130,7 +130,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/networking-wow-august-2026-1594467",
-      "scrapedAt": "2026-08-07T06:08:25.130Z"
+      "scrapedAt": "2026-08-08T05:41:18.264Z"
     },
     {
       "slug": "business-brew-august-2026",
@@ -156,7 +156,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/business-brew-august-2026-1690571",
-      "scrapedAt": "2026-08-07T06:08:25.710Z"
+      "scrapedAt": "2026-08-08T05:41:18.849Z"
     },
     {
       "slug": "chamber-chat-august-2026",
@@ -182,7 +182,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/chamber-chat-august-2026-1594554",
-      "scrapedAt": "2026-08-07T06:08:26.289Z"
+      "scrapedAt": "2026-08-08T05:41:19.426Z"
     },
     {
       "slug": "chamber-member-meeting-september-2026",
@@ -208,7 +208,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/chamber-member-meeting-september-2026-1680467",
-      "scrapedAt": "2026-08-07T06:08:26.908Z"
+      "scrapedAt": "2026-08-08T05:41:20.011Z"
     },
     {
       "slug": "safety-council-meeting-september-2026",
@@ -234,7 +234,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-september-2026-1753317",
-      "scrapedAt": "2026-08-07T06:08:28.081Z"
+      "scrapedAt": "2026-08-08T05:41:21.196Z"
     },
     {
       "slug": "networking-wow-september-2026",
@@ -260,7 +260,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/networking-wow-september-2026-1594473",
-      "scrapedAt": "2026-08-07T06:08:28.715Z"
+      "scrapedAt": "2026-08-08T05:41:21.768Z"
     },
     {
       "slug": "chamber-chat-september-2026",
@@ -286,7 +286,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/chamber-chat-september-2026-1594555",
-      "scrapedAt": "2026-08-07T06:08:29.282Z"
+      "scrapedAt": "2026-08-08T05:41:22.336Z"
     },
     {
       "slug": "chamber-member-meeting-october-2026",
@@ -312,7 +312,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/chamber-member-meeting-october-2026-1690559",
-      "scrapedAt": "2026-08-07T06:08:30.414Z"
+      "scrapedAt": "2026-08-08T05:41:23.497Z"
     },
     {
       "slug": "raising-the-bar-october-2026",
@@ -338,7 +338,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/raising-the-bar-1763673",
-      "scrapedAt": "2026-08-07T06:08:30.977Z"
+      "scrapedAt": "2026-08-08T05:41:24.073Z"
     },
     {
       "slug": "safety-council-meeting-october-2026",
@@ -364,7 +364,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-october-2026-1753320",
-      "scrapedAt": "2026-08-07T06:08:31.543Z"
+      "scrapedAt": "2026-08-08T05:41:24.654Z"
     },
     {
       "slug": "networking-wow-october-2026",
@@ -390,7 +390,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/networking-wow-october-2026-1594478",
-      "scrapedAt": "2026-08-07T06:08:32.119Z"
+      "scrapedAt": "2026-08-08T05:41:25.230Z"
     },
     {
       "slug": "get-to-know-the-chamber",
@@ -416,7 +416,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/get-to-know-the-chamber-1764548",
-      "scrapedAt": "2026-08-07T06:08:32.685Z"
+      "scrapedAt": "2026-08-08T05:41:25.811Z"
     },
     {
       "slug": "chamber-chat-october-2026",
@@ -442,7 +442,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/chamber-chat-october-2026-1594557",
-      "scrapedAt": "2026-08-07T06:08:33.266Z"
+      "scrapedAt": "2026-08-08T05:41:26.379Z"
     },
     {
       "slug": "safety-council-meeting-november-2026",
@@ -468,7 +468,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-november-2026-1753323",
-      "scrapedAt": "2026-08-07T06:08:33.834Z"
+      "scrapedAt": "2026-08-08T05:41:26.950Z"
     },
     {
       "slug": "networking-wow-november-2026",
@@ -494,7 +494,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/networking-wow-november-2026-1594480",
-      "scrapedAt": "2026-08-07T06:08:34.397Z"
+      "scrapedAt": "2026-08-08T05:41:27.530Z"
     },
     {
       "slug": "chamber-chat-november-2026",
@@ -520,7 +520,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/chamber-chat-november-2026-1594559",
-      "scrapedAt": "2026-08-07T06:08:34.977Z"
+      "scrapedAt": "2026-08-08T05:41:28.103Z"
     },
     {
       "slug": "raising-the-bar-december-2026",
@@ -546,7 +546,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/raising-the-bar-1763680",
-      "scrapedAt": "2026-08-07T06:08:35.547Z"
+      "scrapedAt": "2026-08-08T05:41:28.666Z"
     },
     {
       "slug": "safety-council-meeting-december-2026",
@@ -572,7 +572,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-december-2026-1753331",
-      "scrapedAt": "2026-08-07T06:08:36.118Z"
+      "scrapedAt": "2026-08-08T05:41:29.231Z"
     },
     {
       "slug": "safety-council-meeting-january-2027",
@@ -598,7 +598,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-january-2027-1756987",
-      "scrapedAt": "2026-08-07T06:08:36.681Z"
+      "scrapedAt": "2026-08-08T05:41:29.832Z"
     },
     {
       "slug": "safety-council-meeting-february-2027",
@@ -624,7 +624,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-february-2027-1756988",
-      "scrapedAt": "2026-08-07T06:08:37.247Z"
+      "scrapedAt": "2026-08-08T05:41:30.411Z"
     },
     {
       "slug": "safety-council-meeting-march-2027",
@@ -650,7 +650,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-march-2027-1756990",
-      "scrapedAt": "2026-08-07T06:08:37.817Z"
+      "scrapedAt": "2026-08-08T05:41:30.993Z"
     },
     {
       "slug": "safety-council-meeting-april-2027",
@@ -676,7 +676,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-april-2027-1756992",
-      "scrapedAt": "2026-08-07T06:08:38.375Z"
+      "scrapedAt": "2026-08-08T05:41:31.563Z"
     },
     {
       "slug": "safety-council-meeting-may-2027",
@@ -702,7 +702,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-may-2027-1756993",
-      "scrapedAt": "2026-08-07T06:08:38.927Z"
+      "scrapedAt": "2026-08-08T05:41:32.173Z"
     },
     {
       "slug": "safety-council-meeting-june-2027",
@@ -728,7 +728,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-june-2027-1756997",
-      "scrapedAt": "2026-08-07T06:08:39.523Z"
+      "scrapedAt": "2026-08-08T05:41:32.738Z"
     }
   ]
 }

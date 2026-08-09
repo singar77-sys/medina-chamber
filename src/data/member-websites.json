@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-08-02T11:59:39.826Z",
-  "totalScraped": 495,
-  "successCount": 453,
+  "generatedAt": "2026-08-09T11:25:15.354Z",
+  "totalScraped": 496,
+  "successCount": 454,
   "failCount": 0,
   "members": [
     {
@@ -12841,6 +12841,27 @@
       "pagesScraped": [
         "home",
         "about"
+      ]
+    },
+    {
+      "chamberSlug": "north-41",
+      "website": "http://north41studio.com/",
+      "scrapedAt": "2026-08-09T11:25:13.851Z",
+      "title": "Home | North41",
+      "metaDescription": "NORTH41° is an agency built to find and move the right audiences, grow brands, and deliver results that matter.",
+      "h1": [],
+      "services": [
+        "NORTH41° is the only certified partner for all of the following brands:",
+        "Everything you need. Nothing you don't.",
+        "We don't follow trends. We set the ones your competitors scramble to catch up with.",
+        "What does winning look like for your business?",
+        "You're one step closer to winning."
+      ],
+      "listItems": [],
+      "homeText": "Local by design. Relentless in execution. Based in Medina, Ohio (41.1389° N, 81.8637° W), we help businesses move faster and smarter through integrated strategy, creative, and digital execution built to drive real results. Work With Us Systems We ask \"what does winning look like?\" — then we build the strategy, the story, and the execution to get there. Full-spectrum capabilities. One accountable team. Audience Intelligence System Narrative Deployment Engine Creative Execution Layer Performance Feedback Loop NORTH41° is the only certified partner for all of the following brands: AI-powered SEO platform that simulates how search engines rank Predicts where users look to improve design performance Data-driven platform connecting brands to the right markets Cloud infrastructure solutions built for modern business growth Custom web, mobile, and AI solutions that drive growth and efficiency Clients Swipe Services Everything you need. Nothing you don't. From the first conversation to the fina",
+      "aboutText": "",
+      "pagesScraped": [
+        "home"
       ]
     }
   ]

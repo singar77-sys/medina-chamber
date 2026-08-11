@@ -141,9 +141,14 @@ export async function POST(req: Request): Promise<Response> {
     );
   }
 
-  // For custom social graphics, register the URL so GraphicPanel shows it
+  // For custom social graphics, register the URL so GraphicPanel shows it.
+  // The blob already uploaded — a Redis hiccup here must not 500 the request.
   if (type === "graphic" && eventSlug) {
-    await setEventGraphicImage(eventSlug, item.url);
+    try {
+      await setEventGraphicImage(eventSlug, item.url);
+    } catch (err) {
+      console.error("[media/upload] setEventGraphicImage failed:", err);
+    }
   }
 
   return NextResponse.json({ item });

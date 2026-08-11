@@ -144,6 +144,9 @@ Generate a GraphicConfig for this chamber event in the described style. Remember
     // Strip markdown code fences if model wraps output
     const cleaned = text.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
     draft = JSON.parse(cleaned);
+    if (!draft || typeof draft !== "object" || Array.isArray(draft)) {
+      throw new Error("non-object config");
+    }
   } catch (err) {
     console.error("[graphic-templates/generate] error:", err);
     return NextResponse.json({ error: "Failed to generate template. Try a different prompt." }, { status: 500 });

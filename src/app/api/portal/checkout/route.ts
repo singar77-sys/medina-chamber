@@ -43,6 +43,14 @@ async function getSession() {
 }
 
 export async function POST(req: Request): Promise<Response> {
+  // Dormant pre-cutover: this internal Stripe transaction endpoint must not be
+  // publicly invokable while GrowthZone remains the live system of record.
+  // Behave as if the route doesn't exist (404) before any DB write or Stripe
+  // call — matches join/route.ts and events/register/route.ts.
+  if (process.env.INTERNAL_TRANSACTIONS_ENABLED !== "true") {
+    return Response.json({ error: "Not found" }, { status: 404 });
+  }
+
   // Rate limit per client IP (~10/min). Fail-open: a limiter hiccup never
   // blocks a paying member or leaks a 500.
   const limited = await limitPortalCheckout(req);

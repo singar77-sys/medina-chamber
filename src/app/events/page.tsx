@@ -30,7 +30,7 @@ export default function EventsPage() {
   // Slim, serializable props for the client calendar — titles shortened
   // server-side so events.json (and shortenEventTitle) stay out of the
   // client bundle. Sorted ascending so the calendar's month range is right.
-  const todayISO = new Date().toISOString().split("T")[0];
+  const todayISO = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
   const calendarEvents = allUpcoming
     .map((e) => ({
       slug: e.slug,

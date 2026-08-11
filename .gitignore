@@ -25,8 +25,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env
-.env*.local
+# env — ignore every env file Next.js loads (.env, .env.production, *.local, …)
+.env*
+!.env.example
 
 # vercel
 .vercel

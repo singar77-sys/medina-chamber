@@ -98,6 +98,7 @@ Command: "${command.trim()}"`;
     });
 
     result = JSON.parse(text.trim());
+    if (!result || typeof result !== "object") throw new Error("bad shape");
   } catch (err) {
     console.error("[graphics] LLM parse error:", err);
     return NextResponse.json({ error: "Failed to parse command." }, { status: 500 });

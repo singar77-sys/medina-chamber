@@ -52,14 +52,13 @@
     "@vercel/speed-insights": "^2.0.0",
     "ai": "^6.0.158",
     "drizzle-orm": "^0.45.2",
-    "next": "^16.2.9",
+    "next": "^16.2.12",
     "postgres": "^3.4.9",
     "posthog-js": "^1.370.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "react-force-graph-2d": "^1.29.1",
     "resend": "^6.10.0",
-    "sharp": "^0.34.5",
+    "sharp": "^0.35.3",
     "stripe": "^22.2.1"
   },
   "pnpm": {

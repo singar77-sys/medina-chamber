@@ -37,13 +37,20 @@ export function getEventBySlug(slug: string): ChamberEvent | undefined {
   return events.find((e) => e.slug === slug);
 }
 
+/** Today's date in Medina's timezone (America/New_York) as YYYY-MM-DD, so
+ *  same-day events don't drop off the listings hours early on a UTC boundary.
+ *  en-CA formats as ISO. `now` stays injectable for testing. */
+function todayEastern(now = new Date()): string {
+  return now.toLocaleDateString("en-CA", { timeZone: "America/New_York" });
+}
+
 export function getUpcomingEvents(now = new Date()): ChamberEvent[] {
-  const today = now.toISOString().split("T")[0];
+  const today = todayEastern(now);
   return events.filter((e) => e.dateISO >= today);
 }
 
 export function getPastEvents(now = new Date()): ChamberEvent[] {
-  const today = now.toISOString().split("T")[0];
+  const today = todayEastern(now);
   return events.filter((e) => e.dateISO < today);
 }
 

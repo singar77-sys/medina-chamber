@@ -46,6 +46,14 @@ export async function POST(req: Request): Promise<Response> {
     .where(eq(contacts.email, email))
     .limit(1);
 
+  // Look up contact — fire-and-forget on hit; generic response always returned.
+  // NOTE (known low): the hit branch does token-sign + Resend send before
+  // responding, so response TIMING differs from a miss and could enumerate
+  // members. Rated low — the chamber runs a public 521-member directory (so
+  // "is X a member" is low-value) and this route is rate-limited 5/min/IP.
+  // Deferring via next/server `after()` is the fix but it throws outside a
+  // request context, breaking the email-escaping unit tests; revisit with a
+  // testable deferral post-launch.
   if (contact) {
     try {
       const token = await signMagicToken(contact.id, email, contact.magicTokenEpoch);
@@ -64,7 +72,7 @@ export async function POST(req: Request): Promise<Response> {
     }
   }
 
-  // Always 200 — no email enumeration
+  // Always 200 — no email enumeration via body/status
   return NextResponse.json({ ok: true });
 }
 

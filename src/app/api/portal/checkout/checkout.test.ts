@@ -4,6 +4,9 @@ import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 // Stub it before anything imports the route. We mock the stripe client itself
 // below, so no real key is ever used.
 vi.stubEnv("STRIPE_SECRET_KEY", "sk_test_dummy_key_for_unit_tests");
+// The route is dormant (404) unless internal transactions are enabled; turn the
+// kill switch on so these tests exercise the real authorization + checkout logic.
+vi.stubEnv("INTERNAL_TRANSACTIONS_ENABLED", "true");
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
 //

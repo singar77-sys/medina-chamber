@@ -1,6 +1,6 @@
 /**
- * POST /api/admin/auth/login   — verify password, set session cookie
- * POST /api/admin/auth/logout  — clear session cookie
+ * POST /api/admin/auth  — verify password, set session cookie.
+ * (Logout lives at /api/admin/auth/logout/route.ts — see AdminNav.)
  *
  * The login credential is CHAT_ADMIN_TOKEN (or a per-admin ADMIN_USERS token).
  * The session cookie is signed with the SEPARATE ADMIN_SESSION_SECRET, so the
@@ -40,22 +40,6 @@ async function logFailedLogin(req: Request, reason: string): Promise<void> {
 }
 
 export async function POST(req: Request): Promise<Response> {
-  const url = new URL(req.url);
-  const action = url.pathname.endsWith("/logout") ? "logout" : "login";
-
-  if (action === "logout") {
-    const res = NextResponse.json({ ok: true });
-    res.cookies.set(ADMIN_COOKIE, "", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 0,
-      path: "/",
-    });
-    return res;
-  }
-
-  // Login
   // Rate-limit BEFORE any credential work so a brute-force flood gets a fast 429
   // and never reaches the constant-time comparison (5/min + 20/hour per IP).
   const rl = await limitAdminAuth(req);

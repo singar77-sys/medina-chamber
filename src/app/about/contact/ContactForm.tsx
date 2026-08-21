@@ -247,7 +247,7 @@ export function ContactForm() {
         <Field label="Contact Preference" htmlFor="cf-pref">
           <select id="cf-pref"
             value={form.contactPreference} onChange={set("contactPreference")} disabled={loading} className={controlClass}>
-            <option value="">No preference</option>
+            <option value="">Select a preference</option>
             {CONTACT_PREFERENCES.map((p) => <option key={p} value={p}>{p}</option>)}
           </select>
         </Field>

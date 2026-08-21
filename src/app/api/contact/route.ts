@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/nextjs";
 import { formLimiter, applyRateLimit } from "@/lib/rate-limit";
 import { resend, CHAMBER_NOTIFY_EMAIL, EMAIL_RE } from "@/lib/email";
-import { escHtml, pickString } from "@/lib/sanitize";
+import { escHtml, pickString, pickOptional } from "@/lib/sanitize";
 
 // Per-field length caps. Anything longer is almost certainly abuse —
 // real chamber visitors don't paste novels into a contact form. These
@@ -61,27 +61,25 @@ export async function POST(req: Request) {
     return Response.json({ ok: true });
   }
 
-  // 3. Field-by-field validation with explicit length caps. `opt` maps a
-  //    missing/oversized optional field to "" so it's simply omitted from
-  //    the notification email rather than failing the whole submission.
-  const opt = (v: unknown, max: number) => pickString(v, max) ?? "";
-
+  // 3. Field-by-field validation with explicit length caps. pickOptional
+  //    maps a missing/oversized optional field to "" so it's simply omitted
+  //    from the notification email rather than failing the whole submission.
   const firstName = pickString(raw.firstName, MAX.name);
   const lastName = pickString(raw.lastName, MAX.name);
   const email = pickString(raw.email, MAX.email);
   const comments = pickString(raw.comments, MAX.comments);
 
-  const organization = opt(raw.organization, MAX.organization);
-  const title = opt(raw.title, MAX.title);
-  const addressLine1 = opt(raw.addressLine1, MAX.address);
-  const addressLine2 = opt(raw.addressLine2, MAX.address);
-  const city = opt(raw.city, MAX.city);
-  const state = opt(raw.state, MAX.state);
-  const postalCode = opt(raw.postalCode, MAX.postalCode);
-  const addressType = opt(raw.addressType, MAX.addressType);
-  const country = opt(raw.country, MAX.country);
-  const phone = opt(raw.phone, MAX.phone);
-  const contactPreference = opt(raw.contactPreference, MAX.contactPreference);
+  const organization = pickOptional(raw.organization, MAX.organization);
+  const title = pickOptional(raw.title, MAX.title);
+  const addressLine1 = pickOptional(raw.addressLine1, MAX.address);
+  const addressLine2 = pickOptional(raw.addressLine2, MAX.address);
+  const city = pickOptional(raw.city, MAX.city);
+  const state = pickOptional(raw.state, MAX.state);
+  const postalCode = pickOptional(raw.postalCode, MAX.postalCode);
+  const addressType = pickOptional(raw.addressType, MAX.addressType);
+  const country = pickOptional(raw.country, MAX.country);
+  const phone = pickOptional(raw.phone, MAX.phone);
+  const contactPreference = pickOptional(raw.contactPreference, MAX.contactPreference);
 
   if (!firstName || !lastName || !email || !comments) {
     return Response.json(

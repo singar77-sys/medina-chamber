@@ -745,10 +745,7 @@ export function ChamberBotPortal({
         {/* Stage: mascot + rings centered, caption at bottom */}
         <section className="stage">
           <HoloRings state={sceneState} />
-          <div
-            className="mascot-slot"
-            aria-label="ChamberBot mascot"
-          >
+          <div className="mascot-slot">
             <div className="mascot-aura" aria-hidden="true" />
             <div className="mascot-figure">
               <ChamberBotMascot

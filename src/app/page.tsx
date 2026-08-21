@@ -472,8 +472,8 @@ export default function HomePage() {
                 </h2>
                 <p className="text-body-lg text-text-secondary mt-f13">
                   Three tiers starting at $345 a year. The savings programs
-                  alone typically cover that in the first month. Stephanie
-                  will walk you through everything, no pressure.
+                  alone can help offset the cost. Stephanie will walk you
+                  through everything, no pressure.
                 </p>
               </div>
               <div className="space-y-f21">

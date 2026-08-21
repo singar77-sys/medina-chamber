@@ -112,6 +112,11 @@ export const navigation: NavItem[] = [
         href: "/membership/savings",
         description: "Member-exclusive discounts and deals",
       },
+      {
+        label: "Chamber Store",
+        href: "/store",
+        description: "Certificate of Origin and other Chamber services",
+      },
     ],
   },
   {

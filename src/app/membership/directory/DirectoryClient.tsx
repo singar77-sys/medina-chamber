@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef, Suspense } from "react";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
 import { MemberCard } from "@/components/MemberCard";
 import { DirectoryHero } from "@/components/directory/DirectoryHero";
 import { IndustryChipStrip } from "@/components/directory/IndustryChipStrip";
@@ -32,7 +32,6 @@ function keywordFilter(members: Member[], q: string): Member[] {
 
 function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const pathname = usePathname();
 
   const [search, setSearch] = useState(searchParams.get("q") ?? "");
@@ -65,14 +64,20 @@ function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
       : topIndustries;
 
   // Last query string this component wrote (or adopted). Lets the
-  // URL→state effect tell our own router.replace echoes apart from real
+  // URL→state effect tell our own history writes apart from real
   // navigations (nav link, back/forward, command palette).
   const lastSyncedQs = useRef(searchParams.toString());
   const urlWriteTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // State → URL, debounced. Typing doesn't spam router.replace per
-  // keystroke; the URL settles 250ms after the last change. Debouncing
-  // also guarantees any searchParams change that differs from
+  // State → URL, debounced. We update the URL with the native
+  // window.history.replaceState instead of router.replace: on this
+  // force-dynamic route router.replace triggers a full RSC round-trip
+  // to the server on every filter change, which re-rendered the tree
+  // and made category results flash in then vanish ~250ms after a click.
+  // history.replaceState still syncs usePathname/useSearchParams (per
+  // the Next docs) so deep links and the URL→state guard keep working —
+  // it just doesn't refetch. Debouncing keeps the URL from thrashing
+  // mid-keystroke and guarantees any searchParams change differing from
   // lastSyncedQs is a real navigation, not a stale echo of our own write.
   useEffect(() => {
     const params = new URLSearchParams();
@@ -83,7 +88,7 @@ function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
     if (qs === lastSyncedQs.current) return;
     urlWriteTimer.current = setTimeout(() => {
       lastSyncedQs.current = qs;
-      router.replace(pathname + (qs ? `?${qs}` : ""), { scroll: false });
+      window.history.replaceState(null, "", pathname + (qs ? `?${qs}` : ""));
     }, 250);
     return () => {
       if (urlWriteTimer.current) clearTimeout(urlWriteTimer.current);

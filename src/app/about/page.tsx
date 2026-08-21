@@ -272,9 +272,15 @@ export default async function AboutPage() {
           </div>
         </FadeIn>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-f21">
+        {/* flex + justify-center so the 5th card centers instead of
+            leaving a lopsided gap in the last row of a 3-col grid. */}
+        <div className="flex flex-wrap justify-center gap-f21">
           {coreValues.map((value, i) => (
-            <FadeIn key={value.number} delay={i * 80}>
+            <FadeIn
+              key={value.number}
+              delay={i * 80}
+              className="basis-full md:basis-[48%] lg:basis-[31%]"
+            >
               <div
                 className="
                   h-full p-f34
@@ -322,8 +328,8 @@ export default async function AboutPage() {
               <p className="text-overline text-cambridge mb-f8">Our Team</p>
               <h2 className="text-h2">The people behind the chamber.</h2>
               <p className="text-body-lg text-text-secondary mt-f13">
-                A small staff with deep roots in Medina County, plus a volunteer
-                board members and ambassadors who make everything work.
+                A small staff with deep roots in Medina County, plus a
+                volunteer board and ambassadors who make everything work.
               </p>
             </div>
           </FadeIn>
@@ -356,27 +362,12 @@ export default async function AboutPage() {
             ))}
           </div>
 
-          <div className="mt-f21 flex flex-wrap gap-f21">
-            <Link
-              href="/about/board"
-              className="text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
-            >
-              Meet the Board of Directors →
-            </Link>
-            <Link
-              href="/about/ambassadors"
-              className="text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
-            >
-              Meet the Ambassadors →
-            </Link>
-          </div>
-
           <FadeIn>
             <div className="mt-f34 p-f34 lg:p-f55 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]">
               <div className="grid md:grid-cols-2 gap-f34 items-center">
                 <div>
                   <p className="text-overline text-cambridge mb-f8">Visit Us</p>
-                  <h2 className="text-h2">Come by the office.</h2>
+                  <h3 className="text-h3">Come by the office.</h3>
                   <div className="mt-f13 text-body text-text-secondary space-y-f3">
                     <p>139 N. Court Street, Suite A</p>
                     <p>Medina, OH 44256</p>

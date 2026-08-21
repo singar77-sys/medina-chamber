@@ -169,7 +169,7 @@ export default function BoardPage() {
                 <p className="text-overline text-cambridge mb-f8">
                   2026 Board of Directors
                 </p>
-                <h2 className="text-h2">{board.length} Volunteer Leaders</h2>
+                <h2 className="text-h2">Volunteer Leaders</h2>
               </div>
               <p className="text-body-sm text-text-tertiary">
                 Local business owners, executives, and longtime members.

@@ -38,7 +38,7 @@ const coreBenefits = [
   {
     title: "Education & Resources",
     description:
-      "Business development programming, workshops, and committee involvement that sharpen skills and expand perspective. The Compass Professional Development Program offers a full five-session professional development experience.",
+      "Business development programming, workshops, and events that sharpen skills and expand perspective. The Compass Professional Development Program offers a full five-session professional development experience.",
     link: { label: "View programs", href: "/programs" },
   },
   {
@@ -54,10 +54,10 @@ const coreBenefits = [
     link: { label: "Sponsorship opportunities", href: "/events/sponsorships" },
   },
   {
-    title: "Committee Participation",
+    title: "Ways to Get Involved",
     description:
-      "Nine committees and councils where members actively shape chamber programs, events, advocacy, and culture. From the Marketing Committee to the Ambassador Committee, there's a role for every kind of contributor.",
-    link: { label: "Explore committees", href: "/membership/committees" },
+      "Give back and grow your network through the Chamber Ambassadors, volunteers who welcome new members, cut ribbons, and represent the Chamber across Medina County. There's a role for every kind of contributor.",
+    link: { label: "Meet the Ambassadors", href: "/about/ambassadors" },
   },
   {
     title: "Safety Council Access",

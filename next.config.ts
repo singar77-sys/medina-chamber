@@ -143,8 +143,10 @@ const nextConfig: NextConfig = {
       { source: "/golf-outing", destination: "/programs/golf-outing", permanent: true },
       { source: "/social-connect", destination: "/programs/social-connect", permanent: true },
       { source: "/compass-program", destination: "/programs/compass", permanent: true },
-      { source: "/committees-and-councils", destination: "/membership/committees", permanent: true },
-      { source: "/committees", destination: "/membership/committees", permanent: true },
+      // Committees & Councils page retired 2026-08-21 — old links land on benefits.
+      { source: "/committees-and-councils", destination: "/membership/benefits", permanent: true },
+      { source: "/committees", destination: "/membership/benefits", permanent: true },
+      { source: "/membership/committees", destination: "/membership/benefits", permanent: true },
       { source: "/member-benefits", destination: "/membership/benefits", permanent: true },
       { source: "/savings-programs", destination: "/membership/savings", permanent: true },
       { source: "/pricing", destination: "/membership/pricing", permanent: true },

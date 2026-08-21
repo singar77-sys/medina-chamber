@@ -97,16 +97,16 @@ const steps: Step[] = [
     number: "05",
     week: "Week 3",
     time: "15 minutes",
-    title: "Review committees and join one",
+    title: "Find your way to get involved",
     why:
-      "Committees are where relationships get built. An event is fun; a committee is family. Nine committees cover everything from golf and ATHENA awards to business advocacy and marketing. Pick the one that aligns with your business goals.",
+      "The fastest way to turn a membership into real relationships is to show up and contribute. Whether that's volunteering with the Ambassadors, joining the Safety Council, or lending a hand at a signature event, there's a role that fits your goals.",
     actions: [
-      "Review the committee list and descriptions",
-      "Pick one (or two) that match your interests",
-      "Email the Chamber to express interest",
-      "Attend your first committee meeting",
+      "Explore the Chamber Ambassador program",
+      "Check the events calendar for something to attend",
+      "Email the Chamber to say what you're interested in",
+      "Show up — the relationships follow",
     ],
-    link: { label: "See Committees & Councils", href: "/membership/committees" },
+    link: { label: "Meet the Ambassadors", href: "/about/ambassadors" },
   },
   {
     number: "06",
@@ -415,9 +415,9 @@ export default function First30DaysPage() {
                 description: "Health insurance, workers' comp, energy, HR, recreation discounts.",
               },
               {
-                label: "Committees & Councils",
-                href: "/membership/committees",
-                description: "Nine committees shaping Chamber programs.",
+                label: "Chamber Ambassadors",
+                href: "/about/ambassadors",
+                description: "Volunteers who welcome and connect members.",
               },
               {
                 label: "Upcoming Events",

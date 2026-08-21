@@ -125,13 +125,6 @@ const COMMANDS: Command[] = [
     keywords: ["discount", "insurance", "workers comp", "anthem", "energy"],
   },
   {
-    id: "committees",
-    label: "Committees",
-    group: "Membership",
-    href: "/membership/committees",
-    keywords: ["get involved", "volunteer"],
-  },
-  {
     id: "first-30",
     label: "Your First 30 Days",
     group: "Membership",

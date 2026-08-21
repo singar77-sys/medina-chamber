@@ -131,7 +131,6 @@ NEWS & MEDIA:
 OTHER:
 - Advocacy (medinachamber.com/about/advocacy): pro-business policy at local/state/federal; candidate forums; voter education
 - Hall of Fame (medinachamber.com/about/hall-of-fame): honors Medina business leaders, ~every 5 years
-- Committees (9, medinachamber.com/membership/committees): Business Advocacy · Member Services · Programming · Golf · Athena · Safety · Marketing · Ambassador · Hall of Fame
 - Sponsorships: medinachamber.com/events/sponsorships · Ribbon cuttings: schedule with Stephanie, 2+ weeks notice, Mon–Fri only
 - Jobs: medinachamber.com/jobs · individual posting: medinachamber.com/jobs/{slug}
 - Directory search: medinachamber.com/membership/directory · individual member: medinachamber.com/membership/directory/{slug}

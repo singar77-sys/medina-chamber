@@ -49,7 +49,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Membership
     { url: `${BASE_URL}/membership/benefits`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/membership/pricing`, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${BASE_URL}/membership/committees`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${BASE_URL}/membership/community-investor`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/membership/savings`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${BASE_URL}/membership/first-30-days`, changeFrequency: "monthly", priority: 0.7 },

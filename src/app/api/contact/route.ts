@@ -4,12 +4,22 @@ import { resend, CHAMBER_NOTIFY_EMAIL, EMAIL_RE } from "@/lib/email";
 import { escHtml, pickString } from "@/lib/sanitize";
 
 // Per-field length caps. Anything longer is almost certainly abuse —
-// real chamber visitors don't paste novels into a contact form.
+// real chamber visitors don't paste novels into a contact form. These
+// mirror the maxLength attributes on the form inputs.
 const MAX = {
-  name: 200,
-  email: 320,    // RFC 5321 maximum
+  name: 100,
+  organization: 200,
+  title: 200,
+  address: 200,
+  city: 100,
+  state: 100,
+  postalCode: 20,
+  addressType: 50,
+  country: 100,
+  email: 320, // RFC 5321 maximum
   phone: 50,
-  message: 5000,
+  contactPreference: 50,
+  comments: 5000,
 };
 
 // Minimum time between form render and submission. Real humans take
@@ -51,17 +61,31 @@ export async function POST(req: Request) {
     return Response.json({ ok: true });
   }
 
-  // 3. Field-by-field validation with explicit length caps
-  const name = pickString(raw.name, MAX.name);
-  const email = pickString(raw.email, MAX.email);
-  const message = pickString(raw.message, MAX.message);
-  const phone = raw.phone === undefined || raw.phone === null
-    ? ""
-    : pickString(raw.phone, MAX.phone) ?? "";
+  // 3. Field-by-field validation with explicit length caps. `opt` maps a
+  //    missing/oversized optional field to "" so it's simply omitted from
+  //    the notification email rather than failing the whole submission.
+  const opt = (v: unknown, max: number) => pickString(v, max) ?? "";
 
-  if (!name || !email || !message) {
+  const firstName = pickString(raw.firstName, MAX.name);
+  const lastName = pickString(raw.lastName, MAX.name);
+  const email = pickString(raw.email, MAX.email);
+  const comments = pickString(raw.comments, MAX.comments);
+
+  const organization = opt(raw.organization, MAX.organization);
+  const title = opt(raw.title, MAX.title);
+  const addressLine1 = opt(raw.addressLine1, MAX.address);
+  const addressLine2 = opt(raw.addressLine2, MAX.address);
+  const city = opt(raw.city, MAX.city);
+  const state = opt(raw.state, MAX.state);
+  const postalCode = opt(raw.postalCode, MAX.postalCode);
+  const addressType = opt(raw.addressType, MAX.addressType);
+  const country = opt(raw.country, MAX.country);
+  const phone = opt(raw.phone, MAX.phone);
+  const contactPreference = opt(raw.contactPreference, MAX.contactPreference);
+
+  if (!firstName || !lastName || !email || !comments) {
     return Response.json(
-      { error: "Name, email, and message are required." },
+      { error: "First name, last name, email, and comments are required." },
       { status: 400 }
     );
   }
@@ -76,6 +100,26 @@ export async function POST(req: Request) {
     return Response.json({ error: "Mail service not configured." }, { status: 500 });
   }
 
+  const fullName = `${firstName} ${lastName}`;
+
+  // Only include fields the visitor actually filled in. Name and email
+  // are guaranteed present (required above).
+  const rows: [string, string][] = [
+    ["Name", fullName],
+    ["Email", email],
+    ["Phone", phone],
+    ["Organization", organization],
+    ["Title", title],
+    ["Address Line 1", addressLine1],
+    ["Address Line 2", addressLine2],
+    ["City", city],
+    ["State", state],
+    ["Postal Code", postalCode],
+    ["Country", country],
+    ["Address Type", addressType],
+    ["Contact Preference", contactPreference],
+  ].filter(([, v]) => v) as [string, string][];
+
   try {
     await resend.emails.send({
       // Sent from huntersystems.dev (verified Resend domain) instead of
@@ -84,22 +128,12 @@ export async function POST(req: Request) {
       from: "Greater Medina Chamber Website <chamber@huntersystems.dev>",
       to: CHAMBER_NOTIFY_EMAIL,
       replyTo: email,
-      subject: `Contact form: ${name}`,
-      text: [
-        `Name: ${name}`,
-        `Email: ${email}`,
-        phone ? `Phone: ${phone}` : "",
-        "",
-        message,
-      ]
-        .filter(Boolean)
-        .join("\n"),
+      subject: `Contact form: ${fullName}`,
+      text: [...rows.map(([k, v]) => `${k}: ${v}`), "", comments].join("\n"),
       html: `
-        <p><strong>Name:</strong> ${escHtml(name)}</p>
-        <p><strong>Email:</strong> ${escHtml(email)}</p>
-        ${phone ? `<p><strong>Phone:</strong> ${escHtml(phone)}</p>` : ""}
+        ${rows.map(([k, v]) => `<p><strong>${escHtml(k)}:</strong> ${escHtml(v)}</p>`).join("\n")}
         <hr />
-        <p style="white-space:pre-wrap">${escHtml(message)}</p>
+        <p style="white-space:pre-wrap">${escHtml(comments)}</p>
       `,
     });
 
@@ -110,7 +144,7 @@ export async function POST(req: Request) {
       tags: { route: "contact" },
       // PII: name + email are intentional — chamber needs to know who hit
       // the error. Sentry's sendDefaultPii is on; this matches that policy.
-      extra: { senderName: name, senderEmail: email },
+      extra: { senderName: fullName, senderEmail: email },
     });
     return Response.json({ error: "Failed to send message. Please try again." }, { status: 500 });
   }

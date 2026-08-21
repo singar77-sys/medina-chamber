@@ -4,11 +4,68 @@ import { useState } from "react";
 
 type Status = "idle" | "loading" | "success" | "error";
 
+const US_STATES = [
+  "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado",
+  "Connecticut", "Delaware", "District of Columbia", "Florida", "Georgia",
+  "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky",
+  "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota",
+  "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire",
+  "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota",
+  "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island",
+  "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont",
+  "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming",
+] as const;
+
+const COUNTRIES = ["United States", "Canada", "Mexico", "Other"] as const;
+const ADDRESS_TYPES = ["Business", "Home", "Mailing", "Billing", "Other"] as const;
+const CONTACT_PREFERENCES = ["Email", "Phone", "Mail", "No preference"] as const;
+
+const EMPTY_FORM = {
+  firstName: "",
+  lastName: "",
+  organization: "",
+  title: "",
+  addressLine1: "",
+  addressLine2: "",
+  city: "",
+  state: "",
+  postalCode: "",
+  addressType: "",
+  country: "United States",
+  phone: "",
+  email: "",
+  contactPreference: "",
+  comments: "",
+};
+
+/** Small label + control wrapper so every field lines up identically. */
+function Field({
+  label,
+  htmlFor,
+  required = false,
+  children,
+}: {
+  label: string;
+  htmlFor: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <label
+        htmlFor={htmlFor}
+        className="block text-body-sm font-bold text-text-primary mb-2"
+      >
+        {label}
+        {required && <span className="text-accent"> *</span>}
+      </label>
+      {children}
+    </div>
+  );
+}
+
 export function ContactForm() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [message, setMessage] = useState("");
+  const [form, setForm] = useState({ ...EMPTY_FORM });
   // Honeypot — a hidden field real users never see. Bots autofill
   // every input; if this isn't empty on submit, the server drops
   // the request silently.
@@ -18,6 +75,12 @@ export function ContactForm() {
   const [formLoadedAt] = useState(() => Date.now());
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
+
+  const loading = status === "loading";
+  const set =
+    (key: keyof typeof EMPTY_FORM) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
+      setForm((f) => ({ ...f, [key]: e.target.value }));
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -29,10 +92,7 @@ export function ContactForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name,
-          email,
-          phone,
-          message,
+          ...form,
           website_confirm: websiteConfirm,
           formLoadedAt,
         }),
@@ -68,7 +128,7 @@ export function ContactForm() {
         <button
           onClick={() => {
             setStatus("idle");
-            setName(""); setEmail(""); setPhone(""); setMessage("");
+            setForm({ ...EMPTY_FORM });
           }}
           className="text-body-sm text-cambridge hover:underline mt-2"
         >
@@ -78,7 +138,7 @@ export function ContactForm() {
     );
   }
 
-  const inputClass = `
+  const controlClass = `
     w-full px-4 py-3
     bg-bg-secondary border border-border-secondary
     rounded-[var(--radius-md)]
@@ -105,69 +165,98 @@ export function ContactForm() {
           onChange={(e) => setWebsiteConfirm(e.target.value)}
         />
       </div>
+
       <div className="grid sm:grid-cols-2 gap-5">
-        <div>
-          <label htmlFor="contact-name" className="block text-body-sm font-bold text-text-primary mb-2">
-            Name <span className="text-accent">*</span>
-          </label>
-          <input
-            id="contact-name"
-            type="text"
-            required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Your name"
-            disabled={status === "loading"}
-            className={inputClass}
-          />
-        </div>
-        <div>
-          <label htmlFor="contact-email" className="block text-body-sm font-bold text-text-primary mb-2">
-            Email <span className="text-accent">*</span>
-          </label>
-          <input
-            id="contact-email"
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
-            disabled={status === "loading"}
-            className={inputClass}
-          />
-        </div>
+        <Field label="First Name" htmlFor="cf-first" required>
+          <input id="cf-first" type="text" required autoComplete="given-name" maxLength={100}
+            value={form.firstName} onChange={set("firstName")} disabled={loading} className={controlClass} />
+        </Field>
+        <Field label="Last Name" htmlFor="cf-last" required>
+          <input id="cf-last" type="text" required autoComplete="family-name" maxLength={100}
+            value={form.lastName} onChange={set("lastName")} disabled={loading} className={controlClass} />
+        </Field>
       </div>
 
-      <div>
-        <label htmlFor="contact-phone" className="block text-body-sm font-bold text-text-primary mb-2">
-          Phone <span className="text-text-tertiary font-normal">(optional)</span>
-        </label>
-        <input
-          id="contact-phone"
-          type="tel"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          placeholder="(330) 555-0100"
-          disabled={status === "loading"}
-          className={inputClass}
-        />
+      <div className="grid sm:grid-cols-2 gap-5">
+        <Field label="Organization" htmlFor="cf-org">
+          <input id="cf-org" type="text" autoComplete="organization" maxLength={200}
+            value={form.organization} onChange={set("organization")} disabled={loading} className={controlClass} />
+        </Field>
+        <Field label="Title" htmlFor="cf-title">
+          <input id="cf-title" type="text" autoComplete="organization-title" maxLength={200}
+            value={form.title} onChange={set("title")} disabled={loading} className={controlClass} />
+        </Field>
       </div>
 
-      <div>
-        <label htmlFor="contact-message" className="block text-body-sm font-bold text-text-primary mb-2">
-          Message <span className="text-accent">*</span>
-        </label>
-        <textarea
-          id="contact-message"
-          required
-          rows={6}
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder="How can we help?"
-          disabled={status === "loading"}
-          className={`${inputClass} resize-none`}
-        />
+      <Field label="Address Line 1" htmlFor="cf-addr1">
+        <input id="cf-addr1" type="text" autoComplete="address-line1" maxLength={200}
+          value={form.addressLine1} onChange={set("addressLine1")} disabled={loading} className={controlClass} />
+      </Field>
+
+      <Field label="Address Line 2" htmlFor="cf-addr2">
+        <input id="cf-addr2" type="text" autoComplete="address-line2" maxLength={200}
+          value={form.addressLine2} onChange={set("addressLine2")} disabled={loading} className={controlClass} />
+      </Field>
+
+      <div className="grid sm:grid-cols-2 gap-5">
+        <Field label="City" htmlFor="cf-city">
+          <input id="cf-city" type="text" autoComplete="address-level2" maxLength={100}
+            value={form.city} onChange={set("city")} disabled={loading} className={controlClass} />
+        </Field>
+        <Field label="State" htmlFor="cf-state">
+          <select id="cf-state" autoComplete="address-level1"
+            value={form.state} onChange={set("state")} disabled={loading} className={controlClass}>
+            <option value="">Select a state</option>
+            {US_STATES.map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
+        </Field>
       </div>
+
+      <div className="grid sm:grid-cols-2 gap-5">
+        <Field label="Postal Code" htmlFor="cf-zip">
+          <input id="cf-zip" type="text" autoComplete="postal-code" maxLength={20}
+            value={form.postalCode} onChange={set("postalCode")} disabled={loading} className={controlClass} />
+        </Field>
+        <Field label="Address Type" htmlFor="cf-addrtype">
+          <select id="cf-addrtype"
+            value={form.addressType} onChange={set("addressType")} disabled={loading} className={controlClass}>
+            <option value="">Select a type</option>
+            {ADDRESS_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+          </select>
+        </Field>
+      </div>
+
+      <div className="grid sm:grid-cols-2 gap-5">
+        <Field label="Country" htmlFor="cf-country">
+          <select id="cf-country" autoComplete="country-name"
+            value={form.country} onChange={set("country")} disabled={loading} className={controlClass}>
+            {COUNTRIES.map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
+        </Field>
+        <Field label="Phone" htmlFor="cf-phone">
+          <input id="cf-phone" type="tel" autoComplete="tel" maxLength={50} placeholder="(330) 555-0100"
+            value={form.phone} onChange={set("phone")} disabled={loading} className={controlClass} />
+        </Field>
+      </div>
+
+      <div className="grid sm:grid-cols-2 gap-5">
+        <Field label="Email" htmlFor="cf-email" required>
+          <input id="cf-email" type="email" required autoComplete="email" maxLength={320} placeholder="you@example.com"
+            value={form.email} onChange={set("email")} disabled={loading} className={controlClass} />
+        </Field>
+        <Field label="Contact Preference" htmlFor="cf-pref">
+          <select id="cf-pref"
+            value={form.contactPreference} onChange={set("contactPreference")} disabled={loading} className={controlClass}>
+            <option value="">No preference</option>
+            {CONTACT_PREFERENCES.map((p) => <option key={p} value={p}>{p}</option>)}
+          </select>
+        </Field>
+      </div>
+
+      <Field label="Comments" htmlFor="cf-comments" required>
+        <textarea id="cf-comments" required rows={6} maxLength={5000} placeholder="How can we help?"
+          value={form.comments} onChange={set("comments")} disabled={loading} className={`${controlClass} resize-none`} />
+      </Field>
 
       {status === "error" && (
         <p className="text-body-sm text-red-500">{errorMsg}</p>
@@ -182,7 +271,7 @@ export function ContactForm() {
 
       <button
         type="submit"
-        disabled={status === "loading"}
+        disabled={loading}
         className="
           inline-flex items-center gap-2 px-8 py-4
           bg-accent hover:bg-accent-hover disabled:opacity-50
@@ -191,7 +280,7 @@ export function ContactForm() {
           transition-colors
         "
       >
-        {status === "loading" ? (
+        {loading ? (
           <>
             <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             Sending…

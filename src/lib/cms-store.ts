@@ -281,7 +281,7 @@ export const DEFAULT_PRICING: Omit<PricingConfig, "updatedAt"> = {
     },
     {
       q: "How do I upgrade later?",
-      a: "Contact Stephanie Mueller at any time. Upgrades are prorated based on where you are in your membership year.",
+      a: "Contact Stephanie Mueller at any time.",
     },
   ],
 };

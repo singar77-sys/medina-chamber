@@ -190,38 +190,6 @@ export default function HomePage() {
         </div>
       </MouseGradient>
 
-      {/* Reflections of Italy — chamber group trip promo (compact banner).
-          Top padding matches the Upcoming Events section's top padding
-          (and no bottom padding) so the banner sits centered in the gap
-          between the stats strip and the events section. */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f89 lg:pt-f144">
-        <FadeIn>
-          <Link
-            href="/programs/italy-trip"
-            className="
-              group flex flex-col gap-f13 sm:flex-row sm:items-center sm:justify-between sm:gap-f21
-              rounded-[var(--radius-lg)] bg-bg-secondary border border-border-secondary
-              px-f21 py-f21 lg:px-f34
-              hover:border-cambridge/40 hover:shadow-cambridge transition-all
-            "
-          >
-            <div>
-              <p className="text-overline text-cambridge mb-f3">Chamber Group Travel</p>
-              <p className="text-h4 font-bold text-text-primary">
-                Reflections of Italy · 10 days in October 2027
-              </p>
-              <p className="text-body-sm text-text-secondary mt-f3">
-                Rome, Florence, Venice, and the Tuscan countryside with Collette.
-                From $5,999 per person.
-              </p>
-            </div>
-            <span className="shrink-0 inline-flex items-center gap-2 text-body-sm font-bold text-cambridge group-hover:translate-x-1 transition-transform">
-              Explore the trip →
-            </span>
-          </Link>
-        </FadeIn>
-      </section>
-
       {/* Upcoming Events — py-f89 lg:py-f144 */}
       {upcomingEvents.length > 0 && (
         <section className="relative overflow-hidden mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
@@ -410,6 +378,35 @@ export default function HomePage() {
           </div>
         </section>
       )}
+
+      {/* Reflections of Italy — chamber group trip promo, below Upcoming Events */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f34">
+        <FadeIn>
+          <Link
+            href="/programs/italy-trip"
+            className="
+              group flex flex-col gap-f13 sm:flex-row sm:items-center sm:justify-between sm:gap-f21
+              rounded-[var(--radius-lg)] bg-bg-secondary border border-border-secondary
+              px-f21 py-f21 lg:px-f34
+              hover:border-cambridge/40 hover:shadow-cambridge transition-all
+            "
+          >
+            <div>
+              <p className="text-overline text-cambridge mb-f3">Chamber Group Travel</p>
+              <p className="text-h4 font-bold text-text-primary">
+                Reflections of Italy · 10 days in October 2027
+              </p>
+              <p className="text-body-sm text-text-secondary mt-f3">
+                Rome, Florence, Venice, and the Tuscan countryside with Collette.
+                From $5,999 per person.
+              </p>
+            </div>
+            <span className="shrink-0 inline-flex items-center gap-2 text-body-sm font-bold text-cambridge group-hover:translate-x-1 transition-transform">
+              Explore the trip →
+            </span>
+          </Link>
+        </FadeIn>
+      </section>
 
       {/* Three Pillars (Your Voice / Network / Growth) */}
       <ThreePillars />

@@ -217,20 +217,23 @@ export default async function CommunityInvestorPage() {
         </FadeIn>
       </section>
 
-      {/* Community Investors — the full logo wall, mirroring the home page */}
-      <CommunityInvestors />
+      {/* Community Investors — the full logo wall, mirroring the home page.
+          featuredQuote promotes the member quote to a prominent spot above
+          the marquee (this page only; the home page keeps it small). */}
+      <CommunityInvestors featuredQuote />
 
-      {/* CTA */}
-      <section className="bg-oxford border-t border-white/10 py-f55 lg:py-f89">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <FadeIn>
+      {/* CTA — theme-aware card (was a hardcoded bg-oxford band that stayed
+          dark in light mode). Matches the contact page's membership bookend. */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+        <FadeIn>
+          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
                 <p className="text-overline text-cambridge mb-f8">Ready to lead</p>
-                <h2 className="text-h2 text-white">Join as a Community Investor</h2>
-                <p className="text-body-lg text-white/70 mt-f13 leading-relaxed">
+                <h2 className="text-h2">Join as a Community Investor</h2>
+                <p className="text-body-lg text-text-secondary mt-f13 leading-relaxed">
                   $1,145/year. Questions about fit or what to expect?
-                  Stephanie or Jaclyn can walk you through it — no pressure,
+                  Stephanie or Jaclyn can walk you through it, no pressure,
                   just a conversation.
                 </p>
               </div>
@@ -251,8 +254,8 @@ export default async function CommunityInvestorPage() {
                   href={mailto(stephanie.email)}
                   className="
                     block w-full text-center py-f13 px-f21
-                    border border-white/20 hover:border-white/40
-                    text-white/80 hover:text-white font-bold text-body-sm
+                    border border-border-primary hover:border-text-tertiary
+                    text-text-primary font-bold text-body-sm
                     rounded-[var(--radius-md)]
                     transition-colors
                   "
@@ -263,7 +266,9 @@ export default async function CommunityInvestorPage() {
                   href={mailto(jaclyn.email)}
                   className="
                     block w-full text-center py-f13 px-f21
-                    text-white/50 hover:text-white/80 font-bold text-body-sm
+                    border border-border-primary hover:border-text-tertiary
+                    text-text-primary font-bold text-body-sm
+                    rounded-[var(--radius-md)]
                     transition-colors
                   "
                 >
@@ -272,7 +277,7 @@ export default async function CommunityInvestorPage() {
               </div>
             </div>
 
-            <div className="mt-f34 pt-f21 border-t border-white/10 flex flex-wrap gap-f21">
+            <div className="mt-f34 pt-f21 border-t border-border-secondary flex flex-wrap gap-f21">
               <Link
                 href="/membership/pricing"
                 className="text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
@@ -286,8 +291,8 @@ export default async function CommunityInvestorPage() {
                 View all member benefits
               </Link>
             </div>
-          </FadeIn>
-        </div>
+          </div>
+        </FadeIn>
       </section>
     </>
   );

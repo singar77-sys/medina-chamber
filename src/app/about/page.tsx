@@ -459,17 +459,18 @@ export default async function AboutPage() {
         </FadeIn>
       </section>
 
-      {/* Join CTA — dark closing band (matches the Community Investor CTA) */}
-      <section className="bg-oxford border-t border-white/10 py-f55 lg:py-f89">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <FadeIn>
+      {/* Join CTA — theme-aware card (was a hardcoded bg-oxford band that
+          stayed dark in light mode). Matches the Community Investor CTA. */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+        <FadeIn>
+          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
                 <p className="text-overline text-cambridge mb-f8">Membership</p>
-                <h2 className="text-h2 text-white">
+                <h2 className="text-h2">
                   Ready to be part of what&apos;s building Medina?
                 </h2>
-                <p className="text-body-lg text-white/70 mt-f13 leading-relaxed">
+                <p className="text-body-lg text-text-secondary mt-f13 leading-relaxed">
                   Join the businesses in the Chamber network. Three tiers, one
                   community, a shared commitment to making Medina County the
                   best place in Ohio to run a business.
@@ -492,8 +493,8 @@ export default async function AboutPage() {
                   href="/membership/pricing"
                   className="
                     block w-full text-center py-f13 px-f21
-                    border border-white/20 hover:border-white/40
-                    text-white/80 hover:text-white font-bold text-body-sm
+                    border border-border-primary hover:border-text-tertiary
+                    text-text-primary font-bold text-body-sm
                     rounded-[var(--radius-md)]
                     transition-colors
                   "
@@ -504,7 +505,9 @@ export default async function AboutPage() {
                   href="/about/contact"
                   className="
                     block w-full text-center py-f13 px-f21
-                    text-white/50 hover:text-white/80 font-bold text-body-sm
+                    border border-border-primary hover:border-text-tertiary
+                    text-text-primary font-bold text-body-sm
+                    rounded-[var(--radius-md)]
                     transition-colors
                   "
                 >
@@ -512,8 +515,8 @@ export default async function AboutPage() {
                 </Link>
               </div>
             </div>
-          </FadeIn>
-        </div>
+          </div>
+        </FadeIn>
       </section>
     </>
   );

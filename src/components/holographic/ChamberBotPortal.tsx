@@ -28,7 +28,6 @@ import { createPortal } from "react-dom";
 import { usePostHog } from "posthog-js/react";
 import { ChamberBotMascot, type MascotIntent } from "./ChamberBotMascot";
 import { renderMarkdown } from "@/lib/markdown";
-import { usePortalAudio } from "@/hooks/usePortalAudio";
 import { getUpcomingEvents } from "@/data/events";
 import { chamberOffice, jaclyn, stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
@@ -402,7 +401,6 @@ export function ChamberBotPortal({
   const phaseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sessionIdRef = useRef<string | null>(null);
 
-  const audio = usePortalAudio();
   const posthog = usePostHog();
 
   useEffect(() => {
@@ -500,7 +498,6 @@ export function ChamberBotPortal({
           const chunk = decoder.decode(value, { stream: true });
           if (firstToken && chunk.length) {
             setSceneState("responding");
-            audio.receive();
             firstToken = false;
             setMessages((prev) =>
               prev.map((m) =>
@@ -549,7 +546,7 @@ export function ChamberBotPortal({
         setSceneState("idle");
       }
     },
-    [sceneState, audio, messages, posthog],
+    [sceneState, messages, posthog],
   );
 
   // ── Phase machine ─────────────────────────────────────────────────
@@ -565,7 +562,6 @@ export function ChamberBotPortal({
 
     if (shouldEnter) {
       setPhase("entering");
-      audio.enter();
       posthog?.capture("chamberbot_opened");
       phaseTimerRef.current = setTimeout(() => {
         setPhase("open");
@@ -573,7 +569,6 @@ export function ChamberBotPortal({
       }, ENTER_MS);
     } else {
       setPhase("exiting");
-      audio.exit();
       posthog?.capture("chamberbot_closed", { message_count: messages.length });
       phaseTimerRef.current = setTimeout(() => {
         setPhase("closed");
@@ -723,44 +718,6 @@ export function ChamberBotPortal({
           <div className="hud-chip mono">SINCE 1938</div>
           <button
             type="button"
-            className="hud-btn"
-            onClick={audio.toggleMute}
-            aria-label={
-              audio.muted ? "Unmute portal audio" : "Mute portal audio"
-            }
-          >
-            {audio.muted ? (
-              <svg
-                viewBox="0 0 18 18"
-                width="14"
-                height="14"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M8 4L4 7H1v4h3l4 3V4z" />
-                <line x1="13" y1="7" x2="17" y2="11" />
-                <line x1="17" y1="7" x2="13" y2="11" />
-              </svg>
-            ) : (
-              <svg
-                viewBox="0 0 18 18"
-                width="14"
-                height="14"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M8 4L4 7H1v4h3l4 3V4zM12 6a4 4 0 010 6M14.5 3.5a7 7 0 010 11" />
-              </svg>
-            )}
-          </button>
-          <button
-            type="button"
             className="hud-btn hud-btn--close"
             onClick={() => {
               abortRef.current?.abort();
@@ -790,7 +747,6 @@ export function ChamberBotPortal({
           <HoloRings state={sceneState} />
           <div
             className="mascot-slot"
-            onClick={() => audio.boop()}
             aria-label="ChamberBot mascot"
           >
             <div className="mascot-aura" aria-hidden="true" />

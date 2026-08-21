@@ -105,6 +105,18 @@ const extraBenefits = [
   },
 ];
 
+// The Harris Poll — verbatim from the chamber's prior site (ACCE × Harris Poll
+// study on public perception of local chambers). Wording preserved exactly.
+const harrisPollIntro =
+  "The Association of Chamber of Commerce Executives (ACCE), in partnership with The Harris Poll, explores U.S. adults' perceptions of their local chamber of commerce, the role chambers play in their communities, and the value of chamber membership to businesses.";
+
+const harrisPollStats = [
+  "81% of U.S. adults trust their local chamber, and 90% believe chambers drive local economic growth",
+  "65% see chambers as advocates for business-friendly policies, and 62% believe chambers support their growth",
+  "76% view chambers as stewards of strong local economies, 74% say they create jobs, and 72% believe they address community challenges",
+  "70% of adults want to know more about their local chamber, including its community impact (49%), general information (43%), and member businesses (42%)",
+];
+
 export default function BenefitsPage() {
   const jsonLd = {
     "@context": "https://schema.org",
@@ -214,8 +226,53 @@ export default function BenefitsPage() {
         </FadeIn>
       </section>
 
+      {/* The Harris Poll — third-party validation of chamber value */}
+      <section className="bg-bg-secondary border-y border-border-secondary py-f89 lg:py-f144">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <FadeIn>
+            <div className="max-w-3xl">
+              {/* Logo on a white chip so the black-on-white mark reads in both themes */}
+              <div className="inline-flex items-center rounded-[var(--radius-md)] bg-white px-f13 py-f8 mb-f21">
+                <Image
+                  src="/images/membership/member-benefits-03-medina-chamber.jpg"
+                  alt="The Harris Poll"
+                  width={1217}
+                  height={638}
+                  className="h-9 w-auto"
+                  sizes="220px"
+                />
+              </div>
+              <h2 className="text-h2">The Harris Poll</h2>
+              <p className="text-body-lg text-text-secondary mt-f13 leading-relaxed">
+                {harrisPollIntro}
+              </p>
+            </div>
+
+            <div className="mt-f34 grid sm:grid-cols-2 gap-f21">
+              {harrisPollStats.map((stat, i) => {
+                const firstSpace = stat.indexOf(" ");
+                const lead = stat.slice(0, firstSpace); // leading "NN%"
+                const rest = stat.slice(firstSpace + 1);
+                return (
+                  <FadeIn key={stat} delay={i * 60}>
+                    <div className="flex flex-col h-full p-f21 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]">
+                      <span className="text-h1 text-cambridge leading-none tabular-nums">
+                        {lead}
+                      </span>
+                      <p className="text-body text-text-secondary leading-relaxed mt-f8">
+                        {rest}
+                      </p>
+                    </div>
+                  </FadeIn>
+                );
+              })}
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
       {/* Member guidebooks — downloadable PDFs */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pb-f89 lg:pb-f144">
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
           <h2 className="text-overline text-cambridge mb-f21">Member Guidebooks</h2>
           <div className="grid sm:grid-cols-2 gap-f21">

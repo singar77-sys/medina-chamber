@@ -190,8 +190,11 @@ export default function HomePage() {
         </div>
       </MouseGradient>
 
-      {/* Reflections of Italy — chamber group trip promo (compact banner) */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f34">
+      {/* Reflections of Italy — chamber group trip promo (compact banner).
+          Top padding matches the Upcoming Events section's top padding
+          (and no bottom padding) so the banner sits centered in the gap
+          between the stats strip and the events section. */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f89 lg:pt-f144">
         <FadeIn>
           <Link
             href="/programs/italy-trip"

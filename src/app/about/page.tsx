@@ -51,7 +51,7 @@ const coreValues = [
     number: "05",
     title: "Champion Collective Leadership",
     tag: "Leading the way",
-    desc: "We engage and support the dedicated volunteers, board members, and committee leaders who drive community growth from the inside.",
+    desc: "We engage and support the dedicated volunteers, board members, and ambassadors who drive community growth from the inside.",
   },
 ];
 
@@ -193,7 +193,7 @@ export default async function AboutPage() {
             {[
               { stat: "1938", label: "Founded" },
               { stat: "50+", label: "Events Per Year" },
-              { stat: "9", label: "Committees" },
+              { stat: "500+", label: "Member Businesses" },
             ].map((item) => (
               <div
                 key={item.label}
@@ -308,7 +308,7 @@ export default async function AboutPage() {
           aria-hidden="true"
         >
           <Image
-            src="/images/photos/medina-chamber-committee-meeting.webp"
+            src="/images/photos/medina-chamber-team-meeting.webp"
             alt=""
             fill
             className="object-cover opacity-[0.10]"
@@ -323,7 +323,7 @@ export default async function AboutPage() {
               <h2 className="text-h2">The people behind the chamber.</h2>
               <p className="text-body-lg text-text-secondary mt-f13">
                 A small staff with deep roots in Medina County, plus a volunteer
-                board, committee leaders, and ambassadors who make everything work.
+                board members and ambassadors who make everything work.
               </p>
             </div>
           </FadeIn>

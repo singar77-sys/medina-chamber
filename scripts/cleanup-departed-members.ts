@@ -1,16 +1,18 @@
 /**
- * One-time cleanup: remove organizations that have LEFT the chamber (verified
- * 2026-08-21 — their GrowthZone detail pages redirect to MemberNotFound) plus
- * the stale pre-rename King Dumpsters slug. gz-sync intentionally never deletes,
- * so departed members linger in the DB-backed directory grid; this removes them.
+ * One-time cleanup: SOFT-DELETE organizations that have LEFT the chamber
+ * (verified 2026-08-21 — their GrowthZone detail pages redirect to
+ * MemberNotFound) plus the stale pre-rename King Dumpsters slug. gz-sync never
+ * deletes, so departed members linger in the DB-backed directory grid.
+ *
+ * We set deleted_at (not a hard DELETE) because the invoices table references
+ * organizations WITHOUT cascade — a hard delete of an org with invoice history
+ * is (correctly) blocked, and we want to keep that history. The directory query
+ * only shows `status='active' AND deleted_at IS NULL`, so soft-delete hides them.
  *
  * Dry-run (default):   pnpm tsx --env-file=.env.local scripts/cleanup-departed-members.ts
- * Apply the delete:    pnpm tsx --env-file=.env.local scripts/cleanup-departed-members.ts --apply
- *
- * FK-safe: every reference to organizations.id is ON DELETE CASCADE / SET NULL,
- * and the delete runs in a transaction, so a partial failure rolls back cleanly.
+ * Apply:               pnpm tsx --env-file=.env.local scripts/cleanup-departed-members.ts --apply
  */
-import { inArray } from "drizzle-orm";
+import { inArray, isNull, and, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { organizations } from "@/lib/db/schema";
 
@@ -51,15 +53,13 @@ void (async () => {
     process.exit(0);
   }
 
-  const deleted = await db.transaction(async (tx) => {
-    const res = await tx
-      .delete(organizations)
-      .where(inArray(organizations.slug, SLUGS))
-      .returning({ slug: organizations.slug });
-    return res.map((r) => r.slug);
-  });
+  const removed = await db
+    .update(organizations)
+    .set({ deletedAt: sql`now()`, updatedAt: sql`now()` })
+    .where(and(inArray(organizations.slug, SLUGS), isNull(organizations.deletedAt)))
+    .returning({ slug: organizations.slug });
 
-  console.log(`\n✅ Deleted ${deleted.length} organization(s) (cascaded to dependent rows):`);
-  deleted.forEach((s) => console.log(`   - ${s}`));
+  console.log(`\n✅ Soft-deleted ${removed.length} organization(s) (hidden from directory, history kept):`);
+  removed.forEach((r) => console.log(`   - ${r.slug}`));
   process.exit(0);
 })();

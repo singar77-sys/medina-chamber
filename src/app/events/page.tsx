@@ -230,7 +230,7 @@ export default function EventsPage() {
                     Get to Know the Chamber
                   </h3>
                   <p className="text-body-sm text-text-secondary leading-relaxed flex-1">
-                    A guided tour of membership benefits, committees, advocacy, and
+                    A guided tour of membership benefits, advocacy, and
                     resources, over coffee and pastries. Built for prospective
                     members, brand-new members, and longtime supporters who want a
                     refresher. Runs four times a year. RSVP required.

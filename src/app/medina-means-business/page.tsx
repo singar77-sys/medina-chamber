@@ -148,7 +148,7 @@ export default function MedinaMeansBusinessPage() {
           {[
             { end: 1938, label: "Chamber Founded", suffix: "" },
             { end: new Date().getFullYear() - 1938, label: "Years of Advocacy", suffix: "+" },
-            { end: 9, label: "Active Committees", suffix: "" },
+            { end: 500, label: "Member Businesses", suffix: "+" },
           ].map((s, i) => (
             <FadeIn key={s.label} delay={i * 80}>
               <div className="p-8 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] text-center">

@@ -9,7 +9,7 @@ import { mailto } from "@/lib/format";
 export const metadata: Metadata = {
   title: "Your First 30 Days",
   description:
-    "New to the Greater Medina Chamber of Commerce? Here's a 7-step onboarding checklist to get the most out of your membership in your first month, build your profile, attend your first event, join a committee, and more.",
+    "New to the Greater Medina Chamber of Commerce? Here's a 7-step onboarding checklist to get the most out of your membership in your first month, build your profile, attend your first event, get involved, and more.",
   openGraph: {
     title: "Your First 30 Days, Medina Chamber Onboarding Checklist",
     description:
@@ -54,7 +54,7 @@ const steps: Step[] = [
     time: "30 minutes",
     title: "Schedule a 1:1 orientation with Stephanie",
     why:
-      "Stephanie walks you through every benefit, helps you pick the right committees and events, and makes sure you get the most out of membership from day one. This is the fastest way to turn membership into momentum.",
+      "Stephanie walks you through every benefit, helps you pick the right events and connections, and makes sure you get the most out of membership from day one. This is the fastest way to turn membership into momentum.",
     actions: [
       "Email Stephanie to book a call or office visit",
       "Bring a list of your business goals for the year",

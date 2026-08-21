@@ -210,8 +210,8 @@ export default function BoardPage() {
                 </p>
                 <h2 className="text-h2">Interested in serving?</h2>
                 <p className="text-body-lg text-text-secondary mt-f13">
-                  Chamber members can join committees, serve as ambassadors,
-                  and engage with the board. It&apos;s how Medina&apos;s
+                  Chamber members can serve as ambassadors and engage with the
+                  board. It&apos;s how Medina&apos;s
                   business community stays connected at the leadership level.
                 </p>
               </div>

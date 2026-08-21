@@ -9,7 +9,6 @@
 export * from "./schema/organizations";
 export * from "./schema/memberships";
 export * from "./schema/payments";
-export * from "./schema/committees";
 export * from "./schema/crm";
 export * from "./schema/events";
 export * from "./schema/email";

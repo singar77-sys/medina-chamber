@@ -459,19 +459,6 @@ export default async function PortalDashboardPage() {
           </a>
 
           <a
-            href="/portal/committees"
-            className="flex items-center gap-3 bg-bg-primary rounded-xl px-5 py-4 shadow-sm border border-border-secondary hover:border-border-primary transition-colors group"
-          >
-            <span className="text-xl">❖</span>
-            <div>
-              <p className="text-sm font-bold text-text-primary group-hover:text-cambridge transition-colors">
-                Committees
-              </p>
-              <p className="text-xs text-text-tertiary">Join a committee</p>
-            </div>
-          </a>
-
-          <a
             href="/portal/deals"
             className="flex items-center gap-3 bg-bg-primary rounded-xl px-5 py-4 shadow-sm border border-border-secondary hover:border-border-primary transition-colors group"
           >

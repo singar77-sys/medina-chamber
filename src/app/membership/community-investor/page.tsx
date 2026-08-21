@@ -120,7 +120,7 @@ export default async function CommunityInvestorPage() {
             </h1>
             <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
               This is where chamber leadership lives. The CEOs, founders, and
-              owners who don&apos;t just join the chamber — they shape Medina
+              owners who don&apos;t just join the chamber, but shape Medina
               County&apos;s business direction.
             </p>
             <div className="mt-f21 flex flex-wrap items-center gap-f13">

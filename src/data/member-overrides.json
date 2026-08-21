@@ -1,0 +1,10 @@
+{
+  "_readme": "Durable, scrape-proof enrichment for members whose public GrowthZone listing is too thin for search. The weekly member scraper OVERWRITES members.json, so any hand-edit to a member's categories/description is lost on the next run (this is what kept un-fixing Medwick). Instead, put the enrichment here — scripts/scrape-members.mjs and scripts/apply-member-overrides.mjs re-apply it after every scrape, and the Upstash search index (sync-vectors) reads the enriched members.json. Keyed by chamberSlug. addCategories are merged (deduped) onto the scraped categories; description replaces an empty/thin scraped one. Update the vector index after changing this: `node scripts/apply-member-overrides.mjs && node scripts/sync-vectors-to-upstash.mjs`.",
+  "overrides": {
+    "medwick-construction": {
+      "note": "Community Investor. GrowthZone lists them only as a general contractor, but roofing and insurance restoration are core services — without this they never surface for 'roofing'/'roofers'.",
+      "addCategories": ["Roofing", "Restoration - Fire & Water"],
+      "description": "Medina County's insurance restoration advocate. Medwick Construction specializes in roofing, storm, wind, and hail damage repair, water mitigation, and full-property reconstruction — working directly with homeowners and their insurers to restore homes and businesses after fire, water, and storm damage. A licensed general contractor, not a public adjuster."
+    }
+  }
+}

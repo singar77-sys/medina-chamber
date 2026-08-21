@@ -23,6 +23,7 @@ import { writeFileSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { parse } from 'node-html-parser';
+import { applyMemberOverrides } from './lib-member-overrides.mjs';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dir, '..');
@@ -273,6 +274,16 @@ async function main() {
       membershipTier: m.membershipTier ?? 20,
     })),
   };
+
+  // Durable enrichment: re-apply curated categories/descriptions the public
+  // GrowthZone listing can't provide (e.g. Medwick's roofing services), so they
+  // survive this wholesale overwrite instead of being reverted every scrape.
+  // Source of truth: src/data/member-overrides.json.
+  const ovReport = applyMemberOverrides(output.members);
+  if (ovReport.length) {
+    console.log(`\n  Applied ${ovReport.length} member override(s):`);
+    ovReport.forEach((r) => console.log('   ' + r));
+  }
 
   writeFileSync(OUT_FILE, JSON.stringify(output, null, 2), 'utf-8');
 

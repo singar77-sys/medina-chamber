@@ -19,7 +19,6 @@ const quickLinks = [
   { label: "Member Directory", href: "/membership/directory" },
   { label: "Join the Chamber", href: "/membership/join" },
   { label: "Upcoming Events", href: "/events" },
-  { label: "Chamber Store", href: "/store" },
   { label: "Compass Mentorship", href: "/programs/compass" },
   { label: "Try ChamberBot", href: "/chamberbot" },
   { label: "Advocacy", href: "/about/advocacy" },

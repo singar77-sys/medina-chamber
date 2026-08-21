@@ -233,8 +233,22 @@ export default function AthenaAwardsPage() {
       </section>
 
       {/* Selection Criteria */}
-      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+        {/* Ghosted ATHENA ceremony backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/events/athena-awards/highlights/athena-awards-medina-ohio-002.webp"
+            alt=""
+            fill
+            className="object-cover opacity-[0.10]"
+            sizes="100vw"
+            quality={60}
+          />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
             <h2 className="text-overline text-cambridge mb-f21">Selection Criteria</h2>
             <div className="grid md:grid-cols-2 gap-f21">

@@ -296,7 +296,7 @@ export default async function PricingPage() {
               <p className="text-overline text-cambridge mb-f8">What&apos;s Inside</p>
               <h2 className="text-h2">Every Essentials benefit, in detail</h2>
               <p className="text-body text-text-secondary mt-f13 leading-relaxed">
-                Every tier starts with these {essentialsBenefits.length} benefits. Visibility Plus and
+                Every tier starts with these benefits. Visibility Plus and
                 Community Investor build on top, they don&apos;t replace them.
               </p>
             </div>

@@ -128,6 +128,26 @@ export function CommunityInvestors() {
           </div>
         </FadeIn>
 
+        {/* Member quote — a Community Investor on why it matters */}
+        <FadeIn delay={50}>
+          <figure className="mx-auto max-w-3xl text-center mb-12 lg:mb-16">
+            <p
+              className="text-h1 text-cambridge/30 leading-none font-bold select-none"
+              aria-hidden="true"
+            >
+              &ldquo;
+            </p>
+            <blockquote className="mt-2 text-h3 lg:text-h2 text-text-primary font-medium leading-snug text-balance">
+              Strong businesses help build strong communities. Through the
+              Chamber, we&apos;re able to play an active role in making Medina
+              County a great place for everyone.
+            </blockquote>
+            <figcaption className="mt-6 text-body-sm font-bold text-cambridge uppercase tracking-wider">
+              Steve Allison &middot; Fire-Dex
+            </figcaption>
+          </figure>
+        </FadeIn>
+
         {/* Marquee — three tracks, contained within site framing */}
         <FadeIn delay={100}>
           <div className="space-y-3 overflow-hidden">
@@ -183,18 +203,6 @@ export function CommunityInvestors() {
               See all membership tiers
             </Link>
           </p>
-        </FadeIn>
-
-        {/* Member quote */}
-        <FadeIn delay={300}>
-          <figure className="mt-10 mx-auto max-w-2xl text-center">
-            <blockquote className="text-body-lg lg:text-h4 text-text-primary italic leading-relaxed">
-              &ldquo;Strong businesses help build strong communities. Through the Chamber, we&apos;re able to play an active role in making Medina County a great place for everyone.&rdquo;
-            </blockquote>
-            <figcaption className="mt-4 text-body-sm font-bold text-cambridge">
-              Steve Allison &middot; Fire Dex
-            </figcaption>
-          </figure>
         </FadeIn>
 
       </div>

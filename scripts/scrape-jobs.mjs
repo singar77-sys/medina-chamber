@@ -52,10 +52,15 @@ async function get(url) {
 
 function htmlToText(html = '') {
   return html
+    // Drop <style>/<script> block CONTENTS before the generic tag strip — that
+    // strip only removes the tags, leaking raw block CSS into the body as text.
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
     .replace(/<br\s*\/?>/gi, '\n')
     .replace(/<\/p>/gi, '\n')
     .replace(/<[^>]+>/g, '')
     .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&#39;/g, "'").replace(/&quot;/g, '"')
+    .replace(/[\u200B-\u200D\uFEFF]/g, '') // strip zero-width chars
     .replace(/\n{3,}/g, '\n\n')
     .trim();
 }

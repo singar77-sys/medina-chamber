@@ -71,8 +71,15 @@ export default async function BlogPostPage(
   if (!post) notFound();
 
   const dateDisplay = formatBlogDate(post);
+  // Scraped bodies delimit paragraphs with single newlines (the scraper maps
+  // each </p> and </h*> to "\n"), so split on any run of newlines — splitting
+  // on "\n\n" alone collapsed whole articles into one wall of text. Trim and
+  // drop blank lines.
   const bodyParagraphs = post.body
-    ? post.body.split("\n\n").filter(Boolean)
+    ? post.body
+        .split(/\n+/)
+        .map((para) => para.trim())
+        .filter(Boolean)
     : [];
 
   const jsonLd = {

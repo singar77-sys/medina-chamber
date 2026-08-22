@@ -43,11 +43,18 @@ async function fetchPage(offset) {
 
 function htmlToText(html = '') {
   return html
+    // Drop <style>/<script> block CONTENTS first — the generic tag strip below
+    // only removes the tags, which would leak the raw Squarespace block CSS
+    // (e.g. "#block-… { … }") into the body as visible text.
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
     .replace(/<br\s*\/?>/gi, '\n')
     .replace(/<\/p>/gi, '\n')
     .replace(/<\/h[1-6]>/gi, '\n')
     .replace(/<[^>]+>/g, '')
     .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&#39;/g, "'").replace(/&quot;/g, '"')
+    .replace(/[\u200B-\u200D\uFEFF]/g, '') // strip zero-width chars (ZWSP/ZWNJ/ZWJ/BOM)
+    .replace(/[ \t]+\n/g, '\n')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
 }
@@ -64,7 +71,9 @@ function parsePost(item) {
 
   return {
     slug,
-    title: item.title || '',
+    // Run the title through htmlToText too — otherwise raw entities like
+    // "&amp;" / "&nbsp;" render literally in the <h1>.
+    title: item.title ? htmlToText(item.title) : '',
     excerpt,
     body,
     author: item.author?.displayName || 'Stephanie Mueller',

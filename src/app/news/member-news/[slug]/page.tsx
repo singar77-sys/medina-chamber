@@ -54,8 +54,14 @@ export default async function MemberNewsArticlePage(
     : undefined;
   const memberDirectorySlug = memberRecord?.chamberSlug;
 
+  // Scraped bodies delimit paragraphs with single newlines, so split on any run
+  // of newlines — splitting on "\n\n" alone collapsed articles into a wall of
+  // text. Trim and drop blank lines.
   const bodyParagraphs = article.body
-    ? article.body.split("\n\n").filter(Boolean)
+    ? article.body
+        .split(/\n+/)
+        .map((para) => para.trim())
+        .filter(Boolean)
     : [];
 
   // JSON-LD Article schema

@@ -140,7 +140,7 @@ export default function SocialConnectPage() {
       </section>
 
       {/* Venue callout */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] flex flex-col sm:flex-row sm:items-center gap-f21">
             <div className="flex-1">
@@ -251,7 +251,7 @@ export default function SocialConnectPage() {
       </section>
 
       {/* CTA */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">

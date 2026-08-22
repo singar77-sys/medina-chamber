@@ -121,7 +121,7 @@ export default function BoardPage() {
       </section>
 
       {/* Chamber staff */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
           <div className="mb-f21">
             <p className="text-overline text-cambridge mb-f8">Chamber Staff</p>

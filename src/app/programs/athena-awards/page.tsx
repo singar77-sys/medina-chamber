@@ -147,7 +147,7 @@ export default function AthenaAwardsPage() {
       </section>
 
       {/* About + Event Details */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
           <div className="grid lg:grid-cols-2 gap-f34 lg:gap-f55 items-start">
             <div>
@@ -307,7 +307,7 @@ export default function AthenaAwardsPage() {
       </section>
 
       {/* Sponsorship + Contact */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pb-f55 lg:pb-f89">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 pb-f55 lg:pb-f89">
         <FadeIn>
           <div className="grid md:grid-cols-2 gap-f21">
             <div className="p-f34 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">

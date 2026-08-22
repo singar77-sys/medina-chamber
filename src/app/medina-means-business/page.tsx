@@ -409,7 +409,7 @@ export default function MedinaMeansBusinessPage() {
       </section>
 
       {/* Closing CTA */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pb-20 lg:pb-28">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 pb-20 lg:pb-28">
         <FadeIn>
           <div className="p-10 lg:p-16 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] relative overflow-hidden">
             <div className="absolute -top-32 -right-32 w-64 h-64 bg-cambridge/10 rounded-full blur-3xl" />

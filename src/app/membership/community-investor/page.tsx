@@ -158,7 +158,7 @@ export default async function CommunityInvestorPage() {
       </section>
 
       {/* What sets CI apart */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f89 pb-f55 lg:pt-f144 lg:pb-f89">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 pt-f89 pb-f55 lg:pt-f144 lg:pb-f89">
         <FadeIn>
           <div className="max-w-2xl mb-f34">
             <p className="text-overline text-cambridge mb-f8">At the leadership level</p>
@@ -188,7 +188,7 @@ export default async function CommunityInvestorPage() {
       </section>
 
       {/* Who it's for */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
           <div className="max-w-2xl">
             <p className="text-overline text-cambridge mb-f8">Is this the right fit?</p>
@@ -224,7 +224,7 @@ export default async function CommunityInvestorPage() {
 
       {/* CTA — theme-aware card (was a hardcoded bg-oxford band that stayed
           dark in light mode). Matches the contact page's membership bookend. */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">

@@ -146,7 +146,7 @@ export default function RentalSpacePage() {
       </section>
 
       {/* Location banner */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] flex flex-col sm:flex-row sm:items-center gap-f21">
             <div className="flex-1">
@@ -275,7 +275,7 @@ export default function RentalSpacePage() {
       </section>
 
       {/* Hours + booking */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] overflow-hidden">
             <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-f34 items-start">

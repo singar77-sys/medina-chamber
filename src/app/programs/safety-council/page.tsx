@@ -138,7 +138,7 @@ export default function SafetyCouncilPage() {
       </section>
 
       {/* What Is It + Meeting Details */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
           <div className="grid lg:grid-cols-2 gap-f34 lg:gap-f55 items-start">
             <div>
@@ -322,7 +322,7 @@ export default function SafetyCouncilPage() {
       </section>
 
       {/* Chamber members enroll free — ghosted safety-gear section background */}
-      <section className="relative overflow-hidden py-f55 lg:py-f89">
+      <section className="rule-top relative overflow-hidden py-f55 lg:py-f89">
         {/* Ghosted safety-gear backdrop */}
         <div
           className="absolute inset-0 pointer-events-none select-none"

@@ -204,7 +204,7 @@ export default async function CompassPage() {
       </section>
 
       {/* Program overview */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
           <div className="grid lg:grid-cols-3 gap-f21">
             {overview.map((item) => (
@@ -316,7 +316,7 @@ export default async function CompassPage() {
       </section>
 
       {/* CTA */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">

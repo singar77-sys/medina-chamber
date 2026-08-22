@@ -69,7 +69,7 @@ export default function AmbassadorsPage() {
       </section>
 
       {/* What ambassadors do */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
           <div className="grid lg:grid-cols-2 gap-f34 lg:gap-f55">
             <div>

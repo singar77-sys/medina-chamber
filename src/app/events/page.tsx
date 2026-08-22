@@ -84,7 +84,7 @@ export default function EventsPage() {
       </section>
 
       {/* Upcoming Events */}
-      <section id="upcoming-events" className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144 scroll-mt-f89">
+      <section id="upcoming-events" className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144 scroll-mt-f89">
         <FadeIn>
           <div className="flex items-end justify-between mb-f21">
             <h2 className="text-h2">Upcoming Events</h2>
@@ -353,7 +353,7 @@ export default function EventsPage() {
       </section>
 
       {/* Members CTA */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="max-w-2xl">

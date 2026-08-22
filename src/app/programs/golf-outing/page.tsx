@@ -106,7 +106,7 @@ export default function GolfOutingPage() {
       </section>
 
       {/* Event details */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
           {/* Info strip — gap-f21 between 3 cards */}
           <div className="grid sm:grid-cols-3 gap-f21">

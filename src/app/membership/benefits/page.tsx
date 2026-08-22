@@ -199,7 +199,7 @@ export default function BenefitsPage() {
       </section>
 
       {/* Core benefits */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
           <h2 className="text-overline text-cambridge mb-f21">What&apos;s Included</h2>
           <div className="grid md:grid-cols-2 gap-f21">

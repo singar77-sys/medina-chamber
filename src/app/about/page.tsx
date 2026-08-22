@@ -187,7 +187,7 @@ export default async function AboutPage() {
       </section>
 
       {/* Stats */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <FadeIn>
           <div className="grid grid-cols-3 gap-f21">
             {[
@@ -461,7 +461,7 @@ export default async function AboutPage() {
 
       {/* Join CTA — theme-aware card (was a hardcoded bg-oxford band that
           stayed dark in light mode). Matches the Community Investor CTA. */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
         <FadeIn>
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">

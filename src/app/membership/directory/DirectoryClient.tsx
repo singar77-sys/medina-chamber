@@ -6,7 +6,17 @@ import { MemberCard } from "@/components/MemberCard";
 import { DirectoryHero } from "@/components/directory/DirectoryHero";
 import { IndustryChipStrip } from "@/components/directory/IndustryChipStrip";
 import { BrowseBand } from "@/components/directory/BrowseBand";
-import { type Member } from "@/data/members";
+import { type Member, isCommunityInvestor, isVisibilityPlus } from "@/data/members";
+
+// Premium-first ordering for browse/category views: Community Investors (the
+// logo-header tier) always lead, then Visibility Plus, then everyone else —
+// keyed off the authoritative slug sets that also drive the card treatment, so
+// a CI card never sorts below a plain one. (DB membershipTier is unreliable.)
+function tierRank(m: Member): number {
+  if (isCommunityInvestor(m)) return 0;
+  if (isVisibilityPlus(m)) return 1;
+  return 2;
+}
 
 interface DirectoryClientProps {
   members: Member[];
@@ -184,10 +194,12 @@ function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
     if (activeCategory) {
       result = result.filter((m) => m.categories.includes(activeCategory));
     }
-    if (!activeCategory) {
-      return [...result].sort((a, b) => a.membershipTier - b.membershipTier);
-    }
-    return result;
+    // Community Investors sort first in every browse/category view, then
+    // Visibility Plus, then alphabetically — so CI always populate the top of
+    // the page. (Search results stay in relevance order, handled above.)
+    return [...result].sort(
+      (a, b) => tierRank(a) - tierRank(b) || a.name.localeCompare(b.name),
+    );
   }, [members, search, activeCategory, semanticSlugs, searchError]);
 
   const isFiltered = !!search.trim() || !!activeCategory || showAll;

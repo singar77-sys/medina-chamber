@@ -61,7 +61,7 @@ export default function EventsPage() {
             alt=""
             fill
             priority
-            className="object-cover opacity-[0.33]"
+            className="object-cover object-top opacity-[0.33]"
             sizes="100vw"
             quality={60}
           />
@@ -137,7 +137,7 @@ export default function EventsPage() {
             src="/images/photos/medina-chamber-social-lunch.webp"
             alt=""
             fill
-            className="object-cover opacity-[0.10]"
+            className="object-cover object-top opacity-[0.10]"
             sizes="100vw"
             quality={60}
           />
@@ -363,7 +363,7 @@ export default function EventsPage() {
             src="/images/photos/sneak-peeks/medina-chamber-community-002.webp"
             alt=""
             fill
-            className="object-cover opacity-[0.10]"
+            className="object-cover object-top opacity-[0.10]"
             sizes="100vw"
             quality={60}
           />

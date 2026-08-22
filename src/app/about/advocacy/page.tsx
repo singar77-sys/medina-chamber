@@ -162,7 +162,7 @@ export default function AdvocacyPage() {
             src="/images/membership/medina-chamber-membership-photo.jpg"
             alt=""
             fill
-            className="object-cover opacity-[0.33]"
+            className="object-cover object-top opacity-[0.33]"
             sizes="100vw"
             quality={60}
           />

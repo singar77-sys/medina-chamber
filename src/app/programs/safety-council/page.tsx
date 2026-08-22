@@ -201,7 +201,7 @@ export default function SafetyCouncilPage() {
             src="/images/photos/medina-chamber-workshop-seminar.webp"
             alt=""
             fill
-            className="object-cover opacity-[0.10]"
+            className="object-cover object-top opacity-[0.10]"
             sizes="100vw"
             quality={60}
           />

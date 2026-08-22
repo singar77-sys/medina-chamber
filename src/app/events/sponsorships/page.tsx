@@ -178,7 +178,7 @@ export default function SponsorshipsPage() {
             alt=""
             fill
             priority
-            className="object-cover opacity-[0.33]"
+            className="object-cover object-top opacity-[0.33]"
             sizes="100vw"
             quality={60}
           />
@@ -272,7 +272,7 @@ export default function SponsorshipsPage() {
             src="/images/photos/medina-chamber-ribbon-cutting.webp"
             alt=""
             fill
-            className="object-cover opacity-[0.10]"
+            className="object-cover object-top opacity-[0.10]"
             sizes="100vw"
             quality={60}
           />
@@ -523,7 +523,7 @@ export default function SponsorshipsPage() {
             src="/images/photos/sneak-peeks/medina-chamber-community-007.webp"
             alt=""
             fill
-            className="object-cover opacity-[0.10]"
+            className="object-cover object-top opacity-[0.10]"
             sizes="100vw"
             quality={60}
           />

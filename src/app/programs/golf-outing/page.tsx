@@ -57,7 +57,7 @@ export default function GolfOutingPage() {
             alt=""
             fill
             priority
-            className="object-cover opacity-[0.33]"
+            className="object-cover object-top opacity-[0.33]"
             sizes="100vw"
             quality={60}
           />

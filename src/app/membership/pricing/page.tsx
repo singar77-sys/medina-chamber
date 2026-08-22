@@ -285,7 +285,7 @@ export default async function PricingPage() {
             src="/images/photos/networking.webp"
             alt=""
             fill
-            className="object-cover opacity-[0.10]"
+            className="object-cover object-top opacity-[0.10]"
             sizes="100vw"
             quality={60}
           />
@@ -355,7 +355,7 @@ export default async function PricingPage() {
             src="/images/photos/sneak-peeks/medina-chamber-community-004.webp"
             alt=""
             fill
-            className="object-cover opacity-[0.10]"
+            className="object-cover object-top opacity-[0.10]"
             sizes="100vw"
             quality={60}
           />

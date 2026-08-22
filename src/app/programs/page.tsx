@@ -166,7 +166,7 @@ export default function ProgramsPage() {
             src="/images/photos/sneak-peeks/medina-chamber-community-001.webp"
             alt=""
             fill
-            className="object-cover opacity-[0.10]"
+            className="object-cover object-top opacity-[0.10]"
             sizes="100vw"
             quality={60}
           />

@@ -190,10 +190,9 @@ export default function HomePage() {
         </div>
       </MouseGradient>
 
-      {/* Upcoming Events — reduced bottom padding so the Italy promo below
-          tucks up close under the events (top padding unchanged). */}
+      {/* Upcoming Events — py-f89 lg:py-f144 */}
       {upcomingEvents.length > 0 && (
-        <section className="relative overflow-hidden mx-auto max-w-7xl px-6 lg:px-8 pt-f89 pb-f34 lg:pt-f144 lg:pb-f55">
+        <section className="relative overflow-hidden mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
           <VesicaPiscisWatermark className="tp-vesica" />
           <FadeIn>
             <div className="flex items-end justify-between mb-f34 gap-f21 flex-wrap">
@@ -380,11 +379,8 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* Reflections of Italy — chamber group trip promo, tucked up under
-          Upcoming Events. No top padding so it rides close to the events
-          (their section already adds ~144px below its content); the open
-          space sits below, before the next section. */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pb-f8">
+      {/* Reflections of Italy — chamber group trip promo, below Upcoming Events */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f34">
         <FadeIn>
           <Link
             href="/programs/italy-trip"

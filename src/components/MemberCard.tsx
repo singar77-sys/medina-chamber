@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { type Member, extractCity, getAvatarColor, isCommunityInvestor } from "@/data/members";
+import { type Member, extractCity, isCommunityInvestor } from "@/data/members";
 
 interface MemberCardProps {
   member: Member;
@@ -51,7 +51,6 @@ export function MemberCard({ member }: MemberCardProps) {
   // clean, name-forward card instead of a repetitive first-letter tile; adding a
   // logo later simply upgrades that CI to the full header treatment.
   const hasLogoHeader = isCi && !!member.logoUrl;
-  const catColor = getAvatarColor(primaryCategory || member.name);
 
   return (
     <Link
@@ -103,9 +102,7 @@ export function MemberCard({ member }: MemberCardProps) {
           isCi ? (
             <p className="text-caption text-cambridge mt-1 truncate">{primaryCategory}</p>
           ) : (
-            <span
-              className={`mt-2 inline-flex self-start items-center rounded-full px-2.5 py-0.5 text-caption font-medium ${catColor.bg} ${catColor.text}`}
-            >
+            <span className="mt-2 inline-flex self-start items-center rounded-full px-2.5 py-0.5 text-caption font-medium bg-cambridge/15 text-cambridge">
               {primaryCategory}
             </span>
           )

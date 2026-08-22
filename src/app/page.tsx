@@ -190,9 +190,10 @@ export default function HomePage() {
         </div>
       </MouseGradient>
 
-      {/* Upcoming Events — py-f89 lg:py-f144 */}
+      {/* Upcoming Events — reduced bottom padding so the Italy promo below
+          tucks up close under the events (top padding unchanged). */}
       {upcomingEvents.length > 0 && (
-        <section className="relative overflow-hidden mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+        <section className="relative overflow-hidden mx-auto max-w-7xl px-6 lg:px-8 pt-f89 pb-f34 lg:pt-f144 lg:pb-f55">
           <VesicaPiscisWatermark className="tp-vesica" />
           <FadeIn>
             <div className="flex items-end justify-between mb-f34 gap-f21 flex-wrap">

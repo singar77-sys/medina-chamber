@@ -319,10 +319,26 @@ function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
               ))}
             </div>
           ) : filtered.length > 0 ? (
-            <div className="mt-f13 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-f13">
-              {filtered.map((member) => (
-                <MemberCard key={member.chamberSlug} member={member} />
-              ))}
+            // Community Investors (logo-header cards) render in their own rows,
+            // then everyone else (name-forward text cards) in theirs — so a tall
+            // logo card and a short text card never share a row and stretch the
+            // text card to match. Order (CI first) is already set by the sort.
+            <div className="mt-f13 flex flex-col gap-f13">
+              {[
+                filtered.filter(isCommunityInvestor),
+                filtered.filter((m) => !isCommunityInvestor(m)),
+              ]
+                .filter((group) => group.length > 0)
+                .map((group, i) => (
+                  <div
+                    key={i}
+                    className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-f13"
+                  >
+                    {group.map((member) => (
+                      <MemberCard key={member.chamberSlug} member={member} />
+                    ))}
+                  </div>
+                ))}
             </div>
           ) : (
             <div className="mt-f55 text-center">

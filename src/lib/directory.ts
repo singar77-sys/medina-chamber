@@ -13,6 +13,7 @@ import { and, eq, inArray, isNull } from "drizzle-orm";
 import type { DB } from "@/lib/db";
 import { organizations, organizationCategories, categories } from "@/lib/db/schema";
 import type { Member } from "@/data/members";
+import { normalizeCategories } from "@/lib/categories";
 
 // DB tier text → the legacy numeric rank the UI sorts by (premium first).
 // community_investor is the TOP tier and must sort first — omitting it made
@@ -73,7 +74,7 @@ function toMember(o: OrgRow, cats: string[]): Member {
     website: o.websiteUrl ?? "",
     logoUrl: o.logoUrl ?? "",
     description: o.description ?? "",
-    categories: cats,
+    categories: normalizeCategories(cats),
     social: {
       facebook: o.facebook ?? undefined,
       linkedin: o.linkedin ?? undefined,

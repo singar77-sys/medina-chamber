@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { getDirectoryMembers, topIndustries } from "@/lib/directory";
 import { members as staticMembers } from "@/data/members";
 import { memberLogo } from "@/lib/member-logos";
+import { normalizeCategories } from "@/lib/categories";
 import { DirectoryClient } from "./DirectoryClient";
 import { FadeIn } from "@/components/FadeIn";
 
@@ -39,10 +40,12 @@ export default async function DirectoryPage() {
   }
   // Overlay the curated logos (public/images/members/logos/) onto members — the
   // DB logoUrl column doesn't carry them, and MemberCard shows the logo header
-  // for Community Investors that have one.
+  // for Community Investors that have one — and normalize categories so
+  // near-duplicate GrowthZone labels collapse into one browse chip (also covers
+  // the static-roster fallback path above).
   members = members.map((m) => {
     const logo = memberLogo(m.chamberSlug);
-    return logo ? { ...m, logoUrl: logo } : m;
+    return { ...m, categories: normalizeCategories(m.categories), ...(logo ? { logoUrl: logo } : {}) };
   });
   // Full count-sorted category list; the client shows the top 10 until
   // the visitor expands to all categories.

@@ -380,7 +380,7 @@ export default function HomePage() {
       )}
 
       {/* Reflections of Italy — chamber group trip promo, below Upcoming Events */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f34">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f34">
         <FadeIn>
           <Link
             href="/programs/italy-trip"

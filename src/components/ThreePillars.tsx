@@ -67,7 +67,7 @@ const PILLARS: Pillar[] = [
 
 export function ThreePillars() {
   return (
-    <section className="tp-section relative mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
+    <section className="tp-section rule-top relative mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
       <div className="tp-honeycomb" aria-hidden="true" />
       <FadeIn>
         <div className="grid lg:grid-cols-[1.25fr_1fr] gap-10 lg:gap-14 items-end mb-14 lg:mb-16">

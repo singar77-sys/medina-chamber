@@ -2256,6 +2256,22 @@ body {
 
 /* Honeycomb watermark — ghosted behind all pillar content */
 .tp-section { isolation: isolate; }
+
+/* Full-bleed hairline separator at a section's top edge, matching the
+   border-y bands but independent of the section's own max-width. A 100vw
+   breakout is safe here because body/html use overflow-x: clip. Add to any
+   section (contained or full-bleed) that needs a top divider line. */
+.rule-top { position: relative; }
+.rule-top::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  border-top: 1px solid var(--border-secondary);
+  pointer-events: none;
+}
 .tp-honeycomb {
   position: absolute;
   top: 0;

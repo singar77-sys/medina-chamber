@@ -93,7 +93,7 @@ export function CommunityInvestors({ featuredQuote = false }: { featuredQuote?: 
   ].filter((r) => r.length > 0);
 
   return (
-    <section className="ci-section bg-bg-secondary py-20 lg:py-28">
+    <section className="ci-section border-t border-border-secondary bg-bg-secondary py-20 lg:py-28">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
 
         {/* Header */}

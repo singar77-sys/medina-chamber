@@ -379,8 +379,11 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* Reflections of Italy — chamber group trip promo, below Upcoming Events */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f34">
+      {/* Reflections of Italy — chamber group trip promo, below Upcoming
+          Events. Asymmetric padding (more on top) centers the banner in the
+          gap: the events section above adds ~144px below its content, while
+          the section below adds ~193px above its heading. */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 pt-f55 pb-f8">
         <FadeIn>
           <Link
             href="/programs/italy-trip"

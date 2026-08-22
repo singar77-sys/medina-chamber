@@ -60,6 +60,10 @@ function htmlToText(html = '') {
     .replace(/<\/p>/gi, '\n')
     .replace(/<[^>]+>/g, '')
     .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&#39;/g, "'").replace(/&quot;/g, '"')
+    .replace(/&rsquo;/g, '\u2019').replace(/&lsquo;/g, '\u2018').replace(/&rdquo;/g, '\u201D').replace(/&ldquo;/g, '\u201C')
+    .replace(/&mdash;/g, '\u2014').replace(/&ndash;/g, '\u2013').replace(/&hellip;/g, '\u2026')
+    .replace(/&reg;/g, '\u00AE').replace(/&copy;/g, '\u00A9').replace(/&trade;/g, '\u2122')
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
     .replace(/[\u200B-\u200D\uFEFF]/g, '') // strip zero-width chars
     .replace(/\n{3,}/g, '\n\n')
     .trim();

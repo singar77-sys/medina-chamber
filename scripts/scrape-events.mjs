@@ -52,10 +52,21 @@ async function get(url) {
 /** Extract plain text from HTML, collapsing whitespace */
 function htmlToText(html = '') {
   return html
+    // Drop <style>/<script> block CONTENTS before the generic tag strip.
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
     .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<\/p>/gi, '\n')
+    // A closing block-level tag ends a line — otherwise text separated only by
+    // </div>/</li>/</td>/</h*> fuses together (e.g. "$995Advanced").
+    .replace(/<\/(p|div|li|ul|ol|tr|td|th|h[1-6]|section|article|blockquote)>/gi, '\n')
     .replace(/<[^>]+>/g, '')
     .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&#39;/g, "'").replace(/&quot;/g, '"')
+    .replace(/&rsquo;/g, '’').replace(/&lsquo;/g, '‘').replace(/&rdquo;/g, '”').replace(/&ldquo;/g, '“')
+    .replace(/&mdash;/g, '—').replace(/&ndash;/g, '–').replace(/&hellip;/g, '…')
+    .replace(/&reg;/g, '®').replace(/&copy;/g, '©').replace(/&trade;/g, '™')
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+    .replace(/[\u200B-\u200D\uFEFF]/g, '') // strip zero-width chars
+    .replace(/[ \t]+\n/g, '\n')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
 }

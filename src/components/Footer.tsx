@@ -20,9 +20,9 @@ const quickLinks = [
   { label: "Join the Chamber", href: "/membership/join" },
   { label: "Upcoming Events", href: "/events" },
   { label: "Compass Mentorship", href: "/programs/compass" },
-  { label: "Try ChamberBot", href: "/chamberbot" },
+  { label: "Member Benefits", href: "/membership/benefits" },
   { label: "Advocacy", href: "/about/advocacy" },
-  { label: "Contact", href: "/about/contact" },
+  { label: "Savings Programs", href: "/membership/savings" },
   { label: "Privacy", href: "/privacy" },
 ];
 
@@ -46,7 +46,6 @@ const socialLinks = [
 
 export function Footer() {
   const year = new Date().getFullYear();
-  const chamberYears = year - 1938;
 
   return (
     <footer className="ftr bg-bg-secondary border-t border-border-primary">
@@ -194,8 +193,6 @@ export function Footer() {
         <div className="mt-f21 flex flex-col items-center gap-f13">
           <p className="text-caption text-text-tertiary text-center">
             © {year} Greater Medina Chamber of Commerce.
-            <span className="mx-2 text-border-primary">·</span>
-            Est. 1938 · {chamberYears} years
           </p>
           {/* gap-x-f21 (21px) gap-y-f8 (8px) — F8/F6 */}
           <div className="flex flex-wrap items-center justify-center gap-x-f21 gap-y-f8">

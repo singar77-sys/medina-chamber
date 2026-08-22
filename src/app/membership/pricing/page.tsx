@@ -345,8 +345,23 @@ export default async function PricingPage() {
       </section>
 
       {/* Bottom CTA */}
-      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
-        <FadeIn>
+      <section className="rule-top relative overflow-hidden py-f55 lg:py-f89">
+        {/* Ghosted community backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/sneak-peeks/medina-chamber-community-004.webp"
+            alt=""
+            fill
+            className="object-cover opacity-[0.10]"
+            sizes="100vw"
+            quality={60}
+          />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <FadeIn>
           <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
@@ -396,7 +411,8 @@ export default async function PricingPage() {
               </div>
             </div>
           </div>
-        </FadeIn>
+          </FadeIn>
+        </div>
       </section>
     </>
   );

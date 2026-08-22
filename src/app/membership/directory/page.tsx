@@ -4,6 +4,7 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import { getDirectoryMembers, topIndustries } from "@/lib/directory";
 import { members as staticMembers } from "@/data/members";
+import { memberLogo } from "@/lib/member-logos";
 import { DirectoryClient } from "./DirectoryClient";
 import { FadeIn } from "@/components/FadeIn";
 
@@ -36,6 +37,13 @@ export default async function DirectoryPage() {
     console.warn("[directory] DB returned no members — using static roster fallback");
     members = staticMembers;
   }
+  // Overlay the curated logos (public/images/members/logos/) onto members — the
+  // DB logoUrl column doesn't carry them, and MemberCard shows the logo header
+  // for Community Investors that have one.
+  members = members.map((m) => {
+    const logo = memberLogo(m.chamberSlug);
+    return logo ? { ...m, logoUrl: logo } : m;
+  });
   // Full count-sorted category list; the client shows the top 10 until
   // the visitor expands to all categories.
   const industries = topIndustries(members);

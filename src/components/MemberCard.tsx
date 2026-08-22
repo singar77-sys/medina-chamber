@@ -69,12 +69,15 @@ export function MemberCard({ member }: MemberCardProps) {
       `}
     >
       {hasLogoHeader && (
-        <div className="relative h-28 flex items-center justify-center border-b border-border-secondary overflow-hidden bg-bg-secondary">
+        // White tile — the curated logos are designed for a white background
+        // (the marquee shows them the same way), so this reads correctly in
+        // both light and dark mode.
+        <div className="relative h-28 flex items-center justify-center border-b border-border-secondary overflow-hidden bg-white">
           <Image
             src={member.logoUrl}
             alt={`${member.name} logo, Greater Medina Chamber of Commerce member business`}
             fill
-            className="object-contain p-4"
+            className="object-contain p-4 mix-blend-multiply"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             unoptimized
           />

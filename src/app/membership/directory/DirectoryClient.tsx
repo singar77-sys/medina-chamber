@@ -179,14 +179,19 @@ function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
         const bySlug = new Map(members.map((m) => [m.chamberSlug, m]));
         return semanticSlugs
           .map((slug) => bySlug.get(slug))
-          .filter((m): m is Member => !!m);
+          .filter((m): m is Member => !!m)
+          // Community Investors first, relevance order preserved within tier
+          // (stable sort) — so a CI match never lands below plain results.
+          .sort((a, b) => tierRank(a) - tierRank(b));
       }
       if (searchError) {
         let result = members;
         if (activeCategory) {
           result = result.filter((m) => m.categories.includes(activeCategory));
         }
-        return keywordFilter(result, search);
+        return keywordFilter(result, search).sort(
+          (a, b) => tierRank(a) - tierRank(b) || a.name.localeCompare(b.name),
+        );
       }
       return null;
     }

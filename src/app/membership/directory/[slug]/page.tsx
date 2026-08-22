@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { extractCity, getInitials, getMemberBySlug } from "@/data/members";
 import { db } from "@/lib/db";
 import { getDirectoryMemberBySlug } from "@/lib/directory";
+import { memberLogo } from "@/lib/member-logos";
 import { DirectoryViewBeacon } from "@/components/DirectoryViewBeacon";
 
 import { safeJsonLd } from "@/lib/json-ld";
@@ -69,15 +70,18 @@ export default async function MemberPage(
 
   const city = member.city || extractCity(member.address);
   const initials = getInitials(member.name);
+  // Curated logos live on disk, not in the DB logoUrl column — overlay it so a
+  // member's own page shows their logo (same source as the directory cards).
+  const logoUrl = memberLogo(member.chamberSlug) ?? member.logoUrl;
   // Static-fallback members aren't in the DB, so /go/org would 302 back to
   // the directory — link their raw external URL instead, validated the same
   // way the route validates its destination (http(s) only).
   const externalSite = /^https?:\/\//i.test(member.website) ? member.website : null;
   const websiteHref = found ? `/go/org/${member.chamberSlug}` : externalSite;
-  const logoAbsoluteUrl = member.logoUrl
-    ? member.logoUrl.startsWith("http")
-      ? member.logoUrl
-      : `https://medinachamber.com${member.logoUrl}`
+  const logoAbsoluteUrl = logoUrl
+    ? logoUrl.startsWith("http")
+      ? logoUrl
+      : `https://medinachamber.com${logoUrl}`
     : undefined;
 
   // JSON-LD LocalBusiness schema
@@ -148,19 +152,20 @@ export default async function MemberPage(
           rounded-[var(--radius-lg)]
         ">
           {/* Logo */}
-          <div className="
+          <div className={`
             relative w-28 h-28 shrink-0
-            bg-bg-primary border border-border-secondary
+            border border-border-secondary
             rounded-[var(--radius-md)] overflow-hidden
             flex items-center justify-center
             self-start
-          ">
-            {member.logoUrl ? (
+            ${logoUrl ? "bg-white" : "bg-bg-primary"}
+          `}>
+            {logoUrl ? (
               <Image
-                src={member.logoUrl}
+                src={logoUrl}
                 alt={`${member.name} logo, Greater Medina Chamber of Commerce member business in Medina, Ohio`}
                 fill
-                className="object-contain p-3"
+                className="object-contain p-3 mix-blend-multiply"
                 unoptimized
               />
             ) : (

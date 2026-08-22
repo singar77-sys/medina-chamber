@@ -1,8 +1,7 @@
 import type { CSSProperties } from "react";
-import { readdirSync } from "fs";
-import { join } from "path";
 import Link from "next/link";
 import { members, isCommunityInvestor, type Member } from "@/data/members";
+import { MEMBER_LOGOS } from "@/lib/member-logos";
 import { FadeIn } from "@/components/FadeIn";
 
 /**
@@ -17,21 +16,6 @@ import { FadeIn } from "@/components/FadeIn";
  *   - prefers-reduced-motion disables animation and hides duplicates via CSS.
  * Logos served from /public/images/members/logos/{chamberSlug}.{ext}.
  */
-
-function buildLogoMap(): Map<string, string> {
-  const map = new Map<string, string>();
-  try {
-    const dir = join(process.cwd(), "public", "images", "members", "logos");
-    for (const file of readdirSync(dir)) {
-      const dot = file.lastIndexOf(".");
-      if (dot === -1) continue;
-      map.set(file.substring(0, dot), `/images/members/logos/${file}`);
-    }
-  } catch { /* directory absent — graceful no-logo fallback */ }
-  return map;
-}
-
-const MEMBER_LOGOS = buildLogoMap();
 
 // Row 2 runs slightly slower to give the three tracks a natural rhythm.
 // Durations are deliberately long: a logo wall is for dwelling on, not

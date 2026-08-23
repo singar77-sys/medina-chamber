@@ -4,8 +4,8 @@ import { FadeIn } from "@/components/FadeIn";
 
 /**
  * Home-page quick-access row — a compact, modern take on the old Squarespace
- * icon bar. Small monoline symbols in tiles with subtle gradient depth that
- * lift, scale, and glow cambridge on hover, and rise in with a stagger — so the
+ * icon bar. Small orange monoline symbols in tiles with subtle gradient depth
+ * that lift, scale, and glow on hover, and rise in with a stagger — so the
  * most-wanted destinations are one tap away and the row feels alive, not static.
  */
 
@@ -105,17 +105,17 @@ function IconTile({ icon, label }: { icon: React.ReactNode; label: string }) {
           rounded-[var(--radius-lg)]
           bg-gradient-to-b from-bg-secondary to-bg-tertiary
           border border-border-secondary
-          text-text-tertiary
+          text-accent
           transition-all duration-300 ease-out
           group-hover:-translate-y-1.5 group-hover:scale-105
-          group-hover:text-cambridge group-hover:border-cambridge/60
-          group-hover:shadow-[0_14px_30px_-10px_rgba(131,188,169,0.5)]
-          group-focus-visible:border-cambridge group-focus-visible:text-cambridge
+          group-hover:border-accent/60
+          group-hover:shadow-[0_14px_30px_-10px_rgba(200,74,30,0.55)]
+          group-focus-visible:border-accent
         "
       >
         {icon}
       </span>
-      <span className="text-caption font-bold text-text-secondary transition-colors group-hover:text-cambridge group-focus-visible:text-cambridge">
+      <span className="text-caption font-bold text-text-secondary transition-colors group-hover:text-accent group-focus-visible:text-accent">
         {label}
       </span>
     </>

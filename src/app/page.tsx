@@ -127,9 +127,12 @@ export default function HomePage() {
             </p>
             <h1 className="font-display font-bold uppercase leading-[0.88] tracking-tight text-white">
               <span className="block text-[clamp(2.75rem,7.5vw,5.75rem)]">Medina</span>
-              <span className="block text-[clamp(2rem,5.5vw,4.25rem)] mt-1">Means</span>
+              {/* "Means" is sized as "business" ÷ φ at every viewport
+                  (min/vw/max all divided by 1.618), so the two words of the
+                  idiom "means business" hold the golden ratio at any width. */}
+              <span className="block text-[clamp(1.854rem,5.253vw,3.863rem)] mt-f5">Means</span>
               <span
-                className="font-script normal-case text-[clamp(3rem,8.5vw,6.25rem)] leading-[0.85] inline-block -mt-[0.32em]"
+                className="font-script normal-case text-[clamp(3rem,8.5vw,6.25rem)] leading-[0.85] inline-block -mt-[0.382em]"
                 style={{ color: "var(--coquelicot)", transform: "rotate(-2deg)" }}
               >
                 business
@@ -179,7 +182,7 @@ export default function HomePage() {
                   <CountUp
                     end={s.end}
                     suffix={s.suffix || ""}
-                    duration={s.end > 100 ? 2400 : 1600}
+                    duration={s.end > 100 ? 2584 : 1597}
                   />
                 </p>
                 <p className="text-caption text-text-tertiary mt-f8 uppercase tracking-wider">
@@ -280,7 +283,7 @@ export default function HomePage() {
                  Suite A, Medina, OH, 44256" is wider than 1/3 of the
                  container at < ~1280px. min-w-0 lets the track shrink
                  and the truncate handles the overflow inside the card. */
-              <FadeIn key={event.slug} delay={i * 100} className="h-full min-w-0">
+              <FadeIn key={event.slug} delay={i * 89} className="h-full min-w-0">
                 <TiltCard className="h-full min-w-0">
                 <Link
                   href={`/events/${event.slug}`}
@@ -528,7 +531,7 @@ export default function HomePage() {
 
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <FadeIn>
-          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-xl)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
                 <p className="text-overline text-cambridge mb-f13">Membership</p>

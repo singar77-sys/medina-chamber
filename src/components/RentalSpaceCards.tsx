@@ -142,7 +142,7 @@ export function RentalSpaceCards() {
     <>
       <div className="grid sm:grid-cols-2 gap-4 items-stretch">
         {ROOMS.map((room, i) => (
-          <FadeIn key={room.name} delay={i * 120} className="h-full">
+          <FadeIn key={room.name} delay={i * 89} className="h-full">
             <button
               ref={(el) => {
                 triggerRefs.current[i] = el;
@@ -160,7 +160,7 @@ export function RentalSpaceCards() {
               </p>
 
               <p className="text-display text-oxford [[data-theme=dark]_&]:text-cambridge leading-none mt-2">
-                <CountUp end={room.seats} duration={1400} />
+                <CountUp end={room.seats} duration={1597} />
               </p>
               <p className="text-caption text-text-tertiary uppercase tracking-wider mt-1">
                 Seats
@@ -296,7 +296,7 @@ function RoomModal({ room, onClose }: { room: Room; onClose: () => void }) {
 
           <div className="mt-5 flex items-baseline gap-3">
             <span className="text-h2 text-accent leading-none">
-              <CountUp end={room.seats} duration={1400} />
+              <CountUp end={room.seats} duration={1597} />
             </span>
             <span className="text-caption text-text-tertiary uppercase tracking-wider font-bold">
               Seats

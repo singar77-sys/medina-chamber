@@ -209,7 +209,7 @@ summary,
 
   /* φ-exact radius extension — existing sm/md/lg are φ-adjacent;
      xl closes the series at the mathematically precise value. */
-  --radius-xl: 16.18px;  /* 10 × φ = 16.180... */
+  --radius-xl: 26px;     /* radius-lg × φ ≈ 25.9 — the real 4th φ step: 6 → 10 → 16 → 26 */
 }
 
 /* --- Tailwind Theme Bridge -------------------------------- */

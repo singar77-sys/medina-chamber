@@ -144,7 +144,7 @@ export function QuickLinks() {
         </FadeIn>
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-f21">
           {links.map((l, i) => (
-            <FadeIn key={l.label} delay={i * 70}>
+            <FadeIn key={l.label} delay={i * 55}>
               {l.external ? (
                 <a
                   href={l.href}

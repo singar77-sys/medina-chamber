@@ -70,7 +70,7 @@ export function ThreePillars() {
     <section className="tp-section rule-top relative mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
       <div className="tp-honeycomb" aria-hidden="true" />
       <FadeIn>
-        <div className="grid lg:grid-cols-[1.25fr_1fr] gap-f34 lg:gap-f55 items-end mb-f55">
+        <div className="grid lg:grid-cols-[1.618fr_1fr] gap-f34 lg:gap-f55 items-end mb-f55">
           <div>
             <p className="text-overline text-cambridge mb-f13">Why Members Join</p>
             <h2 className="text-h2">How the Chamber works for you.</h2>
@@ -181,7 +181,7 @@ function PillarGrid() {
       style={{ "--tp-sx": 0.5, "--tp-sy": 0.5 } as CSSProperties}
     >
       {PILLARS.map((pillar, i) => (
-        <FadeIn key={pillar.label} delay={i * 100}>
+        <FadeIn key={pillar.label} delay={i * 89}>
           <PillarCard pillar={pillar} />
         </FadeIn>
       ))}

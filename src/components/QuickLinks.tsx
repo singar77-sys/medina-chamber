@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { growthZone } from "@/lib/navigation";
 import { FadeIn } from "@/components/FadeIn";
@@ -124,8 +125,18 @@ function IconTile({ icon, label }: { icon: React.ReactNode; label: string }) {
 
 export function QuickLinks() {
   return (
-    <section className="border-b border-border-secondary">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-f55">
+    <section className="relative overflow-hidden border-b border-border-secondary">
+      <div className="pointer-events-none absolute inset-0 select-none" aria-hidden="true">
+        <Image
+          src="/images/membership/medina-chamber-member-perks-bg.webp"
+          alt=""
+          fill
+          className="object-cover opacity-[0.10]"
+          sizes="100vw"
+          quality={60}
+        />
+      </div>
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8 py-f55">
         <FadeIn>
           <p className="text-overline text-text-tertiary text-center mb-f21">
             Quick Access

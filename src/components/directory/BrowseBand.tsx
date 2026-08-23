@@ -3,9 +3,18 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { IndustryChipStrip } from "./IndustryChipStrip";
+import { DirectorySearch } from "./DirectorySearch";
 import { useTheme } from "@/components/ThemeProvider";
 
 interface BrowseBandProps {
+  /** Controlled search query. */
+  query: string;
+  /** Called on every search keystroke. */
+  onQueryChange: (next: string) => void;
+  /** Called when a search suggestion chip is clicked. */
+  onSuggestionClick: (text: string) => void;
+  /** Show the spinner inside the search field while a search is in flight. */
+  isSearching?: boolean;
   /** Industries currently shown (top slice or full list). */
   visibleIndustries: ReadonlyArray<{ category: string; count: number }>;
   /** Currently active category (null if none). */
@@ -21,6 +30,10 @@ interface BrowseBandProps {
 }
 
 export function BrowseBand({
+  query,
+  onQueryChange,
+  onSuggestionClick,
+  isSearching = false,
   visibleIndustries,
   active,
   onSelect,
@@ -46,6 +59,16 @@ export function BrowseBand({
         <p className="text-body-lg text-text-secondary mt-f13">
           Member businesses from every corner of Medina County.
         </p>
+
+        {/* Search — sits with the browsing tools, not orphaned in the hero */}
+        <div className="mt-f34">
+          <DirectorySearch
+            query={query}
+            onQueryChange={onQueryChange}
+            onSuggestionClick={onSuggestionClick}
+            isSearching={isSearching}
+          />
+        </div>
 
         {/* Industry chips */}
         <div className="mt-f55">

@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect, useRef, Suspense } from "react";
 import { useSearchParams, usePathname } from "next/navigation";
 import { MemberCard } from "@/components/MemberCard";
 import { DirectoryHero } from "@/components/directory/DirectoryHero";
+import { DirectorySearch } from "@/components/directory/DirectorySearch";
 import { IndustryChipStrip } from "@/components/directory/IndustryChipStrip";
 import { BrowseBand } from "@/components/directory/BrowseBand";
 import { type Member, isCommunityInvestor, isVisibilityPlus } from "@/data/members";
@@ -237,16 +238,15 @@ function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
 
   return (
     <>
-      <DirectoryHero
-        query={search}
-        onQueryChange={startSearch}
-        onSuggestionClick={startSearch}
-        isSearching={isSearching}
-      />
+      <DirectoryHero />
 
       {!isFiltered ? (
         // ── BROWSE MODE ──────────────────────────────
         <BrowseBand
+          query={search}
+          onQueryChange={startSearch}
+          onSuggestionClick={startSearch}
+          isSearching={isSearching}
           visibleIndustries={browseIndustries}
           active={activeCategory}
           onSelect={selectCategory}
@@ -257,6 +257,17 @@ function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
       ) : (
         // ── RESULTS MODE ─────────────────────────────
         <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f34">
+          {/* Search stays reachable in results so a query can be refined
+              without navigating back to the browse landing. */}
+          <div className="mb-f21">
+            <DirectorySearch
+              query={search}
+              onQueryChange={startSearch}
+              onSuggestionClick={startSearch}
+              isSearching={isSearching}
+            />
+          </div>
+
           <IndustryChipStrip
             industries={refineIndustries}
             active={activeCategory}

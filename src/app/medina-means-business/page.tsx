@@ -4,6 +4,7 @@ import Link from "next/link";
 import { GazeboHero } from "@/components/GazeboHero";
 import { activeCommunities, getMembersByCity } from "@/data/communities";
 import { FadeIn } from "@/components/FadeIn";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { CountUp } from "@/components/CountUp";
 
 import { safeJsonLd } from "@/lib/json-ld";
@@ -102,7 +103,8 @@ export default function MedinaMeansBusinessPage() {
       </section>
 
       {/* It's not a slogan. It's a statement of fact. */}
-      <section className="bg-bg-secondary border-y border-border-secondary">
+      <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary">
+        <VesicaPiscisWatermark className="tp-vesica" />
         <div className="mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
           <FadeIn>
             <div className="max-w-3xl">

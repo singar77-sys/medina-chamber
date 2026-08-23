@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { safeJsonLd } from "@/lib/json-ld";
 import { getCmsPricing, DEFAULT_PRICING } from "@/lib/cms-store";
 import { stephanie, jaclyn } from "@/data/staff";
@@ -158,7 +159,8 @@ export default async function CommunityInvestorPage() {
       </section>
 
       {/* What sets CI apart */}
-      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 pt-f89 pb-f55 lg:pt-f144 lg:pb-f89">
+      <section className="relative overflow-hidden rule-top mx-auto max-w-7xl px-6 lg:px-8 pt-f89 pb-f55 lg:pt-f144 lg:pb-f89">
+        <VesicaPiscisWatermark className="tp-vesica" />
         <FadeIn>
           <div className="max-w-2xl mb-f34">
             <p className="text-overline text-cambridge mb-f8">At the leadership level</p>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import Link from "next/link";
 import { ButtonLink, ButtonA } from "@/components/ui/Button";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 
 export const metadata: Metadata = {
   title: "Hire & Grow Your Team in Medina County, Workforce Resources",
@@ -193,7 +194,8 @@ export default function WorkforcePage() {
       </div>
 
       {/* CTA */}
-      <section className="mt-f55 p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+      <section className="relative overflow-hidden mt-f55 p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+        <VesicaPiscisWatermark className="tp-vesica" />
         <div className="max-w-2xl">
           <h2 className="text-h2">Post your open positions free</h2>
           <p className="text-body-lg text-text-secondary mt-f13">

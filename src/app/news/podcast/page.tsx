@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
@@ -76,7 +77,8 @@ export default function PodcastPage() {
       </section>
 
       {/* Embedded player */}
-      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+      <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+        <VesicaPiscisWatermark className="tp-vesica" />
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
             <div className="rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary bg-bg-primary">

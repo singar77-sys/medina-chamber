@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import Link from "next/link";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 
 export const metadata: Metadata = {
   title: "Business Resources, Medina County, Ohio",
@@ -63,7 +64,8 @@ export default function ResourcesPage() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-24">
 
       {/* Resource cards */}
-      <section className="mt-20 grid md:grid-cols-3 gap-6">
+      <section className="relative overflow-hidden mt-20 grid md:grid-cols-3 gap-6">
+        <VesicaPiscisWatermark className="tp-vesica" />
         {resources.map((r) => (
           <Link
             key={r.href}

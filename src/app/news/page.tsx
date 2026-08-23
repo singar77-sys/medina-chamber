@@ -5,6 +5,7 @@ import { getRecentArticles, formatArticleDate } from "@/data/member-news";
 import { formatBlogDate } from "@/data/blog";
 import { getAllBlogPosts } from "@/lib/cms-blog";
 import { FadeIn } from "@/components/FadeIn";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 
 // ISR so admin-authored CMS blog posts appear without a redeploy.
 export const revalidate = 300;
@@ -88,7 +89,8 @@ export default async function NewsPage() {
       </section>
 
       {/* Channel nav cards */}
-      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+      <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+        <VesicaPiscisWatermark className="tp-vesica" />
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-f21">

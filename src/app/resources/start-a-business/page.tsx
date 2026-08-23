@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import Link from "next/link";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 
 export const metadata: Metadata = {
   title: "How to Start a Business in Medina County, Ohio",
@@ -155,7 +156,8 @@ export default function StartABusinessPage() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-24">
 
       {/* Steps */}
-      <section className="mt-20 space-y-6">
+      <section className="relative overflow-hidden mt-20 space-y-6">
+        <VesicaPiscisWatermark className="tp-vesica" />
         {steps.map((step) => (
           <div
             key={step.number}

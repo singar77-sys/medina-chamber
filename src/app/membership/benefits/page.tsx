@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
@@ -199,7 +200,8 @@ export default function BenefitsPage() {
       </section>
 
       {/* Core benefits */}
-      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      <section className="relative overflow-hidden rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+        <VesicaPiscisWatermark className="tp-vesica" />
         <FadeIn>
           <h2 className="text-overline text-cambridge mb-f21">What&apos;s Included</h2>
           <div className="grid md:grid-cols-2 gap-f21">

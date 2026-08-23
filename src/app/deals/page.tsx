@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { db } from "@/lib/db";
 import { getPublicDeals } from "@/lib/deals";
 
@@ -64,7 +65,8 @@ export default async function DealsPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 pb-f89">
+      <section className="relative overflow-hidden mx-auto max-w-7xl px-6 lg:px-8 pb-f89">
+        <VesicaPiscisWatermark className="tp-vesica" />
         {deals.length === 0 ? (
           <p className="text-body text-text-tertiary">No active deals right now — check back soon.</p>
         ) : (

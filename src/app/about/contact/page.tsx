@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ContactForm } from "./ContactForm";
 import { MedinaNetworkMap } from "@/components/about/MedinaNetworkMap";
 import { FadeIn } from "@/components/FadeIn";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { safeJsonLd } from "@/lib/json-ld";
 import { chamberOffice } from "@/data/staff";
 import { mailto } from "@/lib/format";
@@ -135,7 +136,8 @@ export default function ContactPage() {
       </div>
 
       {/* quick-route strip */}
-      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+      <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+        <VesicaPiscisWatermark className="tp-vesica" />
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
             <p className="text-caption text-text-tertiary font-bold uppercase tracking-wider mb-f21">

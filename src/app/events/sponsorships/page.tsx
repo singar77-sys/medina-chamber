@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { jaclyn, stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
 import { SponsorshipForm } from "./SponsorshipForm";
@@ -227,7 +228,8 @@ export default function SponsorshipsPage() {
       </section>
 
       {/* Ribbon Cuttings */}
-      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+      <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+        <VesicaPiscisWatermark className="tp-vesica" />
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
             <p className="text-overline text-cambridge mb-f8">Ribbon Cuttings</p>

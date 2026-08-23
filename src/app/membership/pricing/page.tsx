@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { safeJsonLd } from "@/lib/json-ld";
 import { getCmsPricing, DEFAULT_PRICING } from "@/lib/cms-store";
 import { stephanie } from "@/data/staff";
@@ -111,7 +112,8 @@ export default async function PricingPage() {
       </section>
 
       {/* Tier cards */}
-      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      <section className="relative overflow-hidden rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+        <VesicaPiscisWatermark className="tp-vesica" />
         <div className="grid lg:grid-cols-3 gap-f21">
           {tiers.map((tier, i) => {
             const isFeatured = !!tier.featured;

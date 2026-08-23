@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { jobs, formatJobDate, totalJobsCount } from "@/data/jobs";
 import { FadeIn } from "@/components/FadeIn";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 
 export const metadata: Metadata = {
   title: "Job Board",
@@ -60,7 +61,8 @@ export default function JobsPage() {
       </section>
 
       {/* Job listings */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      <section className="relative overflow-hidden mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+        <VesicaPiscisWatermark className="tp-vesica" />
         <FadeIn>
           {jobs.length === 0 ? (
             /* Empty state — py-f89 centering, mt-f8/f21 gaps */

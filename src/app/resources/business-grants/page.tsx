@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import Link from "next/link";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 
 export const metadata: Metadata = {
   title: "Business Grants & Funding, Medina County, Ohio",
@@ -161,7 +162,8 @@ export default function BusinessGrantsPage() {
       {/* Programs by category */}
       <div className="mt-16 space-y-16">
         {programs.map((group) => (
-          <section key={group.category}>
+          <section key={group.category} className="relative overflow-hidden">
+            <VesicaPiscisWatermark className="tp-vesica" />
             <p className="text-overline text-cambridge mb-8">{group.category}</p>
             <div className="space-y-6">
               {group.items.map((item) => (

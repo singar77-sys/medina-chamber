@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ButtonLink, ButtonA } from "@/components/ui/Button";
 import { FadeIn } from "@/components/FadeIn";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { growthZone } from "@/lib/navigation";
 import { safeJsonLd } from "@/lib/json-ld";
 
@@ -133,7 +134,8 @@ export default function JoinPage() {
       </section>
 
       {/* Benefits */}
-      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      <section className="relative overflow-hidden rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+        <VesicaPiscisWatermark className="tp-vesica" />
         <FadeIn>
           <div className="mb-f21">
             <p className="text-overline text-cambridge mb-f8">Why Join</p>

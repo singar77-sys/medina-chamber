@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getUpcomingEvents, shortenEventTitle } from "@/data/events";
 import { EventsCalendar } from "@/components/events/EventsCalendar";
 import { FadeIn } from "@/components/FadeIn";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 
 // ISR: the upcoming/past split is derived from `new Date()` against static
 // event data, so re-render daily to drop events as they pass rather than
@@ -84,7 +85,8 @@ export default function EventsPage() {
       </section>
 
       {/* Upcoming Events */}
-      <section id="upcoming-events" className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144 scroll-mt-f89">
+      <section id="upcoming-events" className="relative overflow-hidden rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144 scroll-mt-f89">
+        <VesicaPiscisWatermark className="tp-vesica" />
         <FadeIn>
           <div className="flex items-end justify-between mb-f21">
             <h2 className="text-h2">Upcoming Events</h2>

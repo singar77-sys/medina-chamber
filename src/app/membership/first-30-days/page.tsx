@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 
 import { safeJsonLd } from "@/lib/json-ld";
 import { stephanie } from "@/data/staff";
@@ -204,6 +205,7 @@ export default function First30DaysPage() {
         {/* Overview callout */}
         <FadeIn>
           <section className="mt-12 p-8 lg:p-10 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] relative overflow-hidden">
+            <VesicaPiscisWatermark className="tp-vesica" />
             <div className="absolute -top-32 -right-32 w-64 h-64 bg-cambridge/10 rounded-full blur-3xl" />
             <div className="relative grid md:grid-cols-3 gap-6 items-center">
               <div className="md:col-span-2">

@@ -83,15 +83,33 @@ const overview = [
 ];
 
 export default async function CompassPage() {
+  // Hand-picked to 12 photos: only correctly-oriented, high-quality shots — the
+  // source folders hold ~70 images, most of them rotated 90° (portrait phone
+  // shots baked in sideways). Curated `files` lists override the folder read.
   const classPhotos = await getMergedStaticPhotos([
-    {
-      folder: "programs/compass/class-day-2",
-      alt: "Compass Professional Development Program participants during a session at the Greater Medina Chamber of Commerce in Medina, Ohio",
-      limit: 12,
-    },
     {
       folder: "programs/compass/class-day-3",
       alt: "Compass Professional Development Program participants at a workshop session in Medina, Ohio",
+      files: [
+        "compass-leadership-session-3-medina-009.webp",
+        "compass-leadership-session-3-medina-008.webp",
+        "compass-leadership-session-3-medina-010.webp",
+        "compass-leadership-session-3-medina-015.webp",
+        "compass-leadership-session-3-medina-007.webp",
+        "compass-leadership-session-3-medina-003.webp",
+      ],
+    },
+    {
+      folder: "programs/compass/class-day-2",
+      alt: "Compass Professional Development Program participants during a session at the Greater Medina Chamber of Commerce in Medina, Ohio",
+      files: [
+        "compass-leadership-session-2-medina-001.webp",
+        "compass-leadership-session-2-medina-003.webp",
+        "compass-leadership-session-2-medina-005.webp",
+        "compass-leadership-session-2-medina-006.webp",
+        "compass-leadership-session-2-medina-007.webp",
+        "compass-leadership-session-2-medina-009.webp",
+      ],
     },
   ]);
 

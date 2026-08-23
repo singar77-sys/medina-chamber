@@ -18,26 +18,34 @@ import type { MediaItem } from "@/lib/media-store";
  * @param folder  Path relative to public/images/  e.g. "programs/compass/class-day-2"
  * @param alt     Alt text applied to every photo in this batch
  * @param limit   Optional cap on how many photos to return (takes first N after sort)
+ * @param files   Optional explicit, ordered filename list — a curated subset of
+ *                the folder (used verbatim, in order). Overrides folder read +
+ *                limit. Lets a gallery hand-pick which photos show and skip
+ *                rotated/low-quality ones the auto folder read would include.
  */
 export async function getStaticPhotos(
   folder: string,
   alt: string,
   limit?: number,
+  files?: string[],
 ): Promise<MediaItem[]> {
-  const dir = join(process.cwd(), "public", "images", folder);
-
-  let files: string[];
-  try {
-    files = await readdir(dir);
-  } catch {
-    // Folder missing or unreadable — degrade gracefully rather than crash the page
-    return [];
+  let imageFiles: string[];
+  if (files && files.length > 0) {
+    imageFiles = files;
+  } else {
+    const dir = join(process.cwd(), "public", "images", folder);
+    let all: string[];
+    try {
+      all = await readdir(dir);
+    } catch {
+      // Folder missing or unreadable — degrade gracefully rather than crash the page
+      return [];
+    }
+    imageFiles = all
+      .filter((f) => /\.(webp|jpg|jpeg|png|gif)$/i.test(f))
+      .sort()                          // sequential numbered names sort correctly
+      .slice(0, limit ?? all.length);
   }
-
-  const imageFiles = files
-    .filter((f) => /\.(webp|jpg|jpeg|png|gif)$/i.test(f))
-    .sort()                          // sequential numbered names sort correctly
-    .slice(0, limit ?? files.length);
 
   return imageFiles.map((filename) => ({
     url: `/images/${folder}/${filename}`,
@@ -54,10 +62,10 @@ export async function getStaticPhotos(
  * Useful for e.g. combining class-day-2 + class-day-3 into one gallery.
  */
 export async function getMergedStaticPhotos(
-  sources: Array<{ folder: string; alt: string; limit?: number }>,
+  sources: Array<{ folder: string; alt: string; limit?: number; files?: string[] }>,
 ): Promise<MediaItem[]> {
   const batches = await Promise.all(
-    sources.map(({ folder, alt, limit }) => getStaticPhotos(folder, alt, limit)),
+    sources.map(({ folder, alt, limit, files }) => getStaticPhotos(folder, alt, limit, files)),
   );
   return batches.flat();
 }

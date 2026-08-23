@@ -9,7 +9,11 @@ interface Props {
   title?: string;
 }
 
-export function EventGallery({ photos, title = "Photos" }: Props) {
+export function EventGallery({ photos: allPhotos, title = "Photos" }: Props) {
+  // Cap every gallery at 12 photos — enough to convey the event without an
+  // overwhelming wall. Curate the source order to control which 12 show.
+  const photos = allPhotos.slice(0, 12);
+
   const [lightbox, setLightbox] = useState<number | null>(null);
 
   // Accessible focus management: the lightbox <div> is focused on open so

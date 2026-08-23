@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ContactForm } from "./ContactForm";
 import { MedinaNetworkMap } from "@/components/about/MedinaNetworkMap";
 import { FadeIn } from "@/components/FadeIn";
+import { MouseGradient } from "@/components/MouseGradient";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { safeJsonLd } from "@/lib/json-ld";
 import { chamberOffice } from "@/data/staff";
@@ -135,9 +136,12 @@ export default function ContactPage() {
         </section>
       </div>
 
-      {/* quick-route strip */}
-      <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
-        <VesicaPiscisWatermark className="tp-vesica" />
+      {/* quick-route strip — cursor-flashlight glow follows the pointer
+          across the three route cards (same effect as the home stats strip) */}
+      <MouseGradient
+        className="overflow-hidden bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89"
+        color="rgba(92, 149, 183, 0.22)"
+      >
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
             <p className="text-caption text-text-tertiary font-bold uppercase tracking-wider mb-f21">
@@ -167,13 +171,17 @@ export default function ContactPage() {
             </div>
           </FadeIn>
         </div>
-      </section>
+      </MouseGradient>
 
-      {/* contact form */}
-      <section id="contact-form" className="mx-auto max-w-2xl px-6 lg:px-8 py-f89 lg:py-f144">
-        <FadeIn>
-          <ContactForm />
-        </FadeIn>
+      {/* contact form — breathing Vesica watermark sits centered behind the
+          whole band; the form stays in its narrow max-w-2xl column above it */}
+      <section id="contact-form" className="relative overflow-hidden py-f89 lg:py-f144">
+        <VesicaPiscisWatermark className="tp-vesica" />
+        <div className="relative mx-auto max-w-2xl px-6 lg:px-8">
+          <FadeIn>
+            <ContactForm />
+          </FadeIn>
+        </div>
       </section>
 
       {/* network map */}
@@ -226,16 +234,16 @@ export default function ContactPage() {
 
       {/* membership bookend */}
       <section className="relative overflow-hidden py-f55 lg:py-f89">
-        {/* Ghosted community backdrop */}
+        {/* Ghosted vintage Medina gazebo backdrop */}
         <div
           className="absolute inset-0 pointer-events-none select-none"
           aria-hidden="true"
         >
           <Image
-            src="/images/photos/sneak-peeks/medina-chamber-community-011.webp"
+            src="/images/photos/medina-gazebo-vintage.webp"
             alt=""
             fill
-            className="object-cover object-top opacity-[0.10]"
+            className="object-cover object-center opacity-[0.10]"
             sizes="100vw"
             quality={60}
           />

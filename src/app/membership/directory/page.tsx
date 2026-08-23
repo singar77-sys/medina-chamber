@@ -100,8 +100,8 @@ export default async function DirectoryPage() {
                   href="/membership/benefits"
                   className="
                     inline-flex items-center px-f21 py-f13
-                    border border-border-primary hover:border-text-tertiary
-                    text-text-primary font-bold text-body-sm
+                    bg-emerald hover:bg-emerald/90
+                    text-white font-bold text-body-sm
                     rounded-[var(--radius-md)]
                     focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge focus-visible:ring-offset-2 focus-visible:ring-offset-bg-primary
                     transition-colors duration-200

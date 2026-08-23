@@ -121,8 +121,8 @@ export default function ContactPage() {
                 href={mailto(chamberOffice.email)}
                 className="
                   inline-flex items-center px-f21 py-f13
-                  border border-border-primary hover:border-text-tertiary
-                  text-text-primary font-bold text-body-sm
+                  bg-emerald hover:bg-emerald/90
+                  text-white font-bold text-body-sm
                   rounded-[var(--radius-md)]
                   transition-colors
                 "
@@ -269,8 +269,8 @@ export default function ContactPage() {
                   href="/membership/benefits"
                   className="
                     inline-flex items-center justify-center px-f21 py-f13
-                    border border-border-primary hover:border-text-tertiary
-                    text-text-primary font-bold text-body-sm
+                    bg-emerald hover:bg-emerald/90
+                    text-white font-bold text-body-sm
                     rounded-[var(--radius-md)]
                     transition-colors
                   "

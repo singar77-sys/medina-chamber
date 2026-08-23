@@ -376,8 +376,8 @@ export default function First30DaysPage() {
                   href="tel:+13307238773"
                   className="
                     inline-flex items-center justify-center px-5 py-3
-                    border border-border-primary hover:border-text-tertiary
-                    text-text-primary font-bold text-body-sm
+                    bg-emerald hover:bg-emerald/90
+                    text-white font-bold text-body-sm
                     rounded-[var(--radius-md)]
                     transition-colors
                   "
@@ -493,8 +493,8 @@ export default function First30DaysPage() {
                   href="/membership/pricing"
                   className="
                     block w-full text-center py-3 px-6
-                    border border-border-primary hover:border-text-tertiary
-                    text-text-primary font-bold text-body-sm
+                    bg-emerald hover:bg-emerald/90
+                    text-white font-bold text-body-sm
                     rounded-[var(--radius-md)]
                     transition-colors
                   "

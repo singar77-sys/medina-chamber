@@ -580,19 +580,15 @@ export function Header() {
               <CommandPaletteTrigger />
               <ThemeToggle />
 
-              {/* Desktop Member Login — ghost link so Join Now is the only filled CTA */}
-              <a
+              {/* Desktop Member Login — emerald button (brand direction: no clear buttons) */}
+              <ButtonA
                 href={memberLogin.href}
-                className="
-                  hidden xl:flex items-center px-3 py-2
-                  whitespace-nowrap
-                  text-text-secondary hover:text-text-primary
-                  font-bold text-body-sm
-                  transition-colors
-                "
+                variant="emerald"
+                size="sm"
+                className="hidden xl:flex whitespace-nowrap"
               >
                 {memberLogin.label}
-              </a>
+              </ButtonA>
 
               {/* Desktop CTA */}
               <ButtonLink

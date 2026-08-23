@@ -267,8 +267,8 @@ export default async function MemberPage(
                   href={`tel:${member.phone.replace(/\D/g, "")}`}
                   className="
                     inline-flex items-center gap-2 px-5 py-2.5
-                    border border-border-primary hover:border-text-tertiary
-                    text-text-primary font-bold text-body-sm
+                    bg-emerald hover:bg-emerald/90
+                    text-white font-bold text-body-sm
                     rounded-[var(--radius-md)]
                     transition-colors
                   "
@@ -383,8 +383,8 @@ function SocialLink({
       aria-label={label}
       className="
         inline-flex items-center gap-2 px-4 py-2
-        border border-border-primary hover:border-text-tertiary
-        text-text-secondary hover:text-text-primary
+        bg-emerald hover:bg-emerald/90
+        text-white
         text-caption font-bold
         rounded-[var(--radius-md)]
         transition-colors

@@ -126,8 +126,8 @@ export default function SocialConnectPage() {
               href="/about/contact"
               className="
                 inline-flex items-center px-6 py-4
-                border border-border-primary hover:border-text-tertiary
-                text-text-primary font-bold text-body-sm
+                bg-emerald hover:bg-emerald/90
+                text-white font-bold text-body-sm
                 rounded-[var(--radius-md)]
                 transition-colors
               "
@@ -158,8 +158,8 @@ export default function SocialConnectPage() {
               rel="noopener noreferrer"
               className="
                 shrink-0 inline-flex items-center px-5 py-2.5
-                border border-border-primary hover:border-text-tertiary
-                text-text-primary font-bold text-body-sm
+                bg-emerald hover:bg-emerald/90
+                text-white font-bold text-body-sm
                 rounded-[var(--radius-md)]
                 transition-colors
               "
@@ -296,8 +296,8 @@ export default function SocialConnectPage() {
                   href="/events"
                   className="
                     block w-full text-center py-f13 px-f21
-                    border border-border-primary hover:border-text-tertiary
-                    text-text-primary font-bold text-body-sm
+                    bg-emerald hover:bg-emerald/90
+                    text-white font-bold text-body-sm
                     rounded-[var(--radius-md)]
                     transition-colors
                   "

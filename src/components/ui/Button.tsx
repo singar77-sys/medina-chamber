@@ -13,7 +13,10 @@ const BASE =
 const VARIANTS: Record<ButtonVariant, string> = {
   primary: "bg-accent hover:bg-accent-hover text-white",
   secondary: "bg-bg-tertiary hover:bg-border-primary text-text-primary",
-  ghost: "border border-border-primary hover:border-text-tertiary text-text-primary",
+  // Brand direction: secondary buttons are emerald, not clear/outlined. "ghost"
+  // keeps its name (many callers still pass variant="ghost") but now renders
+  // filled emerald — same as the emerald variant below.
+  ghost: "bg-emerald hover:bg-emerald/90 text-white",
   emerald: "bg-emerald hover:bg-emerald/90 text-white",
 };
 

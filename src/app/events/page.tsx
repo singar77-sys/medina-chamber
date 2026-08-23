@@ -394,8 +394,8 @@ export default function EventsPage() {
                   href="/events/sponsorships"
                   className="
                     inline-flex items-center px-f21 py-f13
-                    border border-border-primary hover:border-text-tertiary
-                    text-text-primary font-bold text-body-sm
+                    bg-emerald hover:bg-emerald/90
+                    text-white font-bold text-body-sm
                     rounded-[var(--radius-md)]
                     transition-colors
                   "

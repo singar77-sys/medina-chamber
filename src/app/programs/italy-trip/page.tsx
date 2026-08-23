@@ -154,8 +154,8 @@ export default function ItalyTripPage() {
                 href="/events"
                 className="
                   inline-flex items-center px-f21 py-f13
-                  border border-border-primary hover:border-text-tertiary
-                  text-text-primary font-bold text-body-sm
+                  bg-emerald hover:bg-emerald/90
+                  text-white font-bold text-body-sm
                   rounded-[var(--radius-md)]
                   transition-colors
                 "
@@ -378,8 +378,8 @@ export default function ItalyTripPage() {
                       href="tel:+17343087962"
                       className="
                         inline-flex items-center px-f21 py-f13
-                        border border-border-primary hover:border-text-tertiary
-                        text-text-primary font-bold text-body-sm
+                        bg-emerald hover:bg-emerald/90
+                        text-white font-bold text-body-sm
                         rounded-[var(--radius-md)]
                         transition-colors
                       "
@@ -439,8 +439,8 @@ export default function ItalyTripPage() {
                   href="tel:+13307238773"
                   className="
                     block w-full text-center py-f13 px-f21
-                    border border-border-primary hover:border-text-tertiary
-                    text-text-primary font-bold text-body-sm
+                    bg-emerald hover:bg-emerald/90
+                    text-white font-bold text-body-sm
                     rounded-[var(--radius-md)]
                     transition-colors
                   "

@@ -189,7 +189,7 @@ export default function BusinessGrantsPage() {
                         href={item.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="shrink-0 inline-flex items-center px-5 py-2.5 border border-border-primary hover:border-text-tertiary text-text-primary font-bold text-body-sm rounded-[var(--radius-md)] transition-colors whitespace-nowrap"
+                        className="shrink-0 inline-flex items-center px-5 py-2.5 bg-emerald hover:bg-emerald/90 text-white font-bold text-body-sm rounded-[var(--radius-md)] transition-colors whitespace-nowrap"
                       >
                         {item.cta} →
                       </a>
@@ -224,7 +224,7 @@ export default function BusinessGrantsPage() {
               </Link>
               <Link
                 href="/membership/join"
-                className="block w-full text-center py-3 px-6 border border-border-primary hover:border-text-tertiary text-text-primary font-bold text-body-sm rounded-[var(--radius-md)] transition-colors"
+                className="block w-full text-center py-3 px-6 bg-emerald hover:bg-emerald/90 text-white font-bold text-body-sm rounded-[var(--radius-md)] transition-colors"
               >
                 Join the Chamber, from $345/year →
               </Link>

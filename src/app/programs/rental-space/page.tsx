@@ -132,8 +132,8 @@ export default function RentalSpacePage() {
                 href="tel:+13307238773"
                 className="
                   inline-flex items-center px-6 py-4
-                  border border-border-primary hover:border-text-tertiary
-                  text-text-primary font-bold text-body-sm
+                  bg-emerald hover:bg-emerald/90
+                  text-white font-bold text-body-sm
                   rounded-[var(--radius-md)]
                   transition-colors
                 "
@@ -167,8 +167,8 @@ export default function RentalSpacePage() {
               rel="noopener noreferrer"
               className="
                 shrink-0 inline-flex items-center px-5 py-2.5
-                border border-border-primary hover:border-text-tertiary
-                text-text-primary font-bold text-body-sm
+                bg-emerald hover:bg-emerald/90
+                text-white font-bold text-body-sm
                 rounded-[var(--radius-md)]
                 transition-colors
               "
@@ -328,8 +328,8 @@ export default function RentalSpacePage() {
                     href="tel:+13307238773"
                     className="
                       block w-full text-center py-f13 px-f21
-                      border border-border-primary hover:border-text-tertiary
-                      text-text-primary font-bold text-body-sm
+                      bg-emerald hover:bg-emerald/90
+                      text-white font-bold text-body-sm
                       rounded-[var(--radius-md)]
                       transition-colors
                     "

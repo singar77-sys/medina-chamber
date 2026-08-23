@@ -206,8 +206,8 @@ export default function SavingsPage() {
                   href="/membership/benefits"
                   className="
                     block w-full text-center py-f13 px-f21
-                    border border-border-primary hover:border-text-tertiary
-                    text-text-primary font-bold text-body-sm
+                    bg-emerald hover:bg-emerald/90
+                    text-white font-bold text-body-sm
                     rounded-[var(--radius-md)]
                     transition-colors
                   "

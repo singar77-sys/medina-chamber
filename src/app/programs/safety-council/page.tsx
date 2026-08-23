@@ -332,7 +332,7 @@ export default function SafetyCouncilPage() {
             src="/images/photos/medina-chamber-safety-council-bg.webp"
             alt=""
             fill
-            className="object-cover object-[center_25%] opacity-[0.33]"
+            className="object-cover object-[center_25%] opacity-[0.10]"
             sizes="100vw"
             quality={60}
           />

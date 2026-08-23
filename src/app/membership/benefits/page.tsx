@@ -295,7 +295,7 @@ export default function BenefitsPage() {
             src="/images/membership/medina-chamber-member-perks-bg.webp"
             alt=""
             fill
-            className="object-cover opacity-[0.33]"
+            className="object-cover opacity-[0.10]"
             sizes="100vw"
             quality={60}
           />

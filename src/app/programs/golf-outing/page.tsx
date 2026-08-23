@@ -176,7 +176,7 @@ export default function GolfOutingPage() {
             src="/images/programs/golf-outing/medina-chamber-golf-outing-pricing.webp"
             alt=""
             fill
-            className="object-cover opacity-[0.33]"
+            className="object-cover opacity-[0.10]"
             sizes="100vw"
             quality={60}
           />

@@ -68,7 +68,7 @@ export default async function DirectoryPage() {
             src="/images/photos/clock-medina.jpg"
             alt=""
             fill
-            className="object-cover opacity-[0.33]"
+            className="object-cover opacity-[0.10]"
             sizes="100vw"
             quality={60}
           />

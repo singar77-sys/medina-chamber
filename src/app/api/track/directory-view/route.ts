@@ -10,7 +10,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { and, eq, isNull } from "drizzle-orm";
-import { applyRateLimit, formLimiter } from "@/lib/rate-limit";
+import { applyRateLimit, trackLimiter } from "@/lib/rate-limit";
 import { db } from "@/lib/db";
 import { organizations } from "@/lib/db/schema";
 import { logEngagement } from "@/lib/engagement";
@@ -19,7 +19,9 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest): Promise<Response> {
-  const limited = await applyRateLimit(req, formLimiter);
+  // Beacon traffic gets its own budget (rl:track) — sharing formLimiter meant
+  // browsing 5 member listings blocked the visitor's contact-form submission.
+  const limited = await applyRateLimit(req, trackLimiter);
   if (limited) return limited;
 
   let slug = "";

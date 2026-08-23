@@ -105,6 +105,13 @@ export const chatLimiter = makeLimiter(20, "rl:chat");
 // 5 req/min per IP for forms — humans don't submit forms 5x/min
 export const formLimiter = makeLimiter(5, "rl:form");
 
+// 60 req/min per IP for analytics beacons (directory-view etc.). These fire
+// once per listing page mount, so a visitor browsing the directory legitimately
+// sends several per minute. They MUST NOT share the form budget: when the
+// directory-view beacon used formLimiter, opening 5 member listings exhausted
+// rl:form and the visitor's subsequent contact-form submission was 429'd.
+export const trackLimiter = makeLimiter(60, "rl:track");
+
 // 3 req/min per IP for the public self-serve join — stricter than the generic
 // form limit because it's an unauthenticated write: each accepted POST inserts 4
 // rows (org + contact + membership + invoice) and opens a Stripe Checkout session
@@ -332,6 +339,32 @@ function makeLazyWindowLimiter(
 
 const adminAuthPerMinute = makeLazyWindowLimiter(5, "1 m", 60_000, "rl:admin-auth-min");
 const adminAuthPerHour = makeLazyWindowLimiter(20, "1 h", 60 * 60_000, "rl:admin-auth-hr");
+
+// ── Contact form limiter (dual window, own prefix) ─────────────────
+//
+// The public contact form sends mail, so it gets the same discipline as admin
+// auth: a burst cap (5/min) AND a sustained cap (20/hour) per IP, so a single
+// IP can't flood the chamber inbox or burn the Resend quota across an hour.
+// Own prefix (rl:contact-*) so no other form/beacon traffic can starve it, and
+// lazy + degrade-never-throw so a Redis blip can't 500 a real submission.
+const contactPerMinute = makeLazyWindowLimiter(5, "1 m", 60_000, "rl:contact-min");
+const contactPerHour = makeLazyWindowLimiter(20, "1 h", 60 * 60_000, "rl:contact-hr");
+
+/**
+ * Rate-limit guard for the public contact form: 5/min AND 20/hour per IP.
+ * Returns a JSON 429 Response (so the form client can read `.error` and show
+ * a specific message) when either window is exceeded, otherwise null. Never throws.
+ */
+export async function limitContactForm(req: Request): Promise<Response | null> {
+  const key = getRequestIp(req);
+  if (!(await contactPerMinute.allow(key)) || !(await contactPerHour.allow(key))) {
+    return Response.json(
+      { error: "Too many messages from this connection. Please wait a minute and try again, or call us at (330) 723-8773." },
+      { status: 429 },
+    );
+  }
+  return null;
+}
 
 /**
  * Rate-limit guard for the admin login route: 5 attempts/min AND 20/hour per IP.

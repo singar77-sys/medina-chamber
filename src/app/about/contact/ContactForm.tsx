@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -76,6 +76,22 @@ export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
+  // Focus management: after submit the outcome must be both announced and
+  // focused. Success collapses a ~1500px form to a short panel, which can
+  // leave the confirmation above the viewport with focus dropped on <body> —
+  // so we move focus to the success heading (scrolling it into view). On
+  // error, focus the alert so screen readers land on the message.
+  const successHeadingRef = useRef<HTMLHeadingElement | null>(null);
+  const errorRef = useRef<HTMLParagraphElement | null>(null);
+  useEffect(() => {
+    if (status === "success") {
+      successHeadingRef.current?.focus();
+      successHeadingRef.current?.scrollIntoView({ block: "center" });
+    } else if (status === "error") {
+      errorRef.current?.focus();
+    }
+  }, [status]);
+
   const loading = status === "loading";
   const set =
     (key: keyof typeof EMPTY_FORM) =>
@@ -98,16 +114,24 @@ export function ContactForm() {
         }),
       });
 
-      const data = await res.json();
+      // Parse defensively — infrastructure responses (a framework 500, a
+      // proxy error page) may not be JSON, and .json() throwing would land
+      // in the catch below and mislabel a server rejection "Network error".
+      const data = await res.json().catch(() => ({}) as { error?: string });
 
       if (!res.ok) {
-        setErrorMsg(data.error || "Something went wrong. Please try again.");
+        setErrorMsg(
+          data.error ||
+            (res.status === 429
+              ? "Too many messages from this connection. Please wait a minute and try again, or call us at (330) 723-8773."
+              : "Something went wrong. Please try again."),
+        );
         setStatus("error");
       } else {
         setStatus("success");
       }
     } catch {
-      setErrorMsg("Network error. Please try again.");
+      setErrorMsg("Network error. Please check your connection and try again.");
       setStatus("error");
     }
   }
@@ -120,7 +144,9 @@ export function ContactForm() {
             <path d="M20 6L9 17l-5-5" />
           </svg>
         </div>
-        <h2 className="text-h2">Message sent!</h2>
+        <h2 ref={successHeadingRef} tabIndex={-1} className="text-h2 focus:outline-none">
+          Message sent!
+        </h2>
         <p className="text-body text-text-secondary max-w-md">
           Thanks for reaching out. Someone from the Chamber will get back to you
           within one business day.
@@ -259,7 +285,14 @@ export function ContactForm() {
       </Field>
 
       {status === "error" && (
-        <p className="text-body-sm text-red-500">{errorMsg}</p>
+        <p
+          ref={errorRef}
+          role="alert"
+          tabIndex={-1}
+          className="text-body-sm font-medium text-accent focus:outline-none"
+        >
+          {errorMsg}
+        </p>
       )}
 
       <p className="text-caption text-text-tertiary">

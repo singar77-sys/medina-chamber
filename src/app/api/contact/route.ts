@@ -1,5 +1,5 @@
 import * as Sentry from "@sentry/nextjs";
-import { formLimiter, applyRateLimit } from "@/lib/rate-limit";
+import { limitContactForm } from "@/lib/rate-limit";
 import { resend, CHAMBER_NOTIFY_EMAIL, EMAIL_RE } from "@/lib/email";
 import { escHtml, pickString, pickOptional } from "@/lib/sanitize";
 
@@ -29,7 +29,9 @@ const MAX = {
 const MIN_FILL_MS = 1500;
 
 export async function POST(req: Request) {
-  const limited = await applyRateLimit(req, formLimiter);
+  // Dedicated dual-window limiter (5/min + 20/hour, own rl:contact prefix,
+  // never throws, JSON 429) — see limitContactForm in rate-limit.ts.
+  const limited = await limitContactForm(req);
   if (limited) return limited;
 
   // 1. Body must be valid JSON
@@ -51,8 +53,13 @@ export async function POST(req: Request) {
   //    so we can see volume if it matters.
   const honeypot = typeof raw.website_confirm === "string" ? raw.website_confirm.trim() : "";
   const formLoadedAt = typeof raw.formLoadedAt === "number" ? raw.formLoadedAt : 0;
+  // formLoadedAt is a CLIENT clock reading, so only a *small positive* gap is
+  // bot-like. A negative gap just means the visitor's device clock runs ahead
+  // of the server's — without the fillMs >= 0 guard, that real human's message
+  // was silently dropped with a fake success. A negative gap carries no more
+  // signal than an omitted formLoadedAt, which already bypasses this check.
   const fillMs = Date.now() - formLoadedAt;
-  if (honeypot || (formLoadedAt > 0 && fillMs < MIN_FILL_MS)) {
+  if (honeypot || (formLoadedAt > 0 && fillMs >= 0 && fillMs < MIN_FILL_MS)) {
     Sentry.captureMessage("contact form rejected by honeypot/timing", {
       level: "info",
       tags: { route: "contact", phase: "honeypot" },
@@ -119,7 +126,7 @@ export async function POST(req: Request) {
   ].filter(([, v]) => v) as [string, string][];
 
   try {
-    await resend.emails.send({
+    const { error: sendError } = await resend.emails.send({
       // Sent from huntersystems.dev (verified Resend domain) instead of
       // resend.dev sandbox — better deliverability, won't get spam-folder'd
       // by chamber inboxes. Display name still reads as the chamber.
@@ -134,6 +141,19 @@ export async function POST(req: Request) {
         <p style="white-space:pre-wrap">${escHtml(comments)}</p>
       `,
     });
+
+    // The Resend SDK does NOT throw on API-level failures — it resolves with
+    // { data, error }. Without this check, a rejected send (bad domain, quota
+    // exhausted, validation) fell through to the ok:true below: the visitor saw
+    // "Message sent!" while no email existed and nothing reached Sentry.
+    if (sendError) {
+      console.error("Resend API error:", sendError);
+      Sentry.captureException(new Error(`Resend API error: ${sendError.message}`), {
+        tags: { route: "contact" },
+        extra: { senderName: fullName, senderEmail: email, resendError: sendError },
+      });
+      return Response.json({ error: "Failed to send message. Please try again." }, { status: 500 });
+    }
 
     return Response.json({ ok: true });
   } catch (err) {

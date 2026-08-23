@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import { FadeIn } from "@/components/FadeIn";
@@ -195,12 +195,38 @@ export function RentalSpaceCards() {
 
 function RoomModal({ room, onClose }: { room: Room; onClose: () => void }) {
   const closeBtnRef = useRef<HTMLButtonElement | null>(null);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
 
   // Focus the close button on open so keyboard users are in-dialog
   // immediately.
   useEffect(() => {
     requestAnimationFrame(() => closeBtnRef.current?.focus());
   }, []);
+
+  // Trap Tab focus within the dialog. aria-modal="true" promises the rest of
+  // the page is inert to assistive tech, so focus must cycle inside the dialog
+  // rather than escaping to the (visually hidden) page behind the scrim.
+  const onTrapKey = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== "Tab") return;
+    const root = dialogRef.current;
+    if (!root) return;
+    const focusables = root.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    );
+    if (focusables.length === 0) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    const active = document.activeElement;
+    if (e.shiftKey) {
+      if (active === first || !root.contains(active)) {
+        e.preventDefault();
+        last.focus();
+      }
+    } else if (active === last || !root.contains(active)) {
+      e.preventDefault();
+      first.focus();
+    }
+  };
 
   // Portal-mount to document.body. Required because RentalSpaceCards
   // is rendered inside <FadeIn>, which applies `transform` and
@@ -219,10 +245,12 @@ function RoomModal({ room, onClose }: { room: Room; onClose: () => void }) {
       aria-modal="true"
       aria-labelledby="rsc-modal-title"
       onClick={onClose}
+      onKeyDown={onTrapKey}
     >
       {/* Inner wrapper stops scrim clicks from closing when the user
           interacts with the dialog content itself. */}
       <div
+        ref={dialogRef}
         className="rsc-modal"
         onClick={(e) => e.stopPropagation()}
       >

@@ -112,7 +112,7 @@ export default function HomePage() {
       
       <section className="site-hero relative min-h-[85dvh] flex items-end overflow-hidden">
         {/* Background photos — theme-aware */}
-        <GazeboHero />
+        <GazeboHero kenBurns />
         {/* Gradient overlay — bottom-up oxford wash */}
         <div className="absolute inset-0 bg-gradient-to-t from-oxford via-oxford/60 to-oxford/15" />
         {/* Top-down cap — darkens upper third so headline lands on dark sky
@@ -241,7 +241,11 @@ export default function HomePage() {
                     },
                   },
                   image: event.image
-                    ? [`https://medinachamber.com${event.image}`]
+                    ? [
+                        event.image.startsWith("http")
+                          ? event.image
+                          : `https://medinachamber.com${event.image}`,
+                      ]
                     : undefined,
                   url: `https://medinachamber.com/events/${event.slug}`,
                   organizer: {
@@ -291,17 +295,25 @@ export default function HomePage() {
                 >
                   {/* Graphic hero — SVG graphic for known event types;
                       Cloudinary photo fallback for everything else. */}
+                  {/* Poster/photo is decorative inside the already-titled card
+                      link — aria-hidden so the graphic's baked-in text (event
+                      name, date, "Registration Required", address) isn't dumped
+                      into the link's accessible name and duplicated by the
+                      visible title/date/price below. */}
                   {Graphic ? (
-                    <div className="border-b border-border-secondary">
+                    <div className="border-b border-border-secondary" aria-hidden="true">
                       <FluidGraphicFrame mode="social">
                         <Graphic mode="social" />
                       </FluidGraphicFrame>
                     </div>
                   ) : event.image ? (
-                    <div className="relative aspect-[1200/630] border-b border-border-secondary overflow-hidden">
+                    <div
+                      className="relative aspect-[1200/630] border-b border-border-secondary overflow-hidden"
+                      aria-hidden="true"
+                    >
                       <Image
                         src={event.image}
-                        alt={event.title}
+                        alt=""
                         fill
                         sizes="(max-width: 768px) 100vw, 33vw"
                         className="object-cover object-bottom"
@@ -354,10 +366,14 @@ export default function HomePage() {
                         if (!event.pricing) return "Free";
                         // First line, then first sentence — prevents mid-word truncation
                         // like "Registration preferred, but not..." in the cards.
+                        // Only treat "." as a sentence end when it's followed by
+                        // whitespace or end-of-string, so a currency amount like
+                        // "$24.00 PER PERSON" isn't cut down to "$24." (a bare
+                        // indexOf(".") caught the decimal point).
                         const firstLine = event.pricing.split("\n")[0];
-                        const periodIdx = firstLine.indexOf(".");
-                        return periodIdx > 0
-                          ? firstLine.slice(0, periodIdx + 1)
+                        const sentenceEnd = firstLine.search(/\.(\s|$)/);
+                        return sentenceEnd > 0
+                          ? firstLine.slice(0, sentenceEnd + 1)
                           : firstLine;
                       })()}
                     </p>

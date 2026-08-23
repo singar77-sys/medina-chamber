@@ -10,8 +10,12 @@
  * <picture>, so the CDN streams the bytes instantly on the very first hit.
  *
  * Theme handling: the site uses a manual `data-theme` toggle, so SSR can't
- * know which variant is visible. Both ship with the page and CSS shows one;
- * both carry fetchPriority="high" so whichever the user sees is prioritized.
+ * know which variant is visible. Both ship with the page and CSS shows one.
+ * The default-visible DAY hero carries fetchPriority="high" (it's the LCP on
+ * the common light/system first paint); NIGHT stays eager but fetchPriority=
+ * "low" so it no longer competes for bandwidth with the LCP image on light.
+ * Both remain eager — never lazy — so dark-mode users still get their hero on
+ * the initial request path (dropping one to lazy broke dark-mode LCP before).
  * Regenerate assets with scripts if the source photos change.
  */
 
@@ -42,7 +46,15 @@ const NIGHT: Variant = {
 const srcSet = (base: string, ext: string, widths: number[]) =>
   widths.map((w) => `${base}-${w}.${ext} ${w}w`).join(", ");
 
-function HeroPicture({ v, imgClass }: { v: Variant; imgClass: string }) {
+function HeroPicture({
+  v,
+  imgClass,
+  priority,
+}: {
+  v: Variant;
+  imgClass: string;
+  priority: "high" | "low";
+}) {
   return (
     <picture className="contents">
       <source type="image/avif" srcSet={srcSet(v.base, "avif", v.widths)} sizes="100vw" />
@@ -52,7 +64,7 @@ function HeroPicture({ v, imgClass }: { v: Variant; imgClass: string }) {
         src={v.jpg}
         alt={v.alt}
         sizes="100vw"
-        fetchPriority="high"
+        fetchPriority={priority}
         decoding="async"
         className={imgClass}
       />
@@ -65,8 +77,8 @@ export function GazeboHero({ kenBurns = false }: { kenBurns?: boolean }) {
   const burns = kenBurns ? " hero-ken-burns" : "";
   return (
     <>
-      <HeroPicture v={DAY} imgClass={`${fill}${burns} [[data-theme=dark]_&]:hidden`} />
-      <HeroPicture v={NIGHT} imgClass={`${fill}${burns} hidden [[data-theme=dark]_&]:block`} />
+      <HeroPicture v={DAY} priority="high" imgClass={`${fill}${burns} [[data-theme=dark]_&]:hidden`} />
+      <HeroPicture v={NIGHT} priority="low" imgClass={`${fill}${burns} hidden [[data-theme=dark]_&]:block`} />
     </>
   );
 }

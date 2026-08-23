@@ -6,8 +6,8 @@
  * ─────────────────────
  * Daily Vercel cron — runs the membership renewal lifecycle engine.
  *
- * Schedule: "0 8 * * *"  (08:00 UTC = 04:00 ET, after gz-sync at 06:00)
- * Configured in vercel.json.
+ * Schedule when re-enabled: "0 8 * * *" (08:00 UTC = 04:00 ET, after gz-sync
+ * at 06:00). Currently NOT in vercel.json — see the note at the top.
  *
  * Phases each run:
  *   1. Create draft invoices for memberships renewing within 60 days
@@ -16,37 +16,18 @@
  *   4. Transition active → past_due (renewal date passed, unpaid)
  *   5. Transition past_due → lapsed (30-day grace period expired)
  *
- * Auth: same CRON_SECRET bearer-token pattern as gz-sync.
+ * Auth: same CRON_SECRET bearer-token pattern as gz-sync
+ * (shared isAuthorizedCron in src/lib/cron-auth.ts).
  */
 
 import { NextResponse } from "next/server";
 import { runRenewalEngine } from "@/lib/renewal-engine";
+import { isAuthorizedCron } from "@/lib/cron-auth";
 
 export const dynamic = "force-dynamic";
 
-function isAuthorized(req: Request): boolean {
-  const secret = process.env.CRON_SECRET;
-  if (!secret || secret.length < 16) return false;
-
-  const auth = req.headers.get("authorization");
-  if (!auth) return false;
-
-  const match = auth.match(/^Bearer\s+(.+)$/i);
-  if (!match) return false;
-
-  const provided = match[1].trim();
-  if (provided.length !== secret.length) return false;
-
-  // Timing-safe comparison
-  let diff = 0;
-  for (let i = 0; i < provided.length; i++) {
-    diff |= provided.charCodeAt(i) ^ secret.charCodeAt(i);
-  }
-  return diff === 0;
-}
-
 export async function GET(req: Request) {
-  if (!isAuthorized(req)) {
+  if (!(await isAuthorizedCron(req))) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 

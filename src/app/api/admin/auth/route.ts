@@ -2,9 +2,11 @@
  * POST /api/admin/auth  — verify password, set session cookie.
  * (Logout lives at /api/admin/auth/logout/route.ts — see AdminNav.)
  *
- * The login credential is CHAT_ADMIN_TOKEN (or a per-admin ADMIN_USERS token).
- * The session cookie is signed with the SEPARATE ADMIN_SESSION_SECRET, so the
- * login password and the cookie-signing key rotate independently.
+ * The login credential is a per-admin ADMIN_USERS token when those are
+ * configured (CHAT_ADMIN_TOKEN is then unnecessary and can be removed), else
+ * the shared CHAT_ADMIN_TOKEN. The session cookie is signed with the SEPARATE
+ * ADMIN_SESSION_SECRET, so login credentials and the cookie-signing key rotate
+ * independently.
  *
  * The login route is rate-limited (limitAdminAuth: 5/min + 20/hour per IP) BEFORE
  * the constant-time credential check, so a spammed brute-force is 429'd fast
@@ -13,8 +15,8 @@
  */
 
 import { NextResponse } from "next/server";
-import { signSession, getAdminSecret, ADMIN_COOKIE } from "@/lib/admin-session";
-import { authenticateAdmin } from "@/lib/admin-users";
+import { signSession, ADMIN_COOKIE } from "@/lib/admin-session";
+import { authenticateAdmin, getAdminAuthStatus } from "@/lib/admin-users";
 import { limitAdminAuth, getRequestIp } from "@/lib/rate-limit";
 
 /** SHA-256 the client IP to an 8-char prefix so logs correlate attempts without
@@ -48,11 +50,22 @@ export async function POST(req: Request): Promise<Response> {
     return rl.response;
   }
 
-  // Single source of the fail-closed floor (getAdminSecret in admin-session.ts):
-  // refuse to mint a session when the login credential is unset or too weak, so
-  // login and the API guard agree on what "configured" means.
-  if (!getAdminSecret()) {
-    return NextResponse.json({ error: "Admin access not configured." }, { status: 503 });
+  // Single source of the fail-closed floor (getAdminAuthStatus in
+  // admin-users.ts): refuse to mint a session when no usable credential is
+  // configured, or when ADMIN_USERS is set but malformed/weak — a broken
+  // named-user config must surface as an explicit 503, never silently fall
+  // back to the legacy shared token. Login and the API guard share this check.
+  const authStatus = getAdminAuthStatus();
+  if (authStatus !== "ok") {
+    return NextResponse.json(
+      {
+        error:
+          authStatus === "misconfigured"
+            ? "Admin authentication misconfigured."
+            : "Admin access not configured.",
+      },
+      { status: 503 },
+    );
   }
 
   let body: { password?: string };

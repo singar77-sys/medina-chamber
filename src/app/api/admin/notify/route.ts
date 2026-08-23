@@ -67,7 +67,9 @@ export async function POST(req: Request): Promise<Response> {
 
   try {
     await resend.emails.send({
-      from: "Medina Chamber Admin <noreply@medinachamber.com>",
+      // medinaohchamber.com is the Resend-verified sending domain every other
+      // sender uses — @medinachamber.com would fail domain verification.
+      from: "Medina Chamber Admin <noreply@medinaohchamber.com>",
       to: hunterEmail,
       subject: `[Chamber Admin] ${category}`,
       html: `

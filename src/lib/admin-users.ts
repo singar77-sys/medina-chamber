@@ -5,16 +5,25 @@
  * tokens, so the admin area can attribute a login to a person and revoke one
  * person without rotating everyone's access.
  *
- * Format: comma-separated `Name:token` pairs. The token must be URL-safe
- * (hex or base64url — no ':' or ',' characters). Example:
+ * Format: comma-separated `Name:token` pairs. Tokens must be URL-safe
+ * (hex or base64url — no ',' characters) and at least MIN_ADMIN_USER_TOKEN_LEN
+ * characters — generate with `openssl rand -hex 32`. Example:
  *   ADMIN_USERS="Stephanie:3f9a…,Jaclyn:b71c…"
  *
- * Behaviour:
- *   - ADMIN_USERS SET   → only these per-person tokens may log in, and the
- *                         session records which admin authenticated. Revoke a
- *                         person by deleting their entry.
- *   - ADMIN_USERS UNSET → the shared CHAT_ADMIN_TOKEN is the sole login
- *                         credential (recorded as "Admin"), exactly as before.
+ * Three states (see getAdminUsersConfig):
+ *   - UNSET/blank        → "shared": the shared CHAT_ADMIN_TOKEN is the sole
+ *                          login credential (recorded as "Admin"), as before.
+ *   - all entries valid  → "named": ONLY these per-person tokens may log in
+ *                          (CHAT_ADMIN_TOKEN is ignored and can be removed),
+ *                          and the session records which admin authenticated.
+ *                          Revoke a person by deleting their entry.
+ *   - anything malformed → "invalid": admin auth FAILS CLOSED — no login, and
+ *     or a weak token      live sessions are rejected — until the value is
+ *                          fixed or unset. A typo'd ADMIN_USERS must never
+ *                          silently re-enable the shared token or un-revoke a
+ *                          removed admin, and silently dropping one weak entry
+ *                          would just hide the mistake; refusing everything is
+ *                          the only state an operator will actually notice.
  *
  * The session cookie is signed with the dedicated ADMIN_SESSION_SECRET (see
  * admin-session.ts), independent of both CHAT_ADMIN_TOKEN and ADMIN_USERS —
@@ -22,48 +31,67 @@
  */
 
 import { getAdminSecret } from "@/lib/admin-session";
+import { constantTimeEqual } from "@/lib/constant-time";
 
 export interface AdminUser {
   name: string;
   token: string;
 }
 
-/** Parse ADMIN_USERS into a list of {name, token}. Malformed entries are skipped. */
-export function parseAdminUsers(): AdminUser[] {
-  const raw = process.env.ADMIN_USERS;
-  if (!raw || !raw.trim()) return [];
+/**
+ * Minimum length for an individual ADMIN_USERS token. 32 chars of hex is 128
+ * bits — these are machine-generated secrets, not human passwords, so there is
+ * no reason to permit anything guessable.
+ */
+export const MIN_ADMIN_USER_TOKEN_LEN = 32;
 
-  const users: AdminUser[] = [];
-  for (const entry of raw.split(",")) {
-    const trimmed = entry.trim();
-    if (!trimmed) continue;
-    // Split on the FIRST colon: name before, token after. Tokens are expected
-    // to be url-safe (hex/base64url) so they contain no ':' or ','.
-    const i = trimmed.indexOf(":");
-    if (i <= 0) continue; // need both a non-empty name and a token
-    const name = trimmed.slice(0, i).trim();
-    const token = trimmed.slice(i + 1).trim();
-    if (name && token) users.push({ name, token });
+export type AdminUsersConfig =
+  | { mode: "shared" }
+  | { mode: "named"; users: AdminUser[] }
+  | { mode: "invalid"; reason: string };
+
+// Log each distinct misconfiguration once per process, not once per request.
+let warnedInvalidReason: string | null = null;
+
+function invalid(reason: string): AdminUsersConfig {
+  if (warnedInvalidReason !== reason) {
+    warnedInvalidReason = reason;
+    console.error(
+      `[admin-users] ADMIN_USERS is misconfigured (${reason}) — admin auth is disabled (fail closed) until the value is fixed or unset.`,
+    );
   }
-  return users;
+  return { mode: "invalid", reason };
 }
 
 /**
- * Constant-time string equality. Hashes both inputs to a fixed 32 bytes and
- * compares those, so neither the boolean result nor the input lengths leak
- * via timing. Uses Web Crypto (runs in both Node and Edge runtimes).
+ * Classify the ADMIN_USERS value. Entries split on the FIRST colon (name
+ * before, token after); blank entries from a trailing/double comma are
+ * tolerated, but a malformed pair or an under-length token invalidates the
+ * whole value — see the module doc for why partial acceptance is worse.
+ * The reason string never includes token material.
  */
-async function constantTimeEqual(a: string, b: string): Promise<boolean> {
-  const enc = new TextEncoder();
-  const [da, db] = await Promise.all([
-    crypto.subtle.digest("SHA-256", enc.encode(a)),
-    crypto.subtle.digest("SHA-256", enc.encode(b)),
-  ]);
-  const va = new Uint8Array(da);
-  const vb = new Uint8Array(db);
-  let diff = 0;
-  for (let i = 0; i < va.length; i++) diff |= va[i] ^ vb[i];
-  return diff === 0;
+export function getAdminUsersConfig(): AdminUsersConfig {
+  const raw = process.env.ADMIN_USERS;
+  if (!raw || !raw.trim()) return { mode: "shared" };
+
+  const users: AdminUser[] = [];
+  const entries = raw.split(",");
+  for (let i = 0; i < entries.length; i++) {
+    const trimmed = entries[i].trim();
+    if (!trimmed) continue;
+    const sep = trimmed.indexOf(":");
+    const name = sep > 0 ? trimmed.slice(0, sep).trim() : "";
+    const token = sep > 0 ? trimmed.slice(sep + 1).trim() : "";
+    if (!name || !token) return invalid(`entry ${i + 1} is not a Name:token pair`);
+    if (token.length < MIN_ADMIN_USER_TOKEN_LEN) {
+      return invalid(
+        `token for "${name}" is shorter than ${MIN_ADMIN_USER_TOKEN_LEN} chars — generate with: openssl rand -hex 32`,
+      );
+    }
+    users.push({ name, token });
+  }
+  if (users.length === 0) return invalid("no Name:token entries");
+  return { mode: "named", users };
 }
 
 /**
@@ -71,16 +99,19 @@ async function constantTimeEqual(a: string, b: string): Promise<boolean> {
  * else null. Every candidate is checked (no short-circuit) so timing never
  * reveals how many admins exist or which token matched.
  *
- * Falls back to the shared CHAT_ADMIN_TOKEN when ADMIN_USERS is unset OR
- * malformed (empty parse), so a bad ADMIN_USERS value can never lock admins out.
+ * Named mode accepts ONLY the per-admin tokens; shared mode (ADMIN_USERS
+ * unset) accepts ONLY CHAT_ADMIN_TOKEN; a misconfigured ADMIN_USERS accepts
+ * nothing (fail closed — never fall back to the shared token).
  */
 export async function authenticateAdmin(submitted: string): Promise<string | null> {
   if (!submitted) return null;
 
-  const users = parseAdminUsers();
+  const cfg = getAdminUsersConfig();
+  if (cfg.mode === "invalid") return null;
+
   let candidates: AdminUser[];
-  if (users.length > 0) {
-    candidates = users;
+  if (cfg.mode === "named") {
+    candidates = cfg.users;
   } else {
     const shared = getAdminSecret();
     candidates = shared ? [{ name: "Admin", token: shared }] : [];
@@ -100,16 +131,32 @@ export async function authenticateAdmin(submitted: string): Promise<string | nul
  * rejected on its next request — without waiting out the 12h expiry or rotating
  * the shared signing secret (which logs everyone out).
  *
- * Two accept-all cases keep this safe and backward-compatible:
- *   - Shared-token mode (ADMIN_USERS unset): there is no per-person identity to
- *     revoke, so any validly-signed session is accepted.
- *   - A session with no `sub` (minted before named accounts existed): grandfathered
- *     in. Such tokens can only be produced by our own server and expire within 12h
- *     of this code shipping, so the window is bounded.
+ *   - Shared-token mode: accept-all — there is no per-person identity to revoke.
+ *   - Named mode: the session must carry a `sub` that is a current admin.
+ *     (Sessions have carried `sub` since named accounts shipped, so a missing
+ *     `sub` means a forged or ancient token — reject it.)
+ *   - Misconfigured ADMIN_USERS: reject-all, matching the disabled login.
  */
 export function isCurrentAdmin(sub: string | undefined): boolean {
-  const users = parseAdminUsers();
-  if (users.length === 0) return true; // shared-token mode — nothing to revoke
-  if (!sub) return true;               // legacy pre-named-account session (expires <12h)
-  return users.some((u) => u.name === sub);
+  const cfg = getAdminUsersConfig();
+  if (cfg.mode === "shared") return true;
+  if (cfg.mode === "invalid") return false;
+  if (!sub) return false;
+  return cfg.users.some((u) => u.name === sub);
+}
+
+/**
+ * Whether admin login is currently possible, and why not when it isn't.
+ * Shared by the login route and the API guard so both agree on what
+ * "configured" means:
+ *   - "misconfigured" → ADMIN_USERS is set but invalid (fail closed).
+ *   - "unconfigured"  → shared mode without a usable CHAT_ADMIN_TOKEN.
+ * Named mode needs NO CHAT_ADMIN_TOKEN — once per-admin tokens are live the
+ * legacy shared credential can be deleted from the environment.
+ */
+export function getAdminAuthStatus(): "ok" | "unconfigured" | "misconfigured" {
+  const cfg = getAdminUsersConfig();
+  if (cfg.mode === "invalid") return "misconfigured";
+  if (cfg.mode === "named") return "ok";
+  return getAdminSecret() ? "ok" : "unconfigured";
 }

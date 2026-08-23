@@ -27,6 +27,7 @@
 
 import * as Sentry from "@sentry/nextjs";
 import { formLimiter, applyRateLimit } from "@/lib/rate-limit";
+import { readJsonBounded } from "@/lib/body-limit";
 import { resend } from "@/lib/email";
 import { escHtml, pickString } from "@/lib/sanitize";
 import { isValidSessionId, loadSession } from "@/lib/chat-session";
@@ -54,12 +55,9 @@ export async function POST(req: Request) {
   const limited = await applyRateLimit(req, formLimiter);
   if (limited) return limited;
 
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return Response.json({ error: "Invalid JSON body." }, { status: 400 });
-  }
+  const parsed = await readJsonBounded(req);
+  if ("response" in parsed) return parsed.response;
+  const body = parsed.body;
   if (!body || typeof body !== "object") {
     return Response.json({ error: "Invalid request body." }, { status: 400 });
   }
@@ -71,8 +69,10 @@ export async function POST(req: Request) {
     typeof raw.website_confirm === "string" ? raw.website_confirm.trim() : "";
   const formLoadedAt =
     typeof raw.formLoadedAt === "number" ? raw.formLoadedAt : 0;
+  // fillMs >= 0: a negative gap means the visitor's device clock runs ahead of
+  // the server's — a real human, not a bot (same guard as the contact route).
   const fillMs = Date.now() - formLoadedAt;
-  if (honeypot || (formLoadedAt > 0 && fillMs < MIN_FILL_MS)) {
+  if (honeypot || (formLoadedAt > 0 && fillMs >= 0 && fillMs < MIN_FILL_MS)) {
     Sentry.captureMessage("chat handoff rejected by honeypot/timing", {
       level: "info",
       tags: { route: "chat/handoff", phase: "honeypot" },

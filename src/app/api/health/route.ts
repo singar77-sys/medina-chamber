@@ -6,30 +6,33 @@
  * site depends on in parallel with short timeouts and reports each
  * one's status individually.
  *
- * Response shape:
- *   {
- *     ok: boolean,           // true only if every required dep is "ok"
- *     timestamp: string,     // ISO-8601 of when checks ran
- *     deps: {
- *       upstashVector: { status: "ok" | "error" | "skip", ms?, error? },
- *       anthropic:     { status, ms?, error? },
- *       resend:        { status, ms?, error? },
- *     }
+ * PUBLIC response (no auth) is coarse on purpose — per-provider status,
+ * latencies, upstream HTTP codes, and env-presence would hand an attacker a
+ * free infrastructure map:
+ *   { ok: boolean, timestamp: string }
+ *
+ * With `Authorization: Bearer ${CRON_SECRET}` (same credential the cron
+ * routes use — give it to your monitor) the response adds the per-dependency
+ * detail:
+ *   deps: {
+ *     upstashVector: { status: "ok" | "error" | "skip", ms?, error? },
+ *     anthropic:     { status, ms?, error? },
+ *     resend:        { status, ms?, error? },
  *   }
  *
- * HTTP status:
+ * HTTP status (both variants):
  *   200 — every required dep reported "ok"
  *   503 — at least one required dep failed (UptimeRobot will alert)
  *
- * Auth: none. The endpoint exposes only boolean health, never secrets,
- * counts, or implementation details. Rate-limited to 60/min/IP via
- * the existing Upstash limiter so it can't be abused for amplification.
+ * Rate-limited to 60/min/IP via the existing Upstash limiter so it can't be
+ * abused for amplification.
  *
  * Runtime: edge (matches /api/search and /api/chat).
  */
 
 import { NextResponse } from "next/server";
 import { healthLimiter, applyRateLimit } from "@/lib/rate-limit";
+import { isAuthorizedCron } from "@/lib/cron-auth";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
@@ -127,11 +130,15 @@ export async function GET(req: Request) {
   const required = [upstashVector, anthropic];
   const ok = required.every((d) => d.status === "ok");
 
+  // Per-dependency detail only for authenticated monitors (CRON_SECRET
+  // bearer) — the public shape stays a plain liveness boolean.
+  const detailed = await isAuthorizedCron(req);
+
   return NextResponse.json(
     {
       ok,
       timestamp: new Date().toISOString(),
-      deps: { upstashVector, anthropic, resend },
+      ...(detailed ? { deps: { upstashVector, anthropic, resend } } : {}),
     },
     { status: ok ? 200 : 503 }
   );

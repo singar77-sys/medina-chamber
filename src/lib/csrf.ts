@@ -12,7 +12,9 @@
  *   - Safe (idempotent) methods — GET/HEAD/OPTIONS — are never blocked.
  *   - A request with NO Origin header falls back to the SameSite protection
  *     rather than being rejected, so same-origin navigations and RFC 8058
- *     one-click POSTs (which may omit Origin) still work.
+ *     one-click POSTs (which may omit Origin) still work. Modern browsers do
+ *     send Sec-Fetch-Site even when Origin is absent, so the cross-site case
+ *     is still caught below for them.
  *
  * Apply ONLY to endpoints that act on an ambient cookie credential. Purely public
  * unauthenticated endpoints (contact/apply/join/sponsorship/…) gain nothing from
@@ -27,8 +29,16 @@ const SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
 export function assertSameOrigin(req: Request): Response | null {
   if (SAFE_METHODS.has(req.method.toUpperCase())) return null;
 
+  // Browser-attested fetch metadata (a forbidden header — cross-site JS cannot
+  // set or strip it): reject outright what the browser itself labels
+  // cross-site. "same-site" is deliberately NOT trusted here — a sibling
+  // subdomain like business.medinachamber.com is externally hosted — so it
+  // falls through to the Origin checks below, as do "same-origin"/"none".
+  if (req.headers.get("sec-fetch-site") === "cross-site") return forbidden();
+
   const origin = req.headers.get("origin");
-  // No Origin header → rely on the SameSite cookie attribute already in place.
+  // No Origin header → rely on the SameSite cookie attribute already in place
+  // (plus the Sec-Fetch-Site rejection above on browsers that send it).
   if (!origin) return null;
 
   let originHost: string;

@@ -1,5 +1,6 @@
 import * as Sentry from "@sentry/nextjs";
 import { limitContactForm } from "@/lib/rate-limit";
+import { readJsonBounded } from "@/lib/body-limit";
 import { resend, CHAMBER_NOTIFY_EMAIL, EMAIL_RE } from "@/lib/email";
 import { escHtml, pickString, pickOptional } from "@/lib/sanitize";
 
@@ -34,13 +35,10 @@ export async function POST(req: Request) {
   const limited = await limitContactForm(req);
   if (limited) return limited;
 
-  // 1. Body must be valid JSON
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return Response.json({ error: "Invalid JSON body." }, { status: 400 });
-  }
+  // 1. Body must be valid JSON and under the size ceiling (413 if oversized)
+  const parsed = await readJsonBounded(req);
+  if ("response" in parsed) return parsed.response;
+  const body = parsed.body;
   if (!body || typeof body !== "object") {
     return Response.json({ error: "Invalid request body." }, { status: 400 });
   }
@@ -148,9 +146,13 @@ export async function POST(req: Request) {
     // "Message sent!" while no email existed and nothing reached Sentry.
     if (sendError) {
       console.error("Resend API error:", sendError);
+      // No PII to Sentry: the visitor sees the failure and can retry or email
+      // directly, and Sentry is a third party — the privacy page tells
+      // visitors form data is used to respond to them, not shipped to error
+      // tooling. The error name/message is enough to diagnose.
       Sentry.captureException(new Error(`Resend API error: ${sendError.message}`), {
         tags: { route: "contact" },
-        extra: { senderName: fullName, senderEmail: email, resendError: sendError },
+        extra: { resendErrorName: sendError.name },
       });
       return Response.json({ error: "Failed to send message. Please try again." }, { status: 500 });
     }
@@ -158,11 +160,9 @@ export async function POST(req: Request) {
     return Response.json({ ok: true });
   } catch (err) {
     console.error("Resend error:", err);
+    // No PII to Sentry — see the sendError branch above.
     Sentry.captureException(err, {
       tags: { route: "contact" },
-      // PII: name + email are intentional — chamber needs to know who hit
-      // the error. Sentry's sendDefaultPii is on; this matches that policy.
-      extra: { senderName: fullName, senderEmail: email },
     });
     return Response.json({ error: "Failed to send message. Please try again." }, { status: 500 });
   }

@@ -47,11 +47,37 @@ describe("getSiteOrigin — production (fail closed + allowlist)", () => {
     expect(getSiteOrigin(httpReq)).toBe("https://medinaohchamber.com");
   });
 
-  it("honors an allowlisted preview domain (vercel.app)", () => {
+  it("honors THIS deployment's own Vercel host (exact match on VERCEL_BRANCH_URL)", () => {
     vi.stubEnv("NODE_ENV", "production");
     vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://medinaohchamber.com");
+    vi.stubEnv("VERCEL_BRANCH_URL", "medina-chamber-git-pr1.vercel.app");
     const preview = reqFrom("https://medina-chamber-git-pr1.vercel.app/api/join");
     expect(getSiteOrigin(preview)).toBe("https://medina-chamber-git-pr1.vercel.app");
+  });
+
+  it("ignores an arbitrary *.vercel.app host that is NOT this deployment", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://medinaohchamber.com");
+    vi.stubEnv("VERCEL_URL", "");
+    vi.stubEnv("VERCEL_BRANCH_URL", "");
+    // Any Vercel customer can register attacker-anything.vercel.app — a bare
+    // suffix rule would trust it. Only exact deployment hosts may pass.
+    const foreign = reqFrom("https://attacker-anything.vercel.app/api/join");
+    expect(getSiteOrigin(foreign)).toBe("https://medinaohchamber.com");
+  });
+
+  it("ignores subdomains of the canonical domains (business.* is externally hosted)", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://medinaohchamber.com");
+    const growthzone = reqFrom("https://business.medinachamber.com/api/join");
+    expect(getSiteOrigin(growthzone)).toBe("https://medinaohchamber.com");
+  });
+
+  it("honors the www variant of a canonical domain", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://medinaohchamber.com");
+    const www = reqFrom("https://www.medinachamber.com/api/join");
+    expect(getSiteOrigin(www)).toBe("https://www.medinachamber.com");
   });
 
   it("strips a trailing slash from the configured canonical URL", () => {

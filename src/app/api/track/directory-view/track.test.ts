@@ -1,7 +1,7 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 const applyRateLimit = vi.fn(async () => null as Response | null);
-vi.mock("@/lib/rate-limit", () => ({ applyRateLimit, formLimiter: {} }));
+vi.mock("@/lib/rate-limit", () => ({ applyRateLimit, trackLimiter: {} }));
 
 const logEngagement = vi.fn(async (_db: unknown, _i: Record<string, unknown>) => {});
 vi.mock("@/lib/engagement", () => ({ logEngagement }));

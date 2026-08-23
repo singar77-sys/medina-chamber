@@ -36,6 +36,11 @@ What to improve:
 
 ### 2. Medium: Admin auth token is accepted in the query string
 
+> **RESOLVED 2026-08-23.** The `?token=` / Bearer guard no longer exists —
+> admin routes are gated by an HttpOnly, HMAC-signed session cookie
+> (`requireAdminSession` in `src/lib/admin-auth.ts`), set at login and never
+> present in URLs. The line references below describe the removed code.
+
 Evidence:
 - `src/lib/admin-auth.ts:27-36` accepts `?token=<token>` in addition to `Authorization: Bearer`.
 - `src/app/api/admin/chat-log/route.ts:7-12` documents `token=<string>` in query params.

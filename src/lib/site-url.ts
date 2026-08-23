@@ -7,9 +7,10 @@
  * one-time login link — to an attacker's domain. So:
  *
  *   • Production — REQUIRE NEXT_PUBLIC_SITE_URL (fail closed if unset). A
- *     request-derived origin is used ONLY if it exactly matches the allowlist
- *     (the canonical site + known Vercel preview domains); otherwise the
- *     canonical URL wins. A spoofed Host can never influence the result.
+ *     request-derived origin is used ONLY if its hostname exactly matches the
+ *     allowlist (the canonical hostnames + THIS deployment's own Vercel URLs);
+ *     otherwise the canonical URL wins. A spoofed Host can never influence the
+ *     result.
  *
  *   • Development — fall back to the request origin freely (localhost:3000,
  *     LAN IPs, etc.) so local runs need zero config.
@@ -20,12 +21,27 @@
 
 const CANONICAL_FALLBACK = "https://medinaohchamber.com";
 
-/** Hostname suffixes we trust for request-derived origins in production. */
-const ALLOWED_HOST_SUFFIXES = [
+/**
+ * Exact hostnames we trust for request-derived origins. No suffix/wildcard
+ * matching: business.medinachamber.com is externally hosted (GrowthZone) and
+ * must never pass this trust boundary, and a ".vercel.app" suffix rule would
+ * trust every Vercel customer's deployment, not just ours. This deployment's
+ * own preview/production hostnames are matched exactly via the Vercel-provided
+ * env vars below instead.
+ */
+const ALLOWED_HOSTS = new Set([
   "medinaohchamber.com",
+  "www.medinaohchamber.com",
   "medinachamber.com",
-  ".vercel.app", // Vercel preview + production deployment URLs
-];
+  "www.medinachamber.com",
+]);
+
+/** This deployment's own hostnames, injected by Vercel (no protocol prefix). */
+function deploymentHosts(): string[] {
+  return [process.env.VERCEL_URL, process.env.VERCEL_BRANCH_URL]
+    .filter((h): h is string => !!h)
+    .map((h) => h.toLowerCase());
+}
 
 export function isAllowedOrigin(origin: string): boolean {
   let host: string;
@@ -38,12 +54,7 @@ export function isAllowedOrigin(origin: string): boolean {
     return false;
   }
   if (protocol !== "https:") return false;
-  return ALLOWED_HOST_SUFFIXES.some(
-    (suffix) =>
-      suffix.startsWith(".")
-        ? host.endsWith(suffix)
-        : host === suffix || host.endsWith(`.${suffix}`),
-  );
+  return ALLOWED_HOSTS.has(host) || deploymentHosts().includes(host);
 }
 
 /**

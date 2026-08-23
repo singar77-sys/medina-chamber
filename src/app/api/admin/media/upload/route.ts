@@ -83,7 +83,18 @@ export async function POST(req: Request): Promise<Response> {
   }
 
   const description = (formData.get("description") as string | null)?.trim() ?? "";
-  const eventSlug = (formData.get("eventSlug") as string | null)?.trim() || undefined;
+  const rawEventSlug = (formData.get("eventSlug") as string | null)?.trim() || undefined;
+  // eventSlug becomes both a Blob pathname segment (events/<slug>/...) and a
+  // Redis key component (cms:media:event:<slug>), so it must be a plain slug —
+  // reject rather than silently normalize, or the stored key would no longer
+  // match the actual event's slug.
+  if (rawEventSlug && !/^[a-z0-9](?:[a-z0-9-]{0,118}[a-z0-9])?$/.test(rawEventSlug)) {
+    return NextResponse.json(
+      { error: "eventSlug must be a lowercase-hyphen slug." },
+      { status: 400 },
+    );
+  }
+  const eventSlug = rawEventSlug;
   const type = (formData.get("type") as string | null) ?? "photo";
 
   // ── Convert to WebP via sharp ──────────────────────────────────────────────

@@ -38,6 +38,15 @@ const PER_IP_BLOCK_TOKENS = Number(
 // if an attack is in flight.
 const KEY_TTL_SECONDS = 2 * 60 * 60;
 
+/** Subnet-level anonymization for external telemetry (v4 → a.b.0.0). */
+function anonymizeIp(ip: string): string {
+  const v4 = ip.split(".");
+  if (v4.length === 4) return `${v4[0]}.${v4[1]}.0.0`;
+  const v6 = ip.split(":");
+  if (v6.length > 2) return `${v6.slice(0, 4).join(":")}::`;
+  return ip.slice(0, 8);
+}
+
 function currentHourSuffix(): string {
   // YYYY-MM-DDTHH — per-hour bucket, UTC.
   return new Date().toISOString().slice(0, 13);
@@ -104,8 +113,11 @@ export async function recordIpTokenUsage(
       });
       if (firstTime === "OK") {
         const overBlock = newTotal >= PER_IP_BLOCK_TOKENS;
+        // Anonymized IP only — Sentry is a third party, and the subnet is
+        // enough to act on. The full address stays in Redis (2h TTL) under
+        // chat:tokens:ip:* if an active attack needs the exact host.
         Sentry.captureMessage(
-          `chat: IP ${ip} burned ${newTotal} tokens this hour (threshold: ${PER_IP_WARN_TOKENS})`,
+          `chat: IP ${anonymizeIp(ip)} burned ${newTotal} tokens this hour (threshold: ${PER_IP_WARN_TOKENS})`,
           {
             level: overBlock ? "error" : "warning",
             tags: {
@@ -114,7 +126,7 @@ export async function recordIpTokenUsage(
               severity: overBlock ? "blocked" : "warned",
             },
             extra: {
-              ip,
+              ip: anonymizeIp(ip),
               hourTotal: newTotal,
               warnThreshold: PER_IP_WARN_TOKENS,
               blockThreshold: PER_IP_BLOCK_TOKENS,

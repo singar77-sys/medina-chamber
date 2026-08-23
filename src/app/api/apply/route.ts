@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { formLimiter, applyRateLimit } from "@/lib/rate-limit";
+import { readJsonBounded } from "@/lib/body-limit";
 import { resend, CHAMBER_NOTIFY_EMAIL, EMAIL_RE } from "@/lib/email";
 import { escHtml, pickString, pickOptional } from "@/lib/sanitize";
 
@@ -31,13 +32,10 @@ export async function POST(req: NextRequest) {
   const limited = await applyRateLimit(req, formLimiter);
   if (limited) return limited;
 
-  // 1. Body must be valid JSON
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
-  }
+  // 1. Body must be valid JSON and under the size ceiling (413 if oversized)
+  const parsed = await readJsonBounded(req);
+  if ("response" in parsed) return parsed.response;
+  const body = parsed.body;
   if (!body || typeof body !== "object") {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
@@ -50,8 +48,10 @@ export async function POST(req: NextRequest) {
   //    adjust tactics) but never touch Resend or the chamber inbox.
   const honeypot = typeof raw.website_confirm === "string" ? raw.website_confirm.trim() : "";
   const formLoadedAt = typeof raw.formLoadedAt === "number" ? raw.formLoadedAt : 0;
+  // fillMs >= 0: a negative gap means the visitor's device clock runs ahead of
+  // the server's — a real human, not a bot (same guard as the contact route).
   const fillMs = Date.now() - formLoadedAt;
-  if (honeypot || (formLoadedAt > 0 && fillMs < MIN_FILL_MS)) {
+  if (honeypot || (formLoadedAt > 0 && fillMs >= 0 && fillMs < MIN_FILL_MS)) {
     Sentry.captureMessage("apply form rejected by honeypot/timing", {
       level: "info",
       tags: { route: "apply", phase: "honeypot" },

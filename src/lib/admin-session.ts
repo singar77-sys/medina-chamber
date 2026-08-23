@@ -173,7 +173,12 @@ export async function readSession(token: string): Promise<Payload | null> {
   }
 }
 
-/** Boolean gate used by the proxy guard and the /api/admin/* guard. */
+/**
+ * Boolean convenience wrapper over readSession. The production guards
+ * (proxy.ts, admin-auth.ts) call readSession directly because they need
+ * payload.sub for isCurrentAdmin; this survives for tests and any caller
+ * that only needs valid/invalid.
+ */
 export async function verifySession(token: string): Promise<boolean> {
   return (await readSession(token)) !== null;
 }

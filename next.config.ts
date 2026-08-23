@@ -2,13 +2,15 @@ import type { NextConfig } from "next";
 import path from "node:path";
 import { withSentryConfig } from "@sentry/nextjs";
 
-// Security response headers applied to every route. We do NOT set CSP
-// here — a strict CSP requires per-page nonces for the JSON-LD
-// `dangerouslySetInnerHTML` blocks scattered across the app, which is
-// non-trivial to retrofit. Without nonces, a CSP strict enough to be
-// useful would break the site. We get most of the win from frame-ancestors
-// (clickjacking) and X-Content-Type-Options (MIME sniffing) without that
-// trade-off; HSTS is auto-applied by Vercel on the apex domain.
+// Security response headers applied to every route. CSP is NOT set here —
+// it lives in src/proxy.ts, which serves a two-tier policy: per-request
+// nonce + strict-dynamic on the dynamic /admin and /portal routes, and a
+// static-page policy (script-src 'self' 'unsafe-inline', required by Next's
+// inline hydration payload) everywhere else. JSON-LD blocks turned out not
+// to need nonces at all — type="application/ld+json" is data, never executed
+// (see the analysis in proxy.ts). X-Frame-Options below is the legacy twin
+// of proxy.ts's frame-ancestors 'none'; HSTS is auto-applied by Vercel on
+// the apex domain.
 const securityHeaders = [
   // Clickjacking — prevent any site from embedding us in a frame/iframe
   { key: "X-Frame-Options", value: "DENY" },

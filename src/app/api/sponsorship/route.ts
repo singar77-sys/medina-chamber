@@ -10,6 +10,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { formLimiter, applyRateLimit } from "@/lib/rate-limit";
+import { readJsonBounded } from "@/lib/body-limit";
 import { EMAIL_RE } from "@/lib/email";
 import { pickString, pickOptional } from "@/lib/sanitize";
 import { db } from "@/lib/db";
@@ -26,22 +27,22 @@ export async function POST(req: NextRequest) {
   const limited = await applyRateLimit(req, formLimiter);
   if (limited) return limited;
 
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
-  }
+  const parsed = await readJsonBounded(req);
+  if ("response" in parsed) return parsed.response;
+  const body = parsed.body;
   if (!body || typeof body !== "object") {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
   const raw = body as Record<string, unknown>;
 
   // Honeypot + timing — bots fill the hidden field and submit instantly. Silent
-  // 200 so they don't adjust tactics.
+  // 200 so they don't adjust tactics. fillMs >= 0: a negative gap means the
+  // visitor's device clock runs ahead of the server's — a real human, not a
+  // bot (same guard as the contact route).
   const honeypot = typeof raw.website_confirm === "string" ? raw.website_confirm.trim() : "";
   const formLoadedAt = typeof raw.formLoadedAt === "number" ? raw.formLoadedAt : 0;
-  if (honeypot || (formLoadedAt > 0 && Date.now() - formLoadedAt < MIN_FILL_MS)) {
+  const fillMs = Date.now() - formLoadedAt;
+  if (honeypot || (formLoadedAt > 0 && fillMs >= 0 && fillMs < MIN_FILL_MS)) {
     return NextResponse.json({ success: true });
   }
 

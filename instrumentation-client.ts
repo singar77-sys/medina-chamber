@@ -11,7 +11,8 @@ import * as Sentry from "@sentry/nextjs";
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-  sendDefaultPii: true,
+  // Data minimization — see sentry.server.config.ts for the rationale.
+  sendDefaultPii: false,
   // Trace 100% in dev so we see everything; 10% in prod to stay under
   // free-tier quota at chamber-traffic scale.
   tracesSampleRate: process.env.NODE_ENV === "development" ? 1.0 : 0.1,

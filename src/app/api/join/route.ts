@@ -76,8 +76,10 @@ export async function POST(req: NextRequest): Promise<Response> {
   // Honeypot + timing — silent 200 on a bot, never touching the DB or Stripe.
   const honeypot = typeof raw.website_confirm === "string" ? raw.website_confirm.trim() : "";
   const formLoadedAt = typeof raw.formLoadedAt === "number" ? raw.formLoadedAt : 0;
+  // fillMs >= 0: a negative gap means the visitor's device clock runs ahead of
+  // the server's — a real human, not a bot (same guard as the contact route).
   const fillMs = Date.now() - formLoadedAt;
-  if (honeypot || (formLoadedAt > 0 && fillMs < MIN_FILL_MS)) {
+  if (honeypot || (formLoadedAt > 0 && fillMs >= 0 && fillMs < MIN_FILL_MS)) {
     Sentry.captureMessage("join form rejected by honeypot/timing", {
       level: "info",
       tags: { route: "join", phase: "honeypot" },

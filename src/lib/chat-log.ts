@@ -14,7 +14,8 @@
  * Storage shape per conversation:
  *   key: chat:log:<yyyy-mm-dd>:<sessionId>
  *   val: JSON {
- *     sessionId, ip, startedAt, updatedAt, turns[], topic?
+ *     sessionId, ip (keyed hash, never the raw address), startedAt,
+ *     updatedAt, turns[], topic?
  *   }
  *   ttl: 90 days (configurable via env)
  *
@@ -27,8 +28,8 @@
  *   chat:stats:messages:<yyyy-mm-dd>        → daily message count
  *   chat:stats:topic:<yyyy-mm-dd>:<topic>   → topic histogram per day
  *
- * Admin-only — conversations are queried via /api/admin/chat-log
- * behind an env-var token. No client-exposed surface.
+ * Admin-only — conversations are queried via /api/admin/chat-log behind
+ * the admin session cookie (requireAdminSession). No client-exposed surface.
  */
 
 import { getRedis } from "@/lib/upstash";
@@ -42,11 +43,38 @@ const STATS_TTL_SECONDS = (LOG_TTL_DAYS + 30) * 24 * 60 * 60;
 
 export interface ConversationLog {
   sessionId: string;
+  /** Keyed hash of the client IP (`ip#<16 hex>`) — the raw address is never
+   *  stored. Stable per visitor, so same-visitor correlation still works. */
   ip: string;
   startedAt: string;
   updatedAt: string;
   turns: ChatTurn[];
   topic?: string;
+}
+
+/**
+ * The 90-day log needs "same visitor?" correlation for abuse forensics, not
+ * identity — and the privacy page promises the IP is used for abuse
+ * prevention only. So we store a keyed HMAC-SHA256 prefix instead of the
+ * address: keyed (ADMIN_SESSION_SECRET, always set in prod) so the 32-bit
+ * IPv4 space can't simply be hashed-and-compared back to addresses. Raw IPs
+ * still exist where abuse handling actually needs them: the rate limiter and
+ * per-ip-watch keys, both short-TTL and derived per request.
+ */
+async function hashIpForLog(ip: string): Promise<string> {
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    enc.encode(process.env.ADMIN_SESSION_SECRET || "chat-log-dev-unkeyed"),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const mac = await crypto.subtle.sign("HMAC", key, enc.encode(ip));
+  const hex = Array.from(new Uint8Array(mac).slice(0, 8))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+  return `ip#${hex}`;
 }
 
 function todayKey(): string {
@@ -93,7 +121,7 @@ export async function logConversation(
     const existing = await redis.get<ConversationLog>(logKey(date, sessionId));
     const record: ConversationLog = {
       sessionId,
-      ip,
+      ip: await hashIpForLog(ip),
       startedAt: existing?.startedAt ?? now,
       updatedAt: now,
       turns,

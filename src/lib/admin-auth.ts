@@ -2,14 +2,15 @@
  * Shared auth gate for /api/admin/* routes.
  *
  * Reads the httpOnly `admin_session` cookie and verifies it with
- * verifySession (HMAC-SHA256 over ADMIN_SESSION_SECRET, see admin-session.ts).
+ * readSession (HMAC-SHA256 over ADMIN_SESSION_SECRET, see admin-session.ts).
  * This replaces the old Bearer-token / ?token= guard — the session cookie
  * is set server-side at login and is never exposed to JavaScript, access
  * logs, browser history, or Referer headers.
  *
  * Fail-closed:
- *   - 503 if CHAT_ADMIN_TOKEN is unset or shorter than 16 chars (not
- *     configured — never accidentally open with a default credential).
+ *   - 503 if admin auth is unusable: shared mode without a valid
+ *     CHAT_ADMIN_TOKEN (>=16 chars), or ADMIN_USERS set but malformed/weak
+ *     (see getAdminAuthStatus — named mode needs no CHAT_ADMIN_TOKEN).
  *   - 401 if the cookie is missing or fails verification.
  *   - null if authorized and OK to proceed.
  *
@@ -21,8 +22,8 @@
  * that construct raw Request objects work unchanged.
  */
 
-import { ADMIN_COOKIE, getAdminSecret, readSession } from "@/lib/admin-session";
-import { isCurrentAdmin } from "@/lib/admin-users";
+import { ADMIN_COOKIE, readSession } from "@/lib/admin-session";
+import { getAdminAuthStatus, isCurrentAdmin } from "@/lib/admin-users";
 import { assertSameOrigin } from "@/lib/csrf";
 
 function extractSessionCookie(req: Request): string | null {
@@ -44,7 +45,7 @@ export async function requireAdminSession(req: Request): Promise<Response | null
   const csrf = assertSameOrigin(req);
   if (csrf) return csrf;
 
-  if (!getAdminSecret())
+  if (getAdminAuthStatus() !== "ok")
     return Response.json({ error: "Admin access not configured." }, { status: 503 });
   const token = extractSessionCookie(req);
   if (!token) return Response.json({ error: "Unauthorized." }, { status: 401 });

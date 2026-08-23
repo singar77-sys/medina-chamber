@@ -31,7 +31,9 @@ export async function POST(req: NextRequest): Promise<Response> {
   } catch {
     return NextResponse.json({ ok: false }, { status: 400 });
   }
-  if (!slug) return NextResponse.json({ ok: false }, { status: 400 });
+  // Real member slugs are short lowercase-hyphen strings; an unbounded value
+  // would otherwise flow into the DB lookup and engagement metadata as-is.
+  if (!slug || slug.length > 120) return NextResponse.json({ ok: false }, { status: 400 });
 
   try {
     const [org] = await db

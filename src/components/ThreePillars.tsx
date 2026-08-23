@@ -67,14 +67,14 @@ const PILLARS: Pillar[] = [
 
 export function ThreePillars() {
   return (
-    <section className="tp-section rule-top relative mx-auto max-w-7xl px-6 lg:px-8 py-20 lg:py-28">
+    <section className="tp-section rule-top relative mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
       <div className="tp-honeycomb" aria-hidden="true" />
       <FadeIn>
-        <div className="grid lg:grid-cols-[1.25fr_1fr] gap-10 lg:gap-14 items-end mb-14 lg:mb-16">
+        <div className="grid lg:grid-cols-[1.25fr_1fr] gap-f34 lg:gap-f55 items-end mb-f55">
           <div>
-            <p className="text-overline text-cambridge mb-3">Why Members Join</p>
+            <p className="text-overline text-cambridge mb-f13">Why Members Join</p>
             <h2 className="text-h2">How the Chamber works for you.</h2>
-            <p className="text-body-lg text-text-secondary mt-4 max-w-xl leading-relaxed">
+            <p className="text-body-lg text-text-secondary mt-f13 max-w-xl leading-relaxed">
               Since 1938, from our downtown Medina headquarters, the Chamber has
               served as the voice, the network, and the growth engine for
               Medina County business.
@@ -90,7 +90,7 @@ export function ThreePillars() {
               quality={70}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-oxford/50 via-transparent to-transparent pointer-events-none" />
-            <div className="absolute bottom-3 left-3 bg-oxford/80 backdrop-blur-sm text-white text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">
+            <div className="absolute bottom-3 left-3 bg-oxford/80 backdrop-blur-sm text-white text-[11px] font-bold uppercase tracking-widest px-f13 py-f5 rounded-full">
               139 N. Court Street
             </div>
           </div>
@@ -177,7 +177,7 @@ function PillarGrid() {
   return (
     <div
       ref={gridRef}
-      className="tp-grid grid md:grid-cols-3 gap-6"
+      className="tp-grid grid md:grid-cols-3 gap-f21"
       style={{ "--tp-sx": 0.5, "--tp-sy": 0.5 } as CSSProperties}
     >
       {PILLARS.map((pillar, i) => (
@@ -307,14 +307,14 @@ function PillarCard({ pillar }: { pillar: Pillar }) {
             <p className="text-caption text-cambridge font-bold uppercase tracking-wider">
               {pillar.label}
             </p>
-            <h3 className="text-h3 mt-2 mb-3">{pillar.title}</h3>
+            <h3 className="text-h3 mt-f8 mb-f13">{pillar.title}</h3>
           </div>
           <p className="text-body-sm text-text-secondary leading-relaxed flex-1">
             {pillar.desc}
           </p>
           <Link
             href={pillar.href}
-            className="tp-card__cta mt-5 text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors inline-flex items-center gap-1"
+            className="tp-card__cta mt-f21 text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors inline-flex items-center gap-f5"
           >
             <span>{pillar.cta}</span>
           </Link>

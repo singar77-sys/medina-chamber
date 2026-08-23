@@ -80,13 +80,13 @@ const PARTNERS: Partner[] = [
 
 export function PartnersMarquee() {
   return (
-    <section className="pm-section bg-bg-secondary border-y border-border-secondary py-16 lg:py-24">
+    <section className="pm-section bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <FadeIn>
-          <div className="max-w-3xl mb-10 lg:mb-14">
-            <p className="text-overline text-cambridge mb-3">Partners & Sponsors</p>
+          <div className="max-w-3xl mb-f34 lg:mb-f55">
+            <p className="text-overline text-cambridge mb-f13">Partners & Sponsors</p>
             <h2 className="text-h2">Built on strong relationships.</h2>
-            <p className="text-body-lg text-text-secondary mt-4 leading-relaxed">
+            <p className="text-body-lg text-text-secondary mt-f13 leading-relaxed">
               These organizations power the programs, savings, and community
               our members count on. Every Chamber initiative is stronger
               because of the partners standing with us.
@@ -95,7 +95,7 @@ export function PartnersMarquee() {
         </FadeIn>
 
         <FadeIn delay={150}>
-          <div className="pm-grid grid grid-cols-3 lg:grid-cols-6 gap-3 lg:gap-5">
+          <div className="pm-grid grid grid-cols-3 lg:grid-cols-6 gap-f13 lg:gap-f21">
             {PARTNERS.map((p) => {
               const inner = (
                 <>
@@ -147,7 +147,7 @@ export function PartnersMarquee() {
         </FadeIn>
 
         <FadeIn delay={250}>
-          <div className="flex items-center justify-between flex-wrap gap-4 border-t border-border-secondary pt-6 mt-10 lg:mt-14">
+          <div className="flex items-center justify-between flex-wrap gap-f13 border-t border-border-secondary pt-f21 mt-f34 lg:mt-f55">
             <p className="text-body-sm text-text-tertiary">
               Interested in becoming a Chamber sponsor?
             </p>

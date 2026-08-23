@@ -2387,7 +2387,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 2rem;
+  padding: var(--f34);
   background: var(--bg-secondary);
   border: 1px solid var(--border-secondary);
   border-radius: var(--radius-lg);

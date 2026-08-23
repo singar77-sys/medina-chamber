@@ -182,7 +182,7 @@ export default function HomePage() {
                     duration={s.end > 100 ? 2400 : 1600}
                   />
                 </p>
-                <p className="text-caption text-text-tertiary mt-2 uppercase tracking-wider">
+                <p className="text-caption text-text-tertiary mt-f8 uppercase tracking-wider">
                   {s.label}
                 </p>
               </div>
@@ -201,7 +201,7 @@ export default function HomePage() {
           <FadeIn>
             <div className="flex items-end justify-between mb-f34 gap-f21 flex-wrap">
               <div>
-                <p className="text-overline text-cambridge mb-2">Upcoming Events</p>
+                <p className="text-overline text-cambridge mb-f8">Upcoming Events</p>
                 <h2 className="text-h2">What&apos;s next in Medina business.</h2>
               </div>
               <Link
@@ -322,13 +322,13 @@ export default function HomePage() {
                   ) : null}
 
                   {/* Date badge header */}
-                  <div className="flex items-center gap-3 p-5 border-b border-border-secondary">
+                  <div className="flex items-center gap-f13 p-f21 border-b border-border-secondary">
                     <div className="flex-shrink-0 w-14 text-center">
-                      <div className="bg-oxford text-white rounded-[var(--radius-md)] py-1.5 px-1">
+                      <div className="bg-oxford text-white rounded-[var(--radius-md)] py-f5 px-f5">
                         <p className="text-[10px] font-bold uppercase tracking-widest text-cambridge leading-none">
                           {event.month.substring(0, 3)}
                         </p>
-                        <p className="text-xl font-bold leading-tight mt-0.5">
+                        <p className="text-xl font-bold leading-tight mt-f3">
                           {event.day}
                         </p>
                       </div>
@@ -337,7 +337,7 @@ export default function HomePage() {
                       <p className="text-caption text-cambridge font-bold uppercase tracking-wider">
                         {event.dayOfWeek}
                       </p>
-                      <p className="text-caption text-text-tertiary mt-0.5">
+                      <p className="text-caption text-text-tertiary mt-f3">
                         {event.startTime}
                         {event.endTime ? `–${event.endTime}` : ""}
                       </p>
@@ -345,12 +345,12 @@ export default function HomePage() {
                   </div>
 
                   {/* Title + details */}
-                  <div className="flex flex-col flex-1 p-5 min-w-0">
+                  <div className="flex flex-col flex-1 p-f21 min-w-0">
                     <h3 className="text-h4 leading-snug line-clamp-2 group-hover:text-accent transition-colors">
                       {shortenEventTitle(event.title)}
                     </h3>
                     {event.location && (
-                      <p className="text-caption text-text-tertiary mt-2 truncate">
+                      <p className="text-caption text-text-tertiary mt-f8 truncate">
                         {event.location}
                       </p>
                     )}
@@ -361,7 +361,7 @@ export default function HomePage() {
                         ragged hole where Chamber Chat / Business Brew
                         show their cambridge pricing line. Fallback "Free"
                         keeps the visual rhythm consistent. */}
-                    <p className="text-body-sm text-cambridge mt-3 font-medium line-clamp-1">
+                    <p className="text-body-sm text-cambridge mt-f13 font-medium line-clamp-1">
                       {(() => {
                         if (!event.pricing) return "Free";
                         // First line, then first sentence — prevents mid-word truncation
@@ -377,7 +377,7 @@ export default function HomePage() {
                           : firstLine;
                       })()}
                     </p>
-                    <p className="mt-auto pt-4 text-body-sm font-bold text-cambridge group-hover:translate-x-1 transition-transform">
+                    <p className="mt-auto pt-f13 text-body-sm font-bold text-cambridge group-hover:translate-x-1 transition-transform">
                       Event details →
                     </p>
                   </div>
@@ -436,7 +436,7 @@ export default function HomePage() {
                 From $5,999 per person.
               </p>
             </div>
-            <span className="shrink-0 inline-flex items-center gap-2 text-body-sm font-bold text-cambridge group-hover:translate-x-1 transition-transform">
+            <span className="shrink-0 inline-flex items-center gap-f8 text-body-sm font-bold text-cambridge group-hover:translate-x-1 transition-transform">
               Explore the trip →
             </span>
           </Link>
@@ -476,7 +476,7 @@ export default function HomePage() {
             {/* Golden ratio columns: 1fr : φ (1.618fr) — exact divine proportion */}
             <div className="grid lg:grid-cols-[1fr_1.618fr] gap-f34 lg:gap-f55 items-start">
               <div>
-                <p className="text-overline text-cambridge mb-3">Meeting Space</p>
+                <p className="text-overline text-cambridge mb-f13">Meeting Space</p>
                 <h2 className="text-h2">
                   Need a room for your next&nbsp;
                   <span className="text-accent">meeting</span>?

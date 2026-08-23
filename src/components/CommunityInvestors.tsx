@@ -39,7 +39,7 @@ function LogoTile({ m, ghost = false }: LogoTileProps) {
       className={`
         ci-card
         flex-shrink-0 flex items-center justify-center
-        w-36 h-[4.5rem] px-3 mr-3
+        w-36 h-[4.5rem] px-f13 mr-f13
         bg-white border border-black/8 hover:border-cambridge/60
         rounded-[var(--radius-md)]
         transition-colors duration-200
@@ -81,7 +81,7 @@ export function CommunityInvestors({
   ].filter((r) => r.length > 0);
 
   return (
-    <section className={`ci-section border-t border-border-secondary bg-bg-secondary py-20 lg:py-28${backdropSrc ? " relative overflow-hidden" : ""}`}>
+    <section className={`ci-section border-t border-border-secondary bg-bg-secondary py-f89 lg:py-f144${backdropSrc ? " relative overflow-hidden" : ""}`}>
       {backdropSrc && (
         <div className="absolute inset-0 pointer-events-none select-none" aria-hidden="true">
           <Image
@@ -98,15 +98,15 @@ export function CommunityInvestors({
 
         {/* Header */}
         <FadeIn>
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12 lg:mb-16">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-f21 mb-f34 lg:mb-f55">
             <div>
-              <p className="text-overline text-cambridge mb-3 tracking-[0.2em]">
+              <p className="text-overline text-cambridge mb-f13 tracking-[0.2em]">
                 Community Investors
               </p>
               <h2 className="text-h2 text-text-primary">
                 The businesses leading<br />Medina County.
               </h2>
-              <p className="text-body-sm text-text-secondary mt-3 max-w-md leading-relaxed">
+              <p className="text-body-sm text-text-secondary mt-f13 max-w-md leading-relaxed">
                 Our highest-tier members, investing in Medina County&apos;s
                 business community at the top level.
               </p>
@@ -115,7 +115,7 @@ export function CommunityInvestors({
               href="/membership/community-investor"
               className="
                 shrink-0 self-start sm:self-auto
-                inline-flex items-center gap-2 px-5 py-3
+                inline-flex items-center gap-f8 px-f21 py-f13
                 border border-cambridge/40 hover:border-cambridge
                 text-cambridge font-bold text-body-sm
                 rounded-[var(--radius-md)]
@@ -133,19 +133,19 @@ export function CommunityInvestors({
             page keeps the smaller quote at the bottom of the section. */}
         {featuredQuote && (
           <FadeIn delay={50}>
-            <figure className="mx-auto max-w-3xl text-center mb-12 lg:mb-16">
+            <figure className="mx-auto max-w-3xl text-center mb-f34 lg:mb-f55">
               <p
                 className="text-h1 text-cambridge/30 leading-none font-bold select-none"
                 aria-hidden="true"
               >
                 &ldquo;
               </p>
-              <blockquote className="mt-2 text-h3 lg:text-h2 text-text-primary font-medium leading-snug text-balance">
+              <blockquote className="mt-f8 text-h3 lg:text-h2 text-text-primary font-medium leading-snug text-balance">
                 Strong businesses help build strong communities. Through the
                 Chamber, we&apos;re able to play an active role in making Medina
                 County a great place for everyone.
               </blockquote>
-              <figcaption className="mt-6 text-body-sm font-bold text-cambridge uppercase tracking-wider">
+              <figcaption className="mt-f21 text-body-sm font-bold text-cambridge uppercase tracking-wider">
                 Steve Allison &middot; Fire-Dex
               </figcaption>
             </figure>
@@ -154,7 +154,7 @@ export function CommunityInvestors({
 
         {/* Marquee — three tracks, contained within site framing */}
         <FadeIn delay={100}>
-          <div className="space-y-3 overflow-hidden">
+          <div className="space-y-f13 overflow-hidden">
             {rows.map((row, ri) => {
               const direction = ROW_DIRECTIONS[ri] ?? "right";
               const dur = ROW_DURATIONS[ri] ?? 30;
@@ -175,7 +175,7 @@ export function CommunityInvestors({
                       gets a full pass.
                       No flex `gap` either: it puts N-1 gaps between 2N tiles,
                       leaving -50% a half-gap short. Spacing lives on each tile
-                      (mr-3) so every child is a uniform width. */}
+                      (mr-f13) so every child is a uniform width. */}
                   <div
                     className="ci-marquee-track flex w-max"
                     data-direction={direction}
@@ -198,7 +198,7 @@ export function CommunityInvestors({
 
         {/* Footer note */}
         <FadeIn delay={200}>
-          <p className="mt-10 text-caption text-text-tertiary text-center">
+          <p className="mt-f34 text-caption text-text-tertiary text-center">
             Community Investors · Greater Medina Chamber of Commerce ·{" "}
             <Link
               href="/membership/benefits"
@@ -213,11 +213,11 @@ export function CommunityInvestors({
             Community Investor page shows the featured version above instead. */}
         {!featuredQuote && (
           <FadeIn delay={300}>
-            <figure className="mt-10 mx-auto max-w-2xl text-center">
+            <figure className="mt-f34 mx-auto max-w-2xl text-center">
               <blockquote className="text-body-lg lg:text-h4 text-text-primary italic leading-relaxed">
                 &ldquo;Strong businesses help build strong communities. Through the Chamber, we&apos;re able to play an active role in making Medina County a great place for everyone.&rdquo;
               </blockquote>
-              <figcaption className="mt-4 text-body-sm font-bold text-cambridge">
+              <figcaption className="mt-f13 text-body-sm font-bold text-cambridge">
                 Steve Allison &middot; Fire-Dex
               </figcaption>
             </figure>

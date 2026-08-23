@@ -11,7 +11,7 @@ import { BrandShaderBackgroundLazy } from "@/components/effects/BrandShaderBackg
  */
 export function MemberVoice() {
   return (
-    <section className="mv-section relative bg-bg-primary border-y border-border-secondary py-20 lg:py-28 overflow-hidden">
+    <section className="mv-section relative bg-bg-primary border-y border-border-secondary py-f89 lg:py-f144 overflow-hidden">
       {/* Liquid-chrome shader wallpaper — brand-tinted WebGL backdrop
           that flows with time and reacts to cursor. Sits behind the
           quote with pointer-events: none so it never interferes with
@@ -21,7 +21,7 @@ export function MemberVoice() {
 
       <div className="relative z-10 mx-auto max-w-6xl px-6 lg:px-8">
         <FadeIn>
-          <p className="text-overline text-cambridge mb-8 tracking-[0.2em]">
+          <p className="text-overline text-cambridge mb-f34 tracking-[0.2em]">
             Member Voice
           </p>
 
@@ -40,12 +40,12 @@ export function MemberVoice() {
         </FadeIn>
 
         <FadeIn delay={150}>
-          <div className="mt-10 lg:mt-14 grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
+          <div className="mt-f34 lg:mt-f55 grid gap-f21 lg:grid-cols-[1fr_auto] lg:items-end">
             <div>
               <p className="text-caption text-text-tertiary uppercase tracking-[0.18em] font-bold">
                 Attribution
               </p>
-              <p className="text-body-sm text-text-primary mt-2 font-bold">
+              <p className="text-body-sm text-text-primary mt-f8 font-bold">
                 Dan Calvin
                 <span className="text-text-tertiary font-normal">
                   {", "}Critchfield, Critchfield &amp; Johnston, Ltd.
@@ -56,7 +56,7 @@ export function MemberVoice() {
             <Link
               href="/membership/directory"
               className="
-                inline-flex items-center gap-2
+                inline-flex items-center gap-f8
                 text-body-sm font-bold text-cambridge
                 hover:text-cambridge/80 transition-colors
                 justify-self-start lg:justify-self-end

@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { LinkProps } from "next/link";
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes } from "react";
 
-export type ButtonVariant = "primary" | "secondary" | "ghost";
+export type ButtonVariant = "primary" | "secondary" | "ghost" | "emerald";
 export type ButtonSize = "sm" | "md" | "lg";
 
 const BASE =
@@ -14,6 +14,7 @@ const VARIANTS: Record<ButtonVariant, string> = {
   primary: "bg-accent hover:bg-accent-hover text-white",
   secondary: "bg-bg-tertiary hover:bg-border-primary text-text-primary",
   ghost: "border border-border-primary hover:border-text-tertiary text-text-primary",
+  emerald: "bg-emerald hover:bg-emerald/90 text-white",
 };
 
 const SIZES: Record<ButtonSize, string> = {

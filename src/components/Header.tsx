@@ -320,7 +320,7 @@ function MobileMenu({
         <div className="px-f21 pt-f21">
           <ButtonA
             href={memberLogin.href}
-            variant="ghost"
+            variant="emerald"
             size="md"
             className="w-full justify-center"
             onClick={onClose}

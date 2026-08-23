@@ -333,18 +333,18 @@ export default function ItalyTripPage() {
             ))}
           </div>
 
-          <div className="mt-f21 p-f21 bg-oxford border border-cambridge/30 rounded-[var(--radius-lg)]">
+          <div className="mt-f21 p-f21 bg-bg-secondary border border-cambridge/40 rounded-[var(--radius-lg)]">
             <p className="text-caption font-bold text-cambridge uppercase tracking-wider mb-f8">
               Extend Your Vacation
             </p>
-            <p className="text-h4 text-white">Optional 2-Night Rome Pre-Tour Extension</p>
-            <p className="text-body-sm text-white/80 mt-f8 leading-relaxed">
+            <p className="text-h4 text-text-primary">Optional 2-Night Rome Pre-Tour Extension</p>
+            <p className="text-body-sm text-text-secondary mt-f8 leading-relaxed">
               Four days / two nights in Rome before the main tour begins,
               including guided walking tours of the Colosseum and Imperial
               Fora, plus Renaissance and Baroque Rome — the Spanish Steps,
               Trevi Fountain, and the Pantheon. Two breakfasts included.
             </p>
-            <p className="text-body font-bold text-white mt-f13">
+            <p className="text-body font-bold text-text-primary mt-f13">
               $1,299 double / $1,599 single, land only
             </p>
           </div>

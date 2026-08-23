@@ -380,8 +380,23 @@ export default function HomePage() {
       )}
 
       {/* Reflections of Italy — chamber group trip promo, below Upcoming Events */}
-      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f34">
-        <FadeIn>
+      <section className="rule-top relative overflow-hidden py-f34">
+        {/* Ghosted Amalfi Coast sunset panorama */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/programs/italy-trip/medina-chamber-italy-trip-panorama.webp"
+            alt=""
+            fill
+            className="object-cover opacity-[0.10]"
+            sizes="100vw"
+            quality={60}
+          />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <FadeIn>
           <Link
             href="/programs/italy-trip"
             className="
@@ -405,7 +420,8 @@ export default function HomePage() {
               Explore the trip →
             </span>
           </Link>
-        </FadeIn>
+          </FadeIn>
+        </div>
       </section>
 
       {/* Three Pillars (Your Voice / Network / Growth) */}
@@ -430,7 +446,7 @@ export default function HomePage() {
             src="/images/events/networking.webp"
             alt=""
             fill
-            className="object-cover object-top opacity-[0.10]"
+            className="object-cover object-center opacity-[0.15]"
             sizes="100vw"
             quality={60}
           />

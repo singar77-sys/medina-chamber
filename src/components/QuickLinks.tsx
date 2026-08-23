@@ -4,8 +4,9 @@ import { FadeIn } from "@/components/FadeIn";
 
 /**
  * Home-page quick-access row — a compact, modern take on the old Squarespace
- * icon bar. Small monoline symbols in subtle tiles (not the old chunky orange
- * blocks) that lift on hover, so the most-wanted destinations are one tap away.
+ * icon bar. Small monoline symbols in tiles with subtle gradient depth that
+ * lift, scale, and glow cambridge on hover, and rise in with a stagger — so the
+ * most-wanted destinations are one tap away and the row feels alive, not static.
  */
 
 const stroke = {
@@ -24,6 +25,29 @@ interface QuickLink {
 }
 
 const links: QuickLink[] = [
+  {
+    label: "Join",
+    href: "/membership/join",
+    icon: (
+      <svg viewBox="0 0 24 24" {...stroke} className="w-6 h-6" aria-hidden="true">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M19 8v6M22 11h-6" />
+      </svg>
+    ),
+  },
+  {
+    label: "Member Login",
+    href: growthZone.login,
+    external: true,
+    icon: (
+      <svg viewBox="0 0 24 24" {...stroke} className="w-6 h-6" aria-hidden="true">
+        <circle cx="7.5" cy="15.5" r="5.5" />
+        <path d="m21 2-9.6 9.6" />
+        <path d="m15.5 7.5 3 3L22 7l-3-3" />
+      </svg>
+    ),
+  },
   {
     label: "Directory",
     href: "/membership/directory",
@@ -68,37 +92,9 @@ const links: QuickLink[] = [
       </svg>
     ),
   },
-  {
-    label: "Member Login",
-    href: growthZone.login,
-    external: true,
-    icon: (
-      <svg viewBox="0 0 24 24" {...stroke} className="w-6 h-6" aria-hidden="true">
-        <circle cx="7.5" cy="15.5" r="5.5" />
-        <path d="m21 2-9.6 9.6" />
-        <path d="m15.5 7.5 3 3L22 7l-3-3" />
-      </svg>
-    ),
-  },
-  {
-    label: "Join",
-    href: "/membership/join",
-    icon: (
-      <svg viewBox="0 0 24 24" {...stroke} className="w-6 h-6" aria-hidden="true">
-        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M19 8v6M22 11h-6" />
-      </svg>
-    ),
-  },
 ];
 
-function tileClass() {
-  return [
-    "group flex flex-col items-center gap-f8 text-center",
-    "focus-visible:outline-none",
-  ].join(" ");
-}
+const tileClass = "group flex flex-col items-center gap-f8 text-center focus-visible:outline-none";
 
 function IconTile({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
@@ -107,11 +103,13 @@ function IconTile({ icon, label }: { icon: React.ReactNode; label: string }) {
         className="
           flex h-14 w-14 items-center justify-center
           rounded-[var(--radius-lg)]
-          bg-bg-secondary border border-border-secondary
+          bg-gradient-to-b from-bg-secondary to-bg-tertiary
+          border border-border-secondary
           text-text-tertiary
-          transition-all duration-200
-          group-hover:-translate-y-1 group-hover:text-cambridge
-          group-hover:border-cambridge/50 group-hover:shadow-cambridge
+          transition-all duration-300 ease-out
+          group-hover:-translate-y-1.5 group-hover:scale-105
+          group-hover:text-cambridge group-hover:border-cambridge/60
+          group-hover:shadow-[0_14px_30px_-10px_rgba(131,188,169,0.5)]
           group-focus-visible:border-cambridge group-focus-visible:text-cambridge
         "
       >
@@ -131,26 +129,27 @@ export function QuickLinks() {
         <p className="text-overline text-text-tertiary text-center mb-f21">
           Quick Access
         </p>
-        <div className="grid grid-cols-3 sm:grid-cols-6 gap-f21">
-          {links.map((l) =>
-            l.external ? (
+      </FadeIn>
+      <div className="grid grid-cols-3 sm:grid-cols-6 gap-f21">
+        {links.map((l, i) => (
+          <FadeIn key={l.label} delay={i * 70}>
+            {l.external ? (
               <a
-                key={l.label}
                 href={l.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={tileClass()}
+                className={tileClass}
               >
                 <IconTile icon={l.icon} label={l.label} />
               </a>
             ) : (
-              <Link key={l.label} href={l.href} className={tileClass()}>
+              <Link href={l.href} className={tileClass}>
                 <IconTile icon={l.icon} label={l.label} />
               </Link>
-            ),
-          )}
-        </div>
-      </FadeIn>
+            )}
+          </FadeIn>
+        ))}
+      </div>
     </section>
   );
 }

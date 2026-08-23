@@ -40,12 +40,12 @@ export function IndustryChipStrip({
     appearance === "dark"
       ? {
           active: "bg-cambridge text-oxford border-cambridge hover:bg-cambridge/85",
-          idle: "bg-white/5 text-white/85 border-white/15 hover:border-cambridge hover:text-white",
+          idle: "bg-white/5 text-white/85 border-white/15 hover:bg-cambridge/10 hover:border-cambridge hover:text-white hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-[0_8px_24px_-8px_rgba(131,188,169,0.4)]",
           focus: "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge",
         }
       : {
           active: "bg-cambridge text-bg-primary border-cambridge hover:bg-cambridge/85",
-          idle: "bg-bg-primary text-text-secondary border-border-primary hover:border-cambridge hover:text-text-primary",
+          idle: "bg-bg-primary text-text-secondary border-border-primary hover:bg-surface-cambridge hover:border-cambridge hover:text-text-primary hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-cambridge",
           focus:
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cambridge focus-visible:ring-offset-2 focus-visible:ring-offset-bg-primary",
         };
@@ -74,7 +74,7 @@ export function IndustryChipStrip({
               text-body-sm font-medium
               px-f13
               rounded-[var(--radius-md)]
-              border transition-colors duration-200
+              border transition-all duration-200
               ${chipClasses.focus}
               ${isActive ? chipClasses.active : chipClasses.idle}
             `}

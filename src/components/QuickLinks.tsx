@@ -124,31 +124,33 @@ function IconTile({ icon, label }: { icon: React.ReactNode; label: string }) {
 
 export function QuickLinks() {
   return (
-    <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55">
-      <FadeIn>
-        <p className="text-overline text-text-tertiary text-center mb-f21">
-          Quick Access
-        </p>
-      </FadeIn>
-      <div className="grid grid-cols-3 sm:grid-cols-6 gap-f21">
-        {links.map((l, i) => (
-          <FadeIn key={l.label} delay={i * 70}>
-            {l.external ? (
-              <a
-                href={l.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={tileClass}
-              >
-                <IconTile icon={l.icon} label={l.label} />
-              </a>
-            ) : (
-              <Link href={l.href} className={tileClass}>
-                <IconTile icon={l.icon} label={l.label} />
-              </Link>
-            )}
-          </FadeIn>
-        ))}
+    <section className="border-b border-border-secondary">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-f55">
+        <FadeIn>
+          <p className="text-overline text-text-tertiary text-center mb-f21">
+            Quick Access
+          </p>
+        </FadeIn>
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-f21">
+          {links.map((l, i) => (
+            <FadeIn key={l.label} delay={i * 70}>
+              {l.external ? (
+                <a
+                  href={l.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={tileClass}
+                >
+                  <IconTile icon={l.icon} label={l.label} />
+                </a>
+              ) : (
+                <Link href={l.href} className={tileClass}>
+                  <IconTile icon={l.icon} label={l.label} />
+                </Link>
+              )}
+            </FadeIn>
+          ))}
+        </div>
       </div>
     </section>
   );

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { safeJsonLd } from "@/lib/json-ld";
 import { stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
@@ -68,9 +69,9 @@ const pricing = [
 ];
 
 const addOns = [
-  { name: "Tuscan Feast (Florence)", price: "$129 / person", description: "After-hours monastery visit and a family-style Tuscan dinner with entertainment." },
-  { name: "Venetian Serenaded Gondola Cruise", price: "$79 / person", description: "A serenaded gondola ride along Venice's Grand Canal and smaller side canals." },
-  { name: "Roman Serenade (Rome)", price: "$129 / person", description: "Dinner and live folk music in Trastevere." },
+  { name: "Tuscan Feast (Florence)", price: "$129 / person", description: "After-hours monastery visit and a family-style Tuscan dinner with entertainment.", image: "/images/programs/italy-trip/medina-chamber-italy-trip-tuscan.webp" },
+  { name: "Venetian Serenaded Gondola Cruise", price: "$79 / person", description: "A serenaded gondola ride along Venice's Grand Canal and smaller side canals.", image: "/images/programs/italy-trip/medina-chamber-italy-trip-venetian.webp" },
+  { name: "Roman Serenade (Rome)", price: "$129 / person", description: "Dinner and live folk music in Trastevere.", image: "/images/programs/italy-trip/medina-chamber-italy-trip-roman.webp" },
 ];
 
 export default function ItalyTripPage() {
@@ -168,7 +169,8 @@ export default function ItalyTripPage() {
       </section>
 
       {/* Trip details */}
-      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      <section className="relative overflow-hidden rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+        <VesicaPiscisWatermark className="tp-vesica" />
         <FadeIn>
           <div className="grid sm:grid-cols-3 gap-f21">
             {tripFacts.map((item) => (
@@ -309,13 +311,24 @@ export default function ItalyTripPage() {
             {addOns.map((a) => (
               <div
                 key={a.name}
-                className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
+                className="overflow-hidden bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
               >
-                <p className="text-body font-bold text-text-primary">{a.name}</p>
-                <p className="text-body-sm font-bold text-cambridge mt-f3">{a.price}</p>
-                <p className="text-body-sm text-text-secondary mt-f8 leading-relaxed">
-                  {a.description}
-                </p>
+                <div className="relative aspect-[16/9] w-full">
+                  <Image
+                    src={a.image}
+                    alt={a.name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                </div>
+                <div className="p-f21">
+                  <p className="text-body font-bold text-text-primary">{a.name}</p>
+                  <p className="text-body-sm font-bold text-cambridge mt-f3">{a.price}</p>
+                  <p className="text-body-sm text-text-secondary mt-f8 leading-relaxed">
+                    {a.description}
+                  </p>
+                </div>
               </div>
             ))}
           </div>

@@ -8,6 +8,7 @@ import { FadeIn } from "@/components/FadeIn";
 import { CountUp } from "@/components/CountUp";
 import { MouseGradient } from "@/components/MouseGradient";
 import { ThreePillars } from "@/components/ThreePillars";
+import { QuickLinks } from "@/components/QuickLinks";
 import { PartnersMarquee } from "@/components/PartnersMarquee";
 import { RentalSpaceCards } from "@/components/RentalSpaceCards";
 import { MemberVoice } from "@/components/MemberVoice";
@@ -189,6 +190,9 @@ export default function HomePage() {
           </div>
         </div>
       </MouseGradient>
+
+      {/* Quick access — compact modern shortcut row (replaces the old big icon bar) */}
+      <QuickLinks />
 
       {/* Upcoming Events — py-f89 lg:py-f144 */}
       {upcomingEvents.length > 0 && (

@@ -400,7 +400,7 @@ export default function HomePage() {
           />
         </div>
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
-          <FadeIn>
+          <FadeIn from="left" distance={110}>
           <Link
             href="/programs/italy-trip"
             className="

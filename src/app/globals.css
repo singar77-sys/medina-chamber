@@ -645,10 +645,10 @@ body {
   will-change: opacity, transform;
 }
 
-.fade-in-up    { transform: translateY(28px); }
-.fade-in-down  { transform: translateY(-28px); }
-.fade-in-left  { transform: translateX(-28px); }
-.fade-in-right { transform: translateX(28px); }
+.fade-in-up    { transform: translateY(var(--fade-distance, 28px)); }
+.fade-in-down  { transform: translateY(calc(-1 * var(--fade-distance, 28px))); }
+.fade-in-left  { transform: translateX(calc(-1 * var(--fade-distance, 28px))); }
+.fade-in-right { transform: translateX(var(--fade-distance, 28px)); }
 .fade-in       { transform: none; }
 
 .fade-in.is-visible,

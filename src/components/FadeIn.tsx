@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 
 interface FadeInProps {
   children: ReactNode;
@@ -9,6 +9,9 @@ interface FadeInProps {
   delay?: number;
   /** Direction to fade from: up (default), down, left, right, none */
   from?: "up" | "down" | "left" | "right" | "none";
+  /** Travel distance in px for the slide (default 28). Larger = a more
+      pronounced slide-in; use for hero bands and feature CTAs. */
+  distance?: number;
 }
 
 /**
@@ -22,7 +25,7 @@ interface FadeInProps {
  * delay is stored in a ref so the IntersectionObserver effect can have
  * empty deps (created once) without a stale closure on delay.
  */
-export function FadeIn({ children, className = "", delay = 0, from = "up" }: FadeInProps) {
+export function FadeIn({ children, className = "", delay = 0, from = "up", distance }: FadeInProps) {
   const ref = useRef<HTMLDivElement>(null);
   const delayRef = useRef(delay);
   // Keep ref current on every render (sync, not in an effect)
@@ -61,8 +64,13 @@ export function FadeIn({ children, className = "", delay = 0, from = "up" }: Fad
     none: "fade-in",
   }[from];
 
+  const style =
+    distance != null
+      ? ({ "--fade-distance": `${distance}px` } as CSSProperties)
+      : undefined;
+
   return (
-    <div ref={ref} className={`${directionClass} ${className}`}>
+    <div ref={ref} className={`${directionClass} ${className}`} style={style}>
       {children}
     </div>
   );

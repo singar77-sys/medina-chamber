@@ -2250,6 +2250,69 @@ body {
 }
 
 /* ============================================================
+   HALFTONE FIELD — dot-gradient section backdrop
+   A fine lattice of dots masked into a soft diagonal fade, breathing
+   its opacity in and out. Kept generic so it can sit behind any section
+   whose negative space needs breaking up. Mirrors the vesica watermark's
+   theme-token + reduced-motion conventions.
+   ============================================================ */
+.halftone-field {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  /* Fine dot lattice. 1.3px dots on a 22px grid read as texture, not
+     polka dots. Dot color is theme-set below. */
+  background-image: radial-gradient(
+    circle,
+    var(--halftone-dot) 1.3px,
+    transparent 1.7px
+  );
+  background-size: 22px 22px;
+  background-position: center;
+  /* The "gradient": dots pool in the bottom-left corner and dissolve
+     toward the top-right, so a section's dead space fills in while the
+     content band stays visually clear. */
+  -webkit-mask-image: linear-gradient(
+    to top right,
+    #000 0%,
+    rgba(0, 0, 0, 0.5) 32%,
+    transparent 72%
+  );
+  mask-image: linear-gradient(
+    to top right,
+    #000 0%,
+    rgba(0, 0, 0, 0.5) 32%,
+    transparent 72%
+  );
+  animation: halftoneBreath 8s ease-in-out infinite;
+  will-change: opacity;
+}
+/* Dot color + opacity band per theme. Bare default = system dark. */
+.halftone-field {
+  --halftone-dot: rgb(131, 188, 169);
+  --halftone-floor: 0.14;
+  --halftone-peak: 0.24;
+}
+:root[data-theme="light"] .halftone-field {
+  --halftone-dot: rgb(0, 84, 80);
+  --halftone-floor: 0.09;
+  --halftone-peak: 0.16;
+}
+:root[data-theme="dark"] .halftone-field {
+  --halftone-dot: rgb(131, 188, 169);
+  --halftone-floor: 0.14;
+  --halftone-peak: 0.24;
+}
+@keyframes halftoneBreath {
+  0%, 100% { opacity: var(--halftone-floor, 0.14); }
+  50%      { opacity: var(--halftone-peak, 0.24); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .halftone-field { animation: none; opacity: var(--halftone-floor, 0.14); }
+}
+
+/* ============================================================
    THREE PILLARS — "Why Members Join" section
    3D tilt + per-card reactive SVG graphics + shared cursor awareness.
    ============================================================ */

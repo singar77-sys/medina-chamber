@@ -14,6 +14,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getMergedStaticPhotos } from "@/lib/static-media";
 import { FadeIn } from "@/components/FadeIn";
+import { HalftoneField } from "@/components/effects/HalftoneField";
 
 export async function RecentPhotoStrip() {
   // photos/top-8 is synced nightly from the chamber's SharePoint
@@ -30,8 +31,9 @@ export async function RecentPhotoStrip() {
   if (photos.length < 4) return null;
 
   return (
-    <section className="border-t border-border-primary">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+    <section className="relative overflow-hidden border-t border-border-primary">
+      <HalftoneField />
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
       <FadeIn>
         <div className="flex items-end justify-between mb-f21 gap-f13 flex-wrap">
           <div>

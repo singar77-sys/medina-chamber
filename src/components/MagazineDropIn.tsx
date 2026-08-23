@@ -8,6 +8,15 @@ const SESSION_KEY = "mag-drop-dismissed";
 export function MagazineDropIn() {
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+  const [reduced, setReduced] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(mq.matches);
+    const onChange = () => setReduced(mq.matches);
+    mq.addEventListener?.("change", onChange);
+    return () => mq.removeEventListener?.("change", onChange);
+  }, []);
 
   useEffect(() => {
     if (typeof sessionStorage !== "undefined" && sessionStorage.getItem(SESSION_KEY)) {
@@ -55,11 +64,14 @@ export function MagazineDropIn() {
       <div
         style={{
           transformOrigin: "top center",
-          transform: visible ? "rotateX(0deg)" : "rotateX(-90deg)",
+          // Reduced-motion: no hinge swing — the card simply fades in.
+          transform: reduced ? "none" : visible ? "rotateX(0deg)" : "rotateX(-90deg)",
           opacity: visible ? 1 : 0,
-          transition: visible
-            ? "transform 0.72s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.55s ease 0.15s"
-            : "none",
+          transition: reduced
+            ? "opacity 0.3s ease"
+            : visible
+              ? "transform 0.72s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.55s ease 0.15s"
+              : "none",
           backfaceVisibility: "hidden",
         }}
         className="bg-oxford/70 backdrop-blur-md text-white rounded-b-[var(--radius-lg)] rounded-tr-[var(--radius-lg)] border border-white/15 shadow-[0_28px_72px_rgba(0,0,0,0.35)]"

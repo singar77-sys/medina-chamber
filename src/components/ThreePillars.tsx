@@ -66,8 +66,30 @@ const PILLARS: Pillar[] = [
 ];
 
 export function ThreePillars() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Pause the decorative SVG-graphic pulses (and honeycomb breath) while the
+  // section is scrolled well offscreen — those pulses animate SVG stroke
+  // properties and repaint the main thread, so halting them off-view keeps
+  // scrolling smooth on low-end devices. The 200px rootMargin resumes them
+  // just before the section re-enters view, so the pause is never seen.
+  // (Cursor tilt/spotlight are CSS-var driven, not @keyframes, so unaffected.)
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => el.classList.toggle("tp-anim-paused", !entry.isIntersecting),
+      { rootMargin: "200px 0px 200px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <section className="tp-section rule-top relative mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+    <section
+      ref={sectionRef}
+      className="tp-section rule-top relative mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144"
+    >
       <div className="tp-honeycomb" aria-hidden="true" />
       <FadeIn>
         <div className="grid lg:grid-cols-[1.618fr_1fr] gap-f34 lg:gap-f55 items-end mb-f55">

@@ -2320,6 +2320,14 @@ body {
 /* Honeycomb watermark — ghosted behind all pillar content */
 .tp-section { isolation: isolate; }
 
+/* Halt the section's decorative @keyframes animations while it is scrolled
+   well offscreen (class toggled by an IntersectionObserver in ThreePillars).
+   Only elements that actually run an animation are affected; FadeIn uses
+   transitions, not animations, so scroll-reveal is untouched. */
+.tp-section.tp-anim-paused * {
+  animation-play-state: paused !important;
+}
+
 /* Full-bleed hairline separator at a section's top edge, matching the
    border-y bands but independent of the section's own max-width. A 100vw
    breakout is safe here because body/html use overflow-x: clip. Add to any

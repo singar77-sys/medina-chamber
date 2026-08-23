@@ -45,7 +45,12 @@ export function CountUp({
       ([entry]) => {
         if (entry.isIntersecting && !hasAnimated.current) {
           hasAnimated.current = true;
-          setHasStarted(true);
+          // Respect reduced-motion: leave the number at its seeded final
+          // value (`end`) instead of resetting to 0 and ramping up.
+          const reduced = window.matchMedia?.(
+            "(prefers-reduced-motion: reduce)",
+          ).matches;
+          if (!reduced) setHasStarted(true);
           observer.unobserve(el);
         }
       },

@@ -112,6 +112,8 @@ function IconTile({ icon, label }: { icon: React.ReactNode; label: string }) {
           group-hover:border-accent/60
           group-hover:shadow-[0_14px_30px_-10px_rgba(200,74,30,0.55)]
           group-focus-visible:border-accent
+          group-focus-visible:ring-2 group-focus-visible:ring-accent
+          group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-[var(--bg-primary)]
         "
       >
         {icon}

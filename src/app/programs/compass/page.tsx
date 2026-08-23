@@ -95,8 +95,7 @@ export default async function CompassPage() {
         "compass-leadership-session-3-medina-008.webp",
         "compass-leadership-session-3-medina-010.webp",
         "compass-leadership-session-3-medina-015.webp",
-        "compass-leadership-session-3-medina-007.webp",
-        "compass-leadership-session-3-medina-003.webp",
+        "compass-leadership-session-3-medina-013.webp",
       ],
     },
     {
@@ -109,6 +108,7 @@ export default async function CompassPage() {
         "compass-leadership-session-2-medina-006.webp",
         "compass-leadership-session-2-medina-007.webp",
         "compass-leadership-session-2-medina-009.webp",
+        "compass-leadership-session-2-medina-027.webp",
       ],
     },
   ]);

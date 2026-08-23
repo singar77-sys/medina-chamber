@@ -428,7 +428,7 @@ export default function HomePage() {
       <ThreePillars />
 
       {/* Community Investors */}
-      <CommunityInvestors />
+      <CommunityInvestors backdropSrc="/images/about/advocacy/medina-chamber-advocacy-hero.webp" />
 
       {/* Life at the Chamber — recent event photos from Vercel Blob */}
       <RecentPhotoStrip />

@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { members, isCommunityInvestor, type Member } from "@/data/members";
 import { MEMBER_LOGOS } from "@/lib/member-logos";
@@ -62,7 +63,10 @@ function LogoTile({ m, ghost = false }: LogoTileProps) {
   );
 }
 
-export function CommunityInvestors({ featuredQuote = false }: { featuredQuote?: boolean } = {}) {
+export function CommunityInvestors({
+  featuredQuote = false,
+  backdropSrc,
+}: { featuredQuote?: boolean; backdropSrc?: string } = {}) {
   const investors = members
     .filter(isCommunityInvestor)
     .sort((a, b) => a.name.localeCompare(b.name));
@@ -77,8 +81,20 @@ export function CommunityInvestors({ featuredQuote = false }: { featuredQuote?: 
   ].filter((r) => r.length > 0);
 
   return (
-    <section className="ci-section border-t border-border-secondary bg-bg-secondary py-20 lg:py-28">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section className={`ci-section border-t border-border-secondary bg-bg-secondary py-20 lg:py-28${backdropSrc ? " relative overflow-hidden" : ""}`}>
+      {backdropSrc && (
+        <div className="absolute inset-0 pointer-events-none select-none" aria-hidden="true">
+          <Image
+            src={backdropSrc}
+            alt=""
+            fill
+            className="object-cover opacity-[0.10]"
+            sizes="100vw"
+            quality={60}
+          />
+        </div>
+      )}
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
 
         {/* Header */}
         <FadeIn>

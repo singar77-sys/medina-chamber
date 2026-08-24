@@ -242,7 +242,7 @@ export default function AthenaAwardsPage() {
           aria-hidden="true"
         >
           <Image
-            src="/images/events/athena-awards/highlights/athena-awards-medina-ohio-002.webp"
+            src="/images/events/athena-awards/part1/athena-awards-ceremony-medina-ohio-154.webp"
             alt=""
             fill
             className="object-cover object-top opacity-[0.10]"

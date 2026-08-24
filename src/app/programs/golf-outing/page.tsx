@@ -48,17 +48,18 @@ export default function GolfOutingPage() {
     <>
 
       <section className="relative overflow-hidden pt-f144 pb-f89 min-h-[42rem]">
-        {/* Ghosted golf-ball-at-sunset backdrop */}
+        {/* Ghosted real-event backdrop — foursome on the Westfield fairway
+            (replaced the blurry stock golfer-mid-swing close-up, 2026-08-24) */}
         <div
           className="absolute inset-0 pointer-events-none select-none"
           aria-hidden="true"
         >
           <Image
-            src="/images/programs/golf-outing/medina-chamber-golf-outing-hero.webp"
+            src="/images/events/golf-outing/golf-outing-medina-chamber-011.webp"
             alt=""
             fill
             priority
-            className="object-cover object-top opacity-[0.33]"
+            className="object-cover object-center opacity-[0.33]"
             sizes="100vw"
             quality={60}
           />

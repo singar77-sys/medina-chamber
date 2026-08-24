@@ -13,6 +13,7 @@ import {
   AthenaAwardsGraphic,
   BusinessBrewGraphic,
   ChamberChatGraphic,
+  CompassGraphic,
   EggsExpertiseGraphic,
   GetToKnowGraphic,
   GolfOutingGraphic,
@@ -98,6 +99,7 @@ export function getEventGraphicRenderer(
   if (s.includes("athena") || t.includes("athena")) return AthenaAwardsGraphic;
   if (s.includes("ribbon") || t.includes("ribbon cutting")) return RibbonCuttingGraphic;
   if (s.includes("social-connect") || t.includes("social connect")) return SocialConnectGraphic;
+  if (s.includes("compass") || t.includes("compass")) return CompassGraphic;
 
   if (s.startsWith("networking-wow") || t.includes("networking wow")) {
     const info = eventInfoFor(event);

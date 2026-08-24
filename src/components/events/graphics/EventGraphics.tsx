@@ -1130,6 +1130,19 @@ export function EggsExpertiseGraphic(_props: {
   return <OfficialArtworkGraphic src={ASSETS.eggsExpertiseArt} />;
 }
 
+/* =============================================================================
+   12 — COMPASS PROGRAM  (official designed artwork — Compass never had a
+   drawn composition; before this it fell back to the scraped event image)
+
+   Same clean OfficialArtworkGraphic structure as the others — artwork only,
+   no text overlay. Note the artwork is cohort-specific ("Fall Cohort begins
+   September 9"): expect a replacement graphic each cohort.
+   ============================================================================ */
+
+export function CompassGraphic(_props: { mode?: GraphicMode }) {
+  return <OfficialArtworkGraphic src={ASSETS.compassArt} />;
+}
+
 /* ComingSoonGraphic removed pre-launch — was a placeholder for an in-progress
    graphics redesign that never finished. No event slug routed to it via
    getEventGraphicRenderer, and the EVENT_GRAPHICS showcase array did not list

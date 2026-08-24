@@ -52,6 +52,7 @@ export const ASSETS = {
   // the Networking WOW / Chamber Chat visuals, not background textures.
   networkingWowArt:"/images/events/networking-wow-official.webp",
   chamberChatArt:  "/images/events/chamber-chat-official.webp",
+  safetyCouncilArt:"/images/events/safety-council-official.webp",
 } as const;
 
 export const FONT_STACK = '"BN Bergen", system-ui, -apple-system, sans-serif';

@@ -1143,6 +1143,20 @@ export function CompassGraphic(_props: { mode?: GraphicMode }) {
   return <OfficialArtworkGraphic src={ASSETS.compassArt} />;
 }
 
+/* =============================================================================
+   13 — STATE OF THE CITY 2026  (official designed artwork for ONE event:
+   the Sept 8, 2026 member meeting with Mayor Jim Shields)
+
+   Event-specific, not a series graphic — the registry routes
+   state-of-the-city slugs here BEFORE the generic member-meeting branch,
+   so other member meetings keep MemberMeetingGraphic. Clean artwork, no
+   text overlay.
+   ============================================================================ */
+
+export function StateOfTheCityGraphic(_props: { mode?: GraphicMode }) {
+  return <OfficialArtworkGraphic src={ASSETS.stateOfTheCityArt} />;
+}
+
 /* ComingSoonGraphic removed pre-launch — was a placeholder for an in-progress
    graphics redesign that never finished. No event slug routed to it via
    getEventGraphicRenderer, and the EVENT_GRAPHICS showcase array did not list

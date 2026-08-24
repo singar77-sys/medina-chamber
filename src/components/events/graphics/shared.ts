@@ -56,6 +56,7 @@ export const ASSETS = {
   eggsExpertiseArt:"/images/events/eggs-expertise-official.webp",
   socialConnectArt:"/images/events/social-connect-official.webp",
   compassArt:      "/images/events/compass-official.webp",
+  stateOfTheCityArt:"/images/events/state-of-the-city-2026-official.webp",
 } as const;
 
 export const FONT_STACK = '"BN Bergen", system-ui, -apple-system, sans-serif';

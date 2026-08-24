@@ -14,6 +14,7 @@ import {
   BusinessBrewGraphic,
   ChamberChatGraphic,
   CompassGraphic,
+  StateOfTheCityGraphic,
   EggsExpertiseGraphic,
   GetToKnowGraphic,
   GolfOutingGraphic,
@@ -132,6 +133,10 @@ export function getEventGraphicRenderer(
     );
     Bound.displayName = "BusinessBrewGraphic(bound)";
     return Bound;
+  }
+  // Event-specific artwork must outrank the generic member-meeting branch.
+  if (s.includes("state-of-the-city") || t.includes("state of the city")) {
+    return StateOfTheCityGraphic;
   }
   if (
     s.startsWith("chamber-member-meeting") ||

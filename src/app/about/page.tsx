@@ -193,13 +193,15 @@ export default async function AboutPage() {
             >
               <div
                 className="
-                  h-full p-f34
-                  bg-bg-secondary border border-border-secondary
+                  group h-full p-f34
+                  bg-gradient-to-b from-bg-secondary to-bg-tertiary
+                  border border-border-secondary
                   rounded-[var(--radius-lg)]
-                  hover:border-cambridge/40 transition-colors
+                  transition-all duration-300 ease-out
+                  hover:-translate-y-1.5 hover:border-cambridge/40 hover:shadow-cambridge
                 "
               >
-                <p className="text-display text-cambridge/20 leading-none font-bold">
+                <p className="text-display text-cambridge/20 leading-none font-bold transition-colors duration-300 group-hover:text-cambridge/45">
                   {value.number}
                 </p>
                 <h3 className="text-h3 mt-f13">{value.title}</h3>

@@ -26,42 +26,16 @@ import {
    1 — NETWORKING WOW  (v3 — official designed artwork, replaces the
    programmatic K_12 composition)
 
-   The chamber's designed 16:9 artwork replaces the drawn composition.
+   The chamber's designed 16:9 artwork replaces the drawn composition, and
+   renders CLEAN — no text overlay (owner call 2026-08-24: no plinth on the
+   official artwork; date/time already live in the page's event details).
    Square/story modes center-crop the same art via object-fit: cover — both
-   designs are center-weighted so the crop holds. The event-info plinth
-   survives as an HTML overlay on a bottom oxford scrim, so bound instances
-   still carry date · time · registration. Chamber Chat (section 3) shares
-   this exact structure via OfficialArtworkGraphic.
+   designs are center-weighted so the crop holds. Chamber Chat (section 3)
+   shares this structure via OfficialArtworkGraphic. The mode/eventInfo props
+   stay in the signature so the registry contract is unchanged.
    ============================================================================ */
 
-function OfficialArtworkGraphic({
-  src,
-  mode = "social",
-  eventInfo,
-}: {
-  src: string;
-  mode?: GraphicMode;
-  eventInfo?: EventInfo;
-}) {
-  const isStory = mode === "story";
-  const isSquare = mode === "square";
-
-  const plinthGap = pick([18, 22, 28] as const, mode);
-  const plinthLabel = pick([18, 22, 28] as const, mode);
-  const plinthBig = pick([28, 34, 40] as const, mode);
-
-  // Date string for the plinth, e.g. "WED · MAY 20, 2026"
-  const dateLine = eventInfo
-    ? [
-        eventInfo.dayOfWeek?.substring(0, 3).toUpperCase(),
-        eventInfo.month && eventInfo.day
-          ? `${eventInfo.month.toUpperCase()} ${eventInfo.day}${eventInfo.year ? `, ${eventInfo.year}` : ""}`
-          : null,
-      ]
-        .filter(Boolean)
-        .join(" · ")
-    : null;
-
+function OfficialArtworkGraphic({ src }: { src: string }) {
   return (
     <div style={containerStyle({ background: BRAND.oxford, color: "#fff" })}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -76,101 +50,15 @@ function OfficialArtworkGraphic({
           objectFit: "cover",
         }}
       />
-
-      {/* Bottom event-info plinth — only renders when bound to a specific
-          upcoming event; sits on an oxford scrim for legibility over the
-          artwork. The generic template stays clean. */}
-      {eventInfo && (dateLine || eventInfo.time || eventInfo.note) && (
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 2,
-            padding: isStory
-              ? "140px 72px 84px"
-              : isSquare
-              ? "110px 64px 64px"
-              : "96px 64px 52px",
-            background: `linear-gradient(180deg, ${BRAND.oxford}00 0%, ${BRAND.oxford}e6 64%)`,
-          }}
-        >
-          <div
-            style={{
-              borderTop: `1px solid ${BRAND.cambridge}55`,
-              paddingTop: plinthGap,
-              display: "flex",
-              alignItems: "flex-end",
-              justifyContent: "space-between",
-              gap: 24,
-              flexWrap: "wrap",
-            }}
-          >
-            <div>
-              {dateLine && (
-                <div
-                  style={{
-                    fontSize: plinthLabel,
-                    fontWeight: 700,
-                    letterSpacing: "0.16em",
-                    color: BRAND.cambridge,
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {dateLine}
-                </div>
-              )}
-              {eventInfo.time && (
-                <div
-                  style={{
-                    fontSize: plinthBig,
-                    fontWeight: 700,
-                    color: "#fff",
-                    letterSpacing: "-0.01em",
-                    marginTop: 4,
-                  }}
-                >
-                  {eventInfo.time}
-                </div>
-              )}
-            </div>
-            {eventInfo.note && (
-              <div
-                style={{
-                  fontSize: plinthLabel,
-                  fontWeight: 700,
-                  letterSpacing: "0.18em",
-                  color: BRAND.coquelicot,
-                  textTransform: "uppercase",
-                  textAlign: "right",
-                  paddingBottom: 4,
-                }}
-              >
-                {eventInfo.note}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
 
-export function NetworkingWowGraphic({
-  mode = "social",
-  eventInfo,
-}: {
+export function NetworkingWowGraphic(_props: {
   mode?: GraphicMode;
   eventInfo?: EventInfo;
 }) {
-  return (
-    <OfficialArtworkGraphic
-      src={ASSETS.networkingWowArt}
-      mode={mode}
-      eventInfo={eventInfo}
-    />
-  );
+  return <OfficialArtworkGraphic src={ASSETS.networkingWowArt} />;
 }
 
 /* =============================================================================
@@ -436,25 +324,15 @@ export function SafetyCouncilGraphic({
    3 — CHAMBER CHAT  (v3 — official designed artwork, replaces the drawn
    coffee-cup composition)
 
-   Same OfficialArtworkGraphic structure as Networking WOW (section 1).
-   Unlike the old version, this one DOES render the event-info plinth when
-   bound to an instance.
+   Same clean OfficialArtworkGraphic structure as Networking WOW (section 1)
+   — artwork only, no text overlay.
    ============================================================================ */
 
-export function ChamberChatGraphic({
-  mode = "social",
-  eventInfo,
-}: {
+export function ChamberChatGraphic(_props: {
   mode?: GraphicMode;
   eventInfo?: EventInfo;
 }) {
-  return (
-    <OfficialArtworkGraphic
-      src={ASSETS.chamberChatArt}
-      mode={mode}
-      eventInfo={eventInfo}
-    />
-  );
+  return <OfficialArtworkGraphic src={ASSETS.chamberChatArt} />;
 }
 
 /* =============================================================================

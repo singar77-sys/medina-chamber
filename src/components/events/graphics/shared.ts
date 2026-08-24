@@ -53,6 +53,8 @@ export const ASSETS = {
   networkingWowArt:"/images/events/networking-wow-official.webp",
   chamberChatArt:  "/images/events/chamber-chat-official.webp",
   safetyCouncilArt:"/images/events/safety-council-official.webp",
+  eggsExpertiseArt:"/images/events/eggs-expertise-official.webp",
+  socialConnectArt:"/images/events/social-connect-official.webp",
 } as const;
 
 export const FONT_STACK = '"BN Bergen", system-ui, -apple-system, sans-serif';

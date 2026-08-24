@@ -491,56 +491,15 @@ export function AthenaAwardsGraphic({ mode = "social" }: { mode?: GraphicMode })
 }
 
 /* =============================================================================
-   7 — SOCIAL CONNECT
-   Coquelicot field, confetti circles, "Social Connect." split-color title.
+   7 — SOCIAL CONNECT  (v3 — official designed artwork, replaces the drawn
+   composition)
+
+   Same clean OfficialArtworkGraphic structure as Networking WOW (section 1)
+   — artwork only, no text overlay.
    ============================================================================ */
 
-export function SocialConnectGraphic({ mode = "social" }: { mode?: GraphicMode }) {
-  const isStory = mode === "story";
-  const isSquare = mode === "square";
-
-  const titleSize = pick([220, 260, 260] as const, mode);
-  const vb = isStory ? "0 0 1080 1920" : isSquare ? "0 0 1080 1080" : "0 0 1200 630";
-  const W = isStory ? 1080 : isSquare ? 1080 : 1200;
-  const H = isStory ? 1920 : isSquare ? 1080 : 630;
-  const dotCount = isStory ? 70 : isSquare ? 55 : 50;
-  const confettiColors = [BRAND.cambridge, BRAND.oxford, "#fff", BRAND.emerald];
-
-  return (
-    <div style={containerStyle({ background: BRAND.coquelicot, color: "#fff" })}>
-      <svg viewBox={vb} style={svgFillStyle}>
-        {Array.from({ length: dotCount }, (_, i) => {
-          const seeded = (Math.sin(i * 9999) + 1) / 2;
-          const x = ((i * 137) % W) + seeded * 30;
-          const y = ((i * 53) % H) + ((Math.cos(i * 7) + 1) / 2) * 40;
-          const r = 5 + ((i * 7) % 13);
-          return (
-            <circle key={i} cx={x} cy={y} r={r} fill={confettiColors[i % 4]} opacity="0.78" />
-          );
-        })}
-      </svg>
-
-      <div style={{
-        position: "relative", height: "100%",
-        padding: isStory ? "100px 72px 100px" : isSquare ? "72px 64px" : "56px 64px",
-        display: "flex", flexDirection: "column", justifyContent: "space-between",
-      }}>
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={ASSETS.iconWhite} style={{ height: isStory ? 60 : 44 }} alt="" />
-        </div>
-
-        <div>
-          <div style={{ fontSize: titleSize, fontWeight: 700, lineHeight: 0.85, letterSpacing: "-0.055em", color: "#fff" }}>
-            Social
-          </div>
-          <div style={{ fontSize: titleSize, fontWeight: 700, lineHeight: 0.85, letterSpacing: "-0.055em", color: BRAND.oxford, marginTop: -10 }}>
-            Connect
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+export function SocialConnectGraphic(_props: { mode?: GraphicMode }) {
+  return <OfficialArtworkGraphic src={ASSETS.socialConnectArt} />;
 }
 
 /* =============================================================================
@@ -1154,226 +1113,22 @@ export function GetToKnowGraphic({
 }
 
 /* =============================================================================
-   11 — EGGS & EXPERTISE
-   Oxford field + cream panel, detailed cracked egg, monthly topic chip.
-   Accepts an optional `topic` prop (defaults to "Canva 101").
+   11 — EGGS & EXPERTISE  (v3 — official designed artwork, replaces the drawn
+   cracked-egg composition)
+
+   Same clean OfficialArtworkGraphic structure as Networking WOW (section 1)
+   — artwork only, no text overlay. `topic` stays in the signature for the
+   registry's slug-derived forwarding; the monthly topic renders in the
+   event card/page copy, not on the artwork.
    ============================================================================ */
 
-export function EggsExpertiseGraphic({
-  mode = "social",
-  // `topic` is accepted for API compatibility with earlier versions +
-  // getEventGraphicRenderer's slug-derived topic forwarding, but the
-  // simplified graphic no longer displays it. The card/page below can
-  // still show the specific monthly topic.
-  topic: _topic = "Canva 101",
-  eventInfo,
-}: {
+export function EggsExpertiseGraphic(_props: {
   mode?: GraphicMode;
   topic?: string;
   eventInfo?: EventInfo;
 }) {
-  const isStory = mode === "story";
-  const isSquare = mode === "square";
-
-  const titleSize = pick([140, 180, 210] as const, mode);
-  const ampSize = pick([100, 130, 150] as const, mode);
-  const vb = isStory ? "0 0 1080 1920" : isSquare ? "0 0 1080 1080" : "0 0 1200 630";
-
-  const egg = isStory
-    ? { cx: 800, cy: 1420, rx: 190, ry: 240 }
-    : isSquare
-    ? { cx: 830, cy: 720,  rx: 160, ry: 200 }
-    : { cx: 990, cy: 340,  rx: 135, ry: 170 };
-
-  // Build the cracked-zigzag path across the egg's top
-  const zW = egg.rx * 1.2;
-  const zStartX = egg.cx - zW / 2;
-  const zY = egg.cy - egg.ry * 0.35;
-  const zSegs = 7;
-  let zigzag = `M ${zStartX} ${zY}`;
-  for (let i = 1; i <= zSegs; i++) {
-    const x = zStartX + (zW * i) / zSegs;
-    const yy = zY + (i % 2 === 0 ? -12 : 12);
-    zigzag += ` L ${x} ${yy}`;
-  }
-
-  const creamPanelStyle: CSSProperties = isStory
-    ? { right: 0, top: 0, width: "38%", height: "100%" }
-    : { left: 0, bottom: 0, width: "100%", height: isSquare ? "38%" : "35%" };
-
-  return (
-    <div style={containerStyle({ background: BRAND.oxford, color: "#fff" })}>
-      {/* Cream accent panel — bottom (social/square) or right (story) */}
-      <div style={{ position: "absolute", background: BRAND.cream, ...creamPanelStyle }} />
-
-      <svg viewBox={vb} style={svgFillStyle}>
-        <defs>
-          <radialGradient id={`eeglow-${mode}`} cx="50%" cy="50%" r="55%">
-            <stop offset="0%"   stopColor={BRAND.coquelicot} stopOpacity="0.25" />
-            <stop offset="100%" stopColor={BRAND.coquelicot} stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        <circle cx={egg.cx} cy={egg.cy} r={Math.max(egg.rx, egg.ry) * 2} fill={`url(#eeglow-${mode})`} />
-
-        {/* Shadow beneath the egg */}
-        <ellipse cx={egg.cx} cy={egg.cy + egg.ry + 20} rx={egg.rx * 0.95} ry={egg.ry * 0.1} fill={BRAND.oxford} opacity="0.4" />
-
-        {/* Egg body — classic egg shape with pinched top */}
-        <path
-          d={`
-            M ${egg.cx} ${egg.cy - egg.ry}
-            C ${egg.cx + egg.rx * 0.6} ${egg.cy - egg.ry},
-              ${egg.cx + egg.rx}       ${egg.cy - egg.ry * 0.3},
-              ${egg.cx + egg.rx}       ${egg.cy + egg.ry * 0.1}
-            C ${egg.cx + egg.rx}       ${egg.cy + egg.ry * 0.85},
-              ${egg.cx + egg.rx * 0.6} ${egg.cy + egg.ry},
-              ${egg.cx}                ${egg.cy + egg.ry}
-            C ${egg.cx - egg.rx * 0.6} ${egg.cy + egg.ry},
-              ${egg.cx - egg.rx}       ${egg.cy + egg.ry * 0.85},
-              ${egg.cx - egg.rx}       ${egg.cy + egg.ry * 0.1}
-            C ${egg.cx - egg.rx}       ${egg.cy - egg.ry * 0.3},
-              ${egg.cx - egg.rx * 0.6} ${egg.cy - egg.ry},
-              ${egg.cx}                ${egg.cy - egg.ry}
-            Z`}
-          fill="#F9F0DC"
-        />
-
-        {/* Highlight blob */}
-        <ellipse
-          cx={egg.cx - egg.rx * 0.35}
-          cy={egg.cy - egg.ry * 0.35}
-          rx={egg.rx * 0.25}
-          ry={egg.ry * 0.2}
-          fill="#FFFDF6"
-          opacity="0.8"
-        />
-
-        {/* Cracked zigzag line */}
-        <path d={zigzag} fill="none" stroke={BRAND.oxford} strokeWidth={isStory ? 4 : 3} strokeLinejoin="round" />
-
-        {/* Yolk peek */}
-        <circle
-          cx={egg.cx + egg.rx * 0.1}
-          cy={egg.cy - egg.ry * 0.35}
-          r={isStory ? 14 : 10}
-          fill={BRAND.coquelicot}
-          opacity="0.9"
-        />
-      </svg>
-
-      <div style={{
-        position: "relative", height: "100%",
-        padding: isStory ? "72px 72px 84px" : isSquare ? "56px 64px 64px" : "44px 64px 52px",
-        display: "flex", flexDirection: "column", justifyContent: "space-between",
-      }}>
-        {/* Top rail — chamber wordmark left, icon right */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{
-            fontSize: pick([14, 16, 20] as const, mode),
-            fontWeight: 700, letterSpacing: "0.18em",
-            color: BRAND.cambridge, textTransform: "uppercase",
-          }}>
-            Greater Medina Chamber
-          </div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={ASSETS.iconWhite} style={{ height: isStory ? 60 : 44, opacity: 0.95 }} alt="" />
-        </div>
-
-        <div style={{ maxWidth: isStory ? 700 : isSquare ? 600 : 620 }}>
-          <div style={{ fontSize: titleSize, fontWeight: 700, lineHeight: 0.86, letterSpacing: "-0.045em", color: "#fff" }}>
-            Eggs
-          </div>
-          <div style={{
-            fontSize: ampSize, fontWeight: 300, fontStyle: "italic",
-            letterSpacing: "-0.015em", color: BRAND.coquelicot, marginTop: -6, lineHeight: 0.9,
-          }}>
-            &amp;
-          </div>
-          <div style={{
-            fontSize: titleSize, fontWeight: 700, lineHeight: 0.86,
-            letterSpacing: "-0.045em", color: "#fff", marginTop: -6,
-          }}>
-            Expertise
-          </div>
-
-          {/* Chamber's actual slogan: "Serving Up Knowledge" —
-              Mistrully on "Knowledge" (the payoff word). */}
-          <div style={{
-            marginTop: isStory ? 28 : 16,
-            display: "flex", alignItems: "baseline", flexWrap: "wrap",
-            columnGap: pick([12, 14, 18] as const, mode),
-            rowGap: 4,
-            color: "#fff",
-          }}>
-            <span style={{
-              fontSize: pick([28, 36, 48] as const, mode), fontWeight: 300,
-              letterSpacing: "0.04em", textTransform: "uppercase",
-            }}>Serving Up</span>
-            <span style={{
-              fontFamily: SCRIPT_STACK,
-              fontSize: pick([46, 60, 80] as const, mode), lineHeight: 0.9,
-              color: BRAND.cambridge, fontWeight: 400,
-              transform: "translateY(0.08em)", display: "inline-block",
-            }}>
-              Knowledge
-            </span>
-          </div>
-        </div>
-
-        {/* Event-info plinth */}
-        {eventInfo && (eventInfo.dayOfWeek || eventInfo.time || eventInfo.note) && (
-          <div style={{
-            borderTop: `1px solid ${BRAND.cambridge}55`,
-            paddingTop: pick([18, 22, 28] as const, mode),
-            display: "flex", alignItems: "flex-end", justifyContent: "space-between",
-            gap: 24, flexWrap: "wrap",
-          }}>
-            <div>
-              {(() => {
-                const dateLine = [
-                  eventInfo.dayOfWeek?.substring(0, 3).toUpperCase(),
-                  eventInfo.month && eventInfo.day
-                    ? `${eventInfo.month.toUpperCase()} ${eventInfo.day}${eventInfo.year ? `, ${eventInfo.year}` : ""}`
-                    : null,
-                ]
-                  .filter(Boolean)
-                  .join(" · ");
-                return dateLine ? (
-                  <div style={{
-                    fontSize: pick([18, 22, 28] as const, mode), fontWeight: 700,
-                    letterSpacing: "0.16em", color: BRAND.cambridge,
-                    textTransform: "uppercase",
-                  }}>
-                    {dateLine}
-                  </div>
-                ) : null;
-              })()}
-              {eventInfo.time && (
-                <div style={{
-                  fontSize: pick([28, 34, 40] as const, mode), fontWeight: 700,
-                  color: "#fff", letterSpacing: "-0.01em", marginTop: 4,
-                }}>
-                  {eventInfo.time}
-                </div>
-              )}
-            </div>
-            {eventInfo.note && (
-              <div style={{
-                fontSize: pick([18, 22, 28] as const, mode), fontWeight: 700,
-                letterSpacing: "0.18em", color: BRAND.coquelicot,
-                textTransform: "uppercase", textAlign: "right",
-                paddingBottom: 4,
-              }}>
-                {eventInfo.note}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  );
+  return <OfficialArtworkGraphic src={ASSETS.eggsExpertiseArt} />;
 }
-
 
 /* ComingSoonGraphic removed pre-launch — was a placeholder for an in-progress
    graphics redesign that never finished. No event slug routed to it via

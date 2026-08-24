@@ -165,22 +165,10 @@ export default async function AboutPage() {
       </section>
 
       {/* Core Values */}
-      <section className="relative overflow-hidden py-f89 lg:py-f144">
-        {/* Ghosted benefits wheel — a graphic, not a photo, so object-contain
-            keeps the full wheel visible across the band. */}
-        <div
-          className="absolute inset-0 pointer-events-none select-none"
-          aria-hidden="true"
-        >
-          <Image
-            src="/images/logos/benefits-wheel.png"
-            alt=""
-            fill
-            className="object-contain opacity-[0.12]"
-            sizes="100vw"
-            quality={60}
-          />
-        </div>
+      {/* Plain band — the benefits-wheel ghost was tried here and pulled:
+          the PNG's opaque square bounding box reads as a big box, not a
+          watermark. */}
+      <section className="rule-top relative overflow-hidden py-f89 lg:py-f144">
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <FadeIn>
           <div className="max-w-2xl mb-f21">
@@ -230,7 +218,7 @@ export default async function AboutPage() {
 
       {/* Our Team — its own plain band (alternation: Core Values above and
           Visit Us below both carry ghosts, so this one stays image-free). */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
           <FadeIn>
             <div className="max-w-2xl mx-auto text-center mb-f21">
               <p className="text-overline text-cambridge mb-f8">Our Team</p>

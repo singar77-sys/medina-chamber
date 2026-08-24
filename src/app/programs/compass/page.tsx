@@ -77,7 +77,7 @@ const audience = [
 ];
 
 const overview = [
-  { label: "Format", value: "5 interactive sessions\nFebruary – May" },
+  { label: "Format", value: "5 interactive sessions\nFall cohort begins Sept 9, 2026" },
   { label: "Location", value: "Chamber Office\n139 N. Court Street, Medina" },
   { label: "Investment", value: "$995 per participant" },
 ];
@@ -147,8 +147,7 @@ export default async function CompassPage() {
           addressCountry: "US",
         },
       },
-      startDate: "2026-02-01",
-      endDate: "2026-05-31",
+      startDate: "2026-09-09",
     },
     url: "https://medinachamber.com/programs/compass",
   };
@@ -206,7 +205,7 @@ export default async function CompassPage() {
 
           <div className="mt-f34 flex flex-wrap gap-f13">
             <Link
-              href="/about/contact"
+              href="/events/the-compass-program"
               className="
                 inline-flex items-center px-8 py-4
                 bg-accent hover:bg-accent-hover
@@ -215,9 +214,13 @@ export default async function CompassPage() {
                 transition-colors
               "
             >
-              Get Notified for Next Cohort →
+              Register for the Fall Cohort →
             </Link>
           </div>
+          <p className="mt-f13 text-body-sm text-text-secondary">
+            First session Wednesday, September 9, 2026. Advance registration
+            and payment required by Friday, August 28, 2026.
+          </p>
           </div>
         </div>
       </section>
@@ -360,8 +363,10 @@ export default async function CompassPage() {
                 <h2 className="text-h2">Ready to invest in your leadership?</h2>
                 <p className="text-body-lg text-text-secondary mt-f13">
                   Compass runs annually. Each cohort is limited in size to keep
-                  the experience intentional and the connections real. Contact
-                  the chamber to learn about the next cohort.
+                  the experience intentional and the connections real.
+                  Registration for the fall 2026 cohort is open through
+                  Friday, August 28 — reserve your seat on the event page, or
+                  contact the chamber with questions.
                 </p>
               </div>
               <div className="space-y-f13">

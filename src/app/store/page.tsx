@@ -27,7 +27,7 @@ const products = [
     price: "$50.00",
     description:
       "Official documentation certifying where your goods were manufactured, for Medina County businesses involved in import and export. The Chamber authenticates and stamps your certificate.",
-    note: "Visibility Plus and Community Investor members may qualify for complimentary certificates — see member benefits.",
+    note: "Complimentary for Visibility Plus and Community Investor members (non-freight forwarders) — see member benefits.",
     href: "https://business.medinachamber.com/store/StoreItemDetails?StoreItemId=23241&quantity=0",
   },
 ];

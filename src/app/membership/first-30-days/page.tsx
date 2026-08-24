@@ -7,6 +7,7 @@ import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermar
 import { safeJsonLd } from "@/lib/json-ld";
 import { stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
+import { growthZone } from "@/lib/navigation";
 export const metadata: Metadata = {
   title: "Your First 30 Days",
   description:
@@ -45,7 +46,9 @@ const steps: Step[] = [
     ],
     link: {
       label: "Open Member Hub",
-      href: "https://greatermedinachamberofcommerce.growthzoneapp.com/a/MIC/Login",
+      // Same canonical login URL the site header uses (growthZone.login) —
+      // don't reintroduce the raw growthzoneapp.com host here.
+      href: growthZone.login,
       external: true,
     },
   },
@@ -427,9 +430,9 @@ export default function First30DaysPage() {
                 description: "Networking WOW, Chamber Chat, workshops, and more.",
               },
               {
-                label: "Compass Leadership Program",
+                label: "Compass Professional Development Program",
                 href: "/programs/compass",
-                description: "Five-session flagship leadership development.",
+                description: "Five-session professional leadership development.",
               },
               {
                 label: "Chamber Directory",

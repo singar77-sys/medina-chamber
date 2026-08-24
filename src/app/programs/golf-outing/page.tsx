@@ -72,9 +72,9 @@ export default function GolfOutingPage() {
               <span className="block text-accent">Golf Outing</span>
             </h1>
             <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
-              The premier networking event on the Medina County business calendar.
-              18 holes, great food, on-course games, and a room full of people worth
-              knowing.
+              The chamber&apos;s flagship outing on the Medina County business
+              calendar. 18 holes, great food, on-course games, and a room full
+              of people worth knowing.
             </p>
             <div className="mt-f21 flex flex-wrap gap-f13">
             <Link

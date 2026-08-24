@@ -36,8 +36,18 @@ export function formatEventsForPrompt(): string {
     const day = e.dayOfWeek.substring(0, 3);
     const date = `${e.month} ${e.day}`;
     const time = `${e.startTime}–${e.endTime}`;
+    // First THREE pricing lines, not one: enrollment-style events (e.g. the
+    // FY27 Safety Council $0/$100/$345 options) put the real price menu on
+    // lines 2-3, and a single-line cut hid it from the bot entirely.
     const price = e.pricing
-      ? e.pricing.split("\n")[0].replace(/\s+/g, " ").trim()
+      ? e.pricing
+          .split("\n")
+          .map((l) => l.trim())
+          .filter(Boolean)
+          .slice(0, 3)
+          .join(" · ")
+          .replace(/\s+/g, " ")
+          .slice(0, 220)
       : "";
     const url = `https://medinachamber.com/events/${e.slug}`;
     return `- ${day} ${date}: ${e.title} | ${time}${price ? ` | ${price}` : ""} | [Details & Registration](${url})`;

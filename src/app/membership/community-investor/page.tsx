@@ -34,7 +34,7 @@ const ciExclusives = [
     title: "Complimentary Member Luncheon Tickets",
     where: "Member Luncheons",
     description:
-      "Complimentary tickets to chamber member luncheons — events that Business Essentials and Visibility Plus members pay to attend. Over a membership year, that's real savings and consistent face time with the chamber's most active and engaged members.",
+      "Two complimentary tickets to chamber member luncheons — events that Business Essentials and Visibility Plus members pay to attend. Over a membership year, that's real savings and consistent face time with the chamber's most active and engaged members.",
   },
   {
     title: "Anytime Access to Member Mailing List",
@@ -126,7 +126,8 @@ export default async function CommunityInvestorPage() {
             </p>
             <div className="mt-f21 flex flex-wrap items-center gap-f13">
               <div className="text-text-secondary text-body-sm font-mono">
-                $1,145 <span className="text-text-tertiary">/year</span>
+                ${(ciTier?.price ?? 1145).toLocaleString("en-US")}{" "}
+                <span className="text-text-tertiary">/year</span>
               </div>
               <div className="w-px h-4 bg-border-primary" />
               <Link
@@ -265,9 +266,9 @@ export default async function CommunityInvestorPage() {
                 <p className="text-overline text-cambridge mb-f8">Ready to lead</p>
                 <h2 className="text-h2">Join as a Community Investor</h2>
                 <p className="text-body-lg text-text-secondary mt-f13 leading-relaxed">
-                  $1,145/year. Questions about fit or what to expect?
-                  Stephanie or Jaclyn can walk you through it, no pressure,
-                  just a conversation.
+                  ${(ciTier?.price ?? 1145).toLocaleString("en-US")}/year.
+                  Questions about fit or what to expect? Stephanie or Jaclyn
+                  can walk you through it, no pressure, just a conversation.
                 </p>
               </div>
               <div className="space-y-f13">

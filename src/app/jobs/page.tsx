@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { jobs, formatJobDate, totalJobsCount } from "@/data/jobs";
+import { growthZone } from "@/lib/navigation";
 import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 
@@ -74,7 +75,7 @@ export default function JobsPage() {
               <p className="text-body-sm text-text-tertiary mt-f21">
                 Member businesses can post jobs through the{" "}
                 <a
-                  href="https://greatermedinachamberofcommerce.growthzoneapp.com"
+                  href={growthZone.login}
                   className="text-cambridge hover:text-cambridge/80 transition-colors"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -174,7 +175,7 @@ export default function JobsPage() {
               </div>
               <div className="space-y-f21">
                 <a
-                  href="https://greatermedinachamberofcommerce.growthzoneapp.com"
+                  href={growthZone.login}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="

@@ -3,7 +3,7 @@
  *
  * The public GrowthZone directory (which our scraper reads) doesn't
  * distinguish Community Investor from Visibility Plus cleanly — the
- * scraper lands most CI members as tier=2 but misses the 99 real VP
+ * scraper lands most CI members as tier=2 but misses the 98 real VP
  * members entirely, and sometimes tags non-premium members as tier=2.
  *
  * These sets are the source of truth, pulled from the authenticated

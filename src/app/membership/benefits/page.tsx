@@ -4,6 +4,15 @@ import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { safeJsonLd } from "@/lib/json-ld";
+import { DEFAULT_PRICING } from "@/lib/cms-store";
+
+// Single-source the CTA's tier prices from the same defaults the pricing page
+// falls back to — a code-level price change updates this copy too. (A live
+// Redis pricing override still only renders on /membership/pricing; this page
+// is static.)
+const [essentialsPrice, plusPrice, investorPrice] = DEFAULT_PRICING.tiers.map(
+  (t) => t.price,
+);
 
 export const metadata: Metadata = {
   title: "Member Benefits",
@@ -329,10 +338,11 @@ export default function BenefitsPage() {
               <div>
                 <h2 className="text-h2">Ready to put these to work?</h2>
                 <p className="text-body-lg text-text-secondary mt-f13">
-                  Three tiers: Business Essentials at $345/year, Visibility Plus at
-                  $575/year, or Community Investor at $1,145/year. Membership pays
-                  for itself with one good referral, one saved contract, or one
-                  connection made at a mixer.
+                  Three tiers: Business Essentials at ${essentialsPrice}/year,
+                  Visibility Plus at ${plusPrice}/year, or Community Investor
+                  at ${investorPrice.toLocaleString("en-US")}/year. Membership
+                  pays for itself with one good referral, one saved contract,
+                  or one connection made at a mixer.
                 </p>
               </div>
               <div className="space-y-f13">

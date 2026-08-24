@@ -383,7 +383,7 @@ export const CONTENT_FIELD_DEFS: ContentFieldDef[] = [
     label: "Mission Statement",
     type: "textarea",
     maxLength: 300,
-    defaultValue: "To advance the economic vitality and quality of life in the Greater Medina area.",
+    defaultValue: "To champion and empower Medina's business community, driving growth through advocacy, connection, and leadership.",
   },
   // Contact page
   {

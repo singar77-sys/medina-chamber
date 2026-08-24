@@ -37,7 +37,7 @@ export const savingsPrograms: SavingsProgram[] = [
     tag: "Healthcare",
     description:
       "A group health insurance plan specifically designed for small businesses in Medina, Ohio with 2–49 employees. Medically underwritten plans through the Blue Access PPO Network, includes Cleveland Clinic, Summa Health System, and University Hospitals. HSA and 80/20 options available.",
-    eligibility: "Medina-based businesses with fewer than 50 full-time employees",
+    eligibility: "Medina-based businesses with 2–49 employees",
     howToAccess:
       "Contact the chamber for the list of participating brokers and agents. Applications are submitted via the Form Fire system.",
     contact: null,

@@ -71,7 +71,7 @@ export default function ProgramsPage() {
       "Greater Medina Chamber programs, leadership development, networking events, workplace safety, and professional meeting space for Medina County businesses.",
     url: "https://medinachamber.com/programs",
     hasPart: [
-      { "@type": "WebPage", name: "Compass Leadership Program", url: "https://medinachamber.com/programs/compass" },
+      { "@type": "WebPage", name: "Compass Professional Development Program", url: "https://medinachamber.com/programs/compass" },
       { "@type": "WebPage", name: "Social Connect", url: "https://medinachamber.com/programs/social-connect" },
       { "@type": "WebPage", name: "Annual Golf Outing", url: "https://medinachamber.com/programs/golf-outing" },
       { "@type": "WebPage", name: "Athena Awards", url: "https://medinachamber.com/programs/athena-awards" },

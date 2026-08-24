@@ -48,6 +48,10 @@ export const ASSETS = {
   chamberBuilding: "/images/events/chamber-building.webp",
   industryMedina:  "/images/events/industry-medina.jpg",
   businessBrewLogo:"/images/events/business-brew/business-brew-networking-medina-chamber-013.webp",
+  // Official designed artwork (2026-08) — full-frame 16:9 graphics that ARE
+  // the Networking WOW / Chamber Chat visuals, not background textures.
+  networkingWowArt:"/images/events/networking-wow-official.webp",
+  chamberChatArt:  "/images/events/chamber-chat-official.webp",
 } as const;
 
 export const FONT_STACK = '"BN Bergen", system-ui, -apple-system, sans-serif';

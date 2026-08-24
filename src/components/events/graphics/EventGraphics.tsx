@@ -23,66 +23,29 @@ import {
 } from "./shared";
 
 /* =============================================================================
-   1 — NETWORKING WOW  (redesign v2 — esoteric chamber-faithful)
+   1 — NETWORKING WOW  (v3 — official designed artwork, replaces the
+   programmatic K_12 composition)
 
-   Layered composition:
-     • Oxford blue field
-     • Hexagonal honeycomb grid at low opacity (chamber as society)
-     • 12-node ring with full all-to-all connection web (the literal
-       "network", also reads as a hermetic seal / fraternal compass)
-     • Three concentric ghost rings (radial seal feel)
-     • Coquelicot radial glow centered on the title
-     • BN Bergen "Networking" / "WOW!" wordmark
-     • Mistrully script accent on "Opportunities" in the chamber's
-       actual tagline ("Watch Opportunities Work")
-     • Optional event-info plinth at the bottom (date · time + a
-       "REGISTRATION REQUIRED" note) when an EventInfo is supplied —
-       generic preview omits it so the template still works for any
-       month's instance.
+   The chamber's designed 16:9 artwork replaces the drawn composition.
+   Square/story modes center-crop the same art via object-fit: cover — both
+   designs are center-weighted so the crop holds. The event-info plinth
+   survives as an HTML overlay on a bottom oxford scrim, so bound instances
+   still carry date · time · registration. Chamber Chat (section 3) shares
+   this exact structure via OfficialArtworkGraphic.
    ============================================================================ */
 
-export function NetworkingWowGraphic({
+function OfficialArtworkGraphic({
+  src,
   mode = "social",
   eventInfo,
 }: {
+  src: string;
   mode?: GraphicMode;
   eventInfo?: EventInfo;
 }) {
   const isStory = mode === "story";
   const isSquare = mode === "square";
 
-  const titleTop = pick([180, 132, 170] as const, mode);
-  const titleBig = pick([260, 220, 300] as const, mode);
-
-  const W = isStory ? 1080 : isSquare ? 1080 : 1200;
-  const H = isStory ? 1920 : isSquare ? 1080 : 630;
-  const vb = `0 0 ${W} ${H}`;
-
-  // Sacred-geometry "network web" placement — anchored opposite the
-  // title block in each layout so it never collides with type.
-  const seal = isStory
-    ? { cx: 540, cy: 620, r: 320 }
-    : isSquare
-    ? { cx: 760, cy: 540, r: 320 }
-    : { cx: 880, cy: 315, r: 240 };
-
-  // 12 nodes around the seal — connect every pair to form the
-  // complete graph K_12 (66 edges). Reads as both "networking" and
-  // a hermetic seal / society compass.
-  const nodes = Array.from({ length: 12 }, (_, i) => {
-    const a = (i / 12) * Math.PI * 2 - Math.PI / 2;
-    return { x: seal.cx + Math.cos(a) * seal.r, y: seal.cy + Math.sin(a) * seal.r };
-  });
-  const edges: Array<[number, number]> = [];
-  for (let i = 0; i < nodes.length; i++) {
-    for (let j = i + 1; j < nodes.length; j++) edges.push([i, j]);
-  }
-
-  // Tagline geometry (sits under the WOW! mark)
-  const taglineSize = pick([34, 40, 52] as const, mode);
-  const scriptSize = pick([56, 70, 92] as const, mode);
-
-  // Bottom info plinth heights
   const plinthGap = pick([18, 22, 28] as const, mode);
   const plinthLabel = pick([18, 22, 28] as const, mode);
   const plinthBig = pick([28, 34, 40] as const, mode);
@@ -101,182 +64,112 @@ export function NetworkingWowGraphic({
 
   return (
     <div style={containerStyle({ background: BRAND.oxford, color: "#fff" })}>
-      <svg viewBox={vb} style={svgFillStyle}>
-        <defs>
-          {/* Coquelicot wash under the wordmark — toned way down (was
-              0.55 → felt like an abrasive orange spotlight against the
-              already-saturated WOW! mark). 0.22 reads as warmth, not
-              heat, with a soft midpoint to smooth the falloff. */}
-          <radialGradient id={`nwglow-${mode}`} cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor={BRAND.coquelicot} stopOpacity="0.22" />
-            <stop offset="40%" stopColor={BRAND.coquelicot} stopOpacity="0.08" />
-            <stop offset="80%" stopColor={BRAND.coquelicot} stopOpacity="0" />
-          </radialGradient>
-          {/* Honeycomb grid — hexagons via two offset diagonal repeats */}
-          <pattern id={`nwhex-${mode}`} x="0" y="0" width="64" height="56" patternUnits="userSpaceOnUse">
-            <path
-              d="M 32 0 L 64 16 L 64 40 L 32 56 L 0 40 L 0 16 Z"
-              fill="none"
-              stroke={BRAND.cambridge}
-              strokeOpacity="0.07"
-              strokeWidth="1"
-            />
-          </pattern>
-        </defs>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt=""
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+        }}
+      />
 
-        {/* Honeycomb texture across the full field */}
-        <rect width="100%" height="100%" fill={`url(#nwhex-${mode})`} />
-
-        {/* Glow halo behind the WOW! mark — anchored to the title side */}
-        <g>
-          <circle
-            cx={isStory ? 380 : isSquare ? 360 : 420}
-            cy={isStory ? 1280 : isSquare ? 720 : 380}
-            r={isStory ? 480 : 360}
-            fill={`url(#nwglow-${mode})`}
-          />
-        </g>
-
-        {/* Sacred-geometry seal — three concentric ghost rings */}
-        <g opacity="0.32">
-          <circle cx={seal.cx} cy={seal.cy} r={seal.r * 1.18} fill="none" stroke={BRAND.cambridge} strokeWidth="1.5" strokeDasharray="1 5" />
-          <circle cx={seal.cx} cy={seal.cy} r={seal.r * 1.06} fill="none" stroke={BRAND.cambridge} strokeWidth="1.2" />
-          <circle cx={seal.cx} cy={seal.cy} r={seal.r * 0.92} fill="none" stroke={BRAND.cambridge} strokeWidth="1" strokeDasharray="2 8" />
-        </g>
-
-        {/* Complete-graph K_12 connection web */}
-        <g stroke={BRAND.cambridge} strokeOpacity="0.22" strokeWidth="1">
-          {edges.map(([a, b], i) => (
-            <line key={i} x1={nodes[a].x} y1={nodes[a].y} x2={nodes[b].x} y2={nodes[b].y} />
-          ))}
-        </g>
-
-        {/* Outer ring */}
-        <circle cx={seal.cx} cy={seal.cy} r={seal.r} fill="none" stroke={BRAND.cambridge} strokeOpacity="0.55" strokeWidth="1.5" />
-
-        {/* 12 nodes — alternating coquelicot accent at cardinal positions */}
-        {nodes.map((n, i) => {
-          const cardinal = i % 3 === 0;
-          return (
-            <g key={i}>
-              <circle cx={n.x} cy={n.y} r={cardinal ? 8 : 5} fill={cardinal ? BRAND.coquelicot : BRAND.cambridge} />
-              {cardinal && (
-                <circle cx={n.x} cy={n.y} r={16} fill="none" stroke={BRAND.coquelicot} strokeOpacity="0.4" strokeWidth="1.5" />
-              )}
-            </g>
-          );
-        })}
-
-        {/* Center mark — small coquelicot dot + cambridge ring */}
-        <circle cx={seal.cx} cy={seal.cy} r="6" fill={BRAND.coquelicot} />
-        <circle cx={seal.cx} cy={seal.cy} r="14" fill="none" stroke={BRAND.cambridge} strokeOpacity="0.5" strokeWidth="1" />
-      </svg>
-
-      {/* Content layer */}
-      <div style={{
-        position: "relative", zIndex: 2, height: "100%",
-        padding: isStory ? "72px 72px 84px" : isSquare ? "56px 64px 64px" : "44px 64px 52px",
-        display: "flex", flexDirection: "column", justifyContent: "space-between",
-      }}>
-        {/* Top rail — chamber wordmark left, icon right */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{
-            fontSize: pick([14, 16, 20] as const, mode),
-            fontWeight: 700, letterSpacing: "0.18em",
-            color: BRAND.cambridge, textTransform: "uppercase",
-          }}>
-            Greater Medina Chamber
-          </div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={ASSETS.iconWhite} style={{ height: isStory ? 60 : 44, opacity: 0.95 }} alt="" />
-        </div>
-
-        {/* Title + tagline block */}
-        <div style={{ marginTop: isStory ? -120 : 0 }}>
-          <div style={{
-            fontSize: titleTop, fontWeight: 700, lineHeight: 0.82,
-            letterSpacing: "-0.05em", color: "#fff",
-          }}>
-            Networking
-          </div>
-          <div style={{
-            fontSize: titleBig, fontWeight: 700, lineHeight: 0.82,
-            letterSpacing: "-0.06em", color: BRAND.coquelicot,
-            marginTop: -20, marginLeft: -8,
-          }}>
-            WOW!
-          </div>
-
-          {/* Tagline — BN Bergen "Watch ___ Work" with Mistrully on
-              "Opportunities" as a single-word brand accent. */}
-          <div style={{
-            marginTop: isStory ? 32 : 18,
-            display: "flex", alignItems: "baseline", flexWrap: "wrap",
-            columnGap: pick([14, 16, 20] as const, mode),
-            rowGap: 4,
-            color: "#fff",
-          }}>
-            <span style={{
-              fontSize: taglineSize, fontWeight: 300,
-              letterSpacing: "0.04em", textTransform: "uppercase",
-            }}>Watch</span>
-            <span style={{
-              fontFamily: SCRIPT_STACK,
-              fontSize: scriptSize, lineHeight: 0.9,
-              color: BRAND.cambridge, fontWeight: 400,
-              transform: "translateY(0.08em)", display: "inline-block",
-            }}>
-              Opportunities
-            </span>
-            <span style={{
-              fontSize: taglineSize, fontWeight: 300,
-              letterSpacing: "0.04em", textTransform: "uppercase",
-            }}>Work</span>
-          </div>
-        </div>
-
-        {/* Bottom event-info plinth — only renders when bound to a
-            specific upcoming event. The generic template stays clean. */}
-        {eventInfo && (dateLine || eventInfo.time || eventInfo.note) && (
-          <div style={{
-            borderTop: `1px solid ${BRAND.cambridge}55`,
-            paddingTop: plinthGap,
-            display: "flex", alignItems: "flex-end", justifyContent: "space-between",
-            gap: 24, flexWrap: "wrap",
-          }}>
+      {/* Bottom event-info plinth — only renders when bound to a specific
+          upcoming event; sits on an oxford scrim for legibility over the
+          artwork. The generic template stays clean. */}
+      {eventInfo && (dateLine || eventInfo.time || eventInfo.note) && (
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 2,
+            padding: isStory
+              ? "140px 72px 84px"
+              : isSquare
+              ? "110px 64px 64px"
+              : "96px 64px 52px",
+            background: `linear-gradient(180deg, ${BRAND.oxford}00 0%, ${BRAND.oxford}e6 64%)`,
+          }}
+        >
+          <div
+            style={{
+              borderTop: `1px solid ${BRAND.cambridge}55`,
+              paddingTop: plinthGap,
+              display: "flex",
+              alignItems: "flex-end",
+              justifyContent: "space-between",
+              gap: 24,
+              flexWrap: "wrap",
+            }}
+          >
             <div>
               {dateLine && (
-                <div style={{
-                  fontSize: plinthLabel, fontWeight: 700,
-                  letterSpacing: "0.16em", color: BRAND.cambridge,
-                  textTransform: "uppercase",
-                }}>
+                <div
+                  style={{
+                    fontSize: plinthLabel,
+                    fontWeight: 700,
+                    letterSpacing: "0.16em",
+                    color: BRAND.cambridge,
+                    textTransform: "uppercase",
+                  }}
+                >
                   {dateLine}
                 </div>
               )}
               {eventInfo.time && (
-                <div style={{
-                  fontSize: plinthBig, fontWeight: 700,
-                  color: "#fff", letterSpacing: "-0.01em", marginTop: 4,
-                }}>
+                <div
+                  style={{
+                    fontSize: plinthBig,
+                    fontWeight: 700,
+                    color: "#fff",
+                    letterSpacing: "-0.01em",
+                    marginTop: 4,
+                  }}
+                >
                   {eventInfo.time}
                 </div>
               )}
             </div>
             {eventInfo.note && (
-              <div style={{
-                fontSize: plinthLabel, fontWeight: 700,
-                letterSpacing: "0.18em", color: BRAND.coquelicot,
-                textTransform: "uppercase", textAlign: "right",
-                paddingBottom: 4,
-              }}>
+              <div
+                style={{
+                  fontSize: plinthLabel,
+                  fontWeight: 700,
+                  letterSpacing: "0.18em",
+                  color: BRAND.coquelicot,
+                  textTransform: "uppercase",
+                  textAlign: "right",
+                  paddingBottom: 4,
+                }}
+              >
                 {eventInfo.note}
               </div>
             )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
+  );
+}
+
+export function NetworkingWowGraphic({
+  mode = "social",
+  eventInfo,
+}: {
+  mode?: GraphicMode;
+  eventInfo?: EventInfo;
+}) {
+  return (
+    <OfficialArtworkGraphic
+      src={ASSETS.networkingWowArt}
+      mode={mode}
+      eventInfo={eventInfo}
+    />
   );
 }
 
@@ -540,207 +433,27 @@ export function SafetyCouncilGraphic({
 }
 
 /* =============================================================================
-   3 — CHAMBER CHAT
-   Oxford field + ghosted networking photo, cambridge coffee cup + steam,
-   split-color "Chamber / Chat." wordmark, tagline + WHEN stat bottom row.
+   3 — CHAMBER CHAT  (v3 — official designed artwork, replaces the drawn
+   coffee-cup composition)
+
+   Same OfficialArtworkGraphic structure as Networking WOW (section 1).
+   Unlike the old version, this one DOES render the event-info plinth when
+   bound to an instance.
    ============================================================================ */
 
 export function ChamberChatGraphic({
   mode = "social",
-  eventInfo: _eventInfo,
+  eventInfo,
 }: {
   mode?: GraphicMode;
   eventInfo?: EventInfo;
 }) {
-  const isStory = mode === "story";
-  const isSquare = mode === "square";
-
-  const vb = isStory ? "0 0 1080 1920" : isSquare ? "0 0 1080 1080" : "0 0 1200 630";
-  const vbW = isStory || isSquare ? 1080 : 1200;
-  const vbH = isStory ? 1920 : isSquare ? 1080 : 630;
-
-  // Cup: coffee surface at φ horizontal (vbH / 1.618), handle bleeds right edge
-  const cup = isStory
-    ? { cx: 840,  cy: 1440, rx: 260, ry: 65, h: 290 }
-    : isSquare
-    ? { cx: 860,  cy: 800,  rx: 200, ry: 50, h: 220 }
-    : { cx: 950,  cy: 388,  rx: 170, ry: 42, h: 200 };
-
-  const titleSize = pick([140, 200, 260] as const, mode);
-  const padding = isStory ? "110px 72px 100px" : isSquare ? "72px 64px" : "56px 64px";
-
-  const dotX = cup.cx + cup.rx * 0.35;
-  const dotY = cup.cy + 2;
-  const dotR  = isStory ? 10 : 7;
-
-  // Bokeh: city-light particles [fracX, fracY, r, opacity]
-  const bokeh: [number, number, number, number][] = [
-    [0.10, 0.13, 2.5, 0.14], [0.28, 0.07, 1.8, 0.10], [0.48, 0.14, 3.0, 0.09],
-    [0.63, 0.09, 2.0, 0.13], [0.17, 0.82, 2.2, 0.08], [0.38, 0.76, 1.5, 0.11],
-    [0.07, 0.49, 1.6, 0.07], [0.43, 0.31, 2.0, 0.12], [0.68, 0.22, 1.8, 0.08],
-    [0.13, 0.28, 3.0, 0.06], [0.52, 0.47, 2.0, 0.09], [0.23, 0.61, 1.4, 0.07],
-  ];
-
   return (
-    <div style={containerStyle({ background: BRAND.oxford, color: "#fff" })}>
-      {/* Ghosted networking photo */}
-      <div style={{
-        position: "absolute", inset: 0,
-        backgroundImage: `url(${ASSETS.networking})`,
-        backgroundSize: "cover", backgroundPosition: "center",
-        opacity: 0.28, mixBlendMode: "luminosity",
-        filter: "grayscale(1) contrast(1.2)",
-      }} />
-
-      {/* Deep atmospheric gradient */}
-      <div style={{
-        position: "absolute", inset: 0,
-        background: `linear-gradient(168deg, ${BRAND.oxford}88 0%, ${BRAND.oxford}bb 45%, ${BRAND.oxford}f4 100%)`,
-      }} />
-
-      {/* John Alvin "heavy light": warm coquelicot glow radiating from cup position */}
-      <div style={{
-        position: "absolute", inset: 0,
-        background: `radial-gradient(ellipse 55% 70% at ${(cup.cx / vbW) * 100}% ${(cup.cy / vbH) * 100}%, ${BRAND.coquelicot}1e 0%, transparent 62%)`,
-      }} />
-
-      {/* Cambridge counterglow — cool upper atmosphere */}
-      <div style={{
-        position: "absolute", inset: 0,
-        background: `radial-gradient(ellipse 38% 32% at 18% 12%, ${BRAND.cambridge}1c 0%, transparent 70%)`,
-      }} />
-
-      {/* SVG: esoteric geometry + particles + cup + glow */}
-      <svg viewBox={vb} style={svgFillStyle}>
-        <defs>
-          {/* Bloom glow for steam curls */}
-          <filter id={`cc-steam-${mode}`} x="-120%" y="-40%" width="340%" height="180%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation={isStory ? 5 : 3.5} result="b" />
-            <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
-          </filter>
-
-          {/* Bloom glow for coquelicot focal dot */}
-          <filter id={`cc-dot-${mode}`} x="-400%" y="-400%" width="900%" height="900%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation={isStory ? 18 : 11} result="b" />
-            <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
-          </filter>
-        </defs>
-
-        {/* Esoteric Architect: invisible circle anchors the composition —
-            the eye perceives its weight without ever seeing the line */}
-        <circle
-          cx={cup.cx} cy={cup.cy} r={isStory ? 500 : isSquare ? 370 : 288}
-          fill="none" stroke={BRAND.cambridge}
-          strokeWidth={isStory ? 0.8 : 0.5} opacity="0.08"
-        />
-
-        {/* Bokeh city-light field — warm amber + cool cambridge + white */}
-        {bokeh.map(([fx, fy, r, o], i) => (
-          <circle key={i}
-            cx={fx * vbW} cy={fy * vbH} r={r}
-            fill={i % 3 === 0 ? BRAND.cambridge : i % 3 === 1 ? "#C8963E" : "#ffffff"}
-            opacity={o}
-          />
-        ))}
-
-        {/* Steam curls — with bloom */}
-        <g fill="none" stroke={BRAND.cambridge} strokeWidth={isStory ? 4 : 3}
-           strokeLinecap="round" opacity="0.72"
-           filter={`url(#cc-steam-${mode})`}>
-          {[0, 1, 2].map((i) => {
-            const x    = cup.cx + (i - 1) * (cup.rx * 0.45);
-            const topY = cup.cy - cup.ry - (isStory ? 260 : 180);
-            const botY = cup.cy - cup.ry - 12;
-            const midX = x + (i % 2 === 0 ? 20 : -20);
-            return (
-              <path key={i}
-                d={`M ${x} ${botY} C ${midX} ${botY-50}, ${x+28} ${botY-100}, ${x-10} ${botY-150} S ${midX+14} ${topY+30}, ${x} ${topY}`} />
-            );
-          })}
-        </g>
-
-        {/* Saucer */}
-        <ellipse cx={cup.cx} cy={cup.cy+cup.h+16} rx={cup.rx+36} ry={cup.ry*0.8}  fill={BRAND.cambridge} opacity="0.22" />
-        <ellipse cx={cup.cx} cy={cup.cy+cup.h+10} rx={cup.rx+30} ry={cup.ry*0.7}  fill={BRAND.cambridge} />
-        <ellipse cx={cup.cx} cy={cup.cy+cup.h+6}  rx={cup.rx+22} ry={cup.ry*0.55} fill={BRAND.oxford} />
-
-        {/* Cup body */}
-        <path d={`M ${cup.cx-cup.rx} ${cup.cy}
-                  C ${cup.cx-cup.rx} ${cup.cy+cup.h*0.8}, ${cup.cx-cup.rx*0.6} ${cup.cy+cup.h}, ${cup.cx} ${cup.cy+cup.h}
-                  C ${cup.cx+cup.rx*0.6} ${cup.cy+cup.h}, ${cup.cx+cup.rx} ${cup.cy+cup.h*0.8}, ${cup.cx+cup.rx} ${cup.cy}
-                  Z`} fill={BRAND.cambridge} />
-        {/* Handle */}
-        <path d={`M ${cup.cx+cup.rx-4} ${cup.cy+cup.h*0.2}
-                  Q ${cup.cx+cup.rx+cup.rx*0.55} ${cup.cy+cup.h*0.35}, ${cup.cx+cup.rx+cup.rx*0.55} ${cup.cy+cup.h*0.55}
-                  Q ${cup.cx+cup.rx+cup.rx*0.55} ${cup.cy+cup.h*0.78}, ${cup.cx+cup.rx-4} ${cup.cy+cup.h*0.72}`}
-          fill="none" stroke={BRAND.cambridge} strokeWidth={isStory ? 28 : 22} strokeLinecap="round" />
-        {/* Coffee surface */}
-        <ellipse cx={cup.cx} cy={cup.cy} rx={cup.rx}     ry={cup.ry}     fill={BRAND.oxford} />
-        <ellipse cx={cup.cx} cy={cup.cy} rx={cup.rx-10}  ry={cup.ry-8}   fill="#1a1306" />
-        <ellipse cx={cup.cx-cup.rx*0.3} cy={cup.cy-cup.ry*0.3} rx={cup.rx*0.45} ry={cup.ry*0.25} fill="rgba(255,255,255,0.09)" />
-
-        {/* Coquelicot focal point — the single John Alvin light source, glowing halos */}
-        <circle cx={dotX} cy={dotY} r={dotR*5.5} fill={BRAND.coquelicot} opacity="0.07"
-                filter={`url(#cc-dot-${mode})`} />
-        <circle cx={dotX} cy={dotY} r={dotR*3}   fill={BRAND.coquelicot} opacity="0.20" />
-        <circle cx={dotX} cy={dotY} r={dotR*1.7} fill={BRAND.coquelicot} opacity="0.55" />
-        <circle cx={dotX} cy={dotY} r={dotR}      fill={BRAND.coquelicot} opacity="0.95" />
-      </svg>
-
-      {/* Content layer */}
-      <div style={{
-        position: "relative", zIndex: 2, height: "100%",
-        padding,
-        display: "flex", flexDirection: "column", justifyContent: "space-between",
-      }}>
-        {/* Top rail */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-          <div>
-            <div style={{ fontSize: isStory ? 16 : 12, letterSpacing: "0.3em", color: BRAND.cambridge, fontWeight: 700 }}>
-              MONTHLY NETWORKING
-            </div>
-            <div style={{ fontSize: isStory ? 17 : 13, color: "rgba(255,255,255,0.55)", marginTop: 6, letterSpacing: "0.1em" }}>
-              GREATER MEDINA CHAMBER
-            </div>
-          </div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={ASSETS.iconWhite} style={{ height: isStory ? 60 : 44, width: "auto" }} alt="" />
-        </div>
-
-        {/* Wordmark — heavy bottom-left anchor, neon glow treatment */}
-        <div style={{ maxWidth: isStory ? 760 : isSquare ? 620 : 560 }}>
-          <div style={{
-            borderTop: `1px solid ${BRAND.cambridge}38`,
-            paddingTop: isStory ? 28 : 18,
-            marginBottom: isStory ? 10 : 6,
-          }} />
-          <div style={{
-            fontSize: titleSize, fontWeight: 700, lineHeight: 0.86, letterSpacing: "-0.045em",
-            color: "#fff",
-            textShadow: `0 0 ${isStory ? 60 : 38}px rgba(255,255,255,0.20), 0 0 ${isStory ? 120 : 75}px rgba(255,255,255,0.09)`,
-          }}>
-            Chamber
-          </div>
-          <div style={{
-            fontSize: titleSize, fontWeight: 700, lineHeight: 0.86, letterSpacing: "-0.045em",
-            color: BRAND.cambridge, marginTop: -8,
-            textShadow: `0 0 ${isStory ? 48 : 30}px ${BRAND.cambridge}80, 0 0 ${isStory ? 96 : 60}px ${BRAND.cambridge}40, 0 0 ${isStory ? 180 : 110}px ${BRAND.cambridge}1a`,
-          }}>
-            Chat
-          </div>
-          <div style={{
-            fontFamily: SCRIPT_STACK,
-            fontSize: pick([34, 48, 68] as const, mode),
-            color: "rgba(255,255,255,0.72)",
-            marginTop: isStory ? 18 : 10,
-            letterSpacing: "0.01em",
-            lineHeight: 1.1,
-          }}>
-            where connections happen
-          </div>
-        </div>
-      </div>
-    </div>
+    <OfficialArtworkGraphic
+      src={ASSETS.chamberChatArt}
+      mode={mode}
+      eventInfo={eventInfo}
+    />
   );
 }
 

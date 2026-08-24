@@ -187,48 +187,10 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="relative overflow-hidden rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
-        <VesicaPiscisWatermark className="tp-vesica" />
-        <FadeIn>
-          <div className="grid grid-cols-3 gap-f21">
-            {[
-              { stat: "1938", label: "Founded" },
-              { stat: "50+", label: "Events Per Year" },
-              { stat: "500+", label: "Member Businesses" },
-            ].map((item) => (
-              <div
-                key={item.label}
-                className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] text-center"
-              >
-                <p className="text-h2 text-oxford [[data-theme=dark]_&]:text-cambridge">
-                  {item.stat}
-                </p>
-                <p className="text-caption text-text-tertiary mt-f3 uppercase tracking-wider">
-                  {item.label}
-                </p>
-              </div>
-            ))}
-          </div>
-        </FadeIn>
-      </section>
-
-      {/* Our Story */}
+      {/* Our Story — vesica watermark (moved from the removed Stats band);
+          its courthouse ghost moved down to Core Values 2026-08-24. */}
       <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
-        {/* Ghosted courthouse backdrop */}
-        <div
-          className="absolute inset-0 pointer-events-none select-none"
-          aria-hidden="true"
-        >
-          <Image
-            src="/images/photos/medina-county-courthouse-sunset.webp"
-            alt=""
-            fill
-            className="object-cover opacity-[0.10]"
-            sizes="100vw"
-            quality={60}
-          />
-        </div>
+        <VesicaPiscisWatermark className="tp-vesica" />
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
             <div className="max-w-3xl">
@@ -258,9 +220,21 @@ export default async function AboutPage() {
 
       {/* Core Values */}
       <section className="relative overflow-hidden py-f89 lg:py-f144">
-        {/* Backdrop removed 2026-08-03: adjacent sections (Our Story, Our
-            Team) carry ghosts, and backdrops must alternate with plain
-            sections — never stack. */}
+        {/* Courthouse ghost moved here from Our Story 2026-08-24 (Our Story
+            now carries the vesica watermark instead). */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/medina-county-courthouse-sunset.webp"
+            alt=""
+            fill
+            className="object-cover opacity-[0.10]"
+            sizes="100vw"
+            quality={60}
+          />
+        </div>
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <FadeIn>
           <div className="max-w-2xl mb-f21">
@@ -308,23 +282,9 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* Our Team + Location */}
-      <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
-        {/* Ghosted chamber-meeting backdrop */}
-        <div
-          className="absolute inset-0 pointer-events-none select-none"
-          aria-hidden="true"
-        >
-          <Image
-            src="/images/photos/medina-chamber-team-meeting.webp"
-            alt=""
-            fill
-            className="object-cover object-top opacity-[0.18]"
-            sizes="100vw"
-            quality={60}
-          />
-        </div>
-        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+      {/* Our Team — its own plain band (alternation: Core Values above and
+          Visit Us below both carry ghosts, so this one stays image-free). */}
+      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
           <FadeIn>
             <div className="max-w-2xl mb-f21">
               <p className="text-overline text-cambridge mb-f8">Our Team</p>
@@ -339,7 +299,7 @@ export default async function AboutPage() {
           <div className="grid sm:grid-cols-2 gap-f21 max-w-3xl">
             {staff.map((s, i) => (
               <FadeIn key={s.name} delay={i * 100}>
-                <div className="overflow-hidden bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)] h-full">
+                <div className="overflow-hidden bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] h-full">
                   <div className="relative w-full aspect-[4/3]">
                     <Image
                       src={s.photo}
@@ -363,9 +323,27 @@ export default async function AboutPage() {
               </FadeIn>
             ))}
           </div>
+      </section>
 
+      {/* Visit Us / Location — chamber-meeting ghost + translucent card
+          (card-over-ghost pattern: 0.18 backdrop, /75 surface). */}
+      <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/medina-chamber-team-meeting.webp"
+            alt=""
+            fill
+            className="object-cover object-top opacity-[0.18]"
+            sizes="100vw"
+            quality={60}
+          />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
-            <div className="mt-f34 p-f34 lg:p-f55 bg-bg-primary/75 border border-border-secondary rounded-[var(--radius-lg)]">
+            <div className="p-f34 lg:p-f55 bg-bg-primary/75 border border-border-secondary rounded-[var(--radius-lg)]">
               <div className="grid md:grid-cols-2 gap-f34 items-center">
                 <div>
                   <p className="text-overline text-cambridge mb-f8">Visit Us</p>

@@ -243,14 +243,14 @@ export default function ContactPage() {
             src="/images/photos/medina-gazebo-vintage.webp"
             alt=""
             fill
-            className="object-cover object-center opacity-[0.10]"
+            className="object-cover object-center opacity-[0.18]"
             sizes="100vw"
             quality={60}
           />
         </div>
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
-          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+          <div className="p-f34 lg:p-f55 bg-bg-secondary/75 border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
                 <p className="text-overline text-cambridge mb-f8">Membership</p>

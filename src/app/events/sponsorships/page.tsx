@@ -525,14 +525,14 @@ export default function SponsorshipsPage() {
             src="/images/photos/sneak-peeks/medina-chamber-community-007.webp"
             alt=""
             fill
-            className="object-cover object-top opacity-[0.10]"
+            className="object-cover object-top opacity-[0.18]"
             sizes="100vw"
             quality={60}
           />
         </div>
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
-          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+          <div className="p-f34 lg:p-f55 bg-bg-secondary/75 border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
                 <h2 className="text-h2">Ready to get in the room?</h2>

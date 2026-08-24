@@ -365,14 +365,14 @@ export default function EventsPage() {
             src="/images/photos/sneak-peeks/medina-chamber-community-002.webp"
             alt=""
             fill
-            className="object-cover object-top opacity-[0.10]"
+            className="object-cover object-top opacity-[0.18]"
             sizes="100vw"
             quality={60}
           />
         </div>
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
-          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+          <div className="p-f34 lg:p-f55 bg-bg-secondary/75 border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="max-w-2xl">
               <h2 className="text-h2">Members get priority access</h2>
               <p className="text-body-lg text-text-secondary mt-f13">

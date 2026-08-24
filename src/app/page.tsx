@@ -147,19 +147,13 @@ export default function HomePage() {
               <ButtonLink href="/membership/join" variant="primary" size="lg">
                 Join the Chamber →
               </ButtonLink>
-              <Link
+              <ButtonLink
                 href="/membership/directory"
-                className="
-                  inline-flex items-center px-f21 py-f21
-                  border border-white/30 hover:border-white/60
-                  text-white
-                  font-bold text-body-sm
-                  rounded-[var(--radius-md)]
-                  transition-colors
-                "
+                variant="emerald"
+                size="lg"
               >
                 Browse the Directory
-              </Link>
+              </ButtonLink>
             </div>
           </div>
         </div>
@@ -409,11 +403,14 @@ export default function HomePage() {
           className="absolute inset-0 pointer-events-none select-none"
           aria-hidden="true"
         >
+          {/* 0.18 (above the usual 0.10 band pattern) — Mark wants the
+              panorama readable through the translucent promo card, and at
+              0.10 the card's see-through share of it is ~1% (invisible). */}
           <Image
             src="/images/programs/italy-trip/medina-chamber-italy-trip-panorama.webp"
             alt=""
             fill
-            className="object-cover opacity-[0.10]"
+            className="object-cover opacity-[0.18]"
             sizes="100vw"
             quality={60}
           />
@@ -424,7 +421,7 @@ export default function HomePage() {
             href="/programs/italy-trip"
             className="
               group flex flex-col gap-f13 sm:flex-row sm:items-center sm:justify-between sm:gap-f21
-              rounded-[var(--radius-lg)] bg-bg-secondary border border-border-secondary
+              rounded-[var(--radius-lg)] bg-bg-secondary/75 border border-border-secondary
               px-f21 py-f21 lg:px-f34
               hover:border-cambridge/40 hover:shadow-cambridge transition-all
             "
@@ -523,7 +520,7 @@ export default function HomePage() {
             src="/images/photos/industry-medina.jpg"
             alt=""
             fill
-            className="object-cover object-center opacity-[0.10]"
+            className="object-cover object-center opacity-[0.18]"
             sizes="100vw"
             quality={55}
           />
@@ -531,7 +528,7 @@ export default function HomePage() {
 
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <FadeIn>
-          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-xl)]">
+          <div className="p-f34 lg:p-f55 bg-bg-secondary/75 border border-border-secondary rounded-[var(--radius-xl)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
                 <p className="text-overline text-cambridge mb-f13">Membership</p>

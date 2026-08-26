@@ -4,8 +4,6 @@ import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { safeJsonLd } from "@/lib/json-ld";
-import { stephanie } from "@/data/staff";
-import { mailto } from "@/lib/format";
 
 const BOOKING_URL = "https://groups.gocollette.com/en-US/link/1446404";
 const BOOK_BY = "April 11, 2027";
@@ -381,16 +379,11 @@ export default function ItalyTripPage() {
                   Collette has reserved for the chamber, so reserve early.
                 </p>
                 <p className="text-body text-text-secondary mt-f13">
-                  General questions about the trip?{" "}
-                  <a
-                    href={mailto(stephanie.email)}
-                    className="font-bold text-cambridge hover:underline"
-                  >
-                    Email Stephanie
-                  </a>{" "}
-                  or call the chamber at{" "}
-                  <a href="tel:+13307238773" className="font-bold text-cambridge hover:underline">
-                    (330) 723-8773
+                  Questions about the trip? Contact{" "}
+                  <span className="font-bold text-text-primary">Catherine Hawk</span>{" "}
+                  at Collette —{" "}
+                  <a href="tel:+17343087962" className="font-bold text-cambridge hover:underline">
+                    (734) 308-7962
                   </a>
                   .
                 </p>

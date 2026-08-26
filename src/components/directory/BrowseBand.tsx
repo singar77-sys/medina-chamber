@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/Button";
 import { IndustryChipStrip } from "./IndustryChipStrip";
 import { DirectorySearch } from "./DirectorySearch";
 import { useTheme } from "@/components/ThemeProvider";
-import { HalftoneField } from "@/components/effects/HalftoneField";
 
 interface BrowseBandProps {
   /** Controlled search query. */
@@ -47,11 +46,12 @@ export function BrowseBand({
   return (
     <section
       aria-labelledby="browse-band-heading"
-      className="browse-band relative overflow-hidden border-y border-border-primary py-f89 lg:py-f144"
+      className="browse-band relative isolate overflow-hidden border-y border-border-primary py-f89 lg:py-f144"
     >
-      {/* Vesica sigil tried here and pulled same-day ("too much") — the
-          halftone dot field reads quieter behind the search + chip grid. */}
-      <HalftoneField />
+      {/* Vesica sigil tried and pulled ("too much"), then dots, then the
+          honeycomb grid (Mark 2026-08-26) — its breathing cells sit better
+          behind the search + chip grid than the flat dot field did. */}
+      <div className="tp-honeycomb" aria-hidden="true" />
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         {/* Header */}
         <p className="text-overline text-cambridge mb-f8 tracking-[0.18em]">

@@ -7,6 +7,7 @@ import { members as staticMembers } from "@/data/members";
 import { memberLogo } from "@/lib/member-logos";
 import { normalizeCategories } from "@/lib/categories";
 import { DirectoryClient } from "./DirectoryClient";
+import { CommunityInvestors } from "@/components/CommunityInvestors";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
 import {
@@ -103,6 +104,10 @@ export default async function DirectoryPage() {
           </FadeIn>
         </div>
       </section>
+
+      {/* Community Investor logo marquee — same strip as the homepage, plain
+          (no backdrop) so the photo bands alternate around it */}
+      <CommunityInvestors />
 
       {/* Join CTA — clock-medina ghosted as the section background */}
       <section className="relative overflow-hidden py-f55 lg:py-f89">

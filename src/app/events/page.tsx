@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getUpcomingEvents, shortenEventTitle } from "@/data/events";
-import { EventsCalendar } from "@/components/events/EventsCalendar";
+import { EventsTimeline } from "@/components/events/EventsTimeline";
 import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 
@@ -28,16 +28,26 @@ export default function EventsPage() {
   const allUpcoming = getUpcomingEvents();
   const hasEvents = allUpcoming.length > 0;
 
-  // Slim, serializable props for the client calendar — titles shortened
-  // server-side so events.json (and shortenEventTitle) stay out of the
-  // client bundle. Sorted ascending so the calendar's month range is right.
-  const todayISO = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
-  const calendarEvents = allUpcoming
+  // Slim props for the signal-rail timeline — titles shortened and pricing
+  // reduced to a chip server-side. Sorted ascending so the rail reads
+  // chronologically and the first event is NEXT UP.
+  const priceLineOf = (pricing?: string): string => {
+    if (!pricing) return "Free";
+    const first = pricing.split("\n")[0].trim();
+    if (/no cost|free/i.test(first)) return "Free";
+    const dollar = first.match(/\$\d[\d,]*(\.\d{2})?/);
+    return dollar ? dollar[0].replace(/\.00$/, "") : "See event";
+  };
+  const timelineEvents = allUpcoming
     .map((e) => ({
       slug: e.slug,
       title: shortenEventTitle(e.title),
       dateISO: e.dateISO,
+      dayOfWeek: e.dayOfWeek,
+      day: e.day,
       startTime: e.startTime,
+      location: e.location,
+      priceLine: priceLineOf(e.pricing),
     }))
     .sort((a, b) => a.dateISO.localeCompare(b.dateISO));
 
@@ -98,11 +108,7 @@ export default function EventsPage() {
           </div>
 
           {hasEvents ? (
-            <EventsCalendar
-              events={calendarEvents}
-              initialYm={todayISO.slice(0, 7)}
-              todayISO={todayISO}
-            />
+            <EventsTimeline events={timelineEvents} />
           ) : (
             <div className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] text-center">
               <p className="text-body-lg text-text-secondary">

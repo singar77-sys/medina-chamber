@@ -436,13 +436,23 @@ export default function ItalyTripPage() {
         </div>
       </section>
 
-      {/* Legal disclosure — required Seller of Travel registration numbers */}
-      <p className="mx-auto max-w-7xl px-6 lg:px-8 pb-f34 text-caption text-text-tertiary">
-        Travel arrangements for Reflections of Italy are booked, operated, and
-        sold by Collette. CST# 2006766-20 · UBN# 601220855 · Nevada Sellers of
-        Travel Registration No. 2003-0279. A passport valid at least 6 months
-        beyond your travel dates is required.
-      </p>
+      {/* Legal disclosure — required Seller of Travel registration numbers,
+          set as a quiet centered footnote: prose and registration numbers on
+          separate lines so neither reads as a wall of codes. */}
+      <section className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f34">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-caption text-text-tertiary leading-relaxed">
+            Travel arrangements for Reflections of Italy are booked, operated,
+            and sold by Collette, the chamber&apos;s group travel partner.
+            A passport valid at least 6 months beyond your travel dates is
+            required.
+          </p>
+          <p className="mt-f8 font-mono text-caption tracking-wide text-text-tertiary/70">
+            CST# 2006766-20&ensp;·&ensp;UBN# 601220855&ensp;·&ensp;Nevada
+            Sellers of Travel Registration No. 2003-0279
+          </p>
+        </div>
+      </section>
     </>
   );
 }

@@ -8,6 +8,28 @@ import { memberLogo } from "@/lib/member-logos";
 import { normalizeCategories } from "@/lib/categories";
 import { DirectoryClient } from "./DirectoryClient";
 import { FadeIn } from "@/components/FadeIn";
+import { safeJsonLd } from "@/lib/json-ld";
+
+// Membership benefits-wheel promo video (10s ambient loop, muted).
+const BENEFITS_VIDEO = "/videos/medina-chamber-membership-benefits-wheel.mp4";
+const BENEFITS_VIDEO_POSTER = "/videos/medina-chamber-membership-benefits-wheel-poster.webp";
+
+const videoJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  name: "Greater Medina Chamber of Commerce Membership Benefits",
+  description:
+    "The five pillars of Greater Medina Chamber membership — connections, visibility, advocacy, savings, and education — for Medina County, Ohio businesses.",
+  thumbnailUrl: `https://medinachamber.com${BENEFITS_VIDEO_POSTER}`,
+  contentUrl: `https://medinachamber.com${BENEFITS_VIDEO}`,
+  uploadDate: "2026-08-26",
+  duration: "PT10S",
+  publisher: {
+    "@type": "Organization",
+    name: "Greater Medina Chamber of Commerce",
+    url: "https://medinachamber.com",
+  },
+};
 
 export const metadata: Metadata = {
   title: "Member Directory",
@@ -56,6 +78,47 @@ export default async function DirectoryPage() {
   return (
     <>
       <DirectoryClient members={members} industries={industries} />
+
+      {/* Membership at a glance — ambient benefits-wheel loop (plain band per
+          the Band Book: dots above, ghost CTA below). Muted + playsInline so
+          autoplay is allowed everywhere; poster keeps the LCP honest. */}
+      <section className="rule-top relative overflow-hidden py-f55 lg:py-f89">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(videoJsonLd) }}
+        />
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <FadeIn>
+            <div className="grid lg:grid-cols-2 gap-f34 items-center">
+              <div>
+                <p className="text-overline text-cambridge mb-f8">Membership</p>
+                <h2 className="text-h2">Five pillars, one membership.</h2>
+                <p className="text-body-lg text-text-secondary mt-f13">
+                  Every business in this directory taps the same engine —
+                  connections, visibility, advocacy, savings, and education.
+                </p>
+                <Link
+                  href="/membership/benefits"
+                  className="inline-block mt-f21 text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
+                >
+                  See every benefit →
+                </Link>
+              </div>
+              <video
+                className="w-full aspect-video rounded-[var(--radius-lg)] border border-border-secondary bg-bg-secondary object-cover"
+                src={BENEFITS_VIDEO}
+                poster={BENEFITS_VIDEO_POSTER}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-label="Animated wheel of the five Greater Medina Chamber membership benefits: connections, visibility, advocacy, savings, and education"
+              />
+            </div>
+          </FadeIn>
+        </div>
+      </section>
 
       {/* Join CTA — clock-medina ghosted as the section background */}
       <section className="relative overflow-hidden py-f55 lg:py-f89">

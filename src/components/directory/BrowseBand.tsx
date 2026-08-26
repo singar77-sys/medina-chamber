@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/Button";
 import { IndustryChipStrip } from "./IndustryChipStrip";
 import { DirectorySearch } from "./DirectorySearch";
 import { useTheme } from "@/components/ThemeProvider";
+import { MouseGradient } from "@/components/MouseGradient";
+import { BrandShaderBackgroundLazy } from "@/components/effects/BrandShaderBackgroundLazy";
 
 interface BrowseBandProps {
   /** Controlled search query. */
@@ -46,12 +48,15 @@ export function BrowseBand({
   return (
     <section
       aria-labelledby="browse-band-heading"
-      className="browse-band relative isolate overflow-hidden border-y border-border-primary py-f89 lg:py-f144"
+      className="browse-band relative isolate overflow-hidden border-y border-border-primary"
     >
-      {/* Vesica sigil tried and pulled ("too much"), then dots, then the
-          honeycomb grid (Mark 2026-08-26) — its breathing cells sit better
-          behind the search + chip grid than the flat dot field did. */}
-      <div className="tp-honeycomb" aria-hidden="true" />
+      {/* Fourth texture tried here (sigil → dots → honeycomb → this): the
+          MemberVoice liquid-chrome shader wash with the subtle cursor
+          flashlight on top (Mark 2026-08-26). Shader sits at section level
+          so the glow paints above it; padding lives on the MouseGradient
+          wrapper so the glow tracks across the full band. */}
+      <BrandShaderBackgroundLazy className="mv-shader-bg" />
+      <MouseGradient className="py-f89 lg:py-f144">
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         {/* Header */}
         <p className="text-overline text-cambridge mb-f8 tracking-[0.18em]">
@@ -125,6 +130,7 @@ export function BrowseBand({
           </p>
         </div>
       </div>
+      </MouseGradient>
     </section>
   );
 }

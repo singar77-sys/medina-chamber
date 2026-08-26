@@ -13,10 +13,10 @@ Interactive reference (live swatches): the "Band Book" artifact from the
 | T2 | Ghost photo + card | `opacity-[0.18]` under `bg-bg-secondary/75` card | The closer — terminal CTA band. `rule-top`, always. |
 | T3 | Ghost photo band | `opacity-[0.10]` over `bg-secondary`, `border-y` | Mid-page storytelling depth. Opaque cards only. |
 | T4 | Sigil | `<VesicaPiscisWatermark className="tp-vesica" />` | The page's core-substance band. Exactly one per page. `rule-top`. |
-| T5 | Dots | `<HalftoneField />` (`.halftone-field`) | Utility & browsing grids — perks, archives, photo strips. (Directory browse moved to honeycomb, Mark 2026-08-26.) |
+| T5 | Dots | `<HalftoneField />` (`.halftone-field`) | Utility & browsing grids — perks, archives, photo strips. (Directory browse tried dots, then honeycomb, then settled on shader + flashlight — Mark 2026-08-26.) |
 | T6 | Honeycomb | `.tp-honeycomb` in a `relative isolate` section | Community & proof bands — pillars, Harris Poll. Keep rare. |
 | T7 | Flashlight | `<MouseGradient>` cursor glow | Interactive strips only (home stats, contact quick-routes). No further spread. |
-| T8 | Shader | `BrandShaderBackgroundLazy` | Member-testimony band. Homepage soloist; never a second instance. |
+| T8 | Shader | `BrandShaderBackgroundLazy` | Member-testimony band (home) + directory browse band with flashlight (Mark 2026-08-26). Two instances max — treat as spent. |
 | T9 | Gradient scrim | oxford washes over full photo | Flagship heroes only: homepage + medina-means-business (gazebo). |
 | T0 | Plain | `bg-primary`, or `bg-secondary` + `border-y` | Breathing room. Required between any two photo bands. |
 

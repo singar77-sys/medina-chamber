@@ -351,63 +351,8 @@ export default function ItalyTripPage() {
         </FadeIn>
       </section>
 
-      {/* Booking */}
-      <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
-        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
-          <FadeIn>
-            <div className="p-f34 lg:p-f55 bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)]">
-              <div className="grid lg:grid-cols-2 gap-f34 items-center">
-                <div>
-                  <p className="text-overline text-cambridge mb-f8">Booking</p>
-                  <h2 className="text-h2">Reserve Your Spot</h2>
-                  <p className="text-body-lg text-text-secondary mt-f13">
-                    This trip is booked and operated by Collette, the chamber&apos;s
-                    group travel partner. Seats are limited to the group size
-                    Collette has reserved for the chamber, so reserve early.
-                  </p>
-                </div>
-                <div>
-                  <p className="text-body text-text-secondary">
-                    Booking questions go to{" "}
-                    <span className="font-bold text-text-primary">Catherine Hawk</span>{" "}
-                    (Collette), booking #1446404.
-                  </p>
-                  <div className="mt-f13 flex flex-wrap gap-f13">
-                    <a
-                      href={BOOKING_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="
-                        inline-flex items-center px-f21 py-f13
-                        bg-accent hover:bg-accent-hover
-                        text-white font-bold text-body-sm
-                        rounded-[var(--radius-md)]
-                        transition-colors
-                      "
-                    >
-                      Reserve Your Spot →
-                    </a>
-                    <a
-                      href="tel:+17343087962"
-                      className="
-                        inline-flex items-center px-f21 py-f13
-                        bg-emerald hover:bg-emerald/90
-                        text-white font-bold text-body-sm
-                        rounded-[var(--radius-md)]
-                        transition-colors
-                      "
-                    >
-                      (734) 308-7962
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* Chamber contact CTA */}
+      {/* Booking + questions — one closing CTA (the separate "Reserve" and
+          "Questions" cards read as duplicates; merged 2026-08-25) */}
       <section className="rule-top relative overflow-hidden py-f55 lg:py-f89">
         {/* Ghosted Amalfi coastal terrace backdrop */}
         <div
@@ -428,38 +373,62 @@ export default function ItalyTripPage() {
           <div className="p-f34 lg:p-f55 bg-bg-secondary/75 border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
-                <h2 className="text-h2">Questions About the Trip?</h2>
+                <p className="text-overline text-cambridge mb-f8">Booking</p>
+                <h2 className="text-h2">Reserve Your Spot</h2>
                 <p className="text-body-lg text-text-secondary mt-f13">
-                  For general questions about this chamber-organized trip, reach
-                  out to the chamber directly. For booking, payment, and travel
-                  logistics, Collette&apos;s booking contact above is the fastest path.
+                  This trip is booked and operated by Collette, the chamber&apos;s
+                  group travel partner. Seats are limited to the group size
+                  Collette has reserved for the chamber, so reserve early.
+                </p>
+                <p className="text-body text-text-secondary mt-f13">
+                  General questions about the trip?{" "}
+                  <a
+                    href={mailto(stephanie.email)}
+                    className="font-bold text-cambridge hover:underline"
+                  >
+                    Email Stephanie
+                  </a>{" "}
+                  or call the chamber at{" "}
+                  <a href="tel:+13307238773" className="font-bold text-cambridge hover:underline">
+                    (330) 723-8773
+                  </a>
+                  .
                 </p>
               </div>
-              <div className="space-y-f13">
-                <a
-                  href={mailto(stephanie.email)}
-                  className="
-                    block w-full text-center py-f13 px-f21
-                    bg-accent hover:bg-accent-hover
-                    text-white font-bold text-body-sm
-                    rounded-[var(--radius-md)]
-                    transition-colors
-                  "
-                >
-                  Email Stephanie →
-                </a>
-                <a
-                  href="tel:+13307238773"
-                  className="
-                    block w-full text-center py-f13 px-f21
-                    bg-emerald hover:bg-emerald/90
-                    text-white font-bold text-body-sm
-                    rounded-[var(--radius-md)]
-                    transition-colors
-                  "
-                >
-                  (330) 723-8773
-                </a>
+              <div>
+                <p className="text-body text-text-secondary">
+                  Booking, payment, and travel logistics go to{" "}
+                  <span className="font-bold text-text-primary">Catherine Hawk</span>{" "}
+                  (Collette), booking #1446404.
+                </p>
+                <div className="mt-f13 flex flex-wrap gap-f13">
+                  <a
+                    href={BOOKING_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="
+                      inline-flex items-center px-f21 py-f13
+                      bg-accent hover:bg-accent-hover
+                      text-white font-bold text-body-sm
+                      rounded-[var(--radius-md)]
+                      transition-colors
+                    "
+                  >
+                    Reserve Your Spot →
+                  </a>
+                  <a
+                    href="tel:+17343087962"
+                    className="
+                      inline-flex items-center px-f21 py-f13
+                      bg-emerald hover:bg-emerald/90
+                      text-white font-bold text-body-sm
+                      rounded-[var(--radius-md)]
+                      transition-colors
+                    "
+                  >
+                    Call Collette · (734) 308-7962
+                  </a>
+                </div>
               </div>
             </div>
           </div>

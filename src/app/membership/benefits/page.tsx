@@ -5,6 +5,7 @@ import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { safeJsonLd } from "@/lib/json-ld";
 import { DEFAULT_PRICING } from "@/lib/cms-store";
+import { HalftoneField } from "@/components/effects/HalftoneField";
 
 // Single-source the CTA's tier prices from the same defaults the pricing page
 // falls back to — a code-level price change updates this copy too. (A live
@@ -236,8 +237,11 @@ export default function BenefitsPage() {
         </FadeIn>
       </section>
 
-      {/* The Harris Poll — third-party validation of chamber value */}
-      <section className="bg-bg-secondary border-y border-border-secondary py-f89 lg:py-f144">
+      {/* The Harris Poll — third-party validation of chamber value.
+          Honeycomb watermark (ThreePillars treatment): section is
+          relative+isolate so the z-index:-1 field stays inside it. */}
+      <section className="relative isolate bg-bg-secondary border-y border-border-secondary py-f89 lg:py-f144">
+        <div className="tp-honeycomb" aria-hidden="true" />
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
             <div className="max-w-3xl">
@@ -295,22 +299,10 @@ export default function BenefitsPage() {
         </div>
       </section>
 
-      {/* Additional perks */}
+      {/* Additional perks — halftone dot field (the branded-buttons photo
+          that lived here moved down to the Join CTA, 2026-08-25) */}
       <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
-        {/* Ghosted Medina Chamber branded-buttons backdrop */}
-        <div
-          className="absolute inset-0 pointer-events-none select-none"
-          aria-hidden="true"
-        >
-          <Image
-            src="/images/membership/medina-chamber-member-perks-bg.webp"
-            alt=""
-            fill
-            className="object-cover opacity-[0.10]"
-            sizes="100vw"
-            quality={60}
-          />
-        </div>
+        <HalftoneField />
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
             <h2 className="text-overline text-cambridge mb-f21">Additional Member Perks</h2>
@@ -330,10 +322,25 @@ export default function BenefitsPage() {
         </div>
       </section>
 
-      {/* Join CTA */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+      {/* Join CTA — branded-buttons ghost moved here from the perks section
+          (card-over-ghost pattern: 0.18 backdrop, /75 surface) */}
+      <section className="relative overflow-hidden py-f55 lg:py-f89">
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/membership/medina-chamber-member-perks-bg.webp"
+            alt=""
+            fill
+            className="object-cover opacity-[0.18]"
+            sizes="100vw"
+            quality={60}
+          />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <FadeIn>
-          <div className="p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+          <div className="p-f34 lg:p-f55 bg-bg-secondary/75 border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
                 <h2 className="text-h2">Ready to put these to work?</h2>
@@ -383,6 +390,7 @@ export default function BenefitsPage() {
             </Link>
           </div>
         </FadeIn>
+        </div>
       </section>
     </>
   );

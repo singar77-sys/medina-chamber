@@ -51,12 +51,18 @@ export function BrowseBand({
       className="browse-band relative isolate overflow-hidden border-y border-border-primary"
     >
       {/* Fourth texture tried here (sigil → dots → honeycomb → this): the
-          MemberVoice liquid-chrome shader wash with the subtle cursor
-          flashlight on top (Mark 2026-08-26). Shader sits at section level
-          so the glow paints above it; padding lives on the MouseGradient
-          wrapper so the glow tracks across the full band. */}
+          MemberVoice liquid-chrome shader wash leading, with a whisper of
+          cursor flashlight over it — default glow read "more of a
+          flashlight" than the MemberVoice gradient (Mark 2026-08-26), so
+          it runs wide and faint. Shader sits at section level so the glow
+          paints above it; padding lives on the MouseGradient wrapper so
+          the glow tracks the full band. */}
       <BrandShaderBackgroundLazy className="mv-shader-bg" />
-      <MouseGradient className="py-f89 lg:py-f144">
+      <MouseGradient
+        className="py-f89 lg:py-f144"
+        color="rgba(131, 188, 169, 0.05)"
+        radius={700}
+      >
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         {/* Header */}
         <p className="text-overline text-cambridge mb-f8 tracking-[0.18em]">

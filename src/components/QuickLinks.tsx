@@ -128,7 +128,7 @@ export function QuickLinks() {
     <section className="relative overflow-hidden border-b border-border-secondary">
       <div className="pointer-events-none absolute inset-0 select-none" aria-hidden="true">
         <Image
-          src="/images/membership/medina-chamber-member-perks-bg.webp"
+          src="/images/photos/medina-wildflower-meadow.webp"
           alt=""
           fill
           className="object-cover opacity-[0.10]"

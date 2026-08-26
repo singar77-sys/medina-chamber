@@ -234,13 +234,14 @@ export default function ContactPage() {
 
       {/* membership bookend */}
       <section className="relative overflow-hidden py-f55 lg:py-f89">
-        {/* Ghosted vintage Medina gazebo backdrop */}
+        {/* Ghosted misty-lake-sunrise backdrop (was the vintage gazebo, which
+            also ghosts medina-means-business — de-twinned 2026-08-26) */}
         <div
           className="absolute inset-0 pointer-events-none select-none"
           aria-hidden="true"
         >
           <Image
-            src="/images/photos/medina-gazebo-vintage.webp"
+            src="/images/photos/medina-county-lake-sunrise.webp"
             alt=""
             fill
             className="object-cover object-center opacity-[0.18]"

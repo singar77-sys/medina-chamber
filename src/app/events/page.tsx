@@ -213,8 +213,9 @@ export default function EventsPage() {
         </div>
       </section>
 
-      {/* Workshops + Annual Signature */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      {/* Workshops + Annual Signature — gradient wash band (Mark 2026-08-26) */}
+      <section className="relative isolate mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+        <div className="tp-gradient" aria-hidden="true" />
         <FadeIn>
           {/* Workshops & Orientation */}
           <p className="text-overline text-cambridge mb-f8">Learning &amp; Onboarding</p>

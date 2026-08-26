@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 /**
  * EventsTimeline — the "signal rail" that replaced the month-grid calendar
@@ -12,10 +15,16 @@ import Link from "next/link";
  * does the calendar's one real job (how far out does the pipeline go?) in
  * one row, and each pip anchor-jumps to its month group.
  *
- * Server component, zero client JS: jumps are #anchors, glow/pulse are CSS.
+ * Collapsed to the first 7 events with a show-all reveal (Mark 2026-08-26:
+ * the full rail "will result in scrolling forever"). The pip strip always
+ * shows the WHOLE pipeline; a pip for a still-hidden month expands first,
+ * then jumps. That one useState is the only client JS — jumps are #anchors,
+ * glow/pulse are CSS.
  * Band Book: lives inside the /events sigil band; cards are opaque
  * bg-secondary per the T4 rules (no /75 outside CTA bands).
  */
+
+const INITIAL_VISIBLE = 7;
 
 export interface TimelineEvent {
   slug: string;
@@ -53,15 +62,35 @@ function venueName(location?: string): string | null {
   return /^\d/.test(name) ? "Chamber Office" : name;
 }
 
-export function EventsTimeline({ events }: { events: TimelineEvent[] }) {
-  const sorted = [...events].sort((a, b) => a.dateISO.localeCompare(b.dateISO));
+function groupByMonth(events: TimelineEvent[]) {
   const months: { ym: string; items: TimelineEvent[] }[] = [];
-  for (const e of sorted) {
+  for (const e of events) {
     const ym = ymOf(e.dateISO);
     const last = months[months.length - 1];
     if (last && last.ym === ym) last.items.push(e);
     else months.push({ ym, items: [e] });
   }
+  return months;
+}
+
+export function EventsTimeline({ events }: { events: TimelineEvent[] }) {
+  const [showAll, setShowAll] = useState(false);
+  // A pip click on a still-hidden month has to wait for the expanded rail to
+  // commit before its #anchor exists — the effect jumps after that render.
+  const [pendingJump, setPendingJump] = useState<string | null>(null);
+  useEffect(() => {
+    if (!pendingJump) return;
+    document.getElementById(pendingJump)?.scrollIntoView();
+    setPendingJump(null);
+  }, [pendingJump]);
+
+  const sorted = [...events].sort((a, b) => a.dateISO.localeCompare(b.dateISO));
+  const visible = showAll ? sorted : sorted.slice(0, INITIAL_VISIBLE);
+  const hiddenCount = sorted.length - visible.length;
+  // Pips always chart the whole pipeline; the rail may render a subset.
+  const allMonths = groupByMonth(sorted);
+  const months = groupByMonth(visible);
+  const visibleYms = new Set(months.map((m) => m.ym));
   const nextSlug = sorted[0]?.slug;
 
   return (
@@ -72,12 +101,18 @@ export function EventsTimeline({ events }: { events: TimelineEvent[] }) {
         aria-label="Jump to month"
         className="flex flex-wrap gap-f8 mb-f34"
       >
-        {months.map(({ ym, items }) => {
+        {allMonths.map(({ ym, items }) => {
           const { short, year } = monthLabel(ym);
           return (
             <a
               key={ym}
               href={`#tl-${ym}`}
+              onClick={(e) => {
+                if (visibleYms.has(ym)) return;
+                e.preventDefault();
+                setShowAll(true);
+                setPendingJump(`tl-${ym}`);
+              }}
               className="
                 group inline-flex items-center gap-f8 px-f13 py-f8
                 bg-bg-secondary border border-border-secondary
@@ -213,6 +248,31 @@ export function EventsTimeline({ events }: { events: TimelineEvent[] }) {
             );
           })}
         </div>
+
+        {/* Show-all reveal — a hollow node continues the spine past the cut */}
+        {hiddenCount > 0 && (
+          <div className="relative pl-f34 sm:pl-f55 mt-f21">
+            <span
+              aria-hidden="true"
+              className="absolute left-[3px] sm:left-[5px] top-[13px] w-[9px] h-[9px] rounded-full border border-cambridge/60"
+            />
+            <button
+              type="button"
+              onClick={() => setShowAll(true)}
+              aria-expanded={false}
+              className="
+                inline-flex items-center gap-f8 px-f13 py-f8
+                bg-bg-secondary border border-border-secondary
+                rounded-[var(--radius-md)]
+                font-mono text-caption font-bold tracking-widest
+                text-text-secondary hover:text-cambridge
+                hover:border-cambridge/60 transition-colors
+              "
+            >
+              Show all {sorted.length} events <span aria-hidden="true">▾</span>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

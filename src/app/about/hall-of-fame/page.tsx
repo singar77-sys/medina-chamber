@@ -231,11 +231,26 @@ export default function HallOfFamePage() {
         </div>
       </section>
 
-      {/* CTA cards */}
-      <section className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89">
+      {/* CTA cards — courthouse-at-sunset ghost (nature/landmark, no people —
+          Mark 2026-08-26); 0.18 band + /75 cards per the Band Book */}
+      <section className="rule-top relative overflow-hidden py-f55 lg:py-f89">
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/medina-county-courthouse-sunset.webp"
+            alt=""
+            fill
+            className="object-cover opacity-[0.18]"
+            sizes="100vw"
+            quality={60}
+          />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <FadeIn>
           <div className="grid md:grid-cols-2 gap-f21">
-            <div className="p-f34 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+            <div className="p-f34 bg-bg-secondary/75 border border-border-secondary rounded-[var(--radius-lg)]">
               <h2 className="text-h3">Know a nominee?</h2>
               <p className="text-body text-text-secondary mt-f13 leading-relaxed">
                 The Hall of Fame convenes approximately every five years. If you
@@ -257,7 +272,7 @@ export default function HallOfFamePage() {
               </Link>
             </div>
 
-            <div className="p-f34 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
+            <div className="p-f34 bg-bg-secondary/75 border border-border-secondary rounded-[var(--radius-lg)]">
               <h2 className="text-h3">Explore More</h2>
               <p className="text-body text-text-secondary mt-f13 leading-relaxed">
                 The Hall of Fame is just one way the chamber celebrates the
@@ -288,6 +303,7 @@ export default function HallOfFamePage() {
             </Link>
           </div>
         </FadeIn>
+        </div>
       </section>
     </>
   );

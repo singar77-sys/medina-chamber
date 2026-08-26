@@ -2335,6 +2335,30 @@ body {
   border-top: 1px solid var(--border-secondary);
   pointer-events: none;
 }
+/* ── Gradient wash band — "gradient" in the taste taxonomy ─────────────
+   Ambient two-ellipse brand wash (teal high, cambridge low) for long flat
+   content bands that need atmosphere without a photo or pattern. Same
+   full-bleed breakout + usage contract as .tp-honeycomb: place inside a
+   `relative isolate` section (no overflow-hidden — it would clip the
+   breakout to the max-w container). */
+.tp-gradient {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(50% - 50vw);
+  width: 100vw;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 90% 55% at 18% 0%, rgba(0, 84, 80, 0.24), transparent 62%),
+    radial-gradient(ellipse 80% 50% at 85% 100%, rgba(131, 188, 169, 0.10), transparent 65%);
+}
+:root[data-theme="light"] .tp-gradient {
+  background:
+    radial-gradient(ellipse 90% 55% at 18% 0%, rgba(0, 84, 80, 0.08), transparent 62%),
+    radial-gradient(ellipse 80% 50% at 85% 100%, rgba(131, 188, 169, 0.12), transparent 65%);
+}
+
 .tp-honeycomb {
   position: absolute;
   top: 0;

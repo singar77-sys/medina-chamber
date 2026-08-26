@@ -64,15 +64,31 @@ export default async function DirectoryPage() {
     <>
       <DirectoryClient members={members} industries={industries} />
 
-      {/* Membership at a glance — ambient benefits-wheel loop (plain band per
-          the Band Book: dots above, ghost CTA below). Muted + playsInline so
-          autoplay is allowed everywhere; poster keeps the LCP honest. */}
+      {/* Membership at a glance — ambient benefits-wheel loop over the
+          perspective-honeycomb brand abstract (Mark 2026-08-26). The ghost
+          is a DARK image (teal glow on near-black), so it runs hotter than
+          a photo ghost in dark mode and cooler in light, where its black
+          field would gray out the band. Muted + playsInline so autoplay is
+          allowed everywhere; poster keeps the LCP honest. */}
       <section className="rule-top relative overflow-hidden py-f55 lg:py-f89">
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/photos/backgrounds/brand-honeycomb-perspective.webp"
+            alt=""
+            fill
+            className="object-cover opacity-[0.32] [[data-theme=light]_&]:opacity-[0.12]"
+            sizes="100vw"
+            quality={60}
+          />
+        </div>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: safeJsonLd(benefitsWheelVideoJsonLd) }}
         />
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>

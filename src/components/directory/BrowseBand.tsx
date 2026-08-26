@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { IndustryChipStrip } from "./IndustryChipStrip";
 import { DirectorySearch } from "./DirectorySearch";
 import { useTheme } from "@/components/ThemeProvider";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 
 interface BrowseBandProps {
   /** Controlled search query. */
@@ -46,9 +47,10 @@ export function BrowseBand({
   return (
     <section
       aria-labelledby="browse-band-heading"
-      className="browse-band border-y border-border-primary py-f89 lg:py-f144"
+      className="browse-band relative overflow-hidden border-y border-border-primary py-f89 lg:py-f144"
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <VesicaPiscisWatermark className="tp-vesica" />
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         {/* Header */}
         <p className="text-overline text-cambridge mb-f8 tracking-[0.18em]">
           Browse the directory

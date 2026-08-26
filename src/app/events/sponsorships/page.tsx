@@ -179,7 +179,7 @@ export default function SponsorshipsPage() {
             alt=""
             fill
             priority
-            className="object-cover object-top opacity-[0.33]"
+            className="object-cover object-[center_75%] opacity-[0.33]"
             sizes="100vw"
             quality={60}
           />

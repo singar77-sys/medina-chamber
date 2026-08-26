@@ -48,14 +48,15 @@ export default function GolfOutingPage() {
     <>
 
       <section className="relative overflow-hidden pt-f144 pb-f89 min-h-[42rem]">
-        {/* Ghosted real-event backdrop — foursome on the Westfield fairway
-            (replaced the blurry stock golfer-mid-swing close-up, 2026-08-24) */}
+        {/* Ghosted real-event backdrop — composed foursome on the Westfield
+            fairway (011's playful poses read "too goofy" for a hero — Mark;
+            the blurry stock golfer-mid-swing went before that, 2026-08-24) */}
         <div
           className="absolute inset-0 pointer-events-none select-none"
           aria-hidden="true"
         >
           <Image
-            src="/images/events/golf-outing/golf-outing-medina-chamber-011.webp"
+            src="/images/events/golf-outing/golf-outing-medina-chamber-003.webp"
             alt=""
             fill
             priority

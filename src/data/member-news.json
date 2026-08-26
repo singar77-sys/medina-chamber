@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-25T05:30:43.447Z",
+  "generatedAt": "2026-08-26T05:33:19.512Z",
   "totalArticles": 8,
   "articles": [
     {
@@ -19,7 +19,7 @@
       "dateISO": "2026-08-05",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_248,w_813,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785965239/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/6338bef9692949ca910de033c315d596/LOGO.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/medina-lifestyle-kids-and-pets-august-348528",
-      "scrapedAt": "2026-08-25T05:30:39.284Z"
+      "scrapedAt": "2026-08-26T05:33:15.408Z"
     },
     {
       "slug": "medicare-101-presentation",
@@ -38,7 +38,7 @@
       "dateISO": "2026-08-03",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_575,w_1636,x_27,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785790027/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/ae5b2f79e693485ab5fa99e2dfa746fd/Medicare-101-Terri.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/medicare-101-presentation-347957",
-      "scrapedAt": "2026-08-25T05:30:39.935Z"
+      "scrapedAt": "2026-08-26T05:33:15.956Z"
     },
     {
       "slug": "bike-nite",
@@ -57,7 +57,7 @@
       "dateISO": "2026-08-01",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774649265/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/08696adfe8014e348e3411fecd5205ae/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/bike-nite-321885",
-      "scrapedAt": "2026-08-25T05:30:40.481Z"
+      "scrapedAt": "2026-08-26T05:33:16.529Z"
     },
     {
       "slug": "1st-annual-fundraising-car-show",
@@ -76,7 +76,7 @@
       "dateISO": "2026-07-30",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_2048,w_2048,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785423508/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/94e6c419c14a42e480a489b848eab88e/Medina-Odd-Fellows.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/1st-annual-fundraising-car-show-347096",
-      "scrapedAt": "2026-08-25T05:30:41.091Z"
+      "scrapedAt": "2026-08-26T05:33:17.155Z"
     },
     {
       "slug": "medina-athletics-sponsorship-opportunities",
@@ -95,7 +95,7 @@
       "dateISO": "2026-07-29",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1001,w_1400,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785292914/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/bce87398f55c4b779e58e8ec65279974/MAB-LOGO.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/medina-athletics-sponsorship-opportunities-346803",
-      "scrapedAt": "2026-08-25T05:30:41.688Z"
+      "scrapedAt": "2026-08-26T05:33:17.747Z"
     },
     {
       "slug": "host-your-holiday-party-at-the-club",
@@ -114,7 +114,7 @@
       "dateISO": "2026-07-28",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_159,w_292,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785263176/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/3c23413c8c584f86b8877f07009382cb/Weymouth-fox-duel-logo.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/host-your-holiday-party-at-the-club-346683",
-      "scrapedAt": "2026-08-25T05:30:42.275Z"
+      "scrapedAt": "2026-08-26T05:33:18.331Z"
     },
     {
       "slug": "celebrate-our-100th-issue-with-us",
@@ -133,7 +133,7 @@
       "dateISO": "2026-07-23",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_417,w_1500,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785160773/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/9ae82988f22d468ab9f4a86c9cb38d26/Joy-of-Medina-County-Magazine.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/celebrate-our-100th-issue-with-us-346007",
-      "scrapedAt": "2026-08-25T05:30:42.852Z"
+      "scrapedAt": "2026-08-26T05:33:18.910Z"
     },
     {
       "slug": "car-cruise-in",
@@ -152,7 +152,7 @@
       "dateISO": "2026-04-06",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775437512/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/62aa1d5146da4ab78eb0def384a2a8ee/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/car-cruise-in-323364",
-      "scrapedAt": "2026-08-25T05:30:43.440Z"
+      "scrapedAt": "2026-08-26T05:33:19.505Z"
     }
   ]
 }

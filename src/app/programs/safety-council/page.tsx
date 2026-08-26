@@ -334,13 +334,14 @@ export default function SafetyCouncilPage() {
             src="/images/photos/medina-chamber-safety-council-bg.webp"
             alt=""
             fill
-            className="object-cover object-[center_25%] opacity-[0.10]"
+            className="object-cover object-[center_25%] opacity-[0.18]"
             sizes="100vw"
             quality={60}
           />
         </div>
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
+          <div className="p-f34 lg:p-f55 bg-bg-secondary/75 border border-border-secondary rounded-[var(--radius-lg)]">
             <div className="grid lg:grid-cols-2 gap-f34 items-center">
               <div>
                 <h2 className="text-h2">Chamber members enroll free.</h2>
@@ -378,6 +379,7 @@ export default function SafetyCouncilPage() {
                 </Link>
               </div>
             </div>
+          </div>
           </FadeIn>
         </div>
       </section>

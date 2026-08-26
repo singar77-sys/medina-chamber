@@ -62,7 +62,7 @@ export default function JobsPage() {
       </section>
 
       {/* Job listings */}
-      <section className="relative overflow-hidden mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
+      <section className="rule-top relative overflow-hidden mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
         <VesicaPiscisWatermark className="tp-vesica" />
         <FadeIn>
           {jobs.length === 0 ? (
@@ -146,7 +146,7 @@ export default function JobsPage() {
       </section>
 
       {/* Post a job CTA */}
-      <section className="relative overflow-hidden py-f55 lg:py-f89">
+      <section className="rule-top relative overflow-hidden py-f55 lg:py-f89">
         {/* Ghosted community backdrop */}
         <div
           className="absolute inset-0 pointer-events-none select-none"

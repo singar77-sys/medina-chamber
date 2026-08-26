@@ -466,7 +466,7 @@ export default function HomePage() {
             src="/images/events/networking.webp"
             alt=""
             fill
-            className="object-cover object-center opacity-[0.15]"
+            className="object-cover object-center opacity-[0.10]"
             sizes="100vw"
             quality={60}
           />
@@ -510,7 +510,7 @@ export default function HomePage() {
       <MemberVoice />
 
       {/* Join CTA — py-f89 lg:py-f144 */}
-      <section className="relative py-f89 lg:py-f144 overflow-hidden">
+      <section className="rule-top relative py-f89 lg:py-f144 overflow-hidden">
         {/* Ghosted Medina industry backdrop across the whole band */}
         <div
           className="absolute inset-0 pointer-events-none select-none"

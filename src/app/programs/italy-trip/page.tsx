@@ -408,7 +408,7 @@ export default function ItalyTripPage() {
       </section>
 
       {/* Chamber contact CTA */}
-      <section className="relative overflow-hidden py-f55 lg:py-f89">
+      <section className="rule-top relative overflow-hidden py-f55 lg:py-f89">
         {/* Ghosted Amalfi coastal terrace backdrop */}
         <div
           className="absolute inset-0 pointer-events-none select-none"

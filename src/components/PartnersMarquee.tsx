@@ -78,7 +78,7 @@ const PARTNERS: Partner[] = [
 
 export function PartnersMarquee() {
   return (
-    <section className="pm-section bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+    <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <FadeIn>
           <div className="max-w-3xl mb-f34 lg:mb-f55">

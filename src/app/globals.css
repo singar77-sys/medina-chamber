@@ -1380,14 +1380,6 @@ body {
    MEMBER VOICE — architectural pull-quote band
    ============================================================ */
 
-.mv-wash {
-  background: radial-gradient(
-    ellipse at 50% 0%,
-    rgba(131, 188, 169, 0.08) 0%,
-    transparent 55%
-  );
-}
-
 .mv-quote {
   position: relative;
   font-family: var(--font-display, inherit);

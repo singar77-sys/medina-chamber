@@ -156,7 +156,7 @@ export default function StartABusinessPage() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-24">
 
       {/* Steps */}
-      <section className="relative overflow-hidden mt-20 space-y-6">
+      <section className="rule-top relative overflow-hidden mt-20 pt-16 space-y-6">
         <VesicaPiscisWatermark className="tp-vesica" />
         {steps.map((step) => (
           <div

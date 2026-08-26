@@ -11,7 +11,7 @@ import { BrandShaderBackgroundLazy } from "@/components/effects/BrandShaderBackg
  */
 export function MemberVoice() {
   return (
-    <section className="mv-section relative bg-bg-primary border-y border-border-secondary py-f89 lg:py-f144 overflow-hidden">
+    <section className="relative bg-bg-primary border-y border-border-secondary py-f89 lg:py-f144 overflow-hidden">
       {/* Liquid-chrome shader wallpaper — brand-tinted WebGL backdrop
           that flows with time and reacts to cursor. Sits behind the
           quote with pointer-events: none so it never interferes with

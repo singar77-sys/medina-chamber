@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import Link from "next/link";
 import { db } from "@/lib/db";
 import { getPublicResources, groupByCategory, type Resource } from "@/lib/resources";
@@ -55,9 +56,10 @@ export default async function ResourceLibraryPage() {
           for a specific resource.
         </p>
       ) : (
-        <div className="mt-20 space-y-16">
+        <div className="rule-top relative overflow-hidden mt-20 pt-16 space-y-16">
+          <VesicaPiscisWatermark className="tp-vesica" />
           {groups.map((g) => (
-            <section key={g.category}>
+            <section key={g.category} className="relative">
               <h2 className="text-h3 mb-6">{g.category}</h2>
               <div className="grid md:grid-cols-2 gap-6">
                 {g.items.map((r) => (

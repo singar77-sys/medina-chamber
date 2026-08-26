@@ -64,7 +64,7 @@ export default function ResourcesPage() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-24">
 
       {/* Resource cards */}
-      <section className="relative overflow-hidden mt-20 grid md:grid-cols-3 gap-6">
+      <section className="rule-top relative overflow-hidden mt-20 pt-16 grid md:grid-cols-3 gap-6">
         <VesicaPiscisWatermark className="tp-vesica" />
         {resources.map((r) => (
           <Link

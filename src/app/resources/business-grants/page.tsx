@@ -159,11 +159,12 @@ export default function BusinessGrantsPage() {
         </p>
       </div>
 
-      {/* Programs by category */}
-      <div className="mt-16 space-y-16">
+      {/* Programs by category — ONE sigil for the whole stack (it previously
+          rendered inside the .map, stacking three watermarks) */}
+      <div className="rule-top relative overflow-hidden mt-16 pt-16 space-y-16">
+        <VesicaPiscisWatermark className="tp-vesica" />
         {programs.map((group) => (
-          <section key={group.category} className="relative overflow-hidden">
-            <VesicaPiscisWatermark className="tp-vesica" />
+          <section key={group.category} className="relative">
             <p className="text-overline text-cambridge mb-8">{group.category}</p>
             <div className="space-y-6">
               {group.items.map((item) => (

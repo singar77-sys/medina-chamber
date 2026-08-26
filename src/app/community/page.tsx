@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
+import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import Link from "next/link";
 import { activeCommunities } from "@/data/communities";
 
@@ -34,9 +35,11 @@ export default function CommunityHubPage() {
 
       <div className="mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-24">
 
-      {/* Community grid */}
-      <section className="mt-16">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Community grid — sigil band (was the only content page with no
+          texture below the hero) */}
+      <section className="rule-top relative overflow-hidden mt-16 pt-16">
+        <VesicaPiscisWatermark className="tp-vesica" />
+        <div className="relative grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {activeCommunities.map((c) => (
               <Link
                 key={c.slug}

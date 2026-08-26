@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
+import { HalftoneField } from "@/components/effects/HalftoneField";
 import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
@@ -251,9 +252,10 @@ export default function MagazinePage() {
         </FadeIn>
       </section>
 
-      {/* What's inside */}
-      <section className="bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      {/* What's inside — dots per the Band Book (utility/archive band) */}
+      <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
+        <HalftoneField />
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>
             <div className="mb-f21">
               <p className="text-overline text-cambridge mb-f8">Inside</p>

@@ -140,8 +140,10 @@ export default function WorkforcePage() {
         )}
       </div>
 
-      {/* Sections */}
-      <div className="mt-f55 space-y-f21">
+      {/* Sections — band-level sigil (the clipped in-card copy at the CTA
+          below was removed; the watermark belongs to the band, not a card) */}
+      <div className="rule-top relative overflow-hidden mt-f55 pt-f55 space-y-f21">
+        <VesicaPiscisWatermark className="tp-vesica" />
         {sections.map((s) => (
           <div
             key={s.id}
@@ -195,7 +197,6 @@ export default function WorkforcePage() {
 
       {/* CTA */}
       <section className="relative overflow-hidden mt-f55 p-f34 lg:p-f55 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]">
-        <VesicaPiscisWatermark className="tp-vesica" />
         <div className="max-w-2xl">
           <h2 className="text-h2">Post your open positions free</h2>
           <p className="text-body-lg text-text-secondary mt-f13">

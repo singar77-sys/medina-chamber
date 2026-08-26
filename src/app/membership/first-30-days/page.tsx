@@ -205,9 +205,11 @@ export default function First30DaysPage() {
 
       <div className="mx-auto max-w-7xl px-6 lg:px-8 pb-16 lg:pb-24">
 
-        {/* Overview callout */}
+        {/* Overview callout — rule-top wrapper anchors the workbook's first
+            card like a band without giving up the card-stack character */}
+        <div className="rule-top mt-12 pt-12">
         <FadeIn>
-          <section className="mt-12 p-8 lg:p-10 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] relative overflow-hidden">
+          <section className="p-8 lg:p-10 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] relative overflow-hidden">
             <VesicaPiscisWatermark className="tp-vesica" />
             <div className="absolute -top-32 -right-32 w-64 h-64 bg-cambridge/10 rounded-full blur-3xl" />
             <div className="relative grid md:grid-cols-3 gap-6 items-center">
@@ -244,6 +246,7 @@ export default function First30DaysPage() {
             </div>
           </section>
         </FadeIn>
+        </div>
 
         {/* Steps */}
         <section className="mt-20">

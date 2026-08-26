@@ -5,7 +5,8 @@ import { useEffect, useRef } from "react";
 /**
  * BrandShaderBackground — a subtle, always-flowing WebGL fragment
  * shader used as an ambient background. Designed specifically for the
- * Partners & Sponsors section, but reusable anywhere that wants a
+ * Member Voice section (it began life under Partners & Sponsors and
+ * migrated), but reusable anywhere that wants a
  * brand-tinted "liquid-chrome" wallpaper.
  *
  * What it does:

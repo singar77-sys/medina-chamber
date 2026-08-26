@@ -101,7 +101,10 @@ Pages should alternate between three band types to prevent visual fatigue:
 |------|---------|---------|
 | Default | (no bg class) | Primary content sections |
 | Secondary band | `bg-bg-secondary border-y border-border-secondary` | Stats, tools, secondary info |
-| Ghosted photo | `relative overflow-hidden` + `<Image opacity-[0.05]>` | CTAs, hero adjacents |
+| Ghosted photo | `relative overflow-hidden` + `<Image>` on the opacity ladder below | CTAs, mid-page bands |
+
+Ghost opacity ladder (law — see docs/design-continuity.md for the full band grammar):
+`0.33` hero backdrop · `0.18` CTA ghost, always under a `bg-bg-secondary/75` card · `0.10` mid-page band ghost, never with a /75 card.
 
 Don't use secondary band twice in a row. Default → Secondary → Default → CTA ghost is the home page's actual rhythm.
 

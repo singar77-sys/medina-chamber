@@ -31,7 +31,7 @@ export async function RecentPhotoStrip() {
   if (photos.length < 4) return null;
 
   return (
-    <section className="relative overflow-hidden border-t border-border-primary">
+    <section className="relative overflow-hidden border-t border-border-secondary">
       <HalftoneField />
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8 py-f89 lg:py-f144">
       <FadeIn>

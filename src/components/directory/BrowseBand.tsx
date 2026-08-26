@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { IndustryChipStrip } from "./IndustryChipStrip";
 import { DirectorySearch } from "./DirectorySearch";
 import { useTheme } from "@/components/ThemeProvider";
-import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
+import { HalftoneField } from "@/components/effects/HalftoneField";
 
 interface BrowseBandProps {
   /** Controlled search query. */
@@ -49,7 +49,9 @@ export function BrowseBand({
       aria-labelledby="browse-band-heading"
       className="browse-band relative overflow-hidden border-y border-border-primary py-f89 lg:py-f144"
     >
-      <VesicaPiscisWatermark className="tp-vesica" />
+      {/* Vesica sigil tried here and pulled same-day ("too much") — the
+          halftone dot field reads quieter behind the search + chip grid. */}
+      <HalftoneField />
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         {/* Header */}
         <p className="text-overline text-cambridge mb-f8 tracking-[0.18em]">

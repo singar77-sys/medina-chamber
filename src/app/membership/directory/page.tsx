@@ -64,13 +64,9 @@ export default async function DirectoryPage() {
     <>
       <DirectoryClient members={members} industries={industries} />
 
-      {/* Community Investor logo marquee — same strip as the homepage, plain
-          (no backdrop) so the photo bands alternate around it */}
-      <CommunityInvestors />
-
-      {/* Membership at a glance — ambient benefits-wheel loop (plain band).
-          Muted + playsInline so autoplay is allowed everywhere; poster keeps
-          the LCP honest. */}
+      {/* Membership at a glance — ambient benefits-wheel loop (plain band per
+          the Band Book: dots above, ghost CTA below). Muted + playsInline so
+          autoplay is allowed everywhere; poster keeps the LCP honest. */}
       <section className="rule-top relative overflow-hidden py-f55 lg:py-f89">
         <script
           type="application/ld+json"
@@ -108,6 +104,10 @@ export default async function DirectoryPage() {
           </FadeIn>
         </div>
       </section>
+
+      {/* Community Investor logo marquee — same strip as the homepage, plain
+          (no backdrop) so the photo bands alternate around it */}
+      <CommunityInvestors />
 
       {/* Join CTA — clock-medina ghosted as the section background */}
       <section className="relative overflow-hidden py-f55 lg:py-f89">

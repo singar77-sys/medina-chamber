@@ -516,16 +516,18 @@ export default function SponsorshipsPage() {
 
       {/* Cta */}
       <section className="rule-top relative overflow-hidden py-f55 lg:py-f89">
-        {/* Ghosted community backdrop */}
+        {/* Ghosted golden-hour barn backdrop — the sneak-peek booth photo it
+            replaced had a readable vendor banner bleeding through the ghost
+            (Mark 2026-08-26: nature/abstract over people for backdrops) */}
         <div
           className="absolute inset-0 pointer-events-none select-none"
           aria-hidden="true"
         >
           <Image
-            src="/images/photos/sneak-peeks/medina-chamber-community-007.webp"
+            src="/images/photos/medina-county-barn-golden-hour.webp"
             alt=""
             fill
-            className="object-cover object-top opacity-[0.18]"
+            className="object-cover object-center opacity-[0.18]"
             sizes="100vw"
             quality={60}
           />

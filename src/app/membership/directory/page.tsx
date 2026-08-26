@@ -9,27 +9,11 @@ import { normalizeCategories } from "@/lib/categories";
 import { DirectoryClient } from "./DirectoryClient";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
-
-// Membership benefits-wheel promo video (10s ambient loop, muted).
-const BENEFITS_VIDEO = "/videos/medina-chamber-membership-benefits-wheel.mp4";
-const BENEFITS_VIDEO_POSTER = "/videos/medina-chamber-membership-benefits-wheel-poster.webp";
-
-const videoJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "VideoObject",
-  name: "Greater Medina Chamber of Commerce Membership Benefits",
-  description:
-    "The five pillars of Greater Medina Chamber membership — connections, visibility, advocacy, savings, and education — for Medina County, Ohio businesses.",
-  thumbnailUrl: `https://medinachamber.com${BENEFITS_VIDEO_POSTER}`,
-  contentUrl: `https://medinachamber.com${BENEFITS_VIDEO}`,
-  uploadDate: "2026-08-26",
-  duration: "PT10S",
-  publisher: {
-    "@type": "Organization",
-    name: "Greater Medina Chamber of Commerce",
-    url: "https://medinachamber.com",
-  },
-};
+import {
+  BENEFITS_VIDEO,
+  BENEFITS_VIDEO_POSTER,
+  benefitsWheelVideoJsonLd,
+} from "@/lib/benefits-wheel-video";
 
 export const metadata: Metadata = {
   title: "Member Directory",
@@ -85,7 +69,7 @@ export default async function DirectoryPage() {
       <section className="rule-top relative overflow-hidden py-f55 lg:py-f89">
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: safeJsonLd(videoJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(benefitsWheelVideoJsonLd) }}
         />
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FadeIn>

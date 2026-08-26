@@ -6,6 +6,11 @@ import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { growthZone } from "@/lib/navigation";
 import { safeJsonLd } from "@/lib/json-ld";
+import {
+  BENEFITS_VIDEO,
+  BENEFITS_VIDEO_POSTER,
+  benefitsWheelVideoJsonLd,
+} from "@/lib/benefits-wheel-video";
 
 export const metadata: Metadata = {
   title: "Join the Greater Medina Chamber of Commerce",
@@ -91,13 +96,14 @@ export default function JoinPage() {
 
       {/* Hero */}
       <section className="relative overflow-hidden pt-f144 pb-f89 min-h-[42rem]">
-        {/* Ghosted Medina County covered bridge backdrop */}
+        {/* Ghosted forest-ledges backdrop (replaced the covered bridge —
+            Mark 2026-08-26, first drop from the image-prompt sheet) */}
         <div
           className="absolute inset-0 pointer-events-none select-none"
           aria-hidden="true"
         >
           <Image
-            src="/images/photos/medina-chamber-join-hero.webp"
+            src="/images/photos/medina-county-forest-ledges.webp"
             alt=""
             fill
             priority
@@ -157,6 +163,48 @@ export default function JoinPage() {
         </FadeIn>
       </section>
 
+      {/* The five pillars — ambient benefits-wheel loop (same module as the
+          directory band, join-page verbiage). Muted + playsInline so autoplay
+          is allowed everywhere; poster keeps the LCP honest. */}
+      <section className="rule-top relative overflow-hidden py-f55 lg:py-f89">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(benefitsWheelVideoJsonLd) }}
+        />
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <FadeIn>
+            <div className="grid lg:grid-cols-2 gap-f34 items-center">
+              <div>
+                <p className="text-overline text-cambridge mb-f8">The Five Pillars</p>
+                <h2 className="text-h2">One membership, working five ways.</h2>
+                <p className="text-body-lg text-text-secondary mt-f13">
+                  Everything above traces back to five pillars — connections,
+                  visibility, advocacy, savings, and education — turning from
+                  the day you join.
+                </p>
+                <Link
+                  href="/membership/benefits"
+                  className="inline-block mt-f21 text-body-sm font-bold text-cambridge hover:text-cambridge/80 transition-colors"
+                >
+                  Explore every benefit →
+                </Link>
+              </div>
+              <video
+                className="w-full aspect-video rounded-[var(--radius-lg)] border border-border-secondary bg-bg-secondary object-cover"
+                src={BENEFITS_VIDEO}
+                poster={BENEFITS_VIDEO_POSTER}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-label="Animated wheel of the five Greater Medina Chamber membership benefits: connections, visibility, advocacy, savings, and education"
+              />
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
       {/* FAQ */}
       <section className="relative overflow-hidden bg-bg-secondary border-y border-border-secondary py-f55 lg:py-f89">
         {/* Ghosted boardroom-discussion backdrop */}
@@ -201,7 +249,7 @@ export default function JoinPage() {
       {/* Application form */}
       <section
         id="apply"
-        className="mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89 scroll-mt-24"
+        className="rule-top mx-auto max-w-7xl px-6 lg:px-8 py-f55 lg:py-f89 scroll-mt-24"
       >
         <FadeIn>
           <div className="max-w-3xl">
@@ -209,22 +257,19 @@ export default function JoinPage() {
             <h2 className="text-h2 mb-f21">Become a Member</h2>
             {/* Applications are handled in GrowthZone (the live system of record).
                 The internal Stripe join flow stays dormant until the cutover. */}
-            <div className="text-center">
-              <ButtonA
-                href={growthZone.joinApplication}
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="primary"
-                size="lg"
-                className="justify-center"
-              >
-                Apply for Membership →
-              </ButtonA>
-              <p className="text-body-sm text-text-tertiary mt-f13">
-                You&apos;ll complete your application on the chamber&apos;s secure
-                membership portal.
-              </p>
-            </div>
+            <ButtonA
+              href={growthZone.joinApplication}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="primary"
+              size="lg"
+            >
+              Apply for Membership →
+            </ButtonA>
+            <p className="text-body-sm text-text-tertiary mt-f13">
+              You&apos;ll complete your application on the chamber&apos;s secure
+              membership portal.
+            </p>
           </div>
 
           <div className="mt-f34">

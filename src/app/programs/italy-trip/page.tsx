@@ -378,15 +378,6 @@ export default function ItalyTripPage() {
                   group travel partner. Seats are limited to the group size
                   Collette has reserved for the chamber, so reserve early.
                 </p>
-                <p className="text-body text-text-secondary mt-f13">
-                  Questions about the trip? Contact{" "}
-                  <span className="font-bold text-text-primary">Catherine Hawk</span>{" "}
-                  at Collette —{" "}
-                  <a href="tel:+17343087962" className="font-bold text-cambridge hover:underline">
-                    (734) 308-7962
-                  </a>
-                  .
-                </p>
               </div>
               <div>
                 <p className="text-body text-text-secondary">

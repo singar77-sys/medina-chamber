@@ -131,7 +131,7 @@ export default function JoinPage() {
             <ButtonA href="#apply" size="lg">
               Start Your Application →
             </ButtonA>
-            <ButtonLink href="/membership/pricing" variant="secondary" size="lg">
+            <ButtonLink href="/membership/pricing" variant="emerald" size="lg">
               View Pricing
             </ButtonLink>
           </div>

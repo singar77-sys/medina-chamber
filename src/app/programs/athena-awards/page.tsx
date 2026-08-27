@@ -10,7 +10,7 @@ import { mailto } from "@/lib/format";
 export const metadata: Metadata = {
   title: "Athena Awards",
   description:
-    "The ATHENA Awards honor Medina County leaders who achieve professional excellence, serve their community, and actively help women reach their full leadership potential. Presented November 10, 2026 by the Greater Medina Chamber of Commerce and WJ Creative Studio.",
+    "The Athena Awards honor Medina County leaders who achieve professional excellence, serve their community, and actively help women reach their full leadership potential. Presented November 10, 2026 by the Greater Medina Chamber of Commerce and WJ Creative Studio.",
   openGraph: {
     title: "Athena Awards | Greater Medina Chamber of Commerce",
     description:
@@ -24,7 +24,7 @@ const jsonLd = {
   "@type": "Event",
   name: "Athena Awards",
   description:
-    "Annual ATHENA Awards ceremony honoring Medina County leaders who demonstrate professional excellence, serve their community, and actively help women reach their full leadership potential. Nominees of any gender are welcome.",
+    "Annual Athena Awards ceremony honoring Medina County leaders who demonstrate professional excellence, serve their community, and actively help women reach their full leadership potential. Nominees of any gender are welcome.",
   startDate: "2026-11-10",
   organizer: [
     {
@@ -157,7 +157,7 @@ export default function AthenaAwardsPage() {
               <div className="mt-f13 space-y-f21 text-body text-text-secondary leading-relaxed">
                 <p>
                   The Medina Chamber of Commerce and WJ Creative Studio proudly
-                  host the ATHENA Awards, honoring exceptional leaders who have
+                  host the Athena Awards, honoring exceptional leaders who have
                   made remarkable contributions to their careers and communities.
                   Modeled on the international ATHENA Leadership Award, this
                   recognition celebrates individuals, of any gender, who lead with

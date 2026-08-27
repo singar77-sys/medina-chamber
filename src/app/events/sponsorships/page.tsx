@@ -45,7 +45,7 @@ const sponsorships: SponsorshipCard[] = [
     ],
   },
   {
-    event: "Athena Leadership Awards",
+    event: "Athena Awards",
     tag: "Premier Audience",
     href: "/programs/athena-awards",
     description:

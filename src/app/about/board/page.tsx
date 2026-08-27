@@ -66,7 +66,7 @@ export default function BoardPage() {
       employee: [
         {
           "@type": "Person",
-          name: "Jaclyn Ringstmeier IOM",
+          name: "Jaclyn Ringstmeier, IOM",
           jobTitle: "Executive Director",
           email: jaclyn.email,
         },

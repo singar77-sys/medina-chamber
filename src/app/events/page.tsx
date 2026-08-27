@@ -326,7 +326,7 @@ export default function EventsPage() {
                   NOV
                 </span>
                 <p className="text-caption font-bold text-cambridge uppercase tracking-wider">November 10, 2026</p>
-                <h3 className="text-h3 text-white mt-f8 leading-tight">ATHENA Awards</h3>
+                <h3 className="text-h3 text-white mt-f8 leading-tight">Athena Awards</h3>
                 <p className="text-white/55 text-body-sm mt-f13 leading-relaxed flex-1">
                   Honoring Medina County leaders who lead with excellence and
                   actively help women reach their full leadership potential.

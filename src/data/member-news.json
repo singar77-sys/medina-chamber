@@ -1,7 +1,26 @@
 {
-  "generatedAt": "2026-08-26T05:33:19.512Z",
+  "generatedAt": "2026-08-27T16:06:21.125Z",
   "totalArticles": 8,
   "articles": [
+    {
+      "slug": "harvest-jamboree-fundraiser-to-support-hospice-in-medina",
+      "articleId": "350939",
+      "title": "Harvest Jamboree Fundraiser to support Hospice in Medina!",
+      "subtitle": "Images",
+      "body": "Join Reserve Care on October 3rd at 6pm at Forever Farms Blueberry Barn for a community celebration of compassionate hospice care right here in our community! The event will feature live music, a BBQ dinner, signature cocktails, and exciting raffle prizes. Funds raised from this event support hospice, palliative care, grief support, Veteran's programming and more in Medina County. Visit reserve-care.org/jamboree for more info and to purchase tickets!",
+      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1618,w_3000,x_0,y_-1/q_auto/f_auto/q_auto/v1787770282/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/59138b1a6b604a15a29a2776e8253f9a/Reserve-Care-logo.png",
+      "tags": [
+        "By\r\n                            Reserve Care (formerly Hospice of the Western Reserve)",
+        "8/19/2026"
+      ],
+      "memberName": "Reserve Care (formerly Hospice of the Western Reserve)",
+      "memberSlug": "22529288",
+      "dateRaw": "8/19/2026",
+      "dateISO": "2026-08-19",
+      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1618,w_3000,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1787770282/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/59138b1a6b604a15a29a2776e8253f9a/Reserve-Care-logo.png",
+      "detailUrl": "https://business.medinachamber.com/news/Details/harvest-jamboree-fundraiser-to-support-hospice-in-medina-350939",
+      "scrapedAt": "2026-08-27T16:06:17.304Z"
+    },
     {
       "slug": "medina-lifestyle-kids-and-pets-august",
       "articleId": "348528",
@@ -19,26 +38,7 @@
       "dateISO": "2026-08-05",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_248,w_813,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785965239/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/6338bef9692949ca910de033c315d596/LOGO.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/medina-lifestyle-kids-and-pets-august-348528",
-      "scrapedAt": "2026-08-26T05:33:15.408Z"
-    },
-    {
-      "slug": "medicare-101-presentation",
-      "articleId": "347957",
-      "title": "Medicare 101 Presentation",
-      "subtitle": "Check out this opportunity for HR professionals!",
-      "body": "Employees turning 65, retiring, or comparing Medicare with employer group coverage often turn to HR for answers. \nJoin Terri Lika of KAZ Company for an educational presentation covering Medicare enrollment, how Medicare coordinates with employer-sponsored health plans, and the questions employees ask most—so your team is better prepared to guide them. \nWednesday, August 26, 2026 \n8:00 am – 9:30 am \nMedina Chamber of Commerce \n139 North Court Street Suite A, Medina, \nEnjoy coffee, pastries, and the opportunity to connect with HR professionals from across the region. \nPlease RSVP to Terri by August 19, 2026",
-      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_575,w_1636,x_27,y_0/q_auto/f_auto/q_auto/v1785790027/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/ae5b2f79e693485ab5fa99e2dfa746fd/Medicare-101-Terri.jpg",
-      "tags": [
-        "By\r\n                            Terri Lika with the KAZ Company",
-        "8/3/2026"
-      ],
-      "memberName": "Terri Lika with the KAZ Company",
-      "memberSlug": "22529949",
-      "dateRaw": "8/3/2026",
-      "dateISO": "2026-08-03",
-      "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_575,w_1636,x_27,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785790027/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/ae5b2f79e693485ab5fa99e2dfa746fd/Medicare-101-Terri.jpg",
-      "detailUrl": "https://business.medinachamber.com/news/Details/medicare-101-presentation-347957",
-      "scrapedAt": "2026-08-26T05:33:15.956Z"
+      "scrapedAt": "2026-08-27T16:06:17.854Z"
     },
     {
       "slug": "bike-nite",
@@ -57,7 +57,7 @@
       "dateISO": "2026-08-01",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1774649265/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/08696adfe8014e348e3411fecd5205ae/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/bike-nite-321885",
-      "scrapedAt": "2026-08-26T05:33:16.529Z"
+      "scrapedAt": "2026-08-27T16:06:18.374Z"
     },
     {
       "slug": "1st-annual-fundraising-car-show",
@@ -76,7 +76,7 @@
       "dateISO": "2026-07-30",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_2048,w_2048,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785423508/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/94e6c419c14a42e480a489b848eab88e/Medina-Odd-Fellows.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/1st-annual-fundraising-car-show-347096",
-      "scrapedAt": "2026-08-26T05:33:17.155Z"
+      "scrapedAt": "2026-08-27T16:06:18.887Z"
     },
     {
       "slug": "medina-athletics-sponsorship-opportunities",
@@ -95,7 +95,7 @@
       "dateISO": "2026-07-29",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1001,w_1400,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785292914/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/bce87398f55c4b779e58e8ec65279974/MAB-LOGO.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/medina-athletics-sponsorship-opportunities-346803",
-      "scrapedAt": "2026-08-26T05:33:17.747Z"
+      "scrapedAt": "2026-08-27T16:06:19.458Z"
     },
     {
       "slug": "host-your-holiday-party-at-the-club",
@@ -114,7 +114,7 @@
       "dateISO": "2026-07-28",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_159,w_292,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785263176/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/3c23413c8c584f86b8877f07009382cb/Weymouth-fox-duel-logo.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/host-your-holiday-party-at-the-club-346683",
-      "scrapedAt": "2026-08-26T05:33:18.331Z"
+      "scrapedAt": "2026-08-27T16:06:20.011Z"
     },
     {
       "slug": "celebrate-our-100th-issue-with-us",
@@ -133,7 +133,7 @@
       "dateISO": "2026-07-23",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_417,w_1500,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785160773/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/9ae82988f22d468ab9f4a86c9cb38d26/Joy-of-Medina-County-Magazine.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/celebrate-our-100th-issue-with-us-346007",
-      "scrapedAt": "2026-08-26T05:33:18.910Z"
+      "scrapedAt": "2026-08-27T16:06:20.575Z"
     },
     {
       "slug": "car-cruise-in",
@@ -152,7 +152,7 @@
       "dateISO": "2026-04-06",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_638,w_994,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1775437512/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/62aa1d5146da4ab78eb0def384a2a8ee/QS-L-Color-Logo-2.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/car-cruise-in-323364",
-      "scrapedAt": "2026-08-26T05:33:19.505Z"
+      "scrapedAt": "2026-08-27T16:06:21.118Z"
     }
   ]
 }

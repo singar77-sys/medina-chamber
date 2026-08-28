@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-27T16:06:27.122Z",
-  "totalJobs": 9,
+  "generatedAt": "2026-08-28T17:10:17.873Z",
+  "totalJobs": 8,
   "jobs": [
     {
       "slug": "human-resources-generalist",
@@ -16,7 +16,7 @@
       "dateRaw": "8/26/2026",
       "dateISO": "2026-08-26",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/human-resources-generalist-352311",
-      "scrapedAt": "2026-08-27T16:06:22.688Z"
+      "scrapedAt": "2026-08-28T17:10:13.557Z"
     },
     {
       "slug": "client-support-specialist-insurance",
@@ -32,7 +32,7 @@
       "dateRaw": "8/26/2026",
       "dateISO": "2026-08-26",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/client-support-specialist-insurance-352314",
-      "scrapedAt": "2026-08-27T16:06:23.258Z"
+      "scrapedAt": "2026-08-28T17:10:14.069Z"
     },
     {
       "slug": "commercial-account-manager-seibertkeck",
@@ -48,7 +48,7 @@
       "dateRaw": "8/21/2026",
       "dateISO": "2026-08-21",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/commercial-account-manager-seibertkeck-351524",
-      "scrapedAt": "2026-08-27T16:06:23.776Z"
+      "scrapedAt": "2026-08-28T17:10:15.187Z"
     },
     {
       "slug": "orthodontic-assistant",
@@ -64,7 +64,7 @@
       "dateRaw": "7/31/2026",
       "dateISO": "2026-07-31",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/orthodontic-assistant-347436",
-      "scrapedAt": "2026-08-27T16:06:24.336Z"
+      "scrapedAt": "2026-08-28T17:10:15.717Z"
     },
     {
       "slug": "legal-secretary-hoffee-wallace-law-firm-medina-oh",
@@ -80,23 +80,7 @@
       "dateRaw": "7/30/2026",
       "dateISO": "2026-07-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/legal-secretary-hoffee-wallace-law-firm-medina-oh-347072",
-      "scrapedAt": "2026-08-27T16:06:24.906Z"
-    },
-    {
-      "slug": "esol-instructor",
-      "jobId": "346357",
-      "title": "ESOL Instructor",
-      "subtitle": "",
-      "body": "We're hiring a Part-time ESOL Instructor to join our team. \nThe ESOL Instructor at Project: LEARN of Medina County provides high-quality English language instruction to adult\nlearners whose first language is not English. The instructor creates a supportive, student-centered learning environment\nthat helps students strengthen their English proficiency in speaking, listening, reading, and writing.\nIf you are interested in this opportunity—or know someone who may be a great fit—we would greatly appreciate you reaching out to julie.alexander@projectlearnmedina.org.",
-      "tags": [],
-      "location": "",
-      "applyUrl": "",
-      "companyName": "Project: LEARN of Medina County",
-      "companySlug": "",
-      "dateRaw": "7/27/2026",
-      "dateISO": "2026-07-27",
-      "detailUrl": "https://business.medinachamber.com/jobs/Details/esol-instructor-346357",
-      "scrapedAt": "2026-08-27T16:06:25.463Z"
+      "scrapedAt": "2026-08-28T17:10:16.245Z"
     },
     {
       "slug": "insurance-sales-representative",
@@ -112,7 +96,7 @@
       "dateRaw": "7/13/2026",
       "dateISO": "2026-07-13",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/insurance-sales-representative-343823",
-      "scrapedAt": "2026-08-27T16:06:26.007Z"
+      "scrapedAt": "2026-08-28T17:10:16.783Z"
     },
     {
       "slug": "workforce-development-specialist-medina-county",
@@ -128,7 +112,7 @@
       "dateRaw": "6/29/2026",
       "dateISO": "2026-06-29",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/workforce-development-specialist-medina-county-340917",
-      "scrapedAt": "2026-08-27T16:06:26.548Z"
+      "scrapedAt": "2026-08-28T17:10:17.334Z"
     },
     {
       "slug": "catering-event-staff",
@@ -144,7 +128,7 @@
       "dateRaw": "4/30/2026",
       "dateISO": "2026-04-30",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/catering-event-staff-328997",
-      "scrapedAt": "2026-08-27T16:06:27.115Z"
+      "scrapedAt": "2026-08-28T17:10:17.865Z"
     }
   ]
 }

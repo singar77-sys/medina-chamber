@@ -57,13 +57,12 @@ const nextConfig: NextConfig = {
         pathname: "/content/v1/5c1d23c545776e89bb386be4/**",
       },
       {
-        // Vercel Blob — CMS-uploaded event photos and media.
-        // TODO(mark): pin to this project's actual store subdomain (grab the
-        // hostname from any uploaded photo URL in the admin media library or
-        // the Vercel Blob dashboard); the wildcard matches every public Blob
-        // store on Vercel, not just ours.
+        // Vercel Blob — CMS-uploaded event photos and media, pinned to this
+        // project's store (was a wildcard that matched every public Blob
+        // store on Vercel). If the store is ever recreated, update the
+        // subdomain here — it's visible in any uploaded photo URL.
         protocol: "https",
-        hostname: "*.public.blob.vercel-storage.com",
+        hostname: "75emgknx7u1oaaiq.public.blob.vercel-storage.com",
       },
     ],
   },

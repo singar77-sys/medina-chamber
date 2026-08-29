@@ -97,14 +97,24 @@ function parseDetailPage(html, { slug, eventId, detailUrl }) {
     ?.trim() ?? '';
 
   // Parse the date string into structured parts
+  const MONTHS = { January:0,February:1,March:2,April:3,May:4,June:5,July:6,August:7,September:8,October:9,November:10,December:11 };
+  const toISO = (year, month, day) =>
+    new Date(parseInt(year), MONTHS[month] ?? 0, parseInt(day)).toISOString().split('T')[0];
   const dateMatch = subtitleRaw.match(/(\w+),\s+(\w+)\s+(\d+),\s+(\d+)\s+\((\d+:\d+\s*[AP]M)\s*[-–]\s*(\d+:\d+\s*[AP]M)\)/i);
   let dayOfWeek = '', month = '', day = '', year = '', startTime = '', endTime = '', dateISO = '';
   if (dateMatch) {
     [, dayOfWeek, month, day, year, startTime, endTime] = dateMatch;
-    // Build ISO date string for sorting
-    const months = { January:0,February:1,March:2,April:3,May:4,June:5,July:6,August:7,September:8,October:9,November:10,December:11 };
-    const d = new Date(parseInt(year), months[month] ?? 0, parseInt(day));
-    dateISO = d.toISOString().split('T')[0];
+    dateISO = toISO(year, month, day);
+  } else {
+    // Date-only subtitles — no "(6:00 PM - 8:00 PM)" range. All-day items
+    // like enrollment deadlines ("Wednesday, September 30, 2026") used to
+    // fail the full match above and ship with a blank dateISO, which
+    // knocked them off every chronological listing on the site.
+    const dateOnly = subtitleRaw.match(/^(\w+),\s+(\w+)\s+(\d+),\s+(\d+)/);
+    if (dateOnly) {
+      [, dayOfWeek, month, day, year] = dateOnly;
+      dateISO = toISO(year, month, day);
+    }
   }
 
   // Location

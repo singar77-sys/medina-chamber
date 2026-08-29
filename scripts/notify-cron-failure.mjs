@@ -42,7 +42,7 @@ const text = [
   ``,
   `Common causes:`,
   `  - GrowthZone changed their HTML (scrapers can't find the cards)`,
-  `  - Smoke check rejected the result (member count <500 or events 0)`,
+  `  - Smoke check rejected the result (member count <450, events <5, or news/jobs collapsed to 0)`,
   `  - Upstash credentials expired or quota hit`,
   `  - GitHub Actions outage (try re-running before debugging)`,
 ].join("\n");
@@ -54,7 +54,7 @@ const html = `
   <p><strong>Common causes:</strong></p>
   <ul>
     <li>GrowthZone changed their HTML (scrapers can't find the cards)</li>
-    <li>Smoke check rejected the result (member count &lt;500 or events 0)</li>
+    <li>Smoke check rejected the result (member count &lt;450, events &lt;5, or news/jobs collapsed to 0)</li>
     <li>Upstash credentials expired or quota hit</li>
     <li>GitHub Actions outage (try re-running before debugging)</li>
   </ul>

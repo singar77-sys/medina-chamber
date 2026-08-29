@@ -12,7 +12,10 @@ export function htmlToText(html = '') {
     // strip only removes the tags, leaking raw block CSS into the body as text.
     .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
     .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
-    .replace(/<br\s*\/?>/gi, '\n')
+    // \b[^>]* — GrowthZone's Froala editor emits <br fr-original-style=''
+    // style=''> with attributes; a bare <br\s*\/?> match misses those, the
+    // generic tag strip eats them, and adjacent lines fuse ("personFor").
+    .replace(/<br\b[^>]*>/gi, '\n')
     // A closing block-level tag ends a line — otherwise text separated only by
     // </div>/</li>/</td>/</h*> fuses together.
     .replace(/<\/(p|div|li|ul|ol|tr|td|th|h[1-6]|section|article|blockquote)>/gi, '\n')

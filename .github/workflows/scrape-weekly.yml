@@ -75,8 +75,12 @@ jobs:
         run: |
           COUNT=$(node -e "console.log(JSON.parse(require('fs').readFileSync('src/data/members.json','utf8')).members.length)")
           echo "Scraped $COUNT members"
-          if [ "$COUNT" -lt 500 ]; then
-            echo "❌ Member count $COUNT is below sanity floor (500). Refusing to push."
+          # Floor 450, not 500: real membership drifted to 501 by 2026-08 and a
+          # hard 500 was one departure from bricking every weekly refresh. The
+          # catastrophic-collapse case is covered by the scraper's own guard
+          # (refuses to write on a >10% drop vs the previous file).
+          if [ "$COUNT" -lt 450 ]; then
+            echo "❌ Member count $COUNT is below sanity floor (450). Refusing to push."
             exit 1
           fi
 

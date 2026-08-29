@@ -29,6 +29,7 @@
 
 import { NextResponse } from "next/server";
 import { requireAdminSession } from "@/lib/admin-auth";
+import { SLUG_RE } from "@/lib/sanitize";
 import { setEventInfoOverride, clearEventInfoOverride } from "@/lib/cms-store";
 import type { EventInfo } from "@/components/events/graphics/shared";
 import { generateText } from "ai";
@@ -77,6 +78,11 @@ export async function POST(req: Request): Promise<Response> {
   const { slug, command, currentInfo = {} } = body;
   if (!slug || !command) {
     return NextResponse.json({ error: "Missing slug or command." }, { status: 400 });
+  }
+  // slug becomes a Redis key component — pin it to the canonical shape like
+  // media/upload does rather than trusting the admin client.
+  if (!SLUG_RE.test(slug)) {
+    return NextResponse.json({ error: "Invalid slug." }, { status: 400 });
   }
 
   if (!command.trim()) {

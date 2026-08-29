@@ -30,6 +30,7 @@ import { db } from "@/lib/db";
 import { events, eventTickets, eventRegistrations } from "@/lib/db/schema";
 import { verifyPortalSession, PORTAL_COOKIE } from "@/lib/portal-session";
 import { limitEventRegister } from "@/lib/rate-limit";
+import { readJsonBounded } from "@/lib/body-limit";
 import { assertSameOrigin } from "@/lib/csrf";
 import { EMAIL_RE } from "@/lib/email";
 import { stripe } from "@/lib/stripe/client";
@@ -75,12 +76,9 @@ export async function POST(req: Request): Promise<Response> {
   const csrf = assertSameOrigin(req);
   if (csrf) return csrf;
 
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return bad("invalid body");
-  }
+  const bounded = await readJsonBounded(req);
+  if ("response" in bounded) return bounded.response;
+  const body = bounded.body;
   if (!body || typeof body !== "object") return bad("invalid body");
   const b = body as Record<string, unknown>;
 

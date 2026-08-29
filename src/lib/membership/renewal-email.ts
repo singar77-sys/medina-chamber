@@ -6,14 +6,7 @@
  */
 
 import { resend } from "@/lib/email";
-
-function esc(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
+import { escHtml as esc } from "@/lib/sanitize";
 
 export interface RenewalConfirmationInput {
   to: string;

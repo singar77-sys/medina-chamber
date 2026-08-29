@@ -16,6 +16,7 @@ import {
   type Member,
 } from "@/data/members";
 import { chatLimiter, applyRateLimit, getRequestIp } from "@/lib/rate-limit";
+import { readJsonBounded } from "@/lib/body-limit";
 import { isOverDailyCap, isOverMonthlyCap, recordTokenUsage } from "@/lib/spend-cap";
 import { isIpOverBlockThreshold, recordIpTokenUsage } from "@/lib/per-ip-watch";
 import {
@@ -367,12 +368,9 @@ export async function POST(req: Request) {
     return createTextStreamResponse({ textStream: offlineFallbackStream() });
   }
 
-  let body: { sessionId?: unknown; message?: unknown };
-  try {
-    body = (await req.json()) as typeof body;
-  } catch {
-    return new Response("Invalid JSON body", { status: 400 });
-  }
+  const bounded = await readJsonBounded(req, 16 * 1024);
+  if ("response" in bounded) return bounded.response;
+  const body = bounded.body as { sessionId?: unknown; message?: unknown };
 
   // Request shape: { sessionId?: UUIDv4, message: string }
   // The server owns the conversation transcript in Upstash. Clients

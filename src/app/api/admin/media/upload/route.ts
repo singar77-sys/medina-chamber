@@ -21,6 +21,7 @@
 import { NextResponse } from "next/server";
 import sharp from "sharp";
 import { requireAdminSession } from "@/lib/admin-auth";
+import { SLUG_RE } from "@/lib/sanitize";
 import {
   uploadMedia,
   setEventGraphicImage,
@@ -88,7 +89,7 @@ export async function POST(req: Request): Promise<Response> {
   // Redis key component (cms:media:event:<slug>), so it must be a plain slug —
   // reject rather than silently normalize, or the stored key would no longer
   // match the actual event's slug.
-  if (rawEventSlug && !/^[a-z0-9](?:[a-z0-9-]{0,118}[a-z0-9])?$/.test(rawEventSlug)) {
+  if (rawEventSlug && !SLUG_RE.test(rawEventSlug)) {
     return NextResponse.json(
       { error: "eventSlug must be a lowercase-hyphen slug." },
       { status: 400 },

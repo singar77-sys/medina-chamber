@@ -15,6 +15,7 @@ import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { and, eq, gt } from "drizzle-orm";
 import { joinLimiter, applyRateLimit } from "@/lib/rate-limit";
+import { readJsonBounded } from "@/lib/body-limit";
 import { EMAIL_RE } from "@/lib/email";
 import { pickString, pickOptional } from "@/lib/sanitize";
 import { db } from "@/lib/db";
@@ -62,12 +63,9 @@ export async function POST(req: NextRequest): Promise<Response> {
   const limited = await applyRateLimit(req, joinLimiter);
   if (limited) return limited;
 
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
-  }
+  const bounded = await readJsonBounded(req);
+  if ("response" in bounded) return bounded.response;
+  const body = bounded.body;
   if (!body || typeof body !== "object") {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }

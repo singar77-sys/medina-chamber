@@ -14,6 +14,7 @@
  */
 
 import { resend } from "@/lib/email";
+import { escHtml as escapeHtml } from "@/lib/sanitize";
 
 export interface EventConfirmationParams {
   to: string;
@@ -38,14 +39,6 @@ function formatMoney(cents: number): string {
     currency: "USD",
     minimumFractionDigits: 2,
   });
-}
-
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
 }
 
 export function buildEventConfirmationEmail(p: EventConfirmationParams): string {

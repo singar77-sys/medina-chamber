@@ -20,6 +20,7 @@ import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { searchMembers } from "@/lib/semantic-search";
 import { searchLimiter, applyRateLimit } from "@/lib/rate-limit";
+import { readJsonBounded } from "@/lib/body-limit";
 
 export const runtime = "edge";
 
@@ -31,13 +32,10 @@ export async function POST(req: Request) {
   const limited = await applyRateLimit(req, searchLimiter);
   if (limited) return limited;
 
-  // Parse body
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
-  }
+  // Parse body (bounded — a search query has no business being large)
+  const bounded = await readJsonBounded(req, 8 * 1024);
+  if ("response" in bounded) return bounded.response;
+  const body = bounded.body;
 
   const { q, topK, categoryFilter } =
     (body as { q?: string; topK?: number; categoryFilter?: string | null }) ?? {};

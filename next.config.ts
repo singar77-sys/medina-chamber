@@ -49,12 +49,19 @@ const nextConfig: NextConfig = {
         pathname: "/micronetonline/**",
       },
       {
-        // Squarespace blog post images
+        // Squarespace blog post images — pinned to the chamber's own account
+        // path so arbitrary Squarespace images can't ride our optimizer
+        // (every URL in src/data/blog.json shares this prefix).
         protocol: "https",
         hostname: "images.squarespace-cdn.com",
+        pathname: "/content/v1/5c1d23c545776e89bb386be4/**",
       },
       {
-        // Vercel Blob — CMS-uploaded event photos and media
+        // Vercel Blob — CMS-uploaded event photos and media.
+        // TODO(mark): pin to this project's actual store subdomain (grab the
+        // hostname from any uploaded photo URL in the admin media library or
+        // the Vercel Blob dashboard); the wildcard matches every public Blob
+        // store on Vercel, not just ours.
         protocol: "https",
         hostname: "*.public.blob.vercel-storage.com",
       },

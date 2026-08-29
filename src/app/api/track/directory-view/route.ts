@@ -11,6 +11,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { and, eq, isNull } from "drizzle-orm";
 import { applyRateLimit, trackLimiter } from "@/lib/rate-limit";
+import { readJsonBounded } from "@/lib/body-limit";
 import { db } from "@/lib/db";
 import { organizations } from "@/lib/db/schema";
 import { logEngagement } from "@/lib/engagement";
@@ -25,12 +26,12 @@ export async function POST(req: NextRequest): Promise<Response> {
   if (limited) return limited;
 
   let slug = "";
-  try {
-    const body = (await req.json()) as { slug?: unknown };
-    if (typeof body?.slug === "string") slug = body.slug;
-  } catch {
+  const bounded = await readJsonBounded(req, 4 * 1024);
+  if ("response" in bounded) {
     return NextResponse.json({ ok: false }, { status: 400 });
   }
+  const body = bounded.body as { slug?: unknown };
+  if (typeof body?.slug === "string") slug = body.slug;
   // Real member slugs are short lowercase-hyphen strings; an unbounded value
   // would otherwise flow into the DB lookup and engagement metadata as-is.
   if (!slug || slug.length > 120) return NextResponse.json({ ok: false }, { status: 400 });

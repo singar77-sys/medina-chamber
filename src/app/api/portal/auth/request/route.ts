@@ -13,6 +13,7 @@ import { eq } from "drizzle-orm";
 import { signMagicToken } from "@/lib/portal-session";
 import { resend, EMAIL_RE } from "@/lib/email";
 import { limitPortalAuth } from "@/lib/rate-limit";
+import { readJsonBounded } from "@/lib/body-limit";
 import { escHtml } from "@/lib/sanitize";
 import { getSiteOrigin } from "@/lib/site-url";
 
@@ -24,12 +25,9 @@ export async function POST(req: Request): Promise<Response> {
   const limited = await limitPortalAuth(req);
   if (limited) return limited;
 
-  let body: { email?: unknown };
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid request." }, { status: 400 });
-  }
+  const bounded = await readJsonBounded(req, 4 * 1024);
+  if ("response" in bounded) return bounded.response;
+  const body = bounded.body as { email?: unknown };
 
   const email = typeof body.email === "string"
     ? body.email.trim().toLowerCase()

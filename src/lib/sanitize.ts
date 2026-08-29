@@ -19,6 +19,11 @@ export function escHtml(s: string): string {
     .replace(/'/g, "&#39;");
 }
 
+/** Canonical member/event slug shape: lowercase alphanumerics and hyphens,
+ *  1-120 chars, no leading/trailing hyphen. Shared by the admin routes that
+ *  feed a client-supplied slug into Blob paths or Redis keys. */
+export const SLUG_RE = /^[a-z0-9](?:[a-z0-9-]{0,118}[a-z0-9])?$/;
+
 /**
  * Returns the trimmed string if valid (non-empty, within length cap),
  * or null otherwise. Used for required fields where empty/invalid

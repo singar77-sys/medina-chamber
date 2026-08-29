@@ -6,14 +6,7 @@
  */
 
 import { resend, CHAMBER_NOTIFY_EMAIL } from "@/lib/email";
-
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
+import { escHtml as escapeHtml } from "@/lib/sanitize";
 
 function money(cents: number): string {
   return (cents / 100).toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 });

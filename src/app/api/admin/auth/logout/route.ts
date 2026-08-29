@@ -8,8 +8,14 @@
 
 import { NextResponse } from "next/server";
 import { ADMIN_COOKIE } from "@/lib/admin-session";
+import { assertSameOrigin } from "@/lib/csrf";
 
-export async function POST(): Promise<Response> {
+export async function POST(req: Request): Promise<Response> {
+  // Same-origin check like every other cookie-acting route — without it any
+  // cross-site page could force-logout an admin via an auto-submitted form.
+  const csrf = assertSameOrigin(req);
+  if (csrf) return csrf;
+
   const res = NextResponse.json({ ok: true });
   res.cookies.set(ADMIN_COOKIE, "", {
     httpOnly: true,

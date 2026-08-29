@@ -14,17 +14,32 @@
  * TTL: 1 year for all keys — they're managed explicitly via admin UI.
  */
 
+import { cache } from "react";
 import { getRedis } from "@/lib/upstash";
 import type { EventInfo } from "@/components/events/graphics/shared";
 
 const TTL = 365 * 24 * 3600; // seconds
+
+/** Read-side guard. The store's contract is "purely additive — nothing breaks
+ *  if Redis is unavailable", which must cover thrown network errors, not just
+ *  the unconfigured-null case: a Redis outage must degrade to static data, not
+ *  500 the pricing/event/blog pages. Write helpers still throw so admin saves
+ *  fail loudly. */
+async function readSafe<T>(label: string, op: () => Promise<T>, fallback: T): Promise<T> {
+  try {
+    return await op();
+  } catch (err) {
+    console.error(`[cms-store] Redis read failed (${label}):`, err);
+    return fallback;
+  }
+}
 
 // ── Event graphic overrides ────────────────────────────────────────────────
 
 export async function getEventInfoOverride(slug: string): Promise<EventInfo | null> {
   const redis = getRedis();
   if (!redis) return null;
-  return redis.get<EventInfo>(`cms:event-info:${slug}`);
+  return readSafe("event-info", () => redis.get<EventInfo>(`cms:event-info:${slug}`), null);
 }
 
 export async function setEventInfoOverride(slug: string, info: EventInfo): Promise<void> {
@@ -44,7 +59,7 @@ export async function clearEventInfoOverride(slug: string): Promise<void> {
 export async function getContentField(page: string, field: string): Promise<string | null> {
   const redis = getRedis();
   if (!redis) return null;
-  return redis.get<string>(`cms:content:${page}:${field}`);
+  return readSafe("content", () => redis.get<string>(`cms:content:${page}:${field}`), null);
 }
 
 export async function setContentField(
@@ -77,11 +92,12 @@ export interface CmsBlogPost {
   updatedAt: string;
 }
 
-export async function getCmsBlogPost(slug: string): Promise<CmsBlogPost | null> {
+/** cache() dedupes the generateMetadata + page-body reads within one request. */
+export const getCmsBlogPost = cache(async (slug: string): Promise<CmsBlogPost | null> => {
   const redis = getRedis();
   if (!redis) return null;
-  return redis.get<CmsBlogPost>(`cms:blog:post:${slug}`);
-}
+  return readSafe("blog-post", () => redis.get<CmsBlogPost>(`cms:blog:post:${slug}`), null);
+});
 
 export async function saveCmsBlogPost(post: CmsBlogPost): Promise<void> {
   const redis = getRedis();
@@ -112,9 +128,15 @@ export async function listCmsBlogPosts(): Promise<CmsBlogPost[]> {
   const redis = getRedis();
   if (!redis) return [];
 
-  const slugs = (await redis.get<string[]>("cms:blog:index")) ?? [];
-  const posts = await Promise.all(slugs.map((s) => getCmsBlogPost(s)));
-  return posts.filter((p): p is CmsBlogPost => p !== null);
+  return readSafe(
+    "blog-index",
+    async () => {
+      const slugs = (await redis.get<string[]>("cms:blog:index")) ?? [];
+      const posts = await Promise.all(slugs.map((s) => getCmsBlogPost(s)));
+      return posts.filter((p): p is CmsBlogPost => p !== null);
+    },
+    [],
+  );
 }
 
 // ── CMS event data overrides ───────────────────────────────────────────────
@@ -145,11 +167,12 @@ export interface CmsEventData {
   updatedAt?: string;
 }
 
-export async function getCmsEventData(slug: string): Promise<CmsEventData | null> {
+/** cache() dedupes the generateMetadata + page-body reads within one request. */
+export const getCmsEventData = cache(async (slug: string): Promise<CmsEventData | null> => {
   const redis = getRedis();
   if (!redis) return null;
-  return redis.get<CmsEventData>(`cms:event:${slug}`);
-}
+  return readSafe("event-data", () => redis.get<CmsEventData>(`cms:event:${slug}`), null);
+});
 
 export async function setCmsEventData(slug: string, data: CmsEventData): Promise<void> {
   const redis = getRedis();
@@ -289,7 +312,7 @@ export const DEFAULT_PRICING: Omit<PricingConfig, "updatedAt"> = {
 export async function getCmsPricing(): Promise<PricingConfig | null> {
   const redis = getRedis();
   if (!redis) return null;
-  return redis.get<PricingConfig>("cms:pricing");
+  return readSafe("pricing", () => redis.get<PricingConfig>("cms:pricing"), null);
 }
 
 export async function setCmsPricing(config: PricingConfig): Promise<void> {

@@ -9,13 +9,19 @@ import Link from "next/link";
 /* ─── Shard Particle (flies out on shatter) ────────────── */
 
 function Shard({ index }: { index: number }) {
+  // Index-seeded pseudo-randoms (same trick as MedinaAmbience) — stable across
+  // re-renders so trajectories can't re-randomize mid-flight.
+  const rand = (n: number) => {
+    const x = Math.sin(index * 127.1 + n * 311.7) * 43758.5453;
+    return x - Math.floor(x);
+  };
   const angle = (index / 16) * Math.PI * 2;
-  const distance = 120 + Math.random() * 200;
+  const distance = 120 + rand(1) * 200;
   const tx = Math.cos(angle) * distance;
   const ty = Math.sin(angle) * distance - 80;
-  const rotation = (Math.random() - 0.5) * 720;
-  const size = 8 + Math.random() * 20;
-  const delay = Math.random() * 0.15;
+  const rotation = (rand(2) - 0.5) * 720;
+  const size = 8 + rand(3) * 20;
+  const delay = rand(4) * 0.15;
 
   return (
     <div
@@ -43,7 +49,7 @@ type Phase = "frozen" | "shatter" | "character" | "game";
 export function IcebreakerClient({ questions }: { questions: string[] }) {
   const [phase, setPhase] = useState<Phase>("frozen");
   const [currentQ, setCurrentQ] = useState(0);
-  const [usedIndices, setUsedIndices] = useState<Set<number>>(new Set());
+  const [, setUsedIndices] = useState<Set<number>>(new Set());
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Shuffle to a random unused question

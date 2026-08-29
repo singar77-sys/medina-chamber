@@ -9,7 +9,6 @@
  * file is just the eleven graphic component implementations.
  */
 
-import type { CSSProperties } from "react";
 import {
   BRAND,
   ASSETS,

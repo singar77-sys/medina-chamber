@@ -102,7 +102,7 @@ export default function ItalyTripPage() {
       />
 
       <section className="relative overflow-hidden pt-f144 pb-f89 min-h-[42rem]">
-        {/* Ghosted Italy trip backdrop — TODO: swap in real photo at this path */}
+        {/* Ghosted Italy trip backdrop */}
         <div
           className="absolute inset-0 pointer-events-none select-none"
           aria-hidden="true"

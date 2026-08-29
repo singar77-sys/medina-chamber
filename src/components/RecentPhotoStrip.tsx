@@ -1,10 +1,10 @@
 /**
  * RecentPhotoStrip — "Life at the Chamber" homepage photo grid.
  *
- * Async Server Component. Reads the last 8 uploaded photos from the Redis
- * recent feed (cms:media:recent) and renders them as a 4×2 image grid.
- * Returns null when fewer than 4 photos are available so the section never
- * renders as an empty shell.
+ * Async Server Component. Reads the curated photos/top-8 set from the local
+ * filesystem via getMergedStaticPhotos (synced nightly from the chamber's
+ * SharePoint) and renders them as a 4×2 image grid. Returns null when fewer
+ * than 4 photos are available so the section never renders as an empty shell.
  *
  * Photos come from Vercel Blob (CDN URLs). The *.public.blob.vercel-storage.com
  * remote pattern is registered in next.config.ts so next/image can serve them.

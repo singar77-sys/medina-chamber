@@ -7,7 +7,7 @@ import { getPublicDeals } from "@/lib/deals";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Member Deals & Savings · Greater Medina Chamber of Commerce",
+  title: "Member Deals & Savings",
   description:
     "Exclusive deals and offers from Greater Medina Chamber of Commerce members. Support local businesses and save.",
   alternates: { canonical: "/deals" },

@@ -6,6 +6,7 @@
  * required except the logout form POST.
  */
 
+import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
@@ -432,7 +433,7 @@ export default async function PortalDashboardPage() {
 
         {/* ── Quick links ────────────────────────────────────────────────── */}
         <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <a
+          <Link
             href="/membership/directory"
             className="flex items-center gap-3 bg-bg-primary rounded-xl px-5 py-4 shadow-sm border border-border-secondary hover:border-border-primary transition-colors group"
           >
@@ -443,9 +444,9 @@ export default async function PortalDashboardPage() {
               </p>
               <p className="text-xs text-text-tertiary">Browse all members</p>
             </div>
-          </a>
+          </Link>
 
-          <a
+          <Link
             href="/events"
             className="flex items-center gap-3 bg-bg-primary rounded-xl px-5 py-4 shadow-sm border border-border-secondary hover:border-border-primary transition-colors group"
           >
@@ -456,9 +457,9 @@ export default async function PortalDashboardPage() {
               </p>
               <p className="text-xs text-text-tertiary">Upcoming chamber events</p>
             </div>
-          </a>
+          </Link>
 
-          <a
+          <Link
             href="/portal/deals"
             className="flex items-center gap-3 bg-bg-primary rounded-xl px-5 py-4 shadow-sm border border-border-secondary hover:border-border-primary transition-colors group"
           >
@@ -469,9 +470,9 @@ export default async function PortalDashboardPage() {
               </p>
               <p className="text-xs text-text-tertiary">Post a member deal</p>
             </div>
-          </a>
+          </Link>
 
-          <a
+          <Link
             href="/portal/resources"
             className="flex items-center gap-3 bg-bg-primary rounded-xl px-5 py-4 shadow-sm border border-border-secondary hover:border-border-primary transition-colors group"
           >
@@ -482,9 +483,9 @@ export default async function PortalDashboardPage() {
               </p>
               <p className="text-xs text-text-tertiary">Member resource library</p>
             </div>
-          </a>
+          </Link>
 
-          <a
+          <Link
             href="/portal/reporting"
             className="flex items-center gap-3 bg-bg-primary rounded-xl px-5 py-4 shadow-sm border border-border-secondary hover:border-border-primary transition-colors group"
           >
@@ -495,7 +496,7 @@ export default async function PortalDashboardPage() {
               </p>
               <p className="text-xs text-text-tertiary">Engagement summary</p>
             </div>
-          </a>
+          </Link>
 
           <a
             href="mailto:office@medinaohchamber.com"

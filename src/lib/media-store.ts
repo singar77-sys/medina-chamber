@@ -93,7 +93,14 @@ async function addEventPhoto(slug: string, item: MediaItem): Promise<void> {
 export async function getEventPhotos(slug: string): Promise<MediaItem[]> {
   const redis = getRedis();
   if (!redis) return [];
-  return (await redis.get<MediaItem[]>(`cms:media:event:${slug}`)) ?? [];
+  // Public event pages call this — a Redis outage must mean "no photos",
+  // not a 500 (same read-side contract as cms-store).
+  try {
+    return (await redis.get<MediaItem[]>(`cms:media:event:${slug}`)) ?? [];
+  } catch (err) {
+    console.error("[media-store] Redis read failed (event-photos):", err);
+    return [];
+  }
 }
 
 /**

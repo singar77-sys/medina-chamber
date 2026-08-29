@@ -85,7 +85,9 @@ export default async function EventPage(
     name: event.title,
     ...(event.dateISO && {
       startDate: `${event.dateISO}T${to24h(event.startTime)}`,
-      endDate: `${event.dateISO}T${to24h(event.endTime)}`,
+      // Omit endDate when endTime is missing — to24h would fall back to
+      // "00:00:00" and emit an endDate at midnight BEFORE the startDate.
+      ...(event.endTime && { endDate: `${event.dateISO}T${to24h(event.endTime)}` }),
       eventStatus: "https://schema.org/EventScheduled",
     }),
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",

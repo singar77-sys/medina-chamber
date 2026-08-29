@@ -248,9 +248,11 @@ export default async function PricingPage() {
                           </li>
                         ))}
                       </ul>
-                      <p className="text-caption text-text-tertiary mt-f8">
-                        + {tier.benefits.length - 8} more benefits below
-                      </p>
+                      {tier.benefits.length > 8 && (
+                        <p className="text-caption text-text-tertiary mt-f8">
+                          + {tier.benefits.length - 8} more benefits below
+                        </p>
+                      )}
                     </div>
                   )}
 

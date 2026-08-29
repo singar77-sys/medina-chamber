@@ -176,7 +176,8 @@ export default async function EventPage(
 
             {event.startTime && (
               <p className="text-h4 text-text-secondary mt-f8">
-                {event.startTime} – {event.endTime}
+                {event.startTime}
+                {event.endTime ? ` – ${event.endTime}` : ""}
               </p>
             )}
 
@@ -284,7 +285,8 @@ export default async function EventPage(
                 </div>
                 {event.startTime && (
                   <p className="text-body font-bold text-text-primary">
-                    {event.startTime} – {event.endTime}
+                    {event.startTime}
+                    {event.endTime ? ` – ${event.endTime}` : ""}
                   </p>
                 )}
               </div>

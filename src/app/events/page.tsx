@@ -157,7 +157,7 @@ export default async function EventsPage() {
           <FadeIn>
             <h2 className="text-h2 mb-f8">Regular Programming</h2>
             <p className="text-body-lg text-text-secondary mb-f8">
-              Variety programs on a variety of dates — stay as busy as you want to be.
+              A variety of programs on a variety of dates — stay as busy as you want to be.
             </p>
             <p className="text-body-sm text-text-tertiary mb-f21">
               These programs recur monthly, but dates, times, and venues can change.

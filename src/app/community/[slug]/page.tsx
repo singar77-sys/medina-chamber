@@ -291,7 +291,8 @@ export default async function CommunityPage(
                       {e.title}
                     </h3>
                     <p className="text-caption text-text-tertiary mt-1">
-                      {e.startTime} – {e.endTime}
+                      {e.startTime}
+                      {e.endTime ? ` – ${e.endTime}` : ""}
                     </p>
                   </div>
                 </Link>

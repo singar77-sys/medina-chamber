@@ -98,7 +98,7 @@ function main() {
     console.error(`  ${kb(o.size).padStart(9)}  ${o.rel}`);
   }
   console.error(
-    "\nConvert to WebP/AVIF (see scripts/convert-event-heroes-webp.mjs for the pattern),\n" +
+    "\nConvert to WebP/AVIF (sharp is in devDependencies — a few lines of script),\n" +
       "or, if this large raster is genuinely required, add its path to\n" +
       "scripts/image-size-allowlist.txt with a one-line justification comment.",
   );

@@ -17,7 +17,12 @@
 
 # misc
 .DS_Store
+Thumbs.db
+desktop.ini
 *.pem
+
+# test coverage
+/coverage
 
 # debug
 npm-debug.log*
@@ -39,9 +44,6 @@ next-env.d.ts
 # scraper debug + report output (regenerated on demand, shouldn't
 # live in git history — they're scraper byproducts, not source)
 scripts/_debug-raw.html
-scripts/image-catalog.json
-scripts/link-audit-report.json
-scripts/logo-scrape-report.json
 scripts/*.log
 
 # Designer scratch — HTML mockups, .jsx design files, pasted-screenshot

@@ -7,9 +7,10 @@
  * members entirely, and sometimes tags non-premium members as tier=2.
  *
  * These sets are the source of truth, pulled from the authenticated
- * admin membership list (/api/memberships/all/). Update by re-running
- * scripts/pull-tier-overrides.mjs (documented in repo) or by hitting
- * the admin API from an authenticated browser session.
+ * admin membership list (/api/memberships/all/). Update via
+ * scripts/sync-tier-overrides.mjs: paste the arrays fetched from an
+ * authenticated browser console into that script and run it (the
+ * procedure is documented in the script header).
  *
  * Last sync: 2026-04-22 (full); Medwick Construction added manually 2026-07-15
  * Source: GrowthZone admin dashboard (Mark authenticated)

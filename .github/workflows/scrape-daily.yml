@@ -75,14 +75,30 @@ jobs:
       # If GrowthZone changes their HTML and we silently scrape zero
       # events, the homepage event widget would go dark. Better to fail
       # the workflow loudly so a human investigates.
-      - name: Smoke check — events count must be sane
+      - name: Smoke check — scraped counts must be sane
         run: |
-          COUNT=$(node -e "console.log(JSON.parse(require('fs').readFileSync('src/data/events.json','utf8')).events.length)")
-          echo "Events in file: $COUNT"
-          if [ "$COUNT" -lt 1 ]; then
-            echo "❌ Events count is zero. Refusing to push — investigate scraper."
-            exit 1
-          fi
+          # The continue-on-error flags above mean a scraper can write a
+          # collapsed file and the workflow still shows green — so every
+          # dataset is checked here, not just events. News/jobs can
+          # legitimately be small, so they are compared against the
+          # previously committed file instead of a fixed floor.
+          check () {
+            file=$1; key=$2; floor=$3
+            count=$(node -e "console.log(JSON.parse(require('fs').readFileSync('src/data/'+process.argv[1],'utf8'))[process.argv[2]].length)" "$file" "$key")
+            prev=$(git show "HEAD:src/data/$file" 2>/dev/null | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{try{console.log(JSON.parse(d)[process.argv[1]].length)}catch{console.log(0)}})" "$key")
+            echo "$file: $count entries (previously $prev)"
+            if [ "$count" -lt "$floor" ]; then
+              echo "❌ $file has $count entries (floor: $floor). Refusing to push — investigate scraper."
+              exit 1
+            fi
+            if [ "$prev" -gt 0 ] && [ "$count" -eq 0 ]; then
+              echo "❌ $file collapsed from $prev entries to zero. Refusing to push — investigate scraper."
+              exit 1
+            fi
+          }
+          check events.json events 5
+          check member-news.json articles 0
+          check jobs.json jobs 0
 
       - name: Show diff (for log visibility)
         run: |

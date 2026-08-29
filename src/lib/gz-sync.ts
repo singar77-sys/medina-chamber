@@ -14,7 +14,7 @@
  *   DATABASE_URL — Supabase connection string (session pooler, port 5432)
  */
 
-import { sql, eq, inArray } from "drizzle-orm";
+import { sql, inArray } from "drizzle-orm";
 import { db } from "@/lib/db";
 import {
   organizations,
@@ -191,6 +191,10 @@ export async function runGzSync(): Promise<SyncResult> {
             youtube:        sql`excluded.youtube`,
             membershipTier: sql`excluded.membership_tier`,
             updatedAt:      sql`excluded.updated_at`,
+            // An org present in the current member scrape IS a member again —
+            // clear any soft-delete from a past departure, otherwise a
+            // re-joining member stays hidden from the directory forever.
+            deletedAt:      null,
           },
         });
 

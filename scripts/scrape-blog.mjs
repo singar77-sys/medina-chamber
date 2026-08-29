@@ -13,6 +13,7 @@
 import { writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { htmlToText } from './lib-html-to-text.mjs';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dir, '..');
@@ -39,28 +40,6 @@ async function fetchPage(offset) {
   });
   if (!res.ok) throw new Error(`HTTP ${res.status} → ${url}`);
   return res.json();
-}
-
-function htmlToText(html = '') {
-  return html
-    // Drop <style>/<script> block CONTENTS first — the generic tag strip below
-    // only removes the tags, which would leak the raw Squarespace block CSS
-    // (e.g. "#block-… { … }") into the body as visible text.
-    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
-    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<\/p>/gi, '\n')
-    .replace(/<\/h[1-6]>/gi, '\n')
-    .replace(/<[^>]+>/g, '')
-    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&#39;/g, "'").replace(/&quot;/g, '"')
-    .replace(/&rsquo;/g, '\u2019').replace(/&lsquo;/g, '\u2018').replace(/&rdquo;/g, '\u201D').replace(/&ldquo;/g, '\u201C')
-    .replace(/&mdash;/g, '\u2014').replace(/&ndash;/g, '\u2013').replace(/&hellip;/g, '\u2026')
-    .replace(/&reg;/g, '\u00AE').replace(/&copy;/g, '\u00A9').replace(/&trade;/g, '\u2122')
-    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
-    .replace(/[\u200B-\u200D\uFEFF]/g, '') // strip zero-width chars (ZWSP/ZWNJ/ZWJ/BOM)
-    .replace(/[ \t]+\n/g, '\n')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
 }
 
 function parsePost(item) {
@@ -134,6 +113,14 @@ if (!TEST_MODE && pagination?.nextPage) {
   }
 } else if (TEST_MODE) {
   console.log(`  ℹ  TEST MODE — first page only (${firstItems.length} posts)`);
+}
+
+// Truncation guard: a failed page mid-walk breaks the cursor chain (see the
+// break above) — writing the partial crawl would replace the full archive
+// with a stub and still exit 0. totalItems is the first page's itemCount.
+if (!TEST_MODE && totalItems > 0 && allItems.length < totalItems * 0.9) {
+  console.error(`\n❌ Only fetched ${allItems.length}/${totalItems} posts (<90%) — aborting without writing.`);
+  process.exit(1);
 }
 
 console.log(`\n  Parsing ${allItems.length} posts...`);

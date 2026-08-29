@@ -25,6 +25,7 @@ import { writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { parse } from 'node-html-parser';
+import { htmlToText } from './lib-html-to-text.mjs';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dir, '..');
@@ -48,25 +49,6 @@ async function get(url) {
   });
   if (!res.ok) throw new Error(`HTTP ${res.status} → ${url}`);
   return res.text();
-}
-
-function htmlToText(html = '') {
-  return html
-    // Drop <style>/<script> block CONTENTS before the generic tag strip — that
-    // strip only removes the tags, leaking raw block CSS into the body as text.
-    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
-    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<\/p>/gi, '\n')
-    .replace(/<[^>]+>/g, '')
-    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&#39;/g, "'").replace(/&quot;/g, '"')
-    .replace(/&rsquo;/g, '\u2019').replace(/&lsquo;/g, '\u2018').replace(/&rdquo;/g, '\u201D').replace(/&ldquo;/g, '\u201C')
-    .replace(/&mdash;/g, '\u2014').replace(/&ndash;/g, '\u2013').replace(/&hellip;/g, '\u2026')
-    .replace(/&reg;/g, '\u00AE').replace(/&copy;/g, '\u00A9').replace(/&trade;/g, '\u2122')
-    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
-    .replace(/[\u200B-\u200D\uFEFF]/g, '') // strip zero-width chars
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
 }
 
 /** Parse the listing page for all job stubs */
@@ -195,6 +177,7 @@ if (TEST_MODE) {
 console.log(`  Found ${stubs.length} job postings to scrape\n`);
 
 const jobs = [];
+let detailFailures = 0;
 for (let i = 0; i < stubs.length; i++) {
   const stub = stubs[i];
   const pct = Math.round(((i + 1) / stubs.length) * 100);
@@ -207,6 +190,7 @@ for (let i = 0; i < stubs.length; i++) {
     console.log(`  [${String(pct).padStart(3)}%] ${label} ✓  ${stub.dateISO} — ${stub.companyName}`);
   } catch (err) {
     console.log(`  [${String(pct).padStart(3)}%] ${label} ✗  ${err.message}`);
+    detailFailures++;
   }
 
   if (i < stubs.length - 1) await sleep(DELAY_MS);
@@ -214,6 +198,13 @@ for (let i = 0; i < stubs.length; i++) {
 
 // Sort newest first
 jobs.sort((a, b) => b.dateISO.localeCompare(a.dateISO));
+
+// A high failure rate means GrowthZone was erroring — keep the previous file
+// rather than replacing it with the few survivors.
+if (stubs.length > 0 && detailFailures > stubs.length * 0.2) {
+  console.error(`\n❌ ${detailFailures}/${stubs.length} detail pages failed (>20%) — aborting without writing.`);
+  process.exit(1);
+}
 
 const output = {
   generatedAt: new Date().toISOString(),

@@ -24,6 +24,7 @@ import { writeFileSync, readFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { parse } from 'node-html-parser';
+import { htmlToText } from './lib-html-to-text.mjs';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dir, '..');
@@ -47,28 +48,6 @@ async function get(url) {
   });
   if (!res.ok) throw new Error(`HTTP ${res.status} → ${url}`);
   return res.text();
-}
-
-/** Extract plain text from HTML, collapsing whitespace */
-function htmlToText(html = '') {
-  return html
-    // Drop <style>/<script> block CONTENTS before the generic tag strip.
-    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
-    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
-    .replace(/<br\s*\/?>/gi, '\n')
-    // A closing block-level tag ends a line — otherwise text separated only by
-    // </div>/</li>/</td>/</h*> fuses together (e.g. "$995Advanced").
-    .replace(/<\/(p|div|li|ul|ol|tr|td|th|h[1-6]|section|article|blockquote)>/gi, '\n')
-    .replace(/<[^>]+>/g, '')
-    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&#39;/g, "'").replace(/&quot;/g, '"')
-    .replace(/&rsquo;/g, '’').replace(/&lsquo;/g, '‘').replace(/&rdquo;/g, '”').replace(/&ldquo;/g, '“')
-    .replace(/&mdash;/g, '—').replace(/&ndash;/g, '–').replace(/&hellip;/g, '…')
-    .replace(/&reg;/g, '®').replace(/&copy;/g, '©').replace(/&trade;/g, '™')
-    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
-    .replace(/[\u200B-\u200D\uFEFF]/g, '') // strip zero-width chars
-    .replace(/[ \t]+\n/g, '\n')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
 }
 
 /** Parse the listing page for all event detail URLs and basic card data */
@@ -202,6 +181,7 @@ console.log(`  Found ${eventStubs.length} events to scrape\n`);
 
 // Step 2: Scrape each detail page
 const events = [];
+let detailFailures = 0;
 for (let i = 0; i < eventStubs.length; i++) {
   const stub = eventStubs[i];
   const pct = Math.round(((i + 1) / eventStubs.length) * 100);
@@ -220,9 +200,18 @@ for (let i = 0; i < eventStubs.length; i++) {
     }
   } catch (err) {
     console.log(`${prefix} ✗  ${err.message}`);
+    detailFailures++;
   }
 
   if (i < eventStubs.length - 1) await sleep(DELAY_MS);
+}
+
+// A high detail-page failure rate means GrowthZone was erroring, not that
+// events disappeared — writing just the survivors would shrink the calendar
+// (and still pass the workflow's count floor). Abort and keep yesterday's file.
+if (eventStubs.length > 0 && detailFailures > eventStubs.length * 0.2) {
+  console.error(`\n❌ ${detailFailures}/${eventStubs.length} detail pages failed (>20%) — aborting without writing.`);
+  process.exit(1);
 }
 
 // Step 3: De-duplicate slugs. GrowthZone slugs are only unique when GrowthZone

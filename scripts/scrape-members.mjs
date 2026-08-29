@@ -19,7 +19,7 @@
  *   .gz-card-cat .gz-cat             → categories (multiple spans)
  */
 
-import { writeFileSync, mkdirSync } from 'fs';
+import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { parse } from 'node-html-parser';
@@ -271,6 +271,8 @@ async function main() {
       description: m.description || '',
       categories: m.categories,
       social: m.social || {},
+      // 20 = GrowthZone's default listing rank when no RankN class parses —
+      // treated downstream as the base (non-CI) tier.
       membershipTier: m.membershipTier ?? 20,
     })),
   };
@@ -283,6 +285,19 @@ async function main() {
   if (ovReport.length) {
     console.log(`\n  Applied ${ovReport.length} member override(s):`);
     ovReport.forEach((r) => console.log('   ' + r));
+  }
+
+  // Nuke guard: refuse to replace a healthy members.json with a collapsed
+  // scrape (markup change, GrowthZone outage). The weekly workflow has a
+  // ≥500 CI floor too, but a local `pnpm scrape` bypasses CI — so a floor
+  // lives here as well, derived from the previous file, not a hardcoded count.
+  if (existsSync(OUT_FILE)) {
+    let prevCount = 0;
+    try { prevCount = JSON.parse(readFileSync(OUT_FILE, 'utf-8')).totalCount ?? 0; } catch { /* corrupt previous file — no baseline */ }
+    if (prevCount > 0 && output.totalCount < prevCount * 0.9) {
+      console.error(`\n❌ Scraped ${output.totalCount} members but the existing file has ${prevCount} (>10% drop). Refusing to overwrite — if the membership really shrank, delete src/data/members.json and re-run.`);
+      process.exit(1);
+    }
   }
 
   writeFileSync(OUT_FILE, JSON.stringify(output, null, 2), 'utf-8');

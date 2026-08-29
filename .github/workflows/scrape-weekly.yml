@@ -112,6 +112,7 @@ jobs:
       # manual-only and went stale for 3+ months (last scraped April,
       # still showing April/March posts in July) before anyone noticed.
       - name: Scrape business blog
+        id: blog
         run: pnpm scrape:blog
         continue-on-error: true
 
@@ -141,7 +142,37 @@ jobs:
           the business blog. Vectors synced to Upstash separately (no
           JSON file).
           Triggered by .github/workflows/scrape-weekly.yml."
-          git push origin main
+          # Same intermittent receive-pack failures as the daily workflow —
+          # retry with backoff, rebasing between attempts (see scrape-daily.yml).
+          for attempt in 1 2 3; do
+            if git push origin main; then
+              echo "✓ Push succeeded on attempt $attempt"
+              exit 0
+            fi
+            case "$attempt" in
+              1) delay=10 ;;
+              2) delay=30 ;;
+              *) delay=0 ;;
+            esac
+            if [ "$delay" -gt 0 ]; then
+              echo "Push attempt $attempt failed; sleeping ${delay}s before retry"
+              sleep "$delay"
+              git pull --rebase origin main || { echo "❌ Rebase failed; aborting"; exit 1; }
+            fi
+          done
+          echo "❌ Push failed after 3 attempts."
+          exit 1
+
+      # Surface a blog-scrape failure AFTER the member data is safely pushed.
+      # continue-on-error keeps a blog break (e.g. the Squarespace source
+      # vanishing at DNS cutover) from blocking the member pipeline, but
+      # without this the failure is swallowed and blog.json silently goes
+      # stale — the exact staleness this workflow exists to prevent.
+      - name: Fail loudly if the blog scrape broke
+        if: steps.blog.outcome == 'failure'
+        run: |
+          echo "❌ Blog scrape failed (see the 'Scrape business blog' step). Member data was still pushed."
+          exit 1
 
       # Email Mark if anything in the workflow above failed. Skips
       # silently if the notify secrets aren't configured.

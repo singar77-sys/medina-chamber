@@ -149,6 +149,23 @@ async function main() {
 
   mkdirSync(OUT_DIR, { recursive: true });
 
+  // Age-based refresh: without this, a member's rating freezes at its first
+  // fetch forever. Re-fetch the oldest entries past REFRESH_DAYS, capped per
+  // run to keep Places API spend bounded (~60 × $0.017 ≈ $1/run).
+  const REFRESH_DAYS = 90;
+  const REFRESH_CAP = 60;
+  const refreshCutoff = Date.now() - REFRESH_DAYS * 86400000;
+  const refreshSlugs = new Set(
+    Object.values(existing)
+      .filter((m) => !m.fetchedAt || Date.parse(m.fetchedAt) < refreshCutoff)
+      .sort((a, b) => (a.fetchedAt ? Date.parse(a.fetchedAt) : 0) - (b.fetchedAt ? Date.parse(b.fetchedAt) : 0))
+      .slice(0, REFRESH_CAP)
+      .map((m) => m.chamberSlug),
+  );
+  if (refreshSlugs.size) {
+    console.log(`ℹ  Re-fetching ${refreshSlugs.size} rating(s) older than ${REFRESH_DAYS} days\n`);
+  }
+
   const results = { ...existing };
   let done = 0, found = 0, notFound = 0, skip = 0;
 
@@ -156,7 +173,7 @@ async function main() {
     done++;
     const pct = ((done / members.length) * 100).toFixed(0);
 
-    if (existing[member.chamberSlug]) {
+    if (existing[member.chamberSlug] && !refreshSlugs.has(member.chamberSlug)) {
       skip++;
       continue;
     }

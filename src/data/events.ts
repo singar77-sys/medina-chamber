@@ -46,12 +46,17 @@ function todayEastern(now = new Date()): string {
 
 export function getUpcomingEvents(now = new Date()): ChamberEvent[] {
   const today = todayEastern(now);
-  return events.filter((e) => e.dateISO >= today);
+  // A blank dateISO (unparseable scrape subtitle) sorts as "" < today and
+  // would silently vanish from every listing. GrowthZone only lists current
+  // and future events, so an undated event is treated as upcoming — visibly
+  // wrong beats invisibly missing. (The DB path bails explicitly instead;
+  // see getRegisterableEvent in src/lib/events/db-events.ts.)
+  return events.filter((e) => !e.dateISO || e.dateISO >= today);
 }
 
 export function getPastEvents(now = new Date()): ChamberEvent[] {
   const today = todayEastern(now);
-  return events.filter((e) => e.dateISO < today);
+  return events.filter((e) => e.dateISO !== "" && e.dateISO < today);
 }
 
 /** Short human-readable date: "Wed, April 15" */

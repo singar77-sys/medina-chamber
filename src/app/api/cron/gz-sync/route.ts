@@ -35,6 +35,12 @@ export async function GET(req: Request) {
 
   try {
     const result = await runGzSync();
+    // Partial failures must be loud: a green cron with errors: 400 would hide
+    // a half-synced directory. A non-200 makes Vercel's cron monitoring (and
+    // anyone curling it) see the failure; details are in the payload/sync_log.
+    if (result.errors > 0) {
+      return NextResponse.json({ ok: false, ...result }, { status: 500 });
+    }
     return NextResponse.json({ ok: true, ...result });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

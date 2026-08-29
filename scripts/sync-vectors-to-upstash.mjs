@@ -247,6 +247,29 @@ async function main() {
   console.log("");
   console.log(`✓ Upserted ${upserted} members in ${Date.now() - t0}ms total.`);
 
+  // Remove vectors for members no longer in members.json — upsert-only sync
+  // left departed members searchable forever (ChamberBot kept surfacing
+  // businesses that 404 on the site). Full-sync runs only: a --limit run
+  // covers a subset and must not treat the rest as departed.
+  if (LIMIT <= 0) {
+    const currentIds = new Set(records.map((r) => String(r.id)));
+    const staleIds = [];
+    let cursor = "";
+    do {
+      const page = await index.range({ cursor, limit: 500 });
+      for (const v of page.vectors ?? []) {
+        if (!currentIds.has(String(v.id))) staleIds.push(v.id);
+      }
+      cursor = page.nextCursor;
+    } while (cursor);
+    if (staleIds.length) {
+      console.log(`Deleting ${staleIds.length} departed member vector(s): ${staleIds.slice(0, 10).join(", ")}${staleIds.length > 10 ? ", …" : ""}`);
+      await index.delete(staleIds);
+    } else {
+      console.log("No departed-member vectors to remove.");
+    }
+  }
+
   // Verify by re-fetching index info
   const finalInfo = await index.info();
   console.log("");

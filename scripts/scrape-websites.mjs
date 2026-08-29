@@ -261,9 +261,17 @@ async function main() {
     done++;
     const pct = ((done / members.length) * 100).toFixed(0);
 
-    // Skip if already scraped in this run
-    if (existing[member.chamberSlug]) {
-      process.stdout.write(`  [${pct}%] ${member.name.substring(0, 40).padEnd(40)} SKIP (already done)\n`);
+    // Skip only when the existing entry is a FRESH success. Successful
+    // scrapes are re-fetched after 30 days (a redesigned member site must
+    // re-enter the vector index — skip-if-present froze every entry at its
+    // first scrape forever) and failed entries retry every run; within a
+    // single run the checkpoint saves still make this resumable.
+    const prev = existing[member.chamberSlug];
+    const prevAgeDays = prev?.scrapedAt
+      ? (Date.now() - Date.parse(prev.scrapedAt)) / 86400000
+      : Infinity;
+    if (prev && prev.ok !== false && prevAgeDays < 30) {
+      process.stdout.write(`  [${pct}%] ${member.name.substring(0, 40).padEnd(40)} SKIP (fresh, ${Math.floor(prevAgeDays)}d)\n`);
       skip++;
       continue;
     }

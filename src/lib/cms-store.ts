@@ -345,16 +345,22 @@ export interface ContentFieldDef {
   hint?: string;
 }
 
+// Every field maps to a REAL text node on a public page (wired through
+// src/lib/cms-content.ts) and its defaultValue mirrors that page's shipped
+// copy verbatim. Fields that used to exist here with no rendered home (the
+// composed home/about headlines, an unrendered mission statement) were
+// removed 2026-08-29 — the editor must never offer a control that does
+// nothing. Add a field only together with its page wiring.
 export const CONTENT_FIELD_DEFS: ContentFieldDef[] = [
   // Home page
   {
     page: "home",
     field: "hero-headline",
-    label: "Hero Headline",
+    label: "Hero Eyebrow",
     type: "text",
     maxLength: 80,
     defaultValue: "Greater Medina Chamber of Commerce",
-    hint: "Shown in the homepage hero section",
+    hint: "Small line above “Medina Means Business” in the homepage hero (the big headline itself is fixed brand art)",
   },
   {
     page: "home",
@@ -362,51 +368,30 @@ export const CONTENT_FIELD_DEFS: ContentFieldDef[] = [
     label: "Hero Subheadline",
     type: "textarea",
     maxLength: 200,
-    defaultValue: "Connecting businesses, driving growth, and strengthening the Medina community since 1938.",
-    hint: "1–2 sentences below the headline",
+    defaultValue:
+      "Championing Medina's business community since 1938. Advocacy that moves policy. Connections that open doors. Resources that drive growth.",
+    hint: "Paragraph below the homepage hero headline",
   },
-  // Membership page
-  {
-    page: "membership",
-    field: "intro-headline",
-    label: "Membership Page Headline",
-    type: "text",
-    maxLength: 80,
-    defaultValue: "Invest in the Medina Business Community",
-  },
+  // Membership pricing page
   {
     page: "membership",
     field: "intro-body",
-    label: "Membership Intro",
+    label: "Pricing Page Intro",
     type: "textarea",
     maxLength: 400,
-    defaultValue: "Three membership tiers designed to match where your business is and where you want it to go.",
+    defaultValue:
+      "Pick the tier that fits your goals, from first-year essentials to investor-level access and recognition. Every membership includes the full Chamber network and savings programs.",
+    hint: "Paragraph under “Three Tiers. One Community.” on /membership/pricing",
   },
   // Events page
   {
     page: "events",
     field: "intro-headline",
-    label: "Events Page Headline",
+    label: "Upcoming Events Heading",
     type: "text",
     maxLength: 80,
     defaultValue: "Upcoming Events",
-  },
-  // About page
-  {
-    page: "about",
-    field: "intro-headline",
-    label: "About Page Headline",
-    type: "text",
-    maxLength: 80,
-    defaultValue: "About the Greater Medina Chamber",
-  },
-  {
-    page: "about",
-    field: "mission-statement",
-    label: "Mission Statement",
-    type: "textarea",
-    maxLength: 300,
-    defaultValue: "To champion and empower Medina's business community, driving growth through advocacy, connection, and leadership.",
+    hint: "Section heading above the events timeline on /events",
   },
   // Contact page
   {
@@ -415,6 +400,7 @@ export const CONTENT_FIELD_DEFS: ContentFieldDef[] = [
     label: "Office Hours",
     type: "text",
     maxLength: 100,
-    defaultValue: "Monday–Friday, 10:00 AM – 4:00 PM",
+    defaultValue: "Mon–Fri · 10:00 AM – 4:00 PM",
+    hint: "Shown under the address on the contact page (search-engine structured hours are set separately in code)",
   },
 ];

@@ -9,6 +9,7 @@ import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermar
 import { safeJsonLd } from "@/lib/json-ld";
 import { chamberOffice } from "@/data/staff";
 import { mailto } from "@/lib/format";
+import { getPageContent } from "@/lib/cms-content";
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -67,7 +68,11 @@ const routes = [
   },
 ];
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  // Admin-editable hours caption (Content editor). The structured-data hours
+  // in contactJsonLd above stay code-managed — they need opens/closes fields,
+  // not a display string.
+  const hoursCaption = await getPageContent("contact", "hours");
   return (
     <>
       <script
@@ -214,7 +219,7 @@ export default function ContactPage() {
                   Medina, OH 44256
                 </p>
                 <p className="text-caption text-text-tertiary mt-f8">
-                  Mon–Fri · 10:00 AM – 4:00 PM
+                  {hoursCaption}
                 </p>
                 <a
                   href="https://maps.google.com/?q=139+N+Court+Street+Suite+A+Medina+OH+44256"

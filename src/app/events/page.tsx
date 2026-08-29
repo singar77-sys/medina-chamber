@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getUpcomingEvents, shortenEventTitle } from "@/data/events";
+import { getPageContent } from "@/lib/cms-content";
 import { EventsTimeline } from "@/components/events/EventsTimeline";
 import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
@@ -24,7 +25,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/events" },
 };
 
-export default function EventsPage() {
+export default async function EventsPage() {
+  // Admin-editable section heading (Content editor); cached + tag-busted.
+  const upcomingHeading = await getPageContent("events", "intro-headline");
   const allUpcoming = getUpcomingEvents();
   const hasEvents = allUpcoming.length > 0;
 
@@ -99,7 +102,7 @@ export default function EventsPage() {
         <VesicaPiscisWatermark className="tp-vesica" />
         <FadeIn>
           <div className="flex items-end justify-between mb-f21">
-            <h2 className="text-h2">Upcoming Events</h2>
+            <h2 className="text-h2">{upcomingHeading}</h2>
             {hasEvents && (
               <p className="text-body-sm text-text-tertiary">
                 {allUpcoming.length} upcoming event{allUpcoming.length === 1 ? "" : "s"}

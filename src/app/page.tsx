@@ -31,6 +31,7 @@ import { GazeboHero } from "@/components/GazeboHero";
 import { safeJsonLd } from "@/lib/json-ld";
 import { chamberOffice, memberServices, stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
+import { getPageContent } from "@/lib/cms-content";
 export const metadata: Metadata = {
   title: "Greater Medina Chamber of Commerce | Medina County, Ohio",
   description: "The Greater Medina Chamber of Commerce connects and champions businesses across Medina County, Ohio. Member businesses, networking events, advocacy, and programs since 1938.",
@@ -99,7 +100,13 @@ const organizationJsonLd = {
   },
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Admin-editable copy (Content editor → Redis override, static default
+  // otherwise). Cached + tag-busted, so the page stays prerendered.
+  const [heroEyebrow, heroSubheadline] = await Promise.all([
+    getPageContent("home", "hero-headline"),
+    getPageContent("home", "hero-subheadline"),
+  ]);
   const upcomingEvents = getUpcomingEvents().slice(0, 3);
 
   return (
@@ -123,7 +130,7 @@ export default function HomePage() {
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 pb-f89 lg:pb-f89 pt-f144 w-full">
           <div className="max-w-3xl">
             <p className="text-overline text-cambridge mb-f13 tracking-widest">
-              Greater Medina Chamber of Commerce
+              {heroEyebrow}
             </p>
             <h1 className="font-display font-bold uppercase leading-[0.88] tracking-tight text-white">
               <span className="block text-[clamp(2.75rem,7.5vw,5.75rem)]">Medina</span>
@@ -139,9 +146,7 @@ export default function HomePage() {
               </span>
             </h1>
             <p className="text-body-lg text-white/80 mt-f21 max-w-2xl">
-              Championing Medina&apos;s business community since 1938. Advocacy
-              that moves policy. Connections that open doors. Resources that
-              drive growth.
+              {heroSubheadline}
             </p>
             <div className="mt-f34 flex flex-wrap gap-f21">
               <ButtonLink href="/membership/join" variant="primary" size="lg">

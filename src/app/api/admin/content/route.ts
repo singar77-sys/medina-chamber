@@ -9,7 +9,9 @@
  */
 
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { requireAdminSession } from "@/lib/admin-auth";
+import { CMS_CONTENT_TAG } from "@/lib/cms-content";
 import {
   getContentField,
   setContentField,
@@ -77,6 +79,9 @@ export async function PUT(req: Request): Promise<Response> {
   }
 
   await setContentField(page, field, value.trim());
+  // Bust the cached reads so the edit shows on the public page immediately
+  // (Next 16.2 revalidateTag requires the profile argument).
+  revalidateTag(CMS_CONTENT_TAG, "max");
   return NextResponse.json({ ok: true });
 }
 
@@ -93,5 +98,6 @@ export async function DELETE(req: Request): Promise<Response> {
   }
 
   await clearContentField(page, field);
+  revalidateTag(CMS_CONTENT_TAG, "max");
   return NextResponse.json({ ok: true });
 }

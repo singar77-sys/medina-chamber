@@ -5,6 +5,7 @@ import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { safeJsonLd } from "@/lib/json-ld";
 import { getCmsPricing, DEFAULT_PRICING } from "@/lib/cms-store";
+import { getPageContent } from "@/lib/cms-content";
 import { stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
 
@@ -30,6 +31,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function PricingPage() {
+  // Admin-editable intro paragraph (Content editor); cached + tag-busted.
+  const introBody = await getPageContent("membership", "intro-body");
   const { tiers, faqs } = (await getCmsPricing()) ?? DEFAULT_PRICING;
   const essentialsTier = tiers.find((t) => t.key === "essentials");
   const essentialsBenefits = essentialsTier?.benefits ?? [];
@@ -77,9 +80,7 @@ export default async function PricingPage() {
             <span className="block text-accent">One Community.</span>
           </h1>
           <p className="text-body-lg text-text-secondary mt-f13 max-w-2xl">
-            Pick the tier that fits your goals, from first-year essentials to
-            investor-level access and recognition. Every membership includes
-            the full Chamber network and savings programs.
+            {introBody}
           </p>
           <div className="mt-f21 flex flex-wrap gap-f13">
             <Link

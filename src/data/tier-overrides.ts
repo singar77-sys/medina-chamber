@@ -3,22 +3,22 @@
  *
  * The public GrowthZone directory (which our scraper reads) doesn't
  * distinguish Community Investor from Visibility Plus cleanly — the
- * scraper lands most CI members as tier=2 but misses the 98 real VP
+ * scraper lands most CI members as tier=2 but misses the 99 real VP
  * members entirely, and sometimes tags non-premium members as tier=2.
  *
  * These sets are the source of truth, pulled from the authenticated
- * admin membership list (/api/memberships/all/). Update via
- * scripts/sync-tier-overrides.mjs: paste the arrays fetched from an
- * authenticated browser console into that script and run it (the
- * procedure is documented in the script header).
+ * admin membership list (/api/memberships/all/). Regenerate with:
  *
- * Last sync: 2026-04-22 (full); Medwick Construction added manually 2026-07-15
- * Source: GrowthZone admin dashboard (Mark authenticated)
- * Counts: CI 34, VP 98
+ *   node scripts/sync-tier-overrides.mjs
+ *
+ * See that script's header for how to pull fresh lists from the admin
+ * console.
+ *
+ * Last sync: 2026-08-29
+ * Counts: CI 35, VP 97
  */
 
 export const COMMUNITY_INVESTOR_SLUGS: ReadonlySet<string> = new Set([
-  "medwick-construction",
   "first-financial-bank",
   "trillium-creek-dermatology",
   "the-foundry-social-high-voltage-karting-mad-brewing",
@@ -52,6 +52,8 @@ export const COMMUNITY_INVESTOR_SLUGS: ReadonlySet<string> = new Set([
   "bleachtech-llc",
   "lifestone-ministries",
   "bucky-cares",
+  "medwick-construction",
+  "marketing-directions",
 ]);
 
 export const VISIBILITY_PLUS_SLUGS: ReadonlySet<string> = new Set([
@@ -70,11 +72,9 @@ export const VISIBILITY_PLUS_SLUGS: ReadonlySet<string> = new Set([
   "st-francis-xavier-catholic-parish",
   "servpro-of-medina-county",
   "santosuossos-pizza-pasta-vino",
-  "rowleys-wholesale",
   "rose-company",
   "rolling-hocevar-inc",
   "richards-industrials-inc",
-  "remembrance-hospice",
   "redwood-living-inc",
   "ravago-americas-llc",
   "rad-air-complete-auto-tire-service",
@@ -94,6 +94,7 @@ export const VISIBILITY_PLUS_SLUGS: ReadonlySet<string> = new Set([
   "liberty-ford-of-brunswick",
   "insyte-consulting-group-llc",
   "homestead-insurance-agency",
+  "high-standard-hauling-junk-removal-llc",
   "hhl-group-inc",
   "golden-alliance-inc",
   "foundations-worldwide-inc",
@@ -104,8 +105,6 @@ export const VISIBILITY_PLUS_SLUGS: ReadonlySet<string> = new Set([
   "ataraxis",
   "die-guys-inc",
   "culvers-of-medina-montville-twp",
-  "ctss",
-  "crystal-clinic-orthopaedic-center",
   "corrpro-companies-inc",
   "corrigan-krause",
   "consumers-national-bank",
@@ -114,7 +113,6 @@ export const VISIBILITY_PLUS_SLUGS: ReadonlySet<string> = new Set([
   "burns-inc-j-h-dba-bmsburns",
   "bunker-hill-golf-course-inc",
   "buehlers-fresh-foods",
-  "brookdale-medina-south-assisted-living-memory-care",
   "blue-heron-brewery-event-center",
   "bickle-insurance-services",
   "avenue-at-medina",
@@ -133,17 +131,12 @@ export const VISIBILITY_PLUS_SLUGS: ReadonlySet<string> = new Set([
   "weymouth-country-club",
   "aladdins-eatery",
   "icor-solutions",
-  "south-medina-kindercare",
   "champion-creek-health-rehabilitation",
   "infinite-moments-travel",
   "hearinglife",
   "thomastech",
-  "namaste-life-center",
-  "mpact-collision",
-  "warehouse-gym",
   "shears-beards-mens-hair-co",
   "medina-lighting-llc",
-  "panchur-chiropractic-wellness-centre",
   "dtc-auto-center",
   "buffalo-wild-wings",
   "knot-yourself-medical-massage-studio",
@@ -153,4 +146,12 @@ export const VISIBILITY_PLUS_SLUGS: ReadonlySet<string> = new Set([
   "synergy-homecare-of-medina",
   "medwick-pest-control",
   "rios-guitar-co-music-store",
+  "medina-center-for-rehabilitation-nursing",
+  "sinceri-senior-living",
+  "reichwein-pest-specialists-llc",
+  "samartian-care-center-villa",
+  "agrati-inc",
+  "the-villas-at-hidden-lakes",
+  "first-national-bank",
+  "directions-credit-union",
 ]);

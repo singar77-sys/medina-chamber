@@ -38,7 +38,8 @@
     "db:migrate:all": "drizzle-kit migrate && tsx scripts/apply-off-journal-migrations.ts",
     "db:studio": "drizzle-kit studio",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.68",
@@ -55,8 +56,8 @@
     "next": "^16.2.12",
     "postgres": "^3.4.9",
     "posthog-js": "^1.370.1",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
     "resend": "^6.10.0",
     "sharp": "^0.35.3",
     "stripe": "^22.2.1"
@@ -72,7 +73,8 @@
     ],
     "overrides": {
       "undici": "^6.27.0",
-      "protobufjs": "^7.6.1"
+      "protobufjs": "^7.6.1",
+      "sharp": "^0.35.3"
     }
   },
   "devDependencies": {
@@ -84,7 +86,7 @@
     "dotenv": "^17.4.2",
     "drizzle-kit": "^0.31.10",
     "eslint": "^9",
-    "eslint-config-next": "16.2.1",
+    "eslint-config-next": "16.2.12",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "node-html-parser": "^7.1.0",
     "tailwindcss": "^4",

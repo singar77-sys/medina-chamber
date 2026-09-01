@@ -1,137 +1,7 @@
 {
-  "generatedAt": "2026-08-31T11:22:22.471Z",
-  "totalEvents": 31,
+  "generatedAt": "2026-09-01T09:45:43.098Z",
+  "totalEvents": 27,
   "events": [
-    {
-      "slug": "raising-the-bar-august-2026",
-      "eventId": "1763666",
-      "title": "Raising the Bar",
-      "dateISO": "2026-08-13",
-      "dayOfWeek": "Thursday",
-      "month": "August",
-      "day": 13,
-      "year": 2026,
-      "startTime": "10:00 AM",
-      "endTime": "11:00 AM",
-      "dateString": "Thursday, August 13, 2026 (10:00 AM - 11:00 AM)",
-      "location": "139 N. Court Street Suite A, Medina, OH, 44256",
-      "locationDesc": "The Medina Chamber's new office is located at 139 N. Court Street, Medina 44256, next to the Medina Police Station/City Hall. Parking is located behind the building and you can enter through the doors facing the parking lot.",
-      "street": "139 N. Court Street Suite A",
-      "city": "Medina",
-      "state": "OH",
-      "zip": "44256",
-      "pricing": "No cost to participate. Members and prospective members welcome! Registration preferred but not required.",
-      "image": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_720,w_1280,x_0,y_0/q_auto/f_auto/q_auto/v1777668614/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/a05b1b29673846ccb3cd7915c766b5ea/2026-Raising-the-Bar-logo.png",
-      "registerUrl": "https://business.medinachamber.com/member-events/Details/raising-the-bar-1763666",
-      "contactName": "Stephanie Mueller",
-      "contactPhone": "",
-      "detailUrl": "https://business.medinachamber.com/member-events/Details/raising-the-bar-1763666",
-      "scrapedAt": "2026-08-31T11:22:20.184Z"
-    },
-    {
-      "slug": "safety-council-meeting-august-2026",
-      "eventId": "1753315",
-      "title": "Safety Council Meeting - August 2026",
-      "dateISO": "2026-08-18",
-      "dayOfWeek": "Tuesday",
-      "month": "August",
-      "day": 18,
-      "year": 2026,
-      "startTime": "11:30 AM",
-      "endTime": "1:00 PM",
-      "dateString": "Tuesday, August 18, 2026 (11:30 AM - 1:00 PM)",
-      "location": "787 Lafayette Road, Medina, OH, 44256",
-      "locationDesc": "",
-      "street": "787 Lafayette Road",
-      "city": "Medina",
-      "state": "OH",
-      "zip": "44256",
-      "pricing": "$24.00 PER PERSON\n\nADVANCED REGISTRATION REQUIRED. NO WALK-IN REGISTRATION ON EVENT DAY.\nPlease note ~ NO SHOWS will be billed\nCancellations must be received by our office by 2:00 pm the FRIDAY PRIOR to the event to avoid being charged for this event.\nFor your convenience, payment with VISA / MC/Discover/AMEX can be made when registering online through the Chamber website.",
-      "image": "https://res.cloudinary.com/micronetonline/image/upload/c_crop,h_1080,w_1080,x_0,y_0/f_auto/q_auto/f_auto/q_auto/v1747233639/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/ce881861b0474635a3e1458fe0ecd3c1/Safety-Council-logo.png",
-      "registerUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-august-2026-1753315",
-      "contactName": "Stephanie Mueller",
-      "contactPhone": "",
-      "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-august-2026-1753315",
-      "scrapedAt": "2026-08-31T11:22:20.752Z"
-    },
-    {
-      "slug": "networking-wow-august-2026",
-      "eventId": "1594467",
-      "title": "Networking WOW - August 2026",
-      "dateISO": "2026-08-19",
-      "dayOfWeek": "Wednesday",
-      "month": "August",
-      "day": 19,
-      "year": 2026,
-      "startTime": "8:30 AM",
-      "endTime": "10:00 AM",
-      "dateString": "Wednesday, August 19, 2026 (8:30 AM - 10:00 AM)",
-      "location": "139 North Court Street Suite A, Medina, OH, 44256",
-      "locationDesc": "The Medina Chamber's new office is located at 139 N. Court Street, Medina 44256, next to the Medina Police Station/City Hall. Parking is located behind the building and you can enter through the doors facing the parking lot.",
-      "street": "139 North Court Street Suite A",
-      "city": "Medina",
-      "state": "OH",
-      "zip": "44256",
-      "pricing": "$14 - Chamber members (Networking and Coffee/Pastries included)\n\n$20 - Prospective members (Networking and Coffee/Pastries included)\n\nAdvanced registration and payment preferred.\n\nFor your convenience, payment with VISA/MC/Discover/AMEX may be made when registering online through the Chamber website. Invoices are available, by request, for Chamber members only. All invoices must be paid in advance of the event.\n\nPlease note that No Shows will be billed. Cancellations must be received by our office by 5:00 pm on Monday the week of the event to receive a credit.",
-      "image": "https://res.cloudinary.com/micronetonline/image/upload/c_crop,h_1080,w_1080,x_0,y_0/f_auto/q_auto/f_auto/q_auto/v1765554948/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/421cf13d3aeb448e8207673ac401565d/Networking-WOW-logo.png",
-      "registerUrl": "https://business.medinachamber.com/member-events/Details/networking-wow-august-2026-1594467",
-      "contactName": "Stephanie Mueller",
-      "contactPhone": "",
-      "detailUrl": "https://business.medinachamber.com/member-events/Details/networking-wow-august-2026-1594467",
-      "scrapedAt": "2026-08-31T11:22:21.322Z"
-    },
-    {
-      "slug": "business-brew-august-2026",
-      "eventId": "1690571",
-      "title": "Business Brew - August 2026",
-      "dateISO": "2026-08-26",
-      "dayOfWeek": "Wednesday",
-      "month": "August",
-      "day": 26,
-      "year": 2026,
-      "startTime": "4:00 PM",
-      "endTime": "6:00 PM",
-      "dateString": "Wednesday, August 26, 2026 (4:00 PM - 6:00 PM)",
-      "location": "220 N. State Road, Medina, OH, 44256",
-      "locationDesc": "",
-      "street": "220 N. State Road",
-      "city": "Medina",
-      "state": "OH",
-      "zip": "44256",
-      "pricing": "No cost to participate. Registration preferred, but not required. (Food/beverage available for purchase on your own.)",
-      "image": "https://res.cloudinary.com/micronetonline/image/upload/c_crop,h_1080,w_1308,x_306,y_0/f_auto/q_auto/f_auto/q_auto/v1738879099/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/f692dd8699c94f639fff4e7495da3fb8/BUSINESS-BREW-2025-logo.png",
-      "registerUrl": "https://business.medinachamber.com/member-events/Details/business-brew-august-2026-1690571",
-      "contactName": "Stephanie Mueller",
-      "contactPhone": "",
-      "detailUrl": "https://business.medinachamber.com/member-events/Details/business-brew-august-2026-1690571",
-      "scrapedAt": "2026-08-31T11:22:21.899Z"
-    },
-    {
-      "slug": "chamber-chat-august-2026",
-      "eventId": "1594554",
-      "title": "Chamber Chat - August 2026",
-      "dateISO": "2026-08-28",
-      "dayOfWeek": "Friday",
-      "month": "August",
-      "day": 28,
-      "year": 2026,
-      "startTime": "9:00 AM",
-      "endTime": "10:00 AM",
-      "dateString": "Friday, August 28, 2026 (9:00 AM - 10:00 AM)",
-      "location": "139 N. Court Street Suite A, Medina, OH, 44256",
-      "locationDesc": "The Medina Chamber's new office is located at 139 N. Court Street, Medina 44256, next to the Medina Police Station/City Hall. Parking is located behind the building and you can enter through the doors facing the parking lot.",
-      "street": "139 N. Court Street Suite A",
-      "city": "Medina",
-      "state": "OH",
-      "zip": "44256",
-      "pricing": "No cost to participate. Members and prospective members welcome! Registration preferred but not required.",
-      "image": "https://res.cloudinary.com/micronetonline/image/upload/c_crop,h_1080,w_1920,x_0,y_0/f_auto/q_auto/f_auto/q_auto/v1738877197/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/3466dd8d714e442ab1679a33f11c3da2/Chamber-Chat-2025.png",
-      "registerUrl": "https://business.medinachamber.com/member-events/Details/chamber-chat-august-2026-1594554",
-      "contactName": "Stephanie Mueller",
-      "contactPhone": "",
-      "detailUrl": "https://business.medinachamber.com/member-events/Details/chamber-chat-august-2026-1594554",
-      "scrapedAt": "2026-08-31T11:22:22.464Z"
-    },
     {
       "slug": "chamber-member-meeting-state-of-the-city-with-mayor-jim-shields",
       "eventId": "1680467",
@@ -156,7 +26,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/chamber-member-meeting-state-of-the-city-with-mayor-jim-shields-1680467",
-      "scrapedAt": "2026-08-31T11:22:05.091Z"
+      "scrapedAt": "2026-09-01T09:45:29.710Z"
     },
     {
       "slug": "the-compass-program",
@@ -182,7 +52,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/the-compass-program-1746719",
-      "scrapedAt": "2026-08-31T11:22:05.661Z"
+      "scrapedAt": "2026-09-01T09:45:30.222Z"
     },
     {
       "slug": "safety-council-meeting-september-2026",
@@ -208,7 +78,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-september-2026-1753317",
-      "scrapedAt": "2026-08-31T11:22:06.242Z"
+      "scrapedAt": "2026-09-01T09:45:30.759Z"
     },
     {
       "slug": "networking-wow-september-2026",
@@ -234,7 +104,33 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/networking-wow-september-2026-1594473",
-      "scrapedAt": "2026-08-31T11:22:06.862Z"
+      "scrapedAt": "2026-09-01T09:45:31.278Z"
+    },
+    {
+      "slug": "business-brew-september-2026",
+      "eventId": "1910951",
+      "title": "Business Brew - September 2026",
+      "dateISO": "2026-09-22",
+      "dayOfWeek": "Tuesday",
+      "month": "September",
+      "day": 22,
+      "year": 2026,
+      "startTime": "4:00 PM",
+      "endTime": "6:00 PM",
+      "dateString": "Tuesday, September 22, 2026 (4:00 PM - 6:00 PM)",
+      "location": "236 N State Rd, Medina, OH, 44256",
+      "locationDesc": "",
+      "street": "236 N State Rd",
+      "city": "Medina",
+      "state": "OH",
+      "zip": "44256",
+      "pricing": "No cost to participate. Registration preferred, but not required. (Food/beverage available for purchase on your own.)",
+      "image": "https://res.cloudinary.com/micronetonline/image/upload/c_crop,h_1080,w_1308,x_306,y_0/f_auto/q_auto/f_auto/q_auto/v1738879099/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/f692dd8699c94f639fff4e7495da3fb8/BUSINESS-BREW-2025-logo.png",
+      "registerUrl": "https://business.medinachamber.com/ap/Events/Register/8EFOqRdHOCRC7",
+      "contactName": "Stephanie Mueller",
+      "contactPhone": "",
+      "detailUrl": "https://business.medinachamber.com/member-events/Details/business-brew-september-2026-1910951",
+      "scrapedAt": "2026-09-01T09:45:31.786Z"
     },
     {
       "slug": "chamber-chat-september-2026",
@@ -260,7 +156,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/chamber-chat-september-2026-1594555",
-      "scrapedAt": "2026-08-31T11:22:07.436Z"
+      "scrapedAt": "2026-09-01T09:45:32.305Z"
     },
     {
       "slug": "fy27-safety-council-enrollment-or-renewal-2026-2027-rebate-program",
@@ -286,7 +182,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/fy27-safety-council-enrollment-or-renewal-2026-2027-rebate-program-1747261",
-      "scrapedAt": "2026-08-31T11:22:08.011Z"
+      "scrapedAt": "2026-09-01T09:45:32.820Z"
     },
     {
       "slug": "chamber-member-meeting-october-2026",
@@ -312,7 +208,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/chamber-member-meeting-october-2026-1690559",
-      "scrapedAt": "2026-08-31T11:22:08.580Z"
+      "scrapedAt": "2026-09-01T09:45:33.325Z"
     },
     {
       "slug": "raising-the-bar-october-2026",
@@ -338,7 +234,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/raising-the-bar-1763673",
-      "scrapedAt": "2026-08-31T11:22:09.143Z"
+      "scrapedAt": "2026-09-01T09:45:33.842Z"
     },
     {
       "slug": "chamber-trip-to-italy-information-session",
@@ -364,7 +260,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/chamber-trip-to-italy-information-session-1893554",
-      "scrapedAt": "2026-08-31T11:22:09.717Z"
+      "scrapedAt": "2026-09-01T09:45:34.363Z"
     },
     {
       "slug": "safety-council-meeting-october-2026",
@@ -390,7 +286,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-october-2026-1753320",
-      "scrapedAt": "2026-08-31T11:22:10.283Z"
+      "scrapedAt": "2026-09-01T09:45:34.876Z"
     },
     {
       "slug": "networking-wow-october-2026",
@@ -416,7 +312,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/networking-wow-october-2026-1594478",
-      "scrapedAt": "2026-08-31T11:22:10.851Z"
+      "scrapedAt": "2026-09-01T09:45:35.405Z"
     },
     {
       "slug": "get-to-know-the-chamber",
@@ -442,7 +338,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/get-to-know-the-chamber-1764548",
-      "scrapedAt": "2026-08-31T11:22:11.431Z"
+      "scrapedAt": "2026-09-01T09:45:35.910Z"
     },
     {
       "slug": "chamber-chat-october-2026",
@@ -468,7 +364,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/chamber-chat-october-2026-1594557",
-      "scrapedAt": "2026-08-31T11:22:12.020Z"
+      "scrapedAt": "2026-09-01T09:45:36.425Z"
     },
     {
       "slug": "business-brew-november-2026",
@@ -494,7 +390,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/business-brew-november-2026-1905527",
-      "scrapedAt": "2026-08-31T11:22:12.603Z"
+      "scrapedAt": "2026-09-01T09:45:36.921Z"
     },
     {
       "slug": "safety-council-meeting-november-2026",
@@ -520,7 +416,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-november-2026-1753323",
-      "scrapedAt": "2026-08-31T11:22:13.177Z"
+      "scrapedAt": "2026-09-01T09:45:37.436Z"
     },
     {
       "slug": "networking-wow-november-2026",
@@ -546,7 +442,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/networking-wow-november-2026-1594480",
-      "scrapedAt": "2026-08-31T11:22:13.752Z"
+      "scrapedAt": "2026-09-01T09:45:37.965Z"
     },
     {
       "slug": "chamber-chat-november-2026",
@@ -572,7 +468,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/chamber-chat-november-2026-1594559",
-      "scrapedAt": "2026-08-31T11:22:14.481Z"
+      "scrapedAt": "2026-09-01T09:45:38.481Z"
     },
     {
       "slug": "business-brew-december-2026",
@@ -598,7 +494,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/business-brew-december-2026-1905532",
-      "scrapedAt": "2026-08-31T11:22:15.059Z"
+      "scrapedAt": "2026-09-01T09:45:38.997Z"
     },
     {
       "slug": "raising-the-bar-december-2026",
@@ -624,7 +520,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/raising-the-bar-1763680",
-      "scrapedAt": "2026-08-31T11:22:15.618Z"
+      "scrapedAt": "2026-09-01T09:45:39.504Z"
     },
     {
       "slug": "safety-council-meeting-december-2026",
@@ -650,7 +546,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-december-2026-1753331",
-      "scrapedAt": "2026-08-31T11:22:16.193Z"
+      "scrapedAt": "2026-09-01T09:45:40.026Z"
     },
     {
       "slug": "safety-council-meeting-january-2027",
@@ -676,7 +572,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-january-2027-1756987",
-      "scrapedAt": "2026-08-31T11:22:16.773Z"
+      "scrapedAt": "2026-09-01T09:45:40.549Z"
     },
     {
       "slug": "safety-council-meeting-february-2027",
@@ -702,7 +598,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-february-2027-1756988",
-      "scrapedAt": "2026-08-31T11:22:17.332Z"
+      "scrapedAt": "2026-09-01T09:45:41.060Z"
     },
     {
       "slug": "safety-council-meeting-march-2027",
@@ -728,7 +624,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-march-2027-1756990",
-      "scrapedAt": "2026-08-31T11:22:17.912Z"
+      "scrapedAt": "2026-09-01T09:45:41.574Z"
     },
     {
       "slug": "safety-council-meeting-april-2027",
@@ -754,7 +650,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-april-2027-1756992",
-      "scrapedAt": "2026-08-31T11:22:18.484Z"
+      "scrapedAt": "2026-09-01T09:45:42.083Z"
     },
     {
       "slug": "safety-council-meeting-may-2027",
@@ -780,7 +676,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-may-2027-1756993",
-      "scrapedAt": "2026-08-31T11:22:19.056Z"
+      "scrapedAt": "2026-09-01T09:45:42.587Z"
     },
     {
       "slug": "safety-council-meeting-june-2027",
@@ -806,7 +702,7 @@
       "contactName": "Stephanie Mueller",
       "contactPhone": "",
       "detailUrl": "https://business.medinachamber.com/member-events/Details/safety-council-meeting-june-2027-1756997",
-      "scrapedAt": "2026-08-31T11:22:19.623Z"
+      "scrapedAt": "2026-09-01T09:45:43.090Z"
     }
   ]
 }

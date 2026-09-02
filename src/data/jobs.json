@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-01T09:45:49.878Z",
-  "totalJobs": 5,
+  "generatedAt": "2026-09-02T09:18:53.665Z",
+  "totalJobs": 4,
   "jobs": [
     {
       "slug": "human-resources-generalist",
@@ -16,7 +16,7 @@
       "dateRaw": "8/26/2026",
       "dateISO": "2026-08-26",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/human-resources-generalist-352311",
-      "scrapedAt": "2026-09-01T09:45:47.823Z"
+      "scrapedAt": "2026-09-02T09:18:51.957Z"
     },
     {
       "slug": "client-support-specialist-insurance",
@@ -32,7 +32,7 @@
       "dateRaw": "8/26/2026",
       "dateISO": "2026-08-26",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/client-support-specialist-insurance-352314",
-      "scrapedAt": "2026-09-01T09:45:48.336Z"
+      "scrapedAt": "2026-09-02T09:18:52.506Z"
     },
     {
       "slug": "commercial-account-manager-seibertkeck",
@@ -48,7 +48,7 @@
       "dateRaw": "8/21/2026",
       "dateISO": "2026-08-21",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/commercial-account-manager-seibertkeck-351524",
-      "scrapedAt": "2026-09-01T09:45:48.844Z"
+      "scrapedAt": "2026-09-02T09:18:53.074Z"
     },
     {
       "slug": "orthodontic-assistant",
@@ -64,23 +64,7 @@
       "dateRaw": "7/31/2026",
       "dateISO": "2026-07-31",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/orthodontic-assistant-347436",
-      "scrapedAt": "2026-09-01T09:45:49.350Z"
-    },
-    {
-      "slug": "workforce-development-specialist-medina-county",
-      "jobId": "340917",
-      "title": "Workforce Development Specialist - Medina County",
-      "subtitle": "",
-      "body": "JOBS FOR OHIO'S GRADUATES is hiring for a Workforce Development Specialist for Medina County\n\nApply Via ZipRecruiter Link: Workforce Development Specialist job in Medina, Ohio, United States at ZipRecruiter | Ziprecruiter\n\nWorkforce Development Specialist\nJobs for Ohio's Graduates (JOG)\nLocation: Medina, OH (On-Site)\nSalary: $40,000–$45,000 per year\nSchedule: Full-Time | Monday–Friday | 8:00 AM–4:30 PM\n\nAbout Jobs for Ohio's Graduates (JOG)\nJobs for Ohio's Graduates (JOG) is dedicated to helping young people complete their education and successfully transition into meaningful employment or post-secondary training. Through mentorship, career readiness, work experience, and life skills training, JOG empowers youth to overcome barriers and achieve long-term success.\n\nPosition Overview\nAs a Workforce Development Specialist, you will mentor and support youth as they work toward educational, career, and personal goals. This role focuses on building relationships, removing barriers, and connecting participants with employment and training opportunities.\n\nKey Responsibilities\nMentor and coach youth as they transition into employment or post-secondary education.\nHelp participants identify and overcome barriers to success.\nAssess participant needs and develop individualized goal plans.\nTeach employability, life skills, and workforce readiness competencies.\nTrack participant progress and maintain accurate documentation.\nBuild relationships with employers, schools, and community partners.\nCollaborate with the JOG team to ensure participant success.\nPromote JOG's mission, standards, and program objectives.\n\nQualifications\nBachelor's degree required.\nExperience working with youth required.\nStrong communication and relationship-building skills.\nProficient in:Microsoft Outlook\nMicrosoft Word\nMicrosoft Excel\nMicrosoft PowerPoint\nOnline database management systems\n\nAbility to travel locally during the day within a five-county service area.\nValid driver's license and reliable transportation preferred.\n\nBenefits\nMedical Insurance\nDental Insurance\nVision Insurance\nLife Insurance\n401(k) Retirement Plan\n401(k) Company Match\nPaid Time Off (PTO)\nEmployee Assistance Program (EAP)\nMileage Reimbursement\nOn-the-Job Training\n\nWhy Join JOG?\nMake a meaningful impact in the lives of young people.\nHelp youth overcome barriers and achieve their goals.\nWork with a supportive, mission-driven team.\nBe part of an organization that has exceeded national performance standards for over 30 consecutive years.\nBuild strong partnerships with schools, employers, and community organizations while changing lives every day.",
-      "tags": [],
-      "location": "",
-      "applyUrl": "",
-      "companyName": "Jobs for Ohio's Graduates",
-      "companySlug": "",
-      "dateRaw": "6/29/2026",
-      "dateISO": "2026-06-29",
-      "detailUrl": "https://business.medinachamber.com/jobs/Details/workforce-development-specialist-medina-county-340917",
-      "scrapedAt": "2026-09-01T09:45:49.870Z"
+      "scrapedAt": "2026-09-02T09:18:53.657Z"
     }
   ]
 }

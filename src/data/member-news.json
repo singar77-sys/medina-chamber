@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T09:18:50.699Z",
+  "generatedAt": "2026-09-03T09:28:18.348Z",
   "totalArticles": 4,
   "articles": [
     {
@@ -19,7 +19,7 @@
       "dateISO": "2026-08-27",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_2482,w_2482,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1787836323/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/68e6062251a5411cb1c5d03dfe6b9df3/ArmstrongFB.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/armstrong-s-9th-annual-avenge-hunger-month-food-drive-352409",
-      "scrapedAt": "2026-09-02T09:18:49.001Z"
+      "scrapedAt": "2026-09-03T09:28:16.572Z"
     },
     {
       "slug": "harvest-jamboree-fundraiser-to-support-hospice-in-medina",
@@ -38,7 +38,7 @@
       "dateISO": "2026-08-19",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1618,w_3000,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1787770282/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/59138b1a6b604a15a29a2776e8253f9a/Reserve-Care-logo.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/harvest-jamboree-fundraiser-to-support-hospice-in-medina-350939",
-      "scrapedAt": "2026-09-02T09:18:49.572Z"
+      "scrapedAt": "2026-09-03T09:28:17.145Z"
     },
     {
       "slug": "1st-annual-fundraising-car-show",
@@ -57,7 +57,7 @@
       "dateISO": "2026-07-30",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_2048,w_2048,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785423508/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/94e6c419c14a42e480a489b848eab88e/Medina-Odd-Fellows.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/1st-annual-fundraising-car-show-347096",
-      "scrapedAt": "2026-09-02T09:18:50.111Z"
+      "scrapedAt": "2026-09-03T09:28:17.753Z"
     },
     {
       "slug": "medina-athletics-sponsorship-opportunities",
@@ -76,7 +76,7 @@
       "dateISO": "2026-07-29",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1001,w_1400,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785292914/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/bce87398f55c4b779e58e8ec65279974/MAB-LOGO.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/medina-athletics-sponsorship-opportunities-346803",
-      "scrapedAt": "2026-09-02T09:18:50.691Z"
+      "scrapedAt": "2026-09-03T09:28:18.341Z"
     }
   ]
 }

@@ -114,9 +114,11 @@ export function buildCsp(nonce: string | null): string {
     // own origin (/monitoring) so we don't need the ingest hostname here.
     // Vercel Analytics/Speed Insights also same-origin.
     `connect-src 'self'`,
-    // Allow the Medina Means Business flipbook (hosted on hflip.co) to load in
-    // the magazine page <iframe>; default-src 'self' would otherwise block it.
-    `frame-src https://*.hflip.co`,
+    // Allow the Medina Means Business flipbook (hflip.co) and the Medina
+    // Matters podcast player (TelVue) to load in their page <iframe>s;
+    // default-src 'self' would otherwise block them (the podcast player
+    // rendered blank until TelVue was added here).
+    `frame-src https://*.hflip.co https://videoplayer.telvue.com`,
     `frame-ancestors 'none'`,
     `form-action 'self'`,
     `base-uri 'self'`,

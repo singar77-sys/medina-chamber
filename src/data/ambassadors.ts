@@ -40,15 +40,6 @@ export const ambassadors: Ambassador[] = [
     photo: "/images/people/ambassadors/brittney-esser-title-select-medina-chamber-ambassador.jpg",
   },
   {
-    slug: "tania-grant",
-    name: "Tania Grant",
-    title: "Owner",
-    company: "TAG Studio",
-    email: "taniagrantstudio@gmail.com",
-    website: "https://www.tagvoiceover.com",
-    photo: "/images/people/ambassadors/tania-grant-tag-studio-medina-chamber-ambassador.jpg",
-  },
-  {
     slug: "don-hicks",
     name: "Don Hicks",
     title: "Area Vice President, Midwest Region",
@@ -83,15 +74,6 @@ export const ambassadors: Ambassador[] = [
     email: "claus.meyer@raymondjames.com",
     website: "https://www.raymondjames.com/clausmeyer",
     photo: "/images/people/ambassadors/claus-meyer-raymond-james-medina-chamber-ambassador.jpg",
-  },
-  {
-    slug: "tom-muntean",
-    name: "Tom Muntean",
-    title: "Owner",
-    company: "Thomas Muntean Agency / American Family Insurance",
-    email: "tmuntean@amfam.com",
-    website: "https://www.amfam.com/agents/ohio/medina/thomas-muntean",
-    photo: "/images/people/ambassadors/tom-muntean-american-family-insurance-medina-chamber-ambassador.jpg",
   },
   {
     slug: "cindy-phillips",

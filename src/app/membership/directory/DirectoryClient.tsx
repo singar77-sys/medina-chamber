@@ -210,6 +210,16 @@ function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
 
   const isFiltered = !!search.trim() || !!activeCategory || showAll;
 
+  // Entering a filtered view swaps the tall BrowseBand out for the results
+  // grid; CSS scroll anchoring then keeps the below-band sections at the same
+  // viewport offset, dumping the user at the BOTTOM of the inserted grid (the
+  // "browse all lands at Z" bug). Snap to the top when a filter engages.
+  const wasFiltered = useRef(false);
+  useEffect(() => {
+    if (isFiltered && !wasFiltered.current) window.scrollTo({ top: 0 });
+    wasFiltered.current = isFiltered;
+  }, [isFiltered]);
+
   function reset() {
     setSearch("");
     setActiveCategory(null);

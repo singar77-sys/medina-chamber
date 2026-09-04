@@ -251,7 +251,18 @@ export default function SponsorshipsPage() {
                           <svg className="w-4 h-4 text-cambridge shrink-0 mt-f3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                             <path d="M20 6L9 17l-5-5" />
                           </svg>
-                          {item}
+                          {/* "Contact Stephanie" must actually be a contact
+                              link, not prose (staff request) */}
+                          {item.includes("Contact Stephanie") ? (
+                            <a
+                              href={mailto(stephanie.email)}
+                              className="font-bold text-cambridge hover:text-cambridge/80 underline underline-offset-2 transition-colors"
+                            >
+                              {item} →
+                            </a>
+                          ) : (
+                            item
+                          )}
                         </li>
                       ))}
                     </ul>

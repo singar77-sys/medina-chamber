@@ -108,8 +108,13 @@ export default function MemberNewsPage() {
                 Direct from chamber members.
               </p>
             </div>
+          </FadeIn>
 
-            {articles.length === 0 ? (
+          {/* Grid stays OUTSIDE the header FadeIn: a whole-grid wrapper can
+              never trip the 10% IntersectionObserver threshold once the list
+              grows tall, leaving every card invisible (the blog page bug).
+              Per-card FadeIns animate each card individually. */}
+          {articles.length === 0 ? (
               <p className="text-body text-text-tertiary">
                 No member news yet. Check back soon.
               </p>
@@ -133,9 +138,13 @@ export default function MemberNewsPage() {
                       {article.thumbnail ? (
                         <div className="relative h-44 bg-bg-secondary shrink-0">
                           <Image
-                            src={article.thumbnail}
+                            // Full-size image, not article.thumbnail — the
+                            // scraped thumbnail is a 250×100 Cloudinary
+                            // variant that upscales blurry in this h-44 card.
+                            src={article.image || article.thumbnail}
                             alt={`${article.title}, Greater Medina Chamber of Commerce member news`}
                             fill
+                            sizes="(max-width: 768px) 100vw, 400px"
                             className="object-contain p-4"
                           />
                         </div>
@@ -179,7 +188,6 @@ export default function MemberNewsPage() {
                 ))}
               </div>
             )}
-          </FadeIn>
         </div>
       </section>
 

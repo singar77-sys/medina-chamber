@@ -218,11 +218,11 @@ export interface PricingConfig {
 // The pricing page and bot both use these if Redis has nothing stored.
 const _essentialsBenefits = [
   "Online directory listing",
+  "Networking & educational opportunities year-round",
   "Ribbon cutting ceremony",
   "Member mailing address list",
   "Post sharing on Chamber socials",
   "Business advocacy & economic development support",
-  "Access to coworking space",
   "Member Portal account",
   "Custom digital membership badge",
   "Free job postings",
@@ -237,7 +237,6 @@ const _essentialsBenefits = [
 ];
 const _plusAdded = [
   "Directory listing enhanced with logo",
-  "Member spotlight (social & email)",
   "Custom digital membership sticker video",
   "E-newsletter ad placement (4 per year)",
   "Free certificate of origin (non-freight forwarders)",
@@ -266,7 +265,7 @@ export const DEFAULT_PRICING: Omit<PricingConfig, "updatedAt"> = {
       name: "Visibility Plus",
       price: 575,
       tagline:
-        "Turn up your reach with logo-enhanced directory, member spotlights, and four newsletter ads per year, done-for-you visibility.",
+        "Turn up your reach with a logo-enhanced directory listing, four newsletter ads per year, and a custom membership sticker video, done-for-you visibility.",
       who: "Growth-minded small and mid-sized businesses seeking more impressions and owned media slots.",
       benefits: _essentialsBenefits,
       addedBenefits: _plusAdded,
@@ -292,7 +291,7 @@ export const DEFAULT_PRICING: Omit<PricingConfig, "updatedAt"> = {
     },
     {
       q: "What's included in member spotlights?",
-      a: "Visibility Plus spotlights run on social and email. Community Investor spotlights run on social, email, and the chamber website.",
+      a: "Member spotlights are a Community Investor benefit — they run on social, email, and the chamber website.",
     },
     {
       q: "Do Investors get ongoing event perks?",

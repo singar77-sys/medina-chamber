@@ -141,9 +141,12 @@ export default async function BlogListingPage() {
             </FadeIn>
           )}
 
+          {/* No FadeIn around the whole grid: IntersectionObserver's 10%
+              threshold can never trip on a ~20,000px element, so the wrapper
+              stayed at opacity 0 forever and 174 cards rendered invisible.
+              The per-card FadeIns below animate each card on their own. */}
           {rest.length > 0 && (
-            <FadeIn>
-              <div className="mt-f34 grid md:grid-cols-2 lg:grid-cols-3 gap-f21">
+            <div className="mt-f34 grid md:grid-cols-2 lg:grid-cols-3 gap-f21">
                 {rest.map((post, i) => (
                   <FadeIn key={post.slug} delay={(i % 3) * 40}>
                     <Link
@@ -180,8 +183,7 @@ export default async function BlogListingPage() {
                     </Link>
                   </FadeIn>
                 ))}
-              </div>
-            </FadeIn>
+            </div>
           )}
 
           {!featured && rest.length === 0 && (

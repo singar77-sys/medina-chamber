@@ -83,6 +83,19 @@ const links: QuickLink[] = [
     ),
   },
   {
+    // "Hot Deals" is the label members know from the old GrowthZone site;
+    // distinct from "Savings" (affinity programs) — this is member-posted
+    // offers at /deals.
+    label: "Hot Deals",
+    href: "/deals",
+    icon: (
+      <svg viewBox="0 0 24 24" {...stroke} className="w-6 h-6" aria-hidden="true">
+        <path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42Z" />
+        <path d="M7.5 7.5h.01" />
+      </svg>
+    ),
+  },
+  {
     label: "Chamber Store",
     href: "/store",
     icon: (
@@ -142,7 +155,7 @@ export function QuickLinks() {
             Quick Access
           </p>
         </FadeIn>
-        <div className="grid grid-cols-3 sm:grid-cols-6 gap-f21">
+        <div className="grid grid-cols-4 md:grid-cols-7 gap-f21">
           {links.map((l, i) => (
             <FadeIn key={l.label} delay={i * 55}>
               {l.external ? (

@@ -54,6 +54,11 @@ export const navigation: NavItem[] = [
         description: "Annual scramble and networking day",
       },
       {
+        label: "Social Connect",
+        href: "/programs/social-connect",
+        description: "Casual after-hours networking around the county",
+      },
+      {
         label: "Sponsorships & Ribbon Cuttings",
         href: "/events/sponsorships",
         description: "Celebrate milestones with the Chamber",

@@ -24,36 +24,44 @@ export const metadata: Metadata = {
   alternates: { canonical: "/membership/join" },
 };
 
+// Each card links to the page where that benefit actually lives (staff
+// request — mirrors the benefits page pattern).
 const benefits = [
   {
     title: "Business Directory Listing",
     description:
       "Your business appears in the Chamber's searchable member directory, one of the first places customers look for local services.",
+    href: "/membership/directory",
   },
   {
     title: "Networking Events",
     description:
       "Monthly mixers, Chamber Chats, and after-hours events where you meet the business owners who actually run this town.",
+    href: "/events",
   },
   {
     title: "Advocacy & Voice",
     description:
       "The Chamber represents your interests at the local, state, and federal level. Your membership funds the advocacy that protects your business.",
+    href: "/about/advocacy",
   },
   {
     title: "Savings Programs",
     description:
       "Member-exclusive discounts on insurance, office supplies, shipping, and more through Chamber partnerships.",
+    href: "/membership/savings",
   },
   {
     title: "Visibility & Credibility",
     description:
       "The Chamber seal means something in Medina County. Customers trust Chamber members. It's an earned reputation since 1938.",
+    href: "/membership/benefits",
   },
   {
     title: "Ribbon Cuttings & Milestones",
     description:
       "New location? Anniversary? Expansion? The Chamber shows up with ambassadors, photos, and social media coverage.",
+    href: "/events/sponsorships",
   },
 ];
 
@@ -149,15 +157,21 @@ export default function JoinPage() {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-f21">
             {benefits.map((b) => (
-              <div
+              <Link
                 key={b.title}
-                className="p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)]"
+                href={b.href}
+                className="group block p-f21 bg-bg-secondary border border-border-secondary rounded-[var(--radius-lg)] hover:border-cambridge/40 hover:shadow-cambridge transition-shadow duration-300"
               >
-                <h3 className="text-h4 mb-f8">{b.title}</h3>
+                <h3 className="text-h4 mb-f8 group-hover:text-cambridge transition-colors">
+                  {b.title}
+                </h3>
                 <p className="text-body-sm text-text-secondary leading-relaxed">
                   {b.description}
                 </p>
-              </div>
+                <p className="text-caption font-bold text-cambridge mt-f13">
+                  Explore →
+                </p>
+              </Link>
             ))}
           </div>
         </FadeIn>

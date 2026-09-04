@@ -19,7 +19,7 @@ const SHARED_STRICT_DIRECTIVES = [
   "img-src 'self' blob: data: https://res.cloudinary.com https://images.squarespace-cdn.com",
   "font-src 'self'",
   "connect-src 'self'",
-  "frame-src https://*.hflip.co",
+  "frame-src https://*.hflip.co https://videoplayer.telvue.com",
   "frame-ancestors 'none'",
   "form-action 'self'",
   "base-uri 'self'",

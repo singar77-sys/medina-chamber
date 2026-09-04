@@ -124,7 +124,7 @@ export default function SocialConnectPage() {
               See Upcoming Events →
             </Link>
             <Link
-              href="/about/contact"
+              href="/events/sponsorships"
               className="
                 inline-flex items-center px-6 py-4
                 bg-emerald hover:bg-emerald/90

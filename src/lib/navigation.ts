@@ -59,11 +59,6 @@ export const navigation: NavItem[] = [
         description: "Casual after-hours networking around the county",
       },
       {
-        label: "Sponsorships & Ribbon Cuttings",
-        href: "/events/sponsorships",
-        description: "Celebrate milestones with the Chamber",
-      },
-      {
         label: "Reflections of Italy",
         href: "/programs/italy-trip",
         description: "10-day chamber group trip to Italy, Oct 2027",
@@ -108,6 +103,14 @@ export const navigation: NavItem[] = [
         label: "Savings Programs",
         href: "/membership/savings",
         description: "Member-exclusive discounts and deals",
+      },
+      {
+        // Lives under Membership, not Events — sponsorships and ribbon
+        // cuttings are member benefits (staff call, 2026-09-04). The page
+        // keeps its /events/sponsorships URL.
+        label: "Sponsorships & Ribbon Cuttings",
+        href: "/events/sponsorships",
+        description: "Celebrate milestones with the Chamber",
       },
       {
         label: "Chamber Store",

@@ -125,11 +125,15 @@ export default async function CommunityInvestorPage() {
               County&apos;s business direction.
             </p>
             <div className="mt-f21 flex flex-wrap items-center gap-f13">
-              <div className="text-text-secondary text-body-sm font-mono">
-                ${(ciTier?.price ?? 1145).toLocaleString("en-US")}{" "}
-                <span className="text-text-tertiary">/year</span>
+              {/* Price reads as a proper lockup next to the CTA — the old
+                  body-sm muted mono was too easy to miss (staff request). */}
+              <div className="text-text-primary">
+                <span className="text-h3 font-bold font-mono leading-none">
+                  ${(ciTier?.price ?? 1145).toLocaleString("en-US")}
+                </span>{" "}
+                <span className="text-body-sm text-text-tertiary">/year</span>
               </div>
-              <div className="w-px h-4 bg-border-primary" />
+              <div className="w-px h-6 bg-border-primary" />
               <Link
                 href="/membership/join"
                 className="

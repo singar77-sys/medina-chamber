@@ -57,13 +57,23 @@ function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
   const [showAllCategories, setShowAllCategories] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
 
+  // SELECTION of the compact set stays by member count (that's what makes
+  // them "top" categories), but every DISPLAYED list reads A→Z — staff
+  // expected alphabetical and count-order looked arbitrary (Mark's call,
+  // from Stephanie's review).
+  const alpha = (
+    list: ReadonlyArray<{ category: string; count: number }>,
+  ) => [...list].sort((a, b) => a.category.localeCompare(b.category));
+
   const topIndustries = industries.slice(0, TOP_INDUSTRIES);
-  const browseIndustries = showAllCategories ? industries : topIndustries;
+  const browseIndustries = alpha(
+    showAllCategories ? industries : topIndustries,
+  );
 
   // Refine bar stays compact (top 10), but if the active category is a
-  // rare one (picked from the expanded list or a deep link), prepend it
+  // rare one (picked from the expanded list or a deep link), include it
   // so its chip is visible and deselectable.
-  const refineIndustries =
+  const refineIndustries = alpha(
     activeCategory && !topIndustries.some((i) => i.category === activeCategory)
       ? [
           industries.find((i) => i.category === activeCategory) ?? {
@@ -72,7 +82,8 @@ function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
           },
           ...topIndustries,
         ]
-      : topIndustries;
+      : topIndustries,
+  );
 
   // Last query string this component wrote (or adopted). Lets the
   // URL→state effect tell our own history writes apart from real

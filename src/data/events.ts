@@ -12,6 +12,9 @@ export interface ChamberEvent {
   startTime: string;
   endTime: string;
   dateString: string;
+  /** Plain-text event description scraped from the GrowthZone detail page
+   *  (newline-separated paragraphs). Older data files may lack it. */
+  description?: string;
   location: string;
   locationDesc: string;
   venue?: string;

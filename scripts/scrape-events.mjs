@@ -129,6 +129,11 @@ function parseDetailPage(html, { slug, eventId, detailUrl }) {
   const pricingHtml = root.querySelector('.gz-event-pricing-info')?.innerHTML ?? '';
   const pricing = htmlToText(pricingHtml);
 
+  // Event description (rich text → plain text with newline paragraphs).
+  // The block opens with a literal "Description" heading — drop it.
+  const descriptionHtml = root.querySelector('.gz-event-description')?.innerHTML ?? '';
+  const description = htmlToText(descriptionHtml).replace(/^Description\s*\n?/, '').trim();
+
   // Image (Cloudinary URL from GrowthZone)
   const imgEl = root.querySelector('.gz-details-img img, .gz-event-details-img img, [class*="gz-details"] img');
   const image = imgEl?.getAttribute('src') ?? '';
@@ -155,6 +160,7 @@ function parseDetailPage(html, { slug, eventId, detailUrl }) {
     startTime,
     endTime,
     dateString: subtitleRaw,
+    description,
     location,
     locationDesc,
     street,

@@ -83,6 +83,7 @@ export default async function EventPage(
     "@context": "https://schema.org",
     "@type": "Event",
     name: event.title,
+    ...(event.description && { description: event.description }),
     ...(event.dateISO && {
       startDate: `${event.dateISO}T${to24h(event.startTime)}`,
       // Omit endDate when endTime is missing — to24h would fall back to
@@ -131,6 +132,11 @@ export default async function EventPage(
   const pricingLines = event.pricing
     ? event.pricing.split("\n").filter(Boolean)
     : [];
+
+  const descriptionParas = (event.description ?? "")
+    .split(/\n+/)
+    .map((p) => p.trim())
+    .filter(Boolean);
 
   const Graphic = getEventGraphicRenderer(event);
 
@@ -207,6 +213,20 @@ export default async function EventPage(
                 </figcaption>
               </figure>
             ) : null}
+
+            {/* Description — scraped from the GrowthZone event page */}
+            {descriptionParas.length > 0 && (
+              <div className="mt-f34">
+                <h2 className="text-h3 mb-f13">About This Event</h2>
+                <div className="space-y-f13">
+                  {descriptionParas.map((para, i) => (
+                    <p key={i} className="text-body text-text-secondary leading-relaxed">
+                      {para}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Location */}
             <div className="mt-f34">

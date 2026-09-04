@@ -154,7 +154,18 @@ export default function AmbassadorsPage() {
                       {a.title}
                     </p>
                     <p className="text-caption font-bold text-cambridge mt-f3">
-                      {a.company}
+                      {/* Member businesses link to their directory page
+                          (staff request); non-members stay plain text. */}
+                      {a.memberSlug ? (
+                        <Link
+                          href={`/membership/directory/${a.memberSlug}`}
+                          className="hover:text-cambridge/80 underline-offset-2 hover:underline transition-colors"
+                        >
+                          {a.company}
+                        </Link>
+                      ) : (
+                        a.company
+                      )}
                     </p>
                     <div className="mt-f13 flex flex-col gap-1">
                       <a

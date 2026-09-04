@@ -20,18 +20,18 @@ export const metadata: Metadata = {
 };
 
 const board = [
-  { name: "Steve Allison", title: "President", company: "Fire-Dex" },
-  { name: "Malorie Kormos", title: "President Elect", company: "Catholic Charities Diocese of Cleveland" },
-  { name: "Julie McNabb", title: "Immediate Past President", company: "JK Gift Shop / Interior Design Studio" },
-  { name: "Terry Blascak", title: "Board of Directors", company: "Huntington Bank" },
-  { name: "David Ferrell", title: "Board of Directors", company: "Philpott Solutions Group" },
-  { name: "Steve Ferris", title: "Board of Directors", company: "Discount Drug Mart" },
+  { name: "Steve Allison", title: "President", company: "Fire-Dex", memberSlug: "fire-dex" },
+  { name: "Malorie Kormos", title: "President Elect", company: "Catholic Charities Diocese of Cleveland", memberSlug: "catholic-charities-diocese-of-cleveland" },
+  { name: "Julie McNabb", title: "Immediate Past President", company: "JK Gift Shop / Interior Design Studio", memberSlug: "interior-design-studio" },
+  { name: "Terry Blascak", title: "Board of Directors", company: "Huntington Bank", memberSlug: "huntington-national-bank" },
+  { name: "David Ferrell", title: "Board of Directors", company: "Philpott Solutions Group", memberSlug: "philpott-solutions-group" },
+  { name: "Steve Ferris", title: "Board of Directors", company: "Discount Drug Mart", memberSlug: "discount-drug-mart" },
   { name: "Kathy Elseser", title: "Board of Directors", company: "Community Energy Advisors" },
-  { name: "Julie Simon", title: "Board of Directors", company: "Cleveland Clinic Medina Hospital" },
-  { name: "Brian Harr", title: "Board of Directors", company: "Commercial & Savings Bank" },
-  { name: "Mark Herwick", title: "Board of Directors", company: "Homestead Insurance Agency" },
-  { name: "Nick Howell", title: "Board of Directors", company: "National Design Mart" },
-  { name: "Kaleigh Huffman", title: "Board of Directors", company: "Critchfield, Critchfield & Johnston" },
+  { name: "Julie Simon", title: "Board of Directors", company: "Cleveland Clinic Medina Hospital", memberSlug: "cleveland-clinic-medina-hospital" },
+  { name: "Brian Harr", title: "Board of Directors", company: "Commercial & Savings Bank", memberSlug: "the-commercial-savings-bank" },
+  { name: "Mark Herwick", title: "Board of Directors", company: "Homestead Insurance Agency", memberSlug: "homestead-insurance-agency" },
+  { name: "Nick Howell", title: "Board of Directors", company: "National Design Mart", memberSlug: "national-design-mart" },
+  { name: "Kaleigh Huffman", title: "Board of Directors", company: "Critchfield, Critchfield & Johnston", memberSlug: "critchfield-critchfield-johnston-ltd" },
 ];
 
 const staffBios = [
@@ -190,7 +190,18 @@ export default function BoardPage() {
                     {m.title}
                   </p>
                   <p className="text-caption text-text-tertiary mt-f3">
-                    {m.company}
+                    {/* Member businesses link to their directory page
+                        (staff request); non-members stay plain text. */}
+                    {m.memberSlug ? (
+                      <Link
+                        href={`/membership/directory/${m.memberSlug}`}
+                        className="hover:text-cambridge underline-offset-2 hover:underline transition-colors"
+                      >
+                        {m.company}
+                      </Link>
+                    ) : (
+                      m.company
+                    )}
                   </p>
                 </div>
               ))}

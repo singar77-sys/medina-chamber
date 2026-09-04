@@ -9,6 +9,10 @@ export interface Ambassador {
   name: string;
   title: string;
   company: string;
+  /** chamberSlug of the member business — when set, the company name on the
+   *  ambassadors page links to its directory detail page. Verified against
+   *  members.json; leave unset for non-member businesses. */
+  memberSlug?: string;
   email: string;
   website?: string;
   /** Path under /public/. Aspect ratio expected to be portrait or square. */
@@ -26,6 +30,7 @@ export const ambassadors: Ambassador[] = [
     name: "Kari Deeks",
     title: "Treasury Management Officer",
     company: "First Federal of Lakewood",
+    memberSlug: "first-federal-of-lakewood",
     email: "kdeeks@ffl.net",
     website: "https://www.ffl.bank",
     photo: "/images/people/ambassadors/kari-deeks-first-federal-medina-chamber-ambassador.jpg",
@@ -35,6 +40,7 @@ export const ambassadors: Ambassador[] = [
     name: "Brittney Esser",
     title: "Escrow Processor",
     company: "Title Select",
+    memberSlug: "title-select",
     email: "brittney@titleselect.net",
     website: "https://www.titleselect.net",
     photo: "/images/people/ambassadors/brittney-esser-title-select-medina-chamber-ambassador.jpg",
@@ -44,6 +50,7 @@ export const ambassadors: Ambassador[] = [
     name: "Don Hicks",
     title: "Area Vice President, Midwest Region",
     company: "Vensure",
+    memberSlug: "vensurehr",
     email: "don.hicks@vensure.com",
     website: "https://www.vensure.com",
     photo: "/images/people/ambassadors/don-hicks-vensure-medina-chamber-ambassador.jpg",
@@ -53,6 +60,7 @@ export const ambassadors: Ambassador[] = [
     name: "Laurin Jeffers",
     title: "Events and Community Manager",
     company: "Foundry Social / High Voltage Karting / MAD Brewing",
+    memberSlug: "the-foundry-social-high-voltage-karting-mad-brewing",
     email: "laurinj@highvoltagekarting.com",
     website: "https://thefoundrysocial.com",
     photo: "/images/people/ambassadors/laurin-jeffers-foundry-social-medina-chamber-ambassador.jpg",
@@ -62,6 +70,7 @@ export const ambassadors: Ambassador[] = [
     name: "Danielle Litton",
     title: "MRO Midwest Sales Manager",
     company: "National Process Systems",
+    memberSlug: "national-process-systems",
     email: "danielle.litton@national-process.com",
     website: "https://national-process.com",
     photo: "/images/people/ambassadors/danielle-litton-national-process-systems-medina-chamber-ambassador.jpg",
@@ -71,6 +80,7 @@ export const ambassadors: Ambassador[] = [
     name: "Claus Meyer",
     title: "Certified Financial Planner",
     company: "Raymond James",
+    memberSlug: "raymond-james",
     email: "claus.meyer@raymondjames.com",
     website: "https://www.raymondjames.com/clausmeyer",
     photo: "/images/people/ambassadors/claus-meyer-raymond-james-medina-chamber-ambassador.jpg",
@@ -80,6 +90,7 @@ export const ambassadors: Ambassador[] = [
     name: "Cindy Phillips",
     title: "Vice President, Wealth Advisor",
     company: "Huntington Bank",
+    memberSlug: "huntington-national-bank",
     email: "cindy.k.phillips@huntington.com",
     website: "https://www.huntington.com",
     photo: "/images/people/ambassadors/cindy-phillips-huntington-bank-medina-chamber-ambassador.jpg",
@@ -89,6 +100,7 @@ export const ambassadors: Ambassador[] = [
     name: "Sam Pietrangelo",
     title: "Community Marketing Manager",
     company: "Armstrong",
+    memberSlug: "armstrong",
     email: "spietrangelo@agoc.com",
     website: "https://armstrongonewire.com",
     photo: "/images/people/ambassadors/sam-pietrangelo-armstrong-medina-chamber-ambassador.jpg",
@@ -98,6 +110,7 @@ export const ambassadors: Ambassador[] = [
     name: "Tori Toth",
     title: "Walk Manager",
     company: "Alzheimer's Association",
+    memberSlug: "alzheimers-association-greater-east-ohio-chapter",
     email: "tjtoth@alz.org",
     website: "https://www.alz.org",
     photo: "/images/people/ambassadors/tori-toth-alzheimers-association-medina-chamber-ambassador.jpg",
@@ -107,6 +120,7 @@ export const ambassadors: Ambassador[] = [
     name: "Kimberly Valco",
     title: "Community Relations",
     company: "Western Reserve Masonic Community",
+    memberSlug: "western-reserve-masonic-community",
     email: "kvalco@ohiomasonichome.org",
     website: "https://wrmcoh.org",
     photo: "/images/people/ambassadors/kimberly-valco-western-reserve-masonic-community-medina-chamber-ambassador.jpg",

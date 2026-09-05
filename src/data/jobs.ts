@@ -25,14 +25,9 @@ const raw = jobsData as {
 
 export const jobs: Job[] = raw.jobs;
 export const totalJobsCount = raw.totalJobs;
-export const jobsGeneratedAt = raw.generatedAt;
 
 export function getJobBySlug(slug: string): Job | undefined {
   return jobs.find((j) => j.slug === slug);
-}
-
-export function getRecentJobs(count = 10): Job[] {
-  return jobs.slice(0, count);
 }
 
 /** Format date for display: "April 6, 2026" */

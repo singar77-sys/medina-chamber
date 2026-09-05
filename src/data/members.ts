@@ -35,16 +35,6 @@ export interface Member {
   membershipTier: number;
 }
 
-/** Legacy label derived from the scraper's membershipTier. Kept only for
- *  display in places that show the raw scraper rank; the authoritative
- *  tier helpers below are what actually drives routing/priority. */
-export function getTierLabel(tier: number): "Visibility Plus" | "Featured" | "Enhanced" | "Standard" {
-  if (tier === 2) return "Visibility Plus";
-  if (tier === 5) return "Featured";
-  if (tier === 10) return "Enhanced";
-  return "Standard";
-}
-
 /** True for the chamber's top-tier Community Investor members ($1,145/yr).
  *  Backed by the authoritative slug set in tier-overrides.ts, sourced
  *  from the authenticated GrowthZone admin API. */
@@ -62,11 +52,6 @@ export function isVisibilityPlus(member: Member): boolean {
   );
 }
 
-/** True for any premium-tier member (CI or VP). */
-export function isPremiumMember(member: Member): boolean {
-  return isCommunityInvestor(member) || isVisibilityPlus(member);
-}
-
 export interface MembersData {
   generatedAt: string;
   totalCount: number;
@@ -78,13 +63,6 @@ const data = membersData as MembersData;
 export const members: Member[] = data.members;
 export const generatedAt: string = data.generatedAt;
 export const totalCount: number = data.totalCount;
-
-/** All unique categories, sorted alphabetically */
-export function getAllCategories(): string[] {
-  const seen = new Set<string>();
-  members.forEach((m) => m.categories.forEach((c) => seen.add(c)));
-  return [...seen].sort((a, b) => a.localeCompare(b));
-}
 
 /** Lookup by chamberSlug — O(n) but called once per static page */
 export function getMemberBySlug(slug: string): Member | undefined {
@@ -104,45 +82,4 @@ export function getInitials(name: string): string {
   const words = name.trim().split(/\s+/);
   if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
   return (words[0][0] + words[1][0]).toUpperCase();
-}
-
-const AVATAR_PALETTE = [
-  { bg: "bg-cambridge/15", text: "text-cambridge"  },
-  { bg: "bg-oxford/10",    text: "text-oxford"     },
-  { bg: "bg-accent/10",    text: "text-accent"     },
-  { bg: "bg-amber-50",     text: "text-amber-700"  },
-  { bg: "bg-violet-50",    text: "text-violet-700" },
-] as const;
-
-export type AvatarColor = (typeof AVATAR_PALETTE)[number];
-
-/** Deterministic color slot from the palette, hashed by business name. */
-export function getAvatarColor(name: string): AvatarColor {
-  const hash = name.split("").reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
-  return AVATAR_PALETTE[hash % AVATAR_PALETTE.length];
-}
-
-/** First alphabetical character of the business name (skips leading numbers/symbols). */
-export function getAvatarInitial(name: string): string {
-  const match = name.match(/[A-Za-z]/);
-  return match ? match[0].toUpperCase() : (name[0]?.toUpperCase() ?? "?");
-}
-
-/** Top N industries by member count, sorted descending. */
-export function getTopIndustries(limit = 10): Array<{ category: string; count: number }> {
-  const counts = new Map<string, number>();
-  members.forEach((m) => {
-    m.categories.forEach((c) => {
-      counts.set(c, (counts.get(c) ?? 0) + 1);
-    });
-  });
-  return [...counts.entries()]
-    .map(([category, count]) => ({ category, count }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, limit);
-}
-
-/** All Community Investor members, derived from the authoritative slug set. */
-export function getCommunityInvestors(): Member[] {
-  return members.filter(isCommunityInvestor);
 }

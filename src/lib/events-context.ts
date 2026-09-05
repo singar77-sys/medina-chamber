@@ -3,38 +3,19 @@
  * Reads from the statically-built events.json and filters to future events at request time.
  */
 
-import eventsData from "@/data/events.json";
-
-interface RawEvent {
-  slug: string;
-  title: string;
-  dateISO: string;
-  dayOfWeek: string;
-  month: string;
-  day: number;
-  year: number;
-  startTime: string;
-  endTime: string;
-  location: string;
-  pricing: string;
-  registerUrl: string;
-}
-
-const allEvents = (eventsData as { events: RawEvent[] }).events;
+import { getUpcomingEvents, formatShortDate } from "@/data/events";
 
 /** Returns a formatted string of upcoming events for the system prompt. */
 export function formatEventsForPrompt(): string {
-  // Use the chamber's local (Eastern) calendar day, not UTC — after ~8pm ET, UTC
-  // has rolled to tomorrow and a same-day event would be filtered out hours early.
-  // en-CA renders as YYYY-MM-DD, matching dateISO.
-  const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
-  const upcoming = allEvents.filter((e) => e.dateISO >= today).slice(0, 10);
+  // Deliberately shares the events pages' filter: getUpcomingEvents uses the
+  // chamber's Eastern calendar day, so the bot and the site can't disagree about
+  // whether today's event is still upcoming (a UTC boundary drops it hours early).
+  const upcoming = getUpcomingEvents().slice(0, 10);
 
   if (upcoming.length === 0) return "";
 
   const lines = upcoming.map((e) => {
-    const day = e.dayOfWeek.substring(0, 3);
-    const date = `${e.month} ${e.day}`;
+    const date = formatShortDate(e);
     const time = `${e.startTime}–${e.endTime}`;
     // First THREE pricing lines, not one: enrollment-style events (e.g. the
     // FY27 Safety Council $0/$100/$345 options) put the real price menu on
@@ -50,7 +31,7 @@ export function formatEventsForPrompt(): string {
           .slice(0, 220)
       : "";
     const url = `https://medinachamber.com/events/${e.slug}`;
-    return `- ${day} ${date}: ${e.title} | ${time}${price ? ` | ${price}` : ""} | [Details & Registration](${url})`;
+    return `- ${date}: ${e.title} | ${time}${price ? ` | ${price}` : ""} | [Details & Registration](${url})`;
   });
 
   return `UPCOMING CHAMBER EVENTS (live from calendar, ${upcoming.length} scheduled):\n${lines.join("\n")}`;

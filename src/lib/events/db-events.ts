@@ -106,14 +106,6 @@ export async function getRegisterableEvent(
   return { ...event, tickets };
 }
 
-/** True when the event registers on our site (used to pick the Register link target). */
-export async function isRegisterableEvent(
-  title: string,
-  dateISO: string,
-): Promise<boolean> {
-  return (await getRegisterableEvent(title, dateISO)) !== null;
-}
-
 /** Remaining capacity, or null when the event is uncapped. */
 export function seatsLeft(event: RegisterableEvent): number | null {
   if (event.maxCapacity == null) return null;

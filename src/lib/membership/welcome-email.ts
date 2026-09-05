@@ -8,8 +8,17 @@
 import { resend, CHAMBER_NOTIFY_EMAIL } from "@/lib/email";
 import { escHtml as escapeHtml } from "@/lib/sanitize";
 
+// Both fraction digits are pinned to 2, matching the invoice table on
+// /portal/billing so a member reading the receipt email and the portal sees
+// the same amount. The old minimumFractionDigits-only setting rendered 5750
+// cents as "$57.5".
 function money(cents: number): string {
-  return (cents / 100).toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 });
+  return (cents / 100).toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 export interface WelcomeEmailParams {

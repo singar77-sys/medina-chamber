@@ -183,6 +183,35 @@ const nextConfig: NextConfig = {
       //   so the new news pages are untouched. The bare /news landing is
       //   intentionally NOT redirected — the new site serves its own hub there.
       { source: "/news/:year(\\d{4})/:rest*", destination: "/news/blog", permanent: true },
+
+      // — Legacy business blog (the site's largest evergreen section) —
+      //   The old apex served the blog at /businessblog; all 175 post slugs
+      //   match src/data/blog.json 1:1 (asserted in next-config.test.ts), so
+      //   the wildcard lands every ranked URL on its own post rather than a
+      //   hub page. Without this the whole archive 404s at DNS cutover.
+      { source: "/businessblog", destination: "/news/blog", permanent: true },
+      { source: "/businessblog/:slug", destination: "/news/blog/:slug", permanent: true },
+
+      // — Squarespace tag/category archives (156 URLs) → the blog index.
+      //   Two-segment prefixes, so these can never swallow /news/blog itself.
+      { source: "/news/tag/:rest*", destination: "/news/blog", permanent: true },
+      { source: "/news/category/:rest*", destination: "/news/blog", permanent: true },
+
+      // — Partner + advocacy micro-blogs —
+      //   /vensure-blog was PEO/HR content from the VensureHR savings partner;
+      //   /advocacy-blog held candidate interviews and voting guides (dated
+      //   paths, hence :rest*).
+      { source: "/vensure-blog", destination: "/membership/savings", permanent: true },
+      { source: "/vensure-blog/:slug", destination: "/membership/savings", permanent: true },
+      { source: "/advocacy-blog", destination: "/about/advocacy", permanent: true },
+      { source: "/advocacy-blog/:rest*", destination: "/about/advocacy", permanent: true },
+
+      // — Remaining flat legacy slugs —
+      { source: "/home", destination: "/", permanent: true },
+      { source: "/under-construction", destination: "/", permanent: true },
+      { source: "/golfsponsorships", destination: "/events/sponsorships", permanent: true },
+      { source: "/golfphotos", destination: "/programs/golf-outing", permanent: true },
+      { source: "/golfphotos26", destination: "/programs/golf-outing", permanent: true },
     ];
   },
 };

@@ -12,10 +12,15 @@
  *   2. Keep .jpg/.jpeg/.png under version control that still exist on disk.
  *   3. Flag any over MAX_BYTES that isn't on the allowlist.
  *
- * Base ref resolution (first that works):
- *   - $BASE_REF                (explicit override / GitHub Actions passes this)
- *   - origin/main              (typical PR base)
+ * Base ref resolution:
+ *   - $BASE_REF                (explicit override / GitHub Actions passes this;
+ *                               HEAD~1 if it names no commit here, e.g. the
+ *                               all-zero SHA of a branch's first push)
+ *   - origin/main              (no BASE_REF: typical local/PR base)
  *   - the repo's first commit  (fallback: check the whole tree)
+ *
+ * A guard that cannot see the diff must not report green: an unusable base ref
+ * or a failing git command exits non-zero instead of silently finding nothing.
  *
  * Allowlist: scripts/image-size-allowlist.txt — one repo-relative path per
  * line, '#' comments allowed. Use sparingly for a genuinely-needed large
@@ -47,10 +52,39 @@ function trySh(cmd) {
   }
 }
 
+function shOrDie(cmd, hint) {
+  try {
+    return execSync(cmd, { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim();
+  } catch (err) {
+    console.error(`✗ image-size guard: ${hint}`);
+    console.error(`  ${cmd}`);
+    console.error(String(err.stderr || err.message).trim());
+    process.exit(1);
+  }
+}
+
 function resolveBaseRef() {
-  if (process.env.BASE_REF) return process.env.BASE_REF;
+  const requested = process.env.BASE_REF?.trim();
+  if (requested) {
+    // GitHub sends an all-zero SHA as `github.event.before` on a branch's
+    // first push, and a shallow clone may not carry the ref at all. Either
+    // way the previous commit is the honest base — diffing against something
+    // unresolvable would just report "no changed files" and pass.
+    // Quote the revision: execSync shells out through cmd.exe on Windows,
+    // where a bare ^ is the escape character and would eat the ^{commit}.
+    if (!/^0+$/.test(requested) && trySh(`git rev-parse --verify "${requested}^{commit}"`)) {
+      return requested;
+    }
+    console.warn(`! BASE_REF "${requested}" names no commit here — using HEAD~1.`);
+    if (trySh("git rev-parse --verify HEAD~1")) return "HEAD~1";
+    // No HEAD~1 either (a true first commit). Diffing HEAD against HEAD is
+    // empty and would exit 0 with a green tick, i.e. a guard that reports
+    // success precisely because it cannot see anything. Fail instead.
+    console.error("✗ image-size guard: no usable base ref (no HEAD~1 to fall back to).");
+    process.exit(1);
+  }
   if (trySh("git rev-parse --verify origin/main")) return "origin/main";
-  // Fallback: empty-tree hash → diff shows the entire committed tree.
+  // Fallback: the repo's first commit → diff shows the entire committed tree.
   return trySh("git rev-list --max-parents=0 HEAD") || "HEAD";
 }
 
@@ -74,7 +108,10 @@ function main() {
 
   // Added / Copied / Modified files only — deletions and renames-away can't
   // introduce an oversized asset.
-  const diff = trySh(`git diff --name-only --diff-filter=ACM ${base}...HEAD`);
+  const diff = shOrDie(
+    `git diff --name-only --diff-filter=ACM ${base}...HEAD`,
+    `could not diff ${base}...HEAD`,
+  );
   const changed = diff ? diff.split("\n").filter(Boolean) : [];
 
   const offenders = [];

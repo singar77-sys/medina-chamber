@@ -54,10 +54,12 @@ jobs:
         # add a `version:` input — pnpm/action-setup@v4 aborts on the conflict.
         uses: pnpm/action-setup@v4
 
-      - name: Set up Node 20
+      # Node 24 matches the Vercel project runtime (nodeVersion 24.x);
+      # Node 20 went end-of-life in April 2026.
+      - name: Set up Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
           cache: "pnpm"
 
       - name: Install dependencies
@@ -106,6 +108,7 @@ jobs:
       # Pulls Google Places ratings for each member with a website URL.
       # Independent of vector sync — safe to fail without blocking push.
       - name: Scrape Google ratings
+        id: ratings
         env:
           GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
         run: pnpm scrape:ratings
@@ -176,6 +179,18 @@ jobs:
         if: steps.blog.outcome == 'failure'
         run: |
           echo "❌ Blog scrape failed (see the 'Scrape business blog' step). Member data was still pushed."
+          exit 1
+
+      # Same reason as the blog step above. The ratings scrape exits 1 before
+      # saving when GOOGLE_PLACES_API_KEY is missing or the key comes back
+      # REQUEST_DENIED, and continue-on-error swallowed it — member-ratings.json
+      # went stale from June 2026 onward with every run still green, so members
+      # who joined after that never got a Google rating badge.
+      - name: Fail loudly if the ratings scrape broke
+        if: steps.ratings.outcome == 'failure'
+        run: |
+          echo "❌ Google ratings scrape failed (see the 'Scrape Google ratings' step). Member data was still pushed."
+          echo "Usual cause: the GOOGLE_PLACES_API_KEY repo secret is missing, expired, or the Places API is disabled on the key."
           exit 1
 
       # Email Mark if anything in the workflow above failed. Skips

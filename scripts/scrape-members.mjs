@@ -180,19 +180,26 @@ async function main() {
   // ── Step 1: Collect all members from letter pages ──
   const allMembers = new Map(); // slug → member object
   let totalListing = 0;
+  const failedLetters = [];
 
   for (const letter of letters) {
     const url = `${BASE}/list/FindStartsWith?term=${letter}`;
     process.stdout.write(`  ${letter}  `);
 
-    let html;
-    try {
-      html = await get(url);
-    } catch (e) {
-      process.stdout.write(`ERR(${e.message})\n`);
-      await sleep(DELAY_MS);
-      continue;
+    let html = null;
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        html = await get(url);
+        break;
+      } catch (e) {
+        if (attempt === 3) {
+          process.stdout.write(`ERR(${e.message})\n`);
+          failedLetters.push(letter);
+        }
+        await sleep(DELAY_MS * attempt * 2);
+      }
     }
+    if (!html) continue;
 
     if (DEBUG && letter === (LETTER_ONLY || 'A')) {
       writeFileSync(DEBUG_FILE, html, 'utf-8');
@@ -213,12 +220,35 @@ async function main() {
     await sleep(DELAY_MS);
   }
 
+  // A dropped letter page is invisible downstream. The big letters are M=65,
+  // C=48, A=43, S=40 of ~503, so losing C, A or S leaves 455-470 members:
+  // past the >10% nuke guard below AND past the workflow's floor of 450, so
+  // the collapsed roster gets committed and sync-vectors then drops those
+  // members from the search index as "departed". Keep yesterday's file.
+  if (failedLetters.length) {
+    console.error(`\n❌ Letter page(s) failed after 3 attempts: ${failedLetters.join(', ')}. Refusing to write a partial roster.`);
+    process.exit(1);
+  }
+
   const members = Array.from(allMembers.values());
   console.log(`\n📋 Unique members: ${members.length}  (${totalListing - members.length} duplicates removed across letters)\n`);
 
   // ── Step 2: Fetch detail pages for description ──
   if (!NO_DETAILS) {
     console.log('🔍 Fetching detail pages for descriptions...\n');
+
+    // Previous roster keyed by gzSlug. A detail page that throttles or 5xx's
+    // must not blank a member: gz-sync writes `excluded.description` straight
+    // over the DB column, so a blanked scrape erases descriptions, social
+    // links and logos that were fine yesterday.
+    const previousByGzSlug = new Map();
+    if (existsSync(OUT_FILE)) {
+      try {
+        const prev = JSON.parse(readFileSync(OUT_FILE, 'utf-8'));
+        for (const m of prev.members ?? []) previousByGzSlug.set(m.gzSlug, m);
+      } catch { /* corrupt previous file — nothing to fall back on */ }
+    }
+
     let done = 0;
     let withDesc = 0;
     let errors = 0;
@@ -242,9 +272,11 @@ async function main() {
           console.log('(no description)' + (detail.logoUrl ? ' +logo' : ''));
         }
       } catch (e) {
-        console.log(`✗ ${e.message}`);
-        member.description = '';
-        member.social = {};
+        const previous = previousByGzSlug.get(member.slug);
+        member.description = previous?.description ?? '';
+        member.social = previous?.social ?? {};
+        if (previous?.logoUrl) member.logoUrl = previous.logoUrl;
+        console.log(`✗ ${e.message}${previous ? ' (kept previous details)' : ''}`);
         errors++;
       }
 
@@ -253,6 +285,14 @@ async function main() {
 
     console.log(`\n  ${withDesc}/${members.length} members have descriptions`);
     if (errors) console.log(`  ⚠  ${errors} detail pages failed`);
+
+    // Same >20% rule the events/news/jobs scrapers use. A throttling storm is
+    // a broken run, not 100 members deleting their descriptions overnight —
+    // and the member count is unchanged, so no other guard would catch it.
+    if (members.length > 0 && errors > members.length * 0.2) {
+      console.error(`\n❌ ${errors}/${members.length} detail pages failed (>20%) — aborting without writing.`);
+      process.exit(1);
+    }
   }
 
   // ── Step 3: Write JSON ──
@@ -285,6 +325,29 @@ async function main() {
   if (ovReport.length) {
     console.log(`\n  Applied ${ovReport.length} member override(s):`);
     ovReport.forEach((r) => console.log('   ' + r));
+  }
+
+  // chamberSlug is both the public URL and gz-sync's ON CONFLICT target. Two
+  // GrowthZone listings with the same display name (franchise branches; Fifth
+  // Third Bank was listed twice in July) collide, and the nightly batch then
+  // dies with "ON CONFLICT DO UPDATE command cannot affect row a second time",
+  // taking the other 49 members of that batch with it. Keep the first
+  // listing's slug (it is the published one) and suffix later ones.
+  const takenChamberSlugs = new Set();
+  for (const m of output.members) {
+    if (!takenChamberSlugs.has(m.chamberSlug)) {
+      takenChamberSlugs.add(m.chamberSlug);
+      continue;
+    }
+    const gzId = m.gzSlug.match(/-(\d+)$/)?.[1] ?? m.gzSlug;
+    const renamed = `${m.chamberSlug}-${gzId}`;
+    if (takenChamberSlugs.has(renamed)) {
+      console.error(`\n❌ Duplicate chamberSlug "${renamed}" survived de-duplication (${m.name}) — resolve manually before saving.`);
+      process.exit(1);
+    }
+    console.log(`  ↻  chamberSlug collision: ${m.chamberSlug} → ${renamed}  (${m.name})`);
+    m.chamberSlug = renamed;
+    takenChamberSlugs.add(renamed);
   }
 
   // Nuke guard: refuse to replace a healthy members.json with a collapsed

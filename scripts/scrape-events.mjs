@@ -212,7 +212,11 @@ for (let i = 0; i < eventStubs.length; i++) {
       const dateLabel = event.dateISO || 'no date';
       console.log(`${prefix} ✓  ${dateLabel} — ${event.startTime}`);
     } else {
+      // A 200 with no .gz-pagetitle is a soft failure (a GrowthZone
+      // maintenance/interstitial page), not a deleted event — count it so the
+      // >20% abort below covers it instead of silently dropping the event.
       console.log(`${prefix} ⚠  no title found`);
+      detailFailures++;
     }
   } catch (err) {
     console.log(`${prefix} ✗  ${err.message}`);
@@ -256,6 +260,39 @@ for (const event of events) {
     event.slug = renamed;
   }
 }
+
+// Step 3b: keep slugs stable across runs. The de-duplication above only fires
+// while two occurrences of a recurring event coexist, so a slug flips as
+// siblings expire or get posted: raising-the-bar-december-2026 reverts to the
+// bare raising-the-bar the day the October occurrence drops off the calendar,
+// 404ing the URL and orphaning everything keyed on it (cms:event:{slug}
+// overrides, event graphics, links already shared). GrowthZone's numeric
+// eventId is stable per occurrence, so an occurrence that already shipped
+// under a slug keeps that slug.
+const previousSlugById = new Map();
+if (existsSync(OUT_FILE)) {
+  try {
+    const previousFile = JSON.parse(readFileSync(OUT_FILE, 'utf-8'));
+    for (const e of previousFile.events ?? []) {
+      if (e.eventId && e.slug) previousSlugById.set(String(e.eventId), e.slug);
+    }
+  } catch { /* missing or corrupt previous file — nothing to preserve */ }
+}
+// NOTE: this pins a slug to its eventId permanently. A real GrowthZone title
+// change will NOT move the URL, which is the point (published links keep
+// working), but it means the only way to adopt a new slug is to delete that
+// event's entry from src/data/events.json and let the next scrape mint one.
+const proposedSlugs = new Set(events.map((e) => e.slug));
+for (const event of events) {
+  const published = event.eventId ? previousSlugById.get(String(event.eventId)) : undefined;
+  if (!published || published === event.slug) continue;
+  if (proposedSlugs.has(published)) continue; // a different occurrence holds it now
+  proposedSlugs.delete(event.slug);
+  proposedSlugs.add(published);
+  console.log(`  ↺  keeping published slug: ${event.slug} → ${published}`);
+  event.slug = published;
+}
+
 const finalSlugs = new Set();
 for (const event of events) {
   if (finalSlugs.has(event.slug)) {

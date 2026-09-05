@@ -29,10 +29,16 @@
 name: Sync SharePoint Photos
 
 on:
-  schedule:
-    # 06:00 UTC → 02:00 ET (EDT) / 01:00 ET (EST). Pre-dawn so the
-    # site has the new images before anyone visits in the morning.
-    - cron: "0 6 * * *"
+  # No `schedule:` on purpose. The Azure app registration described above has
+  # never been completed, so every nightly run since 2026-06-11 died at
+  # "missing required env var AZURE_TENANT_ID" — a red job every night for
+  # months, which trains everyone to ignore Actions failure mail and would
+  # mask a real scrape-daily/scrape-weekly break. Restore the cron the day the
+  # three AZURE_* secrets exist:
+  #   schedule:
+  #     # 06:00 UTC → 02:00 ET (EDT) / 01:00 ET (EST). Pre-dawn so the
+  #     # site has the new images before anyone visits in the morning.
+  #     - cron: "0 6 * * *"
   workflow_dispatch:
 
 permissions:
@@ -46,15 +52,29 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
+      # Fail in seconds with the actual reason, instead of after a checkout and
+      # a full pnpm install, when the credentials were never provisioned.
+      - name: Check Azure credentials are configured
+        env:
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+        run: |
+          if [ -z "$AZURE_TENANT_ID" ]; then
+            echo "❌ AZURE_TENANT_ID is not set, so AZURE_CLIENT_ID/SECRET almost certainly are not either."
+            echo "Finish the Entra app registration in this file's header, add the three repo secrets, then re-run."
+            exit 1
+          fi
+
       - uses: actions/checkout@v4
 
       # Version comes from package.json `packageManager` (pnpm@10.33.0); do NOT
       # add a `version:` input — pnpm/action-setup@v4 aborts on the conflict.
       - uses: pnpm/action-setup@v4
 
+      # Node 24 matches the Vercel project runtime (nodeVersion 24.x);
+      # Node 20 went end-of-life in April 2026.
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
           cache: "pnpm"
 
       - run: pnpm install --frozen-lockfile

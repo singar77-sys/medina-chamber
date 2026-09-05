@@ -10,7 +10,7 @@
  *   node scripts/scrape-blog.mjs --test    # first page only (20 posts)
  */
 
-import { writeFileSync } from 'fs';
+import { writeFileSync, readFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { htmlToText } from './lib-html-to-text.mjs';
@@ -129,6 +129,20 @@ const posts = allItems
   .map(parsePost)
   .filter(p => p.slug && p.title)
   .sort((a, b) => b.dateISO.localeCompare(a.dateISO));
+
+// Nuke guard: the truncation guard above is skipped when the first page
+// reports itemCount 0, or when the JSON shape changes so neither
+// collection.itemCount nor items is present. A valid-JSON-but-empty response
+// would then replace the whole archive — the site's main SEO content — and
+// still exit 0. Nothing downstream checks blog.json, so this is the only stop.
+if (!TEST_MODE && existsSync(OUT_FILE)) {
+  let previousCount = 0;
+  try { previousCount = JSON.parse(readFileSync(OUT_FILE, 'utf-8')).totalPosts ?? 0; } catch { /* corrupt previous file — no baseline */ }
+  if (previousCount > 0 && posts.length < previousCount * 0.9) {
+    console.error(`\n❌ Parsed ${posts.length} posts but the existing file has ${previousCount} (>10% drop) — aborting without writing.`);
+    process.exit(1);
+  }
+}
 
 const output = {
   generatedAt: new Date().toISOString(),

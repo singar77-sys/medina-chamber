@@ -255,7 +255,7 @@ async function main() {
   mkdirSync(OUT_DIR, { recursive: true });
 
   const results = { ...existing };
-  let done = 0, ok = 0, fail = 0, skip = 0;
+  let done = 0, ok = 0, fail = 0, skip = 0, pruned = 0;
 
   for (const member of members) {
     done++;
@@ -286,6 +286,18 @@ async function main() {
       ok++;
       const pages = summary.pagesScraped.join('+');
       console.log(`✓  (${pages}) — "${(summary.metaDescription || summary.h1[0] || '').substring(0, 50)}"`);
+    } else if (prev && prev.ok !== false && prev.website === member.website) {
+      // A 30-day re-fetch that times out or hits a one-off 5xx must not throw
+      // away a good summary: this entry feeds the member's Upstash vector
+      // document, so blanking it strips their website signals out of search
+      // until a later run succeeds. Keep the summary, record the attempt.
+      results[member.chamberSlug] = {
+        ...prev,
+        lastAttemptAt: new Date().toISOString(),
+        failCount: (prev.failCount ?? 0) + 1,
+      };
+      fail++;
+      console.log(`✗  (unreachable — kept the ${Math.floor(prevAgeDays)}d-old summary)`);
     } else {
       results[member.chamberSlug] = {
         chamberSlug: member.chamberSlug,
@@ -308,6 +320,20 @@ async function main() {
     }
 
     await sleep(DELAY_MS);
+  }
+
+  // Departed members were never removed, so this file grew monotonically (53
+  // orphaned entries today). Only prune on a full run — a --limit or --slug
+  // run never looked at the rest of the roster.
+  if (!LIMIT && !SLUG_ONLY) {
+    const currentSlugs = new Set(membersData.members.map(m => m.chamberSlug));
+    for (const slug of Object.keys(results)) {
+      if (!currentSlugs.has(slug)) {
+        delete results[slug];
+        pruned++;
+      }
+    }
+    if (pruned) console.log(`\n  🧹 Pruned ${pruned} entries for members no longer in members.json`);
   }
 
   // Final save

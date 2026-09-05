@@ -50,10 +50,12 @@ jobs:
         # add a `version:` input — pnpm/action-setup@v4 aborts on the conflict.
         uses: pnpm/action-setup@v4
 
-      - name: Set up Node 20
+      # Node 24 matches the Vercel project runtime (nodeVersion 24.x);
+      # Node 20 went end-of-life in April 2026.
+      - name: Set up Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
           cache: "pnpm"
 
       - name: Install dependencies
@@ -76,14 +78,25 @@ jobs:
       # events, the homepage event widget would go dark. Better to fail
       # the workflow loudly so a human investigates.
       - name: Smoke check — scraped counts must be sane
+        id: smoke
         run: |
           # The continue-on-error flags above mean a scraper can write a
           # collapsed file and the workflow still shows green — so every
           # dataset is checked here, not just events. News/jobs can
           # legitimately be small, so they are compared against the
           # previously committed file instead of a fixed floor.
+          #
+          # Collapse handling differs by dataset. events.json going empty is
+          # always a break (the chamber always has upcoming events), so it
+          # blocks the push. The jobs board and member news legitimately drain
+          # to zero, and the scrapers already exit 1 WITHOUT writing on a real
+          # break (listing HTTP error, >20% detail failures) — so a zero there
+          # is recorded and reported AFTER the push instead of blocking it.
+          # Otherwise the first genuinely empty jobs board would stop events
+          # and news reaching the site, every day, until someone posted a job.
+          COLLAPSED=""
           check () {
-            file=$1; key=$2; floor=$3
+            file=$1; key=$2; floor=$3; on_collapse=$4
             count=$(node -e "console.log(JSON.parse(require('fs').readFileSync('src/data/'+process.argv[1],'utf8'))[process.argv[2]].length)" "$file" "$key")
             prev=$(git show "HEAD:src/data/$file" 2>/dev/null | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{try{console.log(JSON.parse(d)[process.argv[1]].length)}catch{console.log(0)}})" "$key")
             echo "$file: $count entries (previously $prev)"
@@ -92,13 +105,18 @@ jobs:
               exit 1
             fi
             if [ "$prev" -gt 0 ] && [ "$count" -eq 0 ]; then
-              echo "❌ $file collapsed from $prev entries to zero. Refusing to push — investigate scraper."
-              exit 1
+              if [ "$on_collapse" = "block" ]; then
+                echo "❌ $file collapsed from $prev entries to zero. Refusing to push — investigate scraper."
+                exit 1
+              fi
+              echo "⚠️  $file collapsed from $prev entries to zero — pushing the other datasets, then failing this run so it gets looked at."
+              COLLAPSED="${COLLAPSED}${COLLAPSED:+, }$file ($prev → 0)"
             fi
           }
-          check events.json events 5
-          check member-news.json articles 0
-          check jobs.json jobs 0
+          check events.json events 5 block
+          check member-news.json articles 0 report
+          check jobs.json jobs 0 report
+          echo "collapsed=$COLLAPSED" >> "$GITHUB_OUTPUT"
 
       - name: Show diff (for log visibility)
         run: |
@@ -147,6 +165,19 @@ jobs:
             fi
           done
           echo "❌ Push failed after 3 attempts. See receive-pack errors above."
+          exit 1
+
+      # Surface a jobs/news collapse AFTER the push, so today's events and news
+      # still reach the site while the run still goes red (same pattern as the
+      # weekly workflow's blog step). A zero is usually genuine — verify the
+      # GrowthZone listing has no cards before assuming the scraper broke.
+      - name: Report a dataset that collapsed to zero
+        # always(): a plain `if:` implies success(), so a failed push would hide
+        # the one message that explains what went wrong.
+        if: always() && steps.smoke.outputs.collapsed != ''
+        run: |
+          echo "❌ Collapsed to zero: ${{ steps.smoke.outputs.collapsed }}"
+          echo "Check https://business.medinachamber.com — if the listing really is empty, this run needs no action."
           exit 1
 
       # Email Mark if anything in the workflow above failed. Skips

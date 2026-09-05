@@ -16,8 +16,21 @@
 name: CI
 
 on:
+  # Feature branches run once, via pull_request. An unfiltered `push:` ran the
+  # whole gate a second time on every PR commit.
   push:
+    branches: [main]
   pull_request:
+
+# Read-only: this job only lints, tests and builds. The three scheduled
+# workflows ask for contents: write because they commit; CI must not.
+permissions:
+  contents: read
+
+# Four pushes in 30 minutes should not queue four full 3-minute runs.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   quality:
@@ -38,17 +51,20 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
+      # Match the Vercel project's runtime (nodeVersion 24.x). On Node 20 this
+      # gate proved the app builds on a runtime production does not use, and
+      # Node 20 went end-of-life in April 2026.
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Lint is ADVISORY for now: the repo has ~108 pre-existing eslint errors
-      # (tracked separately as lint-debt cleanup). Typecheck, test, and build
+      # Lint is ADVISORY for now: the repo has a backlog of pre-existing eslint
+      # errors (tracked separately as lint-debt cleanup). Typecheck, test, and build
       # are the hard gates. TODO: flip this to blocking (remove
       # continue-on-error) once the lint backlog is cleared in its own PR.
       - name: Lint (advisory)
@@ -68,7 +84,13 @@ jobs:
       - name: Image-size guard
         run: node scripts/check-image-sizes.mjs
         env:
-          BASE_REF: origin/main
+          # On a PR the base is origin/main. On a push to main, origin/main IS
+          # the commit just pushed, so `origin/main...HEAD` was empty and the
+          # guard inspected nothing — which is every run on this repo, since
+          # main is pushed to directly. Diff against the pre-push commit
+          # instead; the script falls back to HEAD~1 for a first push (all-zero
+          # SHA) or an unresolvable ref.
+          BASE_REF: ${{ github.event_name == 'pull_request' && 'origin/main' || github.event.before }}
 
       # Secret-free production build. Proves the app builds with NO runtime
       # secrets — the lazy db + Stripe Proxies mean module import during page-

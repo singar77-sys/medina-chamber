@@ -10,6 +10,12 @@
  * If either is missing, this exits 0 silently — better than failing the
  * already-failed workflow with a notification error.
  *
+ * Sends from the Resend-verified medinaohchamber.com domain (the same sender
+ * the site's renewal and sponsorship mail uses). Resend's shared
+ * onboarding@resend.dev only delivers to the address the Resend account was
+ * registered with, so any other recipient in CRON_ALERT_EMAIL came back 403
+ * and the alert quietly never arrived.
+ *
  * Workflow context flows in via env vars set by GitHub Actions:
  *   GITHUB_WORKFLOW       — workflow filename
  *   GITHUB_REPOSITORY     — owner/repo
@@ -75,7 +81,7 @@ const res = await fetch("https://api.resend.com/emails", {
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
-    from: "Chamber Cron <onboarding@resend.dev>",
+    from: "Chamber Cron <noreply@medinaohchamber.com>",
     to: recipients.split(",").map((e) => e.trim()).filter(Boolean),
     subject,
     text,
@@ -85,10 +91,12 @@ const res = await fetch("https://api.resend.com/emails", {
 
 if (!res.ok) {
   const body = await res.text();
-  console.error(`Resend returned ${res.status}: ${body}`);
-  // Don't exit 1 — we don't want a notification failure to compound the
-  // workflow failure noise. Just log loudly.
-  process.exit(0);
+  console.error(`❌ Resend returned ${res.status}: ${body}`);
+  console.error("The failure alert was NOT delivered — check the Resend API key, the verified sending domain, and CRON_ALERT_EMAIL.");
+  // Exit 1: this step only runs under `if: failure()`, so the job is already
+  // red and this adds no false alarm. A silently broken alert channel is
+  // worse than a noisy one — nobody would learn the emails stopped arriving.
+  process.exit(1);
 }
 
 console.log(`✓ Cron failure alert sent to ${recipients}`);

@@ -20,7 +20,47 @@
  */
 
 import { Ratelimit } from "@upstash/ratelimit";
+import * as Sentry from "@sentry/nextjs";
 import { getRedis } from "@/lib/upstash";
+
+// ── Degradation reporting ─────────────────────────────────────────
+//
+// Swapping a distributed ceiling for a per-isolate one silently multiplies the
+// effective limit by the number of live isolates. That is a condition worth
+// waking up for, so it goes to Sentry the same way spend-cap.ts and
+// per-ip-watch.ts report their own degradations — console.warn alone is
+// invisible in practice.
+//
+// Two properties matter and are easy to get wrong in opposite directions:
+//
+//   • NOT per request. A Redis outage means every request degrades; reporting
+//     each one would bury the incident in its own noise.
+//   • NOT once per isolate FOREVER. A flag that is set and never cleared means
+//     the SECOND outage in an isolate's life reports nothing at all — the
+//     failure mode is silence exactly when someone is looking. Any successful
+//     Upstash check re-arms it.
+function makeDegradeReporter(prefix: string) {
+  let reported = false;
+  return {
+    /** Upstash answered — end the episode so a later outage alerts again. */
+    recovered(): void {
+      reported = false;
+    },
+    /** Emits at most one console + Sentry report per degradation episode. */
+    report(reason: string, err?: unknown): void {
+      if (reported) return;
+      reported = true;
+      console.warn(`[rate-limit] ${prefix} degrading to in-memory: ${reason}`, err ?? "");
+      Sentry.captureMessage(
+        `rate limiter ${prefix} degraded to a per-isolate in-memory ceiling (${reason})`,
+        {
+          level: "warning",
+          tags: { phase: "rate-limit-degraded", prefix },
+        },
+      );
+    },
+  };
+}
 
 // ── Upstash factory ───────────────────────────────────────────────
 function makeUpstashLimiter(
@@ -93,10 +133,32 @@ class InMemoryLimiter {
 // in-memory. Both expose the same `.limit(key) → { success }` shape.
 type SimpleLimiter = { limit(key: string): Promise<{ success: boolean }> };
 
+// Eager limiter: Upstash when configured, in-memory otherwise. A configured
+// Upstash that THROWS mid-request (Redis blip) degrades to the in-memory
+// limiter rather than propagating — applyRateLimit has no try/catch, so an
+// unhandled throw here surfaced as an outright 500 on /api/chat and every
+// other route below. Same degrade-don't-fail-open rationale as
+// makeLazyFailOpenLimiter further down; a guardrail still applies during the
+// outage, and the route never 500s on its own rate limiter.
 function makeLimiter(requestsPerMinute: number, prefix: string): SimpleLimiter {
   const upstash = makeUpstashLimiter(requestsPerMinute, prefix);
-  if (upstash) return upstash;
-  return new InMemoryLimiter(requestsPerMinute);
+  if (!upstash) return new InMemoryLimiter(requestsPerMinute);
+
+  let memFallback: InMemoryLimiter | undefined;
+  const degraded = makeDegradeReporter(prefix);
+  return {
+    async limit(key: string): Promise<{ success: boolean }> {
+      try {
+        const result = await upstash.limit(key);
+        degraded.recovered();
+        return result;
+      } catch (err) {
+        degraded.report("Upstash limiter threw", err);
+        memFallback ??= new InMemoryLimiter(requestsPerMinute);
+        return memFallback.limit(key);
+      }
+    },
+  };
 }
 
 // 20 req/min per IP for chat — generous enough for real users, stops bots
@@ -155,7 +217,11 @@ export function getRequestIp(req: Request): string {
   );
 }
 
-/** Returns a 429 Response if rate limited, null if OK to proceed. */
+/**
+ * Returns a 429 Response if rate limited, null if OK to proceed.
+ * No try/catch here on purpose: makeLimiter above owns the degrade-on-throw
+ * behavior, so every limiter passed in is already non-throwing.
+ */
 export async function applyRateLimit(
   req: Request,
   limiter: SimpleLimiter,
@@ -182,8 +248,9 @@ export async function applyRateLimit(
 //   • DEGRADE, DON'T FAIL OPEN — when Upstash isn't configured the limiter is
 //     in-memory per-isolate; when a configured Upstash check throws (Redis blip)
 //     it ALSO degrades to that in-memory limiter rather than allowing
-//     unconditionally, and warns once. A guardrail still applies during an
-//     outage, and the endpoint never 500s on the limiter.
+//     unconditionally, and reports once per degradation episode (see
+//     makeDegradeReporter). A guardrail still applies during an outage, and the
+//     endpoint never 500s on the limiter.
 //
 // Like applyRateLimit + the eager limiters, the worst case is a per-isolate
 // in-memory limiter (fail-closed-ish) — never "no limiter at all" — which matters
@@ -191,13 +258,7 @@ export async function applyRateLimit(
 function makeLazyFailOpenLimiter(requestsPerMinute: number, prefix: string) {
   let limiter: SimpleLimiter | undefined;
   let memFallback: InMemoryLimiter | undefined;
-  let warned = false;
-
-  function warnOnce(reason: string, err?: unknown) {
-    if (warned) return;
-    warned = true;
-    console.warn(`[rate-limit] ${prefix} degrading to in-memory: ${reason}`, err ?? "");
-  }
+  const degraded = makeDegradeReporter(prefix);
 
   return {
     /** True if the request is allowed, false if it should be 429'd. */
@@ -210,6 +271,7 @@ function makeLazyFailOpenLimiter(requestsPerMinute: number, prefix: string) {
             new InMemoryLimiter(requestsPerMinute);
         }
         const { success } = await limiter.limit(key);
+        degraded.recovered();
         return success;
       } catch (err) {
         // Upstash threw (Redis unreachable). These endpoints send mail, open
@@ -217,7 +279,7 @@ function makeLazyFailOpenLimiter(requestsPerMinute: number, prefix: string) {
         // per-isolate in-memory limiter so a guardrail still applies during the
         // outage (the same fallback the eager limiters use). Only a thrown
         // in-memory check (shouldn't happen) allows, so the guard never 500s.
-        warnOnce("Upstash limiter threw", err);
+        degraded.report("Upstash limiter threw", err);
         try {
           memFallback ??= new InMemoryLimiter(requestsPerMinute);
           const { success } = await memFallback.limit(key);
@@ -305,13 +367,7 @@ function makeLazyWindowLimiter(
 ) {
   let limiter: SimpleLimiter | undefined;
   let memFallback: InMemoryLimiter | undefined;
-  let warned = false;
-
-  function warnOnce(reason: string, err?: unknown) {
-    if (warned) return;
-    warned = true;
-    console.warn(`[rate-limit] ${prefix} degrading to in-memory: ${reason}`, err ?? "");
-  }
+  const degraded = makeDegradeReporter(prefix);
 
   return {
     async allow(key: string): Promise<boolean> {
@@ -322,9 +378,10 @@ function makeLazyWindowLimiter(
             new InMemoryLimiter(limit, windowMs);
         }
         const { success } = await limiter.limit(key);
+        degraded.recovered();
         return success;
       } catch (err) {
-        warnOnce("Upstash limiter threw", err);
+        degraded.report("Upstash limiter threw", err);
         try {
           memFallback ??= new InMemoryLimiter(limit, windowMs);
           const { success } = await memFallback.limit(key);

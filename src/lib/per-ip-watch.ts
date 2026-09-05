@@ -13,25 +13,28 @@
  *   Detection gap is wide — 100k warn / 500k block catches bots while
  *   leaving breathing room for a particularly chatty real user.
  *
- * Requires Upstash Redis (same env vars as rate-limit.ts and
- * spend-cap.ts). Without it, we no-op — the daily cap still protects
- * the bill; we just lose per-IP granularity. In production Upstash is
- * configured, so this is always active there.
+ * Prefers Upstash Redis (same env vars as rate-limit.ts and
+ * spend-cap.ts) so the counters are shared across edge isolates, and
+ * falls back to a per-isolate in-memory bucket when Redis is missing or
+ * throwing. The fallback is weaker (an attacker fanning across cold
+ * isolates gets a fresh budget each time) but it is a real ceiling,
+ * where the old `catch { return false }` was none at all.
  */
 
 import * as Sentry from "@sentry/nextjs";
 import { getRedis } from "@/lib/upstash";
+import { envNumber } from "@/lib/spend-cap";
 
 // Sized against a $20/month budget enforced by spend-cap.ts. The daily
 // cap is ~2M tokens, so any single IP reaching 200k/hour is eating 10%
 // of today's budget in one hour — a clear abuse signal worth blocking.
 // The 100k warn threshold stays as the early-warning heads-up.
-const PER_IP_WARN_TOKENS = Number(
-  process.env.CHAT_PER_IP_WARN_TOKENS ?? 100_000,
-);
-const PER_IP_BLOCK_TOKENS = Number(
-  process.env.CHAT_PER_IP_BLOCK_TOKENS ?? 200_000,
-);
+//
+// envNumber (not a bare Number()) because these are abuse thresholds: a
+// '200,000' typo parses to NaN, every `>= NaN` is false, and the block AND
+// its Sentry alert silently disappear; '' parses to 0 and blocks everyone.
+const PER_IP_WARN_TOKENS = envNumber("CHAT_PER_IP_WARN_TOKENS", 100_000);
+const PER_IP_BLOCK_TOKENS = envNumber("CHAT_PER_IP_BLOCK_TOKENS", 200_000);
 
 // 2h TTL so keys survive the hour-boundary rollover without being
 // pruned mid-request, and we can still inspect the prior hour in Redis
@@ -60,21 +63,50 @@ function alertKey(ip: string): string {
   return `chat:alert:ip:${ip}:${currentHourSuffix()}`;
 }
 
+// ── In-memory fallback ────────────────────────────────────────────
+// Per-isolate hourly totals, used when Redis is absent or throwing. Bounded
+// the same way rate-limit.ts bounds its buckets so a flood of unique IPs
+// can't grow the map without limit; entries are keyed by IP+hour, so a stale
+// hour simply misses and starts a fresh count.
+const MAX_MEM_IPS = 5000;
+const memHourly = new Map<string, number>();
+
+function memGet(ip: string): number {
+  return memHourly.get(tokenKey(ip)) ?? 0;
+}
+
+function memAdd(ip: string, tokens: number): number {
+  const key = tokenKey(ip);
+  const next = (memHourly.get(key) ?? 0) + tokens;
+  if (!memHourly.has(key) && memHourly.size >= MAX_MEM_IPS) {
+    const oldest = memHourly.keys().next().value;
+    if (oldest !== undefined) memHourly.delete(oldest);
+  }
+  memHourly.set(key, next);
+  return next;
+}
+
 /**
  * Returns true if this IP has already burned more than the block
  * threshold in the current hour. Call before invoking the model —
- * when true, short-circuit to the offline fallback. Fails open on
- * Redis errors so a transient blip doesn't brick the chatbot.
+ * when true, short-circuit to the offline fallback.
+ *
+ * Never throws, and never fails OPEN: a Redis error degrades to the
+ * per-isolate in-memory count instead of returning false. Returning false
+ * on error is what made this guard vanish during exactly the Upstash
+ * outage an attacker would be happiest to hit.
  */
 export async function isIpOverBlockThreshold(ip: string): Promise<boolean> {
   const redis = getRedis();
-  if (!redis) return false;
-  try {
-    const total = await redis.get<number>(tokenKey(ip));
-    return (total ?? 0) >= PER_IP_BLOCK_TOKENS;
-  } catch {
-    return false;
+  if (redis) {
+    try {
+      const total = await redis.get<number>(tokenKey(ip));
+      return (total ?? 0) >= PER_IP_BLOCK_TOKENS;
+    } catch (err) {
+      console.error("[per-ip-watch] Redis read failed; using in-memory count:", err);
+    }
   }
+  return memGet(ip) >= PER_IP_BLOCK_TOKENS;
 }
 
 /**
@@ -91,6 +123,11 @@ export async function recordIpTokenUsage(
 ): Promise<void> {
   const total = (inputTokens ?? 0) + (outputTokens ?? 0);
   if (total <= 0) return;
+
+  // Count locally first, unconditionally — the in-memory bucket is what
+  // isIpOverBlockThreshold reads when Redis is down, so it has to be warm
+  // before the outage starts, not after.
+  memAdd(ip, total);
 
   const redis = getRedis();
   if (!redis) return;

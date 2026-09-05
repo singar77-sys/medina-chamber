@@ -20,9 +20,11 @@
  * so the existing phase=spend-cap alert rule emails Mark without any
  * rule changes.
  *
- * Storage: Upstash Redis (preferred, shared across edge isolates) with
- * in-memory fallback for local dev. Same two-tier pattern as
- * rate-limit.ts and per-ip-watch.ts.
+ * Storage: Upstash Redis (preferred, shared across edge isolates) with a
+ * per-isolate in-memory fallback. Same two-tier pattern as rate-limit.ts
+ * and per-ip-watch.ts. The fallback is not just for local dev: a Redis
+ * error degrades to it rather than waving requests through (see the
+ * "Redis health" section below).
  *
  * Accounting happens in streamText's onFinish callback, so usage is
  * recorded AFTER the response streams — we're always one request
@@ -38,13 +40,15 @@ import { getRedis } from "@/lib/upstash";
 // false, budget gone) and '' to 0 (bot offline from the first request).
 // Anything that isn't a finite positive number falls back to the default and
 // says so once at module load.
-function envNumber(name: string, fallback: number): number {
+// Exported because per-ip-watch.ts needs the identical guarantee for its own
+// two thresholds — it used a bare Number() and had exactly these two bugs.
+export function envNumber(name: string, fallback: number): number {
   const raw = process.env[name];
   if (raw === undefined || raw === "") return fallback;
   const parsed = Number(raw);
   if (!Number.isFinite(parsed) || parsed <= 0) {
     console.error(
-      `[spend-cap] ${name}="${raw}" is not a positive number; using ${fallback}.`,
+      `[chat-budget] ${name}="${raw}" is not a positive number; using ${fallback}.`,
     );
     return fallback;
   }
@@ -81,6 +85,58 @@ function monthWarnFiredKey(): string {
   return `chat:alert:monthly-warn:${new Date().toISOString().slice(0, 7)}`;
 }
 
+// ── Redis health (fail SAFE, not fail open) ───────────────────────
+//
+// These caps are the only ceiling on an anonymous endpoint that spends real
+// money per request, so a Redis error must never mean "no ceiling". The
+// previous `catch { return false }` did exactly that: an Upstash outage
+// skipped BOTH the Redis read and the in-memory bucket below it, and
+// recordTokenUsage's own catch meant nothing was counted anywhere. Net
+// effect during an outage: unlimited paid generation.
+//
+// Now a failed read falls through to the per-isolate in-memory bucket (which
+// is always kept current — see recordTokenUsage), and after a sustained run
+// of failures we treat the budget as UNKNOWN AND THEREFORE EXHAUSTED. The
+// route already handles that by streaming its offline fallback at 200, so
+// the chatbot degrades to canned links instead of burning unmetered tokens.
+// Only the paid AI generation degrades; the rest of the site is untouched.
+const REDIS_FAILURE_TRIP = 5;
+let consecutiveRedisFailures = 0;
+let redisFailureWarned = false;
+
+function noteRedisOk(): void {
+  consecutiveRedisFailures = 0;
+  redisFailureWarned = false;
+}
+
+function noteRedisFailure(op: string, err: unknown): void {
+  consecutiveRedisFailures++;
+  if (!redisFailureWarned) {
+    redisFailureWarned = true;
+    console.error(`[spend-cap] Redis ${op} failed; degrading to in-memory:`, err);
+  }
+}
+
+/** True once Redis has failed enough times in a row that we can't claim to know the spend. */
+function budgetUnknown(): boolean {
+  return consecutiveRedisFailures >= REDIS_FAILURE_TRIP;
+}
+
+/**
+ * Why the caps above returned true, for the caller's alerting.
+ *
+ * isOverDailyCap/isOverMonthlyCap deliberately collapse two very different
+ * situations into one boolean — "the budget is genuinely spent" and "Redis is
+ * down so we must ASSUME it is spent" — because the route's handling of both is
+ * identical (serve the offline fallback). The alert is not identical: paging
+ * "monthly budget exhausted, offline until next month" in the middle of an
+ * Upstash outage points the on-call at the wrong system at the worst moment.
+ * Read this immediately after a cap check to tell them apart.
+ */
+export function isBudgetUnknown(): boolean {
+  return budgetUnknown();
+}
+
 // In-memory fallback — single bucket per period per isolate.
 let memDaily: { key: string; total: number } | null = null;
 let memMonthly: { key: string; total: number } | null = null;
@@ -101,17 +157,21 @@ function getMemBucket(
 
 /**
  * Returns true if today's token total has already met or exceeded the
- * daily cap. Fails open on Redis errors — better to take one request's
- * cost than 500 the chatbot over an Upstash blip.
+ * daily cap. Never throws. On a Redis error it degrades to this isolate's
+ * in-memory bucket; after REDIS_FAILURE_TRIP consecutive failures it
+ * returns true (budget unknown ⇒ treated as spent).
  */
 export async function isOverDailyCap(): Promise<boolean> {
   const redis = getRedis();
   if (redis) {
     try {
       const total = await redis.get<number>(todayKey());
+      noteRedisOk();
       return (total ?? 0) >= DAILY_TOKEN_CAP;
-    } catch {
-      return false;
+    } catch (err) {
+      noteRedisFailure("daily cap read", err);
+      if (budgetUnknown()) return true;
+      // Fall through to the in-memory bucket rather than returning false.
     }
   }
   return getMemBucket("daily").total >= DAILY_TOKEN_CAP;
@@ -120,16 +180,20 @@ export async function isOverDailyCap(): Promise<boolean> {
 /**
  * Returns true if this calendar month's token total has met or exceeded
  * the monthly cap. Once true, the bot serves offline fallback until the
- * next UTC month rollover — this is the real budget ceiling.
+ * next UTC month rollover — this is the real budget ceiling. Same fail-safe
+ * degradation as isOverDailyCap.
  */
 export async function isOverMonthlyCap(): Promise<boolean> {
   const redis = getRedis();
   if (redis) {
     try {
       const total = await redis.get<number>(monthKey());
+      noteRedisOk();
       return (total ?? 0) >= MONTHLY_TOKEN_CAP;
-    } catch {
-      return false;
+    } catch (err) {
+      noteRedisFailure("monthly cap read", err);
+      if (budgetUnknown()) return true;
+      // Fall through to the in-memory bucket rather than returning false.
     }
   }
   return getMemBucket("monthly").total >= MONTHLY_TOKEN_CAP;
@@ -142,7 +206,9 @@ export async function isOverMonthlyCap(): Promise<boolean> {
  * (dedupe via SET NX on a sibling key, so repeated crossings only
  * alert once per calendar month).
  *
- * Fire-and-forget: never throws. Persistence failures log and move on.
+ * Fire-and-forget: never throws. The in-memory buckets are incremented
+ * unconditionally first, so a Redis failure loses the shared count but
+ * never loses the spend entirely.
  */
 export async function recordTokenUsage(
   inputTokens: number | undefined,
@@ -150,6 +216,13 @@ export async function recordTokenUsage(
 ): Promise<void> {
   const total = (inputTokens ?? 0) + (outputTokens ?? 0);
   if (total <= 0) return;
+
+  // Always count locally, even when Redis is healthy. It costs two additions
+  // and it means the in-memory bucket is already warm the moment Upstash
+  // blips — without this, the fail-safe read path above would degrade to a
+  // bucket that reads 0 and would happily wave every request through.
+  getMemBucket("daily").total += total;
+  getMemBucket("monthly").total += total;
 
   const redis = getRedis();
   if (redis) {
@@ -194,12 +267,11 @@ export async function recordTokenUsage(
           );
         }
       }
+      noteRedisOk();
     } catch (err) {
-      console.error("[spend-cap] Redis incrby failed:", err);
+      // The in-memory buckets were already incremented above, so the spend is
+      // still accounted for somewhere and the read path can act on it.
+      noteRedisFailure("token incrby", err);
     }
-    return;
   }
-
-  getMemBucket("daily").total += total;
-  getMemBucket("monthly").total += total;
 }

@@ -56,13 +56,13 @@
     "@vercel/speed-insights": "^2.0.0",
     "ai": "^6.0.158",
     "drizzle-orm": "^0.45.2",
-    "next": "^16.2.12",
+    "next": "^16.3.4",
     "postgres": "^3.4.9",
     "posthog-js": "^1.370.1",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "resend": "^6.10.0",
-    "sharp": "^0.35.3",
+    "sharp": "^0.35.4",
     "stripe": "^22.2.1"
   },
   "pnpm": {
@@ -77,7 +77,7 @@
     "overrides": {
       "undici": "^6.28.1",
       "protobufjs": "^7.6.6",
-      "sharp": "^0.35.3"
+      "sharp": "^0.35.4"
     }
   },
   "devDependencies": {
@@ -89,7 +89,7 @@
     "dotenv": "^17.4.2",
     "drizzle-kit": "^0.31.10",
     "eslint": "^9",
-    "eslint-config-next": "16.2.12",
+    "eslint-config-next": "16.3.4",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "node-html-parser": "^7.1.0",
     "tailwindcss": "^4",

@@ -21,6 +21,7 @@ import {
   type Member,
 } from "@/data/members";
 import type { ChatTurn } from "@/lib/chat-session";
+import { sanitizeField } from "@/lib/website-search";
 
 interface ReferralRule {
   industry: string;
@@ -194,6 +195,15 @@ export function getComplementaryMembers(
  * Format the 4th system block injected when a user's industry is detected.
  * The instruction keeps it contextual and non-robotic — the model should
  * weave in a mention only when it genuinely fits, not on every reply.
+ *
+ * TRUST: this block is CHAMBER-authored — the prose, the industry label and the
+ * instruction all come from REFERRAL_RULES above, not from a member — which is
+ * why the chat route puts it in the system role rather than inside the
+ * <untrusted_member_data> fence. The two exceptions are the member NAME and
+ * CATEGORY interpolated into each bullet, which the member types into their own
+ * GrowthZone profile. Those go through the same sanitizer the directory block
+ * uses, so a newline in a member name can't split the bullet list into an
+ * unlabelled line and a literal fence tag can't be smuggled in via this path.
  */
 export function formatConnectionContext(
   industry: string,
@@ -201,8 +211,9 @@ export function formatConnectionContext(
 ): string {
   const memberLines = connMembers
     .map((m) => {
-      const cat = m.categories[0] ?? "Chamber member";
-      return `- ${m.name} (${cat}), https://medinachamber.com/membership/directory/${m.chamberSlug}`;
+      const cat = sanitizeField(m.categories[0] ?? "Chamber member", 100);
+      const name = sanitizeField(m.name, 120);
+      return `- ${name} (${cat}), https://medinachamber.com/membership/directory/${m.chamberSlug}`;
     })
     .join("\n");
 

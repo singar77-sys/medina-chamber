@@ -28,5 +28,25 @@ export const metadata: Metadata = {
 };
 
 export default function ChamberBotPage() {
-  return <ChamberBotRoute />;
+  return (
+    <>
+      {/*
+        The portal is client-only and covers the viewport, so without this
+        block the indexed document is an empty <main> with no h1: a soft-404
+        candidate on a page the sitemap advertises at priority 0.7. Kept
+        sr-only so it never flashes before the portal mounts.
+      */}
+      <section className="sr-only">
+        <h1>ChamberBot</h1>
+        <p>
+          ChamberBot is the Greater Medina Chamber of Commerce AI assistant.
+          Ask it about member businesses, upcoming events, membership tiers,
+          Safety Council, Compass, or anything else about doing business in
+          Medina County, and it answers from live chamber records and the
+          full chamber calendar.
+        </p>
+      </section>
+      <ChamberBotRoute />
+    </>
+  );
 }

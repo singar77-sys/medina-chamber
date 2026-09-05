@@ -700,7 +700,7 @@ export function ChamberBotPortal({
       <div className="chamber-scanlines" aria-hidden="true" />
 
       {/* HUD — 56px top grid row */}
-      <header className="hud">
+      <div className="hud">
         <div className="hud-left">
           <div className="hud-wordmark">
             <span className="wm-1">MEDINA</span>
@@ -738,10 +738,10 @@ export function ChamberBotPortal({
             </svg>
           </button>
         </div>
-      </header>
+      </div>
 
       {/* Scene — 1fr middle grid row */}
-      <main className="scene">
+      <div className="scene" role="region" aria-label="Conversation">
         {/* Stage: mascot + rings centered, caption at bottom */}
         <section className="stage">
           <HoloRings state={sceneState} />
@@ -896,10 +896,10 @@ export function ChamberBotPortal({
             <a href="/terms">Terms</a>
           </p>
         </section>
-      </main>
+      </div>
 
       {/* Rail — 36px bottom grid row */}
-      <footer className="rail mono">
+      <div className="rail mono">
         <div className="rail-item" aria-hidden="true">
           <span className="rail-dot ok" /> MEMBERS INDEXED
         </div>
@@ -920,7 +920,7 @@ export function ChamberBotPortal({
         <div className="rail-item" aria-hidden="true">
           LATENCY <span className="rail-val">—</span>
         </div>
-      </footer>
+      </div>
     </div>,
     document.body,
   );

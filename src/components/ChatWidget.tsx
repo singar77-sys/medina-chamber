@@ -7,12 +7,13 @@
  * system prompt in api/chat/route.ts). All UI copy says "ChamberBot."
  *
  * Internal identifiers — the `jackie:open` CustomEvent, the
- * `cmdk-group--jackie` / `jkc-jackie-col` CSS classes, the
- * `askJackie()` function in CommandPalette — were named when the
- * mascot was called "Jackie" and have not been mass-renamed because
- * doing so would touch CSS class names tracked across globals.css
- * (~10 selectors). The two naming systems are stable: copy ↔ user,
- * Jackie ↔ wire. Don't mix. If you rename one side, rename both.
+ * `askJackie()` function in CommandPalette, and the
+ * `cmdk-group--jackie` / `cmdk-row--jackie` CSS classes — were named
+ * when the mascot was called "Jackie" and have not been mass-renamed.
+ * Those four are the only live ones (the `jkc-*` rules in globals.css
+ * are no longer applied to any markup). The two naming systems are
+ * stable: copy ↔ user, Jackie ↔ wire. Don't mix. If you rename one
+ * side, rename both.
  */
 
 import { useState, useRef, useEffect, useCallback, useMemo, type ReactNode } from "react";
@@ -337,10 +338,10 @@ function StephanieCaptureCard({
     <form onSubmit={handleSubmit} className="mt-2 px-3 py-3 rounded-[var(--radius-md)] bg-bg-secondary border border-cambridge/25 space-y-2">
       <p className="text-caption font-bold text-text-primary">Want Stephanie to reach out?</p>
       <div className="flex gap-2">
-        <input type="text" required placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} disabled={status === "sending"} className={fieldCls} />
-        <input type="email" required placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} disabled={status === "sending"} className={fieldCls} />
+        <input type="text" required aria-label="Your name" autoComplete="name" placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} disabled={status === "sending"} className={fieldCls} />
+        <input type="email" required aria-label="Email address" autoComplete="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} disabled={status === "sending"} className={fieldCls} />
       </div>
-      {status === "error" && <p className="text-[10px] text-red-500">Something went wrong, try again.</p>}
+      {status === "error" && <p role="alert" className="text-[10px] text-red-500">Something went wrong, try again.</p>}
       <div className="flex items-center gap-3">
         <button
           type="submit"
@@ -363,6 +364,7 @@ export function ChatWidget() {
   const [previewText, setPreviewText] = useState<ReactNode | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const fabRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
 
   const { messages, input, setInput, isLoading, error, sendMessage, getSessionId, dismissCapture } = useStreamChat();
@@ -395,6 +397,28 @@ export function ChatWidget() {
     window.addEventListener("jackie:open", handler);
     return () => window.removeEventListener("jackie:open", handler);
   }, [sendMessage]);
+
+  // Closing has to hand focus back to the launcher. Without it the
+  // panel unmounts under the user's focus and the browser drops them
+  // on <body>, losing keyboard position on the page behind the chat.
+  const closePanel = useCallback(() => {
+    setOpen(false);
+    fabRef.current?.focus();
+  }, []);
+
+  // Escape closes the panel, the convention for any dialog-ish overlay.
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      // defaultPrevented: the command palette also listens for Escape on
+      // window and calls preventDefault(). Without this check, dismissing the
+      // palette opened over the chat closed the chat panel behind it too.
+      if (e.key !== "Escape" || e.defaultPrevented) return;
+      closePanel();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open, closePanel]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -483,7 +507,11 @@ export function ChatWidget() {
     <div>
       {/* Chat Panel */}
       {open && (
-        <div className="
+        <div
+          id="chamberbot-panel"
+          role="dialog"
+          aria-label="ChamberBot chat"
+          className="
           fixed bottom-24 right-4 sm:right-6 z-50
           w-[min(420px,calc(100dvw-2rem))]
           flex flex-col
@@ -557,7 +585,7 @@ export function ChatWidget() {
                 </button>
               )}
               <button
-                onClick={() => setOpen(false)}
+                onClick={closePanel}
                 aria-label="Close chat"
                 className="w-11 h-11 inline-flex items-center justify-center text-white/60 hover:text-white transition-colors"
               >
@@ -578,7 +606,12 @@ export function ChatWidget() {
           ) : (
             <>
           {/* Messages */}
-          <div className="overflow-y-auto px-4 py-4 space-y-4 min-h-[200px] max-h-[400px]">
+          <div
+            // role="log" already implies aria-live="polite" and announces
+            // additions, so neither needs spelling out.
+            role="log"
+            className="overflow-y-auto px-4 py-4 space-y-4 min-h-[200px] max-h-[400px]"
+          >
             {!hasMessages && (
               <div className="py-5 px-1">
                 <p className="text-body-sm font-bold text-text-primary">
@@ -654,9 +687,10 @@ export function ChatWidget() {
                     <span>{renderMarkdown(m.content)}</span>
                   ) : isLoading ? (
                     <span className="flex gap-1 items-center py-0.5">
-                      <span className="w-1.5 h-1.5 bg-text-tertiary rounded-full animate-bounce [animation-delay:0ms]" />
-                      <span className="w-1.5 h-1.5 bg-text-tertiary rounded-full animate-bounce [animation-delay:150ms]" />
-                      <span className="w-1.5 h-1.5 bg-text-tertiary rounded-full animate-bounce [animation-delay:300ms]" />
+                      <span className="sr-only">ChamberBot is typing</span>
+                      <span aria-hidden="true" className="w-1.5 h-1.5 bg-text-tertiary rounded-full animate-bounce [animation-delay:0ms]" />
+                      <span aria-hidden="true" className="w-1.5 h-1.5 bg-text-tertiary rounded-full animate-bounce [animation-delay:150ms]" />
+                      <span aria-hidden="true" className="w-1.5 h-1.5 bg-text-tertiary rounded-full animate-bounce [animation-delay:300ms]" />
                     </span>
                   ) : ""}
                 </div>
@@ -672,6 +706,9 @@ export function ChatWidget() {
               </div>
             ))}
 
+            {/* Plain <p>, no role="alert": this sits inside the role="log"
+                region above, which already announces additions. Nesting an
+                alert made screen readers read the error twice. */}
             {error && (
               <p className="text-center text-caption text-red-500">{error}</p>
             )}
@@ -688,6 +725,7 @@ export function ChatWidget() {
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              aria-label="Message ChamberBot"
               placeholder="Ask about members, events, or the chamber…"
               disabled={isLoading}
               name="chamberbot-message"
@@ -747,8 +785,8 @@ export function ChatWidget() {
             p-4
             animate-in fade-in slide-in-from-bottom-2 duration-300
           "
-          role="dialog"
-          aria-label="Suggestion from ChamberBot"
+          role="status"
+          aria-live="polite"
         >
           <button
             onClick={() => dismissPreview(true)}
@@ -784,8 +822,11 @@ export function ChatWidget() {
 
       {/* Floating Button */}
       <button
+        ref={fabRef}
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? "Close chat" : "Open chamber assistant"}
+        aria-expanded={open}
+        aria-controls="chamberbot-panel"
         className="
           fixed bottom-5 right-4 sm:right-6 z-50
           w-16 h-16

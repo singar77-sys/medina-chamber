@@ -156,7 +156,9 @@ export async function POST(req: Request) {
       from: "Greater Medina Chamber ChamberBot <chamber@huntersystems.dev>",
       to,
       replyTo: email,
-      subject: `ChamberBot handoff, ${escHtml(name)} (${topicLabel})`,
+      // Subject lines are plain text: escaping here would put &#39; in
+      // the inbox for names like O'Brien. escHtml belongs to the HTML body only.
+      subject: `ChamberBot handoff, ${name} (${topicLabel})`,
       text: [
         `A ChamberBot user asked to talk to a real person.`,
         ``,

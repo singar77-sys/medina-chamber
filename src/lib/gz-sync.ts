@@ -14,7 +14,7 @@
  *   DATABASE_URL — Supabase connection string (session pooler, port 5432)
  */
 
-import { sql, inArray } from "drizzle-orm";
+import { sql, and, inArray, isNull, notInArray, isNotNull } from "drizzle-orm";
 import { db } from "@/lib/db";
 import {
   organizations,
@@ -72,6 +72,28 @@ function chunk<T>(arr: T[], size: number): T[][] {
   return out;
 }
 
+/**
+ * Fraction of the currently-live directory a scrape must still contain before
+ * it is trusted to retire anybody. Mirrors the >10% drop guard in
+ * scripts/scrape-members.mjs.
+ */
+export const RETIREMENT_FLOOR = 0.9;
+
+/**
+ * Is this scrape trustworthy enough to soft-delete the members missing from it?
+ *
+ * Retirement is the one destructive thing gz-sync does, and it runs unattended
+ * every night, so it fails CLOSED: an empty or collapsed scrape (GrowthZone
+ * outage, markup change, half-fetched letter pages) skips retirement entirely
+ * rather than emptying the public directory. Growth is always fine — only a
+ * suspicious SHRINK blocks the pass.
+ */
+export function shouldRetire(scrapedCount: number, liveCount: number): boolean {
+  if (scrapedCount === 0) return false;
+  if (liveCount === 0) return true; // nothing to lose yet (fresh DB)
+  return scrapedCount >= liveCount * RETIREMENT_FLOOR;
+}
+
 // ── Public API ─────────────────────────────────────────────────────────────────
 
 export interface SyncResult {
@@ -91,10 +113,18 @@ export interface SyncResult {
  * result. All writes use ON CONFLICT DO UPDATE so re-runs are safe.
  *
  * Upsert key for organizations: slug (our canonical identifier).
- * Note: if a member's business name changes (new chamberSlug) while the
- * GrowthZone gz_id stays the same, the gz_id unique constraint may raise
- * a conflict. This edge case surfaces in errorDetails rather than silently
- * corrupting data — handle manually if it occurs.
+ *
+ * Departed members ARE retired: after the upsert, any GrowthZone-sourced row
+ * whose slug is absent from the current scrape is soft-deleted (deleted_at).
+ * Without that step the public directory only ever grew — a business that quit
+ * the chamber stayed listed as a member forever, and a business that RENAMED
+ * itself appeared twice (rename changes both chamberSlug and gzSlug, so
+ * neither unique constraint fires and a second active row is inserted). The
+ * retirement pass covers both: the stale slug simply stops appearing.
+ *
+ * Retirement is guarded — see RETIREMENT_FLOOR — so a collapsed or partial
+ * scrape can never mass-delete the directory. Only rows with a gz_id are ever
+ * touched, so hand-created organizations are never affected.
  */
 export async function runGzSync(): Promise<SyncResult> {
   const start = Date.now();
@@ -261,6 +291,60 @@ export async function runGzSync(): Promise<SyncResult> {
     }
   }
 
+  // ── 3.5 Retire departed members ───────────────────────────────────────────
+  // A member that leaves GrowthZone drops out of members.json. Nothing else in
+  // the codebase ever writes deleted_at, so without this pass the directory
+  // (which filters on status='active' AND deleted_at IS NULL) keeps listing
+  // ex-members indefinitely, and the vector index — which DOES delete — drifts
+  // out of agreement with it.
+  let removed = 0;
+  const currentSlugs = members.map((m) => m.chamberSlug);
+
+  // Collapse guard: never retire against a scrape that looks broken. Mirrors
+  // the >10% drop guard in scripts/scrape-members.mjs, but measured against
+  // what is actually live in the DB so it self-adjusts as the roster changes.
+  const [liveRow] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(organizations)
+    .where(and(isNull(organizations.deletedAt), isNotNull(organizations.gzId)));
+  const liveCount = liveRow?.count ?? 0;
+
+  if (!shouldRetire(currentSlugs.length, liveCount)) {
+    // Suspicious input — skip retirement entirely and make the skip visible.
+    errorDetails.push({
+      id: "retire:skipped",
+      error: `Scrape has ${currentSlugs.length} members vs ${liveCount} live in DB (below ${RETIREMENT_FLOOR * 100}%); skipped retirement to avoid mass-deleting the directory.`,
+    });
+  } else {
+    try {
+      const retired = await db
+        .update(organizations)
+        .set({ deletedAt: now, updatedAt: now })
+        .where(
+          and(
+            isNull(organizations.deletedAt),
+            isNotNull(organizations.gzId),
+            notInArray(organizations.slug, currentSlugs),
+          ),
+        )
+        .returning({ slug: organizations.slug });
+
+      removed = retired.length;
+      if (removed > 0) {
+        errorDetails.push({
+          id: "retire:removed",
+          error: `Soft-deleted ${removed} departed member(s): ${retired.map((r) => r.slug).join(", ")}`,
+        });
+      }
+    } catch (err) {
+      errors += 1;
+      errorDetails.push({
+        id: "retire",
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
+  }
+
   // ── 4. Write sync_log ─────────────────────────────────────────────────────
   const durationMs = Date.now() - start;
 
@@ -268,7 +352,7 @@ export async function runGzSync(): Promise<SyncResult> {
     source: "growthzone",
     added: synced,
     updated: 0,
-    removed: 0,
+    removed,
     errors,
     durationMs,
     errorDetails: errorDetails.length > 0 ? errorDetails : null,
@@ -277,7 +361,7 @@ export async function runGzSync(): Promise<SyncResult> {
   return {
     added: synced,
     updated: 0,
-    removed: 0,
+    removed,
     errors,
     durationMs,
     errorDetails,

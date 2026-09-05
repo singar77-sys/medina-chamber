@@ -9,6 +9,11 @@ const { runGzSync } = vi.hoisted(() => ({
   runGzSync: vi.fn(async () => ({ synced: 500, errors: 0 }) as Record<string, unknown>),
 }));
 vi.mock("@/lib/gz-sync", () => ({ runGzSync }));
+// The route busts the directory cache tag after a successful sync.
+// revalidateTag needs Next's request store, which does not exist under
+// vitest, so an unmocked call throws and the route's catch turns a clean
+// sync into a 500 — a test-environment artifact, not real behaviour.
+vi.mock("next/cache", () => ({ revalidateTag: vi.fn() }));
 
 const SECRET = "s".repeat(32);
 

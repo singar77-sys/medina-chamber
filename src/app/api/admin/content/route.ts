@@ -78,7 +78,14 @@ export async function PUT(req: Request): Promise<Response> {
     );
   }
 
-  await setContentField(page, field, value.trim());
+  // A blank submission means "reset", not "publish an empty string": storing
+  // "" would blank live page copy (the office-hours line, the hero eyebrow).
+  const trimmed = value.trim();
+  if (trimmed) {
+    await setContentField(page, field, trimmed);
+  } else {
+    await clearContentField(page, field);
+  }
   // Bust the cached reads so the edit shows on the public page immediately
   // (Next 16.2 revalidateTag requires the profile argument).
   revalidateTag(CMS_CONTENT_TAG, "max");

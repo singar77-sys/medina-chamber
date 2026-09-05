@@ -77,7 +77,7 @@ export const navigation: NavItem[] = [
       {
         label: "Pricing & Tiers",
         href: "/membership/pricing",
-        description: "Investment levels based on company size",
+        description: "Three flat-rate investment levels",
       },
       {
         label: "Community Investor",

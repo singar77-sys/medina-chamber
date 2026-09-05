@@ -222,7 +222,9 @@ export async function POST(req: Request) {
     console.error("[chat/handoff] Resend error:", err);
     Sentry.captureException(err, {
       tags: { route: "chat/handoff" },
-      extra: { senderName: name, senderEmail: email, topic },
+      // No name/email: an `extra` object would smuggle visitor PII past
+      // sendDefaultPii:false. topic is a bounded enum, not personal data.
+      extra: { topic },
     });
     return Response.json(
       { error: "Couldn't send the handoff. Please try again or email office@medinaohchamber.com directly." },

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { safeJsonLd } from "@/lib/json-ld";
-import { getCmsPricing, DEFAULT_PRICING } from "@/lib/cms-store";
+import { getPublicPricing } from "@/lib/cms-store";
 import { stephanie, jaclyn } from "@/data/staff";
 import { mailto } from "@/lib/format";
 import { CommunityInvestors } from "@/components/CommunityInvestors";
@@ -23,7 +23,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "/membership/community-investor" },
 };
 
-export const dynamic = "force-dynamic";
+// ISR, not force-dynamic: the only per-request read was the Redis pricing
+// lookup, which now goes through unstable_cache and is busted by the admin
+// pricing API on save.
+export const revalidate = 300;
 
 const ciExclusives = [
   {
@@ -62,7 +65,7 @@ const whoItsFor = [
 ];
 
 export default async function CommunityInvestorPage() {
-  const tiers = ((await getCmsPricing()) ?? DEFAULT_PRICING).tiers;
+  const tiers = (await getPublicPricing()).tiers;
   const ciTier = tiers.find((t) => t.key === "investor");
 
   const jsonLd = {

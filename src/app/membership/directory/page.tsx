@@ -3,9 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { unstable_cache } from "next/cache";
 import { db } from "@/lib/db";
-import { getDirectoryMembers, topIndustries } from "@/lib/directory";
+import { getDirectoryMembers, topIndustries, DIRECTORY_TAG } from "@/lib/directory";
 import { members as staticMembers } from "@/data/members";
 import { memberLogo } from "@/lib/member-logos";
+import { AutoplayVideo } from "@/components/AutoplayVideo";
 import { normalizeCategories } from "@/lib/categories";
 import { DirectoryClient } from "./DirectoryClient";
 import { CommunityInvestors } from "@/components/CommunityInvestors";
@@ -40,7 +41,7 @@ export const dynamic = "force-dynamic";
 const loadDirectoryMembers = unstable_cache(
   () => getDirectoryMembers(db),
   ["directory-members"],
-  { tags: ["directory"], revalidate: 3600 },
+  { tags: [DIRECTORY_TAG], revalidate: 3600 },
 );
 
 export default async function DirectoryPage() {
@@ -118,16 +119,11 @@ export default async function DirectoryPage() {
                   See every benefit →
                 </Link>
               </div>
-              <video
+              <AutoplayVideo
                 className="w-full aspect-video rounded-[var(--radius-lg)] border border-border-secondary bg-bg-secondary object-cover"
                 src={BENEFITS_VIDEO}
                 poster={BENEFITS_VIDEO_POSTER}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                aria-label="Animated wheel of the five Greater Medina Chamber membership benefits: connections, visibility, advocacy, savings, and education"
+                label="Animated wheel of the five Greater Medina Chamber membership benefits: connections, visibility, advocacy, savings, and education"
               />
             </div>
           </FadeIn>

@@ -87,6 +87,10 @@ function toMember(o: OrgRow, cats: string[]): Member {
 }
 
 /** All public (active) members, name-sorted. */
+/** Cache tag for the public directory listing. Busted by the gz-sync cron
+ *  once the nightly roster sync succeeds. */
+export const DIRECTORY_TAG = "directory";
+
 export async function getDirectoryMembers(db: DB): Promise<Member[]> {
   const orgs = (await db
     .select(ORG_COLS)

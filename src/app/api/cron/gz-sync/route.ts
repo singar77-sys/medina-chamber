@@ -21,7 +21,9 @@
  */
 
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { runGzSync } from "@/lib/gz-sync";
+import { DIRECTORY_TAG } from "@/lib/directory";
 import { isAuthorizedCron } from "@/lib/cron-auth";
 
 // Node.js runtime: required for postgres-js (used by Drizzle).
@@ -35,6 +37,9 @@ export async function GET(req: Request) {
 
   try {
     const result = await runGzSync();
+    // The public directory listing is cached; without this a member added or
+    // retired by this sync would not appear until the revalidate window closed.
+    revalidateTag(DIRECTORY_TAG, "max");
     // Partial failures must be loud: a green cron with errors: 400 would hide
     // a half-synced directory. A non-200 makes Vercel's cron monitoring (and
     // anyone curling it) see the failure; details are in the payload/sync_log.

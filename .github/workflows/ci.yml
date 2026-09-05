@@ -155,3 +155,103 @@ jobs:
       # reintroduced an eager env read / throw at module load.
       - name: Build (secret-free)
         run: pnpm build
+
+  # ── Browser regression gate ────────────────────────────────────────────
+  #
+  # The job above proves the source compiles, the units behave, and `next
+  # build` succeeds. None of that proves a visitor can search the directory,
+  # open an event, or get a reply out of ChamberBot — which was, until this
+  # job existed, the largest quality gap in the repo.
+  #
+  # BLOCKING, deliberately. The suite was run cold three times before this was
+  # wired in (19 tests, plus a 57-test --repeat-each=3 pass) with zero flakes,
+  # and every journey that could not be made deterministic was left out rather
+  # than shipped shaky. See e2e/README.md for what is covered and what is
+  # not. A browser gate that fails one run in ten gets ignored inside two
+  # weeks and then real regressions ride through a red run nobody reads — if
+  # this job ever starts flaking, fix or delete the offending test, do not
+  # add continue-on-error.
+  #
+  # Runs as its own job, in parallel with `quality`, so a browser failure and
+  # a typecheck failure are reported independently rather than one hiding the
+  # other behind a shared fail-fast.
+  #
+  # No secrets: playwright.config.ts blanks every runtime secret in the
+  # webServer env so a developer's .env.local cannot make a local run differ
+  # from this one. That also keeps ChamberBot on its zero-cost offline path —
+  # with a live ANTHROPIC_API_KEY every CI run would bill a model call.
+  e2e:
+    name: Browser tests (Playwright + axe)
+    runs-on: ubuntu-latest
+    # The suite itself is ~40s; the `next build` inside playwright's webServer
+    # dominates. 25 minutes kills a hung browser without ever tripping on a
+    # merely slow runner.
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Keyed on the resolved @playwright/test version, NOT the lockfile hash:
+      # the browser build a Playwright release pins is a property of that
+      # release alone, so an unrelated dependency bump must not throw away a
+      # 130 MB download. Read from the installed package rather than
+      # package.json so a caret range can't key the cache to a version the
+      # runner isn't actually using.
+      - name: Resolve Playwright version
+        id: pw
+        run: |
+          echo "version=$(node -p "require('./node_modules/@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        id: pw-cache
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.pw.outputs.version }}
+
+      # Chromium ONLY. Firefox and WebKit would roughly triple this download
+      # and this step's runtime for a suite that asserts application behaviour,
+      # not cross-engine rendering.
+      #
+      # Two arms because the cache restores the browser binaries but NOT the
+      # apt libraries Chromium links against — those live in system paths the
+      # cache does not cover, so they have to be reinstalled on a cache hit
+      # too. Skipping that is the classic "works until the runner image
+      # changes" cache bug.
+      - name: Install Chromium (cache miss)
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Install Chromium system dependencies (cache hit)
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: pnpm exec playwright install-deps chromium
+
+      # playwright.config.ts's webServer runs `pnpm build && next start` on
+      # :3210 and waits for it, so there is no separate build step here — and
+      # no chance of the suite silently testing a stale .next.
+      - name: Run browser tests
+        run: pnpm exec playwright test
+
+      # Traces and screenshots are only written on a retry (see the config), so
+      # a green run uploads nothing. On a red one this is the difference
+      # between "a test failed" and knowing which element was missing.
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

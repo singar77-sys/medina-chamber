@@ -87,3 +87,9 @@ public/images/archive/
 
 # Local backup of the removed historical archive photos — never shipped.
 .archive-backup/
+
+# playwright (e2e) — run artifacts, never committed
+/test-results
+/playwright-report
+/blob-report
+/playwright/.cache

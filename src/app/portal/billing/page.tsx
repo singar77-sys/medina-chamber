@@ -12,43 +12,14 @@
  * the webhook lands.
  */
 
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { contacts, organizations, invoices } from "@/lib/db/schema";
 import { eq, desc } from "drizzle-orm";
-import { verifyPortalSession, PORTAL_COOKIE } from "@/lib/portal-session";
+import { readPortalSession } from "@/lib/portal-session";
+import { formatCents, formatDateShort } from "@/lib/format";
+import { PortalTopBar } from "@/components/portal/PortalTopBar";
 import { PayButton } from "./PayButton";
-
-// ── Auth helper (mirrors the dashboard) ──────────────────────────────────────
-
-async function getSession() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(PORTAL_COOKIE)?.value;
-  if (!token) return null;
-  return verifyPortalSession(token);
-}
-
-// ── Formatting ───────────────────────────────────────────────────────────────
-
-function formatDollars(cents: number): string {
-  return (cents / 100).toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-}
-
-function formatDate(iso: string | null | undefined): string {
-  if (!iso) return "—";
-  const [year, month, day] = iso.split("-").map(Number);
-  return new Date(year, month - 1, day).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
 
 const INVOICE_STATUS: Record<string, { label: string; bg: string; color: string }> = {
   paid:          { label: "Paid",          bg: "#f0fdf4", color: "#15803d" },
@@ -66,7 +37,7 @@ export default async function PortalBillingPage({
 }: {
   searchParams: Promise<{ paid?: string; canceled?: string }>;
 }) {
-  const session = await getSession();
+  const session = await readPortalSession();
   if (!session) redirect("/portal");
 
   const { paid, canceled } = await searchParams;
@@ -104,42 +75,7 @@ export default async function PortalBillingPage({
 
   return (
     <div className="min-h-full flex flex-col">
-      {/* ── Top bar ────────────────────────────────────────────────────────── */}
-      <header
-        className="sticky top-0 z-10 flex items-center justify-between px-4 sm:px-6 py-3 shrink-0"
-        style={{ background: "#0C1B33", borderBottom: "1px solid rgba(255,255,255,.08)" }}
-      >
-        <div className="flex items-center gap-3">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/chamber-logos/icon-white.png"
-            alt="Medina Chamber"
-            className="w-7 h-7"
-          />
-          <span className="text-white text-sm font-bold hidden sm:block">
-            Member Portal
-          </span>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <a
-            href="/portal/dashboard"
-            className="text-sm hover:underline"
-            style={{ color: "#83BCA9" }}
-          >
-            Dashboard
-          </a>
-          <form action="/api/portal/auth/logout" method="post">
-            <button
-              type="submit"
-              className="text-xs px-3 py-1.5 rounded-lg font-medium transition-colors"
-              style={{ background: "rgba(255,255,255,.08)", color: "#cbd5e1" }}
-            >
-              Sign out
-            </button>
-          </form>
-        </div>
-      </header>
+      <PortalTopBar links={[{ href: "/portal/dashboard", label: "Dashboard" }]} />
 
       {/* ── Main content ───────────────────────────────────────────────────── */}
       <main className="flex-1 px-4 sm:px-6 py-8 max-w-4xl mx-auto w-full">
@@ -198,7 +134,7 @@ export default async function PortalBillingPage({
                         {inv.description ?? "Invoice"}
                       </p>
                       <p className="text-xs text-text-tertiary mt-0.5">
-                        {inv.dueDate ? `Due ${formatDate(inv.dueDate)}` : "—"}
+                        {inv.dueDate ? `Due ${formatDateShort(inv.dueDate)}` : "—"}
                       </p>
                     </div>
 
@@ -212,11 +148,11 @@ export default async function PortalBillingPage({
 
                       <div className="text-right">
                         <p className="text-sm font-bold text-text-primary tabular-nums">
-                          {formatDollars(inv.amountCents)}
+                          {formatCents(inv.amountCents)}
                         </p>
                         {hasBalance && inv.amountPaidCents > 0 && (
                           <p className="text-xs text-text-tertiary tabular-nums">
-                            {formatDollars(balanceCents)} due
+                            {formatCents(balanceCents)} due
                           </p>
                         )}
                       </div>
@@ -224,7 +160,7 @@ export default async function PortalBillingPage({
                       {hasBalance ? (
                         <PayButton
                           invoiceId={inv.id}
-                          balanceLabel={formatDollars(balanceCents)}
+                          balanceLabel={formatCents(balanceCents)}
                         />
                       ) : (
                         <span className="w-px" />

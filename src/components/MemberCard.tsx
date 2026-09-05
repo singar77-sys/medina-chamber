@@ -78,7 +78,13 @@ export function MemberCard({ member }: MemberCardProps) {
             fill
             className="object-contain p-4 mix-blend-multiply"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            unoptimized
+            // Bypass the optimizer only where it cannot help. SVG it refuses
+            // outright (dangerouslyAllowSVG is off). The http:// arm is
+            // future-proofing, not a live fix: every external logoUrl in the DB
+            // today is a res.cloudinary.com URL that next.config remotePatterns
+            // already allows, so this leaves that (small) win on the table in
+            // exchange for never 400ing on a host someone adds later.
+            unoptimized={member.logoUrl.endsWith(".svg") || member.logoUrl.startsWith("http")}
           />
         </div>
       )}

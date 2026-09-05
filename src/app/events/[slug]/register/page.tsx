@@ -8,10 +8,10 @@
  * dynamic, which is correct — it's per-visitor and writes on submit.
  */
 
-import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { verifyPortalSession, PORTAL_COOKIE } from "@/lib/portal-session";
+import { readPortalSession } from "@/lib/portal-session";
+import { formatDateWithWeekday } from "@/lib/format";
 import { getEventBySlug, type ChamberEvent } from "@/data/events";
 import {
   getRegisterableEvent,
@@ -31,19 +31,11 @@ function formatWhen(staticEvent: ChamberEvent | undefined, startsAt: Date): stri
     const date = `${staticEvent.dayOfWeek}, ${staticEvent.month} ${staticEvent.day}, ${staticEvent.year}`;
     return staticEvent.startTime ? `${date} · ${staticEvent.startTime}` : date;
   }
-  return startsAt.toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-    timeZone: "UTC",
-  });
+  return formatDateWithWeekday(startsAt);
 }
 
 async function isMember(): Promise<boolean> {
-  const token = (await cookies()).get(PORTAL_COOKIE)?.value;
-  if (!token) return false;
-  return (await verifyPortalSession(token)) !== null;
+  return (await readPortalSession()) !== null;
 }
 
 export default async function EventRegisterPage({

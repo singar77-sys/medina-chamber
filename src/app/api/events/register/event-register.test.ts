@@ -32,9 +32,10 @@ vi.mock("@/lib/rate-limit", () => ({
   limitEventRegister: vi.fn(async () => null),
 }));
 
-vi.mock("@/lib/email", () => ({
-  EMAIL_RE: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-}));
+// @/lib/email is NOT mocked: EMAIL_RE is exported from source, and a hand-copied
+// regex here would silently stop testing the real one the moment it changed.
+// The module only constructs a Resend client (no env read, no socket) and this
+// route never sends mail, so importing it for real is free.
 
 const ensureStripeCustomer = vi.fn(async () => "cus_test_123");
 vi.mock("@/lib/stripe/customer", () => ({ ensureStripeCustomer }));

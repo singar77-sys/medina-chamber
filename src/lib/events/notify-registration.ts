@@ -24,14 +24,7 @@ import {
 } from "@/lib/db/schema";
 import { events as staticEvents } from "@/data/events";
 import { sendEventConfirmation } from "./event-emails";
-
-const UTC_DATE = new Intl.DateTimeFormat("en-US", {
-  timeZone: "UTC",
-  weekday: "long",
-  month: "long",
-  day: "numeric",
-  year: "numeric",
-});
+import { formatDateWithWeekday } from "@/lib/format";
 
 export async function notifyRegistration(registrationId: string): Promise<void> {
   try {
@@ -104,7 +97,7 @@ export async function notifyRegistration(registrationId: string): Promise<void> 
     );
     const eventWhen = staticEvent
       ? `${staticEvent.dayOfWeek}, ${staticEvent.month} ${staticEvent.day}, ${staticEvent.year} · ${staticEvent.startTime}`
-      : UTC_DATE.format(event.startsAt);
+      : formatDateWithWeekday(event.startsAt);
 
     const siteUrl =
       process.env.NEXT_PUBLIC_SITE_URL ?? "https://medinaohchamber.com";

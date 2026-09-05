@@ -14,6 +14,7 @@
  */
 
 import { put, del } from "@vercel/blob";
+import { unstable_cache } from "next/cache";
 import { getRedis } from "@/lib/upstash";
 
 const RECENT_CAP = 50;
@@ -132,6 +133,48 @@ export async function getEventPhotosWithFallback(slug: string): Promise<MediaIte
   const typeSlug = toTypeSlug(slug);
   if (typeSlug === slug) return photos; // already at type level, no fallback needed
   return getEventPhotos(typeSlug);
+}
+
+/** Tag for on-demand revalidation — the admin media APIs bust this when a photo
+ *  is uploaded, deleted, or edited. Profile "max" marks the tag STALE and serves
+ *  stale-while-revalidate, so the change lands on the NEXT public request rather
+ *  than the one immediately after the upload. */
+export const EVENT_PHOTOS_TAG = "event-photos";
+
+// getEventPhotos / getEventPhotosWithFallback above stay uncached for the admin
+// screens, which have to read back what they just uploaded. The public event
+// page reads through here instead: the Upstash REST call is an uncached fetch
+// that would otherwise opt every /events/[slug] page out of static generation.
+// Reads Redis directly rather than through getEventPhotos: that helper swallows
+// a Redis error into [], and caching that would pin "no photos" on the event page
+// for the whole 300s window over one transient blip. Throwing means
+// unstable_cache stores nothing and the wrapper below degrades per-request.
+const getCachedEventPhotos = unstable_cache(
+  async (slug: string): Promise<MediaItem[]> => {
+    const redis = getRedis();
+    if (!redis) return [];
+    const read = async (s: string) =>
+      (await redis.get<MediaItem[]>(`cms:media:event:${s}`)) ?? [];
+
+    const photos = await read(slug);
+    if (photos.length > 0) return photos;
+    const typeSlug = toTypeSlug(slug);
+    return typeSlug === slug ? photos : read(typeSlug);
+  },
+  ["event-photos"],
+  { tags: [EVENT_PHOTOS_TAG], revalidate: 300 },
+);
+
+/** Gallery photos for the public event page — same recurring-type-slug fallback,
+ *  and still an empty list (not a throw) when Redis is down. The catch sits
+ *  outside the cache so an outage costs one request, not 300 seconds. */
+export async function getPublicEventPhotos(slug: string): Promise<MediaItem[]> {
+  try {
+    return await getCachedEventPhotos(slug);
+  } catch (err) {
+    console.error("[media-store] Redis read failed (cached event-photos):", err);
+    return [];
+  }
 }
 
 /**

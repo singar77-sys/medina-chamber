@@ -8,6 +8,7 @@
  */
 
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { requireAdminSession } from "@/lib/admin-auth";
 import {
   getEventPhotos,
@@ -15,6 +16,7 @@ import {
   deleteMediaItem,
   updateEventPhotoCaption,
   updateMediaItemMeta,
+  EVENT_PHOTOS_TAG,
 } from "@/lib/media-store";
 
 export const dynamic = "force-dynamic";
@@ -53,6 +55,9 @@ export async function DELETE(req: Request): Promise<Response> {
   }
 
   await deleteMediaItem(url, eventSlug);
+  // Only an event-tagged photo is on a public page, so an untagged delete has
+  // no gallery cache to bust (Next 16.2 revalidateTag takes the profile arg).
+  if (eventSlug) revalidateTag(EVENT_PHOTOS_TAG, "max");
   return NextResponse.json({ ok: true });
 }
 
@@ -75,12 +80,14 @@ export async function PATCH(req: Request): Promise<Response> {
   // Legacy caption-only update (event photos)
   if (caption !== undefined && eventSlug) {
     await updateEventPhotoCaption(eventSlug, url, caption);
+    revalidateTag(EVENT_PHOTOS_TAG, "max");
     return NextResponse.json({ ok: true });
   }
 
   // General metadata update (alt text, filename)
   if (alt !== undefined || filename !== undefined) {
     await updateMediaItemMeta(url, { alt, filename }, eventSlug);
+    if (eventSlug) revalidateTag(EVENT_PHOTOS_TAG, "max");
     return NextResponse.json({ ok: true });
   }
 

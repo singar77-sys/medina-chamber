@@ -2,7 +2,9 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 const applyRateLimit = vi.fn(async () => null as Response | null);
 vi.mock("@/lib/rate-limit", () => ({ applyRateLimit, formLimiter: {} }));
-vi.mock("@/lib/email", () => ({ EMAIL_RE: /^[^@\s]+@[^@\s]+\.[^@\s]+$/ }));
+// @/lib/email is NOT mocked: EMAIL_RE is exported from source. The copy that
+// used to live here had already drifted from it character-for-character, which
+// is exactly how a hand-copied regex stops testing the shipped one.
 
 let insertThrows = false;
 const insValues = vi.fn(async (_v: Record<string, unknown>) => {

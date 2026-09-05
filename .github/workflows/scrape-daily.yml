@@ -62,14 +62,17 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Scrape events
+        id: events
         run: pnpm scrape:events
         continue-on-error: true   # one scraper failing shouldn't block the others
 
       - name: Scrape member news
+        id: news
         run: pnpm scrape:news
         continue-on-error: true
 
       - name: Scrape jobs
+        id: jobs
         run: pnpm scrape:jobs
         continue-on-error: true
 
@@ -127,6 +130,7 @@ jobs:
           git diff --stat src/data/ || true
 
       - name: Commit + push if anything changed
+        id: push
         run: |
           if git diff --quiet src/data/; then
             echo "No data changes — nothing to commit."
@@ -178,6 +182,26 @@ jobs:
         run: |
           echo "❌ Collapsed to zero: ${{ steps.smoke.outputs.collapsed }}"
           echo "Check https://business.medinachamber.com — if the listing really is empty, this run needs no action."
+          exit 1
+
+      # A scraper that REFUSES to write is now the healthy failure mode: the
+      # listing guards added to scrape-news/scrape-jobs exit 1 without touching
+      # src/data when GrowthZone serves an error page or the listing markup
+      # moves. That leaves yesterday's data intact, which is what we want, but
+      # it also means the smoke check above sees count == prev and passes, and
+      # continue-on-error swallows the exit code. Without this step the run goes
+      # green while the data quietly freezes — the exact way member-ratings.json
+      # went stale from June 2026 with every weekly run green.
+      - name: Fail loudly if a scraper broke
+        if: always() && (steps.events.outcome == 'failure' || steps.news.outcome == 'failure' || steps.jobs.outcome == 'failure')
+        run: |
+          echo "❌ A scraper exited non-zero. Whatever it could not scrape is now STALE, not empty:"
+          echo "  events: ${{ steps.events.outcome }}"
+          echo "  news:   ${{ steps.news.outcome }}"
+          echo "  jobs:   ${{ steps.jobs.outcome }}"
+          echo "Push step outcome: ${{ steps.push.outcome }} (skipped means the smoke check blocked it,"
+          echo "so nothing was pushed at all). Check the failing scrape step's log:"
+          echo "usually GrowthZone changed the listing markup, or served an error page."
           exit 1
 
       # Email Mark if anything in the workflow above failed. Skips

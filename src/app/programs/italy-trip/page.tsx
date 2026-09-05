@@ -83,6 +83,17 @@ export default function ItalyTripPage() {
       "A 10-day chamber group trip to Italy presented by Collette: Rome, the Vatican, Orvieto, Assisi, Perugia, Cortona, Florence, Chianti, Venice, and Murano Island.",
     startDate: "2027-10-10",
     endDate: "2027-10-19",
+    // schema.org requires `location` on an Event. This one is a touring
+    // itinerary (Rome → Venice), not a venue booking, so it names the
+    // country rather than inventing a street address it never has.
+    location: {
+      "@type": "Place",
+      name: "Italy",
+      address: {
+        "@type": "PostalAddress",
+        addressCountry: "IT",
+      },
+    },
     organizer: {
       "@type": "Organization",
       name: "Greater Medina Chamber of Commerce",

@@ -11,9 +11,11 @@
  * Same scheme as admin-session.ts — proven, auditable, zero deps.
  *
  * Node-only: verifyPortalSession reads contacts.session_epoch (the revocation
- * check), so this module must not be imported into an edge/middleware context.
+ * check) and readPortalSession reads the cookie via next/headers, so this module
+ * must not be imported into an edge/middleware context.
  */
 
+import { cookies } from "next/headers";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { contacts } from "@/lib/db/schema";
@@ -182,4 +184,19 @@ export async function verifyPortalSession(
     return null;
   }
   return p;
+}
+
+/**
+ * Read and verify the portal session cookie from a Server Component or route
+ * handler. Returns null when there is no cookie or the token fails verification
+ * — which includes the session_epoch revocation check inside verifyPortalSession,
+ * so every caller of this helper is revocation-aware by construction.
+ *
+ * Callers redirect to /portal on null; each portal page does its own check
+ * because the layout has to stay reachable without a session.
+ */
+export async function readPortalSession(): Promise<PortalSessionPayload | null> {
+  const token = (await cookies()).get(PORTAL_COOKIE)?.value;
+  if (!token) return null;
+  return verifyPortalSession(token);
 }

@@ -48,9 +48,10 @@ export function EventGallery({ photos: allPhotos, title = "Photos" }: Props) {
     setLightbox((i) => (i === null ? null : (i + 1) % photos.length));
   }
 
-  // The upload route only stores `alt` when an admin typed a description, so
-  // the old `filename` fallback made screen readers announce raw device names
-  // ("IMG 4521 webp"). A positional description is the useful answer.
+  // The upload route now derives an `alt` when the admin leaves the description
+  // blank, but every photo uploaded before that change still has none — and the
+  // old `filename` fallback made screen readers announce raw device names
+  // ("IMG 4521 webp"). A positional description is the useful answer for those.
   function altFor(photo: MediaItem, i: number) {
     return photo.alt ?? photo.caption ?? `Photo ${i + 1} of ${photos.length}`;
   }
@@ -167,8 +168,10 @@ export function EventGallery({ photos: allPhotos, title = "Photos" }: Props) {
                 {photos[lightbox].caption}
               </p>
             )}
+            {/* white/60, not /40: at 12px this counts as normal text, so it
+                needs 4.5:1. /40 measured 3.81:1 against the black/90 scrim. */}
             {photos.length > 1 && (
-              <p className="text-white/40 text-xs text-center mt-1">
+              <p className="text-white/60 text-xs text-center mt-1">
                 {lightbox + 1} / {photos.length}
               </p>
             )}

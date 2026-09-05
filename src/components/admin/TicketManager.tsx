@@ -12,6 +12,7 @@
  */
 
 import { useState } from "react";
+import { formatCents } from "@/lib/format";
 
 export interface AdminTicket {
   id: string;
@@ -27,7 +28,9 @@ const EVENT_STATUSES = ["draft", "published", "cancelled", "completed"] as const
 
 function dollars(cents: number): string {
   if (!cents) return "Free";
-  return `$${(cents / 100).toFixed(2)}`;
+  // toFixed(2) has no thousands separator, so a $1,234 sponsorship ticket
+  // rendered as "$1234.00". formatCents is the shared Intl formatter.
+  return formatCents(cents);
 }
 
 export function TicketManager({

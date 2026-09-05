@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ButtonA, ButtonLink } from "@/components/ui/Button";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { events, getEventBySlug, eventMetaDescription } from "@/data/events";
-import { getCmsEventData } from "@/lib/cms-store";
+import { getPublicCmsEventData } from "@/lib/cms-store";
 import { getEventGraphicRenderer } from "@/components/events/graphics/registry";
 import { FluidGraphicFrame } from "@/components/events/graphics/FluidGraphicFrame";
-import { getEventPhotosWithFallback } from "@/lib/media-store";
+import { getPublicEventPhotos } from "@/lib/media-store";
 import { EventGallery } from "@/components/events/EventGallery";
 
 import { safeJsonLd } from "@/lib/json-ld";
@@ -28,7 +28,10 @@ export async function generateMetadata(
   const { slug } = await params;
   const base = getEventBySlug(slug);
   if (!base) return { title: "Event Not Found" };
-  const override = await getCmsEventData(slug);
+  // Key off the resolved event's slug, not the requested one — getEventBySlug
+  // also answers legacy slugs, which have no Redis keys of their own and must
+  // canonicalise to the live URL rather than self-canonicalise as a duplicate.
+  const override = await getPublicCmsEventData(base.slug);
   const event = override ? { ...base, ...override } : base;
 
   const description = eventMetaDescription(event);
@@ -42,7 +45,7 @@ export async function generateMetadata(
       description,
       ...(event.image && { images: [{ url: event.image }] }),
     },
-    alternates: { canonical: `/events/${slug}` },
+    alternates: { canonical: `/events/${base.slug}` },
   };
 }
 
@@ -57,9 +60,16 @@ export default async function EventPage(
   const { slug } = await params;
   const base = getEventBySlug(slug);
   if (!base) notFound();
+  // Send a legacy/normalized slug to the canonical URL instead of silently
+  // rendering a different event under the requested one. Temporary, not
+  // permanent: recurring events are re-slugged every year, so a 308 cached in
+  // the browser would outlive the target. This also stops dynamicParams from
+  // minting an ISR entry per casing/hyphen variant.
+  if (base.slug !== slug) redirect(`/events/${base.slug}`);
+  // base.slug, not the requested slug — see generateMetadata.
   const [override, photos] = await Promise.all([
-    getCmsEventData(slug),
-    getEventPhotosWithFallback(slug),
+    getPublicCmsEventData(base.slug),
+    getPublicEventPhotos(base.slug),
   ]);
   const event = override ? { ...base, ...override } : base;
 
@@ -113,7 +123,7 @@ export default async function EventPage(
       name: "Greater Medina Chamber of Commerce",
       url: "https://medinachamber.com",
     },
-    url: `https://medinachamber.com/events/${slug}`,
+    url: `https://medinachamber.com/events/${base.slug}`,
     ...(event.image && {
       image: {
         "@type": "ImageObject",

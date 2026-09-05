@@ -362,13 +362,37 @@ summary,
   animation: marquee-right var(--ci-dur, 30s) linear infinite;
 }
 
-/* :hover alone leaves keyboard and touch users with no way to stop the scroll
-   (WCAG 2.2.2). The tiles are real links, so pausing on focus-within at least
-   holds the row still while a keyboard user is reading it. */
-.ci-marquee-track:hover,
-.ci-marquee-track:focus-within { animation-play-state: paused; }
+/* :hover is a convenience for pointer users only. Keyboard and touch users get
+   the explicit toggle below (WCAG 2.2.2). No :focus-within rule: the tiles are
+   tabIndex={-1} now, so nothing inside a track can take focus. */
+.ci-marquee-track:hover { animation-play-state: paused; }
+
+/* Explicit pause/play control (WCAG 2.2.2). A visually hidden checkbox holds
+   the state and the label is the visible button; the sibling combinator
+   reaches every track, so one control stops all three rows. CSS-only on
+   purpose — CommunityInvestors is a Server Component (see the comment there)
+   and this keeps the control working with JavaScript disabled. */
+.ci-marquee-pause:checked ~ .ci-marquee-rows .ci-marquee-track {
+  animation-play-state: paused;
+}
+.ci-marquee-toggle .ci-toggle-resume { display: none; }
+.ci-marquee-pause:checked + .ci-marquee-toggle .ci-toggle-pause  { display: none; }
+.ci-marquee-pause:checked + .ci-marquee-toggle .ci-toggle-resume { display: inline; }
+/* The input is sr-only, so forward its focus ring to the visible label. */
+.ci-marquee-pause:focus-visible + .ci-marquee-toggle {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  /* No border-radius here: this rule is unlayered, so it would beat the
+     label's own rounded-[var(--radius-md)] utility and visibly pinch the
+     corners on keyboard focus. The outline already follows the element. */
+}
 
 @media (prefers-reduced-motion: reduce) {
+  /* Nothing moves, so the control would be a no-op — hide it outright,
+     checkbox included, so it does not sit in the tab order either. */
+  .ci-marquee-pause,
+  .ci-marquee-toggle { display: none; }
+
   .ci-marquee-track {
     animation: none !important;
     flex-wrap: wrap;
@@ -669,6 +693,25 @@ body {
 
 /* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
+  .fade-in,
+  .fade-in-up,
+  .fade-in-down,
+  .fade-in-left,
+  .fade-in-right {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* No-JS fallback. The hidden state above is only correct while JS is there to
+   undo it: with scripting off, FadeIn's IntersectionObserver never runs and
+   every section below the hero stays at opacity 0 forever. The `scripting`
+   media feature is the only signal CSS has on its own — a `js-enabled` root
+   class would need an inline script in layout.tsx, and defaulting to visible
+   and hiding after hydration would flash content on every load. Browsers
+   without the feature ignore this block and behave exactly as before. */
+@media (scripting: none), (scripting: initial-only) {
   .fade-in,
   .fade-in-up,
   .fade-in-down,

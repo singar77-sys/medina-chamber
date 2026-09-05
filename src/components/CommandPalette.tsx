@@ -315,6 +315,8 @@ function scoreCommand(cmd: Command, query: string): number | null {
   return score;
 }
 
+type CmdkWindow = Window & { __cmdkPendingOpen?: boolean };
+
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -378,9 +380,20 @@ export function CommandPalette() {
 
   // External trigger — any component can dispatch `cmdk:open` to
   // summon the palette (used by the header launcher button).
+  //
+  // This component ships in a deferred chunk, so the header's FIRST click
+  // fires before this listener exists. CommandPaletteTrigger parks the intent
+  // on `window.__cmdkPendingOpen` and we consume it once here on mount, so
+  // that click still opens the palette. The flag is cleared on every handled
+  // event, so a stale one can never re-open the palette later.
   useEffect(() => {
-    const handler = () => setOpen(true);
+    const w = window as CmdkWindow;
+    const handler = () => {
+      w.__cmdkPendingOpen = false;
+      setOpen(true);
+    };
     window.addEventListener("cmdk:open", handler);
+    if (w.__cmdkPendingOpen) handler();
     return () => window.removeEventListener("cmdk:open", handler);
   }, []);
 

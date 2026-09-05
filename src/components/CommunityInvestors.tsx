@@ -34,8 +34,13 @@ function LogoTile({ m, ghost = false }: LogoTileProps) {
   return (
     <Link
       href={`/membership/directory/${m.chamberSlug}`}
-      aria-hidden={ghost || undefined}
-      tabIndex={ghost ? -1 : undefined}
+      // Never focusable, ghost or not. The row is `overflow: clip`, which is not
+      // a scroll container, so a tile the animation has carried outside the box
+      // cannot be scrolled into view — focus would land on an invisible link
+      // (WCAG 2.4.11). The whole marquee is aria-hidden below; it is a
+      // decorative restatement of the directory, which is the accessible
+      // equivalent. The href stays in the HTML, so crawlers still follow it.
+      tabIndex={-1}
       className={`
         ci-card
         flex-shrink-0 flex items-center justify-center
@@ -154,17 +159,58 @@ export function CommunityInvestors({
 
         {/* Marquee — three tracks, contained within site framing */}
         <FadeIn delay={100}>
-          <div className="space-y-f13 overflow-hidden">
+          {/* WCAG 2.2.2 — an explicit mechanism to stop content that moves for
+              more than five seconds. Deliberately CSS-only (the checkbox drives
+              .ci-marquee-track's animation-play-state, see globals.css): this
+              is a Server Component and "use client" here would ship all 395 KB
+              of members.json to the browser. Bonus: it still works with JS off.
+
+              role="switch" + a STABLE aria-label on purpose. Letting the visible
+              label text supply the name meant the name and the checked state
+              flipped together, so a screen reader announced "Resume logo scroll,
+              checked" while paused — the name said resume, the state said on.
+              A switch announces "Pause logo scroll, on", where the state alone
+              carries whether it is engaged. */}
+          <input
+            type="checkbox"
+            role="switch"
+            aria-label="Pause logo scroll"
+            id="ci-marquee-pause"
+            className="ci-marquee-pause sr-only"
+          />
+          <label
+            htmlFor="ci-marquee-pause"
+            className="
+              ci-marquee-toggle
+              ml-auto mb-f13 flex w-fit items-center
+              px-f13 py-f8
+              border border-border-secondary hover:border-cambridge
+              text-caption font-medium text-text-secondary hover:text-cambridge
+              rounded-[var(--radius-md)]
+              cursor-pointer transition-colors
+            "
+          >
+            <span className="ci-toggle-pause">
+              <span aria-hidden="true">&#8214;</span> Pause logo scroll
+            </span>
+            <span className="ci-toggle-resume">
+              <span aria-hidden="true">&#9656;</span> Resume logo scroll
+            </span>
+          </label>
+          {/* overflow-clip, not overflow-hidden: `hidden` makes these scroll
+              containers, so tabbing to a tile that has scrolled out of view
+              made the browser scroll the container sideways to reveal it and
+              the track never came back into alignment. `clip` is not a scroll
+              container, and clipped overflow stops propagating to ancestors,
+              so nothing up the tree can be scrolled either. */}
+          <div className="ci-marquee-rows space-y-f13 overflow-clip" aria-hidden="true">
             {rows.map((row, ri) => {
               const direction = ROW_DIRECTIONS[ri] ?? "right";
               const dur = ROW_DURATIONS[ri] ?? 30;
+              // No role/aria-label on the row: the rows container is aria-hidden,
+              // so a labelled region inside it would never be reached anyway.
               return (
-                <div
-                  key={ri}
-                  className="overflow-hidden"
-                  role="region"
-                  aria-label={`Community investor logos, row ${ri + 1}`}
-                >
+                <div key={ri} className="overflow-clip">
                   {/* `w-max` is load-bearing: translateX(-50%) resolves
                       against the track's OWN width. Without it the track is a
                       block box clamped to the container (~1078px), so -50%

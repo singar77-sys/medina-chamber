@@ -36,8 +36,29 @@ const raw = eventsData as { generatedAt: string; totalEvents: number; events: Ch
 export const events: ChamberEvent[] = raw.events;
 export const totalEventCount = raw.totalEvents;
 
+/** Normalised comparison key for the tolerant lookup below: lowercase, no
+ *  trailing 4-digit year, no duplicate or edge hyphens. */
+function slugKey(slug: string): string {
+  return slug
+    .toLowerCase()
+    .replace(/-(?:19|20)\d{2}$/, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 export function getEventBySlug(slug: string): ChamberEvent | undefined {
-  return events.find((e) => e.slug === slug);
+  const exact = events.find((e) => e.slug === slug);
+  if (exact) return exact;
+
+  // The scraper regenerates slugs from the event title, so a title tweak
+  // ("...Golf Outing 2026" → "...Golf Outing") silently 404s every inbound
+  // link and share of the old URL. Fall back to a normalised match — but only
+  // when exactly ONE event normalises to the same key, so two dated instances
+  // of a recurring event never quietly resolve to the wrong one.
+  const key = slugKey(slug);
+  if (!key) return undefined;
+  const near = events.filter((e) => slugKey(e.slug) === key);
+  return near.length === 1 ? near[0] : undefined;
 }
 
 /** Today's date in Medina's timezone (America/New_York) as YYYY-MM-DD, so

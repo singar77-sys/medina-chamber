@@ -7,19 +7,7 @@
 
 import { resend, CHAMBER_NOTIFY_EMAIL } from "@/lib/email";
 import { escHtml as escapeHtml } from "@/lib/sanitize";
-
-// Both fraction digits are pinned to 2, matching the invoice table on
-// /portal/billing so a member reading the receipt email and the portal sees
-// the same amount. The old minimumFractionDigits-only setting rendered 5750
-// cents as "$57.5".
-function money(cents: number): string {
-  return (cents / 100).toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-}
+import { formatCents } from "@/lib/format";
 
 export interface WelcomeEmailParams {
   to: string;
@@ -94,7 +82,7 @@ export async function notifyStaffNewMember(p: StaffNewMemberParams): Promise<voi
         <tr><td style="padding:8px 0;border-bottom:1px solid #eee;color:#666;width:40%">Business</td><td style="padding:8px 0;border-bottom:1px solid #eee;font-weight:600">${escapeHtml(p.businessName)}</td></tr>
         <tr><td style="padding:8px 0;border-bottom:1px solid #eee;color:#666">Contact</td><td style="padding:8px 0;border-bottom:1px solid #eee">${escapeHtml(p.contactName)} &lt;${escapeHtml(p.email)}&gt;</td></tr>
         <tr><td style="padding:8px 0;border-bottom:1px solid #eee;color:#666">Tier</td><td style="padding:8px 0;border-bottom:1px solid #eee">${escapeHtml(p.tierName)}</td></tr>
-        <tr><td style="padding:8px 0;color:#666">Paid</td><td style="padding:8px 0;font-weight:600">${money(p.amountCents)}</td></tr>
+        <tr><td style="padding:8px 0;color:#666">Paid</td><td style="padding:8px 0;font-weight:600">${formatCents(p.amountCents)}</td></tr>
       </table>
     </div>`;
 

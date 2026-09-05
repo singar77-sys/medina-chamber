@@ -13,18 +13,9 @@ import { db } from "@/lib/db";
 import { events, eventTickets, eventRegistrations, contacts } from "@/lib/db/schema";
 import { TicketManager, type AdminTicket } from "@/components/admin/TicketManager";
 import { RegistrationRoster, type RosterRow } from "@/components/admin/RegistrationRoster";
+import { formatDateWithWeekday } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
-
-function fmtDate(d: Date): string {
-  return d.toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-    timeZone: "UTC",
-  });
-}
 
 export default async function AdminEventRegistrationPage({
   params,
@@ -103,7 +94,7 @@ export default async function AdminEventRegistrationPage({
         </Link>
         <h1 className="text-xl font-semibold text-gray-900 mt-3">{event.title}</h1>
         <p className="text-sm text-gray-500 mt-0.5">
-          {fmtDate(event.startsAt)} · {event.status} · {event.registrationCount} registered
+          {formatDateWithWeekday(event.startsAt)} · {event.status} · {event.registrationCount} registered
           {event.waitlistCount > 0 && `, ${event.waitlistCount} waitlisted`}
         </p>
       </div>

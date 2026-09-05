@@ -3,22 +3,16 @@
  * members-only resources hidden from the public page. Read-only server component.
  */
 
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
-import { verifyPortalSession, PORTAL_COOKIE } from "@/lib/portal-session";
+import { readPortalSession } from "@/lib/portal-session";
 import { getMemberResources, groupByCategory, type Resource } from "@/lib/resources";
+import { PortalTopBar } from "@/components/portal/PortalTopBar";
 
 export const dynamic = "force-dynamic";
 
-async function getSession() {
-  const token = (await cookies()).get(PORTAL_COOKIE)?.value;
-  if (!token) return null;
-  return verifyPortalSession(token);
-}
-
 export default async function PortalResourcesPage() {
-  const session = await getSession();
+  const session = await readPortalSession();
   if (!session) redirect("/portal");
 
   let groups: { category: string; items: Resource[] }[] = [];
@@ -31,30 +25,7 @@ export default async function PortalResourcesPage() {
 
   return (
     <div className="min-h-full flex flex-col">
-      <header
-        className="sticky top-0 z-10 flex items-center justify-between px-4 sm:px-6 py-3 shrink-0"
-        style={{ background: "#0C1B33", borderBottom: "1px solid rgba(255,255,255,.08)" }}
-      >
-        <a href="/portal/dashboard" className="flex items-center gap-3">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/chamber-logos/icon-white.png" alt="Medina Chamber" className="w-7 h-7" />
-          <span className="text-white text-sm font-bold hidden sm:block">Member Portal</span>
-        </a>
-        <div className="flex items-center gap-4">
-          <a href="/portal/dashboard" className="text-sm hover:underline" style={{ color: "#83BCA9" }}>
-            Dashboard
-          </a>
-          <form action="/api/portal/auth/logout" method="post">
-            <button
-              type="submit"
-              className="text-xs px-3 py-1.5 rounded-lg font-medium transition-colors"
-              style={{ background: "rgba(255,255,255,.08)", color: "#cbd5e1" }}
-            >
-              Sign out
-            </button>
-          </form>
-        </div>
-      </header>
+      <PortalTopBar links={[{ href: "/portal/dashboard", label: "Dashboard" }]} />
 
       <main className="flex-1 px-4 sm:px-6 py-8 max-w-3xl mx-auto w-full">
         <div className="mb-6">

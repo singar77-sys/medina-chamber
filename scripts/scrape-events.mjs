@@ -25,6 +25,7 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { parse } from 'node-html-parser';
 import { htmlToText } from './lib-html-to-text.mjs';
+import { parseEventSubtitle } from './lib-event-subtitle.mjs';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dir, '..');
@@ -91,31 +92,11 @@ function parseDetailPage(html, { slug, eventId, detailUrl }) {
   // Title
   const title = root.querySelector('.gz-pagetitle')?.text?.trim() ?? '';
 
-  // Date/time subtitle: "Wednesday, April 15, 2026 (8:30 AM - 10:00 AM)"
-  const subtitleRaw = root.querySelector('.gz-subtitle')?.text?.trim()
-    ?.replace(/\s*\([^)]*\)\s*$/, '') // remove timezone abbr like "(EDT)"
-    ?.trim() ?? '';
-
-  // Parse the date string into structured parts
-  const MONTHS = { January:0,February:1,March:2,April:3,May:4,June:5,July:6,August:7,September:8,October:9,November:10,December:11 };
-  const toISO = (year, month, day) =>
-    new Date(parseInt(year), MONTHS[month] ?? 0, parseInt(day)).toISOString().split('T')[0];
-  const dateMatch = subtitleRaw.match(/(\w+),\s+(\w+)\s+(\d+),\s+(\d+)\s+\((\d+:\d+\s*[AP]M)\s*[-–]\s*(\d+:\d+\s*[AP]M)\)/i);
-  let dayOfWeek = '', month = '', day = '', year = '', startTime = '', endTime = '', dateISO = '';
-  if (dateMatch) {
-    [, dayOfWeek, month, day, year, startTime, endTime] = dateMatch;
-    dateISO = toISO(year, month, day);
-  } else {
-    // Date-only subtitles — no "(6:00 PM - 8:00 PM)" range. All-day items
-    // like enrollment deadlines ("Wednesday, September 30, 2026") used to
-    // fail the full match above and ship with a blank dateISO, which
-    // knocked them off every chronological listing on the site.
-    const dateOnly = subtitleRaw.match(/^(\w+),\s+(\w+)\s+(\d+),\s+(\d+)/);
-    if (dateOnly) {
-      [, dayOfWeek, month, day, year] = dateOnly;
-      dateISO = toISO(year, month, day);
-    }
-  }
+  // Date/time subtitle: "Wednesday, April 15, 2026 (8:30 AM - 10:00 AM)".
+  // Shared, unit-tested transform — see lib-event-subtitle.mjs.
+  const {
+    dateString, dayOfWeek, month, day, year, startTime, endTime, dateISO,
+  } = parseEventSubtitle(root.querySelector('.gz-subtitle')?.text);
 
   // Location
   const street = root.querySelector('.gz-street-address')?.text?.trim() ?? '';
@@ -155,11 +136,11 @@ function parseDetailPage(html, { slug, eventId, detailUrl }) {
     dateISO,
     dayOfWeek,
     month,
-    day: parseInt(day) || 0,
-    year: parseInt(year) || 0,
+    day,
+    year,
     startTime,
     endTime,
-    dateString: subtitleRaw,
+    dateString,
     description,
     location,
     locationDesc,

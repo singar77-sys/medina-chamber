@@ -96,4 +96,25 @@ jobs:
             exit 0
           fi
           git commit -m "chore(photos): nightly SharePoint sync"
-          git push
+          # Same intermittent receive-pack failures the scrape workflows hit
+          # ("fatal error in commit_refs") — retry with backoff, rebasing
+          # between attempts so we don't get stuck behind a scrape commit that
+          # landed during the wait. See scrape-daily.yml for the full history.
+          for attempt in 1 2 3; do
+            if git push origin main; then
+              echo "✓ Push succeeded on attempt $attempt"
+              exit 0
+            fi
+            case "$attempt" in
+              1) delay=10 ;;
+              2) delay=30 ;;
+              *) delay=0 ;;
+            esac
+            if [ "$delay" -gt 0 ]; then
+              echo "Push attempt $attempt failed; sleeping ${delay}s before retry"
+              sleep "$delay"
+              git pull --rebase origin main || { echo "❌ Rebase failed; aborting"; exit 1; }
+            fi
+          done
+          echo "❌ Push failed after 3 attempts."
+          exit 1

@@ -19,9 +19,13 @@
  *            .gz-subtitle                    → subtitle / job type
  *            .gz-content-description         → full description
  *            .gz-tag                         → tags
+ *
+ * Write guards (see assertListingRendered / previousJobCount below): the script
+ * refuses to touch jobs.json unless the listing page actually rendered, and
+ * refuses to replace a healthy file with an empty one.
  */
 
-import { writeFileSync } from 'fs';
+import { writeFileSync, readFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { parse } from 'node-html-parser';
@@ -33,6 +37,9 @@ const OUT_FILE = join(ROOT, 'src', 'data', 'jobs.json');
 
 const LISTING_URL = 'https://business.medinachamber.com/jobs';
 const BASE_URL = 'https://business.medinachamber.com';
+// The grid GrowthZone's listing template wraps every .gz-content-card in. Its
+// presence is what separates "rendered, nothing to show" from "did not render".
+const LISTING_CONTAINER = '.gz-web-content-cards';
 const DELAY_MS = 400;
 
 const args = process.argv.slice(2);
@@ -51,9 +58,43 @@ async function get(url) {
   return res.text();
 }
 
+/**
+ * Prove the listing page actually rendered before trusting anything parsed off it.
+ *
+ * parseListingPage() returns [] for three very different situations: a genuinely
+ * empty board, a GrowthZone markup change, and an error / login / CDN
+ * interstitial served with a 200 (so the `res.ok` check in get() waves it
+ * through). Only the first is safe to write, and downstream they are
+ * indistinguishable — an empty jobs array silently blanks /jobs.
+ *
+ * The listing template is the only thing that emits the .gz-web-content-cards
+ * grid; an error page has no reason to carry it, and a markup change that moved
+ * the cards takes the container with it. Checking the container rather than the
+ * cards is deliberate — checking for cards would conflate "broken" with
+ * "genuinely empty", and a text/marker match on the raw HTML could be satisfied
+ * by a stylesheet or a comment on an error page.
+ */
+function assertListingRendered(root) {
+  if (root.querySelector(LISTING_CONTAINER)) return;
+  console.error(`
+❌ ${LISTING_URL} did not render the ${LISTING_CONTAINER} listing grid.`);
+  console.error('   GrowthZone changed its markup, or served an error/interstitial page with a 200.');
+  console.error('   Refusing to touch src/data/jobs.json — nothing parsed off this page is trustworthy.');
+  process.exit(1);
+}
+
+/** Job count in the currently committed file — 0 when there is no baseline. */
+function previousJobCount() {
+  if (!existsSync(OUT_FILE)) return 0;
+  try {
+    return JSON.parse(readFileSync(OUT_FILE, 'utf-8')).jobs?.length ?? 0;
+  } catch {
+    return 0; // corrupt previous file — no baseline to defend
+  }
+}
+
 /** Parse the listing page for all job stubs */
-function parseListingPage(html) {
-  const root = parse(html);
+function parseListingPage(root) {
   const jobs = [];
   const seen = new Set();
 
@@ -166,8 +207,9 @@ console.log('\n💼  Medina Chamber — Jobs Board Scraper');
 console.log('====================================================');
 
 console.log('  Fetching jobs listing page...');
-const listingHtml = await get(LISTING_URL);
-let stubs = parseListingPage(listingHtml);
+const listingRoot = parse(await get(LISTING_URL));
+assertListingRendered(listingRoot);
+let stubs = parseListingPage(listingRoot);
 
 if (TEST_MODE) {
   stubs = stubs.slice(0, 3);
@@ -206,13 +248,32 @@ if (stubs.length > 0 && detailFailures > stubs.length * 0.2) {
   process.exit(1);
 }
 
+// Deliberately NOT a zero-item block. These boards legitimately drain to zero,
+// and the listing assert above already covers the failure a block would catch
+// (moved markup, or an error page served with a 200). Refusing to write on a
+// genuine zero would keep /jobs serving entries that no longer exist, which
+// is worse than briefly empty. .github/workflows/scrape-daily.yml already made
+// this call for these two datasets: it REPORTS a collapse after pushing rather
+// than blocking, so one empty board cannot stop events reaching the site nightly.
+const prevJobCount = previousJobCount();
+if (jobs.length === 0 && prevJobCount > 0) {
+  console.warn(`\n⚠️  Parsed 0 job postings from a listing page that DID render (previously ${prevJobCount}).`);
+  console.warn(`   Writing the empty file. If ${LISTING_URL} still shows cards, the card selectors changed.`);
+}
+
 const output = {
   generatedAt: new Date().toISOString(),
   totalJobs: jobs.length,
   jobs,
 };
 
-writeFileSync(OUT_FILE, JSON.stringify(output, null, 2));
+// --test only scrapes 3 stubs, so writing OUT_FILE would permanently shrink
+// src/data/jobs.json to those 3. Same guard scrape-blog.mjs uses.
+if (TEST_MODE) {
+  console.log(`\n(--test) Skipping the write to src/data/jobs.json — ${output.generatedAt}`);
+} else {
+  writeFileSync(OUT_FILE, JSON.stringify(output, null, 2));
+}
 
 console.log('\n====================================================');
 console.log(`✅  Done! ${jobs.length} job postings saved to src/data/jobs.json`);

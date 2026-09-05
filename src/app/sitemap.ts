@@ -77,8 +77,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/resources/business-grants`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE_URL}/resources/workforce`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE_URL}/resources/library`, changeFrequency: "weekly", priority: 0.6 },
-    // ChamberBot — dedicated immersive AI experience
-    { url: `${BASE_URL}/chamberbot`, changeFrequency: "monthly", priority: 0.7 },
+    // ChamberBot — dedicated immersive AI experience. Its indexable
+    // document is a short sr-only summary (the conversation surface is a
+    // client-only portal), so it sits below the content hubs it used to
+    // outrank at 0.7 and just above the legal boilerplate.
+    { url: `${BASE_URL}/chamberbot`, changeFrequency: "monthly", priority: 0.4 },
     // Policy / legal
     { url: `${BASE_URL}/accessibility`, changeFrequency: "yearly", priority: 0.3 },
     { url: `${BASE_URL}/privacy`, changeFrequency: "yearly", priority: 0.3 },

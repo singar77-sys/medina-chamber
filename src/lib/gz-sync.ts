@@ -212,7 +212,31 @@ export async function runGzSync(): Promise<SyncResult> {
             city:           sql`excluded.city`,
             state:          sql`excluded.state`,
             zip:            sql`excluded.zip`,
-            description:    sql`excluded.description`,
+            // description is the ONE column where an empty scrape is ambiguous,
+            // so it is COALESCEd instead of overwritten. Unlike every other
+            // field in this SET clause it does not come from the directory
+            // listing — it comes from a second request, the member's GrowthZone
+            // detail page — so a throttled or 5xx'd detail fetch produces a
+            // member with a perfectly good name, address and phone and a blank
+            // description. scrape-members.mjs already carries yesterday's text
+            // forward when that fetch *throws*; this covers the case it cannot
+            // see: a 200 whose markup moved, where the parse just returns "".
+            // Empty here means "we failed to read it", never "the member
+            // deleted it". nullif() is what does the work — the mapping above
+            // already turns "" into null, and this keeps the guard honest if
+            // that ever changes.
+            //
+            // Nothing else is COALESCEd, because everywhere else empty is a
+            // real value a member can choose: clearing a phone number, dropping
+            // a website, deleting a Facebook page, removing a logo, moving to
+            // an address with no suite line. Preserving those would make stale
+            // data permanently unclearable — the directory would keep serving a
+            // disconnected phone number with no way to retract it. The tradeoff
+            // here is deliberate and one-sided: a member who genuinely deletes
+            // their description keeps the old paragraph until someone edits the
+            // row, which is a far smaller failure than blanking the description
+            // on 500 listings because one nightly scrape hiccuped.
+            description:    sql`coalesce(nullif(excluded.description, ''), ${organizations.description})`,
             logoUrl:        sql`excluded.logo_url`,
             facebook:       sql`excluded.facebook`,
             twitter:        sql`excluded.twitter`,

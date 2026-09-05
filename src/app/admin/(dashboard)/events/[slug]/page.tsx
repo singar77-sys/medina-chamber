@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { getEventBySlug } from "@/data/events";
 import { getEventInfoOverride, getCmsEventData } from "@/lib/cms-store";
@@ -20,6 +20,11 @@ export default async function AdminEventPage({ params }: Props) {
   const { slug } = await params;
   const event = getEventBySlug(slug);
   if (!event) notFound();
+  // getEventBySlug resolves legacy and normalized slugs. Every Redis key below
+  // must use the RESOLVED slug: keying off the requested one would write
+  // cms:event:<legacy>, which the public page never reads, so the edit would
+  // look saved (the PUT reads its own write back) and silently never publish.
+  if (event.slug !== slug) redirect(`/admin/events/${event.slug}`);
 
   const [savedOverride, savedEventData, customTemplate, eventPhotos, graphicImageUrl] =
     await Promise.all([

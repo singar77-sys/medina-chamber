@@ -187,7 +187,12 @@ export default async function MemberPage(
                 alt={`${member.name} logo, Greater Medina Chamber of Commerce member business in Medina, Ohio`}
                 fill
                 className="object-contain p-3 mix-blend-multiply"
-                unoptimized
+                // The tile is w-28/h-28 (112px). Without this, `fill` defaults
+                // to 100vw and asks the optimizer for a full-viewport variant.
+                sizes="112px"
+                // Same optimizer carve-out as MemberCard: SVG and external DB
+                // logo URLs must bypass it.
+                unoptimized={logoUrl.endsWith(".svg") || logoUrl.startsWith("http")}
               />
             ) : (
               <span className="text-3xl font-bold text-text-tertiary">

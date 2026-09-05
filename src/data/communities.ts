@@ -51,7 +51,7 @@ const allCommunities: Community[] = [
     zip: ["44281"],
     tagline: "Where industry and community meet",
     description:
-      "Wadsworth is a manufacturing and agricultural hub in southeastern Medina County with a charming downtown district along Main Street. Home to Swagelok, the Blue Tip Match Company heritage, and a growing small business scene.",
+      "Wadsworth is a manufacturing and agricultural hub in southeastern Medina County with a charming downtown district along Main Street. Home to Cornwell Quality Tools, Rohrer Corporation, the Blue Tip match heritage, and a growing small business scene.",
     chamberPitch:
       "Wadsworth businesses connect to the full Medina County network through chamber membership, advocacy at the county and state level, plus access to programs, events, and savings that serve the entire region.",
   },

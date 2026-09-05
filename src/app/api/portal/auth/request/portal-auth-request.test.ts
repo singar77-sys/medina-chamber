@@ -26,9 +26,12 @@ vi.mock("@/lib/portal-session", () => ({
 const send = vi.fn(async (_args: { to: string; subject: string; html: string }) => ({
   id: "email_1",
 }));
-vi.mock("@/lib/email", () => ({
+// Partial mock: the REAL EMAIL_RE (and CHAMBER_NOTIFY_EMAIL) come from source,
+// only the transport is stubbed. A hand-copied regex here would silently stop
+// testing the one the route actually ships.
+vi.mock("@/lib/email", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/email")>()),
   resend: { emails: { send } },
-  EMAIL_RE: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
 }));
 
 vi.mock("@/lib/rate-limit", () => ({ limitPortalAuth: vi.fn(async () => null) }));

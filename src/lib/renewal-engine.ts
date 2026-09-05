@@ -22,6 +22,7 @@ import { db } from "@/lib/db";
 import { invoices, type InvoiceLineItem } from "@/lib/db/schema";
 import { sql } from "drizzle-orm";
 import { resend } from "@/lib/email";
+import { formatCents, formatDateLong } from "@/lib/format";
 
 // ── Result type ────────────────────────────────────────────────────────────────
 
@@ -356,11 +357,9 @@ function buildRenewalEmail(opts: {
 }): string {
   const { firstName, orgName, tierName, renewalDate, amountCents, daysOut } = opts;
   const isUrgent   = daysOut <= 7;
-  const amount     = `$${(amountCents / 100).toLocaleString("en-US")}`;
+  const amount     = formatCents(amountCents);
   const accentHex  = isUrgent ? "#dc2626" : "#0C1B33";
-  const dateLabel  = new Date(renewalDate + "T00:00:00Z").toLocaleDateString("en-US", {
-    month: "long", day: "numeric", year: "numeric", timeZone: "UTC",
-  });
+  const dateLabel  = formatDateLong(renewalDate);
 
   const intro = isUrgent
     ? `Your <strong>${orgName}</strong> membership renews in <strong style="color:${accentHex}">${daysOut} days</strong> on ${dateLabel}. Please arrange payment to avoid a lapse in membership benefits.`

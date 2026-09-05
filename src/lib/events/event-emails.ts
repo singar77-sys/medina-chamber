@@ -15,6 +15,7 @@
 
 import { resend } from "@/lib/email";
 import { escHtml as escapeHtml } from "@/lib/sanitize";
+import { formatCents } from "@/lib/format";
 
 export interface EventConfirmationParams {
   to: string;
@@ -33,12 +34,7 @@ export interface EventConfirmationParams {
 }
 
 function formatMoney(cents: number): string {
-  if (!cents) return "Free";
-  return (cents / 100).toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-  });
+  return cents ? formatCents(cents) : "Free";
 }
 
 export function buildEventConfirmationEmail(p: EventConfirmationParams): string {

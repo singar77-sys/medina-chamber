@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getUpcomingEvents } from "@/data/events";
 import { ChamberBotRoute } from "./ChamberBotRoute";
 import { OG_IMAGE } from "@/lib/og";
 
@@ -33,7 +34,7 @@ export default function ChamberBotPage() {
       {/*
         The portal is client-only and covers the viewport, so without this
         block the indexed document is an empty <main> with no h1: a soft-404
-        candidate on a page the sitemap advertises at priority 0.7. Kept
+        candidate on a page the sitemap advertises at priority 0.4. Kept
         sr-only so it never flashes before the portal mounts.
       */}
       <section className="sr-only">
@@ -46,7 +47,10 @@ export default function ChamberBotPage() {
           full chamber calendar.
         </p>
       </section>
-      <ChamberBotRoute />
+      {/* Counted here, in the Server Component. The portal rail shows this
+          one number; importing @/data/events client-side to get it pulled
+          the whole ~70 KB dataset into the bundle. */}
+      <ChamberBotRoute upcomingEventCount={getUpcomingEvents().length} />
     </>
   );
 }

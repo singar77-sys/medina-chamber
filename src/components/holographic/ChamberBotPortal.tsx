@@ -28,7 +28,6 @@ import { createPortal } from "react-dom";
 import { usePostHog } from "posthog-js/react";
 import { ChamberBotMascot, type MascotIntent } from "./ChamberBotMascot";
 import { renderMarkdown } from "@/lib/markdown";
-import { getUpcomingEvents } from "@/data/events";
 import { chamberOffice, jaclyn, stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
 
@@ -52,10 +51,15 @@ export interface ChamberBotPortalProps {
   open: boolean;
   initialQuery?: string | null;
   onClose: () => void;
+  /** Upcoming-event count for the rail readout. Computed in a Server Component
+   *  (see app/chamberbot/page.tsx) so events.json never reaches the client
+   *  bundle — a static import here dragged the whole ~70 KB dataset in for one
+   *  number. Required on purpose: an optional prop meant a lazy-import fallback
+   *  that no call site could ever reach. */
+  upcomingEventCount: number;
 }
 
 // ── Sub-components ────────────────────────────────────────────────
-
 
 /**
  * Concentric holographic rings — pure SVG, zero JS.
@@ -360,6 +364,7 @@ export function ChamberBotPortal({
   open,
   initialQuery,
   onClose,
+  upcomingEventCount,
 }: ChamberBotPortalProps) {
   const [mounted, setMounted] = useState(false);
   const [phase, setPhase] = useState<Phase>("closed");
@@ -378,8 +383,6 @@ export function ChamberBotPortal({
     if (stored !== null) return stored === "true";
     return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
   });
-
-  const upcomingEventCount = useMemo(() => getUpcomingEvents().length, []);
 
   // Calendar mode subtitle — current month + 2 months out, dynamic so the
   // "APR – JUN" range slides forward as the year progresses instead of going

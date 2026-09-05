@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
+import { ButtonLink } from "@/components/ui/Button";
 import { IndustryChipStrip } from "./IndustryChipStrip";
 import { DirectorySearch } from "./DirectorySearch";
 import type { RefObject } from "react";
@@ -125,10 +125,30 @@ export function BrowseBand({
 
         {/* Bottom bar: CTA + CI ribbon */}
         <div className="mt-f55 pt-f34 border-t border-border-primary flex flex-col gap-f21 sm:flex-row sm:items-center sm:justify-between">
-          <Button variant="primary" size="md" onClick={onSeeAll}>
+          {/* A real href, not a bare button. The results grid — where every
+              card is a <Link> to that member's detail page — was reachable only
+              through client state, so 223 of 503 members had no crawlable inbound
+              link and sitemap.ts was their sole discovery path. (The other 280 are
+              reachable from community pages and the CI marquee.) A plain left
+              click still filters client-side:
+              actually navigating would re-render the tree from the server and
+              tear down the filter state (see DirectoryClient). prefetch off so
+              hovering the CTA does not pull the whole roster. */}
+          <ButtonLink
+            href="/membership/directory?all=1"
+            prefetch={false}
+            variant="primary"
+            size="md"
+            onClick={(e) => {
+              // Modified clicks (new tab/window) navigate for real.
+              if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+              e.preventDefault();
+              onSeeAll();
+            }}
+          >
             Browse all members{" "}
             <span aria-hidden="true" className="ml-f5">→</span>
-          </Button>
+          </ButtonLink>
 
           <p className="text-body-sm text-text-secondary">
             Including{" "}

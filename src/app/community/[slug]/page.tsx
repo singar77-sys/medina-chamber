@@ -343,6 +343,43 @@ export default async function CommunityPage(
           </div>
         </section>
 
+        {/* Other communities we serve. /community and
+            /medina-means-business both list `activeCommunities` only, so the
+            four townships with no member yet (Rittman, Lafayette, Granger,
+            Montville) had no crawlable inbound link and the sitemap was
+            their sole discovery path. Cross-linking the full set from every
+            community page fixes that and answers the question a reader on a
+            township page actually has: where else does the chamber reach?
+            Names only, no member counts (see the no-small-counts rule). */}
+        <section className="mt-20">
+          <h2 className="text-overline text-cambridge mb-6">
+            Other Communities We Serve
+          </h2>
+          <p className="text-body text-text-secondary max-w-3xl">
+            The Greater Medina Chamber works with businesses across the
+            county, from the Historic Square to the township lines.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            {communities
+              .filter((c) => c.slug !== community.slug)
+              .map((c) => (
+                <Link
+                  key={c.slug}
+                  href={`/community/${c.slug}`}
+                  className="
+                    inline-flex items-center gap-2 px-4 py-2
+                    bg-bg-secondary border border-border-secondary
+                    rounded-full text-body-sm text-text-secondary
+                    hover:border-border-primary hover:text-text-primary
+                    transition-colors
+                  "
+                >
+                  {c.name}
+                </Link>
+              ))}
+          </div>
+        </section>
+
         {/* Back link */}
         <div className="mt-12">
           <Link

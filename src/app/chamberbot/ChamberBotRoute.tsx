@@ -17,7 +17,12 @@ import { PostHogProvider } from "@/components/PostHogProvider";
  * users came expecting "the immersive experience" and got an on-ramp
  * to it. Now the page IS the portal.
  */
-export function ChamberBotRoute() {
+export function ChamberBotRoute({
+  upcomingEventCount,
+}: {
+  /** Counted on the server so the events dataset stays out of this bundle. */
+  upcomingEventCount: number;
+}) {
   const router = useRouter();
 
   function handleClose() {
@@ -41,6 +46,7 @@ export function ChamberBotRoute() {
         open
         initialQuery={null}
         onClose={handleClose}
+        upcomingEventCount={upcomingEventCount}
       />
     </PostHogProvider>
   );

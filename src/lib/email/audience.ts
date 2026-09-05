@@ -46,13 +46,13 @@ export async function resolveAudience(
   }
 
   if (segment.tiers?.length) {
-    // Orgs with an ACTIVE membership in one of the requested tiers.
+    // Orgs with a CURRENT membership in one of the requested tiers.
     const tierOrgs = db
       .select({ id: memberships.organizationId })
       .from(memberships)
       .innerJoin(membershipTiers, eq(memberships.tierId, membershipTiers.id))
-      // Include in-grace `past_due` members: they're still paying members and
-      // should get tier comms. Silently excluding them (active-only) dropped
+      // "Current" deliberately includes in-grace `past_due`: they're still
+      // paying members and should get tier comms. Excluding them (active-only) dropped
       // anyone inside the 30-day grace window. lapsed/cancelled stay excluded.
       .where(and(inArray(memberships.status, ["active", "past_due"]), inArray(membershipTiers.slug, segment.tiers)));
     conditions.push(inArray(organizations.id, tierOrgs));

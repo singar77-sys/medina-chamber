@@ -7,7 +7,6 @@
  */
 
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import {
@@ -18,43 +17,20 @@ import {
   invoices,
 } from "@/lib/db/schema";
 import { eq, desc } from "drizzle-orm";
-import { verifyPortalSession, PORTAL_COOKIE } from "@/lib/portal-session";
-
-// ── Auth helpers ───────────────────────────────────────────────────────────────
-
-async function getSession() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(PORTAL_COOKIE)?.value;
-  if (!token) return null;
-  return verifyPortalSession(token);
-}
+import { readPortalSession } from "@/lib/portal-session";
+import { formatCents, formatDateLong } from "@/lib/format";
+import { PortalTopBar } from "@/components/portal/PortalTopBar";
 
 // ── Formatting ─────────────────────────────────────────────────────────────────
 
-function formatCents(cents: number): string {
+// Annual dues are quoted in whole dollars on the membership card: a tier price
+// is always a round number, and "$345" reads better there than "$345.00". Every
+// other amount on this page is a real invoice figure and uses formatCents.
+function formatWholeDollars(cents: number): string {
   return (cents / 100).toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
     maximumFractionDigits: 0,
-  });
-}
-
-function formatDollars(cents: number): string {
-  return (cents / 100).toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-}
-
-function formatDate(iso: string | null | undefined): string {
-  if (!iso) return "—";
-  const [year, month, day] = iso.split("-").map(Number);
-  return new Date(year, month - 1, day).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
   });
 }
 
@@ -93,7 +69,7 @@ const INVOICE_STATUS: Record<
 // ── Page ───────────────────────────────────────────────────────────────────────
 
 export default async function PortalDashboardPage() {
-  const session = await getSession();
+  const session = await readPortalSession();
   if (!session) redirect("/portal");
 
   // Fetch all member data in one round trip
@@ -168,52 +144,13 @@ export default async function PortalDashboardPage() {
 
   return (
     <div className="min-h-full flex flex-col">
-      {/* ── Top bar ────────────────────────────────────────────────────────── */}
-      <header
-        className="sticky top-0 z-10 flex items-center justify-between px-4 sm:px-6 py-3 shrink-0"
-        style={{ background: "#0C1B33", borderBottom: "1px solid rgba(255,255,255,.08)" }}
-      >
-        <div className="flex items-center gap-3">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/chamber-logos/icon-white.png"
-            alt="Medina Chamber"
-            className="w-7 h-7"
-          />
-          <span className="text-white text-sm font-bold hidden sm:block">
-            Member Portal
-          </span>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <a
-            href="/portal/billing"
-            className="text-sm hover:underline"
-            style={{ color: "#83BCA9" }}
-          >
-            Billing
-          </a>
-          <a
-            href="/portal/profile"
-            className="text-sm hover:underline"
-            style={{ color: "#83BCA9" }}
-          >
-            Profile
-          </a>
-          <span className="text-sm hidden sm:inline" style={{ color: "#83BCA9" }}>
-            {contact.firstName} {contact.lastName}
-          </span>
-          <form action="/api/portal/auth/logout" method="post">
-            <button
-              type="submit"
-              className="text-xs px-3 py-1.5 rounded-lg font-medium transition-colors"
-              style={{ background: "rgba(255,255,255,.08)", color: "#cbd5e1" }}
-            >
-              Sign out
-            </button>
-          </form>
-        </div>
-      </header>
+      <PortalTopBar
+        links={[
+          { href: "/portal/billing", label: "Billing" },
+          { href: "/portal/profile", label: "Profile" },
+        ]}
+        memberName={`${contact.firstName} ${contact.lastName}`}
+      />
 
       {/* ── Main content ───────────────────────────────────────────────────── */}
       <main className="flex-1 px-4 sm:px-6 py-8 max-w-4xl mx-auto w-full">
@@ -269,7 +206,7 @@ export default async function PortalDashboardPage() {
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-text-secondary">Annual dues</span>
                     <span className="text-sm font-bold text-text-primary">
-                      {formatCents(membership.annualPriceCents)}
+                      {formatWholeDollars(membership.annualPriceCents)}
                     </span>
                   </div>
                 )}
@@ -278,7 +215,7 @@ export default async function PortalDashboardPage() {
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-text-secondary">Renews</span>
                   <span className="text-sm text-text-primary">
-                    {formatDate(membership.renewalDate)}
+                    {formatDateLong(membership.renewalDate)}
                   </span>
                 </div>
 
@@ -286,7 +223,7 @@ export default async function PortalDashboardPage() {
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-text-secondary">Member since</span>
                   <span className="text-sm text-text-primary">
-                    {formatDate(membership.startDate)}
+                    {formatDateLong(membership.startDate)}
                   </span>
                 </div>
               </div>
@@ -409,8 +346,8 @@ export default async function PortalDashboardPage() {
                       </p>
                       <p className="text-xs text-text-tertiary mt-0.5">
                         {inv.dueDate
-                          ? `Due ${formatDate(inv.dueDate)}`
-                          : formatDate(inv.createdAt?.toISOString().slice(0, 10))}
+                          ? `Due ${formatDateLong(inv.dueDate)}`
+                          : formatDateLong(inv.createdAt?.toISOString().slice(0, 10))}
                       </p>
                     </div>
                     <div className="flex items-center gap-3 shrink-0">
@@ -421,7 +358,7 @@ export default async function PortalDashboardPage() {
                         {badge.label}
                       </span>
                       <span className="text-sm font-bold text-text-primary tabular-nums">
-                        {formatDollars(inv.amountCents)}
+                        {formatCents(inv.amountCents)}
                       </span>
                     </div>
                   </div>

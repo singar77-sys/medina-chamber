@@ -29,6 +29,14 @@ The site is static-first with scraped data committed to `src/data/`:
   `scrape-daily.yml` (events/news/jobs, 05:00 UTC) and `scrape-weekly.yml`
   (members → websites → Upstash vectors → ratings → blog, Sun 11:00 UTC).
   Both smoke-check counts before pushing and email on failure.
+- **Photos sync on their own workflow**: `sync-sharepoint-photos.yml` ("Sync
+  SharePoint Photos") pulls the chamber's SharePoint photo folders into
+  `public/images/photos/`, then commits and pushes whatever changed. The folder
+  list lives in `scripts/sharepoint-sync.config.json` (edit that, not the YAML).
+  It is **manual-only** (`workflow_dispatch`): the nightly cron stays commented
+  out until the `AZURE_TENANT_ID` / `AZURE_CLIENT_ID` / `AZURE_CLIENT_SECRET`
+  repo secrets exist, because every scheduled run without them failed on the
+  first step. The file's header documents the one-time Entra app registration.
 - **The weekly member scrape OVERWRITES `src/data/members.json`.** Durable
   hand-edits belong in `src/data/member-overrides.json` (re-applied on every
   scrape). Community Investor / Visibility Plus truth lives in

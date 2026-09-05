@@ -8,12 +8,14 @@
  */
 
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { requireAdminSession } from "@/lib/admin-auth";
 import { SLUG_RE } from "@/lib/sanitize";
 import {
   getCmsEventData,
   setCmsEventData,
   clearCmsEventData,
+  CMS_EVENTS_TAG,
   type CmsEventData,
 } from "@/lib/cms-store";
 
@@ -85,6 +87,10 @@ export async function PUT(req: Request): Promise<Response> {
   }
 
   await setCmsEventData(slug, data);
+  // Bust the cached public read so the edit shows on /events/<slug> right away
+  // (Next 16.2 revalidateTag requires the profile argument). The read-back
+  // below deliberately stays on the uncached helper.
+  revalidateTag(CMS_EVENTS_TAG, "max");
   const saved = await getCmsEventData(slug);
   return NextResponse.json({ data: saved });
 }
@@ -101,5 +107,6 @@ export async function DELETE(req: Request): Promise<Response> {
   }
 
   await clearCmsEventData(slug);
+  revalidateTag(CMS_EVENTS_TAG, "max");
   return NextResponse.json({ ok: true });
 }

@@ -19,6 +19,7 @@
  */
 
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import sharp from "sharp";
 import { requireAdminSession } from "@/lib/admin-auth";
 import { SLUG_RE } from "@/lib/sanitize";
@@ -26,6 +27,7 @@ import {
   uploadMedia,
   setEventGraphicImage,
   getNextSequence,
+  EVENT_PHOTOS_TAG,
   type MediaItem,
 } from "@/lib/media-store";
 
@@ -132,6 +134,15 @@ export async function POST(req: Request): Promise<Response> {
     filename = `${baseName}.webp`;
     const prefix = eventSlug ? `events/${eventSlug}/` : "media/";
     blobPathname = `${prefix}${Date.now()}-${filename}`;
+    // A blank description used to store no alt at all, so the photo reached the
+    // public gallery with no accessible name of its own. Derive one from what
+    // the route actually has: the event slug (generated from the event title)
+    // plus the per-event counter, so eight photos of one outing don't all read
+    // out the same sentence.
+    const seq = await getNextSequence(eventSlug ?? "media");
+    alt = eventSlug
+      ? `Greater Medina Chamber of Commerce ${toTitleCase(eventSlug.replace(/-/g, " "))} photo ${seq}`
+      : `Greater Medina Chamber of Commerce ${year} photo ${seq}`;
   }
 
   // ── Upload ─────────────────────────────────────────────────────────────────
@@ -152,6 +163,10 @@ export async function POST(req: Request): Promise<Response> {
       { status: 500 },
     );
   }
+
+  // A gallery upload changed the event's photo list — bust the cached public
+  // read (Next 16.2 revalidateTag requires the profile argument).
+  if (eventSlug) revalidateTag(EVENT_PHOTOS_TAG, "max");
 
   // For custom social graphics, register the URL so GraphicPanel shows it.
   // The blob already uploaded — a Redis hiccup here must not 500 the request.

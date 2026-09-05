@@ -7,6 +7,7 @@
 
 import { resend } from "@/lib/email";
 import { escHtml as esc } from "@/lib/sanitize";
+import { formatDateLong } from "@/lib/format";
 
 export interface RenewalConfirmationInput {
   to: string;
@@ -19,12 +20,7 @@ export interface RenewalConfirmationInput {
 
 export async function sendRenewalConfirmation(input: RenewalConfirmationInput): Promise<void> {
   const { to, firstName, orgName, tierName, renewedThrough } = input;
-  const dateLabel = new Date(`${renewedThrough}T00:00:00Z`).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-    timeZone: "UTC",
-  });
+  const dateLabel = formatDateLong(renewedThrough);
 
   const html = `<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Membership Renewed</title></head>

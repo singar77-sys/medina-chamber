@@ -170,7 +170,10 @@ export interface CmsEventData {
   updatedAt?: string;
 }
 
-/** cache() dedupes the generateMetadata + page-body reads within one request. */
+/** cache() dedupes the generateMetadata + page-body reads within one request.
+ *  This uncached-across-requests form is what the ADMIN screens use, so an editor
+ *  reads back exactly what it just saved. The public event page reads through
+ *  getPublicCmsEventData below instead. */
 export const getCmsEventData = cache(async (slug: string): Promise<CmsEventData | null> => {
   const redis = getRedis();
   if (!redis) return null;
@@ -187,6 +190,39 @@ export async function clearCmsEventData(slug: string): Promise<void> {
   const redis = getRedis();
   if (!redis) return;
   await redis.del(`cms:event:${slug}`);
+}
+
+/** Tag for on-demand revalidation — the admin event-details API busts this on
+ *  save/clear. revalidateTag with profile "max" marks the tag STALE and serves
+ *  stale-while-revalidate, so the save lands on the NEXT public request, not the
+ *  one immediately after. Read-your-own-writes would need updateTag, which is
+ *  Server-Actions-only and unavailable in a Route Handler. */
+export const CMS_EVENTS_TAG = "cms-events";
+
+// getCmsEventData above stays uncached because the admin editor has to read
+// back what it just saved. The public event page reads through here instead:
+// the Upstash REST call is an uncached fetch, which would otherwise opt every
+// /events/[slug] page out of static generation and cost a Redis round-trip on
+// every view of all ~30 event pages.
+// Deliberately reads the RAW redis call rather than getCmsEventData: readSafe
+// turns a Redis error into null, and caching that would pin "no override" for
+// the whole 300s window on one transient blip. Letting it throw means
+// unstable_cache stores nothing and the wrapper below degrades per-request.
+const getCachedCmsEventData = unstable_cache(
+  async (slug: string): Promise<CmsEventData | null> => {
+    const redis = getRedis();
+    if (!redis) return null;
+    return (await redis.get<CmsEventData>(`cms:event:${slug}`)) ?? null;
+  },
+  ["cms-event-data"],
+  { tags: [CMS_EVENTS_TAG], revalidate: 300 },
+);
+
+/** Published event override for the public event page: the Redis override when
+ *  staff have saved one, else null. A Redis outage degrades to null HERE, outside
+ *  the cache boundary, so the failure costs one request instead of 300 seconds. */
+export async function getPublicCmsEventData(slug: string): Promise<CmsEventData | null> {
+  return readSafe("event-data (cached)", () => getCachedCmsEventData(slug), null);
 }
 
 // ── Membership pricing ─────────────────────────────────────────────────────

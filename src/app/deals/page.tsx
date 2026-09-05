@@ -1,17 +1,42 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
+import { cache } from "react";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { db } from "@/lib/db";
-import { getPublicDeals } from "@/lib/deals";
+import { getPublicDeals, type PublicDeal } from "@/lib/deals";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Member Deals & Savings",
-  description:
-    "Exclusive deals and offers from Greater Medina Chamber of Commerce members. Support local businesses and save.",
-  alternates: { canonical: "/deals" },
-};
+/**
+ * One query per request, shared by generateMetadata and the page body.
+ * hot_deals (migration 0005) may not be applied yet — an empty list keeps
+ * the empty state on screen instead of a 500.
+ */
+const loadPublicDeals = cache(async (): Promise<PublicDeal[]> => {
+  try {
+    return await getPublicDeals(db);
+  } catch (err) {
+    console.error("[deals] load failed:", err);
+    return [];
+  }
+});
+
+export async function generateMetadata(): Promise<Metadata> {
+  const deals = await loadPublicDeals();
+  return {
+    title: "Member Deals & Savings",
+    description:
+      "Exclusive deals and offers from Greater Medina Chamber of Commerce members. Support local businesses and save.",
+    alternates: { canonical: "/deals" },
+    // No member has posted a Hot Deal yet. An empty page indexes as a dead
+    // end, and the homepage Quick Links funnel visitors straight into it,
+    // so keep it out of the index (still followed, for the onward links)
+    // until it carries real offers. Computed, not hardcoded, so it flips
+    // back on its own the moment the first deal goes live.
+    ...(deals.length === 0 ? { robots: { index: false, follow: true } } : {}),
+  };
+}
 
 function formatDate(iso: string): string {
   return new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-US", {
@@ -23,13 +48,7 @@ function formatDate(iso: string): string {
 }
 
 export default async function DealsPage() {
-  let deals: Awaited<ReturnType<typeof getPublicDeals>> = [];
-  try {
-    deals = await getPublicDeals(db);
-  } catch (err) {
-    // hot_deals (migration 0005) may not be applied yet — show the empty state, not a 500.
-    console.error("[deals] load failed:", err);
-  }
+  const deals = await loadPublicDeals();
 
   return (
     <>
@@ -68,7 +87,47 @@ export default async function DealsPage() {
       <section className="relative overflow-hidden mx-auto max-w-7xl px-6 lg:px-8 pb-f89">
         <VesicaPiscisWatermark className="tp-vesica" />
         {deals.length === 0 ? (
-          <p className="text-body text-text-tertiary">No active deals right now — check back soon.</p>
+          // Deals are member-posted, so this page empties and refills with
+          // them. Send the visitor somewhere real rather than leaving them
+          // on a dead end (the homepage Quick Links link straight here).
+          <div className="max-w-2xl">
+            <p className="text-h4 text-text-primary">No member deals posted right now.</p>
+            <p className="text-body text-text-secondary mt-f13 leading-relaxed">
+              Hot Deals come and go with the members who post them. While this
+              page is quiet, three places worth a look:
+            </p>
+            <ul className="mt-f21 space-y-f13">
+              <li className="text-body-sm text-text-secondary leading-relaxed">
+                <Link
+                  href="/membership/savings"
+                  className="font-bold text-cambridge hover:text-cambridge/80 transition-colors"
+                >
+                  Member savings programs
+                </Link>{" "}
+                — the year-round discounts every member gets on health
+                insurance, workers&apos; compensation, energy, HR, and recreation.
+              </li>
+              <li className="text-body-sm text-text-secondary leading-relaxed">
+                <Link
+                  href="/membership/directory"
+                  className="font-bold text-cambridge hover:text-cambridge/80 transition-colors"
+                >
+                  The member directory
+                </Link>{" "}
+                — every Greater Medina Chamber business, searchable by trade
+                and by town.
+              </li>
+              <li className="text-body-sm text-text-secondary leading-relaxed">
+                <Link
+                  href="/membership/join"
+                  className="font-bold text-cambridge hover:text-cambridge/80 transition-colors"
+                >
+                  Join the Chamber
+                </Link>{" "}
+                — members can post their own Hot Deal to this page.
+              </li>
+            </ul>
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-f21">
             {deals.map((d) => {

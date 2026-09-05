@@ -11,6 +11,7 @@ import { db } from "@/lib/db";
 import { verifyResendSignature } from "@/lib/email/resend-signature";
 import { recordResendEvent } from "@/lib/email/track-resend-event";
 import { applyRateLimit, resendWebhookLimiter } from "@/lib/rate-limit";
+import { readTextBounded, WEBHOOK_MAX_CHARS } from "@/lib/body-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -27,7 +28,17 @@ export async function POST(req: Request): Promise<Response> {
     return new Response("not configured", { status: 503 });
   }
 
-  const body = await req.text();
+  // Bound the raw read BEFORE signature verification — the Svix signature is
+  // computed over these exact bytes, so they must be buffered either way; the
+  // ceiling caps how much is ever handed to the HMAC and the parse below on an
+  // unauthenticated request. It does NOT cap what a hostile caller can make the
+  // isolate buffer: only a declared Content-Length is rejected pre-read, and a
+  // chunked body is read in full first. Vercel's ~4.5 MB request limit is the
+  // real backstop there. See src/lib/body-limit.ts.
+  const bounded = await readTextBounded(req, WEBHOOK_MAX_CHARS);
+  if ("response" in bounded) return bounded.response;
+  const body = bounded.text;
+
   const valid = verifyResendSignature(
     secret,
     body,

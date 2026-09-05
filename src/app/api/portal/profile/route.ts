@@ -29,6 +29,7 @@ import { limitPortalProfile } from "@/lib/rate-limit";
 import { assertSameOrigin } from "@/lib/csrf";
 import { EMAIL_RE } from "@/lib/email";
 import { logEngagement } from "@/lib/engagement";
+import { portalDormant } from "../_dormant";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -95,6 +96,10 @@ function sanitizeSocial(v: string): string | null | "INVALID" {
 }
 
 export async function POST(req: Request): Promise<Response> {
+  // Dormant pre-cutover: 404 before any contact/organization write.
+  const dormant = portalDormant();
+  if (dormant) return dormant;
+
   // Rate limit per client IP (~20/min). Fail-open: a limiter hiccup never
   // blocks a member saving their profile or leaks a 500.
   const limited = await limitPortalProfile(req);

@@ -16,10 +16,16 @@ import { limitPortalAuth } from "@/lib/rate-limit";
 import { readJsonBounded } from "@/lib/body-limit";
 import { escHtml } from "@/lib/sanitize";
 import { getSiteOrigin } from "@/lib/site-url";
+import { portalDormant } from "../../_dormant";
 
 export const runtime = "nodejs";
 
 export async function POST(req: Request): Promise<Response> {
+  // Dormant pre-cutover: 404 before the contacts SELECT and the Resend send, so
+  // this route cannot be used as an unauthenticated member-lookup or mailer.
+  const dormant = portalDormant();
+  if (dormant) return dormant;
+
   // Rate limit per client IP (~5/min). Fail-open: a limiter hiccup never
   // blocks login or leaks a 500.
   const limited = await limitPortalAuth(req);
@@ -45,13 +51,14 @@ export async function POST(req: Request): Promise<Response> {
     .limit(1);
 
   // Look up contact — fire-and-forget on hit; generic response always returned.
-  // NOTE (known low): the hit branch does token-sign + Resend send before
-  // responding, so response TIMING differs from a miss and could enumerate
-  // members. Rated low — the chamber runs a public 521-member directory (so
-  // "is X a member" is low-value) and this route is rate-limited 5/min/IP.
-  // Deferring via next/server `after()` is the fix but it throws outside a
-  // request context, breaking the email-escaping unit tests; revisit with a
-  // testable deferral post-launch.
+  // NOTE (timing side channel, now unreachable): the hit branch does token-sign
+  // + Resend send before responding, so response TIMING differs from a miss and
+  // could enumerate members. The dormant-portal 404 above short-circuits every
+  // request pre-cutover, so there is nothing to time today; it was already rated
+  // low anyway (the chamber runs a public 521-member directory, and the route is
+  // rate-limited 5/min/IP). Revisit at cutover: deferring via next/server
+  // `after()` is the fix but it throws outside a request context, breaking the
+  // email-escaping unit tests, so it needs a testable deferral.
   if (contact) {
     try {
       const token = await signMagicToken(contact.id, email, contact.magicTokenEpoch);

@@ -3,10 +3,12 @@ import type { SQL } from "drizzle-orm";
 import { PgDialect } from "drizzle-orm/pg-core";
 import { signMagicToken, verifyPortalSession, PORTAL_COOKIE } from "@/lib/portal-session";
 
-// This route is NOT behind INTERNAL_TRANSACTIONS_ENABLED — it is reachable in
-// production today, and it carries two guarantees that are invisible to review:
-// GET must never consume the link (an Outlook SafeLinks prefetch would burn
-// every login email), and POST must consume it exactly once via the
+// This route IS behind INTERNAL_TRANSACTIONS_ENABLED (it used to be reachable in
+// production while the portal was dormant — see the "dormant backend" block at
+// the bottom, which is the regression test for that). The tests below stub the
+// switch ON so they can still exercise the two guarantees that are invisible to
+// review: GET must never consume the link (an Outlook SafeLinks prefetch would
+// burn every login email), and POST must consume it exactly once via the
 // magic_token_epoch guard (a forwarded or leaked link is otherwise replayable
 // into a full member session).
 
@@ -45,6 +47,9 @@ beforeAll(async () => {
 beforeEach(() => {
   vi.clearAllMocks();
   vi.stubEnv("PORTAL_AUTH_SECRET", "p".repeat(48));
+  // afterEach unstubs everything, so the dormant-portal switch has to be set
+  // per test rather than once at module scope.
+  vi.stubEnv("INTERNAL_TRANSACTIONS_ENABLED", "true");
   state.updateRows = [];
   state.updateWhere = null;
   state.sessionEpoch = 0;
@@ -127,5 +132,33 @@ describe("POST /api/portal/auth/verify (single use)", () => {
     const res = await post("garbage.token");
     expect(res.headers.get("location")).toContain("/portal?error=invalid_link");
     expect(update).not.toHaveBeenCalled();
+  });
+});
+
+describe("/api/portal/auth/verify — dormant backend", () => {
+  // GrowthZone is still the system of record, so neither verb may be reachable
+  // pre-cutover. This mattered most on POST: it WROTE (magic_token_epoch +
+  // portal_claimed_at) on a route nothing was gating.
+  it("404s GET before rendering the sign-in interstitial", async () => {
+    vi.stubEnv("INTERNAL_TRANSACTIONS_ENABLED", "");
+    const token = await signMagicToken(CONTACT, "ann@acme.co", 0);
+    const res = await GET(new Request(url(token)));
+
+    expect(res.status).toBe(404);
+    expect(await res.json()).toEqual({ error: "Not found" });
+    expect(res.headers.get("content-type")).not.toContain("text/html");
+  });
+
+  it("404s POST before the magic_token_epoch write", async () => {
+    vi.stubEnv("INTERNAL_TRANSACTIONS_ENABLED", "");
+    state.updateRows = [consumedRow];
+    const token = await signMagicToken(CONTACT, "ann@acme.co", 0);
+    const res = await POST(new Request(url(token), { method: "POST" }));
+
+    expect(res.status).toBe(404);
+    expect(update).not.toHaveBeenCalled();
+    // No session cookie may be issued while the portal is dormant.
+    expect(res.headers.get("set-cookie")).toBeNull();
+    expect(logEngagement).not.toHaveBeenCalled();
   });
 });

@@ -21,6 +21,7 @@ import {
   SESSION_MAX_AGE,
 } from "@/lib/portal-session";
 import { logEngagement } from "@/lib/engagement";
+import { portalDormant } from "../../_dormant";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -42,6 +43,11 @@ function interstitial(token: string): string {
 }
 
 export async function GET(req: Request): Promise<Response> {
+  // Dormant pre-cutover: 404 before the interstitial renders. A live-looking
+  // sign-in page for a system GrowthZone still owns is a support burden.
+  const dormant = portalDormant();
+  if (dormant) return dormant;
+
   const { origin } = new URL(req.url);
   const token = new URL(req.url).searchParams.get("token") ?? "";
   // Validate the signature so an obviously-bad link errors immediately — but DO
@@ -57,6 +63,10 @@ export async function GET(req: Request): Promise<Response> {
 }
 
 export async function POST(req: Request): Promise<Response> {
+  // Dormant pre-cutover: 404 before the magic_token_epoch write.
+  const dormant = portalDormant();
+  if (dormant) return dormant;
+
   const { origin } = new URL(req.url);
   const token = new URL(req.url).searchParams.get("token") ?? "";
 

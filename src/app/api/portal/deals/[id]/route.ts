@@ -13,6 +13,7 @@ import { verifyPortalSession, PORTAL_COOKIE } from "@/lib/portal-session";
 import { limitPortalProfile } from "@/lib/rate-limit";
 import { assertSameOrigin } from "@/lib/csrf";
 import { buildDealValues } from "@/lib/deals-input";
+import { portalDormant } from "../../_dormant";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -27,6 +28,10 @@ export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<Response> {
+  // Dormant pre-cutover: 404 before any hot_deals update.
+  const dormant = portalDormant();
+  if (dormant) return dormant;
+
   const limited = await limitPortalProfile(req);
   if (limited) return limited;
 
@@ -67,6 +72,10 @@ export async function DELETE(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<Response> {
+  // Dormant pre-cutover: 404 before any hot_deals delete.
+  const dormant = portalDormant();
+  if (dormant) return dormant;
+
   const csrf = assertSameOrigin(req);
   if (csrf) return csrf;
 

@@ -1,6 +1,11 @@
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { contacts, organizations } from "@/lib/db/schema";
 
+// The dormant-backend guard 404s this route unless internal transactions are on;
+// these tests exercise the authorization + write path that runs once the flag is
+// set. The "dormant backend" block at the bottom turns it back off.
+vi.stubEnv("INTERNAL_TRANSACTIONS_ENABLED", "true");
+
 // ── Mocks ─────────────────────────────────────────────────────────────────────
 //
 // Mirrors checkout.test.ts: we mock the cookie store + session verifier so we
@@ -202,5 +207,28 @@ describe("POST /api/portal/profile — org listing edit (primary-only)", () => {
       facebook: "@medinachamber",
       instagram: "https://instagram.com/medinachamber",
     });
+  });
+});
+
+describe("POST /api/portal/profile — dormant backend", () => {
+  it("404s before any session read or contact/organization write", async () => {
+    vi.stubEnv("INTERNAL_TRANSACTIONS_ENABLED", "");
+    const res = await POST(makeRequest({ firstName: "Ann" }));
+
+    expect(res.status).toBe(404);
+    expect(await res.json()).toEqual({ error: "Not found" });
+    expect(verifyPortalSession).not.toHaveBeenCalled();
+    expect(select).not.toHaveBeenCalled();
+    expect(transaction).not.toHaveBeenCalled();
+    vi.stubEnv("INTERNAL_TRANSACTIONS_ENABLED", "true");
+  });
+
+  it("404s — not 401 — with no session, so the route looks absent to a probe", async () => {
+    vi.stubEnv("INTERNAL_TRANSACTIONS_ENABLED", "");
+    verifyPortalSession.mockResolvedValue(null);
+    const res = await POST(makeRequest({ firstName: "Ann" }));
+
+    expect(res.status).toBe(404);
+    vi.stubEnv("INTERNAL_TRANSACTIONS_ENABLED", "true");
   });
 });

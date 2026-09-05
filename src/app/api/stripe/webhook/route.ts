@@ -35,6 +35,7 @@ import { recordPayment } from "@/lib/billing/ledger";
 import { notifyRegistration } from "@/lib/events/notify-registration";
 import { processJoinPayment } from "@/lib/membership/process-join-payment";
 import { processRenewalPayment } from "@/lib/membership/process-renewal-payment";
+import { readTextBounded, WEBHOOK_MAX_CHARS } from "@/lib/body-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -131,7 +132,19 @@ export async function POST(req: Request) {
     return new Response("not configured", { status: 503 });
   }
 
-  const rawBody = await req.text();
+  // Bound the raw read BEFORE signature verification: the body has to be
+  // buffered to verify it, so this caps what constructEvent is ever asked to
+  // HMAC and re-parse on an unauthenticated request. Defense in depth, not a hot
+  // fix — the 503 above already short-circuits an unconfigured deploy, and a
+  // verified Stripe event is never anywhere near this size.
+  //
+  // What it is NOT: a bound on what a hostile caller can make the isolate
+  // buffer. readTextBounded rejects pre-read only on a declared Content-Length;
+  // a chunked body is read in full and measured after. Vercel's ~4.5 MB request
+  // limit is the actual backstop there. See src/lib/body-limit.ts.
+  const bounded = await readTextBounded(req, WEBHOOK_MAX_CHARS);
+  if ("response" in bounded) return bounded.response;
+  const rawBody = bounded.text;
   const sig = req.headers.get("stripe-signature");
 
   let event: Stripe.Event;

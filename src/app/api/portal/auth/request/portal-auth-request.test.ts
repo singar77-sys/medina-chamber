@@ -45,11 +45,18 @@ beforeAll(async () => {
 beforeEach(() => {
   vi.stubEnv("NODE_ENV", "production");
   vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://medinaohchamber.com");
+  // The dormant-backend guard 404s this route unless internal transactions are
+  // on; these tests exercise the email path that runs once the flag is set.
+  // afterEach unstubs everything, so it has to be re-stubbed per test.
+  vi.stubEnv("INTERNAL_TRANSACTIONS_ENABLED", "true");
   contactRow = CONTACT;
 });
 
 afterEach(() => {
   send.mockClear();
+  // The contacts lookup is asserted on too (the dormant guard must land before
+  // it), so it needs the same per-test reset the sender has.
+  select.mockClear();
   vi.unstubAllEnvs();
 });
 
@@ -101,5 +108,29 @@ describe("portal magic-link email — HTML escaping", () => {
     const href = html.match(/href="([^"]+)"/)![1];
     expect(href.startsWith("https://")).toBe(true);
     expect(href.startsWith("http://")).toBe(false);
+  });
+});
+
+describe("POST /api/portal/auth/request — dormant backend", () => {
+  // Pre-cutover this was an unauthenticated endpoint that ran a real contacts
+  // SELECT and a real Resend send for any address a caller supplied — a member
+  // oracle and a mailer in one. The 404 must land before both.
+  it("404s before the contacts lookup and the email send", async () => {
+    vi.stubEnv("INTERNAL_TRANSACTIONS_ENABLED", "");
+    const res = await POST(reqFor("member@example.com"));
+
+    expect(res.status).toBe(404);
+    expect(await res.json()).toEqual({ error: "Not found" });
+    expect(select).not.toHaveBeenCalled();
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("404s — not the generic ok:true — so the dormant route can't be probed", async () => {
+    vi.stubEnv("INTERNAL_TRANSACTIONS_ENABLED", "");
+    const body = (await (await POST(reqFor("member@example.com"))).json()) as Record<
+      string,
+      unknown
+    >;
+    expect(body).not.toHaveProperty("ok");
   });
 });

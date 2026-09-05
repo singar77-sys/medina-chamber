@@ -13,6 +13,7 @@ import { verifyPortalSession, PORTAL_COOKIE } from "@/lib/portal-session";
 import { limitPortalProfile } from "@/lib/rate-limit";
 import { assertSameOrigin } from "@/lib/csrf";
 import { buildDealValues } from "@/lib/deals-input";
+import { portalDormant } from "../_dormant";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -24,6 +25,10 @@ async function getSession() {
 }
 
 export async function POST(req: Request): Promise<Response> {
+  // Dormant pre-cutover: 404 before any hot_deals insert.
+  const dormant = portalDormant();
+  if (dormant) return dormant;
+
   const limited = await limitPortalProfile(req);
   if (limited) return limited;
 

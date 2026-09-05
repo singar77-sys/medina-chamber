@@ -11,10 +11,16 @@ import { db } from "@/lib/db";
 import { contacts } from "@/lib/db/schema";
 import { PORTAL_COOKIE, verifyPortalSession } from "@/lib/portal-session";
 import { assertSameOrigin } from "@/lib/csrf";
+import { portalDormant } from "../../_dormant";
 
 export const runtime = "nodejs";
 
 export async function POST(req: Request): Promise<Response> {
+  // Dormant pre-cutover: 404 before the session_epoch bump. Returned instead of
+  // the usual redirect on purpose — a redirect would advertise a live /portal.
+  const dormant = portalDormant();
+  if (dormant) return dormant;
+
   const csrf = assertSameOrigin(req);
   if (csrf) return csrf;
 

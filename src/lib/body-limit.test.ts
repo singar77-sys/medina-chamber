@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { readJsonBounded } from "./body-limit";
+import { readJsonBounded, readTextBounded, WEBHOOK_MAX_CHARS } from "./body-limit";
 
 // The DoS ceiling on every public form route (contact, apply, chat, search,
 // join, sponsorship). Both halves matter: the Content-Length fast path avoids
@@ -73,5 +73,56 @@ describe("readJsonBounded", () => {
     expect("response" in parsed && (await parsed.response.json())).toEqual({
       error: "Invalid JSON body.",
     });
+  });
+});
+
+// The signed-webhook variant. Stripe and Resend both verify a signature over the
+// RAW bytes, so the body may NOT be parsed and re-serialized on the way through —
+// readTextBounded exists to bound the read while handing back those exact bytes.
+describe("readTextBounded", () => {
+  it("returns the body VERBATIM — byte-for-byte, never re-serialized", async () => {
+    // Whitespace and key order are part of what Stripe signs. If this reader
+    // ever normalized the payload, every real webhook would fail verification.
+    const raw = '{ "id" : "evt_1",\n  "type": "payment_intent.succeeded" }';
+    const bounded = await readTextBounded(post(raw));
+    expect(bounded).toEqual({ text: raw });
+  });
+
+  it("413s on a declared Content-Length over 4x the cap, without reading the body", async () => {
+    const req = post("{}", { "content-length": String(100 * 4 + 1) });
+    const spy = { read: false };
+    const guarded = new Proxy(req, {
+      get(target, prop) {
+        if (prop === "text") {
+          spy.read = true;
+          return target.text.bind(target);
+        }
+        const v = Reflect.get(target, prop);
+        return typeof v === "function" ? v.bind(target) : v;
+      },
+    });
+    const bounded = await readTextBounded(guarded, 100);
+    expect("response" in bounded && bounded.response.status).toBe(413);
+    expect(spy.read).toBe(false);
+  });
+
+  it("413s on an oversized body that declared no Content-Length", async () => {
+    const bounded = await readTextBounded(post("x".repeat(101)), 100);
+    expect("response" in bounded && bounded.response.status).toBe(413);
+  });
+
+  it("does NOT parse — unparseable content comes back as text, not a 400", async () => {
+    // A webhook must reach its signature check (401) rather than being rejected
+    // as bad JSON (400) by the reader.
+    const bounded = await readTextBounded(post("{not json"));
+    expect(bounded).toEqual({ text: "{not json" });
+  });
+
+  it("keeps a real-sized webhook payload well inside the webhook ceiling", async () => {
+    // Regression guard on the number itself: a 32 KB event (larger than anything
+    // Stripe or Resend has sent us) must pass untouched.
+    const raw = JSON.stringify({ data: { object: { note: "x".repeat(32 * 1024) } } });
+    expect(raw.length).toBeLessThan(WEBHOOK_MAX_CHARS);
+    expect(await readTextBounded(post(raw), WEBHOOK_MAX_CHARS)).toEqual({ text: raw });
   });
 });

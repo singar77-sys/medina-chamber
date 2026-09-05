@@ -1,3 +1,4 @@
+import { cache } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,6 +16,18 @@ import { OG_IMAGE } from "@/lib/og";
 // dependency, and lets the directory_view beacon attribute real views.
 export const dynamic = "force-dynamic";
 
+// cache() dedupes the generateMetadata + page-body lookups within one request.
+// getDirectoryMemberBySlug runs two Supabase queries, so without this every
+// member view cost four round-trips through the max:1 pooled connection.
+const loadMember = cache((slug: string) => getDirectoryMemberBySlug(db, slug));
+
+/** Scheme gate for member-supplied URLs. The website and social values are
+ *  scraped straight from member-controlled GrowthZone fields, so anything that
+ *  isn't http(s) never reaches an href. */
+function safeHttp(url: string | undefined): string | null {
+  return url && /^https?:\/\//i.test(url) ? url : null;
+}
+
 // ── Per-page metadata ──────────────────────────────────────────
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }
@@ -22,7 +35,7 @@ export async function generateMetadata(
   const { slug } = await params;
   let found: Awaited<ReturnType<typeof getDirectoryMemberBySlug>> = null;
   try {
-    found = await getDirectoryMemberBySlug(db, slug);
+    found = await loadMember(slug);
   } catch (err) {
     console.error("[directory/member] metadata load failed:", err);
   }
@@ -58,7 +71,7 @@ export default async function MemberPage(
   const { slug } = await params;
   let found: Awaited<ReturnType<typeof getDirectoryMemberBySlug>> = null;
   try {
-    found = await getDirectoryMemberBySlug(db, slug);
+    found = await loadMember(slug);
   } catch (err) {
     // DB unreachable — fall through to the static fallback below.
     console.error("[directory/member] load failed:", err);
@@ -78,7 +91,7 @@ export default async function MemberPage(
   // Static-fallback members aren't in the DB, so /go/org would 302 back to
   // the directory — link their raw external URL instead, validated the same
   // way the route validates its destination (http(s) only).
-  const externalSite = /^https?:\/\//i.test(member.website) ? member.website : null;
+  const externalSite = safeHttp(member.website);
   const websiteHref = found ? `/go/org/${member.chamberSlug}` : externalSite;
   const logoAbsoluteUrl = logoUrl
     ? logoUrl.startsWith("http")
@@ -111,7 +124,13 @@ export default async function MemberPage(
     },
   };
 
-  const hasSocial = [member.social.facebook, member.social.linkedin, member.social.instagram, member.social.twitter, member.social.youtube].some(Boolean);
+  const socialLinks = [
+    { key: "facebook", label: "Facebook", href: safeHttp(member.social.facebook) },
+    { key: "linkedin", label: "LinkedIn", href: safeHttp(member.social.linkedin) },
+    { key: "instagram", label: "Instagram", href: safeHttp(member.social.instagram) },
+    { key: "twitter", label: "X / Twitter", href: safeHttp(member.social.twitter) },
+    { key: "youtube", label: "YouTube", href: safeHttp(member.social.youtube) },
+  ].filter((s): s is { key: string; label: string; href: string } => s.href !== null);
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -293,25 +312,13 @@ export default async function MemberPage(
         )}
 
         {/* Social Links */}
-        {hasSocial && (
+        {socialLinks.length > 0 && (
           <section className="mt-10">
             <h2 className="text-overline text-cambridge mb-4">Connect Online</h2>
             <div className="flex flex-wrap gap-3">
-              {member.social.facebook && (
-                <SocialLink href={member.social.facebook} label="Facebook" icon="facebook" />
-              )}
-              {member.social.linkedin && (
-                <SocialLink href={member.social.linkedin} label="LinkedIn" icon="linkedin" />
-              )}
-              {member.social.instagram && (
-                <SocialLink href={member.social.instagram} label="Instagram" icon="instagram" />
-              )}
-              {member.social.twitter && (
-                <SocialLink href={member.social.twitter} label="X / Twitter" icon="twitter" />
-              )}
-              {member.social.youtube && (
-                <SocialLink href={member.social.youtube} label="YouTube" icon="youtube" />
-              )}
+              {socialLinks.map((s) => (
+                <SocialLink key={s.key} href={s.href} label={s.label} icon={s.key} />
+              ))}
             </div>
           </section>
         )}

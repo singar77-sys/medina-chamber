@@ -4,16 +4,21 @@ import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { safeJsonLd } from "@/lib/json-ld";
-import { getCmsPricing, DEFAULT_PRICING } from "@/lib/cms-store";
+import { getPublicPricing } from "@/lib/cms-store";
 import { getPageContent } from "@/lib/cms-content";
 import { stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
 import { OG_IMAGE } from "@/lib/og";
 
-export const dynamic = "force-dynamic";
+// ISR so admin pricing edits appear without a redeploy. The page was
+// force-dynamic only because the Redis pricing read was uncached; that read now
+// goes through unstable_cache in cms-store, and the admin pricing API busts
+// CMS_PRICING_TAG on save and reset, so edits land immediately rather than
+// waiting out this window.
+export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const tiers = ((await getCmsPricing()) ?? DEFAULT_PRICING).tiers;
+  const tiers = (await getPublicPricing()).tiers;
   const [e, p, i] = tiers;
   const desc = e && p && i
     ? `Three Greater Medina Chamber of Commerce membership tiers: ${e.name} ($${e.price}/year), ${p.name} ($${p.price}/year), and ${i.name} ($${i.price}/year). Choose the level that fits your goals.`
@@ -35,7 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function PricingPage() {
   // Admin-editable intro paragraph (Content editor); cached + tag-busted.
   const introBody = await getPageContent("membership", "intro-body");
-  const { tiers, faqs } = (await getCmsPricing()) ?? DEFAULT_PRICING;
+  const { tiers, faqs } = await getPublicPricing();
   const essentialsTier = tiers.find((t) => t.key === "essentials");
   const essentialsBenefits = essentialsTier?.benefits ?? [];
 

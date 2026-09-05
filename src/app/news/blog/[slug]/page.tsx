@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { unstable_cache } from "next/cache";
 import { blogPosts, getBlogPostBySlug, formatBlogDate, blogMetaDescription } from "@/data/blog";
+import { CMS_BLOG_TAG } from "@/lib/cms-blog";
 import { getCmsBlogPost } from "@/lib/cms-store";
 
 import { safeJsonLd } from "@/lib/json-ld";
@@ -10,6 +12,10 @@ import { OG_IMAGE } from "@/lib/og";
 
 // Allow dynamic slugs for CMS posts added after build
 export const dynamicParams = true;
+
+// ISR: the archive prerenders, CMS edits land within five minutes (sooner via
+// the tag below).
+export const revalidate = 300;
 
 export function generateStaticParams() {
   return blogPosts.map((p) => ({ slug: p.slug }));
@@ -29,8 +35,19 @@ interface ResolvedPost {
   scrapedAt: string;
 }
 
+// The Upstash REST read is an uncached fetch, which opted this route out of
+// static generation: generateStaticParams above prerendered nothing and all
+// ~175 archive posts rendered per request with a Redis hop on the critical
+// path. unstable_cache puts the read in the data cache, and the admin blog API
+// already busts CMS_BLOG_TAG on save/delete so edits still appear right away.
+const getCachedCmsBlogPost = unstable_cache(
+  (slug: string) => getCmsBlogPost(slug),
+  ["cms-blog-post"],
+  { tags: [CMS_BLOG_TAG], revalidate: 300 },
+);
+
 async function resolvePost(slug: string): Promise<ResolvedPost | null> {
-  const cms = await getCmsBlogPost(slug);
+  const cms = await getCachedCmsBlogPost(slug);
   if (cms) {
     return {
       ...cms,

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { unstable_cache } from "next/cache";
 import { db } from "@/lib/db";
 import { getDirectoryMembers, topIndustries } from "@/lib/directory";
 import { members as staticMembers } from "@/data/members";
@@ -32,10 +33,20 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
+// The roster only changes once a day (the gz-sync cron), but this route is
+// force-dynamic, so without a data cache every directory view re-ran both
+// roster queries over the max:1 pooled connection. Tagged "directory" so the
+// sync can bust it on demand.
+const loadDirectoryMembers = unstable_cache(
+  () => getDirectoryMembers(db),
+  ["directory-members"],
+  { tags: ["directory"], revalidate: 3600 },
+);
+
 export default async function DirectoryPage() {
   let members: Awaited<ReturnType<typeof getDirectoryMembers>> = [];
   try {
-    members = await getDirectoryMembers(db);
+    members = await loadDirectoryMembers();
   } catch (err) {
     console.error("[directory] load failed:", err);
   }

@@ -9,12 +9,14 @@
  */
 
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { requireAdminSession } from "@/lib/admin-auth";
 import {
   getCmsPricing,
   setCmsPricing,
   clearCmsPricing,
   DEFAULT_PRICING,
+  CMS_PRICING_TAG,
   type PricingConfig,
 } from "@/lib/cms-store";
 import { bustChamberFactsCache } from "@/lib/chamber-facts";
@@ -71,6 +73,9 @@ export async function POST(req: Request): Promise<Response> {
   };
 
   await setCmsPricing(config);
+  // The public pricing page reads through unstable_cache now, so without this
+  // an edit would sit invisible for up to the 5-minute revalidate window.
+  revalidateTag(CMS_PRICING_TAG, "max");
   bustChamberFactsCache(); // bot picks up new prices on next request
 
   return NextResponse.json({ ok: true, updatedAt: new Date().toISOString() });
@@ -81,6 +86,7 @@ export async function DELETE(req: Request): Promise<Response> {
   if (authErr) return authErr;
 
   await clearCmsPricing();
+  revalidateTag(CMS_PRICING_TAG, "max");
   bustChamberFactsCache();
 
   return NextResponse.json({ ok: true });

@@ -19,6 +19,7 @@
  */
 
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { getRedis } from "@/lib/upstash";
 import type { EventInfo } from "@/components/events/graphics/shared";
 
@@ -314,6 +315,26 @@ export async function getCmsPricing(): Promise<PricingConfig | null> {
   const redis = getRedis();
   if (!redis) return null;
   return readSafe("pricing", () => redis.get<PricingConfig>("cms:pricing"), null);
+}
+
+/** Tag for on-demand revalidation — the admin pricing API should bust this
+ *  on save/reset so edits appear on the public pages immediately. */
+export const CMS_PRICING_TAG = "cms-pricing";
+
+// getCmsPricing above stays uncached because the admin editor has to read back
+// what it just saved. Public pages read through here instead: the Upstash REST
+// call is an uncached fetch, which would otherwise opt the pricing page out of
+// static generation and cost two Redis round-trips on every view.
+const getCachedPricing = unstable_cache(
+  () => getCmsPricing(),
+  ["cms-pricing"],
+  { tags: [CMS_PRICING_TAG], revalidate: 300 },
+);
+
+/** Published pricing for public pages: the Redis override when staff have
+ *  saved one, else the compiled defaults. */
+export async function getPublicPricing(): Promise<PricingConfig> {
+  return (await getCachedPricing()) ?? DEFAULT_PRICING;
 }
 
 export async function setCmsPricing(config: PricingConfig): Promise<void> {

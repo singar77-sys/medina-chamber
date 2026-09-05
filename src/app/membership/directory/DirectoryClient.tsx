@@ -226,8 +226,32 @@ function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
   // viewport offset, dumping the user at the BOTTOM of the inserted grid (the
   // "browse all lands at Z" bug). Snap to the top when a filter engages.
   const wasFiltered = useRef(false);
+
+  // The browse band and the results view each render their OWN search input,
+  // so the first typed character unmounts the field the visitor is typing in
+  // and mounts a different one — focus dropped to <body> and the second
+  // keystroke went nowhere (or "/" opened the command palette). Deleting the
+  // last character did the same thing in reverse. Keep a ref to whichever
+  // input is now mounted and restore focus + caret across the swap. Only
+  // typing sets `restoreFocus`, so clicking a category chip or "browse all"
+  // does not steal focus (or pop the mobile keyboard).
+  const browseSearchRef = useRef<HTMLInputElement>(null);
+  const resultsSearchRef = useRef<HTMLInputElement>(null);
+  const restoreFocus = useRef(false);
+
   useEffect(() => {
-    if (isFiltered && !wasFiltered.current) window.scrollTo({ top: 0 });
+    if (isFiltered !== wasFiltered.current) {
+      if (isFiltered) window.scrollTo({ top: 0 });
+      if (restoreFocus.current) {
+        const el = isFiltered ? resultsSearchRef.current : browseSearchRef.current;
+        if (el) {
+          el.focus({ preventScroll: true });
+          const end = el.value.length;
+          el.setSelectionRange(end, end);
+        }
+      }
+    }
+    restoreFocus.current = false;
     wasFiltered.current = isFiltered;
   }, [isFiltered]);
 
@@ -257,6 +281,13 @@ function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
     if (next.trim() && activeCategory) setActiveCategory(null);
   }
 
+  /** Typing specifically — flags the effect above to carry focus across the
+   *  browse/results swap. Suggestion chips deliberately do not. */
+  function handleTypedQuery(next: string) {
+    restoreFocus.current = true;
+    startSearch(next);
+  }
+
   return (
     <>
       <DirectoryHero />
@@ -264,8 +295,9 @@ function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
       {!isFiltered ? (
         // ── BROWSE MODE ──────────────────────────────
         <BrowseBand
+          inputRef={browseSearchRef}
           query={search}
-          onQueryChange={startSearch}
+          onQueryChange={handleTypedQuery}
           onSuggestionClick={startSearch}
           isSearching={isSearching}
           visibleIndustries={browseIndustries}
@@ -282,8 +314,9 @@ function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
               without navigating back to the browse landing. */}
           <div className="mb-f21">
             <DirectorySearch
+              inputRef={resultsSearchRef}
               query={search}
-              onQueryChange={startSearch}
+              onQueryChange={handleTypedQuery}
               onSuggestionClick={startSearch}
               isSearching={isSearching}
             />

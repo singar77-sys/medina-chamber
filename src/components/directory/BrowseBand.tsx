@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { IndustryChipStrip } from "./IndustryChipStrip";
 import { DirectorySearch } from "./DirectorySearch";
+import type { RefObject } from "react";
 import { useTheme } from "@/components/ThemeProvider";
 import { MouseGradient } from "@/components/MouseGradient";
 import { BrandShaderBackgroundLazy } from "@/components/effects/BrandShaderBackgroundLazy";
@@ -11,6 +12,9 @@ import { BrandShaderBackgroundLazy } from "@/components/effects/BrandShaderBackg
 interface BrowseBandProps {
   /** Controlled search query. */
   query: string;
+  /** Forwarded to the search <input> so focus survives the browse/results
+   *  swap (see DirectoryClient). */
+  inputRef?: RefObject<HTMLInputElement | null>;
   /** Called on every search keystroke. */
   onQueryChange: (next: string) => void;
   /** Called when a search suggestion chip is clicked. */
@@ -33,6 +37,7 @@ interface BrowseBandProps {
 
 export function BrowseBand({
   query,
+  inputRef,
   onQueryChange,
   onSuggestionClick,
   isSearching = false,
@@ -78,6 +83,7 @@ export function BrowseBand({
         {/* Search — sits with the browsing tools, not orphaned in the hero */}
         <div className="mt-f34">
           <DirectorySearch
+            inputRef={inputRef}
             query={query}
             onQueryChange={onQueryChange}
             onSuggestionClick={onSuggestionClick}

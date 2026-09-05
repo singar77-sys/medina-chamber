@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type RefObject } from "react";
 import { RotatingPlaceholder } from "./RotatingPlaceholder";
 
 const EXAMPLE_PROMPTS = [
@@ -27,6 +27,10 @@ interface DirectorySearchProps {
   onSuggestionClick: (text: string) => void;
   /** Show the spinner inside the field while a search is in flight. */
   isSearching?: boolean;
+  /** Forwarded to the <input>. The directory swaps between two instances of
+   *  this component (browse band vs results view), which unmounts the field
+   *  mid-keystroke; DirectoryClient uses this ref to restore focus. */
+  inputRef?: RefObject<HTMLInputElement | null>;
 }
 
 /**
@@ -42,6 +46,7 @@ export function DirectorySearch({
   onQueryChange,
   onSuggestionClick,
   isSearching = false,
+  inputRef,
 }: DirectorySearchProps) {
   const [focused, setFocused] = useState(false);
 
@@ -59,6 +64,7 @@ export function DirectorySearch({
               <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.099zm-5.242 1.156a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11" />
             </svg>
             <input
+              ref={inputRef}
               type="text"
               value={query}
               onChange={(e) => onQueryChange(e.target.value)}

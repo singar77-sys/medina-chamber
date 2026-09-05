@@ -48,6 +48,13 @@ export function EventGallery({ photos: allPhotos, title = "Photos" }: Props) {
     setLightbox((i) => (i === null ? null : (i + 1) % photos.length));
   }
 
+  // The upload route only stores `alt` when an admin typed a description, so
+  // the old `filename` fallback made screen readers announce raw device names
+  // ("IMG 4521 webp"). A positional description is the useful answer.
+  function altFor(photo: MediaItem, i: number) {
+    return photo.alt ?? photo.caption ?? `Photo ${i + 1} of ${photos.length}`;
+  }
+
   // Keyboard nav for lightbox
   function handleKey(e: React.KeyboardEvent) {
     if (e.key === "ArrowLeft") prev();
@@ -82,7 +89,7 @@ export function EventGallery({ photos: allPhotos, title = "Photos" }: Props) {
           >
             <Image
               src={photo.url}
-              alt={photo.alt ?? photo.caption ?? photo.filename}
+              alt={altFor(photo, i)}
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px"
               className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
@@ -148,7 +155,7 @@ export function EventGallery({ photos: allPhotos, title = "Photos" }: Props) {
           >
             <Image
               src={photos[lightbox].url}
-              alt={photos[lightbox].alt ?? photos[lightbox].caption ?? photos[lightbox].filename}
+              alt={altFor(photos[lightbox], lightbox)}
               width={1920}
               height={1440}
               className="max-w-full max-h-[80dvh] w-auto h-auto object-contain rounded-lg mx-auto block"

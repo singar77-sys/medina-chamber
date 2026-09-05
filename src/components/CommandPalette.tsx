@@ -321,6 +321,10 @@ export function CommandPalette() {
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  // Whatever had focus when the palette opened (header launcher, or the page
+  // element the user pressed "/" from), so focus can be handed back on close.
+  const openerRef = useRef<HTMLElement | null>(null);
   const router = useRouter();
 
   const results = useMemo(() => {
@@ -383,6 +387,7 @@ export function CommandPalette() {
   // Focus input on open, reset state on close
   useEffect(() => {
     if (open) {
+      openerRef.current = document.activeElement as HTMLElement | null;
       // Delay so focus lands after the modal paints
       setTimeout(() => inputRef.current?.focus(), 20);
       // iOS Safari ignores overflow:hidden on <body>. position:fixed is the
@@ -403,6 +408,10 @@ export function CommandPalette() {
       if (top) window.scrollTo(0, -parseInt(top, 10));
       setQuery("");
       setActiveIndex(0);
+      // preventScroll: the scroll lock is unwinding on this same commit, so a
+      // focus-driven scrollIntoView would fight window.scrollTo above.
+      openerRef.current?.focus({ preventScroll: true });
+      openerRef.current = null;
     }
     return () => {
       const top = document.body.style.top;
@@ -456,6 +465,31 @@ export function CommandPalette() {
   }, []);
 
   function handleKeyDownInModal(e: React.KeyboardEvent) {
+    if (e.key === "Tab") {
+      // aria-modal="true" promises the page behind is inert, so focus has to
+      // cycle inside the panel instead of walking into the scroll-locked page.
+      const root = panelRef.current;
+      if (!root) return;
+      // Result rows are tabIndex -1 by design (aria-activedescendant keeps
+      // focus on the input), so they must not count as tab stops here.
+      const focusables = root.querySelectorAll<HTMLElement>(
+        'a[href]:not([tabindex="-1"]), button:not([disabled]):not([tabindex="-1"]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey) {
+        if (active === first || !root.contains(active)) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else if (active === last || !root.contains(active)) {
+        e.preventDefault();
+        first.focus();
+      }
+      return;
+    }
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setActiveIndex((i) => Math.min(i + 1, totalRows - 1));
@@ -495,7 +529,11 @@ export function CommandPalette() {
             if (e.target === e.currentTarget) setOpen(false);
           }}
         >
-          <div className="cmdk-panel" onKeyDown={handleKeyDownInModal}>
+          <div
+            ref={panelRef}
+            className="cmdk-panel"
+            onKeyDown={handleKeyDownInModal}
+          >
             <div className="cmdk-inputRow">
               <svg
                 viewBox="0 0 20 20"
@@ -516,25 +554,53 @@ export function CommandPalette() {
                 placeholder="Type to search · or ask a question…"
                 className="cmdk-input"
                 aria-label="Search commands"
+                role="combobox"
+                aria-expanded="true"
+                aria-controls="cmdk-list"
+                aria-autocomplete="list"
+                aria-activedescendant={`cmdk-opt-${activeIndex}`}
                 autoComplete="off"
                 spellCheck={false}
               />
               <kbd className="cmdk-kbd cmdk-kbd--esc">Esc</kbd>
             </div>
 
-            <div ref={listRef} className="cmdk-list">
+            {/* Arrow keys move a visual highlight while focus stays in the
+                input, so the result count has to be announced separately. */}
+            <p aria-live="polite" className="sr-only">
+              {hasResults ? `${results.length} results` : "No commands match."}
+            </p>
+
+            <div
+              ref={listRef}
+              id="cmdk-list"
+              role="listbox"
+              aria-label="Search results"
+              className="cmdk-list"
+            >
               {hasResults ? (
                 grouped.map(([group, items]) => (
-                  <div key={group} className="cmdk-group">
-                    <p className="cmdk-group__label">{group}</p>
-                    <ul>
+                  <div
+                    key={group}
+                    role="group"
+                    aria-label={group}
+                    className="cmdk-group"
+                  >
+                    <p className="cmdk-group__label" aria-hidden="true">
+                      {group}
+                    </p>
+                    <ul role="none">
                       {items.map((cmd) => {
                         const idx = results.indexOf(cmd);
                         const active = idx === activeIndex;
                         return (
-                          <li key={cmd.id}>
+                          <li key={cmd.id} role="none">
                             <button
                               type="button"
+                              id={`cmdk-opt-${idx}`}
+                              role="option"
+                              aria-selected={active}
+                              tabIndex={-1}
                               data-idx={idx}
                               data-active={active}
                               onClick={() => executeCommand(cmd)}
@@ -569,12 +635,22 @@ export function CommandPalette() {
               )}
 
               {showJackieFallback && (
-                <div className="cmdk-group cmdk-group--jackie">
-                  <p className="cmdk-group__label">Ask the ChamberBot</p>
-                  <ul>
-                    <li>
+                <div
+                  role="group"
+                  aria-label="Ask the ChamberBot"
+                  className="cmdk-group cmdk-group--jackie"
+                >
+                  <p className="cmdk-group__label" aria-hidden="true">
+                    Ask the ChamberBot
+                  </p>
+                  <ul role="none">
+                    <li role="none">
                       <button
                         type="button"
+                        id={`cmdk-opt-${results.length}`}
+                        role="option"
+                        aria-selected={activeIndex === results.length}
+                        tabIndex={-1}
                         data-idx={results.length}
                         data-active={activeIndex === results.length}
                         onClick={() => askJackie(query)}

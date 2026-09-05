@@ -80,7 +80,12 @@ export function EventsTimeline({ events }: { events: TimelineEvent[] }) {
   const [pendingJump, setPendingJump] = useState<string | null>(null);
   useEffect(() => {
     if (!pendingJump) return;
-    document.getElementById(pendingJump)?.scrollIntoView();
+    const target = document.getElementById(pendingJump);
+    target?.scrollIntoView();
+    // The pip / Show-all control that had focus is either gone or now far up
+    // the page, so hand focus to the destination rather than dropping it on
+    // <body> and losing the keyboard user's place in the rail.
+    target?.focus({ preventScroll: true });
     setPendingJump(null);
   }, [pendingJump]);
 
@@ -123,7 +128,8 @@ export function EventsTimeline({ events }: { events: TimelineEvent[] }) {
               <span className="font-mono text-caption font-bold tracking-widest text-text-secondary group-hover:text-cambridge transition-colors">
                 {short} <span className="text-text-tertiary">{year.slice(2)}</span>
               </span>
-              <span className="flex gap-[3px]" aria-label={`${items.length} events`}>
+              <span className="sr-only">{items.length} events</span>
+              <span className="flex gap-[3px]" aria-hidden="true">
                 {items.slice(0, 6).map((_, i) => (
                   <span
                     key={i}
@@ -152,7 +158,12 @@ export function EventsTimeline({ events }: { events: TimelineEvent[] }) {
           {months.map(({ ym, items }) => {
             const { long, year } = monthLabel(ym);
             return (
-              <section key={ym} id={`tl-${ym}`} className="scroll-mt-f89">
+              <section
+                key={ym}
+                id={`tl-${ym}`}
+                tabIndex={-1}
+                className="scroll-mt-f89 focus:outline-none"
+              >
                 <h3 className="pl-f34 sm:pl-f55 font-mono text-caption font-bold uppercase tracking-[0.22em] text-text-tertiary mb-f13">
                   {long} <span className="text-cambridge">{year}</span>
                 </h3>
@@ -173,7 +184,9 @@ export function EventsTimeline({ events }: { events: TimelineEvent[] }) {
                         />
                         <Link
                           href={`/events/${e.slug}`}
+                          id={`tl-event-${e.slug}`}
                           className={`
+                            scroll-mt-f89
                             group grid grid-cols-[3.5rem_1fr] sm:grid-cols-[4.5rem_1fr_auto] gap-f13 sm:gap-f21 items-center
                             p-f13 sm:px-f21
                             bg-bg-secondary border rounded-[var(--radius-lg)]
@@ -258,7 +271,10 @@ export function EventsTimeline({ events }: { events: TimelineEvent[] }) {
             />
             <button
               type="button"
-              onClick={() => setShowAll(true)}
+              onClick={() => {
+                setShowAll(true);
+                setPendingJump(`tl-event-${sorted[INITIAL_VISIBLE].slug}`);
+              }}
               aria-expanded={false}
               className="
                 inline-flex items-center gap-f8 px-f13 py-f8

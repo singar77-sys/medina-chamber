@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  type KeyboardEvent as ReactKeyboardEvent,
+} from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -170,8 +176,10 @@ function Dropdown({
         aria-hidden="true"
       />
 
-      {/* Panel */}
+      {/* Panel — aria-hidden when closed: opacity-0 alone still leaves all
+          five submenus (~30 links) in the screen-reader virtual cursor. */}
       <div
+        aria-hidden={!isOpen}
         className={`
           absolute top-full left-0 pt-3 z-50
           transition-all duration-200 ease-out
@@ -252,13 +260,22 @@ function MobileMenu({
   // touchend on the element that opened the menu and can land on the
   // newly-mounted backdrop, instantly closing it.
   const [backdropReady, setBackdropReady] = useState(false);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const closeBtnRef = useRef<HTMLButtonElement | null>(null);
+  // Whatever had focus when the drawer opened (the hamburger), so focus can be
+  // handed back on close instead of falling to <body>.
+  const openerRef = useRef<HTMLElement | null>(null);
 
   // Animate in/out instead of instant mount/unmount
   useEffect(() => {
     if (isOpen) {
+      openerRef.current = document.activeElement as HTMLElement | null;
       setVisible(true);
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => setAnimating(true));
+        requestAnimationFrame(() => {
+          setAnimating(true);
+          closeBtnRef.current?.focus();
+        });
       });
       // Activate backdrop after iOS ghost-click window has passed (~300ms).
       const readyTimer = setTimeout(() => setBackdropReady(true), 350);
@@ -266,15 +283,59 @@ function MobileMenu({
     } else {
       setAnimating(false);
       setBackdropReady(false);
+      // preventScroll: the scroll lock is unwinding on this same commit, so a
+      // focus-driven scrollIntoView would fight window.scrollTo.
+      openerRef.current?.focus({ preventScroll: true });
+      openerRef.current = null;
       const timer = setTimeout(() => setVisible(false), 250);
       return () => clearTimeout(timer);
     }
   }, [isOpen]);
 
+  // Escape closes (matching the desktop dropdowns) and Tab cycles inside the
+  // drawer: aria-modal="true" promises the rest of the page is inert to
+  // assistive tech, so focus must not walk into the content behind the scrim.
+  function onDialogKeyDown(e: ReactKeyboardEvent<HTMLDivElement>) {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      onClose();
+      return;
+    }
+    if (e.key !== "Tab") return;
+    const root = dialogRef.current;
+    if (!root) return;
+    const focusables = root.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    );
+    if (focusables.length === 0) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    const active = document.activeElement;
+    if (e.shiftKey) {
+      if (active === first || !root.contains(active)) {
+        e.preventDefault();
+        last.focus();
+      }
+    } else if (active === last || !root.contains(active)) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 z-50 xl:hidden">
+    // A dialog wrapper is where Escape and the Tab cycle have to live: the
+    // handler is for the whole drawer, not for one control inside it.
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+    <div
+      ref={dialogRef}
+      className="fixed inset-0 z-50 xl:hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="mobile-menu-title"
+      onKeyDown={onDialogKeyDown}
+    >
       {/* Backdrop — fade. Button for native keyboard support.
           pointerEvents blocked until backdropReady to prevent iOS ghost-click. */}
       <button
@@ -291,6 +352,7 @@ function MobileMenu({
 
       {/* Drawer — slide from right */}
       <nav
+        aria-label="Mobile"
         className={`
           absolute top-0 right-0 w-full max-w-sm h-full
           bg-bg-primary shadow-[var(--shadow-lg)] overflow-y-auto
@@ -299,8 +361,9 @@ function MobileMenu({
         `}
       >
         <div className="flex items-center justify-between p-f21 border-b border-border-primary">
-          <span className="text-h4 font-bold">Menu</span>
+          <span id="mobile-menu-title" className="text-h4 font-bold">Menu</span>
           <button
+            ref={closeBtnRef}
             onClick={onClose}
             className="w-f34 h-f34 flex items-center justify-center rounded-full hover:bg-bg-tertiary cursor-pointer"
             aria-label="Close menu"
@@ -348,6 +411,10 @@ function MobileMenu({
               );
             }
 
+            const sectionId = `mobile-nav-${item.label
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")}`;
+
             return (
               <div key={item.label}>
                 <button
@@ -356,6 +423,9 @@ function MobileMenu({
                       expandedSection === item.label ? null : item.label
                     )
                   }
+                  aria-expanded={expandedSection === item.label}
+                  // Only reference the panel while it is actually in the DOM.
+                  aria-controls={expandedSection === item.label ? sectionId : undefined}
                   className="
                     w-full flex items-center justify-between py-3
                     text-body-lg font-bold text-text-primary
@@ -383,7 +453,7 @@ function MobileMenu({
                 </button>
 
                 {expandedSection === item.label && item.children && (
-                  <div className="pb-3 pl-4 space-y-1">
+                  <div id={sectionId} className="pb-3 pl-4 space-y-1">
                     {item.children.map((child) => {
                       const Component = child.external ? "a" : Link;
                       const extraProps = child.external
@@ -559,6 +629,7 @@ export function Header() {
 
             {/* Sacred center: Desktop nav */}
             <nav
+              aria-label="Primary"
               className="hidden xl:flex items-center gap-f5"
               onPointerLeave={scheduleClose}
             >
@@ -604,6 +675,8 @@ export function Header() {
                 onClick={() => setMobileOpen(true)}
                 className="xl:hidden w-f34 h-f34 flex items-center justify-center rounded-full hover:bg-bg-tertiary cursor-pointer"
                 aria-label="Open menu"
+                aria-expanded={mobileOpen}
+                aria-haspopup="dialog"
               >
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                   <path

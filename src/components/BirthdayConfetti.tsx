@@ -20,11 +20,19 @@ function ordinal(n: number): string {
 export function BirthdayConfetti() {
   const [active, setActive] = useState(false);
   const [age, setAge]       = useState(0);
+  // 32 falling emoji for 7s is exactly the kind of motion WCAG 2.3.3 asks us
+  // to drop; reduced-motion visitors still see the toast, without the storm.
+  const [particles, setParticles] = useState(false);
 
   useEffect(() => {
     if (!isBirthday()) return;
     setActive(true);
     setAge(new Date().getFullYear() - FOUNDED);
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    setParticles(!reduceMotion);
 
     const style = document.createElement("style");
     style.id = "bd-keyframes";
@@ -55,6 +63,7 @@ export function BirthdayConfetti() {
   return (
     <div aria-hidden="true">
       {/* Falling emoji particles */}
+      {particles && (
       <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 9000, overflow: "hidden" }}>
         {Array.from({ length: COUNT }, (_, i) => ({
           emoji:    EMOJIS[i % EMOJIS.length],
@@ -76,6 +85,7 @@ export function BirthdayConfetti() {
           </span>
         ))}
       </div>
+      )}
 
       {/* Toast banner */}
       <div style={{

@@ -28,7 +28,7 @@ const whatWeveDone = [
   },
   {
     title: "Color contrast",
-    body: "All body text meets the WCAG 2.1 AA contrast ratio of 4.5:1 or better, verified across every page in both light and dark modes using axe-core. The accent call-to-action button was darkened specifically to pass contrast on white text.",
+    body: "We target the WCAG 2.1 AA contrast ratio of 4.5:1 for text and test pages with axe-core in both light and dark modes. Secondary and tertiary text and the call-to-action color were darkened specifically to pass on white. One accent color still falls short in light mode; it is listed under Known Limitations below.",
   },
   {
     title: "Dark mode parity",
@@ -57,6 +57,10 @@ const whatWeveDone = [
 ];
 
 const knownLimitations = [
+  {
+    title: "Brand green on light backgrounds",
+    body: "Our Cambridge green is used for small section labels and some inline links. Against the white light-mode background it measures roughly 2.2:1, under the 4.5:1 minimum; the same text passes comfortably in dark mode. Nothing is conveyed by that color alone (these labels are also real headings, so their meaning reaches assistive tech independent of color, and the links stay underlined), and a darker light-mode value is queued.",
+  },
   {
     title: "Third-party embedded content",
     body: "Event registration pages hosted on our GrowthZone platform, external PDFs, and some embedded media from partners may not fully meet WCAG 2.1 AA. We are working with these providers and will link alternatives where possible.",
@@ -105,7 +109,7 @@ export default function AccessibilityPage() {
         </p>
         <p className="text-body-sm text-text-tertiary mt-f13">
           <span className="font-bold text-text-secondary">Last reviewed:</span>{" "}
-          April 14, 2026
+          September 5, 2026
         </p>
       </section>
 

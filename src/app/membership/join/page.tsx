@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ButtonLink, ButtonA } from "@/components/ui/Button";
 import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
+import { AutoplayVideo } from "@/components/AutoplayVideo";
 import { growthZone } from "@/lib/navigation";
 import { safeJsonLd } from "@/lib/json-ld";
 import {
@@ -70,7 +71,7 @@ const benefits = [
 const faqs = [
   {
     q: "How much does membership cost?",
-    a: "Three fixed tiers based on your company size — Business Essentials, Visibility Plus, and Community Investor. See our Pricing & Tiers page for current rates. Most new members start with Essentials and upgrade as their visibility and advocacy needs grow.",
+    a: "Three flat-rate tiers based on the visibility and access you want: Business Essentials, Visibility Plus, and Community Investor. See our Pricing & Tiers page for current rates. Most new members start with Essentials and upgrade as their visibility and advocacy needs grow.",
   },
   {
     q: "What if I'm a sole proprietor or work from home?",
@@ -205,16 +206,11 @@ export default function JoinPage() {
                   Explore every benefit →
                 </Link>
               </div>
-              <video
+              <AutoplayVideo
                 className="w-full aspect-video rounded-[var(--radius-lg)] border border-border-secondary bg-bg-secondary object-cover"
                 src={BENEFITS_VIDEO}
                 poster={BENEFITS_VIDEO_POSTER}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                aria-label="Animated wheel of the five Greater Medina Chamber membership benefits: connections, visibility, advocacy, savings, and education"
+                label="Animated wheel of the five Greater Medina Chamber membership benefits: connections, visibility, advocacy, savings, and education"
               />
             </div>
           </FadeIn>

@@ -87,10 +87,12 @@ export default async function EventPage(
     name: event.title,
     ...(event.description && { description: event.description }),
     ...(event.dateISO && {
-      startDate: `${event.dateISO}T${to24h(event.startTime)}`,
+      startDate: `${event.dateISO}T${to24h(event.startTime)}${easternOffset(event.dateISO)}`,
       // Omit endDate when endTime is missing — to24h would fall back to
       // "00:00:00" and emit an endDate at midnight BEFORE the startDate.
-      ...(event.endTime && { endDate: `${event.dateISO}T${to24h(event.endTime)}` }),
+      ...(event.endTime && {
+        endDate: `${event.dateISO}T${to24h(event.endTime)}${easternOffset(event.dateISO)}`,
+      }),
       eventStatus: "https://schema.org/EventScheduled",
     }),
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
@@ -194,9 +196,16 @@ export default async function EventPage(
                 of the 11 graphic templates. */}
             {Graphic ? (
               <figure className="mt-f21 rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary m-0">
-                <FluidGraphicFrame mode="social">
-                  <Graphic mode="social" />
-                </FluidGraphicFrame>
+                {/* The poster SVGs bake their copy into raw <text> nodes, so a
+                    screen reader would read the fragments ("Registration
+                    Required", the address) in drawing order and then hear the
+                    figcaption repeat the same facts. Same call as the homepage
+                    event cards. */}
+                <div aria-hidden="true">
+                  <FluidGraphicFrame mode="social">
+                    <Graphic mode="social" />
+                  </FluidGraphicFrame>
+                </div>
                 <figcaption className="sr-only">
                   {event.title}, Greater Medina Chamber of Commerce event on {dateText} in Medina, Ohio
                 </figcaption>
@@ -344,6 +353,27 @@ export default async function EventPage(
       </section>
     </>
   );
+}
+
+/**
+ * America/New_York UTC offset ("-04:00" / "-05:00") for a YYYY-MM-DD date.
+ * Google reads an Event startDate with no offset as an ambiguous local time
+ * and can render the wrong hour in rich results.
+ */
+function easternOffset(dateISO: string): string {
+  // Total by construction. A CMS event override can set dateISO to any string
+  // (the admin PUT does no format check), and `new Date("TBD")` makes
+  // Intl.formatToParts throw RangeError — which would 500 the whole public
+  // event page over one bad character in a JSON-LD attribute.
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateISO)) return "";
+  // Anchor at noon UTC: a midnight anchor can land on the wrong side of the
+  // spring/fall DST changeover for the date being described.
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    timeZoneName: "longOffset",
+  }).formatToParts(new Date(`${dateISO}T12:00:00Z`));
+  const name = parts.find((p) => p.type === "timeZoneName")?.value ?? "";
+  return name.replace("GMT", "") || "-05:00";
 }
 
 /** Convert "8:30 AM" → "08:30:00" for JSON-LD */

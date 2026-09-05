@@ -1,4 +1,4 @@
-import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { deriveInvoiceStatus, recordPayment } from "./ledger";
 
 // ── deriveInvoiceStatus (pure) ───────────────────────────────────────────────
@@ -32,8 +32,8 @@ describe("deriveInvoiceStatus", () => {
 
 // ── recordPayment idempotency (mocked — runs in CI, no DB) ───────────────────
 //
-// The integration suite below proves the real flow but is skipped without
-// staging creds, so the central money invariant — a redelivered Stripe webhook
+// The integration suite below proves the real flow but stays off unless
+// RUN_DB_INTEGRATION is opted in, so the central money invariant — a redelivered Stripe webhook
 // must never double-record a payment — would otherwise have ZERO enforcement in
 // CI. These pin the two idempotency guards (the check-first fast path and the
 // unique-violation race recovery) against a mock db.
@@ -97,19 +97,43 @@ describe("recordPayment idempotency (mocked)", () => {
   });
 });
 
-// ── recordPayment (integration — staging DB only) ────────────────────────────
+// ── recordPayment (integration — opt-in, non-production DB only) ─────────────
 //
-// Guarded by DATABASE_URL_UNPOOLED so `pnpm test` stays green on machines / CI
-// without staging credentials. When the var is set, this builds its OWN
-// session-pooler client (the app singleton in @/lib/db reads DATABASE_URL and
-// uses prepare:false for the txn-mode pooler; we want a direct session client
-// here so multi-statement transactions behave normally). It creates clearly
-// marked temp rows and deletes every one of them in afterAll, so it can never
-// pollute staging regardless of pass/fail.
+// There is NO staging database. DATABASE_URL_UNPOOLED points at the same
+// Supabase project as DATABASE_URL (the one production DB), so "the var is set"
+// is NOT a safe trigger: any runner that loads .env.local would write a live
+// organizations row here, and if cleanup never ran (crash, Ctrl-C, timeout) it
+// would surface in the public member directory.
+//
+// Two locks, both required. RUN_DB_INTEGRATION=1 must be set deliberately, and
+// the URL host must look like a throwaway database. The temp org is also
+// inserted as status 'deleted' with deletedAt set, so even a failed cleanup
+// leaves nothing the directory query (status 'active' AND deleted_at IS NULL)
+// can return.
+//
+// When it does run it builds its OWN session-pooler client (the app singleton in
+// @/lib/db reads DATABASE_URL and uses prepare:false for the txn-mode pooler; we
+// want a direct session client here so multi-statement transactions behave
+// normally).
+
+function isThrowawayDbHost(url: string): boolean {
+  let host: string;
+  try {
+    host = new URL(url).hostname.toLowerCase();
+  } catch {
+    return false;
+  }
+  if (host === "localhost" || host === "127.0.0.1" || host === "::1") return true;
+  // Anything else must SAY it is disposable. A bare Supabase/RDS hostname —
+  // which is what production looks like — never matches.
+  return /(^|[.-])(staging|test|dev|local)([.-]|$)/.test(host);
+}
 
 const UNPOOLED_URL = process.env.DATABASE_URL_UNPOOLED;
+const DB_INTEGRATION_ENABLED =
+  process.env.RUN_DB_INTEGRATION === "1" && !!UNPOOLED_URL && isThrowawayDbHost(UNPOOLED_URL);
 
-describe.skipIf(!UNPOOLED_URL)("recordPayment (staging integration)", () => {
+describe.skipIf(!DB_INTEGRATION_ENABLED)("recordPayment (DB integration)", () => {
   // Imported lazily so the module isn't loaded at all when the suite is skipped.
   let sqlClient: import("postgres").Sql;
   let testDb: import("@/lib/db").DB;
@@ -124,8 +148,9 @@ describe.skipIf(!UNPOOLED_URL)("recordPayment (staging integration)", () => {
   let orgId = "";
   let invoiceId = "";
 
-  // Resolved inside beforeAll-equivalent (the first test) to keep imports lazy.
-  const setup = async () => {
+  // beforeAll, not "the first test", so afterAll cleanup runs even if a test
+  // fails or the suite is interrupted after setup.
+  beforeAll(async () => {
     const postgres = (await import("postgres")).default;
     const { drizzle } = await import("drizzle-orm/postgres-js");
     const schema = await import("@/lib/db/schema");
@@ -133,9 +158,11 @@ describe.skipIf(!UNPOOLED_URL)("recordPayment (staging integration)", () => {
     sqlClient = postgres(UNPOOLED_URL!, { ssl: "require", max: 1 });
     testDb = drizzle(sqlClient, { schema }) as unknown as import("@/lib/db").DB;
 
+    // 'deleted' + deletedAt: invisible to every public query even if cleanup
+    // never runs. recordPayment does not read organizations.status.
     const [org] = await testDb
       .insert(schema.organizations)
-      .values({ name: orgName, slug: orgSlug, status: "active" })
+      .values({ name: orgName, slug: orgSlug, status: "deleted", deletedAt: new Date() })
       .returning({ id: schema.organizations.id });
     orgId = org.id;
 
@@ -149,7 +176,7 @@ describe.skipIf(!UNPOOLED_URL)("recordPayment (staging integration)", () => {
       })
       .returning({ id: schema.invoices.id });
     invoiceId = inv.id;
-  };
+  });
 
   afterAll(async () => {
     if (!sqlClient) return;
@@ -167,8 +194,6 @@ describe.skipIf(!UNPOOLED_URL)("recordPayment (staging integration)", () => {
   });
 
   it("records a full charge → invoice 'paid', amountPaidCents 10000", async () => {
-    await setup();
-
     const res = await recordPayment(testDb, {
       organizationId: orgId,
       invoiceId,

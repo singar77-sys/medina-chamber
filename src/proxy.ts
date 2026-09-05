@@ -108,7 +108,7 @@ export function buildCsp(nonce: string | null): string {
     // than script XSS.
     `style-src 'self' 'unsafe-inline'`,
     // Image hosts must be explicit. Same as next.config.ts remotePatterns.
-    `img-src 'self' blob: data: https://res.cloudinary.com https://images.squarespace-cdn.com`,
+    `img-src 'self' blob: data: https://res.cloudinary.com https://images.squarespace-cdn.com https://75emgknx7u1oaaiq.public.blob.vercel-storage.com`,
     `font-src 'self'`,
     // Outbound connections from the client. Sentry tunnels through our
     // own origin (/monitoring) so we don't need the ingest hostname here.

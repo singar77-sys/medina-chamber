@@ -49,17 +49,34 @@ interface SafeLink {
   external: boolean;
 }
 
+/** Base used only to decide whether a relative candidate stays on our origin. */
+const INTERNAL_ORIGIN = "https://medinachamber.com";
+
 /**
  * Resolve a raw URL string to a safe href, or null if it isn't allowed.
- * Internal paths (starting with a single "/") are same-tab links.
+ * Internal paths are same-tab links, but "starts with /" is NOT a safe test on
+ * its own: browsers follow the WHATWG URL rules where a backslash is
+ * equivalent to a slash, so "/\evil.com" is a protocol-relative URL that
+ * resolves to https://evil.com — it would have sailed past a naive prefix
+ * check and produced exactly the off-site phishing link this allowlist exists
+ * to prevent. Everything is therefore resolved through the URL parser and
+ * accepted only when the resulting origin is ours.
  * External links must be https: with an allowlisted hostname; the parsed
  * URL is re-serialized (url.href) so the rendered href is normalized and
  * free of whitespace/encoding tricks.
  */
 function resolveSafeLink(raw: string): SafeLink | null {
-  // Internal path: single leading slash, not protocol-relative "//".
-  if (raw.startsWith("/") && !raw.startsWith("//")) {
-    return { href: raw, external: false };
+  // Relative candidate: keep it only if it truly stays on our own origin.
+  if (raw.startsWith("/")) {
+    try {
+      const url = new URL(raw, INTERNAL_ORIGIN);
+      if (url.origin === INTERNAL_ORIGIN) {
+        return { href: url.pathname + url.search + url.hash, external: false };
+      }
+    } catch {
+      // Unparseable — fall through to plain text.
+    }
+    return null;
   }
   try {
     const url = new URL(raw);

@@ -16,7 +16,7 @@ import { THEME_SCRIPT_HASH } from "./lib/theme-script";
 const SHARED_STRICT_DIRECTIVES = [
   "default-src 'self'",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' blob: data: https://res.cloudinary.com https://images.squarespace-cdn.com",
+  "img-src 'self' blob: data: https://res.cloudinary.com https://images.squarespace-cdn.com https://75emgknx7u1oaaiq.public.blob.vercel-storage.com",
   "font-src 'self'",
   "connect-src 'self'",
   "frame-src https://*.hflip.co https://videoplayer.telvue.com",

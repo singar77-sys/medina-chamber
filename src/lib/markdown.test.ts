@@ -145,3 +145,46 @@ describe("renderMarkdown — well-formed links", () => {
     expect(out.text).toContain("https://evil.example/phish");
   });
 });
+
+/**
+ * Off-origin links disguised as internal paths. Browsers apply the WHATWG URL
+ * rules, where a backslash is interchangeable with a slash, so "/" followed by
+ * a backslash and a host is really a protocol-relative URL resolving to that
+ * host. A bare "starts with /" check let those through as same-tab links. The
+ * renderer exists to stop a prompt-injected bot answer from producing a
+ * phishing link, so these must come out as plain text with no anchor at all.
+ * (Backslashes are built from a char code so no escaping layer can soften the
+ * test into a different string than the one under attack.)
+ */
+describe("internal-path links cannot escape the origin", () => {
+  const BS = String.fromCharCode(92);
+  const escapes = [
+    "/" + BS + "evil.com",
+    "/" + BS + BS + "evil.com",
+    "//evil.com",
+    "/" + BS + "/evil.com",
+  ];
+
+  for (const raw of escapes) {
+    it("renders " + JSON.stringify(raw) + " as text, not a link", () => {
+      const out = analyze("[click](" + raw + ")");
+      expect(out.anchors).toEqual([]);
+      expect(out.tags).not.toContain("a");
+    });
+  }
+
+  it("still renders genuine internal paths as same-tab links", () => {
+    const out = analyze("[pricing](/membership/pricing?a=1#tiers)");
+    expect(out.anchors).toHaveLength(1);
+    expect(out.anchors[0].href).toBe("/membership/pricing?a=1#tiers");
+    expect(out.anchors[0].target).toBeUndefined();
+  });
+
+  it("keeps allowlisted external links working", () => {
+    const out = analyze(
+      "[portal](https://greatermedinachamberofcommerce.growthzoneapp.com/a)",
+    );
+    expect(out.anchors).toHaveLength(1);
+    expect(out.anchors[0].target).toBe("_blank");
+  });
+});

@@ -32,6 +32,34 @@ export const dynamic = "force-dynamic";
 
 const SLUG_RE = /^[a-z0-9][a-z0-9-]{1,78}[a-z0-9]$/;
 
+// Featured images render through next/image, which only serves the hosts listed
+// in next.config.ts remotePatterns. An off-allowlist URL saves fine and then
+// 400s as a blank image slot on the public blog (next/image's own host check
+// only runs in dev), so reject it here while the admin can still fix it.
+const ALLOWED_IMAGE_HOSTS: Record<string, string> = {
+  "res.cloudinary.com": "/micronetonline/",
+  "images.squarespace-cdn.com": "/content/v1/5c1d23c545776e89bb386be4/",
+  "75emgknx7u1oaaiq.public.blob.vercel-storage.com": "/",
+};
+
+function validateImage(image: string | undefined): string | null {
+  if (!image) return null;
+  // Site-relative only. "//host/path" is protocol-relative (a full
+  // cross-origin URL to a browser), so it must not pass as a local path.
+  if (image.startsWith("/") && !image.startsWith("//")) return null;
+  let url: URL;
+  try {
+    url = new URL(image);
+  } catch {
+    return "image must be a site-relative path or a full https:// URL.";
+  }
+  const prefix = url.protocol === "https:" ? ALLOWED_IMAGE_HOSTS[url.hostname] : undefined;
+  if (prefix === undefined || !url.pathname.startsWith(prefix)) {
+    return "image must be uploaded through the Media Library, or come from the chamber's own GrowthZone or Squarespace image host.";
+  }
+  return null;
+}
+
 function validateSlug(slug: string): string | null {
   if (!SLUG_RE.test(slug)) return "Slug must be 3–80 lowercase chars, letters/numbers/hyphens only.";
   if (blogPosts.some((p) => p.slug === slug)) return "Slug conflicts with an existing scraped post.";
@@ -53,6 +81,8 @@ function validatePost(
   if (!body.dateISO || !/^\d{4}-\d{2}-\d{2}$/.test(body.dateISO)) {
     return { error: "dateISO must be YYYY-MM-DD." };
   }
+  const imageErr = validateImage(body.image?.trim());
+  if (imageErr) return { error: imageErr };
   return null;
 }
 

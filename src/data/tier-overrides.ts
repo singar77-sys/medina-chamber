@@ -14,8 +14,8 @@
  * See that script's header for how to pull fresh lists from the admin
  * console.
  *
- * Last sync: 2026-08-29
- * Counts: CI 35, VP 97
+ * Last sync: 2026-09-05
+ * Counts: CI 35, VP 98
  */
 
 export const COMMUNITY_INVESTOR_SLUGS: ReadonlySet<string> = new Set([
@@ -154,4 +154,5 @@ export const VISIBILITY_PLUS_SLUGS: ReadonlySet<string> = new Set([
   "the-villas-at-hidden-lakes",
   "first-national-bank",
   "directions-credit-union",
+  "one-hour-heating-air-conditioning",
 ]);

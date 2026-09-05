@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ButtonLink, ButtonA } from "@/components/ui/Button";
-import { totalCount } from "@/data/members";
 import { getUpcomingEvents, shortenEventTitle } from "@/data/events";
 import { FadeIn } from "@/components/FadeIn";
 import { CountUp } from "@/components/CountUp";
@@ -95,11 +94,6 @@ const organizationJsonLd = {
     { "@type": "City", name: "Lafayette, OH 44256" },
   ],
   numberOfEmployees: { "@type": "QuantitativeValue", value: 2 },
-  member: {
-    "@type": "QuantitativeValue",
-    value: totalCount,
-    unitText: "member businesses",
-  },
 };
 
 export default async function HomePage() {

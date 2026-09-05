@@ -24,5 +24,8 @@ const getCachedField = unstable_cache(
 export async function getPageContent(page: string, field: string): Promise<string> {
   const def = CONTENT_FIELD_DEFS.find((d) => d.page === page && d.field === field);
   const value = await getCachedField(page, field);
-  return value ?? def?.defaultValue ?? "";
+  // `||`, not `??`: an admin who clears a field and saves stores an empty
+  // string, and shipping that would delete live copy (the canonical office
+  // hours line, a hero eyebrow). Blank means "use the shipped default".
+  return value || def?.defaultValue || "";
 }

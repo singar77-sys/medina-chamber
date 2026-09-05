@@ -6,6 +6,9 @@ export const dynamic = "force-dynamic";
 
 function formatTime(iso: string) {
   return new Date(iso).toLocaleString("en-US", {
+    // Same Eastern pin as the chat list. Without it the list and the
+    // transcript showed different times for the same conversation.
+    timeZone: "America/New_York",
     weekday: "short",
     month: "short",
     day: "numeric",

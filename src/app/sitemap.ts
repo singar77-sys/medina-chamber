@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { members } from "@/data/members";
-import { activeCommunities } from "@/data/communities";
+import { communities } from "@/data/communities";
 import { jobs } from "@/data/jobs";
 import { events } from "@/data/events";
 import { getAllBlogPosts } from "@/lib/cms-blog";
@@ -95,7 +95,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  const communityPages: MetadataRoute.Sitemap = activeCommunities.map((c) => ({
+  // Every defined community, not just the ones with members: community/[slug]
+  // prerenders all of them so SEO-target cities (Rittman, Granger, Lafayette,
+  // Montville) have an indexable landing page, and the sitemap is currently
+  // their only discovery path.
+  const communityPages: MetadataRoute.Sitemap = communities.map((c) => ({
     url: `${BASE_URL}/community/${c.slug}`,
     changeFrequency: "monthly",
     priority: 0.7,

@@ -19,7 +19,7 @@ const quickLinks = [
   { label: "Member Directory", href: "/membership/directory" },
   { label: "Join the Chamber", href: "/membership/join" },
   { label: "Upcoming Events", href: "/events" },
-  { label: "Compass Mentorship", href: "/programs/compass" },
+  { label: "Compass Program", href: "/programs/compass" },
   { label: "Member Benefits", href: "/membership/benefits" },
   { label: "Advocacy", href: "/about/advocacy" },
   { label: "Savings Programs", href: "/membership/savings" },

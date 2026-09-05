@@ -56,7 +56,7 @@ export const navigation: NavItem[] = [
       {
         label: "Social Connect",
         href: "/programs/social-connect",
-        description: "Casual after-hours networking around the county",
+        description: "Signature networking event and expo at Foundry Social",
       },
       {
         label: "Reflections of Italy",
@@ -87,7 +87,7 @@ export const navigation: NavItem[] = [
       {
         label: "Programs",
         href: "/programs",
-        description: "Mentorship, networking, safety, and Compass",
+        description: "Leadership development, networking, safety, and meeting space",
       },
       {
         label: "Safety Council",

@@ -42,7 +42,19 @@ const jsonLd = {
   location: {
     "@type": "Place",
     name: "Medina County, Ohio",
+    // Google's Event rich result rejects a location with no address. The 2026
+    // venue isn't announced yet, so this carries the chamber's own city rather
+    // than a venue we can't confirm; add the venue name and streetAddress once
+    // it's booked.
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Medina",
+      addressRegion: "OH",
+      addressCountry: "US",
+    },
   },
+  url: "https://medinachamber.com/programs/athena-awards",
+  image: "https://medinachamber.com/images/photos/medina-chamber-athena-awards-hero.webp",
   eventStatus: "https://schema.org/EventScheduled",
   eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
 };

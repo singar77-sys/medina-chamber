@@ -33,20 +33,38 @@
 import * as Sentry from "@sentry/nextjs";
 import { getRedis } from "@/lib/upstash";
 
+// Env caps are the only thing between abuse and the Anthropic bill, so a
+// typo must not disarm them: '15,000,000' would parse to NaN (every `>= cap`
+// false, budget gone) and '' to 0 (bot offline from the first request).
+// Anything that isn't a finite positive number falls back to the default and
+// says so once at module load.
+function envNumber(name: string, fallback: number): number {
+  const raw = process.env[name];
+  if (raw === undefined || raw === "") return fallback;
+  const parsed = Number(raw);
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    console.error(
+      `[spend-cap] ${name}="${raw}" is not a positive number; using ${fallback}.`,
+    );
+    return fallback;
+  }
+  return parsed;
+}
+
 // Haiku 4.5 pricing (~Jan 2026): $1/M input, $5/M output, cached input
 // reads at $0.10/M. Blended chamber usage with prompt caching lands
 // around $1-1.50 per million tokens, so 15M ≈ $20/month. Override via
 // env if pricing shifts or the chamber wants a different budget.
-const MONTHLY_TOKEN_CAP = Number(process.env.CHAT_MONTHLY_TOKEN_CAP ?? 15_000_000);
+const MONTHLY_TOKEN_CAP = envNumber("CHAT_MONTHLY_TOKEN_CAP", 15_000_000);
 
 // Daily tripwire. ~13% of monthly — a legit heavy-use day won't touch
 // this, but an abuse burst gets caught within hours instead of at
 // month-end.
-const DAILY_TOKEN_CAP = Number(process.env.CHAT_DAILY_TOKEN_CAP ?? 2_000_000);
+const DAILY_TOKEN_CAP = envNumber("CHAT_DAILY_TOKEN_CAP", 2_000_000);
 
 // Early-warning fraction of the monthly cap. At 80%, Mark gets a
 // Sentry email with time to investigate before the hard stop kicks in.
-const MONTHLY_WARN_FRACTION = Number(process.env.CHAT_MONTHLY_WARN_FRACTION ?? 0.8);
+const MONTHLY_WARN_FRACTION = envNumber("CHAT_MONTHLY_WARN_FRACTION", 0.8);
 
 const DAILY_TTL_SECONDS = 48 * 60 * 60;       // 2 days
 const MONTHLY_TTL_SECONDS = 40 * 24 * 60 * 60; // 40 days — survives month rollover

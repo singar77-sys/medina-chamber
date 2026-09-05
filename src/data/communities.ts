@@ -51,7 +51,7 @@ const allCommunities: Community[] = [
     zip: ["44281"],
     tagline: "Where industry and community meet",
     description:
-      "Wadsworth is a manufacturing and agricultural hub in southwestern Medina County with a charming downtown district along Main Street. Home to Swagelok, the Blue Tip Match Company heritage, and a growing small business scene.",
+      "Wadsworth is a manufacturing and agricultural hub in southeastern Medina County with a charming downtown district along Main Street. Home to Swagelok, the Blue Tip Match Company heritage, and a growing small business scene.",
     chamberPitch:
       "Wadsworth businesses connect to the full Medina County network through chamber membership, advocacy at the county and state level, plus access to programs, events, and savings that serve the entire region.",
   },
@@ -75,9 +75,9 @@ const allCommunities: Community[] = [
     zip: ["44273"],
     tagline: "Gateway to southern Medina County",
     description:
-      "Seville straddles Medina and Wayne counties along Route 3 with a mix of retail, agricultural, and service businesses. Its location at the intersection of Routes 3 and 224 gives businesses access to southern Medina County and the Wooster corridor.",
+      "Seville sits near the Wayne County line along Route 3, with a mix of retail, agricultural, and service businesses. Its location at the intersection of Routes 3 and 224 gives businesses access to southern Medina County and the Wooster corridor.",
     chamberPitch:
-      "Seville's position between Medina and Wayne counties makes chamber membership especially valuable, tap into a member network that stretches across the region.",
+      "Seville's position near the Wayne County line makes chamber membership especially valuable, tap into a member network that stretches across the region.",
   },
   {
     slug: "valley-city",

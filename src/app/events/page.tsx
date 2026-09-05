@@ -200,7 +200,9 @@ export default async function EventsPage() {
                   freq: "Monthly happy hour",
                   time: "4:00 – 6:00 PM",
                   price: "Free (food/drink on your own)",
-                  desc: "After-hours mixer at rotating venues, recently Buffalo Wild Wings, with industrial and hospitality hosts ahead. Open-house format, drop in any time.",
+                  // Venue rotates every month, so name no host here: the upcoming
+                  // events calendar above is the live source for where it lands.
+                  desc: "After-hours mixer at a different member venue each month. Open-house format, drop in any time.",
                 },
               ].map((p, i) => (
                 <FadeIn key={p.name} delay={i * 60}>

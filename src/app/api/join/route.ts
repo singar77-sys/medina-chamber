@@ -115,6 +115,14 @@ export async function POST(req: NextRequest): Promise<Response> {
     .where(eq(contacts.email, email))
     .limit(1);
   if (existing) {
+    // CUTOVER DECISION: this 409 tells an unauthenticated caller whether an
+    // address is a member contact, so it is an enumeration oracle at 3
+    // req/min/IP once INTERNAL_TRANSACTIONS_ENABLED flips on (portal/auth/
+    // request deliberately answers {ok:true} either way). Kept because a
+    // generic error would strand real members mid-signup with no next step.
+    // Revisit with the known portal-auth timing leak before cutover: the
+    // privacy-preserving version emails the existing contact a sign-in link
+    // and returns the same generic response as a new signup.
     return NextResponse.json(
       { error: "An account with this email already exists. Please sign in to your member portal." },
       { status: 409 },

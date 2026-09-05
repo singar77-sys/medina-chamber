@@ -9,6 +9,7 @@
 
 import { NextResponse } from "next/server";
 import { requireAdminSession } from "@/lib/admin-auth";
+import { SLUG_RE } from "@/lib/sanitize";
 import {
   getCmsEventData,
   setCmsEventData,
@@ -17,6 +18,14 @@ import {
 } from "@/lib/cms-store";
 
 export const dynamic = "force-dynamic";
+
+// The slug becomes a Redis key component (cms:event:<slug>), so it must be a
+// plain slug — the same guard media/upload and events/graphics already apply.
+// Without it an arbitrary string writes an override that no real event can
+// ever match.
+function badSlug(slug: string): boolean {
+  return !SLUG_RE.test(slug);
+}
 
 function deriveDateFields(
   dateISO: string,
@@ -44,6 +53,9 @@ export async function GET(req: Request): Promise<Response> {
   const { searchParams } = new URL(req.url);
   const slug = searchParams.get("slug");
   if (!slug) return NextResponse.json({ error: "Missing slug" }, { status: 400 });
+  if (badSlug(slug)) {
+    return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
+  }
 
   const data = await getCmsEventData(slug);
   return NextResponse.json({ data });
@@ -64,6 +76,9 @@ export async function PUT(req: Request): Promise<Response> {
   if (!slug || !data) {
     return NextResponse.json({ error: "Missing slug or data" }, { status: 400 });
   }
+  if (badSlug(slug)) {
+    return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
+  }
 
   if (data.dateISO) {
     Object.assign(data, deriveDateFields(data.dateISO));
@@ -81,6 +96,9 @@ export async function DELETE(req: Request): Promise<Response> {
   const { searchParams } = new URL(req.url);
   const slug = searchParams.get("slug");
   if (!slug) return NextResponse.json({ error: "Missing slug" }, { status: 400 });
+  if (badSlug(slug)) {
+    return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
+  }
 
   await clearCmsEventData(slug);
   return NextResponse.json({ ok: true });

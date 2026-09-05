@@ -15,11 +15,16 @@ function daysAgoStr(days: number) {
 }
 
 function formatTime(iso: string) {
+  // Server component: this renders in the Vercel function, whose clock is
+  // UTC. Without an explicit zone an 8:15 PM chat reads as 12:15 AM the next
+  // day to Medina staff. (The registrations pages pin UTC instead, because
+  // those values are date-only event dates that Eastern would shift back a day.)
   return new Date(iso).toLocaleString("en-US", {
     month: "short",
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
+    timeZone: "America/New_York",
   });
 }
 

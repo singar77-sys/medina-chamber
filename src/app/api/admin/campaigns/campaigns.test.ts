@@ -12,7 +12,10 @@ const selFrom = vi.fn(() => ({ orderBy: selOrderBy }));
 const select = vi.fn((_projection?: unknown) => ({ from: selFrom }));
 vi.mock("@/lib/db", () => ({ db: { insert, select } }));
 
-vi.mock("@/lib/email", () => ({ EMAIL_RE: /^[^@\s]+@[^@\s]+\.[^@\s]+$/ }));
+// Not mocked: @/lib/email is side-effect-safe to import (the Resend client is
+// built with a placeholder key) and campaign-send is stubbed below, so these
+// tests validate against the REAL EMAIL_RE the route ships with rather than a
+// copy that can silently drift from it.
 
 const sendCampaign = vi.fn(async () => ({ sent: 5, recipients: 5 }) as Record<string, unknown>);
 vi.mock("@/lib/email/campaign-send", () => ({ sendCampaign }));

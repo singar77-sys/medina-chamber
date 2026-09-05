@@ -175,9 +175,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("Apply route error:", err);
+    // No applicant name/business/email in the payload: sentry.server.config.ts
+    // sets sendDefaultPii:false and strips request data, and an `extra` object
+    // would smuggle the PII straight back in. Route tag is enough to debug.
     Sentry.captureException(err, {
       tags: { route: "apply" },
-      extra: { businessName, contactName, email },
     });
     return NextResponse.json(
       { error: "Something went wrong. Please try again." },

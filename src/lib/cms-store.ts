@@ -11,14 +11,17 @@
  *   cms:blog:post:{slug}        CMS-authored blog posts (full object)
  *   cms:blog:index              JSON string[] of CMS blog slugs (newest first)
  *
- * TTL: 1 year for all keys — they're managed explicitly via admin UI.
+ * NO TTL. These keys hold published content whose only lifecycle is the admin
+ * UI (save / reset / delete). An expiry here is a silent time bomb: a post
+ * published and never re-edited would 404 a year later, and a pricing override
+ * would revert to the compiled defaults on both the pricing page and
+ * ChamberBot. Deletion is always explicit.
  */
 
 import { cache } from "react";
 import { getRedis } from "@/lib/upstash";
 import type { EventInfo } from "@/components/events/graphics/shared";
 
-const TTL = 365 * 24 * 3600; // seconds
 
 /** Read-side guard. The store's contract is "purely additive — nothing breaks
  *  if Redis is unavailable", which must cover thrown network errors, not just
@@ -45,7 +48,7 @@ export async function getEventInfoOverride(slug: string): Promise<EventInfo | nu
 export async function setEventInfoOverride(slug: string, info: EventInfo): Promise<void> {
   const redis = getRedis();
   if (!redis) throw new Error("Redis not configured");
-  await redis.set(`cms:event-info:${slug}`, info, { ex: TTL });
+  await redis.set(`cms:event-info:${slug}`, info);
 }
 
 export async function clearEventInfoOverride(slug: string): Promise<void> {
@@ -69,7 +72,7 @@ export async function setContentField(
 ): Promise<void> {
   const redis = getRedis();
   if (!redis) throw new Error("Redis not configured");
-  await redis.set(`cms:content:${page}:${field}`, value, { ex: TTL });
+  await redis.set(`cms:content:${page}:${field}`, value);
 }
 
 export async function clearContentField(page: string, field: string): Promise<void> {
@@ -103,11 +106,11 @@ export async function saveCmsBlogPost(post: CmsBlogPost): Promise<void> {
   const redis = getRedis();
   if (!redis) throw new Error("Redis not configured");
 
-  await redis.set(`cms:blog:post:${post.slug}`, post, { ex: TTL });
+  await redis.set(`cms:blog:post:${post.slug}`, post);
 
   const slugs = (await redis.get<string[]>("cms:blog:index")) ?? [];
   if (!slugs.includes(post.slug)) {
-    await redis.set("cms:blog:index", [post.slug, ...slugs], { ex: TTL });
+    await redis.set("cms:blog:index", [post.slug, ...slugs]);
   }
 }
 
@@ -120,7 +123,6 @@ export async function deleteCmsBlogPost(slug: string): Promise<void> {
   await redis.set(
     "cms:blog:index",
     slugs.filter((s) => s !== slug),
-    { ex: TTL },
   );
 }
 
@@ -177,7 +179,7 @@ export const getCmsEventData = cache(async (slug: string): Promise<CmsEventData 
 export async function setCmsEventData(slug: string, data: CmsEventData): Promise<void> {
   const redis = getRedis();
   if (!redis) throw new Error("Redis not configured");
-  await redis.set(`cms:event:${slug}`, { ...data, updatedAt: new Date().toISOString() }, { ex: TTL });
+  await redis.set(`cms:event:${slug}`, { ...data, updatedAt: new Date().toISOString() });
 }
 
 export async function clearCmsEventData(slug: string): Promise<void> {
@@ -320,7 +322,6 @@ export async function setCmsPricing(config: PricingConfig): Promise<void> {
   await redis.set(
     "cms:pricing",
     { ...config, updatedAt: new Date().toISOString() },
-    { ex: TTL },
   );
 }
 

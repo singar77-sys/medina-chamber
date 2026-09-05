@@ -52,8 +52,15 @@ export function EventPhotoUploader({ eventSlug, eventTitle, initialPhotos }: Pro
         ...files.map((f, i) => ({ id: ids[i], name: f.name, progress: "uploading" as const })),
       ]);
 
-      await Promise.all(
-        files.map(async (file, i) => {
+      // SEQUENTIAL on purpose. The server keeps each event's photo list as a
+      // single JSON array in Redis (GET -> prepend -> SET), so parallel
+      // uploads read the same "before" list and the last write wins: every
+      // upload returns 200 while most of the photos silently vanish from the
+      // gallery, orphaning their blobs. One at a time is correct and fast
+      // enough for the handful of files staff drop at once.
+      for (let i = 0; i < files.length; i++) {
+        {
+          const file = files[i];
           const id = ids[i];
           const fd = new FormData();
           fd.append("file", file);
@@ -83,8 +90,8 @@ export function EventPhotoUploader({ eventSlug, eventTitle, initialPhotos }: Pro
               ),
             );
           }
-        }),
-      );
+        }
+      }
 
       setTimeout(() => {
         setUploading((prev) => prev.filter((u) => u.progress === "uploading"));

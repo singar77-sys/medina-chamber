@@ -16,7 +16,6 @@
 import { put, del } from "@vercel/blob";
 import { getRedis } from "@/lib/upstash";
 
-const TTL = 365 * 24 * 3600;
 const RECENT_CAP = 50;
 
 export interface MediaItem {
@@ -87,7 +86,7 @@ async function addEventPhoto(slug: string, item: MediaItem): Promise<void> {
   const redis = getRedis();
   if (!redis) return;
   const existing = (await redis.get<MediaItem[]>(`cms:media:event:${slug}`)) ?? [];
-  await redis.set(`cms:media:event:${slug}`, [item, ...existing], { ex: TTL });
+  await redis.set(`cms:media:event:${slug}`, [item, ...existing]);
 }
 
 export async function getEventPhotos(slug: string): Promise<MediaItem[]> {
@@ -156,7 +155,7 @@ export async function deleteMediaItem(url: string, eventSlug?: string): Promise<
   // Remove from recent feed
   const recent = (await redis.get<MediaItem[]>("cms:media:recent")) ?? [];
   ops.push(
-    redis.set("cms:media:recent", recent.filter((i) => i.url !== url), { ex: TTL }),
+    redis.set("cms:media:recent", recent.filter((i) => i.url !== url)),
   );
 
   // Remove from event photos if tagged
@@ -166,7 +165,6 @@ export async function deleteMediaItem(url: string, eventSlug?: string): Promise<
       redis.set(
         `cms:media:event:${eventSlug}`,
         existing.filter((i) => i.url !== url),
-        { ex: TTL },
       ),
     );
   }
@@ -193,12 +191,12 @@ export async function updateMediaItemMeta(
   const ops: Promise<unknown>[] = [];
 
   const recent = (await redis.get<MediaItem[]>("cms:media:recent")) ?? [];
-  ops.push(redis.set("cms:media:recent", recent.map(applyMeta), { ex: TTL }));
+  ops.push(redis.set("cms:media:recent", recent.map(applyMeta)));
 
   if (eventSlug) {
     const existing = (await redis.get<MediaItem[]>(`cms:media:event:${eventSlug}`)) ?? [];
     ops.push(
-      redis.set(`cms:media:event:${eventSlug}`, existing.map(applyMeta), { ex: TTL }),
+      redis.set(`cms:media:event:${eventSlug}`, existing.map(applyMeta)),
     );
   }
 
@@ -216,7 +214,6 @@ export async function updateEventPhotoCaption(
   await redis.set(
     `cms:media:event:${slug}`,
     existing.map((i) => (i.url === url ? { ...i, caption } : i)),
-    { ex: TTL },
   );
 }
 
@@ -227,7 +224,7 @@ async function addToRecentFeed(item: MediaItem): Promise<void> {
   if (!redis) return;
   const existing = (await redis.get<MediaItem[]>("cms:media:recent")) ?? [];
   const updated = [item, ...existing].slice(0, RECENT_CAP);
-  await redis.set("cms:media:recent", updated, { ex: TTL });
+  await redis.set("cms:media:recent", updated);
 }
 
 export async function getRecentMedia(limit = 20): Promise<MediaItem[]> {
@@ -243,7 +240,7 @@ export async function getRecentMedia(limit = 20): Promise<MediaItem[]> {
 export async function setEventGraphicImage(slug: string, url: string): Promise<void> {
   const redis = getRedis();
   if (!redis) throw new Error("Redis not configured");
-  await redis.set(`cms:event-graphic:${slug}`, url, { ex: TTL });
+  await redis.set(`cms:event-graphic:${slug}`, url);
 }
 
 export async function getEventGraphicImage(slug: string): Promise<string | null> {

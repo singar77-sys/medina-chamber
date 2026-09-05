@@ -40,13 +40,19 @@ export function MediaLibraryClient({ items: initialItems }: Props) {
     setUploading(true);
     setUploadErrors([]);
 
-    const results = await Promise.allSettled(
-      files.map(async (file) => {
-        const fd = new FormData();
-        fd.append("file", file);
-        fd.append("description", description);
-        fd.append("type", "photo");
+    // SEQUENTIAL on purpose — see EventPhotoUploader: the recent-media feed is
+    // one JSON array in Redis (GET -> prepend -> SET), so parallel uploads
+    // clobber each other's entries even though every request returns 200.
+    const uploaded: MediaItem[] = [];
+    const errors: string[] = [];
 
+    for (const file of files) {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("description", description);
+      fd.append("type", "photo");
+
+      try {
         const res = await fetch("/api/admin/media/upload", {
           method: "POST",
           credentials: "same-origin",
@@ -54,17 +60,11 @@ export function MediaLibraryClient({ items: initialItems }: Props) {
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error ?? "Upload failed");
-        return data.item as MediaItem;
-      }),
-    );
-
-    const uploaded = results
-      .filter((r): r is PromiseFulfilledResult<MediaItem> => r.status === "fulfilled")
-      .map((r) => r.value);
-
-    const errors = results
-      .filter((r): r is PromiseRejectedResult => r.status === "rejected")
-      .map((r) => (r.reason instanceof Error ? r.reason.message : "Upload failed"));
+        uploaded.push(data.item as MediaItem);
+      } catch (err) {
+        errors.push(err instanceof Error ? err.message : "Upload failed");
+      }
+    }
 
     setItems((prev) => [...uploaded, ...prev]);
     if (errors.length) setUploadErrors(errors);

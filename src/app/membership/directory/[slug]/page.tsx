@@ -9,6 +9,7 @@ import { memberLogo } from "@/lib/member-logos";
 import { DirectoryViewBeacon } from "@/components/DirectoryViewBeacon";
 
 import { safeJsonLd } from "@/lib/json-ld";
+import { OG_IMAGE } from "@/lib/og";
 
 // Rendered per request off the DB (active members only). No build-time DB
 // dependency, and lets the directory_view beacon attribute real views.
@@ -39,6 +40,7 @@ export async function generateMetadata(
     title: member.name,
     description: descBase,
     openGraph: {
+      images: OG_IMAGE,
       title: `${member.name} | Medina Chamber Member`,
       description: descBase,
       ...(member.logoUrl && { images: [{ url: member.logoUrl }] }),

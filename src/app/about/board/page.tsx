@@ -6,12 +6,14 @@ import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { jaclyn, stephanie } from "@/data/staff";
 import { safeJsonLd } from "@/lib/json-ld";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Board of Directors",
   description:
     "Meet the volunteer board of directors leading the Greater Medina Chamber of Commerce. Local business leaders guiding the chamber's strategy and advocacy for Medina County.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Board of Directors | Greater Medina Chamber of Commerce",
     description:
       "Local business leaders guiding the chamber's strategy and advocacy.",

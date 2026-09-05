@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { chamberOffice, stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Privacy",
   description:
     "How the Greater Medina Chamber of Commerce website handles information, what we collect, how long we keep it, and how to request deletion.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Privacy | Greater Medina Chamber of Commerce",
     description:
       "Plain English on how medinachamber.com handles your information.",

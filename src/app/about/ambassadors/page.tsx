@@ -12,11 +12,13 @@ import {
 import { stephanie } from "@/data/staff";
 import { domainOnly, mailto } from "@/lib/format";
 import { safeJsonLd } from "@/lib/json-ld";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Chamber Ambassadors",
   description: ambassadorsPageDescription,
   openGraph: {
+    images: OG_IMAGE,
     title: "Chamber Ambassadors | Greater Medina Chamber of Commerce",
     description:
       "Volunteer member representatives who welcome new businesses and represent the chamber across Medina County.",

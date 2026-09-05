@@ -5,12 +5,14 @@ import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { HalftoneField } from "@/components/effects/HalftoneField";
 import { safeJsonLd } from "@/lib/json-ld";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Medina Means Business Magazine",
   description:
     "Medina Means Business, the official quarterly magazine of the Greater Medina Chamber of Commerce. Local business profiles, community stories, chamber updates, and advertising opportunities for Medina County.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Medina Means Business Magazine | Greater Medina Chamber of Commerce",
     description:
       "The official quarterly magazine of the Greater Medina Chamber of Commerce. Business profiles, community stories, and chamber updates.",

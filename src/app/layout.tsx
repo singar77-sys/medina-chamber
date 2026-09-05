@@ -2,11 +2,11 @@ import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider, ThemeScript } from "@/components/ThemeProvider";
-import { PostHogProvider } from "@/components/PostHogProvider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { DeferredGlobals } from "@/components/DeferredGlobals";
 import "./globals.css";
+import { OG_IMAGE } from "@/lib/og";
 
 // Keep non-production Vercel deployments (preview branches) out of the index
 // so scraped duplicate content never competes with the real site. Fail-safe:
@@ -24,6 +24,7 @@ export const metadata: Metadata = {
     "The Greater Medina Chamber of Commerce connects businesses, drives economic growth, and strengthens the Medina community. Est. 1938.",
   metadataBase: new URL("https://medinachamber.com"),
   openGraph: {
+    images: OG_IMAGE,
     type: "website",
     locale: "en_US",
     siteName: "Medina Chamber of Commerce",
@@ -82,8 +83,7 @@ export default async function RootLayout({
         <ThemeScript />
       </head>
       <body className="min-h-screen flex flex-col antialiased">
-        <PostHogProvider>
-          <ThemeProvider>
+        <ThemeProvider>
             <a
               href="#main-content"
               className="
@@ -108,8 +108,7 @@ export default async function RootLayout({
                 first interaction to keep their JS off the initial bundle.
                 See DeferredGlobals for the deferral strategy. */}
             <DeferredGlobals />
-          </ThemeProvider>
-        </PostHogProvider>
+        </ThemeProvider>
         {/* Vercel observability — page views + web vitals (LCP, INP, CLS).
             Both ship sub-1KB scripts; data shows up in the Vercel project
             dashboard under Analytics + Speed Insights. */}

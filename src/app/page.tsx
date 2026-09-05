@@ -32,10 +32,12 @@ import { safeJsonLd } from "@/lib/json-ld";
 import { chamberOffice, memberServices, stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
 import { getPageContent } from "@/lib/cms-content";
+import { OG_IMAGE } from "@/lib/og";
 export const metadata: Metadata = {
   title: "Greater Medina Chamber of Commerce | Medina County, Ohio",
   description: "The Greater Medina Chamber of Commerce connects and champions businesses across Medina County, Ohio. Member businesses, networking events, advocacy, and programs since 1938.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Greater Medina Chamber of Commerce",
     description:
       "Connecting and championing Medina County's business community since 1938.",

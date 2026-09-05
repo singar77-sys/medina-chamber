@@ -6,12 +6,14 @@ import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermar
 import { jaclyn, stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
 import { SponsorshipForm } from "./SponsorshipForm";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Sponsorships & Ribbon Cuttings",
   description:
     "Advertise in the Medina Means Business magazine and e-newsletter, and sponsor Greater Medina Chamber events, Golf Outing, Athena Awards, Member Meetings, and Safety Council. Published ad rates plus ribbon cuttings for Medina County businesses.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Sponsorships & Ribbon Cuttings | Greater Medina Chamber of Commerce",
     description:
       "Put your brand in front of Medina County's business community. Sponsorship packages for every budget.",

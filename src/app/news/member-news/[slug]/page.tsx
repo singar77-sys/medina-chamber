@@ -10,6 +10,7 @@ import {
   articleMetaDescription,
 } from "@/data/member-news";
 import { members } from "@/data/members";
+import { OG_IMAGE } from "@/lib/og";
 
 // ── Static generation ──────────────────────────────────────────────────────
 export function generateStaticParams() {
@@ -30,6 +31,7 @@ export async function generateMetadata(
     title: article.title,
     description,
     openGraph: {
+      images: OG_IMAGE,
       title: `${article.title} | Medina Chamber Member News`,
       description,
       ...(article.image && { images: [{ url: article.image }] }),

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { safeJsonLd } from "@/lib/json-ld";
 import { chamberOffice, jaclyn, stephanie } from "@/data/staff";
+import { OG_IMAGE } from "@/lib/og";
 
 // ISR: re-render daily so the "years later" count (new Date() at build time)
 // refreshes each New Year instead of freezing until the next deploy.
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
   description:
     "The Greater Medina Chamber of Commerce has championed and empowered Medina County's business community since 1938, through advocacy, connection, and leadership. Meet the team and learn what we stand for.",
   openGraph: {
+    images: OG_IMAGE,
     title: "About | Greater Medina Chamber of Commerce",
     description:
       "Championing and empowering Medina County's business community since 1938, through advocacy, connection, and leadership.",

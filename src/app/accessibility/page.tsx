@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { chamberOffice } from "@/data/staff";
 import { mailto } from "@/lib/format";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Accessibility Statement",
   description:
     "The Greater Medina Chamber of Commerce is committed to digital accessibility. Our website targets WCAG 2.1 Level AA, the standard referenced by the Americans with Disabilities Act.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Accessibility Statement | Greater Medina Chamber of Commerce",
     description:
       "Our commitment to making medinachamber.com accessible to everyone, including people with disabilities.",

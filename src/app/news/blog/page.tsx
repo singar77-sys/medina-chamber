@@ -6,6 +6,7 @@ import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermar
 import { formatBlogDate } from "@/data/blog";
 import { getAllBlogPosts } from "@/lib/cms-blog";
 import { safeJsonLd } from "@/lib/json-ld";
+import { OG_IMAGE } from "@/lib/og";
 
 // ISR so admin-authored CMS posts appear without a redeploy.
 export const revalidate = 300;
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
   description:
     "Business tips, strategy, and resources from the Greater Medina Chamber of Commerce. Practical advice for small business owners in Medina County, Ohio.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Business Blog | Greater Medina Chamber of Commerce",
     description:
       "Practical business tips and strategy for Medina County business owners.",

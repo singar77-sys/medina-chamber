@@ -4,12 +4,14 @@ import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { safeJsonLd } from "@/lib/json-ld";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Programs for Local Businesses in Medina County",
   description:
     "Greater Medina Chamber of Commerce programs, leadership development, networking events, workplace safety, and professional meeting space for Medina County businesses.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Programs | Greater Medina Chamber of Commerce",
     description:
       "Compass leadership, Social Connect, Golf Outing, Athena Awards, and Safety Council, programs that power Medina County's business community.",

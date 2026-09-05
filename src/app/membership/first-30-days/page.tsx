@@ -8,11 +8,13 @@ import { safeJsonLd } from "@/lib/json-ld";
 import { stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
 import { growthZone } from "@/lib/navigation";
+import { OG_IMAGE } from "@/lib/og";
 export const metadata: Metadata = {
   title: "Your First 30 Days",
   description:
     "New to the Greater Medina Chamber of Commerce? Here's a 7-step onboarding checklist to get the most out of your membership in your first month, build your profile, attend your first event, get involved, and more.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Your First 30 Days, Medina Chamber Onboarding Checklist",
     description:
       "7-step checklist for new Chamber members. Build your profile, meet the community, and turn membership into momentum in your first month.",

@@ -3,12 +3,14 @@ import { PageHero } from "@/components/PageHero";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import Link from "next/link";
 import { activeCommunities } from "@/data/communities";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Medina County Business Communities",
   description:
     "Explore business resources and Chamber member businesses in Medina, Brunswick, Wadsworth, and communities across Medina County. The Greater Medina Chamber serves all of Medina County.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Medina County Business Communities, Greater Medina Chamber",
     description:
       "Business resources for every community in Medina County, Ohio.",

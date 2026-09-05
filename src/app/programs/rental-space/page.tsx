@@ -6,12 +6,14 @@ import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermar
 import { memberServices } from "@/data/staff";
 import { mailto } from "@/lib/format";
 import { safeJsonLd } from "@/lib/json-ld";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Rental Space",
   description:
     "The Greater Medina Chamber of Commerce offers two professional meeting spaces for rent in downtown Medina. The Vault conference room (up to 16) and the Main Room training space (up to 50). Free parking, Wi-Fi, and AV included.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Rental Space | Greater Medina Chamber of Commerce",
     description:
       "Professional meeting and event space in the heart of downtown Medina. The Vault seats 16, the Main Room seats 50.",

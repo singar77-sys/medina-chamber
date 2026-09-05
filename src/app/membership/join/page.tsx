@@ -11,12 +11,14 @@ import {
   BENEFITS_VIDEO_POSTER,
   benefitsWheelVideoJsonLd,
 } from "@/lib/benefits-wheel-video";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Join the Greater Medina Chamber of Commerce",
   description:
     "Join the Greater Medina Chamber of Commerce. Membership benefits include networking events, business directory listing, advocacy, savings programs, and community visibility.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Join | Greater Medina Chamber of Commerce",
     description:
       "Networking, directory listing, advocacy, savings programs, and community visibility for Medina County businesses.",
@@ -48,7 +50,7 @@ const benefits = [
   {
     title: "Savings Programs",
     description:
-      "Member-exclusive discounts on insurance, office supplies, shipping, and more through Chamber partnerships.",
+      "Member-exclusive programs for group health insurance, workers' compensation, energy, HR services, and the Medina Community Recreation Center.",
     href: "/membership/savings",
   },
   {

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ChamberBotRoute } from "./ChamberBotRoute";
+import { OG_IMAGE } from "@/lib/og";
 
 /**
  * /chamberbot — direct entry to the ChamberBot full-viewport portal.
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
   description:
     "Talk to the Greater Medina Chamber's AI assistant. Ask about members, events, programs, advocacy, or anything Medina-business, backed by live member records and the full chamber calendar.",
   openGraph: {
+    images: OG_IMAGE,
     title: "ChamberBot | Greater Medina Chamber of Commerce",
     description:
       "An AI assistant for Medina County business — members, events, programs, advocacy. Live records, full calendar, instant answers.",

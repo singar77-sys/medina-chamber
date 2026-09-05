@@ -6,6 +6,7 @@ import { blogPosts, getBlogPostBySlug, formatBlogDate, blogMetaDescription } fro
 import { getCmsBlogPost } from "@/lib/cms-store";
 
 import { safeJsonLd } from "@/lib/json-ld";
+import { OG_IMAGE } from "@/lib/og";
 
 // Allow dynamic slugs for CMS posts added after build
 export const dynamicParams = true;
@@ -55,6 +56,7 @@ export async function generateMetadata(
     title: post.title,
     description,
     openGraph: {
+      images: OG_IMAGE,
       title: `${post.title} | Medina Chamber Blog`,
       description,
       ...(post.image && { images: [{ url: post.image }] }),

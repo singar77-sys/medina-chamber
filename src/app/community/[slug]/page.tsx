@@ -10,6 +10,7 @@ import {
 } from "@/data/communities";
 import { getUpcomingEvents } from "@/data/events";
 import { isVisibilityPlus } from "@/data/members";
+import { OG_IMAGE } from "@/lib/og";
 
 // ISR: shows up to 4 upcoming events (filtered by `new Date()`); re-render
 // daily so passed events drop off rather than freezing at build time.
@@ -39,6 +40,7 @@ export async function generateMetadata(
     title,
     description,
     openGraph: {
+      images: OG_IMAGE,
       title: `${community.name}, OH | Greater Medina Chamber of Commerce`,
       description,
     },

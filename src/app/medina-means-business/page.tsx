@@ -8,6 +8,7 @@ import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermar
 import { CountUp } from "@/components/CountUp";
 
 import { safeJsonLd } from "@/lib/json-ld";
+import { OG_IMAGE } from "@/lib/og";
 
 // ISR: re-render daily so the "years of advocacy" count (new Date() at build
 // time) refreshes each New Year instead of freezing until the next deploy.
@@ -18,6 +19,7 @@ export const metadata: Metadata = {
   description:
     `Medina Means Business is the official tagline of the Greater Medina Chamber of Commerce, and a statement of fact. Member businesses, ${new Date().getFullYear() - 1938}+ years of chamber work, and a manufacturing economy that outperforms. Here's what it actually means.`,
   openGraph: {
+    images: OG_IMAGE,
     title: "Medina Means Business | Greater Medina Chamber of Commerce",
     description: `The tagline, the magazine, and the reality. ${new Date().getFullYear() - 1938}+ years of Chamber work, and what Medina County's business community looks like today.`,
   },

@@ -6,6 +6,7 @@ import { formatBlogDate } from "@/data/blog";
 import { getAllBlogPosts } from "@/lib/cms-blog";
 import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
+import { OG_IMAGE } from "@/lib/og";
 
 // ISR so admin-authored CMS blog posts appear without a redeploy.
 export const revalidate = 300;
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
   description:
     "The latest from the Greater Medina Chamber of Commerce, business blog, member announcements, the Medina Matters Podcast, and the Medina Means Business magazine.",
   openGraph: {
+    images: OG_IMAGE,
     title: "News | Greater Medina Chamber of Commerce",
     description:
       "Business blog, member news, podcast, and magazine from the Medina Chamber.",

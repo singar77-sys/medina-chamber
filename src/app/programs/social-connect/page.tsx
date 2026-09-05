@@ -4,12 +4,14 @@ import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { safeJsonLd } from "@/lib/json-ld";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Social Connect",
   description:
     "Social Connect is the Greater Medina Chamber of Commerce's signature networking event, combining professional networking, friendly competition, and a Business Circuit Expo open to the public. Held at Foundry Social in Medina, Ohio.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Social Connect | Greater Medina Chamber of Commerce",
     description:
       "Professional networking meets friendly competition at Foundry Social in Medina, Ohio. The Business Circuit Expo is open to the public.",

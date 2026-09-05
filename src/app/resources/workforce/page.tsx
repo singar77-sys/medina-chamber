@@ -3,12 +3,14 @@ import { PageHero } from "@/components/PageHero";
 import Link from "next/link";
 import { ButtonLink, ButtonA } from "@/components/ui/Button";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Hire & Grow Your Team in Medina County, Workforce Resources",
   description:
     "Workforce resources for Medina County, Ohio employers, post jobs, access OhioMeansJobs, on-the-job training subsidies, Ohio TechCred, workplace safety programs, and the Chamber jobs board.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Workforce & Hiring Resources, Medina County, Ohio",
     description:
       "Post jobs, find candidates, and train your workforce with Medina County employer resources, OhioMeansJobs, TechCred, JFS subsidies, Safety Council, and more.",

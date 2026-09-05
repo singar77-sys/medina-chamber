@@ -8,6 +8,7 @@ import { getCmsPricing, DEFAULT_PRICING } from "@/lib/cms-store";
 import { getPageContent } from "@/lib/cms-content";
 import { stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
+import { OG_IMAGE } from "@/lib/og";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "Membership Pricing",
     description: desc,
     openGraph: {
+      images: OG_IMAGE,
       title: "Membership Pricing | Greater Medina Chamber of Commerce",
       description: e && p && i
         ? `Three tiers: ${e.name} ($${e.price}), ${p.name} ($${p.price}), ${i.name} ($${i.price}). Pick the level that fits your business.`

@@ -4,12 +4,14 @@ import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { safeJsonLd } from "@/lib/json-ld";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Medina County Safety Council",
   description:
     "The Medina County Safety Council is a partnership between the Ohio Bureau of Workers' Compensation and the Greater Medina Chamber of Commerce, offering workplace safety education and BWC rebate opportunities for Medina County employers.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Medina County Safety Council | Greater Medina Chamber of Commerce",
     description:
       "Workplace safety education and BWC rebate program for Medina County employers. Monthly meetings at Williams on the Lake.",
@@ -33,10 +35,16 @@ const tiers = [
   },
 ];
 
+// Straight from the chamber's FY27 enrollment listing. The BWC requirement is
+// 10 CREDITS, not 10 meetings: meeting attendance is one of three ways to earn
+// them, so stating it as "attend 10 meetings" overstates the commitment and
+// hides the training/consultation routes.
 const requirements = [
-  "Enroll by the annual deadline for the program year",
-  "Attend 10 in-person safety council meetings during the fiscal year",
-  "Earn up to 4 additional credits via approved safety training or BWC consultation visits",
+  "Enroll by the annual deadline for the program year (FY27: September 30, 2026)",
+  "Earn at least 10 Safety Council credits during the fiscal year",
+  "Meeting attendance earns one credit per month",
+  "Approved external safety training earns up to 2 credits per year",
+  "A BWC on-site safety consultation earns 2 credits (once every three fiscal years)",
   "Advance registration required for each meeting — no walk-in registration on event day",
 ];
 

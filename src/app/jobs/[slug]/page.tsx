@@ -6,6 +6,7 @@ import { jobs, getJobBySlug, formatJobDate } from "@/data/jobs";
 import { members } from "@/data/members";
 
 import { safeJsonLd } from "@/lib/json-ld";
+import { OG_IMAGE } from "@/lib/og";
 // ── Static generation ─────────────────────────────────────────────
 export function generateStaticParams() {
   return jobs.map((j) => ({ slug: j.slug }));
@@ -25,6 +26,7 @@ export async function generateMetadata(
     title: `${job.title}, ${job.companyName}`,
     description,
     openGraph: {
+      images: OG_IMAGE,
       title: `${job.title} at ${job.companyName} | Medina Chamber Jobs`,
       description,
     },

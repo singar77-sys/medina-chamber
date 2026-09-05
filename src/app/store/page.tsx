@@ -5,12 +5,14 @@ import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { HalftoneField } from "@/components/effects/HalftoneField";
 import { safeJsonLd } from "@/lib/json-ld";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Chamber Store",
   description:
     "Purchase Greater Medina Chamber of Commerce services online, including Certificate of Origin documentation for import/export businesses. Secure checkout through the Chamber's GrowthZone store.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Store | Greater Medina Chamber of Commerce",
     description:
       "Buy chamber services online — Certificate of Origin documentation and more.",

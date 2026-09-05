@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import Link from "next/link";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Business Grants & Funding, Medina County, Ohio",
   description:
     "Business grants, loans, and funding programs available to Medina County, Ohio businesses, SBA loans, JobsOhio incentives, USDA programs, Ohio SBDC, and Chamber savings programs.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Business Grants & Funding in Medina County, Greater Medina Chamber",
     description:
       "State, federal, and local funding programs for Medina County small businesses, grants, loans, incentives, and free consulting.",

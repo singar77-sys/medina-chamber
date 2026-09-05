@@ -5,12 +5,14 @@ import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { stephanie } from "@/data/staff";
 import { mailto } from "@/lib/format";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Annual Chamber Golf Outing",
   description:
     "The Greater Medina Chamber of Commerce Annual Golf Outing at Westfield Country Club. 18-hole scramble with lunch, on-course games, cocktail hour, and dinner. Chamber members $230, non-members $260.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Annual Chamber Golf Outing | Greater Medina Chamber of Commerce",
     description:
       "The chamber's flagship outing at Westfield Country Club. 18-hole scramble, lunch, dinner, and networking with Medina County's business community.",

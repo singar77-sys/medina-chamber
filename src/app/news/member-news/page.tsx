@@ -5,12 +5,14 @@ import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { memberNewsArticles, formatArticleDate } from "@/data/member-news";
 import { safeJsonLd } from "@/lib/json-ld";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Member News",
   description:
     "News and announcements from Greater Medina Chamber of Commerce member businesses. Job postings, events, promotions, and milestones from the Medina County business community.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Member News | Greater Medina Chamber of Commerce",
     description: "News and announcements from Medina County businesses.",
   },

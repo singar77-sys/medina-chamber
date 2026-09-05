@@ -5,12 +5,14 @@ import { jobs, formatJobDate, totalJobsCount } from "@/data/jobs";
 import { growthZone } from "@/lib/navigation";
 import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Job Board",
   description:
     "Job openings posted by Greater Medina Chamber of Commerce member businesses. Find local employment opportunities in Medina County, Ohio.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Job Board | Greater Medina Chamber of Commerce",
     description:
       "Local job openings posted by Medina County Chamber member businesses.",

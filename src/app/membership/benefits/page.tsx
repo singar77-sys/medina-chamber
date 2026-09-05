@@ -6,6 +6,7 @@ import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermar
 import { safeJsonLd } from "@/lib/json-ld";
 import { DEFAULT_PRICING } from "@/lib/cms-store";
 import { HalftoneField } from "@/components/effects/HalftoneField";
+import { OG_IMAGE } from "@/lib/og";
 
 // Single-source the CTA's tier prices from the same defaults the pricing page
 // falls back to — a code-level price change updates this copy too. (A live
@@ -20,6 +21,7 @@ export const metadata: Metadata = {
   description:
     "Greater Medina Chamber of Commerce member benefits, directory listing, networking events, business advocacy, exclusive savings programs, free notary services, and more for Medina County businesses.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Member Benefits | Greater Medina Chamber of Commerce",
     description:
       "What you get as a Greater Medina Chamber member, advocacy, networking, visibility, savings programs, and more.",

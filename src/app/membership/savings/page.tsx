@@ -6,12 +6,14 @@ import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermar
 import { savingsPrograms } from "@/data/savings-programs";
 import { mailto } from "@/lib/format";
 import { safeJsonLd } from "@/lib/json-ld";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Member Savings Programs",
   description:
     "Greater Medina Chamber members get exclusive access to group health insurance, workers' compensation discounts, energy savings programs, HR solutions, and recreation center memberships.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Member Savings Programs | Greater Medina Chamber of Commerce",
     description:
       "Five member-exclusive savings programs covering health insurance, workers' comp, energy, HR, and recreation.",

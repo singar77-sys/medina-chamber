@@ -11,6 +11,7 @@ import { getEventPhotosWithFallback } from "@/lib/media-store";
 import { EventGallery } from "@/components/events/EventGallery";
 
 import { safeJsonLd } from "@/lib/json-ld";
+import { OG_IMAGE } from "@/lib/og";
 
 // Allow CMS-managed slugs added after build
 export const dynamicParams = true;
@@ -36,6 +37,7 @@ export async function generateMetadata(
     title: event.title,
     description,
     openGraph: {
+      images: OG_IMAGE,
       title: `${event.title} | Medina Chamber Events`,
       description,
       ...(event.image && { images: [{ url: event.image }] }),

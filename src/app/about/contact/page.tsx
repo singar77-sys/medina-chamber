@@ -10,12 +10,14 @@ import { safeJsonLd } from "@/lib/json-ld";
 import { chamberOffice } from "@/data/staff";
 import { mailto } from "@/lib/format";
 import { getPageContent } from "@/lib/cms-content";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Contact Us",
   description:
     "Get in touch with the Greater Medina Chamber of Commerce. Located at 139 N. Court Street, Suite A, Medina, OH 44256. Call (330) 723-8773 or send us a message.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Contact | Greater Medina Chamber of Commerce",
     description:
       "Reach out with questions about membership, events, or anything else. We're here to help.",

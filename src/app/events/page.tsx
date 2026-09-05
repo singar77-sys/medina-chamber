@@ -6,6 +6,7 @@ import { getPageContent } from "@/lib/cms-content";
 import { EventsTimeline } from "@/components/events/EventsTimeline";
 import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
+import { OG_IMAGE } from "@/lib/og";
 
 // ISR: the upcoming/past split is derived from `new Date()` against static
 // event data, so re-render daily to drop events as they pass rather than
@@ -18,6 +19,7 @@ export const metadata: Metadata = {
   description:
     "Upcoming networking events, workshops, and community gatherings from the Greater Medina Chamber of Commerce. Chamber Chat, Networking WOW, Member Meetings, Golf Outing, and more.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Events | Greater Medina Chamber of Commerce",
     description:
       "Upcoming networking events and community gatherings in Medina County, Ohio.",

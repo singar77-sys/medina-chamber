@@ -8,12 +8,14 @@ import { getCmsPricing, DEFAULT_PRICING } from "@/lib/cms-store";
 import { stephanie, jaclyn } from "@/data/staff";
 import { mailto } from "@/lib/format";
 import { CommunityInvestors } from "@/components/CommunityInvestors";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Community Investor Membership",
   description:
     "The Greater Medina Chamber's top-tier membership. Community Investors shape local policy, receive premier visibility, and sit at the table where Medina County's business direction is set.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Community Investor | Greater Medina Chamber of Commerce",
     description:
       "Chamber membership at the leadership level. $1,145/year — direct access to legislators, investor spotlights, VIP luncheons, and a seat at the policy table.",

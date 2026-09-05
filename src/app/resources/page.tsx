@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import Link from "next/link";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Business Resources, Medina County, Ohio",
   description:
     "Practical resources for Medina County, Ohio businesses, how to start a business, funding and grants, and workforce hiring programs.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Business Resources | Greater Medina Chamber of Commerce",
     description:
       "Start a business, find funding, and build your team in Medina County, Ohio.",

@@ -4,6 +4,7 @@ import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermar
 import Link from "next/link";
 import { db } from "@/lib/db";
 import { getPublicResources, groupByCategory, type Resource } from "@/lib/resources";
+import { OG_IMAGE } from "@/lib/og";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
   description:
     "A curated library of tools, programs, forms, and links for Medina County, Ohio businesses, organized by topic by the Greater Medina Chamber of Commerce.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Resource Library | Greater Medina Chamber of Commerce",
     description: "Tools, programs, forms, and links for Medina County businesses.",
   },

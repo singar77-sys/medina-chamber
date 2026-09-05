@@ -6,15 +6,17 @@ import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermar
 import { safeJsonLd } from "@/lib/json-ld";
 import { getMergedStaticPhotos } from "@/lib/static-media";
 import { EventGallery } from "@/components/events/EventGallery";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Compass Professional Development Program",
   description:
-    "The Compass Program is a professional leadership development initiative by the Greater Medina Chamber of Commerce, in partnership with the Center for Immersive Leadership. Five interactive sessions covering self-awareness, communication, well-being, and community citizenship.",
+    "The Compass Program is a professional leadership development initiative by the Greater Medina Chamber of Commerce, in partnership with the Heart to Heart Leadership. Five interactive sessions covering self-awareness, communication, well-being, and community citizenship.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Compass Professional Development Program | Greater Medina Chamber of Commerce",
     description:
-      "Five-session leadership development program for professionals at every career stage. Presented by the Greater Medina Chamber and the Center for Immersive Leadership.",
+      "Five-session leadership development program for professionals at every career stage. Presented by the Greater Medina Chamber and the Heart to Heart Leadership.",
   },
   alternates: { canonical: "/programs/compass" },
 };
@@ -118,14 +120,14 @@ export default async function CompassPage() {
     "@type": "Course",
     name: "Compass Professional Development Program",
     description:
-      "A five-session professional leadership development program covering self-awareness, communication, well-being, and community citizenship. Presented by the Greater Medina Chamber of Commerce and the Center for Immersive Leadership.",
+      "A five-session professional leadership development program covering self-awareness, communication, well-being, and community citizenship. Presented by the Greater Medina Chamber of Commerce and the Heart to Heart Leadership.",
     provider: [
       {
         "@type": "Organization",
         name: "Greater Medina Chamber of Commerce",
         url: "https://medinachamber.com",
       },
-      { "@type": "Organization", name: "Center for Immersive Leadership" },
+      { "@type": "Organization", name: "Heart to Heart Leadership" },
     ],
     offers: {
       "@type": "Offer",
@@ -198,7 +200,7 @@ export default async function CompassPage() {
             </span>{" "}
             in partnership with the{" "}
             <span className="text-text-secondary font-bold">
-              Center for Immersive Leadership
+              Heart to Heart Leadership
             </span>
             .
           </p>
@@ -219,7 +221,8 @@ export default async function CompassPage() {
           </div>
           <p className="mt-f13 text-body-sm text-text-secondary">
             First session Wednesday, September 9, 2026. Advance registration
-            and payment required by Friday, August 28, 2026.
+            and payment are required; the current deadline is listed on the
+            event page.
           </p>
           </div>
         </div>
@@ -363,10 +366,10 @@ export default async function CompassPage() {
                 <h2 className="text-h2">Ready to invest in your leadership?</h2>
                 <p className="text-body-lg text-text-secondary mt-f13">
                   Compass runs annually. Each cohort is limited in size to keep
-                  the experience intentional and the connections real.
-                  Registration for the fall 2026 cohort is open through
-                  Friday, August 28 — reserve your seat on the event page, or
-                  contact the chamber with questions.
+                  the experience intentional and the connections real. Seats,
+                  dates, and the registration deadline for the current cohort
+                  are on the event page — reserve a seat there, or contact the
+                  chamber with questions.
                 </p>
               </div>
               <div className="space-y-f13">

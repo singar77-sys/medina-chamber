@@ -4,12 +4,14 @@ import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { safeJsonLd } from "@/lib/json-ld";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Medina Matters Podcast",
   description:
     "The Medina Matters Podcast. Conversations with local business owners, community leaders, and Chamber members about business, community, and what makes Medina County special.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Medina Matters Podcast | Greater Medina Chamber of Commerce",
     description:
       "Conversations with local business owners and community leaders in Medina County.",

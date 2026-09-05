@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import Link from "next/link";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "How to Start a Business in Medina County, Ohio",
   description:
     "Step-by-step guide to starting a business in Medina County, Ohio. Register your LLC, get your EIN, obtain licenses, and connect with local resources, from the Greater Medina Chamber of Commerce.",
   openGraph: {
+    images: OG_IMAGE,
     title: "How to Start a Business in Medina County, Greater Medina Chamber",
     description:
       "Everything you need to launch a business in Medina County, Ohio, structure, registration, licenses, taxes, and local resources.",

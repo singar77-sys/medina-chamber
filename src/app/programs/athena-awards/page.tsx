@@ -6,12 +6,14 @@ import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermar
 import { safeJsonLd } from "@/lib/json-ld";
 import { jaclyn } from "@/data/staff";
 import { mailto } from "@/lib/format";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Athena Awards",
   description:
     "The Athena Awards honor Medina County leaders who achieve professional excellence, serve their community, and actively help women reach their full leadership potential. Presented November 10, 2026 by the Greater Medina Chamber of Commerce and WJ Creative Studio.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Athena Awards | Greater Medina Chamber of Commerce",
     description:
       "Honoring Medina County leaders who champion the advancement of women. Presented November 10, 2026 by the Greater Medina Chamber of Commerce and WJ Creative Studio.",

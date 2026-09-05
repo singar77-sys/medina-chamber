@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { chamberOffice } from "@/data/staff";
 import { mailto } from "@/lib/format";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Terms of Use",
   description:
     "Terms governing use of the Greater Medina Chamber of Commerce website, including the AI assistant, member directory, and all site content.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Terms of Use | Greater Medina Chamber of Commerce",
     description:
       "Terms governing use of medinachamber.com, the AI assistant, and the member directory.",

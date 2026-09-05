@@ -4,6 +4,7 @@ import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { safeJsonLd } from "@/lib/json-ld";
+import { OG_IMAGE } from "@/lib/og";
 
 const BOOKING_URL = "https://groups.gocollette.com/en-US/link/1446404";
 const BOOK_BY = "April 11, 2027";
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
   description:
     "Join the Greater Medina Chamber of Commerce on a 10-day trip to Italy, October 10-19, 2027. Rome, the Vatican, Assisi, Cortona, Florence, Chianti, and Venice with Collette. From $5,999 per person if booked by April 11, 2027.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Reflections of Italy — Chamber Group Travel | Greater Medina Chamber of Commerce",
     description:
       "A 10-day chamber group trip to Italy, October 10-19, 2027, presented by Collette. Rome, the Vatican, Cortona, Florence, Chianti, and Venice. From $5,999 per person.",

@@ -15,12 +15,14 @@ import {
   BENEFITS_VIDEO_POSTER,
   benefitsWheelVideoJsonLd,
 } from "@/lib/benefits-wheel-video";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Member Directory",
   description:
     "Find local businesses in Medina County. Search Greater Medina Chamber of Commerce member businesses by name, service, industry, or city.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Member Directory | Greater Medina Chamber of Commerce",
     description:
       "Find local businesses in Medina County. Search Chamber member businesses by name, service, industry, or city.",

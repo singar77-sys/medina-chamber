@@ -5,12 +5,14 @@ import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { InducteeGrid } from "./InducteeGrid";
 import { type Inductee } from "./shared";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Hall of Fame",
   description:
     "The Greater Medina Chamber of Commerce Hall of Fame, established in 1979, honors individuals and organizations who have made extraordinary contributions to Medina County's business community and quality of life.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Hall of Fame | Greater Medina Chamber of Commerce",
     description:
       "Established in 1979, honoring the people and organizations that shaped Medina County into an exceptional place to live and work.",

@@ -4,12 +4,14 @@ import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { safeJsonLd } from "@/lib/json-ld";
+import { OG_IMAGE } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Advocacy",
   description:
     "The Greater Medina Chamber of Commerce advocates for pro-business policies at the local, state, and federal level, mobilizing the business community on issues that matter.",
   openGraph: {
+    images: OG_IMAGE,
     title: "Advocacy | Greater Medina Chamber of Commerce",
     description:
       "Pro-business advocacy at every level of government. The chamber fights for Medina County's business community.",

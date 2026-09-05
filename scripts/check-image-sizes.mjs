@@ -1,16 +1,27 @@
 /**
- * CI image-size guard — fails if a NEW/CHANGED raster image (jpg/jpeg/png)
- * added in the diff exceeds the size threshold. SVG and WebP/AVIF are exempt
- * (SVG is vector; WebP/AVIF are already the optimized targets we convert to).
+ * CI image-size guard — fails if a NEW/CHANGED raster image added in the diff
+ * is too many BYTES or too many PIXELS. SVG is exempt (vector, no raster cost).
  *
  * Rationale: 168 MB of git-tracked images used to ship in every deploy. After
  * the asset-diet sweep we want to keep it from creeping back — an unoptimized
  * 3 MB PNG dropped into public/ is exactly the regression this catches.
  *
+ * WebP and AVIF are covered too (they were not, until 2026-09-05). Exempting
+ * them confused the FORMAT with the WORK: converting a 6000x4000 camera frame
+ * to WebP without resizing it still produces a megabyte-plus file. 75 tracked
+ * .webp files were already over the byte limit when this check was widened —
+ * they are grandfathered in the allowlist, and re-encoding them is the real fix.
+ *
+ * Two limits, because compression does not bound dimensions:
+ *   - MAX_BYTES      what the visitor downloads.
+ *   - MAX_DIMENSION  what the visitor's browser has to decode. A heavily
+ *                    compressed 6000x4000 image can slip under the byte limit
+ *                    and still cost ~24M pixels of decode memory on a phone.
+ *
  * How it works:
  *   1. Diff changed files against a base ref (added/copied/modified only).
- *   2. Keep .jpg/.jpeg/.png under version control that still exist on disk.
- *   3. Flag any over MAX_BYTES that isn't on the allowlist.
+ *   2. Keep raster images under version control that still exist on disk.
+ *   3. Flag any over MAX_BYTES or MAX_DIMENSION that isn't on the allowlist.
  *
  * Base ref resolution:
  *   - $BASE_REF                (explicit override / GitHub Actions passes this;
@@ -23,8 +34,14 @@
  * or a failing git command exits non-zero instead of silently finding nothing.
  *
  * Allowlist: scripts/image-size-allowlist.txt — one repo-relative path per
- * line, '#' comments allowed. Use sparingly for a genuinely-needed large
- * raster (e.g. a print-res asset). Prefer converting to WebP instead.
+ * line, '#' comments allowed (whole-line or trailing). An entry exempts that
+ * path from BOTH limits. Use sparingly: for a genuinely-needed large raster (a
+ * print-res or source-quality brand asset), or to grandfather pre-existing debt
+ * that must not turn CI red today. Prefer resizing and re-encoding instead.
+ *
+ * Dimensions are read with sharp (already a runtime dependency). CI installs
+ * before running this, so it is always available; if it ever is not, the guard
+ * fails rather than silently skipping the pixel check.
  *
  * Run locally:  node scripts/check-image-sizes.mjs
  * In CI:        BASE_REF=origin/main node scripts/check-image-sizes.mjs
@@ -37,7 +54,13 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const MAX_BYTES = 500 * 1024; // 500 KB
-const RASTER_RE = /\.(jpe?g|png)$/i;
+// 3000 px on the long edge. The largest image this site actually serves is a
+// 1920px hero, so 3000 leaves generous headroom (a 1500px slot at 2x DPR) while
+// any straight-off-the-camera frame (4000px+ on the long edge) trips it. The
+// handful of legitimately larger source assets — 4020px brand wordmarks, the
+// 4000px tagline lockup — are listed in the allowlist, which is what it is for.
+const MAX_DIMENSION = 3000;
+const RASTER_RE = /\.(jpe?g|png|webp|avif)$/i;
 const ALLOWLIST_PATH = join(ROOT, "scripts", "image-size-allowlist.txt");
 
 function sh(cmd) {
@@ -93,16 +116,40 @@ function loadAllowlist() {
   return new Set(
     readFileSync(ALLOWLIST_PATH, "utf8")
       .split("\n")
-      .map((l) => l.trim())
-      .filter((l) => l && !l.startsWith("#")),
+      // Trailing '#' comments are stripped too, so a grandfathered entry can
+      // carry its recorded size inline without breaking the path match.
+      .map((l) => l.split("#")[0].trim())
+      .filter(Boolean),
   );
+}
+
+// sharp is a runtime dependency, so CI has it after `pnpm install`. Imported
+// lazily: it is only needed once something actually has to be measured, and a
+// top-level import would make the guard unusable on a tree with no
+// node_modules even when nothing changed.
+let sharpModule;
+async function dimensionsOf(abs) {
+  if (!sharpModule) {
+    try {
+      sharpModule = (await import("sharp")).default;
+    } catch (err) {
+      // Do not skip the check. A guard that reports green because it could not
+      // look is the exact failure mode this file is written to avoid.
+      console.error("✗ image-size guard: could not load sharp to read image dimensions.");
+      console.error("  Run `pnpm install` first (sharp is a dependency), then re-run.");
+      console.error(String(err.message).trim());
+      process.exit(1);
+    }
+  }
+  const { width, height } = await sharpModule(abs).metadata();
+  return { width: width ?? 0, height: height ?? 0 };
 }
 
 function kb(bytes) {
   return `${(bytes / 1024).toFixed(0)} KB`;
 }
 
-function main() {
+async function main() {
   const base = resolveBaseRef();
   const allowlist = loadAllowlist();
 
@@ -120,26 +167,44 @@ function main() {
     if (allowlist.has(rel)) continue;
     const abs = join(ROOT, rel);
     if (!existsSync(abs)) continue; // deleted/renamed after the diff snapshot
+
     const size = statSync(abs).size;
-    if (size > MAX_BYTES) offenders.push({ rel, size });
+    const { width, height } = await dimensionsOf(abs);
+    const longEdge = Math.max(width, height);
+
+    const reasons = [];
+    if (size > MAX_BYTES) reasons.push(`${kb(size)} — over the ${kb(MAX_BYTES)} byte limit`);
+    if (longEdge > MAX_DIMENSION) {
+      reasons.push(`${width}x${height} — long edge ${longEdge}px over the ${MAX_DIMENSION}px limit`);
+    }
+    if (reasons.length) offenders.push({ rel, size, reasons });
   }
 
   if (offenders.length === 0) {
-    console.log(`✓ image-size guard: no raster images over ${kb(MAX_BYTES)} (base: ${base})`);
+    console.log(
+      `✓ image-size guard: no raster image over ${kb(MAX_BYTES)} or ${MAX_DIMENSION}px ` +
+        `(base: ${base}, ${changed.length} changed file(s))`,
+    );
     return;
   }
 
   offenders.sort((a, b) => b.size - a.size);
-  console.error(`✗ image-size guard: ${offenders.length} raster image(s) exceed ${kb(MAX_BYTES)}:\n`);
+  console.error(`✗ image-size guard: ${offenders.length} raster image(s) over the limits:\n`);
   for (const o of offenders) {
-    console.error(`  ${kb(o.size).padStart(9)}  ${o.rel}`);
+    console.error(`  ${o.rel}`);
+    for (const r of o.reasons) console.error(`      ${r}`);
   }
   console.error(
-    "\nConvert to WebP/AVIF (sharp is in devDependencies — a few lines of script),\n" +
-      "or, if this large raster is genuinely required, add its path to\n" +
-      "scripts/image-size-allowlist.txt with a one-line justification comment.",
+    "\nThe fix is almost always RESIZE first, then re-encode — the format alone\n" +
+      "bounds nothing: a full-frame camera photo saved as WebP is still a\n" +
+      "megabyte. sharp is a dependency, so a few lines of script will do it:\n" +
+      "  sharp(src).resize({ width: 1920, withoutEnlargement: true })\n" +
+      "            .webp({ quality: 82 }).toFile(dest)\n" +
+      "\nIf this large raster is genuinely required (a print-res or source-quality\n" +
+      "brand asset), add its path to scripts/image-size-allowlist.txt with a\n" +
+      "one-line justification comment.",
   );
   process.exit(1);
 }
 
-main();
+await main();

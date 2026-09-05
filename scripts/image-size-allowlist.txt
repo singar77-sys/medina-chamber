@@ -1,12 +1,130 @@
 # Image-size guard allowlist — read by scripts/check-image-sizes.mjs.
 #
-# One repo-relative path per line for a raster image (jpg/jpeg/png) that is
-# ALLOWED to exceed the 500 KB CI threshold. Use sparingly: the right fix for
-# an oversized photo is almost always "convert it to WebP/AVIF", not an
-# allowlist entry. Add a comment above each path explaining why it's exempt.
+# One repo-relative path per line for a raster image (jpg/jpeg/png/webp/avif)
+# that is ALLOWED to exceed the CI limits: 500 KB, or 3000 px on the long edge.
+# An entry exempts that path from BOTH limits.
 #
-# Example:
-#   # Full-res print asset for the annual-report PDF export — not web-served.
-#   public/images/print/annual-report-cover.png
+# "#" starts a comment, whole-line or trailing, so an entry can carry its size
+# inline. Add a comment explaining why each path is exempt.
 #
-# (No entries yet.)
+# The right fix for an oversized photo is almost always RESIZE first, then
+# re-encode. The format alone bounds nothing — a full-frame camera shot saved
+# as WebP is still a megabyte.
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# GRANDFATHERED DEBT — re-encode these, then delete the line.
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# On 2026-09-05 the guard was widened from jpg/png to cover webp and avif too.
+# Exempting those formats had confused the FORMAT with the WORK: every file
+# below IS a WebP, and every one is over 500 KB, because it was converted from
+# a camera original without ever being resized. Largest is 1.11 MB.
+#
+# They are listed rather than left to turn CI red on day one, because a gate
+# that is red on arrival is a gate everyone learns to ignore. This is a debt
+# list, not an approval: the underlying defect is 75 un-resized full-frame
+# photos, and the fix is a batch re-encode down to a 1920px long edge
+# (sharp(src).resize({ width: 1920, withoutEnlargement: true }).webp({ quality: 82 })),
+# after which every line in this section should be removed.
+#
+# NOTE: an allowlisted path is exempt no matter how large it later becomes —
+# so if one of these is ever REPLACED, drop its line rather than inheriting the
+# exemption for a brand new file.
+public/images/photos/sneak-peeks/medina-chamber-community-038.webp  # 1115 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-039.webp  # 1067 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-041.webp  # 1052 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-037.webp  # 1031 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-036.webp  # 1019 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-035.webp  # 919 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-014.webp  # 905 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-019.webp  # 883 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-040.webp  # 876 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-024.webp  # 853 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-022.webp  # 850 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-025.webp  # 836 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-034.webp  # 827 KB, 2400x1600
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-053.webp  # 824 KB, 1920x1440
+public/images/photos/sneak-peeks/medina-chamber-community-008.webp  # 806 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-006.webp  # 802 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-015.webp  # 802 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-005.webp  # 793 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-030.webp  # 790 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-017.webp  # 789 KB, 2400x1600
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-029.webp  # 787 KB, 1920x1440
+public/images/photos/sneak-peeks/medina-chamber-community-042.webp  # 787 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-011.webp  # 784 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-016.webp  # 770 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-010.webp  # 758 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-009.webp  # 749 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-002.webp  # 745 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-013.webp  # 726 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-023.webp  # 715 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-007.webp  # 713 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-012.webp  # 710 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-029.webp  # 710 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-032.webp  # 708 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-028.webp  # 704 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-020.webp  # 703 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-027.webp  # 698 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-018.webp  # 691 KB, 2400x1600
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-008.webp  # 689 KB, 1920x1440
+public/images/photos/sneak-peeks/medina-chamber-community-001.webp  # 684 KB, 2400x1600
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-028.webp  # 664 KB, 1920x1440
+public/images/events/athena-awards/highlights/athena-awards-medina-ohio-003.webp  # 661 KB, 1920x1280
+public/images/photos/sneak-peeks/medina-chamber-community-003.webp  # 656 KB, 2400x1600
+public/images/events/athena-awards/highlights/athena-awards-medina-ohio-002.webp  # 647 KB, 1920x1280
+public/images/photos/sneak-peeks/medina-chamber-community-026.webp  # 646 KB, 2400x1600
+public/images/photos/sneak-peeks/medina-chamber-community-021.webp  # 637 KB, 2400x1600
+public/images/events/athena-awards/highlights/athena-awards-medina-ohio-005.webp  # 632 KB, 1920x1280
+public/images/photos/sneak-peeks/medina-chamber-community-031.webp  # 631 KB, 2400x1600
+public/images/programs/compass/class-day-3/compass-leadership-session-3-medina-010.webp  # 625 KB, 1920x1440
+public/images/photos/sneak-peeks/medina-chamber-community-033.webp  # 620 KB, 2400x1600
+public/images/programs/compass/class-day-3/compass-leadership-session-3-medina-011.webp  # 615 KB, 1920x1440
+public/images/programs/compass/class-day-3/compass-leadership-session-3-medina-012.webp  # 613 KB, 1920x1440
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-011.webp  # 609 KB, 1920x1440
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-030.webp  # 605 KB, 1920x1440
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-015.webp  # 589 KB, 1920x1440
+public/images/programs/compass/class-day-3/compass-leadership-session-3-medina-009.webp  # 586 KB, 1920x1440
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-027.webp  # 579 KB, 1920x1440
+public/images/photos/sneak-peeks/medina-chamber-community-004.webp  # 572 KB, 2400x1600
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-046.webp  # 559 KB, 1920x1440
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-038.webp  # 559 KB, 1920x1440
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-018.webp  # 555 KB, 1920x1440
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-017.webp  # 548 KB, 1920x1440
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-016.webp  # 546 KB, 1920x1440
+public/images/events/athena-awards/highlights/athena-awards-medina-ohio-004.webp  # 530 KB, 1920x1280
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-034.webp  # 528 KB, 1920x1440
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-014.webp  # 524 KB, 1920x1440
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-036.webp  # 521 KB, 1920x1440
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-035.webp  # 521 KB, 1920x1440
+public/images/events/athena-awards/highlights/athena-awards-medina-ohio-006.webp  # 516 KB, 1920x1280
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-023.webp  # 514 KB, 1920x1440
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-045.webp  # 510 KB, 1920x1440
+public/images/programs/compass/compass-leadership-program-medina-006.webp  # 505 KB, 1920x1440
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-049.webp  # 505 KB, 1920x1440
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-050.webp  # 503 KB, 1920x1440
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-039.webp  # 501 KB, 1920x1440
+public/images/programs/compass/class-day-2/compass-leadership-session-2-medina-032.webp  # 501 KB, 1920x1440
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SOURCE-QUALITY BRAND ASSETS — legitimate exemptions, not debt.
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# Over the 3000 px dimension limit but small in bytes (all well under 500 KB):
+# these are the chamber wordmarks and artboards kept at source resolution so
+# they can be re-exported for print and large-format use. They are flat-colour
+# marks, so the pixel count costs almost nothing to download or decode. Keep.
+public/images/chamber-logos/logo-horizontal-blue.png  # 4020x1251, 103 KB
+public/images/chamber-logos/logo-horizontal-white.png  # 4020x1250, 93 KB
+public/images/logos/artboard-10.png  # 3091x3345, 199 KB
+public/images/logos/artboard-7.png  # 3091x3345, 199 KB
+public/images/logos/artboard-8.png  # 3091x3345, 190 KB
+public/images/logos/artboard-9.png  # 3091x3345, 191 KB
+public/images/logos/logo-horizontal-black.png  # 4020x1250, 101 KB
+public/images/logos/logo-horizontal-blue.png  # 4020x1251, 103 KB
+public/images/logos/logo-horizontal-green.png  # 4020x1251, 103 KB
+public/images/logos/logo-horizontal-orange.png  # 4020x1250, 100 KB
+public/images/logos/logo-horizontal-teal.png  # 4020x1250, 103 KB
+public/images/logos/logo-horizontal-white.png  # 4020x1250, 93 KB
+public/images/logos/tagline-default.png  # 4000x4000, 224 KB

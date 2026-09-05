@@ -33,27 +33,41 @@ concurrency:
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # 15 was sized for scrape + install only. The pre-push quality gate adds
+    # a typecheck, the vitest suite and a full `next build` (~4 min).
+    timeout-minutes: 25
     defaults:
       run:
         working-directory: .   # repo root IS the site root
 
     steps:
+      # Pinned to a full commit SHA rather than the mutable `@v4` tag — see
+      # ci.yml for the rationale. Bumping means: read the release notes, swap
+      # the SHA and the version comment together.
       - name: Checkout main
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
-          # Need full token so the push at the end can trigger Vercel.
+          # This is actions/checkout's default token; it is spelled out so the
+          # next reader does not have to guess which credential the push uses.
+          #
+          # Note what it does NOT do: a push authenticated with the default
+          # GITHUB_TOKEN never retriggers GitHub Actions workflows (GitHub
+          # blocks that deliberately, to stop workflows looping). Vercel
+          # deploys anyway — it watches the repo through its own GitHub App,
+          # not through Actions — so the scraped data ships either way. That
+          # asymmetry is why the quality gate below runs INSIDE this job: it is
+          # the only chance to catch a bad data commit before it reaches prod.
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup pnpm
         # Version comes from package.json `packageManager` (pnpm@10.33.0); do NOT
-        # add a `version:` input — pnpm/action-setup@v4 aborts on the conflict.
-        uses: pnpm/action-setup@v4
+        # add a `version:` input — pnpm/action-setup aborts on the conflict.
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
 
       # Node 24 matches the Vercel project runtime (nodeVersion 24.x);
       # Node 20 went end-of-life in April 2026.
       - name: Set up Node 24
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: "24"
           cache: "pnpm"
@@ -120,6 +134,38 @@ jobs:
           check member-news.json articles 0 report
           check jobs.json jobs 0 report
           echo "collapsed=$COLLAPSED" >> "$GITHUB_OUTPUT"
+
+      # ── Quality gate — MUST run here, before the push ────────
+      # The push below authenticates with the default GITHUB_TOKEN, and by
+      # design a GITHUB_TOKEN push does NOT retrigger workflows. So .github/
+      # workflows/ci.yml never runs on these commits: without this step the
+      # scraped data goes straight to Vercel with nothing having checked it.
+      #
+      # What is actually at risk: these commits are path-scoped to
+      # src/data/*.json — no source code is involved — so the failure mode is
+      # bad DATA breaking the build or the rendered pages (a malformed date, a
+      # duplicate slug, a field the page code destructures), not untrusted
+      # code. Typecheck + tests + a real production build is exactly that
+      # check, so we run the same three hard gates CI would have run.
+      #
+      # In-job rather than a bot branch + PR + auto-merge: the daily refresh
+      # has to land unattended. A PR that stalls (auto-merge disabled, a
+      # required check not reporting, branch protection changing) means the
+      # site's events silently go stale every day until someone notices —
+      # which is the failure this whole workflow exists to prevent.
+      #
+      # `pnpm build` runs secret-free here for the same reason it does in CI:
+      # the db/Stripe clients are lazy Proxies, so nothing reads env or opens a
+      # socket during page-data collection. See ci.yml's header.
+      - name: Quality gate — scraped data must still typecheck, test and build
+        run: |
+          if git diff --quiet src/data/; then
+            echo "No data changes — nothing will be pushed, skipping the gate."
+            exit 0
+          fi
+          pnpm exec tsc --noEmit
+          pnpm test
+          pnpm build
 
       - name: Show diff (for log visibility)
         run: |

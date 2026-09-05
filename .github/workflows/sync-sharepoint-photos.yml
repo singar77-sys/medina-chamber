@@ -64,15 +64,24 @@ jobs:
             exit 1
           fi
 
-      - uses: actions/checkout@v4
+      # Pinned to a full commit SHA rather than the mutable `@v4` tag — see
+      # ci.yml for the rationale. Bump SHA and version comment together.
+      #
+      # fetch-depth 0 (full history) so the image-size guard below can diff the
+      # sync commit against its parent — the default depth-1 clone has no
+      # HEAD~1 — and so the rebase-and-retry in the push step has real history
+      # to rebase onto. ci.yml checks out the same way for the same guard.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
 
       # Version comes from package.json `packageManager` (pnpm@10.33.0); do NOT
-      # add a `version:` input — pnpm/action-setup@v4 aborts on the conflict.
-      - uses: pnpm/action-setup@v4
+      # add a `version:` input — pnpm/action-setup aborts on the conflict.
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
 
       # Node 24 matches the Vercel project runtime (nodeVersion 24.x);
       # Node 20 went end-of-life in April 2026.
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: "24"
           cache: "pnpm"
@@ -86,16 +95,59 @@ jobs:
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
         run: pnpm sync:sharepoint
 
-      - name: Commit and push if anything changed
+      # Commit LOCALLY first, then gate, then push. The gates below need the
+      # new photos to exist as a commit (the image-size guard works off a git
+      # diff), and a commit that never gets pushed costs nothing — the runner
+      # is thrown away.
+      - name: Commit locally if anything changed
+        id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/images/photos/
           if git diff --staged --quiet; then
             echo "No photo changes — exiting clean."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          echo "Staged photo changes:"
+          git diff --staged --stat
+          echo "changed=true" >> "$GITHUB_OUTPUT"
           git commit -m "chore(photos): nightly SharePoint sync"
+
+      # ── Quality gate — MUST run here, before the push ────────
+      # This workflow had NO gate of any kind: it committed whatever came back
+      # from Microsoft Graph straight into public/images/photos/ and pushed to
+      # main. And because the push authenticates with the default GITHUB_TOKEN
+      # — which by design never retriggers workflows — ci.yml does not run on
+      # the commit either, while Vercel deploys it regardless (its GitHub App
+      # watches the repo, not Actions). Nothing checked these images at all.
+      #
+      # The commit is path-scoped to public/images/photos/, so the risk is a
+      # bad ASSET, not untrusted code: a 6 MB un-resized camera JPEG dropped
+      # into the deploy payload, or a file the build chokes on. Hence the two
+      # gates below.
+      #
+      # Gate 1 — image-size guard, the same one ci.yml runs. BASE_REF=HEAD~1
+      # so it inspects exactly the photos this job just committed. Without it,
+      # this was the one path into the repo that bypassed the asset diet
+      # entirely.
+      - name: Quality gate — image-size guard on the new photos
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          BASE_REF: HEAD~1
+        run: node scripts/check-image-sizes.mjs
+
+      # Gate 2 — the site must still build with the new assets. Secret-free,
+      # exactly as in ci.yml (the db/Stripe clients are lazy Proxies, so page-
+      # data collection reads no env and opens no socket).
+      - name: Quality gate — the site must still build
+        if: steps.commit.outputs.changed == 'true'
+        run: pnpm build
+
+      - name: Push
+        if: steps.commit.outputs.changed == 'true'
+        run: |
           # Same intermittent receive-pack failures the scrape workflows hit
           # ("fatal error in commit_refs") — retry with backoff, rebasing
           # between attempts so we don't get stuck behind a scrape commit that

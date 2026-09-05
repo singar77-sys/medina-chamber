@@ -7,17 +7,23 @@
 # all of that — it's just here because "weekly" is the right cadence and
 # this workflow already exists.
 #
-# Order of operations (do NOT rearrange steps 1-4 — everything after is
-# independent and order-agnostic):
+# Order of operations (steps 1-3 are order-dependent; 4-5 are independent):
 #   1. Scrape members              → writes src/data/members.json
 #   2. Smoke-check the new members.json (catch broken scrapes loudly)
 #   3. Scrape member websites      → writes src/data/member-websites.json
 #      (must run BEFORE the vector sync — Upstash documents pull website
 #       text into the embedding input)
-#   4. Sync vectors to Upstash     → server-side BAAI/bge-large dense + BM25
-#   5. Scrape Google ratings       → writes src/data/member-ratings.json
-#   6. Scrape business blog        → writes src/data/blog.json
-#   7. Commit data files together
+#   4. Scrape Google ratings       → writes src/data/member-ratings.json
+#   5. Scrape business blog        → writes src/data/blog.json
+#   6. Quality gate (typecheck + tests + build) — CI cannot run on the
+#      commit this job makes, so the gate has to run before the push
+#   7. Commit + push the data files together
+#   8. Sync vectors to Upstash (server-side BAAI/bge-large dense + BM25)
+#      — LAST, and deliberately so. It is the only step here that writes
+#      to LIVE PRODUCTION; if it ran before the gate/push, an abort would
+#      leave the search index holding members that members.json never
+#      received, which is the "flashes then vanishes / unsearchable"
+#      divergence this repo has hit before.
 #
 # Manual run: GitHub → Actions → "Weekly data refresh" → "Run workflow"
 
@@ -40,24 +46,31 @@ jobs:
   scrape:
     runs-on: ubuntu-latest
     # Member scrape (~5 min) + website scrape (~10 min for 466 sites)
-    # + Upstash sync (~2 sec) + ratings (~3 min) + buffer.
-    timeout-minutes: 45
+    # + Upstash sync (~2 sec) + ratings (~3 min) + the pre-push quality gate
+    # (typecheck + vitest + `next build`, ~4 min) + buffer.
+    timeout-minutes: 60
 
     steps:
+      # Pinned to a full commit SHA rather than the mutable `@v4` tag — see
+      # ci.yml for the rationale. Bump SHA and version comment together.
       - name: Checkout main
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
+          # actions/checkout's default token, spelled out. A push made with it
+          # never retriggers Actions (GitHub blocks that to stop workflow
+          # loops), so CI does not run on the commit below — hence the
+          # pre-push quality gate further down.
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup pnpm
         # Version comes from package.json `packageManager` (pnpm@10.33.0); do NOT
-        # add a `version:` input — pnpm/action-setup@v4 aborts on the conflict.
-        uses: pnpm/action-setup@v4
+        # add a `version:` input — pnpm/action-setup aborts on the conflict.
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
 
       # Node 24 matches the Vercel project runtime (nodeVersion 24.x);
       # Node 20 went end-of-life in April 2026.
       - name: Set up Node 24
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: "24"
           cache: "pnpm"
@@ -94,17 +107,7 @@ jobs:
         run: pnpm scrape:websites
         continue-on-error: true   # one bad website shouldn't kill the run
 
-      # ── Step 4: sync to Upstash Vector ───────────────────────
-      # Upserts every member as a fresh document. Upstash's managed
-      # BAAI/bge-large-en-v1.5 (dense) + BM25 (sparse) handle vectorization
-      # server-side. Idempotent — safe to re-run anytime.
-      - name: Sync vectors to Upstash
-        env:
-          UPSTASH_VECTOR_REST_URL: ${{ secrets.UPSTASH_VECTOR_REST_URL }}
-          UPSTASH_VECTOR_REST_TOKEN: ${{ secrets.UPSTASH_VECTOR_REST_TOKEN }}
-        run: node scripts/sync-vectors-to-upstash.mjs
-
-      # ── Step 5: scrape Google ratings ────────────────────────
+      # ── Step 4: scrape Google ratings ────────────────────────
       # Pulls Google Places ratings for each member with a website URL.
       # Independent of vector sync — safe to fail without blocking push.
       - name: Scrape Google ratings
@@ -114,7 +117,7 @@ jobs:
         run: pnpm scrape:ratings
         continue-on-error: true
 
-      # ── Step 6: scrape the business blog ─────────────────────
+      # ── Step 5: scrape the business blog ─────────────────────
       # Independent of the member pipeline above. Was previously
       # manual-only and went stale for 3+ months (last scraped April,
       # still showing April/March posts in July) before anyone noticed.
@@ -122,6 +125,28 @@ jobs:
         id: blog
         run: pnpm scrape:blog
         continue-on-error: true
+
+      # ── Quality gate — MUST run here, before the push ────────
+      # The push below authenticates with the default GITHUB_TOKEN, which by
+      # design never retriggers workflows — so ci.yml does NOT run on these
+      # commits. Vercel deploys them anyway (its own GitHub App watches the
+      # repo, not Actions), which means this step is the only thing standing
+      # between a bad scrape and production.
+      #
+      # The commits are path-scoped to src/data/*.json, so the risk is bad
+      # DATA breaking the build or the rendered pages, not untrusted code —
+      # typecheck + tests + a real production build is exactly that check.
+      # Run in-job rather than via a bot PR because the refresh has to land
+      # unattended; a stalled PR means the directory silently goes stale.
+      - name: Quality gate — scraped data must still typecheck, test and build
+        run: |
+          if git diff --quiet src/data/; then
+            echo "No data changes — nothing will be pushed, skipping the gate."
+            exit 0
+          fi
+          pnpm exec tsc --noEmit
+          pnpm test
+          pnpm build
 
       - name: Show diff (for log visibility)
         run: |
@@ -132,6 +157,7 @@ jobs:
           git diff --stat src/data/ || true
 
       - name: Commit + push if anything changed
+        id: push
         run: |
           if git diff --quiet src/data/; then
             echo "No data changes — nothing to commit."
@@ -170,15 +196,66 @@ jobs:
           echo "❌ Push failed after 3 attempts."
           exit 1
 
+      # ── Sync vectors to Upstash — AFTER the push, deliberately ──
+      # This is the only step in the job that writes to LIVE PRODUCTION;
+      # everything above it touches nothing but the runner's working tree.
+      # So it runs last, and the index can never get ahead of what actually
+      # shipped: if the quality gate fails, or the push fails, this step is
+      # skipped (no `if:`, so the implicit success() applies) and the index
+      # keeps last week's members — which still match the members.json that
+      # is live.
+      #
+      # Direction matters. Index BEHIND members.json = a brand-new member
+      # renders in the directory but is missing from semantic search until
+      # the next run: visible, recoverable, one re-run away. Index AHEAD =
+      # a member in the index that members.json does not have, whose card
+      # "flashes then vanishes" and whose entry is unsearchable. Never
+      # trade the first for the second. (The script also DELETES departed
+      # members' vectors, so running it early could equally have removed
+      # members the shipped file still contains.)
+      #
+      # Reads src/data/members.json + member-websites.json off disk — the
+      # push does not touch the working tree, so they are still the files
+      # the gate just validated. Not conditioned on a data diff: the sync
+      # is idempotent and re-running it weekly is also what repairs an
+      # index that has drifted for any other reason.
+      #
+      # Retried, then LOUD. A failure here is never swallowed: after 3
+      # attempts the step fails the job (and the notify step below emails),
+      # because a silently skipped sync is exactly how the index goes stale
+      # without anyone noticing.
+      - name: Sync vectors to Upstash
+        env:
+          UPSTASH_VECTOR_REST_URL: ${{ secrets.UPSTASH_VECTOR_REST_URL }}
+          UPSTASH_VECTOR_REST_TOKEN: ${{ secrets.UPSTASH_VECTOR_REST_TOKEN }}
+        run: |
+          for attempt in 1 2 3; do
+            if node scripts/sync-vectors-to-upstash.mjs; then
+              echo "✓ Vector sync succeeded on attempt $attempt"
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "Vector sync attempt $attempt failed; sleeping 15s before retry"
+              sleep 15
+            fi
+          done
+          echo "❌ Vector sync failed after 3 attempts."
+          echo "members.json HAS been pushed, so the search index is now BEHIND the live"
+          echo "data: members added this week render in the directory but will not come"
+          echo "back from search. Re-run this workflow, or run"
+          echo "  node scripts/sync-vectors-to-upstash.mjs"
+          echo "locally with UPSTASH_VECTOR_REST_URL / _TOKEN set."
+          exit 1
+
       # Surface a blog-scrape failure AFTER the member data is safely pushed.
       # continue-on-error keeps a blog break (e.g. the Squarespace source
       # vanishing at DNS cutover) from blocking the member pipeline, but
       # without this the failure is swallowed and blog.json silently goes
       # stale — the exact staleness this workflow exists to prevent.
       - name: Fail loudly if the blog scrape broke
-        if: steps.blog.outcome == 'failure'
+        if: always() && steps.blog.outcome == 'failure'
         run: |
-          echo "❌ Blog scrape failed (see the 'Scrape business blog' step). Member data was still pushed."
+          echo "❌ Blog scrape failed (see the 'Scrape business blog' step). Push step outcome: ${{ steps.push.outcome }}."
           exit 1
 
       # Same reason as the blog step above. The ratings scrape exits 1 before
@@ -187,9 +264,9 @@ jobs:
       # went stale from June 2026 onward with every run still green, so members
       # who joined after that never got a Google rating badge.
       - name: Fail loudly if the ratings scrape broke
-        if: steps.ratings.outcome == 'failure'
+        if: always() && steps.ratings.outcome == 'failure'
         run: |
-          echo "❌ Google ratings scrape failed (see the 'Scrape Google ratings' step). Member data was still pushed."
+          echo "❌ Google ratings scrape failed (see the 'Scrape Google ratings' step). Push step outcome: ${{ steps.push.outcome }}."
           echo "Usual cause: the GOOGLE_PLACES_API_KEY repo secret is missing, expired, or the Places API is disabled on the key."
           exit 1
 

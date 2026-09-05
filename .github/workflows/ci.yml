@@ -38,8 +38,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Pinned to a full commit SHA, not a mutable major tag: `@v4` is a
+      # branch-like ref the action's owner can repoint at any time, so a
+      # changed (or compromised) upstream would run here unreviewed. The
+      # trailing comment records which release the SHA is, for readers and for
+      # bumping. To upgrade: read the release notes, then swap SHA + comment.
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           # Full history so the image-size guard can diff against origin/main.
           fetch-depth: 0
@@ -49,19 +54,65 @@ jobs:
       # "Multiple versions of pnpm specified" when both are present (broke CI on
       # every branch until this was removed).
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
 
       # Match the Vercel project's runtime (nodeVersion 24.x). On Node 20 this
       # gate proved the app builds on a runtime production does not use, and
       # Node 20 went end-of-life in April 2026.
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 24
           cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      # Dependency vulnerability scan. Deliberately two passes:
+      #
+      #   1. BLOCKING at `critical`. As of 2026-09-05 the tree has 0 critical
+      #      (5 low / 18 moderate / 29 high), so this is green on day one and
+      #      only goes red when something genuinely severe lands.
+      #   2. REPORTING at `high`, never failing, written to the run summary.
+      #      Blocking on `high` today would paint CI permanently red on 29
+      #      pre-existing transitive build-chain advisories (6x fast-uri via
+      #      @sentry/nextjs -> webpack -> ajv; none on next or sharp). A gate
+      #      that is red on every run is a gate everyone learns to ignore,
+      #      which is worse than no gate at all.
+      #
+      # Placed before the slow steps so a new critical advisory fails in
+      # seconds rather than after a 3-minute build.
+      #
+      # What this does NOT catch: an advisory published only as a repo-level
+      # GitHub security advisory and never mirrored into the GitHub Advisory
+      # Database / OSV. GHSA-2xp9-vwfh-vxw4 (Next.js) is exactly that case,
+      # which is why `pnpm audit` reports nothing for it. Registry advisories
+      # are this step's half of the coverage; GitHub's own dependency graph and
+      # Dependabot alerts are the other half.
+      - name: Dependency audit (blocking on critical)
+        run: pnpm audit --audit-level=critical
+
+      - name: Dependency audit report (advisory)
+        if: always()
+        run: |
+          # A fenced code block, NOT <pre>. $GITHUB_STEP_SUMMARY is rendered as
+          # GitHub-flavoured Markdown WITH HTML, and the sanitizer drops anything
+          # that parses as a tag. pnpm audit's output is full of version ranges
+          # (">=3.0.0 <3.1.6" — 25 "<" characters in the current output), so
+          # inside <pre> the upper bound of every range is silently swallowed and
+          # the report renders WRONG rather than merely ugly. A security report
+          # that shows the wrong range is worse than one that shows none. Inside
+          # a fence the text is literal, "<" included.
+          #
+          # tail -n 40 keeps the trailing "N vulnerabilities found / Severity:"
+          # summary, which is the useful part; the per-advisory table above it is
+          # truncated — read the step's own log for the full listing.
+          {
+            echo "### pnpm audit — advisory, does not fail the build"
+            echo '```text'
+            pnpm audit --audit-level=high 2>&1 | tail -n 40 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
 
       # Lint is ADVISORY for now: the repo has a backlog of pre-existing eslint
       # errors (tracked separately as lint-debt cleanup). Typecheck, test, and build
@@ -77,10 +128,15 @@ jobs:
       - name: Test
         run: pnpm test
 
-      # Image-size guard — fails if a new/changed jpg/jpeg/png in this branch
-      # exceeds 500 KB (SVG/WebP/AVIF exempt). Keeps the deploy image payload
-      # from creeping back after the asset diet. Exceptions go in
-      # scripts/image-size-allowlist.txt. See scripts/check-image-sizes.mjs.
+      # Image-size guard — fails if a new/changed raster in this branch exceeds
+      # 500 KB or 3000 px on the long edge. Covers jpg/jpeg/png/webp/avif; only
+      # SVG is exempt. WebP/AVIF used to be exempt as "already optimized", which
+      # confused the format with the work — an un-resized camera frame is a
+      # megabyte in any format, and 75 tracked .webp files were over the byte
+      # limit when the check was widened (grandfathered in the allowlist).
+      # Keeps the deploy image payload from creeping back after the asset diet.
+      # Exceptions go in scripts/image-size-allowlist.txt.
+      # See scripts/check-image-sizes.mjs.
       - name: Image-size guard
         run: node scripts/check-image-sizes.mjs
         env:

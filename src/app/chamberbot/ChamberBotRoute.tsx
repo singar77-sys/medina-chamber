@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { ChamberBotPortal } from "@/components/holographic/ChamberBotPortal";
+import { PostHogProvider } from "@/components/PostHogProvider";
 
 /**
  * /chamberbot route surface — auto-opens the ChamberBotPortal directly,
@@ -30,11 +31,17 @@ export function ChamberBotRoute() {
     }
   }
 
+  // PostHog is mounted HERE rather than in the root layout: the portal is its
+  // only consumer, and a root-level provider put the whole posthog-js bundle
+  // (~62 KB gzip) into the shared chunk for all 49 public pages — for a
+  // library that no-ops entirely unless NEXT_PUBLIC_POSTHOG_KEY is set.
   return (
-    <ChamberBotPortal
-      open
-      initialQuery={null}
-      onClose={handleClose}
-    />
+    <PostHogProvider>
+      <ChamberBotPortal
+        open
+        initialQuery={null}
+        onClose={handleClose}
+      />
+    </PostHogProvider>
   );
 }

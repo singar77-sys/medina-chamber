@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05T08:49:42.687Z",
+  "generatedAt": "2026-09-06T09:09:52.912Z",
   "totalArticles": 5,
   "articles": [
     {
@@ -19,7 +19,7 @@
       "dateISO": "2026-09-02",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_2048,w_2048,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1788466683/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/b413de032ed140729299ad7503530290/Medina-County-Lifestyle.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/medina-county-lifestyle-september-issue-353615",
-      "scrapedAt": "2026-09-05T08:49:40.409Z"
+      "scrapedAt": "2026-09-06T09:09:50.652Z"
     },
     {
       "slug": "mhrb-the-scoop-quarterly-newsletter",
@@ -38,7 +38,7 @@
       "dateISO": "2026-09-01",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_131,w_235,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1788466608/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/3856d6c455fb476494a1a544559c5717/Medina-County-Mental-Health.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/mhrb-the-scoop-quarterly-newsletter-353269",
-      "scrapedAt": "2026-09-05T08:49:40.938Z"
+      "scrapedAt": "2026-09-06T09:09:51.183Z"
     },
     {
       "slug": "armstrong-s-9th-annual-avenge-hunger-month-food-drive",
@@ -57,7 +57,7 @@
       "dateISO": "2026-08-27",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_2482,w_2482,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1787836323/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/68e6062251a5411cb1c5d03dfe6b9df3/ArmstrongFB.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/armstrong-s-9th-annual-avenge-hunger-month-food-drive-352409",
-      "scrapedAt": "2026-09-05T08:49:41.511Z"
+      "scrapedAt": "2026-09-06T09:09:51.741Z"
     },
     {
       "slug": "harvest-jamboree-fundraiser-to-support-hospice-in-medina",
@@ -76,7 +76,7 @@
       "dateISO": "2026-08-19",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_1618,w_3000,x_0,y_-1/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1787770282/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/59138b1a6b604a15a29a2776e8253f9a/Reserve-Care-logo.png",
       "detailUrl": "https://business.medinachamber.com/news/Details/harvest-jamboree-fundraiser-to-support-hospice-in-medina-350939",
-      "scrapedAt": "2026-09-05T08:49:42.106Z"
+      "scrapedAt": "2026-09-06T09:09:52.321Z"
     },
     {
       "slug": "1st-annual-fundraising-car-show",
@@ -95,7 +95,7 @@
       "dateISO": "2026-07-30",
       "thumbnail": "https://res.cloudinary.com/micronetonline/image/upload/f_auto/c_crop,h_2048,w_2048,x_0,y_0/q_auto/f_auto/c_limit,h_100,w_250/q_auto/v1785423508/tenants/0364a90c-b58a-4c8e-b5d5-7f98b98a69db/94e6c419c14a42e480a489b848eab88e/Medina-Odd-Fellows.jpg",
       "detailUrl": "https://business.medinachamber.com/news/Details/1st-annual-fundraising-car-show-347096",
-      "scrapedAt": "2026-09-05T08:49:42.681Z"
+      "scrapedAt": "2026-09-06T09:09:52.902Z"
     }
   ]
 }

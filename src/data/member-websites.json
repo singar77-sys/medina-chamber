@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-08-30T15:29:37.569Z",
-  "totalScraped": 504,
-  "successCount": 367,
-  "failCount": 84,
+  "generatedAt": "2026-09-06T14:00:16.659Z",
+  "totalScraped": 450,
+  "successCount": 374,
+  "failCount": 76,
   "members": [
     {
       "chamberSlug": "3m-company",
       "website": "http://www.mmm.com/",
-      "scrapedAt": "2026-08-30T15:11:24.589Z",
+      "scrapedAt": "2026-09-06T13:55:37.225Z",
       "ok": false
     },
     {
@@ -431,36 +431,9 @@
       ]
     },
     {
-      "chamberSlug": "any-lab-test-now-medina",
-      "website": "http://www.anylabtestnow.com/medina-44256",
-      "scrapedAt": "2026-04-11T00:31:01.048Z",
-      "title": "Convenient Same Day Lab Testing in Medina, OH 44256",
-      "metaDescription": "Get tested today at ANY LAB TEST NOW® of Medina, OH. Quick, easy & affordable lab testing in Medina and nearby cities. Evaluate your health with reliable results.",
-      "h1": [
-        "Welcome to Any Lab Test Now | Medina, OH"
-      ],
-      "services": [
-        "The easiest test you’ll ever take.",
-        "Our most popular tests",
-        "Available Tests"
-      ],
-      "listItems": [
-        "Privacy Overview",
-        "Strictly Necessary Cookies",
-        "Performance cookies",
-        "Functional & Targeting cookies",
-        "Cookie Policy"
-      ],
-      "homeText": "Choose a test. Choose your time. Get your answer. We offer lab testing that’s private, affordable and convenient.",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
-    },
-    {
       "chamberSlug": "azelie-studio",
       "website": "http://azeliemarketing.com/",
-      "scrapedAt": "2026-08-30T15:11:45.831Z",
+      "scrapedAt": "2026-09-06T13:55:38.340Z",
       "ok": false
     },
     {
@@ -570,36 +543,6 @@
       ]
     },
     {
-      "chamberSlug": "american-family-insurance-thomas-insurance-group",
-      "website": "https://www.amfam.com/agents/ohio/medina/Thomas-Muntean",
-      "scrapedAt": "2026-08-30T15:12:36.996Z",
-      "title": "Thomas Muntean Insurance Agency in MEDINA, Ohio",
-      "metaDescription": "Thomas Muntean is the local American Family Insurance agent in MEDINA. Reach out to Thomas Muntean to see how we can help you with life, home, car insurance and more today.",
-      "h1": [
-        "Thomas Muntean"
-      ],
-      "services": [
-        "Our Agency",
-        "What do you want to protect?",
-        "Ask me about",
-        "First time homebuyers insurance",
-        "Small business coverage",
-        "Life insurance benefits",
-        "Umbrella insurance benefits",
-        "Bundling and discounts"
-      ],
-      "listItems": [
-        "Call (330) 721-7716",
-        "Message Agent",
-        "Get a Quote"
-      ],
-      "homeText": "Thomas MunteanCommitted to inspiring and protecting dreams in MEDINA, Ohio.Message Thomas Call (330) 721-7716 Call (330) 721-7716Message AgentGet a QuoteLocation Details & Hours:1. MEDINA435 W LIBERTY STMEDINA, OH 44256-2221Get Directions Phone:(330) 721-7716Send MessageOur AgencyThe agentOur teamOur missionBradley KenneySales Specialist - Personal LinesShow All Agent StaffWhat do you want to protect?SAVE!BundlesCarHomeLifeUmbrellaRentersView all Ask me about First time homebuyers insuranceSmall business coverageLife insurance benefitsUmbrella insurance benefitsBundling and discountsContact my office We're here to help answer your questions! Please take a moment to complete the contact form and my office will be in touch with you soon. Send Us a Message",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
-    },
-    {
       "chamberSlug": "albrecht-trucking-company",
       "website": "http://www.albrechttruckingco.com/",
       "scrapedAt": "2026-08-30T15:12:04.173Z",
@@ -622,7 +565,7 @@
     {
       "chamberSlug": "aladdins-eatery",
       "website": "http://www.aladdins.com/",
-      "scrapedAt": "2026-08-30T15:12:26.872Z",
+      "scrapedAt": "2026-09-06T13:55:39.063Z",
       "ok": false
     },
     {
@@ -729,21 +672,6 @@
       "chamberSlug": "ameri-cal-corporation",
       "website": "http://www.americalcorp.com/",
       "scrapedAt": "2026-08-30T15:12:05.535Z",
-      "title": "",
-      "metaDescription": "",
-      "h1": [],
-      "services": [],
-      "listItems": [],
-      "homeText": "",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
-    },
-    {
-      "chamberSlug": "ace-handyman-services",
-      "website": "https://www.acehandymanservices.com/offices/medina-summit",
-      "scrapedAt": "2026-04-11T00:31:30.604Z",
       "title": "",
       "metaDescription": "",
       "h1": [],
@@ -936,37 +864,6 @@
       ]
     },
     {
-      "chamberSlug": "alpha-insulation-and-gutters-llc",
-      "website": "http://www.teamalphaohio.com/",
-      "scrapedAt": "2026-04-11T00:31:47.452Z",
-      "title": "Alpha Insulation and Gutters - Your Local Contractor",
-      "metaDescription": "Alpha Insulation and Gutters is a locally owned and operated contractor serving the Cleveland/Akron/Canton corridor and beyond. We install fiberglass and spray foam insulation for both residential and commercial applications.",
-      "h1": [
-        "OUTSTANDING SERVICE. TOP-QUALITY PRODUCTS."
-      ],
-      "services": [
-        "RELY ON A LOCALLY OWNED COMPANY",
-        "HAVE PEACE OF MIND WITH",
-        "TRAINED. TESTED. TRUSTED.",
-        "TRAINED & PROFESSIONAL WORKFORCE.",
-        "Google Reviews",
-        "Affiliations & Memberships",
-        "FOR YOUR INSULATION NEEDS",
-        "PROFESSIONAL GUTTER INSTALLATION",
-        "OWENS CORNING® CERTIFIED ENERGY EXPERTS®",
-        "INSULATION FOR HOMEOWNERS",
-        "INSULATION FOR BUILDERS",
-        "COMMERCIAL WORK"
-      ],
-      "listItems": [],
-      "homeText": "",
-      "aboutText": "Your Local Certified Energy Expert®: Trained. Tested. Trusted. Alpha Insulation & Gutters has been certified by Owens Corning Insulating Systems, the leading name in fiberglass insulation, to provide customers with an outstanding combination of energy expertise and assurance. As an Owens Corning® Certified Energy Expert® professional, we work with builders and homeowners alike to help make buildings and homes quiet, comfortable and energy smart. You’ll have peace of mind that your experienced Certified Energy Expert® team is trained, tested and trusted to help make any home or building a better place to be. Trained to Optimize Comfort. With extensive training in thermal performance, moisture prevention, air filtration, ventilation and more, Certified Energy Expert® professionals are more than insulation installers. We’re expert consultants with building science background, code knowledge and hands-on experience to help optimize comfort, noise control and energy efficiency. Tested for Proven Performance. As a Certified Energy Expert® professional, we have proven our ability to apply advanced building science knowledge and deliver comprehensive solutions. In order to be nationally re",
-      "pagesScraped": [
-        "home",
-        "about"
-      ]
-    },
-    {
       "chamberSlug": "above-all-aerial-and-specialty-photography",
       "website": "http://www.aboveallohio.com/",
       "scrapedAt": "2026-08-30T15:12:24.356Z",
@@ -1003,7 +900,7 @@
     {
       "chamberSlug": "bil-jac-foods-inc",
       "website": "http://www.bil-jac.com/",
-      "scrapedAt": "2026-08-30T15:12:53.501Z",
+      "scrapedAt": "2026-09-06T13:55:39.743Z",
       "ok": false
     },
     {
@@ -1166,7 +1063,7 @@
     {
       "chamberSlug": "buehlers-fresh-foods",
       "website": "http://www.buehlers.com/",
-      "scrapedAt": "2026-08-30T15:13:29.797Z",
+      "scrapedAt": "2026-09-06T13:55:40.483Z",
       "ok": false
     },
     {
@@ -1179,41 +1076,6 @@
       "services": [],
       "listItems": [],
       "homeText": "",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
-    },
-    {
-      "chamberSlug": "buckeye-pva",
-      "website": "http://www.buckeyepva.org/",
-      "scrapedAt": "2026-04-11T00:32:12.802Z",
-      "title": "Home - Paralyzed Veterans Of America",
-      "metaDescription": "BUCKEYE WHEELCHAIR GAMES 2026 Athlete registration is now closed. But sponsor sign up is still in progress! In addition we’re looking for volunteers and spectators!   Download our sponsorship package…",
-      "h1": [
-        "BUCKEYE WHEELCHAIR GAMES 2026",
-        "Discover Who The Paralyzed Veterans of America Are",
-        "Our Service"
-      ],
-      "services": [
-        "Athlete registration is now closed.",
-        "But sponsor sign up is still in progress!",
-        "In addition we're looking for volunteers",
-        "and spectators!",
-        "Register now for Stop 6 on the PVA Bass Fishing Tour",
-        "Sports & Recreation Programs",
-        "News & Events",
-        "About Us"
-      ],
-      "listItems": [
-        "Veterans Benefits",
-        "Wheelchair Sports & Recreation",
-        "Spinal Cord Injury Research",
-        "Advocacy to eliminate architectural barriers and protect civil rights for persons with disabilities",
-        "Referral services for assistive devices, housing, employment, and transportation",
-        "Literature on a variety of topics, including self-care, independent living and disability rights"
-      ],
-      "homeText": "BUCKEYE WHEELCHAIR GAMES 2026 Athlete registration is now closed. But sponsor sign up is still in progress! In addition we're looking for volunteers and spectators! Spectators are welcome during competition which will take place Friday, April 24 from 8:00AM to 7:00PM & Saturday, April 25 from 8:00AM to 4:00PM The events take place at SPIRE Academy in Geneva Ohio. Signs on the property will direct you to the entrance! Download our sponsorship package here Register now for Stop 6 on the PVA Bass Fishing Tour Buckeye PVA is hosting stop 6 on the PVA Bass Fishing Tour. The Buckeye Bash will take place at Mosquito Lake, May 29-31, 2026 in Cortland, Ohio. Registration is open! We hope to see you there! Discover Who The Paralyzed Veterans of America Are The Paralyzed Veterans of America, Buckeye Chapter (BPVA) is one of 33 chapters of the Washington D.C. based Paralyzed Veterans of America (PVA). As a Congressionally chartered Veterans service organization, not an agency of the federal govern",
       "aboutText": "",
       "pagesScraped": [
         "home"
@@ -1242,12 +1104,6 @@
       "pagesScraped": [
         "home"
       ]
-    },
-    {
-      "chamberSlug": "buckeye-quality-rentals",
-      "website": "http://www.bqr-oh.com/",
-      "scrapedAt": "2026-04-11T00:32:15.527Z",
-      "ok": false
     },
     {
       "chamberSlug": "business-communication-specalists",
@@ -1417,7 +1273,7 @@
     {
       "chamberSlug": "brett-high-howard-hanna",
       "website": "http://www.bretthigh.com/",
-      "scrapedAt": "2026-08-30T15:13:36.375Z",
+      "scrapedAt": "2026-09-06T13:55:43.240Z",
       "ok": false
     },
     {
@@ -1456,13 +1312,13 @@
     {
       "chamberSlug": "bunker-hill-golf-course-inc",
       "website": "http://www.bunkerhillgolf.com/",
-      "scrapedAt": "2026-08-30T15:13:06.451Z",
+      "scrapedAt": "2026-09-06T13:55:44.372Z",
       "ok": false
     },
     {
       "chamberSlug": "biggby-coffee-medina",
       "website": "http://www.facebook.com/p/Biggby-Coffee-5145-Buehlers-Dr-Suite-200-Medina-Ohio-61566167050124",
-      "scrapedAt": "2026-08-30T15:13:25.854Z",
+      "scrapedAt": "2026-09-06T13:55:42.125Z",
       "ok": false
     },
     {
@@ -1494,7 +1350,7 @@
     {
       "chamberSlug": "brown-geo-m-assoc-inc",
       "website": "http://www.www./",
-      "scrapedAt": "2026-08-30T15:13:27.595Z",
+      "scrapedAt": "2026-09-06T13:55:41.168Z",
       "ok": false
     },
     {
@@ -1585,39 +1441,6 @@
       ],
       "listItems": [],
       "homeText": "PREVENTATIVE, HEALTH & WELLNESSWhether it be preventative care, foot and ankle health and wellness or surgical treatment options, our specialists and surgeons are able to diagnose and treat an array of foot and ankle conditions. At Balance, we value the importance of understanding your unique foot structure and its mechanical influence on the rest of your body. Our MissionTo create a unique patient experience that blends hospitality and compassion with medicine and surgery within a contemporary yet warm environment that allows us to build relationships with our patients, clients and community. We are devoted to delivering a full range of modern and innovative solutions to our patients with a balanced approach to total wellbeing. Learn More SIGN-UP TO RECEIVE HEALTH AND WELLNESS TIPS DELIVERED TO YOUR INBOXSign-Up Now",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
-    },
-    {
-      "chamberSlug": "brookdale-medina-south-assisted-living-memory-care",
-      "website": "https://www.brookdale.com/en/communities/brookdale-medina-south.html",
-      "scrapedAt": "2026-04-11T00:32:44.273Z",
-      "title": "Find a Community",
-      "metaDescription": "Find a Community",
-      "h1": [
-        "Find A Location"
-      ],
-      "services": [],
-      "listItems": [
-        "Emergency Alert System",
-        "Pet Friendly",
-        "Fitness Center/ Therapy Room",
-        "Transportation",
-        "Library",
-        "Concierge Service",
-        "Outings",
-        "Café/Bistro",
-        "Beauty/Barber Shop",
-        "Courtyard and Garden",
-        "Gardening/Greenhouse",
-        "Porch",
-        "Game Room",
-        "Private Dining Room",
-        "Arts & Crafts"
-      ],
-      "homeText": "Find A Location SHOW ONLY: Locations Articles Blogs Stories All Levels of Care Assisted Living Continuing Care Retirement Community Independent Living Memory Care Skilled Nursing Brookdale at Home Filter by: Amenities Select up to five. Emergency Alert System Pet Friendly Fitness Center/ Therapy Room Transportation Library Concierge Service Outings Café/Bistro Beauty/Barber Shop Courtyard and Garden Gardening/Greenhouse Porch Game Room Private Dining Room Arts & Crafts Walking Paths Pool Theater Housekeeping Laundry Clear Apply Within: 250 miles 200 miles 150 miles 100 miles 50 miles 25 miles Loading Results",
       "aboutText": "",
       "pagesScraped": [
         "home"
@@ -1793,19 +1616,13 @@
     {
       "chamberSlug": "city-barbeque",
       "website": "http://www.citybbq.com/",
-      "scrapedAt": "2026-08-30T15:15:15.822Z",
-      "ok": false
-    },
-    {
-      "chamberSlug": "core-support-partners-llc",
-      "website": "https://www.coresupportpartners.com/",
-      "scrapedAt": "2026-04-11T00:32:54.690Z",
+      "scrapedAt": "2026-09-06T13:55:58.304Z",
       "ok": false
     },
     {
       "chamberSlug": "circon-environmental",
       "website": "https://www.circonenviro.com/",
-      "scrapedAt": "2026-08-30T15:14:37.808Z",
+      "scrapedAt": "2026-09-06T13:56:08.904Z",
       "ok": false
     },
     {
@@ -1896,7 +1713,7 @@
     {
       "chamberSlug": "comfort-suites-brunswick",
       "website": "https://www.choicehotels.com/ohio/brunswick/comfort-suites-hotels/oh673%3Fsource=gyxt",
-      "scrapedAt": "2026-08-30T15:14:50.286Z",
+      "scrapedAt": "2026-09-06T13:55:54.973Z",
       "ok": false
     },
     {
@@ -1930,23 +1747,6 @@
       "pagesScraped": [
         "home",
         "about"
-      ]
-    },
-    {
-      "chamberSlug": "ctss",
-      "website": "http://www.ctsspro.com/",
-      "scrapedAt": "2026-04-11T00:33:12.996Z",
-      "title": "Site is undergoing maintenance",
-      "metaDescription": "Custom Technology and Security Solutions",
-      "h1": [],
-      "services": [
-        "Maintenance mode is on"
-      ],
-      "listItems": [],
-      "homeText": "Maintenance mode is onSite will be available soon. Thank you for your patience!",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
       ]
     },
     {
@@ -2175,7 +1975,7 @@
     {
       "chamberSlug": "capron-construction-inc",
       "website": "http://jimcapronconstruction.com/",
-      "scrapedAt": "2026-08-30T15:15:01.871Z",
+      "scrapedAt": "2026-09-06T13:55:57.591Z",
       "ok": false
     },
     {
@@ -2241,7 +2041,7 @@
     {
       "chamberSlug": "cindy-farnham-juice-plus",
       "website": "http://cfarnham.juiceplus.com/",
-      "scrapedAt": "2026-08-30T15:14:39.685Z",
+      "scrapedAt": "2026-09-06T13:55:56.893Z",
       "ok": false
     },
     {
@@ -2282,48 +2082,6 @@
       ]
     },
     {
-      "chamberSlug": "clearwater-systems",
-      "website": "http://www.clearwatersystems.com/",
-      "scrapedAt": "2026-04-11T00:33:38.618Z",
-      "title": "Clearwater Systems | Home Water Treatment Equipment Supplier",
-      "metaDescription": "For businesses and homes in need of water treatment systems, Clearwater Systems offers a full line of water softener equipment and whole house water filters.",
-      "h1": [
-        "BETTER WATER",
-        "BETTER LIFE"
-      ],
-      "services": [
-        "New Home",
-        "Our Most Popular Water Treatment Systems",
-        "Testimonials",
-        "Virtual Services Available",
-        "Clearwater Systems selected as the World's Greatest in Water Treatment",
-        "Kinetico® is a proud partner of Mike Holmes",
-        "Kinetico® Products",
-        "Pond Systems",
-        "Marine Water Filtration Systems"
-      ],
-      "listItems": [
-        "About Us",
-        "Blog",
-        "Privacy Policy",
-        "Sustainability",
-        "Terms of Use",
-        "Privacy and Cookie Policy",
-        "Careers",
-        "Contact Us",
-        "Recent Online Orders",
-        "Reviews",
-        "Sitemap",
-        "Shipping & Returns",
-        "Pay My Bill"
-      ],
-      "homeText": "Click Here Want Better Water? Schedule a free in-home water test today! Click Here IMPROVE YOUR WATER SCORE IMPROVE YOUR WATER SCORE Get a Quick Quote Get a Quick Quote PROVIDING THE BEST WATER FOR GENERATIONS Kinetico® Non Electric Water Driven World’s Most Efficient New Home Quick Quote Free Water Testing When you need specialized whole-house or single faucet-only water purifiers, Clearwater Systems is here to help. BETTER WATER BETTER LIFE With Kinetico® water softeners and filtration systems, your family will enjoy: • Towels as soft as a hug • Softer skin and hair • Healthy and refreshing drinking water • Faucets & fixtures without build-up • Clean, sparkling dishes • No more soap scum Simply fill out the form to schedule your free water test. A Clearwater expert will call you within 24 business hours. We value your privacy as much as our own, which is why we never sell or share your personal information. Virtual Services Available Learn MoreClearwater Systems selected as the World",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
-    },
-    {
       "chamberSlug": "carducci-sales-team-mcdowell-real-estate",
       "website": "http://lindsay.mcdhomes.com/",
       "scrapedAt": "2026-08-30T15:14:19.729Z",
@@ -2355,54 +2113,6 @@
       "aboutText": "",
       "pagesScraped": [
         "home",
-        "about"
-      ]
-    },
-    {
-      "chamberSlug": "crystal-clinic-orthopaedic-center",
-      "website": "http://www.crystalclinic.com/",
-      "scrapedAt": "2026-04-11T00:33:44.044Z",
-      "title": "Top Orthopedic Surgeons in Ohio | Crystal Clinic Orthopaedic Center",
-      "metaDescription": "Crystal Clinic Orthopaedic Center has Ohio’s most respected group of orthopedic doctors. Locate a doctor at one of our convenient community locations.",
-      "h1": [
-        "WHERE IS YOUR PAIN?"
-      ],
-      "services": [
-        "Head and shoulders above",
-        "Meet our world-class shoulder doctors.",
-        "Common Conditions Treated by Crystal Clinic’s Shoulder Team",
-        "Shoulder Care Videos",
-        "Talk to a shoulder specialist now.",
-        "Personalized care and a conservative approach",
-        "We’re advancing shoulder surgery",
-        "New Physical Therapy Wadsworth Location Now Open",
-        "A Center of Excellence in Orthopaedic Care",
-        "Patient stories",
-        "Crystal Clinic Orthopaedic Tips of the Month",
-        "Nationally renowned. #1 in Ohio."
-      ],
-      "listItems": [
-        "Shoulder pain",
-        "Arthritis of the shoulder",
-        "Sports injury",
-        "Shoulder dislocation",
-        "Shoulder instability",
-        "Shoulder impingement / swimmer’s shoulder",
-        "Shoulder sprain or strain",
-        "Rotator cuff injury / torn rotator cuff",
-        "Shoulder fracture / broken shoulder",
-        "Frozen shoulder (adhesive capsulitis)",
-        "Elbow pain / elbow injury",
-        "Spine / Neck",
-        "Foot / Ankle",
-        "Shoulder / Elbow",
-        "Knee"
-      ],
-      "homeText": "WHERE IS YOUR PAIN? Our board-certified doctors have years of experience and provide comprehensive care designed to help alleviate your pain, so you can get back to the things you love to do. Shoulder Find out how we can help Elbow Find out how we can help Hip Find out how we can help Foot & Ankle Find out how we can help Neck Find out how we can help Spine Find out how we can help Hand & Wrist Find out how we can help Knee Find out how we can help Spine / Neck Foot / Ankle Hip Shoulder / Elbow Knee Hand / Wrist New Physical Therapy Wadsworth Location Now Open Crystal Clinic is thrilled to celebrate the opening of the new home for physical therapy services in Wadsworth. The special ribbon-cutting ceremony with the Wadsworth Chamber of Commerce reaffirms our commitment to the Wadsworth community. We can’t wait to see you at our new space, located at 1154 Hinkle Drive, in Wadsworth. Learn More A Center of Excellence in Orthopaedic Care This is more than a Top 100 hospital—it’s a national",
-      "aboutText": "Top 100 Hospital in America. Earned One Individual Patient at a Time. Once again, Crystal Clinic has been named a Top 100 Hospital in America for exceptional orthopaedic care, and remains the highest rated in Ohio for patient success. Tens-of-thousands of people have trusted Crystal Clinic to help them, or their child, escape debilitating pain and return to the activities they love. And they consistently give Crystal Clinic physicians their highest ratings and recommendations. In other words, “Nationally Renowned™” isn’t claimed; it’s earned … one patient at a time. Make an appointment with confidence you’re choosing the most trusted orthopaedic specialists anywhere. Schedule online, day or night, and see a world-class orthopaedic specialist as soon as today. Schedule Online One of just 3 hospitals of the 6,120 in the nation to receive The Joint Commission certifications in total hip, total knee, total shoulder and spinal fusion procedures Ranked #1 in Ohio and a Top 100 Hospital in America by CareChex for Overall Surgical Care, Joint Replacement, Major Orthopaedic Surgery, Spinal Fusion and Spinal Surgery One of only two hospitals in Ohio to be named America’s 100 Best Hospitals f",
-      "pagesScraped": [
-        "home",
-        "services",
         "about"
       ]
     },
@@ -2578,8 +2288,17 @@
     {
       "chamberSlug": "champs-auto-body-paint-inc",
       "website": "https://www.champsautobody.com/",
-      "scrapedAt": "2026-08-30T15:14:19.128Z",
-      "ok": false
+      "scrapedAt": "2026-09-06T13:55:55.573Z",
+      "title": "",
+      "metaDescription": "",
+      "h1": [],
+      "services": [],
+      "listItems": [],
+      "homeText": "",
+      "aboutText": "",
+      "pagesScraped": [
+        "home"
+      ]
     },
     {
       "chamberSlug": "cms-roofing-and-restoration",
@@ -2940,32 +2659,6 @@
       ]
     },
     {
-      "chamberSlug": "disciples-church-of-medina",
-      "website": "http://disciplesmedina.org/",
-      "scrapedAt": "2026-04-11T00:34:20.526Z",
-      "title": "Disciples Church",
-      "metaDescription": "Welcome to Disciples Church in Medina, Ohio - Jesus Over Everything.",
-      "h1": [
-        "Jesus Over Everything."
-      ],
-      "services": [
-        "Let’s worship together.",
-        "“By this everyone will know that you are my disciples, if you love one another.”",
-        "Our Vision is simple - Jesus Over Everything.",
-        "Statement of Faith",
-        "Our Church",
-        "The Kingdom of God has come near!"
-      ],
-      "listItems": [],
-      "homeText": "Jesus Over Everything. Let’s worship together.Sundays 9 + 10:30am (Disciples Kids at 10:30am only)Williams on the Lake, Building B 787 Lafayette Road Medina, OH 44256 The Kingdom of God has come near!Jesus came proclaiming the good news that life with God in His Kingdom is available right here and now. Jesus went on to lay out the proper response to this incredible opportunity- repent and believe. All are invited to find their place in God’s Kingdom, by embracing life as disciples of Jesus. At Disciples, we believe the good news Jesus announced is the best news of all time. We’re striving to say yes to Jesus’ invitation each day by living as faithful disciples - people who center their lives around being with Jesus, becoming like Jesus, and doing what Jesus did - and we hope we can encourage you to say yes to Jesus too! “By this everyone will know that you are my disciples, if you love one another.”— Jesus of Nazareth",
-      "aboutText": "Our Vision is simple - Jesus Over Everything. Everything we do flows from the conviction that the one holy and eternal God has made himself known in Jesus of Nazareth. We celebrate the good news that all people are invited to life in God’s Kingdom and adoption into God’s family through the life, death, and resurrection of Jesus. We believe the Scriptures tell a unified story that leads to Jesus, and seek to faithfully live by them through the guidance of the Holy Spirit, in light of the tradition and wisdom of the historic and global Church. We all long for love, hope, and a peace whose healing power runs deeper than mere words - we need salvation. The words below make up our Statement of Faith, but more importantly they remind us where salvation is found. As we cling to them, they fill us with hope, help us see our lives in God’s unfolding redemption story, and establish the central convictions of our church. Statement of Faith GodThe one true creator God has eternally existed in three persons: Father, Son, and Holy Spirit. These three persons of the one God have no beginning or end, but have eternally enjoyed a perfect relationship of love with one another. Father, Son, and Spiri",
-      "pagesScraped": [
-        "home",
-        "team",
-        "about"
-      ]
-    },
-    {
       "chamberSlug": "davis-parks-school-of-arts",
       "website": "https://davisparksarts.com/",
       "scrapedAt": "2026-08-30T15:16:01.698Z",
@@ -3020,7 +2713,7 @@
     {
       "chamberSlug": "dtc-auto-center",
       "website": "http://dtcautocenter.com/",
-      "scrapedAt": "2026-08-30T15:16:07.483Z",
+      "scrapedAt": "2026-09-06T13:56:10.369Z",
       "ok": false
     },
     {
@@ -3046,7 +2739,7 @@
     {
       "chamberSlug": "duck-duck-print",
       "website": "http://info@goduckduckprint.com/",
-      "scrapedAt": "2026-08-30T15:16:04.777Z",
+      "scrapedAt": "2026-09-06T13:56:09.506Z",
       "ok": false
     },
     {
@@ -3212,54 +2905,8 @@
     {
       "chamberSlug": "dental-surgical-center-of-medina-inc",
       "website": "http://www.medinasurgical.com/",
-      "scrapedAt": "2026-08-30T15:15:47.206Z",
+      "scrapedAt": "2026-09-06T13:56:30.970Z",
       "ok": false
-    },
-    {
-      "chamberSlug": "dv-gr-enterprises-llc-dba-wingstop",
-      "website": "http://www.linkedin.com/company/dv-gr-enterprises-dba-wingstop",
-      "scrapedAt": "2026-04-11T00:34:38.004Z",
-      "title": "DV & GR Enterprises dba Wingstop | LinkedIn",
-      "metaDescription": "DV &amp; GR Enterprises dba Wingstop | 364 followers on LinkedIn. Where Flavor Gets Its Wings. | Our journey with Wingstop has been nothing short of amazing. It all started back in 2014 when DV &amp; GR Enterprises, LLC acquired franchise rights to this small buffalo-style chicken wing restaurant in",
-      "h1": [
-        "DV & GR Enterprises dba Wingstop"
-      ],
-      "services": [
-        "Restaurants",
-        "About us",
-        "Locations",
-        "Employees at DV & GR Enterprises dba Wingstop",
-        "Updates",
-        "Join now to see what you are missing",
-        "Similar pages",
-        "Browse jobs",
-        "Solon, Ohio 364 followers",
-        "Geraldine Fae Bungabong",
-        "Christianna Dobrowski",
-        "Matthew Hardin"
-      ],
-      "listItems": [
-        "View all 12 employees",
-        "Report this company",
-        "Primary 34050 Solon Rd Solon, Ohio 44139, US Get directions",
-        "Geraldine Fae Bungabong DV & GR Enterprises dba…•75 followers",
-        "Christianna Dobrowski DV & GR Enterprises dba…•46 followers",
-        "Matthew Hardin ARS Brands•60 followers",
-        "Ann Arciaga DV & GR Enterprises dba…•72 followers",
-        "Report this post",
-        "Find people you know at DV & GR Enterprises dba Wingstop",
-        "Browse recommended jobs for you",
-        "View all updates, news, and articles",
-        "Brewtopia 7 Brew Coffee Food and Beverage Services",
-        "Onward Ventures LLC dba Tropical Smoothie Cafe Food and Beverage Services Solon, Ohio",
-        "Wingstop Restaurants Inc. Restaurants Dallas, Texas",
-        "7 Brew Coffee Food and Beverage Services Springdale, Arkansas"
-      ],
-      "homeText": "DV & GR Enterprises dba Wingstop Restaurants Solon, Ohio 364 followers Where Flavor Gets Its Wings. See jobs Follow View all 12 employees Report this company About us Our journey with Wingstop has been nothing short of amazing. It all started back in 2014 when DV & GR Enterprises, LLC acquired franchise rights to this small buffalo-style chicken wing restaurant in Garland, Texas. Little did we know that this would be the beginning of an incredible adventure. Opening our first location in Cleveland marked the start of our expansion journey. The response was overwhelming, and as we continued to bring Wingstop to the Cleveland/Akron/Canton area, it became clear that the demand for Wingstop's proprietary recipes and outstanding food was strong. The decision to enter the Youngstown Market was a strategic move, and the positive reception from the community encouraged us to keep going. Now, standing at our 21st Wingstop location in Streetsboro, Ohio, it's surreal to see how far we've come. Th",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
     },
     {
       "chamberSlug": "d-bat-medina",
@@ -3341,43 +2988,6 @@
       "services": [],
       "listItems": [],
       "homeText": "",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
-    },
-    {
-      "chamberSlug": "dunkin-db-operating-company",
-      "website": "http://www.dunkindonuts.com/",
-      "scrapedAt": "2026-04-11T00:34:44.004Z",
-      "title": "Dunkin'® | America's Favorite Coffee, Espresso and Donuts | Dunkin'®",
-      "metaDescription": "Dunkin' is now pourin' protein! Try the NEW Megan's Mango Protein Refresher today! Sip into Dunkin' and enjoy America's favorite coffee and baked goods chain. View menu items, join Dunkin' Rewards, locate stores, and discover career opportunities.",
-      "h1": [
-        "MAKE THE MOST OF YOUR DUNKIN’ RUN!"
-      ],
-      "services": [
-        "EARN POINTS ANY WAY YOU PAY",
-        "GET REWARDS AND OFFERS",
-        "UNLOCK MORE WITH BOOSTED STATUS",
-        "HAND CRAFTED ESPRESSO DRINKS",
-        "ALL-DAY BREAKFAST SANDWICHES",
-        "HOT COFFEE",
-        "Come Visit",
-        "Find a Dunkin' Near You",
-        "Order ahead in the app or scan your Dunkin' Rewards ID in-store to earn 10 points per $1 spent.",
-        "Enjoy exclusive offers and redeem rewards starting at just 150 points — only $15 spent!",
-        "Earn faster when you visit 12 times in a calendar month and start receiving 12 points per $1 spent!",
-        "Sipping is Believing"
-      ],
-      "listItems": [
-        "MENU",
-        "DELIVERY",
-        "DUNKIN' REWARDS",
-        "Order ahead and pay from your phone",
-        "Join Dunkin’ Rewards and earn points towards free food and beverages",
-        "Earn exclusive offers and rewards"
-      ],
-      "homeText": "MAKE THE MOST OF YOUR DUNKIN’ RUN! Calling all Dunkin’ fans! Join Dunkin’ Rewards today to enjoy exclusive offers and start earning points toward FREE food and drinks. The more you visit, the more benefits you unlock! JOIN NOW JOIN NOW VIEW MY ACCOUNT VIEW MY ACCOUNT EARN POINTS ANY WAY YOU PAY Order ahead in the app or scan your Dunkin' Rewards ID in-store to earn 10 points per $1 spent. GET REWARDS AND OFFERS Enjoy exclusive offers and redeem rewards starting at just 150 points — only $15 spent! UNLOCK MORE WITH BOOSTED STATUS Earn faster when you visit 12 times in a calendar month and start receiving 12 points per $1 spent! Learn More Learn More $6 MEAL DEAL VIEW MENU VIEW MENU No substitutions. Participation may vary. Limited time offer. Cannot be combined with other offers. Exclusions and terms apply. VIEW MENU VIEW MENU No substitutions. Participation may vary. Limited time offer. Cannot be combined with other offers. Exclusions and terms apply. DUNKIN’ DONE EASY Find a store, pl",
       "aboutText": "",
       "pagesScraped": [
         "home"
@@ -3492,107 +3102,20 @@
     {
       "chamberSlug": "edamame-ramen-hibachi-and-boba",
       "website": "https://www.facebook.com/p/Edamame-Ramen-Hibachi-And-Boba-61553074617790/",
-      "scrapedAt": "2026-08-30T15:16:20.029Z",
+      "scrapedAt": "2026-09-06T13:56:32.734Z",
       "ok": false
     },
     {
       "chamberSlug": "enterprise-truck-rental",
       "website": "http://www.enterprisetrucks.com/",
-      "scrapedAt": "2026-08-30T15:16:10.192Z",
+      "scrapedAt": "2026-09-06T13:56:31.905Z",
       "ok": false
-    },
-    {
-      "chamberSlug": "erb-legal-llc",
-      "website": "https://www.erblegal.com/",
-      "scrapedAt": "2026-04-11T00:35:03.710Z",
-      "title": "Family Law Attorney in Northeast Ohio - Erb Legal",
-      "metaDescription": "Erb Legal is the complete package for high caliber legal representation in and around Northeast Ohio. Contact us for a consultation today.",
-      "h1": [
-        "Dedicated Legal Advocates for Northeast Ohio Families"
-      ],
-      "services": [
-        "You Need a Lawyer. Make It Us.",
-        "Absolutely amazing through the whole process.",
-        "Erb Legal Can Help You",
-        "Helpful Info for Clients & Visitors",
-        "Our Blog",
-        "We’re Ready to Help.",
-        "Thomas Erb Jr.",
-        "We Focus On You & Save Our Suits for Court",
-        "Divorce",
-        "Child Custody",
-        "Northeast Ohio Courthouses We Serve",
-        "Fees & Financing Options"
-      ],
-      "listItems": [
-        "Medina",
-        "Akron",
-        "Portage County Drug Court",
-        "Mogadore Mayor's Court",
-        "Portage County Juvenile Division",
-        "Portage County Domestic Relations",
-        "Portage County Municipal Court",
-        "Shaker Heights Municipal Court",
-        "Rocky River Municipal Court",
-        "Euclid Municipal Court",
-        "Cleveland Municipal Court",
-        "Bedford Municipal Court",
-        "Parma Municipal Court",
-        "East Cleveland Municipal Court",
-        "Cuyahoga County Juvenile Division"
-      ],
-      "homeText": "Dedicated Legal Advocates for Northeast Ohio Families Call Erb Legal Today 330-446-3606 thomas Erb JR. Over 100 5-Star Reviews* *100 Reviews based on combined reviews across multiple platforms. We offer unwavering representation from dedicated and compassionate attorneys for people in Summit County, Cuyahoga County, Stark County, Portage County, or anywhere in Northeast Ohio. If you’ve been affected by divorce or family issues Erb Legal has your back. about The Firm You Need a Lawyer. Make It Us. No one wants to hire a lawyer. But if you’re in a fight - fight to win. Unless you have support and advice from a capable attorney, a legal issue in Northeast Ohio can upend your life. That’s where attorney Thomas L. Erb Jr. come in. We are not the lawyers you’re used to. Other area law firms like to talk big, but our record in court and years of experience speak for themselves. We are not shy about our ability to resolve the most complex divorce or custody case. Thomas Erb Jr. Read Thomas's B",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
     },
     {
       "chamberSlug": "everything-outdoor-camping-inc",
-      "website": "http://Instagram: https://www.instagram.com/everythingoutdoorcamping/",
-      "scrapedAt": "2026-08-30T15:16:14.519Z",
+      "website": "https://www.everythingoutdoorcamping.com/",
+      "scrapedAt": "2026-09-06T13:56:45.783Z",
       "ok": false
-    },
-    {
-      "chamberSlug": "edward-jones-investments-lauri-mackey-financial-advisor",
-      "website": "http://edwardjones.com/lauri-mackey",
-      "scrapedAt": "2026-04-11T00:35:05.421Z",
-      "title": "Lauri A Mackey, Financial Advisor | Edward Jones",
-      "metaDescription": "Lauri A Mackey is an Edward Jones Financial Advisor serving Medina, OH. Get the personal financial advice you need to achieve your goals.",
-      "h1": [
-        "Financial Advisor Lauri A Mackey"
-      ],
-      "services": [
-        "Focus Areas",
-        "Team Members",
-        "Send Me a Message",
-        "Office Information",
-        "More to explore",
-        "Hours",
-        "Additional Hours",
-        "Phone",
-        "Fax",
-        "Office Address",
-        "Find your financial starting point"
-      ],
-      "listItems": [
-        "United States | English",
-        "Canada | English",
-        "Canada | French",
-        "Retirement Income Strategies",
-        "Retirement Savings Strategies",
-        "Portfolio Reviews",
-        "Divorce Finances",
-        "Employee Stock Options",
-        "Estate & Legacy Strategies",
-        "Michelle MiecznikowskiSr. Branch Office Administrator",
-        "Evenings"
-      ],
-      "homeText": "Financial Advisor Lauri A Mackey735 N Court Street, Suite C, Medina, OH 44256opens in a new windowCallSend Me a MessageSend Me a Message Focus Areas Retirement Income Strategies Retirement Savings Strategies Portfolio Reviews Divorce Finances Employee Stock Options Estate & Legacy Strategies Focus Areas Retirement Income Strategies Retirement Savings Strategies Portfolio Reviews Divorce Finances Employee Stock Options Estate & Legacy Strategies Team MembersMichelle MiecznikowskiSr. Branch Office AdministratorSend Me a Message* Required fieldExisting Client? Log InOffice Information HoursOffice HoursWeekdayAvailability Mon 08:00AM - 04:00PM Tue 08:00AM - 04:00PM Wed 08:00AM - 04:00PM Thu 08:00AM - 04:00PM Fri 08:00AM - 04:00PM Sat Closed Sun ClosedAdditional HoursEveningsPhone(330) 723-7733Fax(866) 229-7020Office Address735 N Court Street Suite C Medina, OH 44256opens in a new windowFor information about how Edward Jones uses and protects your data, visit our Privacy and Security page:h",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
     },
     {
       "chamberSlug": "elevate-business-advisors",
@@ -3669,13 +3192,13 @@
     {
       "chamberSlug": "fechko-excavating-inc",
       "website": "http://facebook.com/pages/",
-      "scrapedAt": "2026-08-30T15:16:29.275Z",
+      "scrapedAt": "2026-09-06T13:56:47.747Z",
       "ok": false
     },
     {
       "chamberSlug": "first-financial-bank",
       "website": "http://bankatfirst.com/",
-      "scrapedAt": "2026-08-30T15:16:27.728Z",
+      "scrapedAt": "2026-09-06T13:56:46.629Z",
       "ok": false
     },
     {
@@ -3726,7 +3249,7 @@
     {
       "chamberSlug": "first-federal-of-lakewood",
       "website": "http://www/ffl.net",
-      "scrapedAt": "2026-08-30T15:16:51.967Z",
+      "scrapedAt": "2026-09-06T13:56:49.405Z",
       "ok": false
     },
     {
@@ -3782,7 +3305,7 @@
     {
       "chamberSlug": "fiesta-jalapenos",
       "website": "http://www.fiestajalapeno.com/",
-      "scrapedAt": "2026-08-30T15:16:39.266Z",
+      "scrapedAt": "2026-09-06T13:56:50.096Z",
       "ok": false
     },
     {
@@ -3857,26 +3380,6 @@
       "pagesScraped": [
         "home",
         "about"
-      ]
-    },
-    {
-      "chamberSlug": "fifth-third-bank-barberton",
-      "website": "http://www.53.com/",
-      "scrapedAt": "2026-04-11T00:35:39.767Z",
-      "title": "Personal Banking | Fifth Third Bank",
-      "metaDescription": "Fifth Third Bank has all the personal banking solutions to suit your needs. Learn about the features and benefits of our personal bank account today!",
-      "h1": [
-        "We're app-solutely honored!"
-      ],
-      "services": [
-        "Bank anytime, anywhere",
-        "Leaving 53.com"
-      ],
-      "listItems": [],
-      "homeText": "We're app-solutely honored! Best Mobile Banking App for Customer Satisfaction among Regional Banks.1 Open an Account Bank anytime, anywhere It’s easy with Fifth Third online and mobile banking. With our mobile app2, you can check balances, transfer money, deposit checks and more. It’s like having your own personal branch right inside your pocket!",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
       ]
     },
     {
@@ -3959,7 +3462,7 @@
     {
       "chamberSlug": "forest-meadows-apartments",
       "website": "http://facebook.com/ForestMeadowsApartments",
-      "scrapedAt": "2026-08-30T15:16:32.757Z",
+      "scrapedAt": "2026-09-06T13:56:48.791Z",
       "ok": false
     },
     {
@@ -3997,7 +3500,7 @@
     {
       "chamberSlug": "great-lakes-construction-co",
       "website": "http://www.tglcc.com/",
-      "scrapedAt": "2026-08-30T15:17:06.293Z",
+      "scrapedAt": "2026-09-06T13:56:50.814Z",
       "ok": false
     },
     {
@@ -4016,35 +3519,9 @@
       ]
     },
     {
-      "chamberSlug": "gaishauser-dennis-a-dds",
-      "website": "http://gaishauserdentistry.com/",
-      "scrapedAt": "2026-04-11T00:35:51.809Z",
-      "title": "Dennis A. Gaishauser D.D.S. Inc. | Dentists | Medina, OH",
-      "metaDescription": "General dentistry. Cosmetic dentistry. Children's dentistry. Call us for a free consultation.",
-      "h1": [
-        "Dentists",
-        "Here's what our satisfied customers are saying..."
-      ],
-      "services": [
-        "Over 30 Years of Experience | Licensed Dentists",
-        "Over 30 Years of Experience Licensed Dentists",
-        "General Dentistry",
-        "Cosmetic Dentistry",
-        "Children's Dentistry",
-        "About Dennis A. Gaishauser D.D.S. Inc."
-      ],
-      "listItems": [],
-      "homeText": "Request a Callback , This is a placeholder for the Yext Knolwedge Tags. This message will not appear on the live site, but only within the editor. The Yext Knowledge Tags are successfully installed and will be added to the website. This is a placeholder for the Yext Knolwedge Tags. This message will not appear on the live site, but only within the editor. The Yext Knowledge Tags are successfully installed and will be added to the website. Click here for COVID--19 Info Dentists Over 30 Years of Experience | Licensed Dentists Over 30 Years of Experience Licensed Dentists This is a placeholder for the Yext Knolwedge Tags. This message will not appear on the live site, but only within the editor. The Yext Knowledge Tags are successfully installed and will be added to the website. General Dentistry Let the award-winning dentists at Dennis A. Gaishauser D.D.S. Inc. can take care of your general dentistry needs. Drop by our clinic today. FREE parking is available! Learn More Cosmetic Dentistr",
-      "aboutText": "Request a Callback , This is a placeholder for the Yext Knolwedge Tags. This message will not appear on the live site, but only within the editor. The Yext Knowledge Tags are successfully installed and will be added to the website. This is a placeholder for the Yext Knolwedge Tags. This message will not appear on the live site, but only within the editor. The Yext Knowledge Tags are successfully installed and will be added to the website. Click here for COVID--19 Info About About Dennis A. Gaishauser D.D.S. Inc. Over 30 Years of Experience | Licensed Dentists Over 30 Years of Experience Licensed Dentists This is a placeholder for the Yext Knolwedge Tags. This message will not appear on the live site, but only within the editor. The Yext Knowledge Tags are successfully installed and will be added to the website. About Us This is a placeholder for the Yext Knolwedge Tags. This message will not appear on the live site, but only within the editor. The Yext Knowledge Tags are successfully installed and will be added to the website. Year Established This is a placeholder for the Yext Knolwedge Tags. This message will not appear on the live site, but only within the editor. The Yext Knowl",
-      "pagesScraped": [
-        "home",
-        "about"
-      ]
-    },
-    {
       "chamberSlug": "gerspacher-real-estate-group",
       "website": "https://www.facebook.com/gerspacherrealestate",
-      "scrapedAt": "2026-08-30T15:17:14.940Z",
+      "scrapedAt": "2026-09-06T13:56:54.731Z",
       "ok": false
     },
     {
@@ -4096,8 +3573,42 @@
     {
       "chamberSlug": "gridirne-cookery",
       "website": "http://www.gridirne.com/",
-      "scrapedAt": "2026-08-30T15:17:08.209Z",
-      "ok": false
+      "scrapedAt": "2026-09-06T13:56:51.414Z",
+      "title": "Home",
+      "metaDescription": "",
+      "h1": [
+        "LOCAL BBQ DONE RIGHT"
+      ],
+      "services": [
+        "Pig Roast Catering",
+        "We come to you",
+        "Serving all of Northeast Ohio",
+        "And then some!",
+        "Specializing in Barbecue & Comfort Food",
+        "Lavish Open Air Feasts"
+      ],
+      "listItems": [
+        "Backyards",
+        "Public Parks",
+        "Reception Halls",
+        "Golf Courses",
+        "Campgrounds",
+        "Construction Sites",
+        "Parking Lots",
+        "On the factory floor",
+        "Very unique, very special and very delicious!",
+        "Traditional Thanksgiving style dinners",
+        "St. Patrick's Day Events",
+        "Oktoberfest Meals",
+        "Christmas Banquets",
+        "Breakfast with Santa (Santa not included!)",
+        "New Years Parties"
+      ],
+      "homeText": "LOCAL BBQ DONE RIGHTServing all of Northeast OhioAnd then some!Specializing in Barbecue & Comfort FoodPig Roast CateringWhen it comes to having your event professionally catered, come to Gridirne! We have perfected the art of barbecue. All of our meats are pit roasted right over the coals for maximum flavor. They're grilled, roasted and smoked to perfection. We arrive with the cookers smoking and smelling good. The aroma of the meat permeates the air, adding to the atmosphere of the event. Once the meats are done, we hard carve and serve them up hot and fresh for your ultimate enjoyment!Price SheetFor Meat Choices & DescriptionsWe can roast the meat or cater the whole dinner. We can roast on site or cater in.No roast is too big or too smallWe come to youWe can roast Pork, Beef, Chicken, Hamburgers, Brats, Hot Dogs and Chicken breasts. If you don't see what you're looking for, give us a call.WeddingsThe ultimate choice for non-traditional weddings, receptions, rehearsal dinners, bridal ",
+      "aboutText": "",
+      "pagesScraped": [
+        "home"
+      ]
     },
     {
       "chamberSlug": "godard-auto-sales-leasing-co-llc",
@@ -4153,7 +3664,7 @@
     {
       "chamberSlug": "gentle-endodontics",
       "website": "http://www.gentleendo.com/",
-      "scrapedAt": "2026-08-30T15:17:13.432Z",
+      "scrapedAt": "2026-09-06T13:56:53.893Z",
       "ok": false
     },
     {
@@ -4206,7 +3717,7 @@
     {
       "chamberSlug": "huntington-national-bank",
       "website": "http://www.huntington.com/",
-      "scrapedAt": "2026-08-30T15:17:24.567Z",
+      "scrapedAt": "2026-09-06T13:56:55.427Z",
       "ok": false
     },
     {
@@ -4330,49 +3841,8 @@
     {
       "chamberSlug": "hampton-inn-medina",
       "website": "https://www.hilton.com/en/hotels/cakmdhx-hampton-medina",
-      "scrapedAt": "2026-08-30T15:18:05.178Z",
+      "scrapedAt": "2026-09-06T13:56:56.144Z",
       "ok": false
-    },
-    {
-      "chamberSlug": "henderson-roofing-and-construction",
-      "website": "http://hendersonohio.com/",
-      "scrapedAt": "2026-04-11T00:36:16.983Z",
-      "title": "Henderson | Trusted Roofing Contractor in NE Ohio Since 2014",
-      "metaDescription": "Leading roofing contractor in Canton Ohio, and surrounding areas Henderson specializes in replacement, repairs, inspections, and commercial roofing.",
-      "h1": [
-        "Northeast Ohio's Trusted Roofing Company"
-      ],
-      "services": [
-        "Installing Trust, Powered by Faith Since 2014.",
-        "Backed by Experience. Built on Trust.",
-        "Protecting What Matters Most—Your Home",
-        "Proud to Serve Northeast Ohio",
-        "Protecting Your Business from the Top Down",
-        "Henderson’s Toolkit",
-        "Protect Your Home with Confidence",
-        "Serving Akron, Canton, Hudson, Medina and surrounding areas",
-        "Our Top Services:",
-        "Downloadable Guides:",
-        "LOCAL EXPERTS, LASTING RESULTS"
-      ],
-      "listItems": [
-        "Roof Installation – Modern materials, expertly installed",
-        "Roof Repair – Fast, reliable service for all damage types",
-        "Roof Inspection – Assessments to prevent issues",
-        "Canton",
-        "Akron",
-        "Medina",
-        "Hudson",
-        "North Canton",
-        "Fairlawn",
-        "How to Maintain Your Roof for Longevity",
-        "Top 5 Roofing Materials You Should Know About"
-      ],
-      "homeText": "",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
     },
     {
       "chamberSlug": "harold-archer-sons-inc",
@@ -4407,31 +3877,10 @@
       ]
     },
     {
-      "chamberSlug": "hope-wellness-llc",
-      "website": "http://www.hopeandwellnessllc.com/",
-      "scrapedAt": "2026-04-11T00:36:21.579Z",
-      "ok": false
-    },
-    {
       "chamberSlug": "heartland-community-church",
       "website": "http://www.heartlandcommunity.org/",
       "scrapedAt": "2026-08-30T15:17:27.849Z",
       "title": "",
-      "metaDescription": "",
-      "h1": [],
-      "services": [],
-      "listItems": [],
-      "homeText": "",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
-    },
-    {
-      "chamberSlug": "hallock-properties",
-      "website": "http://www.instagram.com/hallockproperties",
-      "scrapedAt": "2026-04-11T00:36:23.239Z",
-      "title": "Instagram",
       "metaDescription": "",
       "h1": [],
       "services": [],
@@ -4490,7 +3939,7 @@
     {
       "chamberSlug": "homestead-insurance-agency",
       "website": "http://www.facebook.com/pages/Homestead-Insurance-Agency-Inc/126088094112471",
-      "scrapedAt": "2026-08-30T15:18:01.459Z",
+      "scrapedAt": "2026-09-06T13:56:56.934Z",
       "ok": false
     },
     {
@@ -4665,7 +4114,7 @@
     {
       "chamberSlug": "icandi-graphics",
       "website": "http://facebook.com/pages/",
-      "scrapedAt": "2026-08-30T15:18:11.208Z",
+      "scrapedAt": "2026-09-06T13:56:57.975Z",
       "ok": false
     },
     {
@@ -4819,7 +4268,7 @@
     {
       "chamberSlug": "ieefa",
       "website": "http://ieefa.org/",
-      "scrapedAt": "2026-08-30T15:18:23.360Z",
+      "scrapedAt": "2026-09-06T13:56:58.829Z",
       "ok": false
     },
     {
@@ -4951,7 +4400,7 @@
     {
       "chamberSlug": "janet-gommel-howard-hanna",
       "website": "http://www.medinacountyhomesforsale.com/",
-      "scrapedAt": "2026-08-30T15:18:43.059Z",
+      "scrapedAt": "2026-09-06T13:57:10.205Z",
       "ok": false
     },
     {
@@ -5085,50 +4534,9 @@
       ]
     },
     {
-      "chamberSlug": "king-dumpsters",
-      "website": "https://www.kingdumpsters.com/dumpster-rental-medina-ohio/",
-      "scrapedAt": "2026-04-11T00:37:27.497Z",
-      "title": "Rent a Dumpster Medina | King Dumpsters| Dumpster Rental",
-      "metaDescription": "Dumpster rental in Medina, Ohio. Call King Dumpsters for a Medina Dumpster Rental quote or book a dumpster online now. (330) 587-9139",
-      "h1": [
-        "Rent a Dumpster Medina Ohio"
-      ],
-      "services": [
-        "Dumpster Rental in Medina",
-        "Order a Dumpster Online in medina",
-        "10 Yard Dumpster",
-        "15 Yard Dumpster",
-        "20 Yard Dumpster",
-        "30 Yard Dumpster",
-        "40 Yard Dumpster"
-      ],
-      "listItems": [
-        "Home Debris",
-        "Carpets and Floor Coverings",
-        "Residential Flooring Debris",
-        "Electrical Appliances",
-        "Residential Furniture",
-        "Mattresses and Box Springs",
-        "Electrical and Plumbing Components",
-        "Landscape Waste",
-        "Building Debris",
-        "Masonry Blocks",
-        "Cement Materials",
-        "Roofing Shingles",
-        "Choose the perfect dumpster size for your project and add it to your cart.",
-        "Indicate whether you’re renting as a contractor or homeowner, and pick a delivery date.",
-        "Enter your delivery details and complete your payment securely."
-      ],
-      "homeText": "Rent a Dumpster Medina Ohio Order Online Dumpster Rental in Medina For efficient and hassle-free waste management in Medina, Ohio, choosing a dumpster rental service is an excellent strategy for individuals and businesses dealing with substantial waste or debris. Rely on Medina Dumpsters for top-notch services in the Medina area. Bypass the trouble of hiring a pickup truck and making multiple landfill trips. Employing a dumpster from a reputable Medina dumpster rental company like Medina Dumpsters streamlines waste removal for a variety of residential and commercial projects. Medina Dumpsters provides timely, dependable, and economical dumpster rental services in Medina, Ohio. Contact us today at (330) 946-5991 to book your dumpster in Medina. Choose Medina Dumpsters for a property-friendly, efficient, and cost-saving dumpster rental experience. Simply sensational. Punctual, professional, and polite. I wouldn’t dream of working with any other dumpster company. Khoelle B. Excellent comp",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
-    },
-    {
       "chamberSlug": "keybank",
       "website": "http://www.key.com/",
-      "scrapedAt": "2026-08-30T15:19:33.279Z",
+      "scrapedAt": "2026-09-06T13:57:37.821Z",
       "ok": false
     },
     {
@@ -5165,13 +4573,38 @@
     {
       "chamberSlug": "kaycorp-creative-services",
       "website": "https://kaycorpohio.com/",
-      "scrapedAt": "2026-08-30T15:19:34.548Z",
-      "ok": false
+      "scrapedAt": "2026-09-06T13:57:10.806Z",
+      "title": "KayCorp Inc. | Medina Ohio | Creative Events, Merch & Marketing Services – Where Innovation Meets Expertise",
+      "metaDescription": "",
+      "h1": [],
+      "services": [
+        "Creativity is just the beginning",
+        "get creative",
+        "Bring Your Vision to Life",
+        "Your Business Is One-of-a-Kind",
+        "Our trusted partners",
+        "Tailored Strategy",
+        "Boost Your Visibility",
+        "Full-Service Creative",
+        "Polished Results"
+      ],
+      "listItems": [
+        "Comprehensive Event & Experience Management",
+        "Customized Marketing & Visibility Plans",
+        "Multi-Channel Advertising & Brand Expansion",
+        "Strategic Influencer & Partnership Campaigns",
+        "Affiliate Network Development & Growth"
+      ],
+      "homeText": "Unlock Bold new ideas Creativity is just the beginning Concierge Marketing & Creative Services Tailored Strategy Every brand is different. We build custom creative solutions rooted in your unique audience, goals, and industry—not cookie-cutter templates. Boost Your Visibility We specialize in high-impact visibility strategies that help you connect with the right people, at the right time, with the right message. Full-Service Creative From websites and digital ads to print collateral, fundraising campaigns, and event branding—we handle everything under one roof for seamless execution. Polished Results Our work blends creativity with strategy to deliver polished, professional solutions designed to elevate your brand and drive measurable success. get creative We elevate your brand with strategic, high-impact creative solutions tailored to your exact needs. Every service is custom-built around your audience, your goals, and your resources to ensure maximum visibility and long-term success.",
+      "aboutText": "",
+      "pagesScraped": [
+        "home"
+      ]
     },
     {
       "chamberSlug": "kerns-roofing-restoration",
       "website": "http://www.kernsroofing.com/roofing/richfield",
-      "scrapedAt": "2026-08-30T15:19:10.300Z",
+      "scrapedAt": "2026-09-06T13:57:17.219Z",
       "ok": false
     },
     {
@@ -5214,26 +4647,6 @@
         "Investment Property"
       ],
       "homeText": "AUCTIONSUpcoming AuctionsAuction ResultsAuction 101How To BuyHow To SellDefinitionsAuction FAQsEstate Auction FAQsFOR SALEProperty SearchNEED TO SELL?Farm/AgHome/LandCommercialFamily EstatesInvestment PropertyBusiness SalesEquipmentClassic Cars/AntiquesAircraftBLOGABOUTLocations and ServicesAreas We ServeAuctioneers & RealtorsIn The NewsCONTACTSearch Buying. Selling. Advising. Since 1945, KIKO Auctioneers has been committed to sharing industry-leading advice and our family culture of caring, collaboration, and integrity. We deliver local knowledge, global reach, and unparalleled service. See our offerings: Real Estate AuctionsContent AuctionsAuction Results Featured AuctionsSep02The Shack Restaurant - Equipment, 2.2 Acres Salesville, OH12:30 PMSep08Handyman Colonial Home With Large Garage, Attention InvestorsAkron, OH12:30 PMSep09 “Pine Hollow Farm LTD”, Christmas Trees and Farm Equipment Dispersal Carrollton, OH10:30 AM VIEW ALL AUCTIONS REAL ESTATE AUCTIONS Featured Listings$799,0002",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
-    },
-    {
-      "chamberSlug": "kmc-fabrication-llc",
-      "website": "http://kmcfabrication.com/",
-      "scrapedAt": "2026-04-11T00:37:44.925Z",
-      "title": "KMC Fabrication",
-      "metaDescription": "Locally owned machine shop specializing in precision, high-quality custom parts for automotive racing and any project. Excellence in customer service and craftsmanship to exceed expectations. Trusted for racing and custom machining needs. Get top-tier service and parts for all your projects today.",
-      "h1": [],
-      "services": [
-        "Country/region"
-      ],
-      "listItems": [
-        "Instagram",
-        "TikTok"
-      ],
-      "homeText": "",
       "aboutText": "",
       "pagesScraped": [
         "home"
@@ -5309,7 +4722,7 @@
     {
       "chamberSlug": "linda-hoffmann-medina-county-recorder",
       "website": "https://www.recorder.co.medina.oh.us/",
-      "scrapedAt": "2026-08-30T15:19:42.533Z",
+      "scrapedAt": "2026-09-06T13:57:40.591Z",
       "ok": false
     },
     {
@@ -5474,12 +4887,6 @@
       ]
     },
     {
-      "chamberSlug": "lafayette-township",
-      "website": "https://www.lafayettetownship.com/",
-      "scrapedAt": "2026-04-11T00:38:02.432Z",
-      "ok": false
-    },
-    {
       "chamberSlug": "leadership-medina-county",
       "website": "http://www.leadershipmedinacounty.org/",
       "scrapedAt": "2026-08-30T15:20:03.558Z",
@@ -5551,7 +4958,7 @@
     {
       "chamberSlug": "liberty-ford-of-brunswick",
       "website": "http://www.libertyfordbrunswick.com/",
-      "scrapedAt": "2026-08-30T15:20:06.657Z",
+      "scrapedAt": "2026-09-06T13:57:39.623Z",
       "ok": false
     },
     {
@@ -5601,7 +5008,7 @@
     {
       "chamberSlug": "medina-county-career-center",
       "website": "http://www.mcjvs.org/",
-      "scrapedAt": "2026-08-30T15:20:07.996Z",
+      "scrapedAt": "2026-09-06T13:57:41.471Z",
       "ok": false
     },
     {
@@ -6049,13 +5456,13 @@
     {
       "chamberSlug": "medina-county-probate-juvenile-court",
       "website": "http://www.medinacountyjuvenileprobatecourt.com/",
-      "scrapedAt": "2026-08-30T15:21:30.315Z",
+      "scrapedAt": "2026-09-06T13:58:10.992Z",
       "ok": false
     },
     {
       "chamberSlug": "medina-county-auditor",
       "website": "http://www.medinacountyauditor.org/",
-      "scrapedAt": "2026-08-30T15:21:02.510Z",
+      "scrapedAt": "2026-09-06T13:58:15.666Z",
       "ok": false
     },
     {
@@ -6219,7 +5626,7 @@
     {
       "chamberSlug": "mc-real-estate",
       "website": "http://www.mcrealestateohio.com/",
-      "scrapedAt": "2026-08-30T15:22:13.851Z",
+      "scrapedAt": "2026-09-06T13:58:12.674Z",
       "ok": false
     },
     {
@@ -6240,7 +5647,7 @@
     {
       "chamberSlug": "michael-a-goyette-dds-inc",
       "website": "http://www.goyettedentistry.com/",
-      "scrapedAt": "2026-08-30T15:22:20.674Z",
+      "scrapedAt": "2026-09-06T13:58:10.171Z",
       "ok": false
     },
     {
@@ -6315,7 +5722,7 @@
     {
       "chamberSlug": "medina-county-port-authority",
       "website": "http://www.medinacountyportauthority.com/",
-      "scrapedAt": "2026-08-30T15:21:38.468Z",
+      "scrapedAt": "2026-09-06T13:58:13.387Z",
       "ok": false
     },
     {
@@ -6509,12 +5916,6 @@
       ]
     },
     {
-      "chamberSlug": "medina-moose-lodge-647",
-      "website": "http://lodge647.moosepages.org/",
-      "scrapedAt": "2026-04-11T00:39:33.628Z",
-      "ok": false
-    },
-    {
       "chamberSlug": "medina-christian-academy-inc",
       "website": "http://www.medinachristian.org/",
       "scrapedAt": "2026-08-30T15:21:03.110Z",
@@ -6552,24 +5953,9 @@
       ]
     },
     {
-      "chamberSlug": "modern-telecom",
-      "website": "http://www.modcom.us/",
-      "scrapedAt": "2026-04-11T00:39:35.715Z",
-      "title": "",
-      "metaDescription": "",
-      "h1": [],
-      "services": [],
-      "listItems": [],
-      "homeText": "",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
-    },
-    {
       "chamberSlug": "medina-county-commissioners",
       "website": "http://www.www./",
-      "scrapedAt": "2026-08-30T15:22:22.894Z",
+      "scrapedAt": "2026-09-06T13:58:14.034Z",
       "ok": false
     },
     {
@@ -6681,36 +6067,6 @@
       ]
     },
     {
-      "chamberSlug": "mpact-collision",
-      "website": "http://mpactcollision.com/",
-      "scrapedAt": "2026-04-11T00:39:44.585Z",
-      "title": "MPACT Collision",
-      "metaDescription": "Comprehensive auto body shop specializing in full service collision repair, paint refinishing, and glass replacement in Northeast Ohio.",
-      "h1": [
-        "MPACT Collision"
-      ],
-      "services": [
-        "About MPACT",
-        "Collision & Repair Services",
-        "Repair Process",
-        "Why Choose MPACT?",
-        "Join Our Team",
-        "Choose Your Location:",
-        "Collision Repair",
-        "Insurance Claims",
-        "Refinishing & Paint Jobs",
-        "Hail Damage",
-        "Dent Repair",
-        "Frame & Body Repair"
-      ],
-      "listItems": [],
-      "homeText": "Skip to content MPACT Collision Comprehensive auto body shop specializing in full service collision repair, paint refinishing, and glass replacement in Northeast Ohio. Get a Free Estimate About MPACT At MPACT Collision, we understand the value of your vehicle and the importance of getting you back on the road safely and efficiently. Our comprehensive auto repair and collision services bring your vehicle back to its pre-accident condition, no matter the challenge. From minor dents and scratches to major collision damage, our team of certified technicians combines expertise, cutting-edge technology, and a passion for cars to deliver unmatched quality and service. Get to Know Us Collision & Repair Services Give us the opportunity to bring your vehicle back to pre-accident condition with our repair and refinish services. Collision Repair Premium collision repair service offering superior body work, modern frame and unibody repairs, and professional paint finishes to restore your vehicle to",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
-    },
-    {
       "chamberSlug": "marks-cleaning-service-inc",
       "website": "http://www.markscleaning.com/",
       "scrapedAt": "2026-08-30T15:22:21.274Z",
@@ -6751,13 +6107,13 @@
     {
       "chamberSlug": "medina-creative-housing",
       "website": "http://www.medinacreativehousing.com/",
-      "scrapedAt": "2026-08-30T15:20:32.832Z",
+      "scrapedAt": "2026-09-06T13:58:16.549Z",
       "ok": false
     },
     {
       "chamberSlug": "medina-township",
       "website": "http://www.medinatownship.com/",
-      "scrapedAt": "2026-08-30T15:21:20.690Z",
+      "scrapedAt": "2026-09-06T13:58:17.433Z",
       "ok": false
     },
     {
@@ -6843,13 +6199,13 @@
     {
       "chamberSlug": "medina-excavating-inc",
       "website": "http://www.medinaexcavating.com/",
-      "scrapedAt": "2026-08-30T15:22:09.657Z",
+      "scrapedAt": "2026-09-06T13:58:08.181Z",
       "ok": false
     },
     {
       "chamberSlug": "master-pizza",
       "website": "http://www.masterpizza.com/",
-      "scrapedAt": "2026-08-30T15:20:21.368Z",
+      "scrapedAt": "2026-09-06T13:58:09.181Z",
       "ok": false
     },
     {
@@ -7110,95 +6466,6 @@
       ]
     },
     {
-      "chamberSlug": "nagel-advertising-inc",
-      "website": "http://www.nagelad.com/",
-      "scrapedAt": "2026-04-11T00:40:57.350Z",
-      "title": "Nagel Advertising Inc. | Nagelad",
-      "metaDescription": "",
-      "h1": [
-        "Experience Growth With Our Integrated Services",
-        "Nagel Advertising Partners",
-        "Tailored Solutions For Your Industry"
-      ],
-      "services": [
-        "Paul G. Nagel",
-        "Maria Nagel",
-        "Raymond N. Nagel",
-        "Ryan Pluta",
-        "Megan Maple",
-        "Karen McFarland",
-        "John C (Jack) Wilcox III",
-        "Peter Canepa",
-        "Strategic Planning",
-        "Creative Services & Branding",
-        "Media Buying & Negotiation",
-        "Sponsorship Development & Execution"
-      ],
-      "listItems": [
-        "SERVICES",
-        "INDUSTRIES",
-        "ABOUT US",
-        "CONTACT US",
-        "Strategic Planning",
-        "Creative Services & Branding",
-        "Media Buying & Negotiation",
-        "Sponsorship Development & Execution",
-        "Social Media Strategy & Management",
-        "Digital Marketing Services",
-        "Direct Mail, Print & Distribution Services",
-        "Public Relations",
-        "Co-op Program Management & Development",
-        "Athlete/Celebrity Endorsements",
-        "Media Relations"
-      ],
-      "homeText": "330.764.9229 SERVICES INDUSTRIES ABOUT US CONTACT US Experience Growth With Our Integrated Services Strategic Planning Creative Services & Branding Media Buying & Negotiation Sponsorship Development & Execution Social Media Strategy & Management Digital Marketing Services Direct Mail, Print & Distribution Services Public Relations Co-op Program Management & Development Athlete/Celebrity Endorsements Nagel Advertising Partners Tailored Solutions For Your Industry Food & Restaurant Manufacturing & Industrial Automotive & Powersports Healthcare Entertainment & Events Home Services Services & Retail Community Outreach Let's Get Started 330.764.9229 nagelad@zoominternet.net Nagel Advertising803 E. Washington Street STE 150Medina, OH 44256 Stay Connected SERVICES INDUSTRIES ABOUT US CONTACT US PRIVACY POLICY ©2026 Nagelad",
-      "aboutText": "330.764.9229 SERVICES INDUSTRIES ABOUT US CONTACT US About Us Experienced Marketing Professionals. Established in 1995 by Paul G. Nagel, Nagel Advertising has a staff of highly skilled marketing professionals that strive to give each of our client partners a big agency experience with boutique agency attention. We've all worked on the “other side of the fence” in media, event marketing, and sales, giving us an advantage with purchasing and strategy resulting in savings and added value for our client partners. Paul G. NagelChief Executive Officer Paul was the founding partner of a 30+ staffed agency when he left to start Nagel Advertising in 1995. Since 1991, he has had direct involvement with Buffalo Wild Wings and their founding principals in developing the overall brand identity. He manages the North American advertising and marketing effort for Seves Glass Block, the world’s leading glass block and glass tile manufacturer. He also manages the national and local marketing and creative strategies for Hot Head Burritos, Milano’s Atlantic City Subs, Romeo’s Pizza corporate and select co-op groups. Paul has over 20 years of automotive marketing experience focusing on luxury/specialty",
-      "pagesScraped": [
-        "home",
-        "services",
-        "about"
-      ]
-    },
-    {
-      "chamberSlug": "namaste-life-center",
-      "website": "http://www.namastelifecenter.com/",
-      "scrapedAt": "2026-04-11T00:41:01.246Z",
-      "title": "Crystals and Minerals Gift Store - Namaste Life Center",
-      "metaDescription": "Namaste Life Center is a place of resources for healing and spiritual development in a loving and supportive community.   We offer Classes and Spiritual mediums metaphysical store",
-      "h1": [
-        "Namaste Life Center & Gift Shop"
-      ],
-      "services": [
-        "Explore Namaste Life Center & Gift Shop's Stunning Gift Collection in Our Photo Gallery",
-        "Today at Namaste!",
-        "Contact Us",
-        "Let's get social !!"
-      ],
-      "listItems": [
-        "Home",
-        "Events Calendar",
-        "Practitioners",
-        "Birthday Club",
-        "ShopCrystals and MineralsShowcase Crystals Sage SprayShop Local Sterling Silver",
-        "Crystals and Minerals",
-        "Showcase Crystals",
-        "Sage Spray",
-        "Shop Local",
-        "Sterling Silver",
-        "Vivianite",
-        "Selenite",
-        "Epidot",
-        "Azurite",
-        "Rose Quartz"
-      ],
-      "homeText": "HomeEvents Calendar PractitionersBirthday ClubShopCrystals and MineralsShowcase Crystals Sage SprayShop Local Sterling Silver My BlogVivianite SeleniteEpidot AzuriteRose QuartzThe Healers MoldaviteNatural CitrineSage 101Hematite HeartsAbout UsShop Namaste Life Center & Gift Shop Namaste Life Gift Shop Namaste Life Center and Gift Shop is woman owned and operated crystal and mineral boutique gift shop located just minutes from Medina Square. We offer over 300 different crystals and minerals to choose from. Come discover our 6/$5 Tumble Stone Special. It’s a great way to start your collection for all ages. We carry the largest selection of tarot and oracle Cards in Medina, Candles, Incense, Sage, Salt Lamps and so much more. You will find many handmade items from local artist. Try our Sage Sprays as an alternative to burning sage, handmade by the owner, Theresa Fisher. Each sprays is made with Love, Blessings, and Reiki infused Quartz Crystal to fill your sacred space with Love, Blessing",
-      "aboutText": "HomeEvents Calendar PractitionersBirthday ClubShopCrystals and MineralsShowcase Crystals Sage SprayShop Local Sterling Silver My BlogVivianite SeleniteEpidot AzuriteRose QuartzThe Healers MoldaviteNatural CitrineSage 101Hematite HeartsAbout UsShop Thank You for your Support!About UsNamaste Life Center and Gift shop is a women owned and operated business. located in Medina county just minutes from the square. Our wellness center offers a place of healing and a community center for like minded people to gather and share. I’m so blessed to be here and provide a place of love and light. ~Namaste Healing Childhood Trauma Healing Childhood Trauma Together- Interactive Coaching Group This is a safe, supportive community dedicated to healing from childhood trauma, CPTSD, and emotional wounds. Here we focus on: • Understanding how trauma shapes our thoughts, feelings, and relationships • Learning healthy coping skills and nervous system regulation • Guided self-discovery and inner child work • Empowering discussions, interactive coaching sessions, and practical tools for growth Our goal is to create a compassionate space where you can be seen, heard, and supported as you take steps toward e",
-      "pagesScraped": [
-        "home",
-        "about"
-      ]
-    },
-    {
       "chamberSlug": "office-aid",
       "website": "http://www.yourofficeaid.com/",
       "scrapedAt": "2026-08-30T15:23:02.224Z",
@@ -7216,30 +6483,6 @@
       "aboutText": "",
       "pagesScraped": [
         "home"
-      ]
-    },
-    {
-      "chamberSlug": "ohio-employee-ownership-center",
-      "website": "http://www.oeockent.org/",
-      "scrapedAt": "2026-04-11T00:41:04.292Z",
-      "title": "Ohio Employee Ownership Center",
-      "metaDescription": "",
-      "h1": [
-        "35th Annual Ohio Employee Ownership Conference update",
-        "Welcome",
-        "Ohio Employee Ownership Center at Kent State University"
-      ],
-      "services": [
-        "Annual Conference",
-        "Support Our Work",
-        "Our Network Programs"
-      ],
-      "listItems": [],
-      "homeText": "35th Annual Ohio Employee Ownership Conference updateSW Ohio Employee Ownership Workshop_Agenda.pdfQuick LinksTraining and DevelopmentFind A ProfessionalOhio Employee-Owned Network ProgramsWelcomeOhio Employee Ownership Center at Kent State UniversityThe Ohio Employee Ownership Center (OEOC) is a nonprofit outreach center based at the main campus of Kent State University established in 1987. We provide support and assistance for business owners interested in selling their business to their employees; technical support for entrepreneurs interested in creating a start-up employee-owned business; training and education programs for existing employee-owned companies through Ohio's Employee-owned Network; and perform research and outreach regarding employee-ownership and its impact on our communities.New to employee ownership? Click here! About the Ohio Employee Ownership Center The Ohio Employee Ownership Center, a nonprofit outreach center of Kent State University, supports the developmen",
-      "aboutText": "35th Annual Ohio Employee Ownership Conference updateQuick LinksTraining and DevelopmentFind A ProfessionalOhio Employee-Owned Network ProgramsAbout the OEOCThe Ohio Employee Ownership Center, a non-profit outreach center of Kent State University, supports the development of business across Ohio and around the world by its efforts that are proven to save jobs, create wealth, and grow the economy. The OEOC’s work rests on a simple philosophy: broader ownership of productive assets is a good thing for employees, communities, and our country.The OEOC provides technical assistance, training, & outreach to the business community in 4 major areas:To business owners looking to exit their business;To owners interested in selling their business to their employees;To employee groups, local governments, and community groups seeking to avoid business shutdowns and job loss in their communities; To existing employee-owned companies, designed to help them be better employee-owned companies.An Overview of the OEOC and its programs can be found hereQuestions? OEOC via email or by phone at 330-672-3028thank you to our sponsorsPlatinum Level SponsorPlatinum Level SponsorGold Level SponsorGold Level ",
-      "pagesScraped": [
-        "home",
-        "about"
       ]
     },
     {
@@ -7308,13 +6551,13 @@
     {
       "chamberSlug": "oda-company-inc",
       "website": "http://www.odaandcompany.com/",
-      "scrapedAt": "2026-08-30T15:22:54.731Z",
+      "scrapedAt": "2026-09-06T13:58:18.953Z",
       "ok": false
     },
     {
       "chamberSlug": "olive-tap",
       "website": "http://www.theolivetap.com/medina/index.php",
-      "scrapedAt": "2026-08-30T15:23:04.245Z",
+      "scrapedAt": "2026-09-06T13:58:18.225Z",
       "ok": false
     },
     {
@@ -7447,7 +6690,7 @@
     {
       "chamberSlug": "pnc-bank",
       "website": "http://www.pnc.com/",
-      "scrapedAt": "2026-08-30T15:23:40.297Z",
+      "scrapedAt": "2026-09-06T13:58:40.284Z",
       "ok": false
     },
     {
@@ -7495,47 +6738,6 @@
         "about",
         "services",
         "team"
-      ]
-    },
-    {
-      "chamberSlug": "pulp-juice-and-smoothie-bar-medina",
-      "website": "http://www.pulpjuiceandsmoothie.com/",
-      "scrapedAt": "2026-04-11T00:41:26.583Z",
-      "title": "Pulp Juice and Smoothie Bar",
-      "metaDescription": "Pulp Juice and Smoothie Bar is your destination for the best smoothies around. We use real fruit and veggies, every smoothie comes with one free enhancer!",
-      "h1": [
-        "Pulp Fan Favs",
-        "Ready to blend your dreams into reality?",
-        "Give Us a Follow!"
-      ],
-      "services": [
-        "The Land Blend",
-        "Nutritional Information",
-        "The Pink Dragon",
-        "Protein Packer",
-        "Blueberry Dream"
-      ],
-      "listItems": [
-        "The Land Blend",
-        "The Pink Dragon",
-        "Protein Packer",
-        "Blueberry Dream",
-        "Pulp Lemonade",
-        "Fresh Squeezed Juice",
-        "Blue Spirulina Bowl",
-        "Dragonfruit Bowl",
-        "The Original Açaí Bowl",
-        "PB&G Bowl",
-        "PB&G Wrap",
-        "Veggie Wrap",
-        "Spicy Turkey Wrap",
-        "Buffalo Chicken Wrap",
-        "Ginger Shot"
-      ],
-      "homeText": "Pulp Fan Favs Smoothies Fresh Juices Bowls Wraps & Salads Wellness Shots Limited Time Only The Land Blend Limited Time Only The Land Blend *Proud partner of the Cleveland Cavaliers* Passionfruit mango juice, strawberries, mangos, orange sherbet, yogurt | soy milk, bananas, blue spirulina sorbet Ohio Locations Only Add one FREE Pulp enhancer with any smoothie! Order Now View All Smoothies Nutritional Information 24oz 400 cal View our nutritional guide for more information. ALLERGEN WARNING: We are not allergy friendly. All food and beverage is prepared in a shared environment which may cause exposure to known food allergens. These may include: peanuts, wheat, soy, dairy and other allergens. If you let us know of an allergy, we will make sure the ingredient of concern is not directly used to make your product. Please be aware however that trace amounts of that ingredient could be present in your product. The Pink Dragon Premium Blend Smoothie The Pink Dragon Dragonfruit, strawberry juice",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
       ]
     },
     {
@@ -7634,7 +6836,7 @@
     {
       "chamberSlug": "paragram-web-design-development",
       "website": "http://paragram.co/",
-      "scrapedAt": "2026-08-30T15:23:14.332Z",
+      "scrapedAt": "2026-09-06T13:58:41.719Z",
       "ok": false
     },
     {
@@ -7691,50 +6893,6 @@
       ]
     },
     {
-      "chamberSlug": "plumbing-911",
-      "website": "http://www.theplumbing911.com/",
-      "scrapedAt": "2026-04-11T00:41:42.309Z",
-      "title": "Residential & Commercial Plumbers in Akron, Cleveland, Canton, Medina, and Ravenna",
-      "metaDescription": "Plumbing 911 provides residential & commercial plumbing services, drain inspections & sewer cleaning in Akron, Cuyahoga Falls, Brunswick, Medina & Cleveland OH.",
-      "h1": [
-        "Welcome to Northeast Ohio's Expert Plumbers",
-        "866-720-0911"
-      ],
-      "services": [
-        "We’re There When You Need Us",
-        "Here’s the 411 on Plumbing 911!",
-        "Providing Residential and Commercial Plumbing Experts for Everyday and Emergency Needs",
-        "Top 10 Reasons to Call Us",
-        "Support Small, Local, Family Owned & Operated",
-        "Let our family be your family plumber!",
-        "Residential Plumbing Service",
-        "LATEST TECHNOLOGY",
-        "PLUMBING",
-        "RESIDENTIAL PLUMBING",
-        "COMMERCIAL PLUMBING",
-        "EMERGENCY PLUMBING"
-      ],
-      "listItems": [
-        "Underground Sewer line repairs and replacements",
-        "Underground Water line repair and replacements",
-        "Underground Gas line repair and replacements",
-        "Monday: Open 24 hours",
-        "Tuesday: Open 24 hours",
-        "Wednesday: Open 24 hours",
-        "Thursday: Open 24 hours",
-        "Friday: Open 24 hours",
-        "Saturday: Open 24 hours",
-        "Sunday: Open 24 hours"
-      ],
-      "homeText": "We’re There When You Need Us Play Video Free Estimates & Upfront Pricing Same Low Rates (No Overtime Fees) Locally Family Owned and Operated Licensed, Insured and Bonded Background Checked Professionals Warranties Given & Honored Safety-First on Every Job Outstanding Customer Service 24/7 Welcome to Northeast Ohio's Expert Plumbers Here’s the 411 on Plumbing 911! Honestly. Integrity. Craftsmanship. After several years of business in our community, we can, with pride, say that the core values from our first day remain the same. Our Plumbing 911 team approaches every day with gratitude; knowing that being allowed into your home is a privilege. Our promise is to send only the very best in professionalism, trade skill and character, as we would never send anyone into your home, that we wouldn’t trust ourselves. Over the years, we have continued to focus on protecting the health of our community and have stringent protocols in place during the pandemic to ensure safety for you and yours. As",
-      "aboutText": "Why Choose Us? Plumbing 911, is a family owned and operated company providing local plumbing services to Medina, Stark, Portage, Summit, Cuyahoga and Lake counties. All our technicians are employed by us (not sub-contracted) to ensure the quality of service and skill you deserve. As a proud local family owned and operated plumbing company, we are excited to announce our continued Better Business Bureau (BBB) approved “A+” rating. Our goal is to provide our clients with complete satisfaction when delivering our services. We intend to do this through sharing our clients’ business values and exceeding their expectations with our performance. What Sets Us Above: We are family owned and operated plumbing company. Compared with other franchise business, we are able to provide much lower prices to our customers, since we are not limited by franchise fees and paybacks. Compared with other family business, we are family operated too, meaning we have direct control in executing and overseeing our business to ensure it continues to meet and exceed our customer standards and ethical business practices. We give free, no obligation estimates. We do not charge trip or travel fees. We do not charg",
-      "pagesScraped": [
-        "home",
-        "services",
-        "about"
-      ]
-    },
-    {
       "chamberSlug": "progressive-molding-technologies-inc",
       "website": "http://www.promoldtech.com/",
       "scrapedAt": "2026-08-30T15:23:51.904Z",
@@ -7763,8 +6921,30 @@
     {
       "chamberSlug": "plastipak-packaging-inc",
       "website": "http://www.plastipak.com/",
-      "scrapedAt": "2026-08-30T15:24:19.749Z",
-      "ok": false
+      "scrapedAt": "2026-09-06T13:58:42.319Z",
+      "title": "Plastipak Packaging, Inc. - Sustainable Packaging Solutions",
+      "metaDescription": "Plastipak pioneers groundbreaking packaging and recycling solutions to drive the success of companies around the world.",
+      "h1": [
+        "We See The Infinite Possibilities In Plastic"
+      ],
+      "services": [
+        "People",
+        "Product",
+        "Planet",
+        "Offering flexibility of form and a lightweight, recyclable alternative to traditional materials."
+      ],
+      "listItems": [
+        "Manage options",
+        "Manage services",
+        "Manage {vendor_count} vendors",
+        "Read more about these purposes",
+        "{title}"
+      ],
+      "homeText": "We See The Infinite Possibilities In Plastic Plastipak creates groundbreaking packaging and recycling solutions to drive the success of our global partners. About Us People Product Planet Our team of problem solvers work to create effective, impactful packaging solutions that benefit the environment, businesses, and consumers. Join Plastipak People Product Planet Whether you’re looking for custom solutions or top-rated packaging, our wide variety of solutions solve everyday problems for businesses and end consumers. See Our Markets People Product Planet When you partner with Plastipak, you’re investing in our collective effort to have a positive impact on the global community. Our Sustainability WE’RE ALWAYS INNOVATING Our wide range of proprietary technologies and products offer innovative, sustainable solutions for your packaging needs. Aerosol Offering flexibility of form and a lightweight, recyclable alternative to traditional materials. Learn More Barrier Ensure full-product prote",
+      "aboutText": "",
+      "pagesScraped": [
+        "home"
+      ]
     },
     {
       "chamberSlug": "project-learn-of-medina-county",
@@ -7814,7 +6994,7 @@
     {
       "chamberSlug": "panera-bread-covelli-enterprises",
       "website": "http://www.catering.panerabread.com/",
-      "scrapedAt": "2026-08-30T15:23:44.453Z",
+      "scrapedAt": "2026-09-06T13:58:19.684Z",
       "ok": false
     },
     {
@@ -7993,13 +7173,13 @@
     {
       "chamberSlug": "profit-performance",
       "website": "http://www.profitperformance.com/",
-      "scrapedAt": "2026-08-30T15:23:48.619Z",
+      "scrapedAt": "2026-09-06T13:58:41.070Z",
       "ok": false
     },
     {
       "chamberSlug": "petal-sweet-cleaning-service",
       "website": "http://www.petalsweetcleaning.com/",
-      "scrapedAt": "2026-08-30T15:23:13.551Z",
+      "scrapedAt": "2026-09-06T13:59:05.471Z",
       "ok": false
     },
     {
@@ -8038,13 +7218,13 @@
     {
       "chamberSlug": "philpott-solutions-group",
       "website": "http://www.philpottrubber.com/",
-      "scrapedAt": "2026-08-30T15:23:56.740Z",
+      "scrapedAt": "2026-09-06T13:59:04.746Z",
       "ok": false
     },
     {
       "chamberSlug": "quaker-steak-and-lube",
       "website": "https://thelube.com/locations/ohio/medina-township/",
-      "scrapedAt": "2026-08-30T15:24:29.244Z",
+      "scrapedAt": "2026-09-06T13:59:06.133Z",
       "ok": false
     },
     {
@@ -8087,7 +7267,7 @@
     {
       "chamberSlug": "rico-manufacturing",
       "website": "http://www.ricoequipment.com/",
-      "scrapedAt": "2026-08-30T15:24:32.166Z",
+      "scrapedAt": "2026-09-06T13:59:07.155Z",
       "ok": false
     },
     {
@@ -8123,19 +7303,19 @@
     {
       "chamberSlug": "redwood-living-inc",
       "website": "http://www.byredwood.com/",
-      "scrapedAt": "2026-08-30T15:25:15.979Z",
+      "scrapedAt": "2026-09-06T13:59:07.931Z",
       "ok": false
     },
     {
       "chamberSlug": "rcd-rv",
       "website": "http://rcdrv.com/",
-      "scrapedAt": "2026-08-30T15:25:12.379Z",
+      "scrapedAt": "2026-09-06T13:59:20.087Z",
       "ok": false
     },
     {
       "chamberSlug": "riztech-llc",
       "website": "http://riztechmedina.com/",
-      "scrapedAt": "2026-08-30T15:24:50.619Z",
+      "scrapedAt": "2026-09-06T13:59:08.604Z",
       "ok": false
     },
     {
@@ -8237,40 +7417,9 @@
       ]
     },
     {
-      "chamberSlug": "remembrance-hospice",
-      "website": "https://www.remembrancehospice.com/",
-      "scrapedAt": "2026-04-11T00:42:54.145Z",
-      "title": "Hospice Provider | Hospice Care | Remembrance Hospice",
-      "metaDescription": "Remembrance Hospice provides compassionate care focused on comfort and dignity, supporting individuals and families during life’s final journey with respect.",
-      "h1": [
-        "Hospice Care in Ohio"
-      ],
-      "services": [
-        "In the Hands of Compassionate Caregivers",
-        "Nursing Visits",
-        "Bereavement Support",
-        "Chaplain Visits",
-        "Social Work Visits",
-        "Welcome to Remembrance Hospice",
-        "Be a Hospice Care Volunteer",
-        "Set an Appointment"
-      ],
-      "listItems": [
-        "Medicare",
-        "Medicaid",
-        "Private Pay",
-        "Most private insurance"
-      ],
-      "homeText": "Welcome to Remembrance Hospice Hospice Care in Ohio As an exceptional hospice provider in Medina, Ohio, we look forward to assisting members of our community on their journey through the last stages of their lives. If you’re looking for a hospice care provider that puts the patient and their needs first, Remembrance Hospice is the place for you.",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
-    },
-    {
       "chamberSlug": "russs-car-care",
       "website": "http://www.www./",
-      "scrapedAt": "2026-08-30T15:25:19.608Z",
+      "scrapedAt": "2026-09-06T13:59:20.699Z",
       "ok": false
     },
     {
@@ -8380,23 +7529,8 @@
     {
       "chamberSlug": "ravago-americas-llc",
       "website": "http://www.ravago.com/",
-      "scrapedAt": "2026-08-30T15:25:17.133Z",
+      "scrapedAt": "2026-09-06T13:59:42.111Z",
       "ok": false
-    },
-    {
-      "chamberSlug": "rowleys-wholesale",
-      "website": "http://www.rowleys.com/",
-      "scrapedAt": "2026-04-11T00:43:07.227Z",
-      "title": "",
-      "metaDescription": "",
-      "h1": [],
-      "services": [],
-      "listItems": [],
-      "homeText": "",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
     },
     {
       "chamberSlug": "revolution-transport-llc",
@@ -8464,13 +7598,13 @@
     {
       "chamberSlug": "raymond-james",
       "website": "http://www.raymondjames.com/clausmeyer",
-      "scrapedAt": "2026-08-30T15:25:11.220Z",
+      "scrapedAt": "2026-09-06T13:59:41.299Z",
       "ok": false
     },
     {
       "chamberSlug": "rubicon-rubber",
       "website": "https://rubiconrubber.com/",
-      "scrapedAt": "2026-08-30T15:24:48.424Z",
+      "scrapedAt": "2026-09-06T13:59:19.204Z",
       "ok": false
     },
     {
@@ -8602,37 +7736,6 @@
       ],
       "homeText": "Your Partners in Hospice and Palliative Care Reserve Care walks alongside patients and families through every stage of care, providing guidance, comfort and expert hospice care, palliative care and grief support across Northern Ohio. Why Families Choose Reserve Care Choosing care is deeply personal. Reserve Care brings nearly 50 years of trusted experience, combining expert medical care with compassionate support for patients and families. We listen first, explain options clearly and honor what matters most at every stage of the journey. Care Catered to Your Needs Reserve Care delivers care wherever you call home. We adapt our services as needs change, focusing on comfort, dignity and personal goals. Our approach ensures care feels consistent, thoughtful and centered on what matters most to each individual. Our Hospice, Palliative Care and Support Services Reserve Care offers a full range of services designed to support comfort, symptom management and emotional well-being throughout se",
       "aboutText": "Your Partners in Hospice and Palliative Care Reserve Care walks alongside patients and families through every stage of care, providing guidance, comfort and expert hospice care, palliative care and grief support across Northern Ohio. Why Families Choose Reserve Care Choosing care is deeply personal. Reserve Care brings nearly 50 years of trusted experience, combining expert medical care with compassionate support for patients and families. We listen first, explain options clearly and honor what matters most at every stage of the journey. Care Catered to Your Needs Reserve Care delivers care wherever you call home. We adapt our services as needs change, focusing on comfort, dignity and personal goals. Our approach ensures care feels consistent, thoughtful and centered on what matters most to each individual. Our Hospice, Palliative Care and Support Services Reserve Care offers a full range of services designed to support comfort, symptom management and emotional well-being throughout serious illness, end of life and grief. Our teams work together to ensure continuity, responsiveness and support for patients and their families. Services remain flexible and evolve as your needs change",
-      "pagesScraped": [
-        "home",
-        "about"
-      ]
-    },
-    {
-      "chamberSlug": "roofsmith-restoration",
-      "website": "https://www.roof-smith.com/",
-      "scrapedAt": "2026-04-11T00:43:21.959Z",
-      "title": "Roofing & Exterior Company/Contractor | Roofsmith Restoration",
-      "metaDescription": "Roofsmith Restoration is your elite roofing, siding, insulation, and gutter company/contractor specializing in roof replacement, restoration, and repair.",
-      "h1": [
-        "Covering You for life"
-      ],
-      "services": [
-        "Your Risk-Free Roofing company",
-        "Get Pre-approved for Low Interest and No Interest Financing Options",
-        "Our Services",
-        "Don’t Know Where to Start?",
-        "How good are your gutters?",
-        "Our Locations",
-        "We Add Value!",
-        "Executive Team",
-        "Sales Leaders",
-        "Office Staff",
-        "Residential Roofing",
-        "Storm Damage"
-      ],
-      "listItems": [],
-      "homeText": "Covering You for life Roofsmith Restoration is your elite gutter and roofing company specializing in roof replacement, restoration and repair. Schedule a Free Inspection Your Risk-Free Roofing company Roofsmith Restoration makes a frustrating and time-intensive process simple by providing homeowners with professional roofing and gutter service from start to finish. Our team has roofing and gutters down to a science, so you don’t have to. We eliminate all the guesswork when choosing the best roofing and gutter materials, guiding you in payment and insurance options, and understanding every step to getting a new look for your property. Simple We aim to redefine what it looks like to work with a roofing and gutters company. Transparent We hold ourselves accountable to get the job done with transparency and integrity. Risk-Free We raise the standards to get you a roof and gutters you’ll never have to worry about again. Our roofs are backed for life. Ask us about our guarantee. Get Pre-appr",
-      "aboutText": "About Us We Add Value! Roofsmith Restoration was born in the summer of 2009, while the recession was on. High-quality tradesmen were sitting home due to the collapse of the home building market here in North East Ohio. The idea of putting these master craftsmen back to work was the brainchild of Mike Farist. He saw the need these men had to apply their years of experience and tradecraft, and the need that homeowners had to find a company that they could trust employing people passionate about performing with excellence. From humble beginnings, Roofsmith has quietly grown into a small but thriving roofing and restoration company, servicing both residential homeowners and commercial property owners. From the very first Amish crew that put on the very first roof; Roofsmith has adhered to a very old, simple, and powerful business model. Treat everyone in the loop of a project as important, and in fact as slightly more important than the company itself. This applies to the customer, the men performing the work, the estimators measuring and figuring out the job, and it even applies to the manufacturers and suppliers of the materials used. By putting all these folks higher than ourselves,",
       "pagesScraped": [
         "home",
         "about"
@@ -8865,34 +7968,6 @@
       ]
     },
     {
-      "chamberSlug": "surgere",
-      "website": "http://www.surgere.com/",
-      "scrapedAt": "2026-04-11T00:43:42.906Z",
-      "title": "Surgere - Supply Chain Asset Management Software, Visibility, Data Accuracy",
-      "metaDescription": "Surgere delivers IoT-based supply chain and data-driven solutions for every industry. Packaging specification management, asset management, production control, and warehouse management.",
-      "h1": [
-        "AI-Powered, Frictionless Supply Chains For Every Industry"
-      ],
-      "services": [
-        "AI-Powered, Frictionless Supply Chains For Every Industry",
-        "Industry Leaders Trust The Power of 99.9%.",
-        "Surgere does it. No one else can.",
-        "Meet Sophia, Your Supply Chain Data Guide",
-        "Unlocking Supply Chain Potential",
-        "Build your Frictionless Supply Chain with us.",
-        "Insights",
-        "Another Supply Chain Intelligence Crisis – How the Iran Conflict is Shaping Supply Chains",
-        "Last-Mile Logistics: How to Reduce Delays and Route Inefficiencies Through Innovation",
-        "How IoT Applications in Sustainable Logistics Improve Visibility and Resource Use"
-      ],
-      "listItems": [],
-      "homeText": "AI-Powered, Frictionless Supply Chains For Every Industry Surgere's superior 99.9% accuracy means your supply chain runs smoother and you focus on the tasks that matter most. Get a Demo Why Surgere? Ask Sophia You’ve got 2 on-time shipments and one manufacturing issue that impact your production. AI-Powered, Frictionless Supply Chains For Every Industry Surgere's superior 99.9% accuracy means your supply chain runs smoother and you focus on the tasks that matter most. Get a Demo Why Surgere? Ask Sophia You need to reallocate 1,300 containers from Plant A to Plant B to have enough containers this week. AI-Powered, Frictionless Supply Chains For Every Industry Surgere's superior 99.9% accuracy means your supply chain runs smoother and you focus on the tasks that matter most. Get a Demo Why Surgere? Ask Sophia Based on current orders, you will have enough potatoes but not enough spices. Industry Leaders Trust The Power of 99.9%. Explore Our Communities Surgere does it. No one else can. Bu",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
-    },
-    {
       "chamberSlug": "spectrum-reach",
       "website": "http://www.spectrumreach.com/",
       "scrapedAt": "2026-08-30T15:25:53.888Z",
@@ -9058,37 +8133,6 @@
       ]
     },
     {
-      "chamberSlug": "south-medina-kindercare",
-      "website": "http://www.kindercare.com/our-centers/medina/oh/300870",
-      "scrapedAt": "2026-04-11T00:43:59.008Z",
-      "title": "Central Medina KinderCare | Daycare, Preschool & Early Education in Medina, OH | KinderCare",
-      "metaDescription": "Central Medina KinderCare in Medina offers child care and early childhood education programs. Contact us to tour our learning center today!",
-      "h1": [
-        "Central Medina KinderCare"
-      ],
-      "services": [
-        "Welcome to Central Medina KinderCare",
-        "Central Medina KinderCare Programs",
-        "Small Group Enrichment Classes",
-        "Family Stories",
-        "Frequently Asked Questions",
-        "About KinderCare",
-        "Meet Our Classroom Heroes",
-        "Teachers You Can Trust",
-        "Classrooms and Learning",
-        "Program Availability",
-        "Meet Carly Hess, Our Center Director",
-        "Infant Programs (6 weeks–1 year)"
-      ],
-      "listItems": [],
-      "homeText": "OverviewProgramsReviewsFAQAbout KinderCareContact This Center All Centers > Daycare In Medina, OH > Central Medina KinderCare Now enrolling for spring and summer 2026. Choose full- or part-time care in a safe, nurturing space where skilled teachers balance care, learning, and growth every day! Address: 190 Northland Dr, Medina, OH 44256 Ages: 6 weeks to 12 years Open hours: 6:30 AM to 6:00 PM, M-F Center Director: Carly Hess Our center is accredited by: NAEYC Tuition & Openings Call (330) 722-1681 Welcome to Central Medina KinderCare Welcome to Central Medina KinderCare located right off of Route 42 in Medina, Ohio! Conveniently located near North Court Street and Medina Square, our nurturing staff and well-structured curriculum will help you and your family transition into our school stress-free. Our center offers interactive learning activities such as dramatic play, child-initiated discovery, and arts and crafts. We build a supportive environment for all children regardless of their",
-      "aboutText": "More than daycare You want to do what’s best for your child by giving them a strong start in their early education. You’re in the right place! We’re the experts in educating and caring for children and families. So, if you’re looking for the best place for your child to learn and grow (when you can’t be there), there is no better choice than KinderCare! Read on to learn more about why KinderCare is more than just daycare and get to know more about our qualified staff; safe, reliable child care centers; and proven programs. Here’s How We’ll Earn Your Confidence: Health and Safety You can breathe easier knowing your child is in a squeaky-clean environment with proven protocols protecting them. A team of pediatric emergency physicians advise us on all the things we do to keep your entire family—and our staff—safer from germs, infections, and even natural disasters. A commitment to nurturing, inspiring, and delighting the children in your care. Look for the WELL Health-Safety Rating™ seal on our center doors—it’s expert validation of our clean and healthy spaces! Convenience and Flexibility Your child care provider is only as helpful as it is convenient! Since our centers are located n",
-      "pagesScraped": [
-        "home",
-        "about"
-      ]
-    },
-    {
       "chamberSlug": "shears-beards-mens-hair-co",
       "website": "http://www.shearsandbeards.com/",
       "scrapedAt": "2026-08-30T15:27:04.565Z",
@@ -9220,87 +8264,6 @@
       ]
     },
     {
-      "chamberSlug": "sharpen-skills-training",
-      "website": "http://www.sharpenskillstraining.com/",
-      "scrapedAt": "2026-04-11T00:44:17.179Z",
-      "title": "Sharpen Skills Training | Personal Trainer | Performance Coach | Fitness Center",
-      "metaDescription": "We offer physical and mental training programs to sharpen athletes of all ages! \n\nWhether you’re looking to start your son or daughter in a sport, cross-train, condition, or sharpen their skills, we will help give your child the edge they need to reach their individual goals!\n\nNo matter their sport,",
-      "h1": [
-        "We offer physical and mental training programs to sharpen athletes of all ages!"
-      ],
-      "services": [
-        "Our Partners",
-        "What separates the good from the great athletes is the ability to be well-rounded.",
-        "Want to rent space in the facility?",
-        "GET IN TOUCH.",
-        "Title",
-        "Fundamentals",
-        "Cross Training",
-        "Skill Building",
-        "Strength Training",
-        "Mental Performance Coaching",
-        "Watch our promo video!"
-      ],
-      "listItems": [
-        "Soccer, Football, Basketball, Baseball, and more ABOUT OUR PROGRAM",
-        "Register for our Summer Sports Camps for Grades K-5. REGISTER FOR SUMMER SPORTS CAMPS",
-        "8 AM–7PM, Monday – Friday",
-        "Saturday and Sunday by Appointment Only"
-      ],
-      "homeText": "Sharpen Skills TrainingChristie Cereshko2025-04-09T14:11:35-04:00 We offer physical and mental training programs to sharpen athletes of all ages!Whether you’re looking to start your son or daughter in a sport, cross-train, condition, or sharpen their skills, we will help give your child the edge they need to reach their individual goals! No matter their sport, we offer the tools and experience to help guide and mold your child into the complete athlete. From individual drills to team-based drills, we provide your child with the coaching to help them sharpen their skills, as well as help guide them on their athletic journey while tracking and measuring their progress along the way. Looking to meet your own fitness goals? Adult conditioning is also available! Our trainers can develop a program for you that will fit busy schedules. Utilize our facility that has over 20,000 sq ft of space to provide weight training, conditioning on turf, and alternative workouts on our basketball/volleybal",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
-    },
-    {
-      "chamberSlug": "storypoint-senior-living",
-      "website": "http://www.storypoint.com/",
-      "scrapedAt": "2026-08-30T15:27:14.456Z",
-      "title": "StoryPoint Group | Shine. Everyday.",
-      "metaDescription": "StoryPoint offers independent, assisted and memory care living options. Our resident focused model allows you to enjoy retirement at every stage of life.",
-      "h1": [
-        "We Can't Wait To Learn What Makes You, You"
-      ],
-      "services": [
-        "Until Then, Tell Us Why You’re Here…",
-        "Start Your Journey",
-        "Journey Guide",
-        "Myself",
-        "Here For Myself",
-        "A Loved One",
-        "Here For A Loved One",
-        "A Career",
-        "What Is Active Adult Living?",
-        "When Is It Time To Consider An Active Adult Community?",
-        "Our Active Adult Communities",
-        "Looking for More Information?"
-      ],
-      "listItems": [
-        "Where to Begin Here For Myself Here For A Loved One Here For A Career",
-        "Here For Myself",
-        "Here For A Loved One",
-        "Here For A Career",
-        "Living Options Active Adult Independent Living Enhanced Living Assisted Living Memory Care",
-        "Active Adult",
-        "Independent Living",
-        "Enhanced Living",
-        "Assisted Living",
-        "Memory Care",
-        "Your Experience Your Experience Things To Do Dining",
-        "Your Experience",
-        "Things To Do",
-        "Dining",
-        "Resources Resource Center Cost Calculator Gazette"
-      ],
-      "homeText": "Back on the Water: Ludington Woods Helps a Resident Sail Again Read More",
-      "aboutText": "",
-      "pagesScraped": [
-        "home",
-        "services"
-      ]
-    },
-    {
       "chamberSlug": "shale-creek-golf-club",
       "website": "http://shalecreekgolfclub.com/",
       "scrapedAt": "2026-08-30T15:26:52.985Z",
@@ -9376,24 +8339,6 @@
       "services": [],
       "listItems": [],
       "homeText": "",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
-    },
-    {
-      "chamberSlug": "sandbar-architecture",
-      "website": "https://www.sandbararc.com/",
-      "scrapedAt": "2026-04-11T00:44:27.402Z",
-      "title": "Sandbar Architecture | Tampa Bay | Florida | Cleveland | Ohio",
-      "metaDescription": "Working collaboratively with our clients to provide architectural design and engineering solutions specifically tailored to your needs.",
-      "h1": [
-        "We Design Buildings",
-        "Collaboratively with our clients"
-      ],
-      "services": [],
-      "listItems": [],
-      "homeText": "We Design BuildingsCollaboratively with our clientsTell us how our architects can assist youCall Now",
       "aboutText": "",
       "pagesScraped": [
         "home"
@@ -9530,14 +8475,30 @@
     {
       "chamberSlug": "shrm-medina-county",
       "website": "http://shrm-medina@ohioshrm.org/",
-      "scrapedAt": "2026-08-30T15:26:52.384Z",
+      "scrapedAt": "2026-09-06T13:59:42.712Z",
       "ok": false
     },
     {
       "chamberSlug": "sincerity-baked-goods-llc",
       "website": "http://www.sinceritybakedgoods.net/",
-      "scrapedAt": "2026-08-30T15:26:51.783Z",
-      "ok": false
+      "scrapedAt": "2026-09-06T13:59:43.313Z",
+      "title": "Parked Domain name on Hostinger DNS system",
+      "metaDescription": "",
+      "h1": [],
+      "services": [
+        "Start your online journey",
+        "Build your website today",
+        "Prompt your website",
+        "Power your projects with VPS",
+        "Find similar domains",
+        "Look professional with email"
+      ],
+      "listItems": [],
+      "homeText": "Registered atIf this is your domain, you can manage it in your Hostinger account. Manage domain Start your online journeyBuild your website todayLaunch your business with WordPress or Website Builder using AI tools, templates, and reliable hosting. Get Web hostingPrompt your websiteChat with AI to build a complete website - with CRM, booking forms, and more. Horizons handles code, design, and copy so you can launch instantly. Get HorizonsPower your projects with VPSGet full control with dedicated resources. Scale apps, websites, and workloads on secure VPS hosting. Get VPS hostingFind similar domainsExplore available alternatives and secure the domain that works best for your brand. Search domainsLook professional with emailCreate a business email that matches your domain. Build your brand with a professional email address like info@example.com. Create email",
+      "aboutText": "",
+      "pagesScraped": [
+        "home"
+      ]
     },
     {
       "chamberSlug": "sam-custer-state-farm",
@@ -9635,24 +8596,6 @@
         "We will help design products to fit your needs or ideas!"
       ],
       "homeText": "Due to the Coronavirus, our Pick-up and Delivery Rules have changed. Pick-up and Delivery are STILL available, but please call 330-725-4151 for more details. Standard Welding & Steel Products Made in Medina, OH-IO Contact Us “You break it, we’ll fix it … You need it, we’ll make it … Can’t find it, we’ll design it!” About Us Standard Welding is a family-owned and operated business located in historic Medina, Ohio for over 80 years. We have done work ranging from lawn mower deck repairs to fabricating structural steel for offices and warehouses. Northeast Ohio’s top welding and steel production team is here to provide you with the maximum quality service. We have highly qualified professionals on staff at Standard Welding and Steel and offer the largest selection of steel products – combined with the best customer service in Medina, Ohio and beyond! Contact Chris, Jack or Dave today to discuss your next project – and let Standard Welding and Steel provide you with the quality you deserve",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
-    },
-    {
-      "chamberSlug": "sweet-and-geeks",
-      "website": "http://www.sweetsandgeeks.com/",
-      "scrapedAt": "2026-04-11T00:44:49.206Z",
-      "title": "Welcome to Sweets and Geeks!",
-      "metaDescription": "The mission of Sweets & Geeks is to be valued as the neighborhood’s favorite candy & game store by bringing the nostalgic candy, soda & pop culture of yesteryear to the customers of today. Inspiring friends & families to spend more time together!",
-      "h1": [],
-      "services": [
-        "My shopping cart",
-        "Customer Reviews"
-      ],
-      "listItems": [],
-      "homeText": "",
       "aboutText": "",
       "pagesScraped": [
         "home"
@@ -9770,34 +8713,6 @@
       ]
     },
     {
-      "chamberSlug": "the-ohio-state-university-extension",
-      "website": "http://medina.osu.edu/",
-      "scrapedAt": "2026-04-11T00:44:57.663Z",
-      "title": "Home | Medina",
-      "metaDescription": "",
-      "h1": [
-        "Home"
-      ],
-      "services": [
-        "Medina County Office",
-        "Hours of Operation",
-        "You are here",
-        "County News",
-        "30th Annual Medina County Earth Day Festival",
-        "SPROUTS 4-H Special Interest Garden Club now enrolling",
-        "Pesticide License Recertification Training-Registration Open",
-        "CFAES News",
-        "About OSU Extension"
-      ],
-      "listItems": [],
-      "homeText": "Ohio State University Extension Medina County Medina County Office 4046 Medina Road Medina, OH 44256 Phone: 330-725-4911330-725-4911 Fax: 330-722-9234@fax.osu.edu piovarchy.3@osu.edu Directions to Medina County Extension Office Hours of Operation Monday-Friday 8:00 a.m. - 12:00 pm and 1:00 p.m - 5:00 p.m. Call the office at 330-725-4911 to schedule an appointment! Home You are hereOSU Extension » Medina County » Home County News 30th Annual Medina County Earth Day FestivalOSU Extension and the Master Gardener Volunteers will be at the Medina County Earth Day event on Saturday, April 25 at Buffalo Creek Retreat Park, 8708 Hubbard Valley Rd., Seville Ohio SPROUTS 4-H Special Interest Garden Club now enrollingSprouts is a special interest (SPIN) club offered through Medina 4-H, designed to introduce youth to gardening. SPIN clubs are short-term, hands-on learning experiences focused on a topic through interactive group activities. Pesticide License Recertification Training-Registration Op",
-      "aboutText": "Welcome to OSU Extension in Medina County! ------------------------------------------------------------- Our office links you to a state and national network of expertise focused on making your life better. Information and programs we offer help people at all stages of life, as well as business owners and community leaders. -------------------------------------------------------------",
-      "pagesScraped": [
-        "home",
-        "about"
-      ]
-    },
-    {
       "chamberSlug": "the-brewer-garrett-company",
       "website": "http://brewer-garrett.com/",
       "scrapedAt": "2026-08-30T15:28:07.550Z",
@@ -9814,37 +8729,6 @@
       "aboutText": "",
       "pagesScraped": [
         "home"
-      ]
-    },
-    {
-      "chamberSlug": "two-men-and-a-truck",
-      "website": "http://twomenandatruck.com/movers/oh/brunswick",
-      "scrapedAt": "2026-04-11T00:45:00.965Z",
-      "title": "Movers in Lorain-Medina, OH | TWO MEN AND A TRUCK",
-      "metaDescription": "Our locally-owned TWO MEN AND A TRUCK Lorain-Medina, OH team is ready to handle your moving needs - whether across town, or across the country.",
-      "h1": [
-        "Your Lorain-Medina Movers"
-      ],
-      "services": [
-        "Best in stress-free service",
-        "Lorain-Medina Service Areas",
-        "Meet Our Team",
-        "Lorain-Medina Services",
-        "Local moving",
-        "Long-distance moving",
-        "Packing services",
-        "Business services",
-        "10 Million Moves!",
-        "Our mission",
-        "Core Purpose",
-        "Core Values"
-      ],
-      "listItems": [],
-      "homeText": "Your Lorain-Medina Movers Welcome to TWO MEN AND A TRUCK® Lorain-Medina — where moving isn’t just our job, it’s our passion. From the moment we pick up the phone to the final handshake after your last box is in place, we’re here to make sure your move is smooth, simple, and surprisingly enjoyable.What began in the early 1980s with nothing but a dream, and literally, two men, and one pickup truck. Through hard work and an uncompromising commitment to excellence, we have grown into one of the largest moving companies in North America. Our Lorain-Medina locations are proud to be a part of that legacy of care and excellence. Backed by a company that has helped millions move across North America, our local team brings professionalism, positivity, and personalized service to every move we make.Best in stress-free serviceOur movers undergo rigorous training, not just in lifting and logistics, but in customer service, communication, and problem-solving. We believe a great move starts with a gr",
-      "aboutText": "About Us It all started as an after-school business for two high school boys. With a hand-drawn logo, advertisement in a local paper, and advertising fund stashed in a ceramic dish, the endeavor was never expected to be more than a local moving company.Now, more than 40 years later, TWO MEN AND A TRUCK has grown both domestically and internationally, with more than 430 locations worldwide spanning across 47 states, as well as Canada, Ireland, and the United Kingdom. 10 Million Moves! TWO MEN AND A TRUCK is proud to announce we recently completed our 10 millionth move as a company! The family-first atmosphere instilled by TWO MEN AND A TRUCK® Founder Mary Ellen Sheets has driven this brand to unimaginable heights. Without this mindset and the hard-working movers, drivers, customer service representatives, managers, franchisees, and corporate team, this would not have been possible!Thank you to the everyone who has played a part in helping us move forward so we can help you move forward — we’re already looking forward to the next 10 million moves! We’re proud of our ongoing growth dating back to 2009 and the completion of more than 10 million moves and counting, along with the annual",
-      "pagesScraped": [
-        "home",
-        "about"
       ]
     },
     {
@@ -9873,8 +8757,39 @@
     {
       "chamberSlug": "trucoat-painting-plus",
       "website": "http://www.trucoatpaintingplus.com/",
-      "scrapedAt": "2026-08-30T15:27:40.301Z",
-      "ok": false
+      "scrapedAt": "2026-09-06T13:59:46.139Z",
+      "title": "Best Painters In Cleveland Ohio | Trucoat Painting Plus",
+      "metaDescription": "Looking for professional painters in Cleveland Ohio? Get top-quality interior, exterior and cabinet painting services from experts in Cleveland Ohio.",
+      "h1": [
+        "Professional painters in Cleveland, Ohio"
+      ],
+      "services": [
+        "Top rated painting company",
+        "best painters in Cleveland, Ohio",
+        "About Trucoat painting Plus",
+        "Chamber Memberships",
+        "services we offer",
+        "Our 3-Step Painting Process",
+        "our edge over the options",
+        "Words From Our Valued Clients",
+        "Request A Free Quote",
+        "residential Painting",
+        "Cabinet Painting",
+        "Exterior Painting"
+      ],
+      "listItems": [
+        "3rd Gen Painter",
+        "No Upfront Deposit",
+        "Background-Checked",
+        "Lakewood Chamber of Commerce (Mini Membership: 638986015966919637)",
+        "Lorain County Chamber of Commerce",
+        "Westshore Chamber of Commerce"
+      ],
+      "homeText": "Interior & Cabinet Painting Experts in Celeveland | Trucoat Painting Plus Professional painters in Cleveland, Ohio 3rd Gen Painter No Upfront Deposit Background-Checked Reliable house painter in Cleveland, OH offering professional interior, exterior, and cabinet painting with quality results that last. Free Estimate Call Now Request A Free Quote Top rated painting company With 930+ Reviews on Google, Facebook, and HomeAdvisor 5.0 ⭐⭐⭐⭐⭐Read All Reviews 5.0 ⭐⭐⭐⭐⭐Read All Reviews 5.0 ⭐⭐⭐⭐⭐Read All Reviews Jasia Geiger 5.0 July 20, 2026 Amazing transformations and very respectful workers. Alyssa Cole 5.0 July 19, 2026 Great company had room of my house painted and the basement done in Elyria excellent work would highly recommend Kamani 5.0 July 19, 2026 The company painted cabinets and interior of my kitchen in North ridgeville did an amazing job Patti Thum 5.0 July 18, 2026 I’m very happy with the job Truecoat Painting did painting the exterior of my house. It was a large job which they k",
+      "aboutText": "",
+      "pagesScraped": [
+        "home"
+      ]
     },
     {
       "chamberSlug": "the-society",
@@ -9997,33 +8912,6 @@
       ]
     },
     {
-      "chamberSlug": "trailer-one-inc",
-      "website": "http://www.trailerone.com/",
-      "scrapedAt": "2026-04-11T00:45:15.046Z",
-      "title": "Trailer One",
-      "metaDescription": "",
-      "h1": [],
-      "services": [
-        "Welcome To TRAILER ONE, INC.",
-        "Welcome to TRAILER ONE",
-        "Check Out Our",
-        "New Inventory",
-        "See Our Used Inventory",
-        "Filter by",
-        "Reasons to Choose Us",
-        "We're Ready To Assist You Anytime"
-      ],
-      "listItems": [
-        "USED",
-        "SELL"
-      ],
-      "homeText": "Skip to content Offering Ready to Roll Trailers and ContainersWelcome To TRAILER ONE, INC. Inventory Empowering You with Trusted Partnership +Years Of ExperienceKHappy ClientsKTrailers Sold Previous Next We Buy And SellWelcome to TRAILER ONETrailer One, Inc. is a New and Used semi trailer dealership. We specialize in Dry Vans, Flatbeds, Drop Decks, Reefers, and Specialty Trailers. Trailer One, Inc. can help you find the trailer that fits your needs, even if it is not in our current inventory we will do the work to find it for you! NewUSEDSELL We have been doing business with Trailer one for about eight years now and we don't have a single complaint, furthermore I feel like Ken and Mike have always went the extra mile to help us. I do recommend Trailer One to anybody looking to buy trailers.ZNZ TruckingOwner Hands down the best trailer dealer in the entire state of Ohio.Nash Dique Awesome team to handle your trailer needs. From Ken Smith to Brad to Victor. I feel like I am in good hands",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
-    },
-    {
       "chamberSlug": "transfer-title-agency-inc",
       "website": "http://www.transfertitle.com/",
       "scrapedAt": "2026-08-30T15:27:37.771Z",
@@ -10066,8 +8954,24 @@
     {
       "chamberSlug": "the-perkins-insurance-agency-inc",
       "website": "http://www.perkinsinsurance.com/",
-      "scrapedAt": "2026-08-30T15:27:47.483Z",
-      "ok": false
+      "scrapedAt": "2026-09-06T13:59:49.353Z",
+      "title": "The Perkins Insurance Agency Inc Home -",
+      "metaDescription": "As a third-generation, family-owned insurance agency, we are your trusted local source for your insurance needs.",
+      "h1": [
+        "Insurance solutions and services since 1956"
+      ],
+      "services": [
+        "Personal",
+        "Business",
+        "Life",
+        "How can we help you?"
+      ],
+      "listItems": [],
+      "homeText": "PersonalWe are happy to assist you in selecting the best coverage.Get a QuoteBusinessWe offer free quotes and dedicated personal service.Get a QuoteLife We get you the right coverage for the right price.Get a QuoteInsurance solutions and services since 1956What if you could get insurance from a nationally recognized company backed by local, personalized service? With Perkins Insurance, you can. That’s the power of being an independent insurance agency, we can partner with multiple insurance companies to provide better, affordable coverage that truly fits your needs. When it comes down to it, no matter what type of insurance you have, it’s nothing without the right level of service. Our insurance professionals are dedicated to providing the kind of personalized service that you can only get from a local agency. Perkins Insurance has been delivering friendly, personalized service and affordable insurance solutions across Northeast Ohio since 1956. As a third-generation, family-owned insu",
+      "aboutText": "",
+      "pagesScraped": [
+        "home"
+      ]
     },
     {
       "chamberSlug": "titan-construction-and-repair",
@@ -10171,34 +9075,6 @@
       ]
     },
     {
-      "chamberSlug": "the-oaks-lakeside",
-      "website": "http://www.theoakslakeside.com/",
-      "scrapedAt": "2026-04-11T00:45:24.492Z",
-      "title": "The Oaks Lakeside Restaurant, Wedding and Event Venue",
-      "metaDescription": "1800s build estate turned restaurant and event venue on the shores of Chippewa Lake, Ohio.",
-      "h1": [
-        "The Oaks Lakeside",
-        "Restaurant and Wedding Venue",
-        "Reservations"
-      ],
-      "services": [
-        "Lakeside Weddings & Dining at an Historic Estate",
-        "About Us.",
-        "A beautiful 1800’s estate built on the shores of Chippewa Lake!",
-        "UPCOMING EVENTS",
-        "Restaurant Dining",
-        "Weddings and Events"
-      ],
-      "listItems": [],
-      "homeText": "The Oaks LakesideRestaurant and Wedding Venue A beautiful 1800’s estate built on the shores of Chippewa Lake!Lakeside Weddings & Dining at an Historic Estate UPCOMING EVENTS Credit Card Surcharge Policy - Beginning April 1, 2026 If you use a credit card, we will charge an additional 3% fee to help offset processing costs. This amount is not more than what we pay in fees. Wine Tasting Queen of Hearts Game Drawing Restaurant DiningDelicious dining with a view! DINNER MENU BRUNCH MENU Weddings and EventsCelebrate your dream Wedding by the Lake! Schedule a Tour Let us make all your wedding dreams come true! Reservations Book a Table",
-      "aboutText": "About Us. In the late 1800's, the Townsend family came to Chippewa Lake and created the estate that is now The Oaks Lakeside Restaurant. Five prominent oaks that stood in a semi-circle on the front lawn gave the estate its original name: Five Oaks. Oscar Townsend added a barn, a carriage house, a boathouse and formal gardens. He designed the unique portico with a latticed roof and thirty-six Tuscan columns leading to it. One of Oscar's passions was collecting stones from around the world. He used them to create the two interior fireplaces still enjoyed by the patrons of The Oaks Lakeside on a cold winter evening. By the early 1900's, the estate had become a standard for hospitality and gracious living in Medina County, and played host to the rich and famous of the day. The estate operated as a dining establishment and bar when it was purchased in 1961 by Don Casper and Al Hitchins. The two continued as joint owners until Al's death in 1986. Don remained the sole owner until his passing in 2003. In the summer of 2004, Johnny & Audrey Pollizi partnered with Don's three nieces; Bonnie Casper Drushal, Cheryl Casper Iaquinta and Holli Stille Boylan. Johnny and Audrey spearheaded our ong",
-      "pagesScraped": [
-        "home",
-        "team",
-        "about"
-      ]
-    },
-    {
       "chamberSlug": "tire-source-medina",
       "website": "http://www.yourtiresource.com/",
       "scrapedAt": "2026-08-30T15:27:56.100Z",
@@ -10212,33 +9088,6 @@
       "pagesScraped": [
         "home",
         "about"
-      ]
-    },
-    {
-      "chamberSlug": "tag-studio",
-      "website": "http://tagvoiceover.com/",
-      "scrapedAt": "2026-04-11T00:45:29.252Z",
-      "title": "Voiceover | Tania Grant Voiceover",
-      "metaDescription": "Tania Grant / TAG Studio provides voiceover talent for Audiobook Narration, Commercial Recordings, Meditations, eLearning Content and Outbound Messaging for Businesses",
-      "h1": [],
-      "services": [
-        "Voiceover Services You Can Rely On",
-        "Medical / Healthcare Narration",
-        "Commercial/ PSAs",
-        "Voice Recordings",
-        "eLearning",
-        "Healthcare/Medical Demo",
-        "Video Narration",
-        "Commercial Demo",
-        "Automotive",
-        "Political Demo",
-        "Audiobook"
-      ],
-      "listItems": [],
-      "homeText": "Products and ServicesHealthcare/Medical DemoVideo NarrationCommercial DemoHealthcare / Medical00:00 / 01:43AutomotiveAutomotive00:00 / 00:23Political DemoPolitical Demo 202600:00 / 02:03Audiobook Children's Audiobook00:00 / 01:31Audio SamplesVoiceover Services You Can Rely OnTania Grant VO will provide audio recording, editing, and production services to meet your individual needs. Fast turnaround and quality production guaranteed.​ Rates will be quoted according to project requirements and confirmed prior to booking. Let's Talk VO!SocialMember, National Association of Voice Actors Member, Society of Voice Arts and Sciences Member, Greater Cleveland Film Commission Member, Women in Film & Television",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
       ]
     },
     {
@@ -10422,7 +9271,7 @@
     {
       "chamberSlug": "the-grounds-guys-of-medina",
       "website": "http://www.groundsguys.com/medina",
-      "scrapedAt": "2026-08-30T15:27:46.365Z",
+      "scrapedAt": "2026-09-06T13:59:45.539Z",
       "ok": false
     },
     {
@@ -10458,54 +9307,21 @@
       ]
     },
     {
-      "chamberSlug": "the-chodaczek-team-at-lofaso-real-estate-services",
-      "website": "https://quinnjohnston.lofasorealestate.com/",
-      "scrapedAt": "2026-04-11T00:45:46.598Z",
-      "ok": false
-    },
-    {
       "chamberSlug": "us-bank",
       "website": "https://www.usbank.com/locations/ohio/medina/3705a-medina-rd-bank-atm/",
-      "scrapedAt": "2026-08-30T15:28:17.828Z",
+      "scrapedAt": "2026-09-06T13:59:53.014Z",
       "ok": false
     },
     {
       "chamberSlug": "union-home-mortgage",
       "website": "http://www.firsttimeohiobuyer.com/",
-      "scrapedAt": "2026-08-30T15:28:15.578Z",
+      "scrapedAt": "2026-09-06T13:59:51.387Z",
       "ok": false
-    },
-    {
-      "chamberSlug": "unisand-incorporated",
-      "website": "http://www.unisand.com/",
-      "scrapedAt": "2026-04-11T00:45:49.491Z",
-      "title": "Coated Abrasives | Non-Woven Abrasives | Z-Wheels | Premium Abrasive Products | Unisand Incorporated",
-      "metaDescription": "When it comes to premium abrasive products, Unisand is your number one source. Our products are used in a variety of industries, from woodworking and metalworking to rubber and fiberglass.",
-      "h1": [
-        "Call Today:",
-        "800.875.2065"
-      ],
-      "services": [
-        "Manufacturers of Premium Abrasive Products",
-        "Featured Products",
-        "Unisand In Action",
-        "Latest News"
-      ],
-      "listItems": [
-        "Home",
-        "Our Products",
-        "Contact Us"
-      ],
-      "homeText": "UNISAND: YOUR #1 SOURCE FOR PREMIUM ABRASIVE PRODUCTS SERVING MULTIPLE INDUSTRIES METAL. WOOD. GLASS. PAPER. A SPECIAL KIND OF COMPANY QUALITY. FAST DELIVERY. PERSONALIZED SERVICE. UNISAND: YOUR #1 SOURCE FOR PREMIUM ABRASIVE PRODUCTS Coated Abrasives Non-Woven Abrasives Z-Wheels Floor Sanding Specialties Accessories Manufacturers of Premium Abrasive Products When it comes to premium abrasive products, Unisand is your number one source. Our products are used in a variety of industries, from woodworking and metalworking to rubber and fiberglass. With our state-of-the-art manufacturing equipment, we guarantee the fastest turnaround in the industry – even on custom orders. From coated and nonwoven belts and discs to our trademarked Z-WHEELS, Unisand has continually provided it’s customers with a “Big Company” product line with the customer service of a small family business. Featured Products Karbosan GriteX CER12 LEARN MORE Unisand In Action Unisand Corporate Video 2025 LEARN MORE Latest",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
     },
     {
       "chamberSlug": "usa-mobile-drug-testing",
       "website": "http://www.usamdt.com/northeast-ohio",
-      "scrapedAt": "2026-08-30T15:28:13.596Z",
+      "scrapedAt": "2026-09-06T13:59:50.703Z",
       "ok": false
     },
     {
@@ -10565,53 +9381,14 @@
     {
       "chamberSlug": "visage-surgical-institute",
       "website": "http://www.visagefacemd.com/",
-      "scrapedAt": "2026-08-30T15:28:22.331Z",
+      "scrapedAt": "2026-09-06T13:59:53.798Z",
       "ok": false
     },
     {
       "chamberSlug": "vcs-salon-spa",
       "website": "http://www.vcssalon.com/",
-      "scrapedAt": "2026-08-30T15:28:24.904Z",
+      "scrapedAt": "2026-09-06T13:59:54.753Z",
       "ok": false
-    },
-    {
-      "chamberSlug": "vensure-employer-services",
-      "website": "https://www.vensure.com/",
-      "scrapedAt": "2026-04-11T00:45:58.338Z",
-      "title": "VensureHR is HR | Payroll | Employee Benefits | Hiring",
-      "metaDescription": "No matter what size your business is, VensureHR offers comprehensive HR and technology services such as payroll, employee benefits, compliance, and recruiting.",
-      "h1": [
-        "Realizing Your Business Vision Just Got Easier"
-      ],
-      "services": [
-        "Uncover the HR Complexities Impacting Your Success.",
-        "Understanding Our Process",
-        "Ready to modernize and scale your business?",
-        "Your Gateway to Top-Tier Benefits",
-        "Helping Businesses Thrive",
-        "Our Vensure Values",
-        "Awards",
-        "Curious about our free custom HR diagnostic?",
-        "HR Solutions That Power Your Business’s Success",
-        "Benefits",
-        "Compliance and Risk Exposure",
-        "Business Processes"
-      ],
-      "listItems": [
-        "Consolidate payroll, hiring, HR, workers’ compensation, EPLI, cyber insurance, and more.",
-        "Create a safe workplace with guidance from our risk management team.",
-        "Keep employees happy with richer benefits at a fair rate.",
-        "Gain access to better group health insurance, retirement, and commuter benefits.",
-        "Review and mitigate compliance concerns.",
-        "Review payroll administration and payroll tax filing procedures.",
-        "Uncover areas of opportunity to improve or create streamlined HR processes."
-      ],
-      "homeText": "Skip to content Realizing Your Business Vision Just Got Easier We combine top-tier services with cutting-edge technology to deliver world-class HR processes and systems to free up your time to pursue your business vision. Request a Call Human Resources Payroll Administration Employee Benefits Risk and Compliance Talent Recruiting Uncover the HR Complexities Impacting Your Success.We understand the challenges that business owners face in effectively managing and sustaining a resilient workforce. To solve these challenges, we offer a customized assessment of your current HR systems and processes that identifies critical gaps that may impact your clients, profits, and overall well-being. The findings not only pinpoint alignment opportunities to meet your future goals, but they also help you navigate practical steps that are essential to drive your business toward success. And the best part? We offer this service free of charge. Understanding Our Process HR Solutions That Power Your Busine",
-      "aboutText": "Skip to content The Better Way of All Things HR Small and medium-sized businesses (SMBs) impact economic growth by creating job opportunities through innovation. While human resources supports day-to-day operations, wouldn’t you rather focus on the work that strengthens and grows your business? Start a conversation with us OUR MISSION is to empower entrepreneurs to build stronger companies by providing innovative solutions and unparalleled service. Helping Businesses Thrive Founded in 2004, VensureHR is a leading provider of HR services and technology for small and mid-sized businesses. Headquartered in Chandler, Arizona, our solutions simplify administrative tasks, minimize risks, ensure compliance, and streamline HR, payroll, and benefits processes. We use advanced technology and provide personalized services that have benefited over 526,000 worksite employees in different industries, processing more than $18.6 billion in payroll annually.No matter what stage of business you are in, we provide custom solutions to meet your unique requirements. Whether you need assistance with startup efficiencies, PEO services to manage HR and payroll, administrative services as you grow, EOR ser",
-      "pagesScraped": [
-        "home",
-        "about"
-      ]
     },
     {
       "chamberSlug": "vans-auto-service-tire-pros",
@@ -10659,21 +9436,6 @@
         "home",
         "services",
         "about"
-      ]
-    },
-    {
-      "chamberSlug": "vib-iso-llc",
-      "website": "https://www.vibiso.com/",
-      "scrapedAt": "2026-04-11T00:46:02.640Z",
-      "title": "HVAC Noise Solutions - VIB ISO",
-      "metaDescription": "We solve HVAC noise issues with innovative products and expert solutions. Our quality results deliver fast lead times. Contact today.",
-      "h1": [],
-      "services": [],
-      "listItems": [],
-      "homeText": "",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
       ]
     },
     {
@@ -10812,63 +9574,6 @@
       ]
     },
     {
-      "chamberSlug": "welser-profile",
-      "website": "https://www.welser.com/en",
-      "scrapedAt": "2026-04-11T00:46:10.767Z",
-      "title": "Custom roll formed steel & stainless steel profiles | Welser Profile",
-      "metaDescription": "Your manufacturer for roll formed steel & stainless steel profiles / sections. ➥ Custom designs & cost-effective production ☝ Click here!",
-      "h1": [
-        "Steel & stainless steel profiles"
-      ],
-      "services": [
-        "We bring substantial added value",
-        "The future of steel profiles and tubes is now here",
-        "Competent",
-        "Core competence roll forming. Extensive downstream processing.",
-        "NEWS",
-        "Welser Profile Receives EcoVadis Silver Medal",
-        "KR Ing. Wolfgang Welser Has Passed Away"
-      ],
-      "listItems": [],
-      "homeText": "Roll formed Steel ProfilesCustom solutions with consistently tight tolerances at an affordable price Find out more. The easiest way to a profile solution. Search directly for your topic. Steel & stainless steel profiles The future of steel profiles and tubes is now here A pioneer for 11 generations, state-of-the-art technology, over 2,400 enthusiastic people, 25,000 profile cross-sections to date and the willingness to expand the limits of what is possible together with our customers – that’s our profile. Being a global manufacturer in the development and production of roll formed metal sections and assemblies, we are your partner when it comes to converting complex individual requirements into economical solutions. We bring substantial added value This is why you should contact Welser Engineering Production Logistics Competent Core competence roll forming. Extensive downstream processing.You’re on the right track with Welser Profile. We’re happy to offer our experience even as early a",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
-    },
-    {
-      "chamberSlug": "wfg-national-title-insurance-company",
-      "website": "https://www.wfgtitle.com/",
-      "scrapedAt": "2026-04-11T00:46:12.533Z",
-      "title": "WFG National Title Title Insurance Company",
-      "metaDescription": "WFG National Title Insurance Company (WFG), a Williston Financial Group company, is a leading provider of title insurance and real estate settlement services for commercial and residential transactions nationwide. WFG is one of just six truly national title underwriters, achieving a national footpri",
-      "h1": [],
-      "services": [
-        "How WFG is built for you",
-        "Keeping you in the know"
-      ],
-      "listItems": [
-        "4/8 As Seen in The Title Report: The AI-Enabled...",
-        "4/7 WFG NATIONAL TITLE STRENGTHENS COLORADO LEADERSHIP WITH TWO...",
-        "3/24 SAFE Tipsheet – Digital Spring Cleaning",
-        "3/9 WFG’s Industry Perspective Q1 2026: Patrick Stone and...",
-        "3/5 Volly’s Katharine Loveland Explains the Impact of Trigger...",
-        "2/25 October Research Releases 2026 State of the Industry...",
-        "2/24 WFG NATIONAL TITLE EVP SHAUN GONZALES TAKES THE...",
-        "2/23 How WFG’s People-First Culture Drove Exceptional Customer Outcomes...",
-        "2/13 Williston Financial Group’s DecisionPoint® Named a 2026 Progress...",
-        "2/13 Volly Recognized as a 2026 Progress in Lending...",
-        "2/10 WFG LAUNCHES COMPREHENSIVE FINCEN COMPLIANCE SOLUTIONS IN SUPPORT...",
-        "2/10 WFG survey shows company employees in large part..."
-      ],
-      "homeText": "WHY WE’RE DIFFERENT Learn more about our Cornerstones HOW WE PROVE IT See what our customers say | 2025 Service Metrics THE TOOLS YOU NEED Learn more about rReal-time access to your closing info THE TOOLS YOU NEED Download Today! HOW WE PROTECT YOU How we safeguard your investment PUTTING YOU FIRST Learn how WFG is reimagining the customer experience WFG CELEBRATES Learn More Get the latest on your closing – securely, in real-time, from any device. Find out more WFG has National Reach with Local Service. Find an Office YOUR BEST INTEREST FIRSTHow WFG is built for youNo matter what side of the transaction you’re on, the ins and outs of real estate can be stressful. But we knew from the start that WFG could make things easier for everyone. Our company is built on five simple cornerstones to serve you better. EVERYTHING WE DO IS BECAUSE OF YOU TAKE TIME AND COST OUT OF REAL ESTATE TRANSACTIONS COMMUNICATE COLLABORATE CO-EXIST OBSESS ABOUT SERVICE REIMAGINE THE CUSTOMER EXPERIENCE We obses",
-      "aboutText": "",
-      "pagesScraped": [
-        "home",
-        "team"
-      ]
-    },
-    {
       "chamberSlug": "waite-funeral-homes",
       "website": "http://www.waitefuneralhome.com/",
       "scrapedAt": "2026-08-30T15:29:00.332Z",
@@ -10968,7 +9673,7 @@
     {
       "chamberSlug": "wqmx-radio",
       "website": "http://www.wqmx.com/",
-      "scrapedAt": "2026-08-30T15:28:46.278Z",
+      "scrapedAt": "2026-09-06T13:59:55.456Z",
       "ok": false
     },
     {
@@ -11206,12 +9911,6 @@
       ]
     },
     {
-      "chamberSlug": "warehouse-gym",
-      "website": "http://warehousegymmedina.com/",
-      "scrapedAt": "2026-04-11T00:46:43.811Z",
-      "ok": false
-    },
-    {
       "chamberSlug": "wesbanco",
       "website": "http://www.wesbanco.com/",
       "scrapedAt": "2026-08-30T15:28:59.123Z",
@@ -11316,7 +10015,7 @@
     {
       "chamberSlug": "zufall-financial-services",
       "website": "http://www.zufallfinancialservices.com/",
-      "scrapedAt": "2026-08-30T15:29:36.969Z",
+      "scrapedAt": "2026-09-06T14:00:16.058Z",
       "ok": false
     },
     {
@@ -11629,39 +10328,6 @@
       ]
     },
     {
-      "chamberSlug": "traditions-of-medina",
-      "website": "https://www.brookdale.com/en/communities/brookdale-medina-south.html",
-      "scrapedAt": "2026-05-31T12:11:02.732Z",
-      "title": "Find a Community",
-      "metaDescription": "Find a Community",
-      "h1": [
-        "Find A Location"
-      ],
-      "services": [],
-      "listItems": [
-        "Emergency Alert System",
-        "Pet Friendly",
-        "Fitness Center/ Therapy Room",
-        "Transportation",
-        "Library",
-        "Concierge Service",
-        "Outings",
-        "Café/Bistro",
-        "Beauty/Barber Shop",
-        "Courtyard and Garden",
-        "Gardening/Greenhouse",
-        "Porch",
-        "Game Room",
-        "Private Dining Room",
-        "Arts & Crafts"
-      ],
-      "homeText": "Find A Location SHOW ONLY: Locations Articles Blogs Stories All Levels of Care Assisted Living Continuing Care Retirement Community Independent Living Memory Care Skilled Nursing Brookdale at Home Filter by: Amenities Select up to five. Emergency Alert System Pet Friendly Fitness Center/ Therapy Room Transportation Library Concierge Service Outings Café/Bistro Beauty/Barber Shop Courtyard and Garden Gardening/Greenhouse Porch Game Room Private Dining Room Arts & Crafts Walking Paths Pool Theater Housekeeping Laundry Clear Apply Within: 250 miles 200 miles 150 miles 100 miles 50 miles 25 miles Loading Results",
-      "aboutText": "",
-      "pagesScraped": [
-        "home"
-      ]
-    },
-    {
       "chamberSlug": "thrive-foot-and-ankle",
       "website": "http://www.thrivefootankle.com/",
       "scrapedAt": "2026-08-30T15:27:48.083Z",
@@ -11724,45 +10390,6 @@
       "aboutText": "",
       "pagesScraped": [
         "home"
-      ]
-    },
-    {
-      "chamberSlug": "vensure-employer-solutions",
-      "website": "https://www.vensure.com/",
-      "scrapedAt": "2026-05-31T12:11:11.063Z",
-      "title": "VensureHR is HR | Payroll | Employee Benefits | Hiring",
-      "metaDescription": "No matter what size your business is, VensureHR offers comprehensive HR and technology services such as payroll, employee benefits, compliance, and recruiting.",
-      "h1": [
-        "Realizing Your Business Vision Just Got Easier"
-      ],
-      "services": [
-        "Uncover the HR Complexities Impacting Your Success.",
-        "Understanding Our Process",
-        "Ready to modernize and scale your business?",
-        "Your Gateway to Top-Tier Benefits",
-        "Helping Businesses Thrive",
-        "Our Vensure Values",
-        "Awards",
-        "SERVICES",
-        "COMPANY",
-        "CHAT WITH US",
-        "HR Solutions That Power Your Business’s Success",
-        "Benefits"
-      ],
-      "listItems": [
-        "Consolidate payroll, hiring, HR, workers’ compensation, EPLI, cyber insurance, and more.",
-        "Create a safe workplace with guidance from our risk management team.",
-        "Keep employees happy with richer benefits at a fair rate.",
-        "Gain access to better group health insurance, retirement, and commuter benefits.",
-        "Review and mitigate compliance concerns.",
-        "Review payroll administration and payroll tax filing procedures.",
-        "Uncover areas of opportunity to improve or create streamlined HR processes."
-      ],
-      "homeText": "",
-      "aboutText": "",
-      "pagesScraped": [
-        "home",
-        "about"
       ]
     },
     {
@@ -12143,7 +10770,7 @@
     {
       "chamberSlug": "the-villas-at-hidden-lakes",
       "website": "http://www.livehiddenlakes.com/",
-      "scrapedAt": "2026-08-30T15:27:26.347Z",
+      "scrapedAt": "2026-09-06T13:59:44.691Z",
       "ok": false
     },
     {
@@ -12228,7 +10855,7 @@
     {
       "chamberSlug": "marketing-directions",
       "website": "http://marketingdirectionsinc.com/",
-      "scrapedAt": "2026-08-02T11:59:35.017Z",
+      "scrapedAt": "2026-09-06T13:57:42.071Z",
       "title": "Marketing Agency in Medina Ohio | Marketing Directions, Inc.",
       "metaDescription": "Marketing Directions is an Ohio design and marketing agency in Medina, helping businesses with websites, SEO, branding, advertising, and design.",
       "h1": [
@@ -12242,8 +10869,8 @@
         "What Do We Create?"
       ],
       "listItems": [],
-      "homeText": "homeAdmin2026-05-06T16:50:01+00:00 LEADING YOU TO SUCCESS WITH MARKETING, DESIGN & advertising IN MEDINA, OHIO Marketing Directions is a full-service design and marketing agency located in historic Medina, Ohio. For more than 40 years, we have helped businesses grow through branding, advertising, creative design, and superior marketing solutions. We bring strategy, creativity, experience, and attention to detail together to help brands move in the right direction. “Helping Brands Go Places”. LEADING YOU TO SUCCESS WITH DIGITAL MARKETING & ADVERTISING IN MEDINA, OHIOWe are a small but mighty Digital Marketing & IT Services Agency located in historic Medina, Ohio. Our outstanding work ethic, creativity and attention to detail means we deliver results in a timely manner with superb quality and incredible value. Marketing Directions offers everything a brand needs to go in the right direction as today’s marketplace means having a partner that can adapt to change faster than ever. For more ",
-      "aboutText": "About UsAdmin2026-05-06T13:59:49+00:00 What Do We Provide? Art direction, graphic design and illustration Branding advice COMPASS™ (Our situation assessment process) Comprehensive I.T. services, support and security Copywriting, editing and proofreading Email management Marketing plan development Marketing services, support and consultation Media buying Online sales promotion development and management (rebates/incentives/fulfillment) Photography (in-house studio) Public relations SEO and custom analytic reporting Social media management and content creation Website analytics Website design, maintenance and security What Do We Create? Annual reports Brand identity graphics and themes Collateral Email marketing items Logo design Corporate identity Marketing/Sales Online advertising Outdoor advertising Packaging Presentations (large- and small-scale) Print advertising Retail point-of-sale items Signage Tradeshow booth design Training tools Video scripting and supervision Websites Want to talk with someone? Learn more? Contact Us",
+      "homeText": "homeChris Raber2026-08-07T16:37:21+00:00 LEADING YOU TO SUCCESS WITH MARKETING, DESIGN & advertising IN MEDINA, OHIO Marketing Directions is a full-service design and marketing agency located in historic Medina, Ohio. For more than 40 years, we have helped businesses grow through branding, advertising, creative design, and superior marketing solutions. We bring strategy, creativity, experience, and attention to detail together to help brands move in the right direction. “Helping Brands Go Places”. LEADING YOU TO SUCCESS WITH DIGITAL MARKETING & ADVERTISING IN MEDINA, OHIOWe are a small but mighty Digital Marketing & IT Services Agency located in historic Medina, Ohio. Our outstanding work ethic, creativity and attention to detail means we deliver results in a timely manner with superb quality and incredible value. Marketing Directions offers everything a brand needs to go in the right direction as today’s marketplace means having a partner that can adapt to change faster than ever. For",
+      "aboutText": "About UsChris Raber2026-08-07T16:36:50+00:00 What Do We Provide? Art direction, graphic design and illustration Branding advice COMPASS™ (Our situation assessment process) Comprehensive I.T. services, support and security Copywriting, editing and proofreading Email management Marketing plan development Marketing services, support and consultation Media buying Online sales promotion development and management (rebates/incentives/fulfillment) Photography (in-house studio) Public relations SEO and custom analytic reporting Social media management and content creation Website analytics Website design, maintenance and security What Do We Create? Annual reports Brand identity graphics and themes Collateral Email marketing items Logo design Corporate identity Marketing/Sales Online advertising Outdoor advertising Packaging Presentations (large- and small-scale) Print advertising Retail point-of-sale items Signage Tradeshow booth design Training tools Video scripting and supervision Websites Want to talk with someone? Learn more? Contact Us",
       "pagesScraped": [
         "home",
         "about"
@@ -12317,8 +10944,33 @@
     {
       "chamberSlug": "eagle-e-waste-solutions-llc",
       "website": "http://eagleewaste.com/",
-      "scrapedAt": "2026-08-30T15:16:24.526Z",
-      "ok": false
+      "scrapedAt": "2026-09-06T13:56:33.334Z",
+      "title": "Home",
+      "metaDescription": "",
+      "h1": [
+        "Secure IT Asset Disposition & Data Destruction"
+      ],
+      "services": [
+        "Why Businesses Choose Eagle E-Waste",
+        "Your Secure IT Asset Disposition Process",
+        "Verified Impact and Scale",
+        "2M+",
+        "250+",
+        "10M+",
+        "25+",
+        "Trusted by Leading Organizations",
+        "Security First, Value Always",
+        "Accountability. Transparency. Environmental Stewardship.",
+        "Ready to Secure Your Assets?",
+        "Certified ITAD"
+      ],
+      "listItems": [],
+      "homeText": "Request PickupGet Asset EvaluationNortheast Ohio's ITAD PartnerSecure IT Asset Disposition & Data DestructionProtect your business, maintain compliance, and maximize the value of retired technology assets. Eagle E-Waste Solutions helps organizations safely retire laptops, servers, networking equipment, storage devices, and data-bearing assets through certified disposition, secure destruction, and asset recovery programs.Our Core AdvantagesWhy Businesses Choose Eagle E-WasteWe provide certified, compliant, and value-driven solutions for your technology retirement needs, serving enterprise, healthcare, and government organizations.Certified ITADSecure Data DestructionAsset Recovery ProgramsChain of CustodyFull-life-cycle IT asset management reduces risk and ensures responsible disposition for all your hardware.Compliant data destruction and sanitization with serialized audit trails.Maximize residual value from decommissioned equipment through transparent buyback programs.Rigorous logisti",
+      "aboutText": "Partner With UsOur CommitmentA Trusted Technology Retirement PartnerEagle E-Waste Solutions provides secure IT asset disposition, data destruction, and technology buyback services. We mitigate corporate liability through uncompromised chain-of-custody and certified destruction. Eagle E Waste has been supporting businesses disposal for over 25 years!Our FoundationSecurity First, Value AlwaysRooted in Northeast Ohio, Eagle E-Waste Solutions was founded on the principle that secure data destruction and responsible asset recovery are paramount. We empower businesses to safely retire technology assets, ensuring compliance and maximizing financial recovery.Our dedication to NIST-compliant data sanitization and transparent chain-of-custody documentation protects your organization from data breaches and environmental liabilities. We are your partner in secure IT asset management.Our PrinciplesAccountability. Transparency. Environmental Stewardship.We uphold the highest standards in every aspect of our operations, ensuring peace of mind for our clients and a sustainable future for our community.Request a QuoteReady to Secure Your Assets?Connect with Eagle E-Waste Solutions today to discuss ",
+      "pagesScraped": [
+        "home",
+        "about"
+      ]
     },
     {
       "chamberSlug": "first-national-bank",
@@ -12423,6 +11075,34 @@
       "services": [],
       "listItems": [],
       "homeText": "SEDANG MAINTENANCE Kami sedang melakukan perbaikan sistem. Silakan kembali nanti.",
+      "aboutText": "",
+      "pagesScraped": [
+        "home"
+      ]
+    },
+    {
+      "chamberSlug": "green-vision-care",
+      "website": "http://www.greenvisioncare.com/",
+      "scrapedAt": "2026-09-06T13:56:52.668Z",
+      "title": "Green Vision Care | Eye Doctor in Seville, OH | 255 Center St., Seville, OH 44273",
+      "metaDescription": "Discover Green Vision Care, your local expert in eye health in Seville, OH. Connect with us and meet the family behind Green Vision Care today!",
+      "h1": [
+        "Welcome to Green Vision Care"
+      ],
+      "services": [
+        "Services",
+        "Meet the Family Behind Green Vision Care",
+        "Connect With Us on Social Media",
+        "Contact Us",
+        "Comprehensive Eye Exams",
+        "Retinal Imaging",
+        "Prescription Eyeglasses",
+        "Sunglasses & Blue Light Protection",
+        "Contact Lens Fittings",
+        "Teleoptometry"
+      ],
+      "listItems": [],
+      "homeText": "Welcome to Green Vision CareLocated in Seville, OHOur goal is simple: to help you see your best today and protect your sight for tomorrow. Schedule your comprehensive eye exam and invest in your vision.Join VIP UpdatesBook an AppointmentComing SoonOur Family. Our Community. Your Vision.ServicesIconComprehensive Eye ExamsDetect issues early and protect your long-term eye health. IconRetinal ImagingAdvanced technology to detect signs of eye disease and monitor ocular health.IconPrescription EyeglassesStylish, high-quality frames and lenses tailored to your unique needs.IconSunglasses & Blue Light ProtectionProtect your eyes from UV rays and digital strain every day.IconContact Lens FittingsComfortable, precise fittings for clear vision and healthy wear.IconTeleoptometrySame day appointments.Meet the Family Behind Green Vision CareLocal. Independent. Community Focused.​ Green Vision Care was founded to bring personalized, high-quality eye care to the community we call home. ​ As a local f",
       "aboutText": "",
       "pagesScraped": [
         "home"

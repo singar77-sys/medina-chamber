@@ -1259,7 +1259,19 @@ body {
   to   { opacity: 1; }
 }
 
+/* Shared decorative click-outside-to-dismiss target for our dialogs. It fills
+   the backdrop and sits UNDER the panel (both positioned, later sibling wins),
+   so the panel needs no stopPropagation guard and the `dialog` role can live on
+   the panel — where the dialog actually is — instead of on the full-screen
+   wrapper. Being aria-hidden, it is never announced or focused; keyboard users
+   dismiss with Escape or the close button. */
+.modal-dismiss-layer {
+  position: absolute;
+  inset: 0;
+}
+
 .cmdk-panel {
+  position: relative;
   width: 100%;
   max-width: 640px;
   max-height: min(70dvh, calc(100dvh - 100px));

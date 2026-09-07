@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { FluidGraphicFrame } from "@/components/events/graphics/FluidGraphicFrame";
 import { DynamicGraphic } from "@/components/events/graphics/DynamicGraphic";
 import type { GraphicConfigDraft, GraphicConfig } from "@/lib/graphic-template";
@@ -25,6 +25,8 @@ interface Props {
 }
 
 export function GraphicTemplateCreator({ onSaved, onCancel }: Props) {
+  const uid = useId();
+  const fid = (name: string) => `${uid}-${name}`;
   const [eventTypeSlug, setEventTypeSlug] = useState("");
   const [stylePrompt, setStylePrompt] = useState("");
   const [generating, setGenerating] = useState(false);
@@ -108,8 +110,11 @@ export function GraphicTemplateCreator({ onSaved, onCancel }: Props) {
       {/* Step 1: Event type + style prompt */}
       <div className="grid grid-cols-[200px_1fr] gap-4 items-start">
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1.5">Event Type</label>
+          <label className="block text-xs font-medium text-gray-500 mb-1.5" htmlFor={fid("event-type")}>
+            Event Type
+          </label>
           <select
+            id={fid("event-type")}
             value={eventTypeSlug}
             onChange={(e) => setEventTypeSlug(e.target.value)}
             className="w-full text-sm px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[var(--color-cambridge)] bg-white"
@@ -124,9 +129,12 @@ export function GraphicTemplateCreator({ onSaved, onCancel }: Props) {
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1.5">Style Prompt</label>
+          <label className="block text-xs font-medium text-gray-500 mb-1.5" htmlFor={fid("style-prompt")}>
+            Style Prompt
+          </label>
           <div className="flex gap-2">
             <input
+              id={fid("style-prompt")}
               type="text"
               value={stylePrompt}
               onChange={(e) => setStylePrompt(e.target.value)}
@@ -185,10 +193,14 @@ export function GraphicTemplateCreator({ onSaved, onCancel }: Props) {
           {/* Save panel */}
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1.5">
+              <label
+                className="block text-xs font-medium text-gray-500 mb-1.5"
+                htmlFor={fid("template-name")}
+              >
                 Template Name
               </label>
               <input
+                id={fid("template-name")}
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}

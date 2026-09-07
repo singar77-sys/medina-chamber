@@ -244,8 +244,11 @@ function RainLayer({ heavy }: { heavy: boolean }) {
     const count = heavy ? 4 : 2;
     return Array.from({ length: count }, (_, i) => ({
       id: i,
-      // Spread between 1.2s and 6.5s into the sequence
-      delay: 1.2 + (i / Math.max(1, count - 1)) * 5.3 + Math.random() * 0.5,
+      // Spread between 1.2s and 6.5s into the sequence. The jitter is derived
+      // from the index rather than Math.random(): useMemo has to be pure (React
+      // may recompute it at any time) and a random value here would also differ
+      // between the server and client renders.
+      delay: 1.2 + (i / Math.max(1, count - 1)) * 5.3 + ((i * 37) % 10) / 20,
     }));
   }, [heavy]);
 

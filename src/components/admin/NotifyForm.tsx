@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 
 const CATEGORIES = [
   "Template / Graphic",
@@ -13,6 +13,7 @@ const CATEGORIES = [
 ] as const;
 
 export function NotifyForm() {
+  const uid = useId();
   const [message, setMessage] = useState("");
   const [category, setCategory] = useState<string>(CATEGORIES[0]);
   const [sending, setSending] = useState(false);
@@ -54,7 +55,7 @@ export function NotifyForm() {
       <div className="rounded-xl border border-green-200 bg-green-50 px-5 py-6 text-center">
         <p className="text-2xl mb-2">✓</p>
         <p className="font-semibold text-green-800">Message sent to Hunter Systems</p>
-        <p className="text-sm text-green-700 mt-1">We'll follow up via email or phone.</p>
+        <p className="text-sm text-green-700 mt-1">We&rsquo;ll follow up via email or phone.</p>
         <button
           onClick={() => setSent(false)}
           className="mt-4 text-sm text-green-700 underline"
@@ -68,8 +69,11 @@ export function NotifyForm() {
   return (
     <form onSubmit={send} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1.5">Category</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1.5" htmlFor={`${uid}-category`}>
+          Category
+        </label>
         <select
+          id={`${uid}-category`}
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-cambridge)]"
@@ -81,8 +85,11 @@ export function NotifyForm() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1.5">Message</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1.5" htmlFor={`${uid}-message`}>
+          Message
+        </label>
         <textarea
+          id={`${uid}-message`}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           rows={6}

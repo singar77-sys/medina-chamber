@@ -89,12 +89,12 @@ export function ButtonA({
   variant = "primary",
   size = "md",
   className = "",
+  children,
   ...props
 }: ButtonAProps) {
   return (
-    <a
-      className={buttonClass(variant, size, className)}
-      {...props}
-    />
+    <a className={buttonClass(variant, size, className)} {...props}>
+      {children}
+    </a>
   );
 }

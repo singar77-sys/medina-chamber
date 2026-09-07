@@ -2,21 +2,14 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePrefersReducedMotion } from "@/hooks/useMediaQuery";
 
 const SESSION_KEY = "mag-drop-dismissed";
 
 export function MagazineDropIn() {
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(mq.matches);
-    const onChange = () => setReduced(mq.matches);
-    mq.addEventListener?.("change", onChange);
-    return () => mq.removeEventListener?.("change", onChange);
-  }, []);
+  const reduced = usePrefersReducedMotion();
 
   useEffect(() => {
     if (typeof sessionStorage !== "undefined" && sessionStorage.getItem(SESSION_KEY)) {

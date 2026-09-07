@@ -128,11 +128,9 @@ function DirectoryClientInner({ members, industries }: DirectoryClientProps) {
     if (qs === lastSyncedQs.current) return; // our own echo
     if (urlWriteTimer.current) clearTimeout(urlWriteTimer.current);
     lastSyncedQs.current = qs;
-    /* eslint-disable react-hooks/set-state-in-effect */
     setSearch(searchParams.get("q") ?? "");
     setActiveCategory(searchParams.get("category") ?? null);
     setShowAll(searchParams.get("all") === "1");
-    /* eslint-enable react-hooks/set-state-in-effect */
   }, [searchParams]);
 
   // Debounced semantic search

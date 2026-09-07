@@ -1,14 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import { usePrefersReducedMotion } from "@/hooks/useMediaQuery";
 
 const FOUNDED = 1938;
 const EMOJIS  = ["🎂", "🎉", "🎈", "🥳", "🎊", "✨", "🎁"];
 const COUNT   = 32;
 
-function isBirthday() {
+/**
+ * The chamber's age today, or 0 when today is not April 30.
+ *
+ * Read through useSyncExternalStore rather than set from a mount effect: the
+ * clock is a client-only value (a render-time read would desync hydration and
+ * is impure), and the server snapshot of 0 means the server and the hydration
+ * pass both render nothing.
+ */
+function birthdayAge(): number {
   const d = new Date();
-  return d.getMonth() === 3 && d.getDate() === 30; // April = month 3
+  // April = month 3
+  return d.getMonth() === 3 && d.getDate() === 30 ? d.getFullYear() - FOUNDED : 0;
+}
+
+/** The date does not change under us within a session; nothing to subscribe to. */
+function subscribeNever(): () => void {
+  return () => {};
 }
 
 function ordinal(n: number): string {
@@ -18,21 +33,16 @@ function ordinal(n: number): string {
 }
 
 export function BirthdayConfetti() {
-  const [active, setActive] = useState(false);
-  const [age, setAge]       = useState(0);
+  const age = useSyncExternalStore(subscribeNever, birthdayAge, () => 0);
+  const [dismissed, setDismissed] = useState(false);
+  const active = age > 0 && !dismissed;
   // 32 falling emoji for 7s is exactly the kind of motion WCAG 2.3.3 asks us
   // to drop; reduced-motion visitors still see the toast, without the storm.
-  const [particles, setParticles] = useState(false);
+  const reduceMotion = usePrefersReducedMotion();
+  const particles = active && !reduceMotion;
 
   useEffect(() => {
-    if (!isBirthday()) return;
-    setActive(true);
-    setAge(new Date().getFullYear() - FOUNDED);
-
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    setParticles(!reduceMotion);
+    if (!active) return;
 
     const style = document.createElement("style");
     style.id = "bd-keyframes";
@@ -50,13 +60,13 @@ export function BirthdayConfetti() {
 
     // Auto-dismiss after 7s — long enough to read the toast, short enough
     // to stop being a distraction on the rest of the page.
-    const dismiss = window.setTimeout(() => setActive(false), 7000);
+    const dismiss = window.setTimeout(() => setDismissed(true), 7000);
 
     return () => {
       window.clearTimeout(dismiss);
       document.getElementById("bd-keyframes")?.remove();
     };
-  }, []);
+  }, [active]);
 
   if (!active) return null;
 

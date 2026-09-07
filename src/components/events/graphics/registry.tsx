@@ -7,7 +7,6 @@
  * bindings are wrapped internally.
  */
 
-import type { ComponentType, FC } from "react";
 import type { EventInfo, GraphicMode } from "./shared";
 import {
   AthenaAwardsGraphic,
@@ -83,91 +82,124 @@ function eventInfoFor(event: EventLike): EventInfo {
   };
 }
 
-export function getEventGraphicRenderer(
-  event: EventLike,
-): ComponentType<{ mode?: GraphicMode }> | null {
+/**
+ * Which graphic (if any) an event routes to. A plain string union rather than a
+ * component so nothing has to construct a component to answer "does this event
+ * have artwork?" — and so <EventGraphic> can render statically declared JSX.
+ */
+type GraphicKind =
+  | "golf"
+  | "athena"
+  | "ribbon"
+  | "social-connect"
+  | "compass"
+  | "networking-wow"
+  | "safety-council"
+  | "chamber-chat"
+  | "business-brew"
+  | "state-of-the-city"
+  | "member-meeting"
+  | "get-to-know"
+  | "eggs-expertise";
+
+function graphicKindFor(event: EventLike): GraphicKind | null {
   const s = event.slug.toLowerCase();
   const t = (event.title ?? "").toLowerCase();
 
-  if (s.includes("golf") || t.includes("golf")) {
-    const info = eventInfoFor(event);
-    const Bound: FC<{ mode?: GraphicMode }> = (props) => (
-      <GolfOutingGraphic {...props} eventInfo={info} />
-    );
-    Bound.displayName = "GolfOutingGraphic(bound)";
-    return Bound;
-  }
-  if (s.includes("athena") || t.includes("athena")) return AthenaAwardsGraphic;
-  if (s.includes("ribbon") || t.includes("ribbon cutting")) return RibbonCuttingGraphic;
-  if (s.includes("social-connect") || t.includes("social connect")) return SocialConnectGraphic;
-  if (s.includes("compass") || t.includes("compass")) return CompassGraphic;
-
-  if (s.startsWith("networking-wow") || t.includes("networking wow")) {
-    const info = eventInfoFor(event);
-    const Bound: FC<{ mode?: GraphicMode }> = (props) => (
-      <NetworkingWowGraphic {...props} eventInfo={info} />
-    );
-    Bound.displayName = "NetworkingWowGraphic(bound)";
-    return Bound;
-  }
-  if (s.startsWith("safety-council")) {
-    const info = eventInfoFor(event);
-    const Bound: FC<{ mode?: GraphicMode }> = (props) => (
-      <SafetyCouncilGraphic {...props} eventInfo={info} />
-    );
-    Bound.displayName = "SafetyCouncilGraphic(bound)";
-    return Bound;
-  }
-  if (s.startsWith("chamber-chat")) {
-    const info = eventInfoFor(event);
-    const Bound: FC<{ mode?: GraphicMode }> = (props) => (
-      <ChamberChatGraphic {...props} eventInfo={info} />
-    );
-    Bound.displayName = "ChamberChatGraphic(bound)";
-    return Bound;
-  }
-  if (s.startsWith("business-brew")) {
-    const info = eventInfoFor(event);
-    const Bound: FC<{ mode?: GraphicMode }> = (props) => (
-      <BusinessBrewGraphic {...props} eventInfo={info} />
-    );
-    Bound.displayName = "BusinessBrewGraphic(bound)";
-    return Bound;
-  }
+  if (s.includes("golf") || t.includes("golf")) return "golf";
+  if (s.includes("athena") || t.includes("athena")) return "athena";
+  if (s.includes("ribbon") || t.includes("ribbon cutting")) return "ribbon";
+  if (s.includes("social-connect") || t.includes("social connect")) return "social-connect";
+  if (s.includes("compass") || t.includes("compass")) return "compass";
+  if (s.startsWith("networking-wow") || t.includes("networking wow")) return "networking-wow";
+  if (s.startsWith("safety-council")) return "safety-council";
+  if (s.startsWith("chamber-chat")) return "chamber-chat";
+  if (s.startsWith("business-brew")) return "business-brew";
   // Event-specific artwork must outrank the generic member-meeting branch.
   if (s.includes("state-of-the-city") || t.includes("state of the city")) {
-    return StateOfTheCityGraphic;
+    return "state-of-the-city";
   }
   if (
     s.startsWith("chamber-member-meeting") ||
     s.startsWith("member-meeting") ||
     t.includes("member meeting")
   ) {
-    return MemberMeetingGraphic;
+    return "member-meeting";
   }
-  if (s.startsWith("get-to-know")) {
-    const info = eventInfoFor(event);
-    const withNote = { ...info, note: info.note ?? "Free · RSVP Required" };
-    const Bound: FC<{ mode?: GraphicMode }> = (props) => (
-      <GetToKnowGraphic {...props} eventInfo={withNote} />
-    );
-    Bound.displayName = "GetToKnowGraphic(bound)";
-    return Bound;
-  }
-  if (s.startsWith("eggs-expertise")) {
-    const info = eventInfoFor(event);
-    const suffix = s.replace(/^eggs-expertise-?/, "");
-    const topic = suffix
-      ? suffix
-          .split("-")
-          .map((w) => (/^\d+$/.test(w) ? w : w.charAt(0).toUpperCase() + w.slice(1)))
-          .join(" ")
-      : "Canva 101";
-    const BoundEggs: FC<{ mode?: GraphicMode }> = (props) => (
-      <EggsExpertiseGraphic {...props} topic={topic} eventInfo={info} />
-    );
-    BoundEggs.displayName = `EggsExpertiseGraphic(${topic})`;
-    return BoundEggs;
-  }
+  if (s.startsWith("get-to-know")) return "get-to-know";
+  if (s.startsWith("eggs-expertise")) return "eggs-expertise";
   return null;
+}
+
+/** "eggs-expertise-canva-101" -> "Canva 101" */
+function eggsTopicFor(slug: string): string {
+  const suffix = slug.toLowerCase().replace(/^eggs-expertise-?/, "");
+  if (!suffix) return "Canva 101";
+  return suffix
+    .split("-")
+    .map((w) => (/^\d+$/.test(w) ? w : w.charAt(0).toUpperCase() + w.slice(1)))
+    .join(" ");
+}
+
+/** Does this event have built-in artwork? Cheap — no rendering involved. */
+export function hasEventGraphic(event: EventLike): boolean {
+  return graphicKindFor(event) !== null;
+}
+
+/**
+ * The event's built-in artwork, or null. One stable component instead of the
+ * per-event components this module used to build on the fly: a component
+ * created during a parent's render is a brand-new type on every render, so
+ * React unmounts and remounts the whole subtree each time.
+ */
+export function EventGraphic({
+  event,
+  mode,
+}: {
+  event: EventLike;
+  mode?: GraphicMode;
+}) {
+  const kind = graphicKindFor(event);
+  if (!kind) return null;
+  const info = eventInfoFor(event);
+
+  switch (kind) {
+    case "golf":
+      return <GolfOutingGraphic mode={mode} eventInfo={info} />;
+    case "athena":
+      return <AthenaAwardsGraphic mode={mode} />;
+    case "ribbon":
+      return <RibbonCuttingGraphic mode={mode} />;
+    case "social-connect":
+      return <SocialConnectGraphic mode={mode} />;
+    case "compass":
+      return <CompassGraphic mode={mode} />;
+    case "networking-wow":
+      return <NetworkingWowGraphic mode={mode} eventInfo={info} />;
+    case "safety-council":
+      return <SafetyCouncilGraphic mode={mode} eventInfo={info} />;
+    case "chamber-chat":
+      return <ChamberChatGraphic mode={mode} eventInfo={info} />;
+    case "business-brew":
+      return <BusinessBrewGraphic mode={mode} eventInfo={info} />;
+    case "state-of-the-city":
+      return <StateOfTheCityGraphic mode={mode} />;
+    case "member-meeting":
+      return <MemberMeetingGraphic mode={mode} />;
+    case "get-to-know":
+      return (
+        <GetToKnowGraphic
+          mode={mode}
+          eventInfo={{ ...info, note: info.note ?? "Free · RSVP Required" }}
+        />
+      );
+    case "eggs-expertise":
+      return (
+        <EggsExpertiseGraphic
+          mode={mode}
+          topic={eggsTopicFor(event.slug)}
+          eventInfo={info}
+        />
+      );
+  }
 }

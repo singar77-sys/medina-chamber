@@ -124,7 +124,6 @@ function parseDetailPage(html, { slug, eventId, detailUrl }) {
   const registerUrl = registerEl?.getAttribute('href') ?? detailUrl;
 
   // Contact
-  const contactSection = root.querySelector('.gz-contact-info, [class*="contact"]');
   const contactName = root.querySelector('.gz-contact-name')?.text?.trim()
     ?? (root.innerHTML.includes('Stephanie Mueller') ? 'Stephanie Mueller' : '');
   const contactPhone = root.querySelector('.gz-contact-phone, [itemprop="telephone"]')?.text?.trim() ?? '';

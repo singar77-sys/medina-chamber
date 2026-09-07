@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 
 export default function PortalLoginPage({
   searchParams,
@@ -13,6 +13,19 @@ export default function PortalLoginPage({
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [formError, setFormError] = useState("");
+  const emailRef = useRef<HTMLInputElement>(null);
+
+  // Put the caret in the only field on the page. Done with a ref rather than
+  // autoFocus (which trips jsx-a11y/no-autofocus): on a dedicated single-field
+  // login screen, moving focus to that field is what a keyboard user expects
+  // — the alternative is landing with focus nowhere and having to Tab in.
+  // Keyed on `sent` rather than mount-only because "Use a different email"
+  // unmounts the form and mounts a fresh input, which a [] effect would miss.
+  // Same pattern as EventPhotoUploader's caption dialog.
+  useEffect(() => {
+    if (sent) return;
+    emailRef.current?.focus();
+  }, [sent]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -107,11 +120,11 @@ export default function PortalLoginPage({
                     Email address
                   </label>
                   <input
+                    ref={emailRef}
                     id="email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    autoFocus
                     autoComplete="email"
                     required
                     disabled={loading}

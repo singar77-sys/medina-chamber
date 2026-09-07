@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import type { PricingConfig, PricingTier } from "@/lib/cms-store";
 
 interface Props {
@@ -140,6 +140,9 @@ function TierCard({
   onUpdateBenefits: (raw: string) => void;
   onUpdateAddedBenefits: (raw: string) => void;
 }) {
+  // Field ids must be unique per tier card — three are mounted side by side.
+  const uid = useId();
+  const fid = (name: string) => `${uid}-${name}`;
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -161,8 +164,9 @@ function TierCard({
 
       {/* Tier name */}
       <div>
-        <label className="text-[10px] uppercase tracking-widest text-text-tertiary block mb-1">Tier Name</label>
+        <label className="text-[10px] uppercase tracking-widest text-text-tertiary block mb-1" htmlFor={fid("tier-name")}>Tier Name</label>
         <input
+          id={fid("tier-name")}
           type="text"
           value={tier.name}
           onChange={(e) => onUpdate({ name: e.target.value })}
@@ -172,10 +176,11 @@ function TierCard({
 
       {/* Price */}
       <div>
-        <label className="text-[10px] uppercase tracking-widest text-text-tertiary block mb-1">Annual Price ($)</label>
+        <label className="text-[10px] uppercase tracking-widest text-text-tertiary block mb-1" htmlFor={fid("annual-price")}>Annual Price ($)</label>
         <div className="flex items-center gap-1">
           <span className="text-text-tertiary text-sm">$</span>
           <input
+            id={fid("annual-price")}
             type="number"
             value={tier.price}
             min={1}
@@ -188,8 +193,9 @@ function TierCard({
 
       {/* Tagline */}
       <div>
-        <label className="text-[10px] uppercase tracking-widest text-text-tertiary block mb-1">Tagline</label>
+        <label className="text-[10px] uppercase tracking-widest text-text-tertiary block mb-1" htmlFor={fid("tagline")}>Tagline</label>
         <textarea
+          id={fid("tagline")}
           value={tier.tagline}
           onChange={(e) => onUpdate({ tagline: e.target.value })}
           rows={3}
@@ -199,8 +205,9 @@ function TierCard({
 
       {/* CTA */}
       <div>
-        <label className="text-[10px] uppercase tracking-widest text-text-tertiary block mb-1">Button Text</label>
+        <label className="text-[10px] uppercase tracking-widest text-text-tertiary block mb-1" htmlFor={fid("button-text")}>Button Text</label>
         <input
+          id={fid("button-text")}
           type="text"
           value={tier.cta}
           onChange={(e) => onUpdate({ cta: e.target.value })}
@@ -225,24 +232,26 @@ function TierCard({
           {tier.addedBenefits !== undefined ? (
             /* Plus / Investor — edit only the added benefits */
             <div>
-              <label className="text-[10px] uppercase tracking-widest text-text-tertiary block mb-1">
+              <label className="text-[10px] uppercase tracking-widest text-text-tertiary block mb-1" htmlFor={fid("added-benefits")}>
                 Added Benefits (one per line)
               </label>
               <textarea
+                id={fid("added-benefits")}
                 value={tier.addedBenefits.join("\n")}
                 onChange={(e) => onUpdateAddedBenefits(e.target.value)}
                 rows={tier.addedBenefits.length + 1}
                 className="w-full text-xs border border-border-primary rounded-md px-2 py-1.5 resize-y focus:outline-none focus:ring-2 focus:ring-cambridge/40 font-mono"
               />
-              <p className="text-[10px] text-text-tertiary mt-0.5">These appear as the "plus" section on the card</p>
+              <p className="text-[10px] text-text-tertiary mt-0.5">These appear as the &ldquo;plus&rdquo; section on the card</p>
             </div>
           ) : (
             /* Essentials — edit the full base benefits list */
             <div>
-              <label className="text-[10px] uppercase tracking-widest text-text-tertiary block mb-1">
+              <label className="text-[10px] uppercase tracking-widest text-text-tertiary block mb-1" htmlFor={fid("base-benefits")}>
                 Base Benefits (one per line, shared across all tiers)
               </label>
               <textarea
+                id={fid("base-benefits")}
                 value={tier.benefits.join("\n")}
                 onChange={(e) => onUpdateBenefits(e.target.value)}
                 rows={Math.min(tier.benefits.length + 2, 20)}

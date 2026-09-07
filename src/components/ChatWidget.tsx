@@ -263,7 +263,7 @@ function useStreamChat() {
     } finally {
       setIsLoading(false);
     }
-  }, [messages, isLoading]);
+  }, [isLoading]);
 
   /** Expose a getter for the current session ID so the handoff form
    *  can attach it to its POST. Not a setter — the server is
@@ -382,12 +382,23 @@ export function ChatWidget() {
     if (open) setTimeout(() => inputRef.current?.focus(), 50);
   }, [open]);
 
+  // Every path that opens the panel goes through here so the proactive bubble
+  // is dropped at the same moment. It used to be cleared by an effect watching
+  // `open`, which meant a second render on every open — and a synchronous
+  // setState inside an effect body. The bubble is already hidden while the
+  // panel is open; clearing it here is what stops it reappearing on close and
+  // cancels its auto-fade timer.
+  const openPanel = useCallback(() => {
+    setOpen(true);
+    setPreviewText(null);
+  }, []);
+
   // Listen for `jackie:open` events from the Command Palette fallback.
   // Payload: { query: string } — we open and auto-send the question.
   useEffect(() => {
     const handler = (e: Event) => {
       const ce = e as CustomEvent<{ query?: string }>;
-      setOpen(true);
+      openPanel();
       const q = ce.detail?.query?.trim();
       if (q) {
         // Small delay so the panel mounts before firing the message
@@ -396,7 +407,7 @@ export function ChatWidget() {
     };
     window.addEventListener("jackie:open", handler);
     return () => window.removeEventListener("jackie:open", handler);
-  }, [sendMessage]);
+  }, [sendMessage, openPanel]);
 
   // Closing has to hand focus back to the launcher. Without it the
   // panel unmounts under the user's focus and the browser drops them
@@ -480,12 +491,6 @@ export function ChatWidget() {
     return () => window.clearTimeout(fadeTimer);
   }, [previewText]);
 
-  // Dismiss the preview as soon as chat opens (whether via click,
-  // proactive accept, or any other path).
-  useEffect(() => {
-    if (open && previewText) setPreviewText(null);
-  }, [open, previewText]);
-
   function dismissPreview(persist: boolean) {
     setPreviewText(null);
     if (persist && typeof window !== "undefined") {
@@ -495,7 +500,7 @@ export function ChatWidget() {
 
   function acceptPreview() {
     dismissPreview(true);
-    setOpen(true);
+    openPanel();
   }
 
   // Hide the floating bubble on /chamberbot itself — that page IS the
@@ -823,7 +828,7 @@ export function ChatWidget() {
       {/* Floating Button */}
       <button
         ref={fabRef}
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => (open ? closePanel() : openPanel())}
         aria-label={open ? "Close chat" : "Open chamber assistant"}
         aria-expanded={open}
         aria-controls="chamberbot-panel"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import type { ChamberEvent } from "@/data/events";
 import type { CmsEventData } from "@/lib/cms-store";
 
@@ -11,6 +11,10 @@ interface Props {
 }
 
 export function EventEditor({ slug, event, initialOverride }: Props) {
+  // Field ids must be unique per editor instance — several can be mounted at once.
+  const uid = useId();
+  const fid = (name: string) => `${uid}-${name}`;
+
   const [override, setOverride] = useState<CmsEventData | null>(initialOverride);
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
@@ -141,8 +145,9 @@ export function EventEditor({ slug, event, initialOverride }: Props) {
       <div className="p-5 space-y-4">
         {/* Title */}
         <div>
-          <label className={labelCls}>Title</label>
+          <label className={labelCls} htmlFor={fid("title")}>Title</label>
           <input
+            id={fid("title")}
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -153,8 +158,9 @@ export function EventEditor({ slug, event, initialOverride }: Props) {
         {/* Date / Times */}
         <div className="grid grid-cols-3 gap-3">
           <div>
-            <label className={labelCls}>Date</label>
+            <label className={labelCls} htmlFor={fid("date")}>Date</label>
             <input
+              id={fid("date")}
               type="date"
               value={dateISO}
               onChange={(e) => setDateISO(e.target.value)}
@@ -162,8 +168,9 @@ export function EventEditor({ slug, event, initialOverride }: Props) {
             />
           </div>
           <div>
-            <label className={labelCls}>Start Time</label>
+            <label className={labelCls} htmlFor={fid("start-time")}>Start Time</label>
             <input
+              id={fid("start-time")}
               type="text"
               value={startTime}
               onChange={(e) => setStartTime(e.target.value)}
@@ -172,8 +179,9 @@ export function EventEditor({ slug, event, initialOverride }: Props) {
             />
           </div>
           <div>
-            <label className={labelCls}>End Time</label>
+            <label className={labelCls} htmlFor={fid("end-time")}>End Time</label>
             <input
+              id={fid("end-time")}
               type="text"
               value={endTime}
               onChange={(e) => setEndTime(e.target.value)}
@@ -186,8 +194,9 @@ export function EventEditor({ slug, event, initialOverride }: Props) {
         {/* Venue / Location note */}
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className={labelCls}>Venue</label>
+            <label className={labelCls} htmlFor={fid("venue")}>Venue</label>
             <input
+              id={fid("venue")}
               type="text"
               value={venue}
               onChange={(e) => setVenue(e.target.value)}
@@ -196,8 +205,9 @@ export function EventEditor({ slug, event, initialOverride }: Props) {
             />
           </div>
           <div>
-            <label className={labelCls}>Location note</label>
+            <label className={labelCls} htmlFor={fid("location-note")}>Location note</label>
             <input
+              id={fid("location-note")}
               type="text"
               value={locationDesc}
               onChange={(e) => setLocationDesc(e.target.value)}
@@ -210,8 +220,9 @@ export function EventEditor({ slug, event, initialOverride }: Props) {
         {/* Address */}
         <div className="grid grid-cols-6 gap-3">
           <div className="col-span-3">
-            <label className={labelCls}>Street</label>
+            <label className={labelCls} htmlFor={fid("street")}>Street</label>
             <input
+              id={fid("street")}
               type="text"
               value={street}
               onChange={(e) => setStreet(e.target.value)}
@@ -219,8 +230,9 @@ export function EventEditor({ slug, event, initialOverride }: Props) {
             />
           </div>
           <div className="col-span-1">
-            <label className={labelCls}>City</label>
+            <label className={labelCls} htmlFor={fid("city")}>City</label>
             <input
+              id={fid("city")}
               type="text"
               value={city}
               onChange={(e) => setCity(e.target.value)}
@@ -228,8 +240,9 @@ export function EventEditor({ slug, event, initialOverride }: Props) {
             />
           </div>
           <div className="col-span-1">
-            <label className={labelCls}>State</label>
+            <label className={labelCls} htmlFor={fid("state")}>State</label>
             <input
+              id={fid("state")}
               type="text"
               value={stateVal}
               onChange={(e) => setStateVal(e.target.value)}
@@ -237,8 +250,9 @@ export function EventEditor({ slug, event, initialOverride }: Props) {
             />
           </div>
           <div className="col-span-1">
-            <label className={labelCls}>ZIP</label>
+            <label className={labelCls} htmlFor={fid("zip")}>ZIP</label>
             <input
+              id={fid("zip")}
               type="text"
               value={zip}
               onChange={(e) => setZip(e.target.value)}
@@ -249,8 +263,9 @@ export function EventEditor({ slug, event, initialOverride }: Props) {
 
         {/* Pricing */}
         <div>
-          <label className={labelCls}>Pricing</label>
+          <label className={labelCls} htmlFor={fid("pricing")}>Pricing</label>
           <textarea
+            id={fid("pricing")}
             value={pricing}
             onChange={(e) => setPricing(e.target.value)}
             rows={3}
@@ -264,8 +279,9 @@ export function EventEditor({ slug, event, initialOverride }: Props) {
 
         {/* Registration URL */}
         <div>
-          <label className={labelCls}>Registration URL</label>
+          <label className={labelCls} htmlFor={fid("registration-url")}>Registration URL</label>
           <input
+            id={fid("registration-url")}
             type="url"
             value={registerUrl}
             onChange={(e) => setRegisterUrl(e.target.value)}
@@ -277,8 +293,9 @@ export function EventEditor({ slug, event, initialOverride }: Props) {
         {/* Contact */}
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className={labelCls}>Contact Name</label>
+            <label className={labelCls} htmlFor={fid("contact-name")}>Contact Name</label>
             <input
+              id={fid("contact-name")}
               type="text"
               value={contactName}
               onChange={(e) => setContactName(e.target.value)}
@@ -286,8 +303,9 @@ export function EventEditor({ slug, event, initialOverride }: Props) {
             />
           </div>
           <div>
-            <label className={labelCls}>Contact Phone</label>
+            <label className={labelCls} htmlFor={fid("contact-phone")}>Contact Phone</label>
             <input
+              id={fid("contact-phone")}
               type="text"
               value={contactPhone}
               onChange={(e) => setContactPhone(e.target.value)}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function AdminLoginPage() {
@@ -8,6 +8,16 @@ export default function AdminLoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const passwordRef = useRef<HTMLInputElement>(null);
+
+  // Put the caret in the only field on the page. Done with a ref rather than
+  // autoFocus (which trips jsx-a11y/no-autofocus): on a dedicated single-field
+  // login screen, moving focus to that field is what a keyboard user expects
+  // — the alternative is landing with focus nowhere and having to Tab in.
+  // Same pattern as EventPhotoUploader's caption dialog.
+  useEffect(() => {
+    passwordRef.current?.focus();
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -67,11 +77,11 @@ export default function AdminLoginPage() {
                 Password
               </label>
               <input
+                ref={passwordRef}
                 id="admin-password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                autoFocus
                 autoComplete="current-password"
                 required
                 disabled={loading}

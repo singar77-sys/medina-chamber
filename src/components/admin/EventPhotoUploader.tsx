@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import type { MediaItem } from "@/lib/media-store";
 import { NamingModal } from "@/components/admin/NamingModal";
 import { prepareImageForUpload } from "@/components/admin/prepare-upload";
@@ -41,6 +41,15 @@ export function EventPhotoUploader({ eventSlug, eventTitle, initialPhotos }: Pro
   const [editingCaption, setEditingCaption] = useState<string | null>(null);
   const [captionDraft, setCaptionDraft] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const captionInputRef = useRef<HTMLInputElement>(null);
+
+  // Move focus into the caption dialog when it opens. Done with a ref rather
+  // than autoFocus: autoFocus would also fire on the initial page render if the
+  // dialog were ever open on mount, and it gives no control over the timing.
+  useEffect(() => {
+    if (!editingCaption) return;
+    captionInputRef.current?.focus();
+  }, [editingCaption]);
 
   const defaultDesc = eventTitle ? defaultDescFromTitle(eventTitle) : "";
 
@@ -175,34 +184,39 @@ export function EventPhotoUploader({ eventSlug, eventTitle, initialPhotos }: Pro
       </h2>
 
       {/* Drop zone */}
-      <div
+      <button
+        type="button"
         onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
         onClick={() => inputRef.current?.click()}
-        className="cursor-pointer rounded-xl border-2 border-dashed transition-colors px-6 py-8 text-center"
+        className="block w-full cursor-pointer rounded-xl border-2 border-dashed transition-colors px-6 py-8 text-center"
         style={{
           borderColor: dragging ? "var(--color-cambridge)" : "#e5e7eb",
           background: dragging ? "rgba(131,188,169,0.05)" : "transparent",
         }}
       >
-        <p className="text-sm text-gray-500">
+        {/* <span>, not <p>: a <button> may only contain phrasing content. */}
+        <span className="block text-sm text-gray-500">
           Drop photos here or{" "}
           <span style={{ color: "var(--color-cambridge)" }} className="font-medium">browse</span>
-        </p>
-        <p className="text-xs text-gray-400 mt-1">
+        </span>
+        <span className="block text-xs text-gray-400 mt-1">
           JPEG, PNG, WebP, GIF, AVIF up to {formatBytes(MAX_SOURCE_BYTES)} · Resized in your
           browser, then converted to WebP
-        </p>
-        <input
-          ref={inputRef}
-          type="file"
-          multiple
-          accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
-          className="hidden"
-          onChange={(e) => e.target.files && queueFiles(e.target.files)}
-        />
-      </div>
+        </span>
+      </button>
+
+      {/* Sibling of the drop zone, not a child: form controls cannot nest
+          inside a <button>. */}
+      <input
+        ref={inputRef}
+        type="file"
+        multiple
+        accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
+        className="hidden"
+        onChange={(e) => e.target.files && queueFiles(e.target.files)}
+      />
 
       {/* Upload progress */}
       {uploading.length > 0 && (
@@ -275,12 +289,12 @@ export function EventPhotoUploader({ eventSlug, eventTitle, initialPhotos }: Pro
           <div className="bg-white rounded-xl p-5 w-80 space-y-3 shadow-xl">
             <p className="text-sm font-semibold text-gray-800">Edit caption</p>
             <input
+              ref={captionInputRef}
               type="text"
               value={captionDraft}
               onChange={(e) => setCaptionDraft(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && saveCaption(editingCaption)}
               placeholder="Optional photo caption"
-              autoFocus
               className="w-full text-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-cambridge)]"
             />
             <div className="flex gap-2">

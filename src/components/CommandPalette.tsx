@@ -329,6 +329,22 @@ export function CommandPalette() {
   const openerRef = useRef<HTMLElement | null>(null);
   const router = useRouter();
 
+  // Opening resets the search, so neither "reset the highlight when the query
+  // changes" nor "clear the query on close" needs an effect that setStates
+  // synchronously (a cascading extra render on every keystroke and every
+  // close). Nothing reads query or activeIndex while the palette is closed.
+  const openPalette = useCallback(() => {
+    setQuery("");
+    setActiveIndex(0);
+    setOpen(true);
+  }, []);
+
+  // Typing always re-highlights the first row.
+  const updateQuery = useCallback((next: string) => {
+    setQuery(next);
+    setActiveIndex(0);
+  }, []);
+
   const results = useMemo(() => {
     if (!query.trim()) return COMMANDS;
     const scored = COMMANDS.map((c) => ({
@@ -344,18 +360,14 @@ export function CommandPalette() {
   const showJackieFallback = query.trim().length > 0;
   const totalRows = results.length + (showJackieFallback ? 1 : 0);
 
-  // Reset highlight when results change.
-  useEffect(() => {
-    setActiveIndex(0);
-  }, [query]);
-
   // Global keyboard triggers
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const mod = e.metaKey || e.ctrlKey;
       if (mod && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        setOpen((prev) => !prev);
+        if (open) setOpen(false);
+        else openPalette();
         return;
       }
       if (e.key === "Escape" && open) {
@@ -370,13 +382,13 @@ export function CommandPalette() {
         const editable = target?.isContentEditable;
         if (tag !== "INPUT" && tag !== "TEXTAREA" && !editable) {
           e.preventDefault();
-          setOpen(true);
+          openPalette();
         }
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
+  }, [open, openPalette]);
 
   // External trigger — any component can dispatch `cmdk:open` to
   // summon the palette (used by the header launcher button).
@@ -390,12 +402,12 @@ export function CommandPalette() {
     const w = window as CmdkWindow;
     const handler = () => {
       w.__cmdkPendingOpen = false;
-      setOpen(true);
+      openPalette();
     };
     window.addEventListener("cmdk:open", handler);
     if (w.__cmdkPendingOpen) handler();
     return () => window.removeEventListener("cmdk:open", handler);
-  }, []);
+  }, [openPalette]);
 
   // Focus input on open, reset state on close
   useEffect(() => {
@@ -419,8 +431,6 @@ export function CommandPalette() {
       document.body.style.right = "";
       document.body.style.overflowY = "";
       if (top) window.scrollTo(0, -parseInt(top, 10));
-      setQuery("");
-      setActiveIndex(0);
       // preventScroll: the scroll lock is unwinding on this same commit, so a
       // focus-driven scrollIntoView would fight window.scrollTo above.
       openerRef.current?.focus({ preventScroll: true });
@@ -533,18 +543,30 @@ export function CommandPalette() {
   return (
     <>
       {open && (
-        <div
-          className="cmdk-backdrop"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Command palette"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setOpen(false);
-          }}
-        >
+        <div className="cmdk-backdrop">
+          {/* Decorative scrim: click-outside-to-dismiss. aria-hidden, so it is
+              never announced or focused — keyboard users dismiss with Escape. */}
+          <div
+            className="modal-dismiss-layer"
+            aria-hidden="true"
+            onClick={() => setOpen(false)}
+          />
+          {/*
+              The rule ships a per-element allowance permitting onKeyDown/onKeyUp/
+              onKeyPress on a dialog, but it keys that allowance off the JSX element
+              NAME (a literal <dialog>), never off role="dialog" — so this handler is
+              exactly the case the rule means to permit and only trips because the
+              dialog is a div. The handler has to live on the dialog container:
+              aria-modal="true" promises the page behind is inert, so Tab must be
+              trapped at the container, which no child control can do.
+          */}
+          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
           <div
             ref={panelRef}
             className="cmdk-panel"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Command palette"
             onKeyDown={handleKeyDownInModal}
           >
             <div className="cmdk-inputRow">
@@ -563,7 +585,7 @@ export function CommandPalette() {
               <input
                 ref={inputRef}
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => updateQuery(e.target.value)}
                 placeholder="Type to search · or ask a question…"
                 className="cmdk-input"
                 aria-label="Search commands"

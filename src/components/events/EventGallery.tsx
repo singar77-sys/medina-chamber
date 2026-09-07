@@ -107,11 +107,17 @@ export function EventGallery({ photos: allPhotos, title = "Photos" }: Props) {
 
       {/* Lightbox */}
       {lightbox !== null && (
-        // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+        // The rule ships a per-element allowance permitting onKeyDown/onKeyUp/
+        // onKeyPress on a dialog, but it keys that allowance off the JSX element
+        // NAME (a literal <dialog>), never off role="dialog" — so this handler is
+        // exactly the case the rule means to permit and only trips because the
+        // dialog is a div. The handler has to live on the dialog container:
+        // aria-modal="true" promises the page behind is inert, so Tab must be
+        // trapped at the container, which no child control can do.
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
         <div
           ref={dialogRef}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
-          onClick={close}
           onKeyDown={handleKey}
           // biome-ignore lint/a11y/noNoninteractiveTabindex: lightbox overlay needs focus for keyboard nav
           tabIndex={-1}
@@ -119,18 +125,25 @@ export function EventGallery({ photos: allPhotos, title = "Photos" }: Props) {
           aria-modal="true"
           aria-label="Photo lightbox"
         >
+          {/* Decorative click-outside-to-dismiss target, under everything else
+              in the lightbox. aria-hidden, so it is never announced or focused;
+              keyboard users close with Escape or the close button. Being a
+              sibling of the controls rather than their ancestor is what lets
+              them drop their stopPropagation guards. */}
+          <div className="modal-dismiss-layer" aria-hidden="true" onClick={close} />
+
           {/* Prev / Next */}
           {photos.length > 1 && (
             <>
               <button
-                onClick={(e) => { e.stopPropagation(); prev(); }}
+                onClick={prev}
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl font-light px-3 py-2 rounded-lg hover:bg-white/10 transition-colors"
                 aria-label="Previous photo"
               >
                 ‹
               </button>
               <button
-                onClick={(e) => { e.stopPropagation(); next(); }}
+                onClick={next}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl font-light px-3 py-2 rounded-lg hover:bg-white/10 transition-colors"
                 aria-label="Next photo"
               >
@@ -150,10 +163,7 @@ export function EventGallery({ photos: allPhotos, title = "Photos" }: Props) {
 
           {/* Image — explicit width/height let next/image size the optimization
               pipeline; CSS max-constraints control the actual display size.   */}
-          <div
-            className="max-w-5xl w-full px-4 sm:px-16"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="relative max-w-5xl w-full px-4 sm:px-16">
             <Image
               src={photos[lightbox].url}
               alt={altFor(photos[lightbox], lightbox)}

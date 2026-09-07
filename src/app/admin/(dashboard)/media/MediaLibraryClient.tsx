@@ -349,15 +349,18 @@ function MediaCard({
   const [saving, setSaving] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Sync draft when parent updates the item (e.g. after save)
-  useEffect(() => {
-    setAltDraft(item.alt ?? "");
-  }, [item.alt]);
-
-  // Focus input when entering edit mode
+  // Focus the input when entering edit mode. The draft is seeded by the event
+  // handler that opens the editor (startEdit), not by an effect that mirrors
+  // item.alt into state — that mirror re-rendered every card on every parent
+  // update and could clobber an in-progress edit.
   useEffect(() => {
     if (editing) inputRef.current?.focus();
   }, [editing]);
+
+  function startEdit() {
+    setAltDraft(item.alt ?? "");
+    setEditing(true);
+  }
 
   async function saveAlt() {
     const trimmed = altDraft.trim();
@@ -431,7 +434,7 @@ function MediaCard({
             />
           ) : (
             <button
-              onClick={() => setEditing(true)}
+              onClick={startEdit}
               title="Edit alt text"
               className="flex items-center gap-1 w-full text-left group/alt"
             >

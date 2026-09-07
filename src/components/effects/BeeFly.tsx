@@ -27,7 +27,6 @@ export function BeeFly() {
   useEffect(() => {
     schedule();
     return () => clearTimeout(timer.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleEnd(e: React.AnimationEvent<HTMLDivElement>) {

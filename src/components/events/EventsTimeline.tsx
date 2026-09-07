@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { flushSync } from "react-dom";
 
 /**
  * EventsTimeline — the "signal rail" that replaced the month-grid calendar
@@ -71,18 +72,23 @@ function groupByMonth(events: TimelineEvent[]) {
 export function EventsTimeline({ events }: { events: TimelineEvent[] }) {
   const [showAll, setShowAll] = useState(false);
   // A pip click on a still-hidden month has to wait for the expanded rail to
-  // commit before its #anchor exists — the effect jumps after that render.
-  const [pendingJump, setPendingJump] = useState<string | null>(null);
-  useEffect(() => {
-    if (!pendingJump) return;
-    const target = document.getElementById(pendingJump);
+  // commit before its #anchor exists. flushSync, not requestAnimationFrame:
+  // rAF only *usually* runs after React has flushed a click's setState, and
+  // when it does not — a frame the browser never paints, a backgrounded tab —
+  // getElementById returns null, the optional chains swallow it, and the pip
+  // silently jumps nowhere with no error to explain it. flushSync commits the
+  // expansion before the next statement runs, so the anchor is guaranteed to
+  // be in the DOM. Still no "pending jump" state, and therefore still no
+  // effect that has to setState(null) to disarm itself afterwards.
+  function expandAndJumpTo(anchorId: string) {
+    flushSync(() => setShowAll(true));
+    const target = document.getElementById(anchorId);
     target?.scrollIntoView();
     // The pip / Show-all control that had focus is either gone or now far up
     // the page, so hand focus to the destination rather than dropping it on
     // <body> and losing the keyboard user's place in the rail.
     target?.focus({ preventScroll: true });
-    setPendingJump(null);
-  }, [pendingJump]);
+  }
 
   const sorted = [...events].sort((a, b) => a.dateISO.localeCompare(b.dateISO));
   const visible = showAll ? sorted : sorted.slice(0, INITIAL_VISIBLE);
@@ -110,8 +116,7 @@ export function EventsTimeline({ events }: { events: TimelineEvent[] }) {
               onClick={(e) => {
                 if (visibleYms.has(ym)) return;
                 e.preventDefault();
-                setShowAll(true);
-                setPendingJump(`tl-${ym}`);
+                expandAndJumpTo(`tl-${ym}`);
               }}
               className="
                 group inline-flex items-center gap-f8 px-f13 py-f8
@@ -267,8 +272,7 @@ export function EventsTimeline({ events }: { events: TimelineEvent[] }) {
             <button
               type="button"
               onClick={() => {
-                setShowAll(true);
-                setPendingJump(`tl-event-${sorted[INITIAL_VISIBLE].slug}`);
+                expandAndJumpTo(`tl-event-${sorted[INITIAL_VISIBLE].slug}`);
               }}
               aria-expanded={false}
               className="

@@ -239,20 +239,33 @@ function RoomModal({ room, onClose }: { room: Room; onClose: () => void }) {
   // Safe to call here: this component only mounts after a click on
   // a card (post-hydration), so document is always defined.
   const modalNode = (
-    <div
-      className="rsc-modal-scrim"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="rsc-modal-title"
-      onClick={onClose}
-      onKeyDown={onTrapKey}
-    >
-      {/* Inner wrapper stops scrim clicks from closing when the user
-          interacts with the dialog content itself. */}
+    <div className="rsc-modal-scrim">
+      {/* Decorative click-outside-to-dismiss target. aria-hidden, so it is never
+          announced or focused; keyboard users close with Escape or the close
+          button. Sitting under the dialog means the dialog itself needs no
+          stopPropagation guard. */}
+      <div
+        className="modal-dismiss-layer"
+        aria-hidden="true"
+        onClick={onClose}
+      />
+      {/*
+          The rule ships a per-element allowance permitting onKeyDown/onKeyUp/
+          onKeyPress on a dialog, but it keys that allowance off the JSX element
+          NAME (a literal <dialog>), never off role="dialog" — so this handler is
+          exactly the case the rule means to permit and only trips because the
+          dialog is a div. The handler has to live on the dialog container:
+          aria-modal="true" promises the page behind is inert, so Tab must be
+          trapped at the container, which no child control can do.
+      */}
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <div
         ref={dialogRef}
         className="rsc-modal"
-        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="rsc-modal-title"
+        onKeyDown={onTrapKey}
       >
         <button
           ref={closeBtnRef}
@@ -313,7 +326,7 @@ function RoomModal({ room, onClose }: { room: Room; onClose: () => void }) {
           </div>
 
           <div className="rsc-modal__section">
-            <p className="text-overline text-cambridge mb-3">What's included</p>
+            <p className="text-overline text-cambridge mb-3">What&rsquo;s included</p>
             <ul className="rsc-modal__features">
               {room.features.map((f) => (
                 <li key={f}>

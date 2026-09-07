@@ -13,7 +13,7 @@ import { QuickLinks } from "@/components/QuickLinks";
 import { PartnersMarquee } from "@/components/PartnersMarquee";
 import { RentalSpaceCards } from "@/components/RentalSpaceCards";
 import { MemberVoice } from "@/components/MemberVoice";
-import { getEventGraphicRenderer } from "@/components/events/graphics/registry";
+import { EventGraphic, hasEventGraphic } from "@/components/events/graphics/registry";
 
 // ISR: the homepage shows the next 3 upcoming events, filtered by `new Date()`
 // against static event data. Re-render daily so passed events drop off instead
@@ -280,7 +280,6 @@ export default async function HomePage() {
 
           <div className="grid md:grid-cols-3 gap-f21">
             {upcomingEvents.map((event, i) => {
-              const Graphic = getEventGraphicRenderer(event);
               return (
               /* min-w-0 is REQUIRED on grid items here. Without it the
                  grid track sizes itself to each item's min-content
@@ -312,10 +311,10 @@ export default async function HomePage() {
                       name, date, "Registration Required", address) isn't dumped
                       into the link's accessible name and duplicated by the
                       visible title/date/price below. */}
-                  {Graphic ? (
+                  {hasEventGraphic(event) ? (
                     <div className="border-b border-border-secondary" aria-hidden="true">
                       <FluidGraphicFrame mode="social">
-                        <Graphic mode="social" />
+                        <EventGraphic event={event} mode="social" />
                       </FluidGraphicFrame>
                     </div>
                   ) : event.image ? (

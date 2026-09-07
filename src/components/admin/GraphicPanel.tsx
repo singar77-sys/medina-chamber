@@ -5,7 +5,7 @@ import { FluidGraphicFrame } from "@/components/events/graphics/FluidGraphicFram
 import { GraphicEditor } from "@/components/admin/GraphicEditor";
 import { EventGraphicUploader } from "@/components/admin/EventGraphicUploader";
 import { DynamicGraphic } from "@/components/events/graphics/DynamicGraphic";
-import { getEventGraphicRenderer } from "@/components/events/graphics/registry";
+import { EventGraphic, hasEventGraphic } from "@/components/events/graphics/registry";
 import type { ChamberEvent } from "@/data/events";
 import type { EventInfo } from "@/components/events/graphics/shared";
 import type { GraphicConfig } from "@/lib/graphic-template";
@@ -31,8 +31,8 @@ export function GraphicPanel({
     initialGraphicImageUrl ?? null,
   );
 
-  const Graphic = getEventGraphicRenderer(event);
-  if (!Graphic && !customTemplate && !graphicImageUrl) return null;
+  const builtInGraphic = hasEventGraphic(event);
+  if (!builtInGraphic && !customTemplate && !graphicImageUrl) return null;
 
   // Priority: uploaded image > AI template > built-in static graphic
   const previewLabel = graphicImageUrl
@@ -74,8 +74,8 @@ export function GraphicPanel({
               <FluidGraphicFrame mode="social">
                 {customTemplate ? (
                   <DynamicGraphic config={customTemplate} mode="social" eventInfo={currentInfo} />
-                ) : Graphic ? (
-                  <Graphic mode="social" />
+                ) : builtInGraphic ? (
+                  <EventGraphic event={event} mode="social" />
                 ) : null}
               </FluidGraphicFrame>
             )}

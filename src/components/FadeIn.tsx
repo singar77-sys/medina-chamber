@@ -36,9 +36,6 @@ interface FadeInProps {
  */
 export function FadeIn({ children, className = "", delay = 0, from = "up", distance }: FadeInProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const delayRef = useRef(delay);
-  // Keep ref current on every render (sync, not in an effect)
-  delayRef.current = delay;
 
   useEffect(() => {
     const el = ref.current;
@@ -47,7 +44,7 @@ export function FadeIn({ children, className = "", delay = 0, from = "up", dista
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          const d = delayRef.current;
+          const d = delay;
           if (d) {
             setTimeout(() => el.classList.add("is-visible"), d);
           } else {
@@ -66,7 +63,10 @@ export function FadeIn({ children, className = "", delay = 0, from = "up", dista
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, []); // empty — delay read from ref at fire time, observer created once
+  // `delay` is a per-call-site constant at every usage, so this re-subscribes
+  // only if a caller ever animates it. Reading it directly is what lets the
+  // ref that used to be written during render go away.
+  }, [delay]);
 
   const directionClass = {
     up: "fade-in-up",

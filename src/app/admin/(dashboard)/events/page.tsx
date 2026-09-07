@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getUpcomingEvents, getPastEvents, shortenEventTitle } from "@/data/events";
 import { getEventInfoOverride, getCmsEventData } from "@/lib/cms-store";
-import { getEventGraphicRenderer } from "@/components/events/graphics/registry";
+import { hasEventGraphic } from "@/components/events/graphics/registry";
 
 export const dynamic = "force-dynamic";
 
@@ -76,7 +76,7 @@ function EventSection({
           <p className="px-4 py-4 text-sm text-gray-400">None.</p>
         ) : (
           events.map((evt) => {
-            const hasGraphic = getEventGraphicRenderer(evt) !== null;
+            const hasGraphic = hasEventGraphic(evt);
             const hasGraphicOverride = graphicOverrideMap.get(evt.slug) ?? false;
             const hasDataOverride = dataOverrideMap.get(evt.slug) ?? false;
 

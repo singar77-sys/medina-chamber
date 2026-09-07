@@ -199,7 +199,7 @@ describe("legacy single-array keys", () => {
 
   it("migrates the array on the next write, preserving order, and drops the old key", async () => {
     await redis.set("cms:media:event:seeded", legacy);
-    const fresh = await upload("fresh", "seeded");
+    await upload("fresh", "seeded");
 
     expect((await getEventPhotos("seeded")).map((p) => p.filename)).toEqual([
       "fresh.webp",

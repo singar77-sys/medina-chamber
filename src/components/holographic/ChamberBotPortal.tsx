@@ -26,6 +26,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { usePostHog } from "posthog-js/react";
+import { useIsHydrated } from "@/hooks/useIsHydrated";
 import { ChamberBotMascot, type MascotIntent } from "./ChamberBotMascot";
 import { renderMarkdown } from "@/lib/markdown";
 import { chamberOffice, jaclyn, stephanie } from "@/data/staff";
@@ -260,7 +261,13 @@ function PortalCaptureCard({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
-  const formLoadedAt = useRef(Date.now());
+  // Bot honeypot: how long the form sat on screen before submit. Stamped in a
+  // mount effect rather than useRef(Date.now()) — render has to stay pure, and
+  // a clock read there would also differ between the server and client passes.
+  const formLoadedAt = useRef(0);
+  useEffect(() => {
+    formLoadedAt.current = Date.now();
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -366,7 +373,7 @@ export function ChamberBotPortal({
   onClose,
   upcomingEventCount,
 }: ChamberBotPortalProps) {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsHydrated();
   const [phase, setPhase] = useState<Phase>("closed");
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -403,12 +410,16 @@ export function ChamberBotPortal({
   const seededForQueryRef = useRef<string | null>(null);
   const phaseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sessionIdRef = useRef<string | null>(null);
+  // Mirrored into state because the transcript renders it (PortalCaptureCard).
+  // Reading sessionIdRef.current during render was a real bug, not just a lint
+  // complaint: the ref is assigned from a fetch response, which schedules no
+  // re-render, so a capture card mounted before the first reply kept the null
+  // it was born with. The ref stays as the synchronous source for the next
+  // request body, which must not wait on a render to see the new id.
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
   const posthog = usePostHog();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Live ET clock — ticks every second
   useEffect(() => {
@@ -483,7 +494,10 @@ export function ChamberBotPortal({
         if (!res.ok || !res.body) throw new Error("Failed");
 
         const serverSid = res.headers.get("x-session-id");
-        if (serverSid) sessionIdRef.current = serverSid;
+        if (serverSid) {
+          sessionIdRef.current = serverSid;
+          setSessionId(serverSid);
+        }
 
         const xSource = (res.headers.get("x-cb-source") ?? "general") as CbSource;
         const xIntent = (res.headers.get("x-cb-intent") ?? "general") as MascotIntent;
@@ -553,25 +567,36 @@ export function ChamberBotPortal({
   );
 
   // ── Phase machine ─────────────────────────────────────────────────
+  //
+  // The phase flip itself is adjusted during render (React's documented
+  // "adjusting state when a prop changes"): the entering/exiting class has to
+  // land in the SAME commit as the open flip, or the CSS transition plays from
+  // its end state. Doing it from the effect body also cascaded an extra render
+  // on every open and close. The effect below keeps only what genuinely
+  // belongs after the commit — the analytics ping and the timers that advance
+  // entering -> open and exiting -> closed.
+  const shouldEnter = open && (phase === "closed" || phase === "exiting");
+  const shouldExit = !open && (phase === "open" || phase === "entering");
+  if (shouldEnter) setPhase("entering");
+  else if (shouldExit) setPhase("exiting");
+
   useEffect(() => {
-    const shouldEnter = open && (phase === "closed" || phase === "exiting");
-    const shouldExit = !open && (phase === "open" || phase === "entering");
-    if (!shouldEnter && !shouldExit) return;
+    const entering = open && phase === "entering";
+    const exiting = !open && phase === "exiting";
+    if (!entering && !exiting) return;
 
     if (phaseTimerRef.current) {
       clearTimeout(phaseTimerRef.current);
       phaseTimerRef.current = null;
     }
 
-    if (shouldEnter) {
-      setPhase("entering");
+    if (entering) {
       posthog?.capture("chamberbot_opened");
       phaseTimerRef.current = setTimeout(() => {
         setPhase("open");
         phaseTimerRef.current = null;
       }, ENTER_MS);
     } else {
-      setPhase("exiting");
       posthog?.capture("chamberbot_closed", { message_count: messages.length });
       phaseTimerRef.current = setTimeout(() => {
         setPhase("closed");
@@ -813,7 +838,7 @@ export function ChamberBotPortal({
                       {m.showCapture && (
                         <PortalCaptureCard
                           messageId={m.id}
-                          sessionId={sessionIdRef.current}
+                          sessionId={sessionId}
                           onClose={(id) =>
                             setMessages((prev) =>
                               prev.map((msg) =>

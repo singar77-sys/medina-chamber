@@ -39,7 +39,7 @@
 
 import sharp from "sharp";
 import { readdir, mkdir, rm, stat } from "fs/promises";
-import { join, dirname, extname, resolve } from "path";
+import { join, dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");

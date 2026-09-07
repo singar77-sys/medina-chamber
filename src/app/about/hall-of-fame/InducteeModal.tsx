@@ -33,25 +33,26 @@ export function InducteeModal({
 
   return (
     <>
-      {/* Scrim */}
+      {/* Scrim — also the click-outside-to-close target. It is decorative and
+          aria-hidden, so it is never announced or focused; keyboard users close
+          with Escape (handled above) or the Close button below. */}
       <div
         className="fixed inset-0 z-40 bg-oxford/70 backdrop-blur-sm"
         aria-hidden="true"
+        onClick={onClose}
       />
 
-      {/* Centered dialog — click the surrounding area to close */}
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center p-f21"
-        onClick={onClose}
-      >
+      {/* Centering layer only. pointer-events-none lets clicks in the margin
+          fall through to the scrim, so the dialog's own wrapper needs neither a
+          click handler nor a stopPropagation guard. */}
+      <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center p-f21">
         <div
           ref={panelRef}
           tabIndex={-1}
           role="dialog"
           aria-modal="true"
           aria-labelledby="inductee-modal-title"
-          onClick={(e) => e.stopPropagation()}
-          className="w-full max-w-lg max-h-[85vh] bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)] shadow-2xl flex flex-col overflow-hidden"
+          className="pointer-events-auto w-full max-w-lg max-h-[85vh] bg-bg-primary border border-border-secondary rounded-[var(--radius-lg)] shadow-2xl flex flex-col overflow-hidden"
         >
           <div className="flex items-start gap-f21 p-f21 lg:p-f34 border-b border-border-secondary">
             <InducteeAvatar

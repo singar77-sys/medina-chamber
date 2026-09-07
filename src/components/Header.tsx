@@ -266,23 +266,45 @@ function MobileMenu({
   // handed back on close instead of falling to <body>.
   const openerRef = useRef<HTMLElement | null>(null);
 
-  // Animate in/out instead of instant mount/unmount
+  // Animate in/out instead of instant mount/unmount.
+  //
+  // The state that has to change in the SAME commit as the isOpen flip is
+  // adjusted during render (React's documented "adjusting state when a prop
+  // changes"), not from an effect. Mounting the drawer one commit late is what
+  // makes an enter transition play from its end state, and clearing `animating`
+  // one commit late does the same on the way out. Only the genuinely
+  // time-delayed work — the two-frame enter flip, the iOS ghost-click window,
+  // and the unmount after the exit transition — stays in the effect below,
+  // where it runs from timer callbacks rather than the effect body.
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  if (prevIsOpen !== isOpen) {
+    setPrevIsOpen(isOpen);
+    if (isOpen) {
+      setVisible(true);
+    } else {
+      setAnimating(false);
+      setBackdropReady(false);
+    }
+  }
+
   useEffect(() => {
     if (isOpen) {
       openerRef.current = document.activeElement as HTMLElement | null;
-      setVisible(true);
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
+      let innerRaf = 0;
+      const outerRaf = requestAnimationFrame(() => {
+        innerRaf = requestAnimationFrame(() => {
           setAnimating(true);
           closeBtnRef.current?.focus();
         });
       });
       // Activate backdrop after iOS ghost-click window has passed (~300ms).
       const readyTimer = setTimeout(() => setBackdropReady(true), 350);
-      return () => clearTimeout(readyTimer);
+      return () => {
+        cancelAnimationFrame(outerRaf);
+        cancelAnimationFrame(innerRaf);
+        clearTimeout(readyTimer);
+      };
     } else {
-      setAnimating(false);
-      setBackdropReady(false);
       // preventScroll: the scroll lock is unwinding on this same commit, so a
       // focus-driven scrollIntoView would fight window.scrollTo.
       openerRef.current?.focus({ preventScroll: true });

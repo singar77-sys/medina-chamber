@@ -15,6 +15,32 @@ const eslintConfig = defineConfig([
   {
     rules: {
       ...jsxA11y.flatConfigs.recommended.rules,
+
+      /*
+       * Honour the leading-underscore convention this codebase already uses for
+       * deliberately-unused bindings — mock signatures that must match a real
+       * one (`(_db, _input) => …` all over the route tests), graphics
+       * components that take `_props` they ignore, and destructured values kept
+       * only to drop them from a rest spread.
+       *
+       * Without this the rule reports ~40 of those as debt, which trains people
+       * to ignore its output — and there is no way to say "this argument exists
+       * for the signature" other than deleting a name the reader wants. This
+       * narrows the rule to what it is actually for: genuinely dead bindings,
+       * which stay reported.
+       */
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          args: "all",
+          argsIgnorePattern: "^_",
+          caughtErrors: "all",
+          caughtErrorsIgnorePattern: "^_",
+          destructuredArrayIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          ignoreRestSiblings: true,
+        },
+      ],
     },
   },
   // Override default ignores of eslint-config-next.

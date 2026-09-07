@@ -114,13 +114,12 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
-      # Lint is ADVISORY for now: the repo has a backlog of pre-existing eslint
-      # errors (tracked separately as lint-debt cleanup). Typecheck, test, and build
-      # are the hard gates. TODO: flip this to blocking (remove
-      # continue-on-error) once the lint backlog is cleared in its own PR.
-      - name: Lint (advisory)
+      # Lint is a HARD GATE. The pre-existing backlog (74 errors, mostly
+      # jsx-a11y label/keyboard findings and React lifecycle rules) was repaired
+      # rather than suppressed, and `eslint` now exits clean, so a new error is a
+      # new defect and should fail the build like a type error does.
+      - name: Lint
         run: pnpm lint
-        continue-on-error: true
 
       - name: Typecheck
         run: pnpm exec tsc --noEmit

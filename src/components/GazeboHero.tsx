@@ -59,7 +59,6 @@ function HeroPicture({
     <picture className="contents">
       <source type="image/avif" srcSet={srcSet(v.base, "avif", v.widths)} sizes="100vw" />
       <source type="image/webp" srcSet={srcSet(v.base, "webp", v.widths)} sizes="100vw" />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={v.jpg}
         alt={v.alt}

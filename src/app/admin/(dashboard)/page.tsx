@@ -10,9 +10,13 @@ export default async function AdminDashboardPage() {
   const recentStaticPosts = blogPosts.slice(0, 3);
   const cmsPosts = await listCmsBlogPosts();
 
-  // Last 30 days chatbot stats
-  const today = new Date().toISOString().slice(0, 10);
-  const thirtyAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  // Last 30 days chatbot stats. One clock read for both ends of the range —
+  // two separate reads could straddle a midnight tick and query a 31-day window.
+  const now = new Date();
+  const today = now.toISOString().slice(0, 10);
+  const thirtyAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 10);
   const stats = await getStats(thirtyAgo, today).catch(() => ({
     totalMessages: 0,
     topicTotals: {} as Record<string, number>,

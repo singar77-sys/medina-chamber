@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getEventBySlug } from "@/data/events";
 import { getEventInfoOverride, getCmsEventData } from "@/lib/cms-store";
 import { getTemplateForEventType } from "@/lib/graphic-template";
-import { getEventGraphicRenderer } from "@/components/events/graphics/registry";
+import { hasEventGraphic } from "@/components/events/graphics/registry";
 import { getEventPhotos, getEventGraphicImage } from "@/lib/media-store";
 import { EventEditor } from "@/components/admin/EventEditor";
 import { GraphicPanel } from "@/components/admin/GraphicPanel";
@@ -35,7 +35,6 @@ export default async function AdminEventPage({ params }: Props) {
       getEventGraphicImage(slug),
     ]);
 
-  const Graphic = getEventGraphicRenderer(event);
 
   const baseInfo: EventInfo = {
     dayOfWeek: event.dayOfWeek,
@@ -69,7 +68,7 @@ export default async function AdminEventPage({ params }: Props) {
       />
 
       {/* Social graphic editor (client component — preview updates live) */}
-      {Graphic || customTemplate || graphicImageUrl ? (
+      {hasEventGraphic(event) || customTemplate || graphicImageUrl ? (
         <GraphicPanel
           event={event}
           initialInfo={currentInfo}

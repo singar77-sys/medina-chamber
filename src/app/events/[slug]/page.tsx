@@ -5,7 +5,7 @@ import { ButtonA, ButtonLink } from "@/components/ui/Button";
 import { notFound, redirect } from "next/navigation";
 import { events, getEventBySlug, eventMetaDescription } from "@/data/events";
 import { getPublicCmsEventData } from "@/lib/cms-store";
-import { getEventGraphicRenderer } from "@/components/events/graphics/registry";
+import { EventGraphic, hasEventGraphic } from "@/components/events/graphics/registry";
 import { FluidGraphicFrame } from "@/components/events/graphics/FluidGraphicFrame";
 import { getPublicEventPhotos } from "@/lib/media-store";
 import { EventGallery } from "@/components/events/EventGallery";
@@ -152,7 +152,6 @@ export default async function EventPage(
     .map((p) => p.trim())
     .filter(Boolean);
 
-  const Graphic = getEventGraphicRenderer(event);
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -204,7 +203,7 @@ export default async function EventPage(
             {/* Hero — prefer the branded SVG graphic; fall back to the
                 cloudinary event image only if the slug doesn't map to one
                 of the 11 graphic templates. */}
-            {Graphic ? (
+            {hasEventGraphic(event) ? (
               <figure className="mt-f21 rounded-[var(--radius-lg)] overflow-hidden border border-border-secondary m-0">
                 {/* The poster SVGs bake their copy into raw <text> nodes, so a
                     screen reader would read the fragments ("Registration
@@ -213,7 +212,7 @@ export default async function EventPage(
                     event cards. */}
                 <div aria-hidden="true">
                   <FluidGraphicFrame mode="social">
-                    <Graphic mode="social" />
+                    <EventGraphic event={event} mode="social" />
                   </FluidGraphicFrame>
                 </div>
                 <figcaption className="sr-only">
@@ -391,7 +390,7 @@ function to24h(time: string): string {
   if (!time) return "00:00:00";
   const match = time.match(/(\d+):(\d+)\s*(AM|PM)/i);
   if (!match) return "00:00:00";
-  let [, h, m, ampm] = match;
+  const [, h, m, ampm] = match;
   let hour = parseInt(h);
   if (ampm.toUpperCase() === "PM" && hour !== 12) hour += 12;
   if (ampm.toUpperCase() === "AM" && hour === 12) hour = 0;

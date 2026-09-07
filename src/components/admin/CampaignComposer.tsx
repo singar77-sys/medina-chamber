@@ -84,7 +84,10 @@ export function CampaignComposer({ tierOptions, campaign }: Props) {
   const [resetting, setResetting] = useState(false);
   const [resetErr, setResetErr] = useState("");
   const [count, setCount] = useState<number | null>(null);
-  const [countLoading, setCountLoading] = useState(false);
+  // Starts true: the mount effect below fetches the count immediately, so the
+  // first paint should already show "Counting…" rather than flashing an empty
+  // count for a frame and then correcting itself.
+  const [countLoading, setCountLoading] = useState(true);
   const [countErr, setCountErr] = useState("");
 
   // Unsaved-changes guard: "Send now" blasts the PERSISTED campaign, so it must
@@ -114,9 +117,16 @@ export function CampaignComposer({ tierOptions, campaign }: Props) {
     return { tiers, statuses };
   }
 
+  /** Re-run the count from a user action — resets the flags first. */
   async function fetchCount(): Promise<number | null> {
     setCountLoading(true);
     setCountErr("");
+    return loadCount();
+  }
+
+  /** The request itself. Sets no state before its first await, so the mount
+   *  effect can call it without a synchronous setState in the effect body. */
+  async function loadCount(): Promise<number | null> {
     try {
       const res = await authFetch("/api/admin/campaigns/preview", "POST", currentSegment());
       if (!res.ok) {
@@ -136,7 +146,7 @@ export function CampaignComposer({ tierOptions, campaign }: Props) {
 
   // Auto-preview the audience once on mount so the count shows without a click.
   useEffect(() => {
-    void fetchCount();
+    void loadCount();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

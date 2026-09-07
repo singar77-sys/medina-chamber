@@ -11,7 +11,7 @@
  * event "live".
  */
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { formatCents } from "@/lib/format";
 
 export interface AdminTicket {
@@ -44,6 +44,7 @@ export function TicketManager({
   initialCapacity: number | null;
   initialTickets: AdminTicket[];
 }) {
+  const uid = useId();
   const [status, setStatus] = useState(initialStatus);
   const [capacity, setCapacity] = useState(initialCapacity?.toString() ?? "");
   const [tickets, setTickets] = useState<AdminTicket[]>(initialTickets);
@@ -131,8 +132,10 @@ export function TicketManager({
         <h2 className="text-sm font-semibold text-gray-900 mb-4">Registration settings</h2>
         <div className="flex flex-wrap items-end gap-4">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Status</label>
-            <select value={status} onChange={(e) => setStatus(e.target.value)} className={inputClass}>
+            <label className="block text-xs font-medium text-gray-500 mb-1" htmlFor={`${uid}-status`}>
+              Status
+            </label>
+            <select id={`${uid}-status`} value={status} onChange={(e) => setStatus(e.target.value)} className={inputClass}>
               {EVENT_STATUSES.map((s) => (
                 <option key={s} value={s}>
                   {s}
@@ -141,8 +144,11 @@ export function TicketManager({
             </select>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Capacity (blank = unlimited)</label>
+            <label className="block text-xs font-medium text-gray-500 mb-1" htmlFor={`${uid}-capacity`}>
+              Capacity (blank = unlimited)
+            </label>
             <input
+              id={`${uid}-capacity`}
               value={capacity}
               onChange={(e) => setCapacity(e.target.value)}
               inputMode="numeric"

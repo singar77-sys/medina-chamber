@@ -33,7 +33,13 @@ export default async function Image() {
         }}
       >
         {/* Ghosted stamp — right side, large background texture */}
+        {/* Decorative texture. This renders to a PNG via ImageResponse, but an
+            explicit empty alt keeps it correct if it is ever read as markup. */}
+        {/* eslint-disable-next-line @next/next/no-img-element -- this tree is
+            rendered by Satori into a PNG, never into the DOM; next/image does
+            not exist in an ImageResponse. */}
         <img
+          alt=""
           src={stamp}
           style={{
             position: "absolute",
@@ -68,7 +74,10 @@ export default async function Image() {
             gap: 0,
           }}
         >
+          {/* eslint-disable-next-line @next/next/no-img-element -- see above:
+              Satori renders this to a PNG, next/image is not available here. */}
           <img
+            alt="Medina County Chamber of Commerce"
             src={logo}
             style={{ width: 300, marginBottom: 36 }}
           />

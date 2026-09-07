@@ -89,8 +89,33 @@ summary,
   /* Darkened from #6B7A94 for WCAG AA (4.5:1) on white backgrounds. */
   --text-tertiary: #5A6A82;
   --text-inverse: #FFFFFF;
-  /* Darkened from --coquelicot (#FF4000, 3.48:1) to pass WCAG AA on white. */
-  --text-accent: #C84A1E;
+  /*
+   * --text-accent-aa — the TEXT-ONLY accent for small / normal-size
+   * informative text on LIGHT surfaces. It is deliberately a SEPARATE token
+   * from --accent / --coquelicot and must not be folded back into them.
+   *
+   * Why it exists: #C84A1E is the brand accent and stays exactly as it is for
+   * fills, borders, buttons (white text on it = 4.61:1) and decoration. But
+   * used AS TEXT it only clears WCAG 2.2 AA 1.4.3 (4.5:1) against pure white.
+   * Measured against the surfaces this site actually paints text on:
+   *   #FFFFFF 4.71 ok · #F7F8FA 4.44 FAIL · #EEF0F4 4.13 FAIL
+   *   #FFF0EB 4.25 FAIL · #EBF5F1 4.24 FAIL · #E0ECEA (bg-cambridge/20) 3.90 FAIL
+   * Every overline, chip, caption and card CTA on the site is normal-size
+   * text (under 24px, or under 18.66px bold), so all of it failed — 31 axe
+   * nodes across home / directory / events / event detail.
+   *
+   * #B6431B is the same hue ray, two steps darker, and clears 4.5:1 on all of
+   * them: #FFFFFF 5.52 · #F7F8FA 5.19 · #EEF0F4 4.83 · #FFF0EB 4.97
+   *       #EBF5F1 4.95 · #E0ECEA 4.56 · #F3F8F6 (rsc chip) 5.14
+   * (#B8431B, the first candidate, lands on #E0ECEA at exactly 4.5001 — on
+   * the threshold with no margin, so it was rejected.)
+   *
+   * LIGHT SURFACES ONLY. On oxford (#0C1B33) it is 3.12:1, so dark surfaces
+   * keep the brighter brand values: --text-accent #FF6233 in dark mode, and
+   * --cambridge on oxford panels. See the override blocks further down.
+   */
+  --text-accent-aa: #B6431B;
+  --text-accent: var(--text-accent-aa);
 
   --border-primary: #D8DCE4;
   --border-secondary: #EEF0F4;
@@ -284,12 +309,30 @@ summary,
   color: #FF8855;
 }
 
+/* --- Light-mode accent TEXT override ---------------------- */
+/*
+ * The mirror image of the dark-mode block above. `.text-accent` is generated
+ * from --color-accent -> --accent (#C84A1E), the SAME token that paints
+ * `bg-accent` buttons and `border-accent` rules, so it cannot be darkened at
+ * the token level without darkening every accent fill on the site. Override
+ * the text utility only, and only in light mode.
+ *
+ * Untouched by design: --coquelicot, --accent, bg-accent, border-accent,
+ * the shader/blob washes, and --accent-hover (#AA3F19 already reads 5.75:1
+ * on #F7F8FA and 5.05:1 on #E0ECEA).
+ */
+[data-theme="light"] .text-accent,
+[data-theme="light"] .hover\:text-accent:hover {
+  color: var(--text-accent-aa);
+}
+
 /* Cambridge text → accent in light mode.
  *
  * #83BCA9 on light backgrounds = ~2.3:1 contrast (fails WCAG AA).
  * In light mode every `.text-cambridge` element (section eyebrows,
- * overlines, footer labels) should render as `--text-accent` (#C84A1E)
- * which achieves 5.6:1 on white — comfortably AA. Decorative uses of
+ * overlines, footer labels) should render as `--text-accent`, which in light
+ * mode is the AA text token #B6431B (5.52:1 on white, 5.19:1 on #F7F8FA, and
+ * still 4.56:1 on the darkest tinted chip). Decorative uses of
  * cambridge that aren't text (bg-cambridge/*, border-cambridge/*) are
  * at low opacity and left intentionally as teal brand accents.
  */
@@ -303,10 +346,46 @@ summary,
   color: color-mix(in oklab, var(--text-accent) 80%, transparent);
 }
 
+/* Large-text exception: the brand accent stays BRIGHT above the AA size line.
+ *
+ * WCAG 1.4.3 asks 4.5:1 only of text under 24px (or under 18.66px bold);
+ * .text-display / .text-h1 / .text-h2 all sit above it at 3:1. The hero
+ * display word and the stat numerals are brand marks, not information, so
+ * they keep #C84A1E. Spelled out rather than inherited, so a new small-text
+ * call site can never fall through into the brighter value by accident.
+ */
+[data-theme="light"] .text-display .text-accent,
+[data-theme="light"] .text-display.text-accent,
+[data-theme="light"] .text-h1 .text-accent,
+[data-theme="light"] .text-h1.text-accent,
+[data-theme="light"] .text-h2 .text-accent,
+[data-theme="light"] .text-h2.text-accent,
+[data-theme="light"] .text-display .text-cambridge,
+[data-theme="light"] .text-display.text-cambridge,
+[data-theme="light"] .text-h1 .text-cambridge,
+[data-theme="light"] .text-h1.text-cambridge,
+[data-theme="light"] .text-h2 .text-cambridge,
+[data-theme="light"] .text-h2.text-cambridge {
+  color: var(--accent);
+}
+
 /* Hero exception: the hero always has a dark oxford overlay so cambridge
  * (#83BCA9) reads cleanly there. Keep teal in both themes by overriding
  * the global light-mode rule above with a tighter selector. */
 [data-theme="light"] .site-hero .text-cambridge {
+  color: var(--cambridge);
+}
+
+/* Oxford-panel exception, same shape as the hero rule above.
+ *
+ * An oxford card is a DARK surface even while the page is in light mode, so
+ * the `.text-cambridge -> --text-accent` remap was putting an orange meant
+ * for light surfaces onto near-black (#C84A1E on #0C1B33 = 3.65:1, and the
+ * AA token would be 3.12:1 — darkening makes it worse, not better). Cambridge
+ * itself reads 7.98:1 there, which is what the card was designed for.
+ * Fixes the five signature-event card labels on /events. */
+[data-theme="light"] .bg-oxford .text-cambridge,
+[data-theme="light"] .bg-bg-inverse .text-cambridge {
   color: var(--cambridge);
 }
 
@@ -341,6 +420,11 @@ summary,
 /* White-on-transparent PNG logos — invert first so white→black, then multiply renders correctly */
 .ci-card[href*="fire-dex"] img,
 .ci-card[href*="great-lakes-construction-co"] img { filter: invert(1); }
+/* The tile is forced white in BOTH themes (above), so the fallback wordmark
+ * shown when a member has no logo must use the LIGHT-mode text colour even in
+ * dark mode. Inheriting --text-secondary there put #A8B4C8 on #FFFFFF = 2.09:1.
+ * #3D4F6F on white = 8.25:1. */
+[data-theme="dark"] .ci-card span { color: #3D4F6F; }
 
 
 /* ── Community Investor marquee ──────────────────────────────── */
@@ -1650,6 +1734,26 @@ body {
 .rsc-card:hover .rsc-card__cta-arrow,
 .rsc-card:focus-visible .rsc-card__cta-arrow {
   transform: translateX(4px);
+}
+
+/* Light mode: cambridge as TEXT on a white card is the site's worst contrast
+ * failure — the chip measured 2.01:1 (#83BCA9 on the #F3F8F6 chip fill) and
+ * the CTA 1.85:1 (#83BCA9 at 82% opacity over white composites to #99C8B8).
+ * Both are 10-11px bold, so AA wants 4.5:1. The teal stays where it is
+ * decoration (card border, hover glow, chip fill, focus ring); only the two
+ * text runs move to the AA text token.
+ *
+ * The CTA's rest opacity goes to 1: an 18% white wash over the text WAS most
+ * of that deficit, and a pre-faded label is exactly the thing 1.4.3 exists to
+ * stop. The hover affordance survives as the arrow slide plus the card lift.
+ * Dark mode is untouched — the card is oxford there and cambridge reads
+ * 7.98:1 on it. */
+[data-theme="light"] .rsc-card__chip,
+[data-theme="light"] .rsc-card__cta {
+  color: var(--text-accent-aa);
+}
+[data-theme="light"] .rsc-card__cta {
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {

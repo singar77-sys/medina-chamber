@@ -31,35 +31,79 @@ import { expect, test, type Page, type TestInfo } from "@playwright/test";
 const WCAG = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"];
 
 /**
- * Serious/critical axe rule ids each page violates today. Measured
- * 2026-09-05 against a production build:
+ * Serious/critical axe rule ids each page violates today.
  *
- *   page          critical  serious                       moderate/minor
- *   home          0         1 rule / 12 nodes  (contrast)  0
- *   directory     0         1 rule /  4 nodes  (contrast)  0
- *   events        0         1 rule / 13 nodes  (contrast)  0
- *   event detail  0         1 rule /  2 nodes  (contrast)  0
+ * 2026-09-05 measured 31 colour-contrast nodes across these four pages
+ * (12 / 4 / 13 / 2). They were one defect in four costumes: the brand accent
+ * and cambridge were being used as small text on light surfaces at 4.43:1,
+ * 3.90:1, 2.01:1 and 1.85:1, and the light-mode `.text-cambridge` remap was
+ * additionally painting a light-surface orange onto oxford cards at 3.65:1.
  *
- * Every one of those 31 nodes is the SAME defect wearing different clothes:
- * two brand tokens fail AA as text.
- *   • `--coquelicot` / .text-accent (#c84a1e) — 4.43:1 on the light surface
- *     (#f7f8fa), 3.65:1 on oxford (#0c1b33). AA wants 4.5:1. It is used for
- *     every overline and card CTA on the site, which is why the count is high
- *     and the rule count is one.
- *   • `--cambridge` (#83bca9 / #99c8b8) — 2.01:1 and 1.85:1 on the
- *     ResourceCard chips and CTAs. That one is not marginal.
- * There is also one decorative oxford-on-oxford numeral (1.26:1) in the
- * signature-events cards that axe sees as text.
+ * 2026-09-07 fixed that at the token level (see --text-accent-aa in
+ * src/app/globals.css) and re-measured against a production build:
  *
- * This is a design-token decision, not a test problem, so it is recorded here
- * rather than "fixed" by loosening the gate. Nudging --coquelicot two or three
- * points darker clears roughly 25 of the 31 nodes in one edit.
+ *   page          before  after   note
+ *   home            12      0     CLEAN
+ *   directory        4      0     CLEAN
+ *   events          13      3     three known nodes, exempted BY NODE below
+ *   event detail     2      0     CLEAN
+ *
+ * All four pages now ENFORCE the whole rule set. BASELINE is empty everywhere.
+ *
+ * Two dark-mode failures are known and NOT gated here (this suite runs in
+ * Playwright's default light colour scheme): `link-name` on the header logo
+ * link, and `.text-emerald` (#005450) on the dark events surface at 1.9:1.
+ * Both live outside this gate's pages-as-configured.
  */
 const BASELINE: Record<string, string[]> = {
-  home: ["color-contrast"],
-  directory: ["color-contrast"],
-  events: ["color-contrast"],
-  "event detail": ["color-contrast"],
+  home: [],
+  directory: [],
+  events: [],
+  "event detail": [],
+};
+
+interface NodeExemption {
+  /** axe rule id this exemption applies to — and only this one. */
+  rule: string;
+  /** Matched against the offending node's own HTML. */
+  match: RegExp;
+  /** EXACTLY how many nodes may match. More or fewer fails. */
+  count: number;
+  why: string;
+}
+
+/**
+ * Per-NODE exemptions, not per-rule ones.
+ *
+ * `events: ["color-contrast"]` in BASELINE used to be the whole story, and it
+ * exempted the RULE across the entire page: a brand-new contrast failure
+ * anywhere on /events was absorbed in silence. The comment said "3 nodes", but
+ * the comment was documentation, not a gate.
+ *
+ * These are the three nodes, identified by the markup that causes them. Any
+ * other contrast failure on /events is not exempt and fails the suite, and the
+ * count is asserted exactly — a fourth wordmark, or a fixed one, both fail here
+ * and make somebody update this list deliberately.
+ */
+const NODE_EXEMPTIONS: Record<string, NodeExemption[]> = {
+  home: [],
+  directory: [],
+  "event detail": [],
+  events: [
+    {
+      rule: "color-contrast",
+      // <span aria-hidden class="… text-[5.5rem] … text-cambridge/[0.13] …">GOLF</span>
+      match: /text-cambridge\/\[0\.13\]/,
+      count: 3,
+      why:
+        "The three signature-event cards each render a giant decorative wordmark " +
+        "as a real text node, which composites to #1b3042 on #0c1b33 = 1.26:1 " +
+        "against the 3:1 large text needs. It carries no information (aria-hidden, " +
+        "repeats the card title), so the fix is to stop shipping it as text — move " +
+        "it to a background or pseudo-element — or raise the wash to a legible " +
+        "opacity. Both are design calls inside src/app/events/page.tsx.",
+    },
+  ],
 };
 
 async function auditPage(page: Page, key: string, info: TestInfo) {
@@ -81,6 +125,8 @@ async function auditPage(page: Page, key: string, info: TestInfo) {
           impact: v.impact,
           nodes: v.nodes.length,
           help: v.help,
+          // The markup, so a baseline decision can be made from the report.
+          html: v.nodes.map((n) => n.html.slice(0, 160)),
         })),
         moderate_minor: advisory.map((v) => ({
           id: v.id,
@@ -94,13 +140,48 @@ async function auditPage(page: Page, key: string, info: TestInfo) {
     ),
   });
 
-  const found = [...new Set(blocking.map((v) => v.id))].sort();
+  // Split every offending NODE into "one of the known ones" and "new".
+  const exemptions = NODE_EXEMPTIONS[key] ?? [];
+  const matched = new Map<NodeExemption, number>();
+  const unexpected: { rule: string; html: string }[] = [];
+
+  for (const violation of blocking) {
+    for (const node of violation.nodes) {
+      const exemption = exemptions.find(
+        (e) => e.rule === violation.id && e.match.test(node.html),
+      );
+      if (exemption) {
+        matched.set(exemption, (matched.get(exemption) ?? 0) + 1);
+      } else {
+        unexpected.push({ rule: violation.id, html: node.html.slice(0, 240) });
+      }
+    }
+  }
+
+  const found = [...new Set(unexpected.map((u) => u.rule))].sort();
   expect(
     found,
     `serious/critical axe rules on "${key}" changed. Fixed one? Remove its id ` +
       `from BASELINE in e2e/a11y.spec.ts. Added one? That is a new accessibility ` +
-      `regression — fix it rather than baselining it.`,
+      `regression — fix it rather than baselining it.
+` +
+      `Offending nodes:
+${JSON.stringify(unexpected, null, 2)}`,
   ).toEqual([...BASELINE[key]].sort());
+
+  // Exact counts, so the exemption cannot quietly grow to cover new markup and
+  // cannot outlive the defect it documents.
+  for (const exemption of exemptions) {
+    expect(
+      matched.get(exemption) ?? 0,
+      `"${key}" expected exactly ${exemption.count} exempt ${exemption.rule} ` +
+        `node(s) matching ${exemption.match}. ${exemption.why}
+` +
+        `If the defect is fixed, delete this exemption. If the markup grew, that ` +
+        `is a new instance of a known accessibility failure — do not just bump ` +
+        `the number.`,
+    ).toBe(exemption.count);
+  }
 }
 
 test.describe("accessibility", () => {

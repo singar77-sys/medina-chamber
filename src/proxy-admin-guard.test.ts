@@ -24,6 +24,24 @@ import { proxy, config } from "./proxy";
  * broken signature check or a broken revocation check fails here.
  */
 
+/**
+ * Return `token` with its HMAC signature altered so that it can never verify.
+ *
+ * Deliberately NOT by flipping the LAST base64url character. An HMAC-SHA-256
+ * signature is 32 bytes, which base64url-encodes to 43 characters - and that
+ * final character carries only 4 significant bits, its low 2 bits being padding
+ * that atob() discards. So for the 1-in-16 signatures whose last character is
+ * "A", flipping it to "B" changes nothing but those discarded bits: the token
+ * still verifies, the guard correctly does NOT redirect, and the test fails at
+ * random. The FIRST signature character is all payload bits, so replacing it
+ * always changes byte 0 of the decoded signature.
+ */
+function tamperSignature(token: string): string {
+  const dot = token.lastIndexOf(".");
+  const sig = token.slice(dot + 1);
+  return `${token.slice(0, dot + 1)}${sig[0] === "A" ? "B" : "A"}${sig.slice(1)}`;
+}
+
 const TOKEN_A = "a".repeat(32); // ADMIN_USERS tokens must be >= 32 chars
 const SESSION_SECRET = "s".repeat(48);
 
@@ -97,9 +115,7 @@ describe("proxy() - /admin redirect guard", () => {
   });
 
   it("redirects a tampered cookie and clears it", async () => {
-    const token = await signSession("Stephanie");
-    // Flip the last character of the signature.
-    const forged = token.slice(0, -1) + (token.endsWith("A") ? "B" : "A");
+    const forged = tamperSignature(await signSession("Stephanie"));
     const res = await proxy(req("/admin", { cookie: `${ADMIN_COOKIE}=${forged}` }));
 
     expect(res.status).toBe(307);

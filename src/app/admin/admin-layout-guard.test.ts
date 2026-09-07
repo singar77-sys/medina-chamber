@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { ADMIN_COOKIE, signSession } from "@/lib/admin-session";
+import { ADMIN_COOKIE, signSession, verifySession } from "@/lib/admin-session";
 
 /**
  * The OTHER half of the `purpose: prefetch` admin-auth bypass.
@@ -73,6 +73,24 @@ async function render(): Promise<string | null> {
   }
 }
 
+/**
+ * Return `token` with its HMAC signature altered so that it can never verify.
+ *
+ * Deliberately NOT by flipping the LAST base64url character. An HMAC-SHA-256
+ * signature is 32 bytes, which base64url-encodes to 43 characters - and that
+ * final character carries only 4 significant bits, its low 2 bits being padding
+ * that atob() discards. So for the 1-in-16 signatures whose last character is
+ * "A", flipping it to "B" changes nothing but those discarded bits: the token
+ * still verifies, the guard correctly does NOT redirect, and the test fails at
+ * random. The FIRST signature character is all payload bits, so replacing it
+ * always changes byte 0 of the decoded signature.
+ */
+function tamperSignature(token: string): string {
+  const dot = token.lastIndexOf(".");
+  const sig = token.slice(dot + 1);
+  return `${token.slice(0, dot + 1)}${sig[0] === "A" ? "B" : "A"}${sig.slice(1)}`;
+}
+
 describe("admin (dashboard) layout self-guard", () => {
   it("redirects to /admin/login with no session cookie", async () => {
     cookieValue = undefined;
@@ -90,8 +108,10 @@ describe("admin (dashboard) layout self-guard", () => {
   });
 
   it("redirects on a tampered signature", async () => {
-    const token = await signSession("Stephanie");
-    cookieValue = token.slice(0, -1) + (token.endsWith("A") ? "B" : "A");
+    cookieValue = tamperSignature(await signSession("Stephanie"));
+    // Precondition: the fixture really is an unverifiable signature. Without
+    // this, a padding-only "tamper" would make the assertion below a coin flip.
+    expect(await verifySession(cookieValue)).toBe(false);
     expect(await render()).toBe("/admin/login");
   });
 

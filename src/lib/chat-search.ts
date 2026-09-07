@@ -170,12 +170,26 @@ function scoreMatch(member: Member, terms: string[]): number {
  * was ambiguous (the scraper's tier=2 flag mostly captured CI members,
  * not VP ones). Using authoritative tier-overrides from the admin API.
  */
+export interface TierSearchResult {
+  ciMembers: Member[];
+  vpMembers: Member[];
+  otherMembers: Member[];
+  /** Unique members matching the query, counted BEFORE the per-tier display
+   *  limits above. This is the census the bot quotes for "how many X?". */
+  totalMatchCount: number;
+  /** Every slug in that census, including the matches the limits cut. The
+   *  caller needs it to de-duplicate a later semantic pass: filtering only
+   *  against the TRUNCATED buckets would let a member that keyword search
+   *  already found come back as a "new" vector hit and be counted twice. */
+  matchedSlugs: Set<string>;
+}
+
 export function searchMembersWithTierPriority(
   query: string,
   ciLimit = 20,
   vpLimit = 20,
   otherLimit = 3,
-): { ciMembers: Member[]; vpMembers: Member[]; otherMembers: Member[]; totalMatchCount: number } {
+): TierSearchResult {
   const terms = expandTerms(
     query
       .toLowerCase()
@@ -185,7 +199,13 @@ export function searchMembersWithTierPriority(
   );
 
   if (terms.length === 0) {
-    return { ciMembers: [], vpMembers: [], otherMembers: [], totalMatchCount: 0 };
+    return {
+      ciMembers: [],
+      vpMembers: [],
+      otherMembers: [],
+      totalMatchCount: 0,
+      matchedSlugs: new Set<string>(),
+    };
   }
 
   const scored = members
@@ -217,7 +237,30 @@ export function searchMembersWithTierPriority(
     .map(({ member }) => member)
     .sort(sortByName);
 
-  return { ciMembers, vpMembers, otherMembers, totalMatchCount: scored.length };
+  return {
+    ciMembers,
+    vpMembers,
+    otherMembers,
+    totalMatchCount: scored.length,
+    matchedSlugs: new Set(scored.map(({ member }) => member.chamberSlug)),
+  };
+}
+
+/**
+ * How many members matched, and how much we can honestly claim about it.
+ *
+ * "How many match" and "how many are printed below" are DIFFERENT numbers and
+ * the prompt has to carry both. The route's directory rule tells the model to
+ * quote TOTAL_MATCHING_COUNT verbatim, so a count that silently included
+ * members the block does not list — or double-counted a member found by both
+ * keyword and vector search — came out of the bot's mouth as fact.
+ */
+export interface MemberMatchCounts {
+  /** Unique members matching the query, counted before display limits. */
+  total: number;
+  /** True when `total` is a FLOOR, not a census: a semantic search only
+   *  returns its top K, so it can never establish that nothing else matches. */
+  approximate?: boolean;
 }
 
 /**
@@ -231,14 +274,27 @@ export function formatMembersGroupedForPrompt(
   ciMembers: Member[],
   vpMembers: Member[],
   otherMembers: Member[],
-  totalMatchCount?: number,
+  counts?: MemberMatchCounts,
 ): string {
   if (ciMembers.length === 0 && vpMembers.length === 0 && otherMembers.length === 0) {
     return "";
   }
   const parts: string[] = [];
-  if (totalMatchCount !== undefined) {
-    parts.push(`TOTAL_MATCHING_COUNT: ${totalMatchCount} members match this query in the chamber directory. Use this exact number when answering count questions ("how many X?").`);
+  if (counts !== undefined) {
+    const displayed = ciMembers.length + vpMembers.length + otherMembers.length;
+    const total = Math.max(counts.total, displayed);
+    const census = counts.approximate
+      ? ` That is a MINIMUM, not a full count — some of these came from a similarity search that only returns its closest matches, so answer count questions with "at least ${total}" and never call it exhaustive.`
+      : ` Use this exact number when answering count questions ("how many X?").`;
+    const listing =
+      displayed < total
+        ? ` DISPLAYED_BELOW: only ${displayed} of them are listed below, so do not describe the list as complete.`
+        : ` DISPLAYED_BELOW: all ${displayed} are listed below.`;
+    parts.push(
+      `TOTAL_MATCHING_COUNT: ${total} members match this query in the chamber directory.` +
+        census +
+        listing,
+    );
   }
   if (ciMembers.length > 0) {
     parts.push(

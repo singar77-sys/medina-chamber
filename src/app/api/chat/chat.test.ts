@@ -16,6 +16,18 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vite
 
 const h = vi.hoisted(() => ({
   applyRateLimit: vi.fn(async () => null as Response | null),
+  searchMembersWithTierPriority: vi.fn(),
+  searchMembers: vi.fn(async () => [] as Array<{ member: { chamberSlug: string } }>),
+  logConversation: vi.fn<
+    (
+      sessionId: string,
+      ip: string,
+      turns: Array<{ role: string; content: string }>,
+      topic: string,
+    ) => Promise<void>
+  >(async () => {}),
+  formatEventsForPrompt: vi.fn(async () => EVENTS_BLOCK),
+  formatNewsForPrompt: vi.fn(() => NEWS_BLOCK),
   getRequestIp: vi.fn(() => "203.0.113.9"),
   isIpOverBlockThreshold: vi.fn(async () => false),
   isOverMonthlyCap: vi.fn(async () => false),
@@ -27,7 +39,14 @@ const h = vi.hoisted(() => ({
   commitRound: vi.fn(async () => {}),
   mintSessionId: vi.fn(() => "11111111-2222-4333-8444-555555555555"),
 
-  formatMembersGroupedForPrompt: vi.fn(() => "Acme Roofing - roofing contractor"),
+  formatMembersGroupedForPrompt: vi.fn<
+    (
+      ci: unknown[],
+      vp: unknown[],
+      other: unknown[],
+      counts?: { total: number; approximate?: boolean },
+    ) => string
+  >(() => "Acme Roofing - roofing contractor"),
 
   detectUserIndustry: vi.fn(() => null as string | null),
   getComplementaryMembers: vi.fn(() => [] as unknown[]),
@@ -36,8 +55,25 @@ const h = vi.hoisted(() => ({
   streamText: vi.fn(),
   captureMessage: vi.fn(),
   captureException: vi.fn(),
-  after: vi.fn(),
+  after: vi.fn<(task: unknown) => void>(() => {}),
 }));
+
+// Sentinels for the two static appendix blocks. They must not be substrings
+// of CHAMBER_SYSTEM_PROMPT, which already says "NEWS & MEDIA" and "UPCOMING
+// EVENTS appendix" — a bare "NEWS" marker matches the chamber's own copy and
+// the trust-placement assertions below silently test nothing.
+const EVENTS_BLOCK = "__CHAMBER_EVENTS_APPENDIX__";
+const NEWS_BLOCK = "__MEMBER_NEWS_APPENDIX__";
+
+/** `after()` is stubbed to a no-op, so the retained background work never runs
+ *  on its own. Drive it the way the runtime would: the promises handed to it. */
+function drainAfterTasks(
+  after: { mock: { calls: Array<[unknown]> } },
+): Promise<unknown[]> {
+  return Promise.allSettled(
+    after.mock.calls.map(([task]) => task).filter((t) => t instanceof Promise),
+  );
+}
 
 vi.mock("@/lib/rate-limit", () => ({
   chatLimiter: {},
@@ -64,7 +100,7 @@ vi.mock("@/lib/chat-session", async (importOriginal) => ({
   mintSessionId: h.mintSessionId,
 }));
 vi.mock("@/lib/chat-log", () => ({
-  logConversation: vi.fn(async () => {}),
+  logConversation: h.logConversation,
   incrementMessageCounter: vi.fn(async () => {}),
   incrementTopicCounter: vi.fn(async () => {}),
 }));
@@ -85,17 +121,12 @@ const MEMBER = {
   categories: ["Roofing"],
 };
 vi.mock("@/lib/chat-search", () => ({
-  searchMembersWithTierPriority: vi.fn(() => ({
-    ciMembers: [MEMBER],
-    vpMembers: [],
-    otherMembers: [],
-    totalMatchCount: 1,
-  })),
+  searchMembersWithTierPriority: h.searchMembersWithTierPriority,
   formatMembersGroupedForPrompt: h.formatMembersGroupedForPrompt,
 }));
-vi.mock("@/lib/semantic-search", () => ({ searchMembers: vi.fn(async () => []) }));
-vi.mock("@/lib/events-context", () => ({ formatEventsForPrompt: vi.fn(() => "EVENTS") }));
-vi.mock("@/lib/news-context", () => ({ formatNewsForPrompt: vi.fn(() => "NEWS") }));
+vi.mock("@/lib/semantic-search", () => ({ searchMembers: h.searchMembers }));
+vi.mock("@/lib/events-context", () => ({ formatEventsForPrompt: h.formatEventsForPrompt }));
+vi.mock("@/lib/news-context", () => ({ formatNewsForPrompt: h.formatNewsForPrompt }));
 vi.mock("@/data/members", () => ({
   isCommunityInvestor: vi.fn(() => true),
   isVisibilityPlus: vi.fn(() => false),
@@ -141,6 +172,16 @@ beforeAll(async () => {
 beforeEach(() => {
   vi.clearAllMocks();
   vi.stubEnv("ANTHROPIC_API_KEY", "sk-ant-test");
+  h.searchMembersWithTierPriority.mockReturnValue({
+    ciMembers: [MEMBER],
+    vpMembers: [],
+    otherMembers: [],
+    totalMatchCount: 1,
+    matchedSlugs: new Set([MEMBER.chamberSlug]),
+  });
+  h.searchMembers.mockResolvedValue([]);
+  h.formatEventsForPrompt.mockResolvedValue(EVENTS_BLOCK);
+  h.formatNewsForPrompt.mockReturnValue(NEWS_BLOCK);
   h.applyRateLimit.mockResolvedValue(null);
   h.isIpOverBlockThreshold.mockResolvedValue(false);
   h.isOverMonthlyCap.mockResolvedValue(false);
@@ -415,14 +456,85 @@ describe("POST /api/chat - successful response", () => {
     });
   });
 
-  it("sends no reference block at all when there are no member matches", async () => {
-    h.formatMembersGroupedForPrompt.mockReturnValueOnce("");
-    await post({ message: "when was the chamber founded?" });
+  // -- Member NEWS is member-authored too -------------------------------------
+  //
+  // The trust split was drawn once, for the directory block, and member news
+  // was missed: it shipped in the same helper as the chamber's own events
+  // calendar, so it inherited the calendar's system role. Nothing about the
+  // file it arrives in makes it chamber content — a member writes the headline
+  // and submits it through GrowthZone, exactly like their directory listing.
+  describe("member news", () => {
+    // Distinct sentinels: the real system prompt already contains the words
+    // "NEWS" and "EVENTS", so a bare marker would match the chamber's own copy.
+    it("keeps the chamber's calendar in the system role", async () => {
+      await post({ message: "what events are coming up?" });
+      const args = h.streamText.mock.calls[0][0] as StreamTextArgs;
+      const carriers = args.messages.filter((m) => m.content.includes(EVENTS_BLOCK));
+      expect(carriers).toHaveLength(1);
+      expect(carriers[0].role).toBe("system");
+    });
+
+    it("puts member news in the untrusted fence, never in a system message", async () => {
+      await post({ message: "any member news?" });
+      const args = h.streamText.mock.calls[0][0] as StreamTextArgs;
+
+      const systemBlocks = args.messages.filter((m) => m.role === "system");
+      expect(systemBlocks.length).toBeGreaterThan(0);
+      expect(systemBlocks.some((m) => m.content.includes(NEWS_BLOCK))).toBe(false);
+
+      const carriers = args.messages.filter((m) => m.content.includes(NEWS_BLOCK));
+      expect(carriers).toHaveLength(1);
+      expect(carriers[0].role).toBe("user");
+      expect(carriers[0].content.startsWith("<untrusted_member_data>")).toBe(true);
+      expect(carriers[0].content.endsWith("</untrusted_member_data>")).toBe(true);
+    });
+
+    it("shares one fence with the directory block rather than opening a second", async () => {
+      // Two fences would mean two places to keep in sync, and the next source
+      // added would pick whichever one it happened to be near.
+      await post({ message: "who does roofing?" });
+      const args = h.streamText.mock.calls[0][0] as StreamTextArgs;
+      const fenced = args.messages.filter((m) =>
+        m.content.includes("<untrusted_member_data>"),
+      );
+      expect(fenced).toHaveLength(1);
+      expect(fenced[0].content).toContain(NEWS_BLOCK);
+      expect(fenced[0].content).toContain("Acme Roofing");
+    });
+
+    it("still carries the news to the model — the boundary moves it, not drops it", async () => {
+      h.formatMembersGroupedForPrompt.mockReturnValueOnce("");
+      await post({ message: "any member news?" });
+      const args = h.streamText.mock.calls[0][0] as StreamTextArgs;
+      expect(args.messages.map((m) => m.content).join("\n")).toContain("NEWS");
+    });
+  });
+
+  it("sends no reference block at all when there is nothing member-authored", async () => {
+    // The events + news strings are memoized at module scope with a 5-minute
+    // TTL, so varying the news mock needs a fresh module, not a fresh mock.
+    h.formatMembersGroupedForPrompt.mockReturnValue("");
+    h.formatNewsForPrompt.mockReturnValue("");
+    vi.resetModules();
+    const freshPOST = (await import("./route")).POST;
+
+    await freshPOST(
+      new Request("https://medinaohchamber.com/api/chat", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ message: "when was the chamber founded?" }),
+      }),
+    );
 
     const args = h.streamText.mock.calls[0][0] as StreamTextArgs;
     expect(
       args.messages.some((m) => m.content.includes("untrusted_member_data")),
     ).toBe(false);
+    // The chamber's own calendar is unaffected — it never depended on this.
+    expect(args.messages.some((m) => m.role === "system" && m.content === EVENTS_BLOCK)).toBe(true);
+
+    h.formatNewsForPrompt.mockReturnValue(NEWS_BLOCK);
+    h.formatMembersGroupedForPrompt.mockReturnValue("Acme Roofing - roofing contractor");
   });
 
   it("passes the user turn through as the last message, truncated to 2000 chars", async () => {
@@ -457,6 +569,255 @@ describe("POST /api/chat - successful response", () => {
     args.onFinish({ totalUsage: { inputTokens: 10, outputTokens: 0 }, text: "" });
     expect(h.commitRound).not.toHaveBeenCalled();
   });
+
+  // -- Analytics logs the round that was actually served ----------------------
+  //
+  // The commit and the analytics task both fired from onFinish, independently.
+  // The analytics task awaited topic classification and then read the session
+  // back "post-commit" — but nothing made it post-commit. Whenever the commit
+  // was the slower of the two, logConversation received the transcript as it
+  // stood BEFORE this round, which for the first question of a conversation is
+  // an empty transcript. The product this feeds is "what are people asking
+  // about", so a silently-stale read is a silently-wrong answer.
+  describe("conversation logging", () => {
+    it("waits for the commit before reading the transcript back", async () => {
+      let committed = false;
+      h.commitRound.mockImplementation(async () => {
+        await new Promise((r) => setTimeout(r, 20));
+        committed = true;
+      });
+      // The session store only reflects the round once the commit lands.
+      h.loadSession.mockImplementation(async () =>
+        committed
+          ? [
+              { role: "user", content: "who does roofing?" },
+              { role: "assistant", content: "Acme can help." },
+            ]
+          : [],
+      );
+
+      await post({ message: "who does roofing?" });
+      const args = h.streamText.mock.calls[0][0] as StreamTextArgs;
+      args.onFinish({
+        totalUsage: { inputTokens: 100, outputTokens: 20 },
+        text: "Acme can help.",
+      });
+
+      await drainAfterTasks(h.after);
+
+      expect(h.logConversation).toHaveBeenCalledTimes(1);
+      const [, , transcript] = h.logConversation.mock.calls[0];
+      expect(transcript).toEqual([
+        { role: "user", content: "who does roofing?" },
+        { role: "assistant", content: "Acme can help." },
+      ]);
+    });
+
+    it("logs the round it served rather than an empty transcript when Redis is down", async () => {
+      // loadSession fails open with [] on a Redis error. Logging that would be
+      // indistinguishable from the race above, so the round we just answered is
+      // the fallback — the analytics failure must never look like silence.
+      h.commitRound.mockResolvedValue(undefined);
+      h.loadSession.mockResolvedValue([]);
+
+      await post({ message: "how do I join?" });
+      const args = h.streamText.mock.calls[0][0] as StreamTextArgs;
+      args.onFinish({
+        totalUsage: { inputTokens: 100, outputTokens: 20 },
+        text: "Email Stephanie.",
+      });
+      await drainAfterTasks(h.after);
+
+      const [, , transcript] = h.logConversation.mock.calls[0];
+      expect(transcript).toEqual([
+        { role: "user", content: "how do I join?" },
+        { role: "assistant", content: "Email Stephanie." },
+      ]);
+    });
+
+    it("logs the round just served, not the previous turn's transcript", async () => {
+      // TURN 2+, which is the case the await actually guards and the only one
+      // the outage fallback cannot quietly repair. Before the commit lands,
+      // loadSession returns a NON-EMPTY but STALE transcript — turn 1 without
+      // turn 2 — so `fresh.length > 0` is true, the reconstruction never runs,
+      // and whatever the read returned is what gets logged. Read it early and
+      // the 90-day analytics log records turn 1 twice and turn 2 never.
+      const PRIOR = [
+        { role: "user", content: "who does roofing?" },
+        { role: "assistant", content: "Acme Roofing can help." },
+      ];
+      const FULL = [
+        ...PRIOR,
+        { role: "user", content: "what is their phone number?" },
+        { role: "assistant", content: "Call (330) 555-0100." },
+      ];
+      let landed = false;
+      h.commitRound.mockImplementation(async () => {
+        await new Promise((r) => setTimeout(r, 20));
+        landed = true;
+      });
+      h.loadSession.mockImplementation(async () => (landed ? FULL : PRIOR));
+
+      await post({
+        message: "what is their phone number?",
+        sessionId: "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee",
+      });
+      const args = h.streamText.mock.calls[0][0] as StreamTextArgs;
+      args.onFinish({
+        totalUsage: { inputTokens: 100, outputTokens: 20 },
+        text: "Call (330) 555-0100.",
+      });
+      await drainAfterTasks(h.after);
+
+      const [, , transcript] = h.logConversation.mock.calls[0];
+      expect(transcript).toEqual(FULL);
+      expect(transcript).toHaveLength(4);
+    });
+
+    it("does not read the transcript back until the commit has resolved", async () => {
+      // The ordering itself, independent of what either read returns. Stated
+      // separately because the transcript assertion above only bites while the
+      // outage fallback stays a pure empty-result path — this one keeps the
+      // ordering pinned even if that fallback is ever hardened.
+      const order: string[] = [];
+      h.commitRound.mockImplementation(async () => {
+        order.push("commit:start");
+        await new Promise((r) => setTimeout(r, 20));
+        order.push("commit:end");
+      });
+      h.loadSession.mockImplementation(async () => {
+        order.push("load");
+        return [];
+      });
+
+      await post({ message: "hi" });
+      const args = h.streamText.mock.calls[0][0] as StreamTextArgs;
+      args.onFinish({ totalUsage: { inputTokens: 10, outputTokens: 5 }, text: "hello" });
+      await drainAfterTasks(h.after);
+
+      // The first load is the route's own prior-turn read at request start.
+      expect(order).toEqual(["load", "commit:start", "commit:end", "load"]);
+    });
+
+    it("still commits the session when the analytics task throws", async () => {
+      // Observability is the least important of the three post-stream jobs and
+      // must never be able to take the session write with it.
+      h.commitRound.mockResolvedValue(undefined);
+      h.logConversation.mockRejectedValue(new Error("log backend down"));
+
+      await post({ message: "hi" });
+      const args = h.streamText.mock.calls[0][0] as StreamTextArgs;
+      args.onFinish({ totalUsage: { inputTokens: 10, outputTokens: 5 }, text: "hello" });
+
+      await drainAfterTasks(h.after);
+
+      expect(h.commitRound).toHaveBeenCalledWith(
+        "11111111-2222-4333-8444-555555555555",
+        "hi",
+        "hello",
+      );
+    });
+  });
+
+  // -- Match counting ---------------------------------------------------------
+  //
+  // The directory rule tells the model to quote TOTAL_MATCHING_COUNT as fact.
+  // The route used to fold fresh semantic results into the tier buckets and
+  // THEN compute the total as buckets + fresh, counting every new vector hit
+  // twice: one unique business, "2 members match this query".
+  describe("member match counts", () => {
+    /** The counts object the route handed the formatter for the last call. */
+    function lastCounts(): { total: number; approximate?: boolean } {
+      const counts = h.formatMembersGroupedForPrompt.mock.calls[0][3];
+      expect(counts).toBeDefined();
+      return counts!;
+    }
+
+    function noKeywordHits() {
+      h.searchMembersWithTierPriority.mockReturnValue({
+        ciMembers: [],
+        vpMembers: [],
+        otherMembers: [],
+        totalMatchCount: 0,
+        matchedSlugs: new Set<string>(),
+      });
+    }
+
+    it("counts one unique semantic result as one", async () => {
+      noKeywordHits();
+      h.searchMembers.mockResolvedValue([{ member: MEMBER }]);
+
+      await post({ message: "who fixes a leaking roof overnight?" });
+
+      expect(lastCounts().total).toBe(1);
+      expect(lastCounts().approximate).toBe(true);
+    });
+
+    it("does not count a member found by both keyword and vector search twice", async () => {
+      h.searchMembersWithTierPriority.mockReturnValue({
+        ciMembers: [MEMBER],
+        vpMembers: [],
+        otherMembers: [],
+        totalMatchCount: 1,
+        matchedSlugs: new Set([MEMBER.chamberSlug]),
+      });
+      h.searchMembers.mockResolvedValue([{ member: MEMBER }]);
+
+      await post({ message: "roofing" });
+
+      expect(lastCounts().total).toBe(1);
+    });
+
+    it("collapses a duplicate returned twice by the vector index", async () => {
+      noKeywordHits();
+      h.searchMembers.mockResolvedValue([{ member: MEMBER }, { member: MEMBER }]);
+
+      await post({ message: "emergency roof repair" });
+
+      expect(lastCounts().total).toBe(1);
+    });
+
+    it("counts matches the display limits cut, and keeps the count exact", async () => {
+      // 40 match, the tier limits print at most 20+20+3 — and with no semantic
+      // pass the census is a real census, not a floor.
+      const many = Array.from({ length: 25 }, (_, i) => ({
+        ...MEMBER,
+        chamberSlug: `m-${i}`,
+        name: `Member ${i}`,
+      }));
+      h.searchMembersWithTierPriority.mockReturnValue({
+        ciMembers: many.slice(0, 20),
+        vpMembers: [],
+        otherMembers: [],
+        totalMatchCount: 40,
+        matchedSlugs: new Set(many.map((m) => m.chamberSlug)),
+      });
+
+      await post({ message: "insurance" });
+
+      expect(lastCounts().total).toBe(40);
+      expect(lastCounts().approximate).toBe(false);
+      expect(h.searchMembers).not.toHaveBeenCalled();
+    });
+
+    it("does not call the census approximate when the vector pass adds nothing", async () => {
+      h.searchMembersWithTierPriority.mockReturnValue({
+        ciMembers: [MEMBER],
+        vpMembers: [],
+        otherMembers: [],
+        totalMatchCount: 1,
+        matchedSlugs: new Set([MEMBER.chamberSlug]),
+      });
+      h.searchMembers.mockResolvedValue([]);
+
+      await post({ message: "roofing" });
+
+      expect(lastCounts()).toEqual({
+        total: 1,
+        approximate: false,
+      });
+    });
+  });
 });
 
 // -- Request shape ------------------------------------------------------------
@@ -486,6 +847,28 @@ describe("POST /api/chat - invalid or missing body", () => {
     expect(res.status).toBe(400);
     expect(await res.text()).toBe("Empty message");
     expect(h.streamText).not.toHaveBeenCalled();
+  });
+
+  // `null`, `[]` and `42` are all VALID JSON, so the body reader parses them
+  // and hands them back — a 400 is only produced by a shape check the route
+  // performs itself. `null` had none: the cast to an object shape satisfied
+  // the type checker, then `body.message` threw a TypeError before the
+  // handler's try/catch existed, so a two-byte request became a 500 with a
+  // Sentry event instead of the documented client error.
+  it.each([
+    ["the literal null", "null"],
+    ["a top-level array", "[]"],
+    ["an array of messages", '[{"message":"hi"}]'],
+    ["a bare number", "42"],
+    ["a bare string", '"hi"'],
+    ["a bare boolean", "true"],
+  ])("400s on %s with no uncaught exception", async (_label, raw) => {
+    const res = await post(raw);
+    expect(res.status).toBe(400);
+    expect(await res.text()).toBe("Invalid request");
+    expect(h.streamText).not.toHaveBeenCalled();
+    // A 500 here would also have paged us for every scanner that posts `null`.
+    expect(h.captureException).not.toHaveBeenCalled();
   });
 });
 
@@ -673,5 +1056,48 @@ describe("POST /api/chat - provider fallback", () => {
     expect(res.status).toBe(200);
     // The visitor sees the chamber's contact details, not a truncated blank.
     expect(await res.text()).toContain(OFFLINE_MARKER);
+  });
+});
+
+// -- Static appendix memo -----------------------------------------------------
+
+describe("static appendix memo", () => {
+  it("starts one calendar read for turns that arrive together on a cold isolate", async () => {
+    // The memo used to cache the RESOLVED value, which gave it no in-flight
+    // de-duplication: every turn that arrived before the first
+    // formatEventsForPrompt() settled started its own unstable_cache → Upstash
+    // read over the whole calendar. A cold isolate is exactly when several
+    // turns arrive at once.
+    vi.resetModules();
+    let release: (block: string) => void = () => {};
+    h.formatEventsForPrompt.mockImplementation(
+      () => new Promise<string>((resolve) => { release = resolve; }),
+    );
+    h.streamText.mockImplementation(() => ({
+      textStream: textStreamOf(["Acme Roofing can help."]),
+    }));
+
+    const { POST: coldPost } = await import("./route");
+    const turn = () =>
+      coldPost(
+        new Request("https://medinaohchamber.com/api/chat", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ message: "who does roofing?" }),
+        }),
+      );
+
+    const first = turn();
+    const second = turn();
+    // Let both turns run down to the appendix read before the first settles.
+    await new Promise((r) => setTimeout(r, 0));
+    release(EVENTS_BLOCK);
+    const [a, b] = await Promise.all([first, second]);
+
+    // Both turns genuinely completed — otherwise "called once" would be an
+    // artefact of the second request dying early.
+    expect(a.status).toBe(200);
+    expect(b.status).toBe(200);
+    expect(h.formatEventsForPrompt).toHaveBeenCalledTimes(1);
   });
 });

@@ -30,11 +30,12 @@ const h = vi.hoisted(() => ({
   formatNewsForPrompt: vi.fn(() => NEWS_BLOCK),
   getRequestIp: vi.fn(() => "203.0.113.9"),
   isIpOverBlockThreshold: vi.fn(async () => false),
-  isOverMonthlyCap: vi.fn(async () => false),
-  isOverDailyCap: vi.fn(async () => false),
-  isBudgetUnknown: vi.fn(() => false),
+  reserveTokens: vi.fn<() => Promise<ReserveResult>>(),
+  settleReservation:
+    vi.fn<(r: Reservation, i?: number, o?: number) => Promise<void>>(),
   recordTokenUsage: vi.fn(async () => {}),
-  recordIpTokenUsage: vi.fn(async () => {}),
+  recordIpTokenUsage:
+    vi.fn<(ip: string, i?: number, o?: number) => Promise<void>>(async () => {}),
   loadSession: vi.fn(async () => [] as Array<{ role: string; content: string }>),
   commitRound: vi.fn(async () => {}),
   mintSessionId: vi.fn(() => "11111111-2222-4333-8444-555555555555"),
@@ -65,6 +66,28 @@ const h = vi.hoisted(() => ({
 const EVENTS_BLOCK = "__CHAMBER_EVENTS_APPENDIX__";
 const NEWS_BLOCK = "__MEMBER_NEWS_APPENDIX__";
 
+/**
+ * The route claims a token allowance before any paid work and settles it
+ * afterwards. The real module (spend-cap.ts) guarantees a reservation settles
+ * exactly once; this stub keeps that contract so "settled exactly once" is a
+ * property of the ROUTE's plumbing here, not of the stub's forgiveness.
+ */
+interface Reservation {
+  allowance: number;
+  key: string;
+  /** Which ledger holds the claim. The route never reads it; the real module
+   *  settles against it, and the stub carries it so the shapes agree. */
+  redisHeld: boolean;
+  settled: boolean;
+}
+type ReserveResult =
+  | { admitted: true; reservation: Reservation }
+  | { admitted: false; reason: "monthly" | "daily" | "unknown" };
+
+const ALLOWANCE = 12_000;
+let reservation: Reservation;
+let settlements: Array<{ input?: number; output?: number }> = [];
+
 /** `after()` is stubbed to a no-op, so the retained background work never runs
  *  on its own. Drive it the way the runtime would: the promises handed to it. */
 function drainAfterTasks(
@@ -81,9 +104,8 @@ vi.mock("@/lib/rate-limit", () => ({
   getRequestIp: h.getRequestIp,
 }));
 vi.mock("@/lib/spend-cap", () => ({
-  isOverDailyCap: h.isOverDailyCap,
-  isOverMonthlyCap: h.isOverMonthlyCap,
-  isBudgetUnknown: h.isBudgetUnknown,
+  reserveTokens: h.reserveTokens,
+  settleReservation: h.settleReservation,
   recordTokenUsage: h.recordTokenUsage,
 }));
 vi.mock("@/lib/per-ip-watch", () => ({
@@ -104,7 +126,8 @@ vi.mock("@/lib/chat-log", () => ({
   incrementMessageCounter: vi.fn(async () => {}),
   incrementTopicCounter: vi.fn(async () => {}),
 }));
-vi.mock("@/lib/topic-classify", () => ({ classifyUserMessage: vi.fn(async () => "general") }));
+const classifyUserMessage = vi.fn(async () => ({ topic: "general", tokens: 0 }));
+vi.mock("@/lib/topic-classify", () => ({ classifyUserMessage }));
 vi.mock("@/lib/langfuse", () => ({ langfuseLog: vi.fn(async () => {}) }));
 vi.mock("@sentry/nextjs", () => ({
   captureMessage: h.captureMessage,
@@ -152,6 +175,8 @@ interface StreamTextArgs {
   messages: Array<{ role: string; content: string }>;
   maxOutputTokens: number;
   temperature: number;
+  abortSignal?: AbortSignal;
+  onAbort?: () => void;
   onFinish: (r: { totalUsage: { inputTokens: number; outputTokens: number }; text: string }) => void;
 }
 
@@ -184,9 +209,20 @@ beforeEach(() => {
   h.formatNewsForPrompt.mockReturnValue(NEWS_BLOCK);
   h.applyRateLimit.mockResolvedValue(null);
   h.isIpOverBlockThreshold.mockResolvedValue(false);
-  h.isOverMonthlyCap.mockResolvedValue(false);
-  h.isOverDailyCap.mockResolvedValue(false);
-  h.isBudgetUnknown.mockReturnValue(false);
+  reservation = {
+    allowance: ALLOWANCE,
+    key: "chat:reserved:test",
+    redisHeld: true,
+    settled: false,
+  };
+  settlements = [];
+  h.reserveTokens.mockResolvedValue({ admitted: true, reservation });
+  h.settleReservation.mockImplementation(async (r, input, output) => {
+    if (r.settled) return;
+    r.settled = true;
+    settlements.push({ input, output });
+  });
+  classifyUserMessage.mockResolvedValue({ topic: "general", tokens: 0 });
   h.loadSession.mockResolvedValue([]);
   h.formatMembersGroupedForPrompt.mockReturnValue("Acme Roofing - roofing contractor");
   h.detectUserIndustry.mockReturnValue(null);
@@ -545,7 +581,7 @@ describe("POST /api/chat - successful response", () => {
     expect(last.content).toHaveLength(2000);
   });
 
-  it("records token spend and commits the round after the stream finishes", async () => {
+  it("settles the reservation with real usage and commits the round after the stream finishes", async () => {
     // The route routes all post-stream work through after(); if that wiring
     // breaks, the spend caps never see the tokens they are meant to cap.
     await post({ message: "who does roofing?" });
@@ -553,7 +589,8 @@ describe("POST /api/chat - successful response", () => {
 
     args.onFinish({ totalUsage: { inputTokens: 1200, outputTokens: 300 }, text: "reply" });
 
-    expect(h.recordTokenUsage).toHaveBeenCalledWith(1200, 300);
+    expect(h.settleReservation).toHaveBeenCalledWith(reservation, 1200, 300);
+    expect(settlements).toEqual([{ input: 1200, output: 300 }]);
     expect(h.recordIpTokenUsage).toHaveBeenCalledWith("203.0.113.9", 1200, 300);
     expect(h.commitRound).toHaveBeenCalledWith(
       "11111111-2222-4333-8444-555555555555",
@@ -935,7 +972,7 @@ describe("POST /api/chat - spend and abuse guards serve the offline fallback", (
   });
 
   it("goes offline for the rest of the month at the monthly cap, and alerts Sentry", async () => {
-    h.isOverMonthlyCap.mockResolvedValue(true);
+    h.reserveTokens.mockResolvedValue({ admitted: false, reason: "monthly" });
 
     const res = await post({ message: "hi" });
 
@@ -949,7 +986,7 @@ describe("POST /api/chat - spend and abuse guards serve the offline fallback", (
   });
 
   it("goes offline until UTC midnight at the daily tripwire, and warns Sentry", async () => {
-    h.isOverDailyCap.mockResolvedValue(true);
+    h.reserveTokens.mockResolvedValue({ admitted: false, reason: "daily" });
 
     const res = await post({ message: "hi" });
 
@@ -963,14 +1000,14 @@ describe("POST /api/chat - spend and abuse guards serve the offline fallback", (
   });
 
   it("reports a Redis outage as a Redis outage, not as an exhausted budget", async () => {
-    // isOverMonthlyCap() returns true for two very different reasons: the
-    // budget is spent, OR Redis has failed enough times that we can't read it
-    // and fail safe by assuming it is. The route's HANDLING is the same
-    // (offline fallback); the ALERT must not be. Paging "monthly budget
-    // exhausted, offline until next month" while Upstash is down sends the
-    // on-call after the wrong system at the one moment it costs the most.
-    h.isOverMonthlyCap.mockResolvedValue(true);
-    h.isBudgetUnknown.mockReturnValue(true);
+    // A refused reservation has three very different causes: the budget is
+    // spent, the daily tripwire fired, OR Redis has failed enough times that
+    // we can't read the budget and fail safe by assuming the worst. The
+    // route's HANDLING is the same (offline fallback); the ALERT must not be.
+    // Paging "monthly budget exhausted, offline until next month" while
+    // Upstash is down sends the on-call after the wrong system at the one
+    // moment it costs the most.
+    h.reserveTokens.mockResolvedValue({ admitted: false, reason: "unknown" });
 
     const res = await post({ message: "hi" });
 
@@ -994,8 +1031,7 @@ describe("POST /api/chat - spend and abuse guards serve the offline fallback", (
     // The other half of the discrimination: with Redis healthy, a true monthly
     // stop must keep its loud, act-on-it-now alert. A fix that quieted BOTH
     // cases would pass the test above and lose the alert that matters.
-    h.isOverMonthlyCap.mockResolvedValue(true);
-    h.isBudgetUnknown.mockReturnValue(false);
+    h.reserveTokens.mockResolvedValue({ admitted: false, reason: "monthly" });
 
     await post({ message: "hi" });
 
@@ -1005,8 +1041,8 @@ describe("POST /api/chat - spend and abuse guards serve the offline fallback", (
     );
   });
 
-  it("checks the caps BEFORE parsing the body, so a capped bot cannot burn parse cycles", async () => {
-    h.isOverMonthlyCap.mockResolvedValue(true);
+  it("reserves BEFORE parsing the body, so a capped bot cannot burn parse cycles", async () => {
+    h.reserveTokens.mockResolvedValue({ admitted: false, reason: "monthly" });
     const res = await post("}{ not json");
     // A 400 here would mean the body was parsed after the budget was blown.
     expect(res.status).toBe(200);
@@ -1099,5 +1135,300 @@ describe("static appendix memo", () => {
     expect(a.status).toBe(200);
     expect(b.status).toBe(200);
     expect(h.formatEventsForPrompt).toHaveBeenCalledTimes(1);
+  });
+});
+
+// -- Disconnects, aborts and settlement ---------------------------------------
+//
+// A chat turn claims a token allowance before the model call and has to give
+// it back exactly once, on every way the request can end. The disconnect path
+// had neither half: safeStream pumped the provider eagerly and defined no
+// cancel(), so a client closing the tab left the generation running, unread,
+// with nobody reading the SDK result — and the SDK's accounting hooks are
+// pull-driven, so the after() work scheduled in onFinish simply never ran.
+// A cancel loop was free money.
+
+/** An upstream the test drives chunk by chunk, and can watch for teardown. */
+function controlledStream() {
+  let controller!: ReadableStreamDefaultController<string>;
+  let cancels = 0;
+  const stream = new ReadableStream<string>({
+    start(c) {
+      controller = c;
+    },
+    cancel() {
+      cancels++;
+    },
+  });
+  return {
+    stream,
+    push: (chunk: string) => controller.enqueue(chunk),
+    close: () => controller.close(),
+    fail: (err: unknown) => controller.error(err),
+    get cancels() {
+      return cancels;
+    },
+  };
+}
+
+/** Collects unhandled rejections raised while `run` is in flight. */
+async function withUnhandledRejectionWatch(
+  run: () => Promise<void>,
+): Promise<unknown[]> {
+  const seen: unknown[] = [];
+  const onUnhandled = (reason: unknown) => seen.push(reason);
+  process.on("unhandledRejection", onUnhandled);
+  try {
+    await run();
+    // Unhandled rejections are reported a turn or two late; give them room.
+    await new Promise((r) => setTimeout(r, 30));
+  } finally {
+    process.off("unhandledRejection", onUnhandled);
+  }
+  return seen;
+}
+
+describe("POST /api/chat - client disconnects mid-stream", () => {
+  it.each([
+    ["before the first token", 0],
+    ["halfway through", 1],
+    ["near completion", 3],
+  ])("settles the reservation exactly once when the client leaves %s", async (
+    _label,
+    chunksRead,
+  ) => {
+    const upstream = controlledStream();
+    h.streamText.mockReturnValue({ textStream: upstream.stream });
+
+    const unhandled = await withUnhandledRejectionWatch(async () => {
+      const res = await post({ message: "who does roofing?" });
+      for (const chunk of ["Acme ", "Roofing ", "can ", "help."]) upstream.push(chunk);
+
+      const reader = res.body!.getReader();
+      for (let i = 0; i < chunksRead; i++) await reader.read();
+      await reader.cancel();
+      // The upstream is deliberately never closed: the point is that the
+      // client left while the provider still had more to say.
+    });
+
+    // Settled once, at the reserved allowance — the honest charge for a
+    // generation whose real cost we can no longer measure. Settling at zero
+    // would make "ask and close the tab" the cheapest way to spend our money.
+    expect(settlements).toEqual([{ input: ALLOWANCE, output: 0 }]);
+    expect(reservation.settled).toBe(true);
+    // And the provider stream is torn down rather than left running.
+    expect(upstream.cancels).toBe(1);
+    // A disconnect is not an incident.
+    expect(unhandled).toEqual([]);
+    expect(h.captureException).not.toHaveBeenCalled();
+  });
+
+  it("aborts the provider call instead of paying for a generation nobody reads", async () => {
+    const upstream = controlledStream();
+    h.streamText.mockReturnValue({ textStream: upstream.stream });
+
+    const res = await post({ message: "hi" });
+    const args = h.streamText.mock.calls[0][0] as StreamTextArgs;
+    // The signal has to reach the provider at all — without it the SDK has no
+    // way to stop the call, whatever we do downstream.
+    expect(args.abortSignal).toBeInstanceOf(AbortSignal);
+    expect(args.abortSignal!.aborted).toBe(false);
+
+    await res.body!.cancel();
+
+    expect(args.abortSignal!.aborted).toBe(true);
+  });
+
+  it("still settles only once when the model finishes after the client has gone", async () => {
+    // Both exit paths can fire for the same request. Counting the spend twice
+    // would double-charge the budget AND release an allowance that is no
+    // longer held, handing the difference to the next request for free.
+    const upstream = controlledStream();
+    h.streamText.mockReturnValue({ textStream: upstream.stream });
+
+    const res = await post({ message: "hi" });
+    upstream.push("partial");
+    await res.body!.cancel();
+
+    const args = h.streamText.mock.calls[0][0] as StreamTextArgs;
+    args.onFinish({ totalUsage: { inputTokens: 900, outputTokens: 40 }, text: "partial" });
+
+    expect(settlements).toEqual([{ input: ALLOWANCE, output: 0 }]);
+    // The per-IP watch is charged exactly once too. It is NOT covered by
+    // settleReservation's own idempotence guard, so if the route stopped
+    // collapsing the paths itself, the abuse tripwire would read double.
+    expect(h.recordIpTokenUsage).toHaveBeenCalledTimes(1);
+  });
+
+  it("settles a request the client abandons before any body is read", async () => {
+    // The tab closes between the response headers and the first read. There
+    // is no onFinish coming; the reservation has to come back anyway.
+    const upstream = controlledStream();
+    h.streamText.mockReturnValue({ textStream: upstream.stream });
+
+    const res = await post({ message: "hi" });
+    await res.body!.cancel();
+
+    expect(settlements).toEqual([{ input: ALLOWANCE, output: 0 }]);
+  });
+
+  it("settles a provider failure at nothing, not at the full allowance", async () => {
+    // A provider that dies before yielding a token never reports usage — and
+    // never billed us either: it errored instead of generating. Charging the
+    // 12k allowance for each of those turns THEIR outage into a day-long
+    // outage of OURS: ~166 failures spends the 2M daily cap and the bot stays
+    // offline until UTC midnight, long after the provider recovered.
+    //
+    // The reservation still has to come back, which is the other half of this.
+    const upstream = controlledStream();
+    h.streamText.mockReturnValue({ textStream: upstream.stream });
+
+    const res = await post({ message: "hi" });
+    upstream.fail(new Error("upstream died"));
+    const body = await res.text();
+
+    expect(body).toContain(OFFLINE_MARKER);
+    expect(settlements).toEqual([{ input: 0, output: 0 }]);
+    expect(reservation.settled).toBe(true);
+  });
+
+  it("charges the allowance when the provider dies after real tokens streamed", async () => {
+    // Generation that actually happened was actually billed, and its real
+    // cost is as un-measurable as a cancel's. The "settle errors at nothing"
+    // rule above is about failures that produced nothing — it must not become
+    // a free ride for a stream that broke on its last chunk.
+    const upstream = controlledStream();
+    h.streamText.mockReturnValue({ textStream: upstream.stream });
+
+    const res = await post({ message: "hi" });
+    upstream.push("Acme Roofing ");
+    const reader = res.body!.getReader();
+    await reader.read(); // the token really did reach the client
+    upstream.fail(new Error("upstream died mid-answer"));
+    await reader.read().catch(() => {});
+
+    expect(settlements).toEqual([{ input: ALLOWANCE, output: 0 }]);
+  });
+});
+
+describe("POST /api/chat - the per-IP watch sees every settled path", () => {
+  it("charges the watch on a cancel, not only on a clean finish", async () => {
+    const upstream = controlledStream();
+    h.streamText.mockReturnValue({ textStream: upstream.stream });
+
+    const res = await post({ message: "hi" });
+    upstream.push("partial");
+    await res.body!.cancel();
+
+    expect(settlements).toEqual([{ input: ALLOWANCE, output: 0 }]);
+    expect(h.recordIpTokenUsage).toHaveBeenCalledWith("203.0.113.9", ALLOWANCE, 0);
+  });
+
+  it("keeps the watch in step with the budget through a cancel loop", async () => {
+    // "Open, ask, close", twenty times — inside the 20 req/min rate limit and
+    // exactly the abuse the cancel-charges-the-allowance policy invites.
+    //
+    // recordIpTokenUsage used to be called only from onFinish, so every one
+    // of these charged 12k to the GLOBAL budget while the per-IP hourly
+    // counter stayed at zero and isIpOverBlockThreshold never fired. At this
+    // rate that is ~240k/min: the whole bot goes offline for the day in about
+    // eight minutes, blind to the one IP doing it — precisely the case
+    // per-ip-watch exists to catch by blocking THAT IP instead.
+    for (let i = 0; i < 20; i++) {
+      reservation = {
+        allowance: ALLOWANCE,
+        key: `chat:reserved:${i}`,
+        redisHeld: true,
+        settled: false,
+      };
+      h.reserveTokens.mockResolvedValue({ admitted: true, reservation });
+      const upstream = controlledStream();
+      h.streamText.mockReturnValue({ textStream: upstream.stream });
+      const res = await post({ message: "hi" });
+      await res.body!.cancel();
+    }
+
+    const budgetCharged = settlements.reduce(
+      (sum, s) => sum + (s.input ?? 0) + (s.output ?? 0),
+      0,
+    );
+    const ipCharged = h.recordIpTokenUsage.mock.calls.reduce(
+      (sum, [, input, output]) => sum + (input ?? 0) + (output ?? 0),
+      0,
+    );
+
+    expect(budgetCharged).toBe(20 * ALLOWANCE);
+    // The watch has to see the same tokens the budget does. It used to see 0.
+    expect(ipCharged).toBe(budgetCharged);
+  });
+});
+
+describe("POST /api/chat - the allowance comes back on every non-streaming exit", () => {
+  it.each([
+    ["a malformed body", "}{ not json"],
+    ["a non-object body", 42],
+    ["a missing message", { sessionId: "x" }],
+    ["an empty message", { message: "   " }],
+  ])("settles the reservation on %s", async (_label, body) => {
+    await post(body);
+    // Nothing paid ran, so the whole allowance goes back unspent. Leaking it
+    // here would let a loop of 400s quietly eat the budget.
+    expect(settlements).toEqual([{ input: 0, output: 0 }]);
+  });
+
+  it("settles the reservation when no LLM provider is configured", async () => {
+    vi.stubEnv("ANTHROPIC_API_KEY", "");
+    vi.stubEnv("OPENAI_API_KEY", "");
+
+    const res = await post({ message: "hi" });
+
+    expect(await res.text()).toContain(OFFLINE_MARKER);
+    expect(settlements).toEqual([{ input: 0, output: 0 }]);
+  });
+
+  it("settles the reservation when streamText throws at init", async () => {
+    h.streamText.mockImplementation(() => {
+      throw new Error("provider unreachable");
+    });
+
+    await post({ message: "hi" });
+
+    expect(settlements).toEqual([{ input: 0, output: 0 }]);
+  });
+
+  it("does not reserve at all when a cheaper guard already refused", async () => {
+    // Reserving and immediately releasing would be harmless but pointless; the
+    // per-IP watch runs first precisely so a known-bad IP costs nothing.
+    h.isIpOverBlockThreshold.mockResolvedValue(true);
+    await post({ message: "hi" });
+    expect(h.reserveTokens).not.toHaveBeenCalled();
+  });
+});
+
+describe("POST /api/chat - the topic classifier is paid work too", () => {
+  it("books the classifier's tokens against the budget and the per-IP watch", async () => {
+    // The classifier's LLM tier is a second billable call per turn. It used to
+    // spend silently: outside the reservation, outside both caps, invisible to
+    // every ceiling we have.
+    classifyUserMessage.mockResolvedValue({ topic: "membership", tokens: 118 });
+
+    await post({ message: "what does membership cost?" });
+    const args = h.streamText.mock.calls[0][0] as StreamTextArgs;
+    args.onFinish({ totalUsage: { inputTokens: 1200, outputTokens: 300 }, text: "reply" });
+    await drainAfterTasks(h.after);
+
+    expect(h.recordTokenUsage).toHaveBeenCalledWith(118, 0);
+    expect(h.recordIpTokenUsage).toHaveBeenCalledWith("203.0.113.9", 118, 0);
+  });
+
+  it("books nothing when the regex tier answered for free", async () => {
+    classifyUserMessage.mockResolvedValue({ topic: "events", tokens: 0 });
+
+    await post({ message: "when is the golf outing?" });
+    const args = h.streamText.mock.calls[0][0] as StreamTextArgs;
+    args.onFinish({ totalUsage: { inputTokens: 1200, outputTokens: 300 }, text: "reply" });
+    await drainAfterTasks(h.after);
+
+    expect(h.recordTokenUsage).not.toHaveBeenCalled();
   });
 });

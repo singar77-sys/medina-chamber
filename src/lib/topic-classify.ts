@@ -19,6 +19,21 @@
  * Called from the chat route's onFinish via after() so classification
  * latency doesn't block the user-facing stream. Failures fall back to
  * "other" — never throws, never breaks the stream.
+ *
+ * The LLM tier is a PAID model call and has to be paid for out of the same
+ * budget as the answer itself, so every classification reports the tokens it
+ * spent (0 for the regex tier) and the route records them against the spend
+ * cap. It used to spend silently: a few hundred thousand unaccounted tokens a
+ * month, invisible to every ceiling we have.
+ *
+ * ⚠ classifyUserMessage's return type is `TopicClassification`, NOT `ChatTopic`.
+ * That was a BREAKING signature change, not an additive widening — an
+ * un-migrated caller would have silently received an object where it expected
+ * a topic string, and every `topic === "events"` style comparison would have
+ * gone quietly false rather than failing loudly. There is exactly one caller
+ * (the chat route's onFinish) and it was migrated with the change, so nothing
+ * was left broken; the earlier "additive" framing of it was simply wrong.
+ * Anything added here later must carry the same warning.
  */
 
 import { generateText } from "ai";
@@ -102,17 +117,24 @@ function classifyByRegex(text: string): ChatTopic | null {
   return null;
 }
 
+/** A topic plus the tokens the classification itself cost. */
+export interface TopicClassification {
+  topic: ChatTopic;
+  /** Total input + output tokens billed for this call. 0 for the regex tier. */
+  tokens: number;
+}
+
 /**
  * LLM classifier fallback. Minimal prompt, single word expected back.
  * If the model returns something unrecognized we fall through to "other".
  */
-async function classifyByLLM(text: string): Promise<ChatTopic> {
+async function classifyByLLM(text: string): Promise<TopicClassification> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) return "other";
+  if (!apiKey) return { topic: "other", tokens: 0 };
 
   try {
     const anthropic = createAnthropic({ apiKey });
-    const { text: raw } = await generateText({
+    const { text: raw, usage } = await generateText({
       model: anthropic("claude-haiku-4-5"),
       system:
         `Classify the user message into ONE of: membership, events, member-lookup, programs, advocacy, contact, other. ` +
@@ -123,13 +145,18 @@ async function classifyByLLM(text: string): Promise<ChatTopic> {
       maxOutputTokens: 10,
       temperature: 0,
     });
+    // The call is billable whether or not we liked the answer, so the token
+    // count is reported on every non-throwing path.
+    const tokens = (usage?.inputTokens ?? 0) + (usage?.outputTokens ?? 0);
     const normalized = raw.trim().toLowerCase().replace(/[^a-z-]/g, "");
     if (CHAT_TOPICS.includes(normalized as ChatTopic)) {
-      return normalized as ChatTopic;
+      return { topic: normalized as ChatTopic, tokens };
     }
-    return "other";
+    return { topic: "other", tokens };
   } catch {
-    return "other";
+    // A throw means no usage report. The call may still have been billed, but
+    // we have no number for it and inventing one would be worse than the gap.
+    return { topic: "other", tokens: 0 };
   }
 }
 
@@ -138,9 +165,11 @@ async function classifyByLLM(text: string): Promise<ChatTopic> {
  * falls back to LLM only when ambiguous. Always returns a valid
  * ChatTopic — never throws.
  */
-export async function classifyUserMessage(text: string): Promise<ChatTopic> {
-  if (!text || !text.trim()) return "other";
+export async function classifyUserMessage(
+  text: string,
+): Promise<TopicClassification> {
+  if (!text || !text.trim()) return { topic: "other", tokens: 0 };
   const fast = classifyByRegex(text);
-  if (fast) return fast;
+  if (fast) return { topic: fast, tokens: 0 };
   return classifyByLLM(text);
 }

@@ -2,7 +2,15 @@
  * seed-event-photos.mjs
  *
  * Uploads static event photos from public/images/events/ to Vercel Blob
- * and registers them in Redis under cms:media:event:{type-slug}.
+ * and registers them in Redis under cms:media:event:{type-slug}:items /
+ * :order — the same indexed shape src/lib/media-store.ts reads and writes.
+ *
+ * It used to write the LEGACY single-JSON-array key (cms:media:event:{slug}).
+ * media-store migrates that array onto the hash + sorted set on the first admin
+ * write and DELETES it, after which this script was writing to a key nothing
+ * reads and reading a guard key nothing writes: "already seeded" saw nothing,
+ * so it re-uploaded every blob, and the metadata it then wrote was invisible.
+ * Seeding silently did nothing.
  *
  * Event detail pages fall back to the type slug when no instance-specific
  * photos exist, so seeding once covers all recurring event instances.
@@ -138,8 +146,17 @@ const DRY_RUN = args.includes("--dry-run");
 const FORCE = args.includes("--force");
 const onlyFolder = args.find((a) => a.startsWith("--folder="))?.split("=")[1];
 
-const TTL = 365 * 24 * 3600; // 1 year — matches media-store.ts
 const CONCURRENCY = 5;        // parallel uploads per folder
+const RECENT_CAP = 50;        // matches media-store.ts
+
+// Indexed key shape, kept in lockstep with src/lib/media-store.ts.
+// NO TTL: these keys hold published content whose only lifecycle is the admin
+// UI. The legacy writes here set a 1-year expiry, which would have quietly
+// emptied a seeded gallery a year after seeding.
+const RECENT_BASE = "cms:media:recent";
+const eventBase = (slug) => `cms:media:event:${slug}`;
+const itemsKey = (base) => `${base}:items`;
+const orderKey = (base) => `${base}:order`;
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -153,6 +170,78 @@ function listWebpFiles(folder) {
       return statSync(join(dir, f)).isFile();
     })
     .sort();
+}
+
+/**
+ * Write items into one indexed list. HSET before ZADD so the index never points
+ * at a missing body; scores descend with the file order so the gallery reads
+ * back in the same order `files.sort()` produced.
+ */
+async function writeList(base, items, baseScore) {
+  const bodies = Object.fromEntries(items.map((item) => [item.url, item]));
+  const entries = items.map((item, i) => ({
+    score: baseScore + (items.length - i),
+    member: item.url,
+  }));
+  await redis.hset(itemsKey(base), bodies);
+  await redis.zadd(orderKey(base), entries[0], ...entries.slice(1));
+}
+
+/** Drop everything past `cap`, bodies included — media-store.trimList. */
+async function trimList(base, cap) {
+  const stale = await redis.zrange(orderKey(base), 0, -(cap + 1));
+  if (!stale || stale.length === 0) return;
+  await redis.zrem(orderKey(base), ...stale);
+  await redis.hdel(itemsKey(base), ...stale);
+}
+
+/**
+ * Carry a legacy single-array key onto the indexed keys, exactly as
+ * media-store.migrateLegacyList does (hset -> zadd -> del, ordinal scores, so a
+ * partial failure leaves the array intact and the stored order survives).
+ *
+ * Needed because readList prefers the sorted set whenever it is non-empty:
+ * writing seeded photos into the new keys while an unmigrated array still sat
+ * in the old one would hide every photo in that array.
+ *
+ * This script is operator-run and is NOT designed to race admin uploads; the
+ * store's migration lock is deliberately not reimplemented here.
+ */
+async function migrateLegacy(base) {
+  if ((await redis.zcard(orderKey(base))) > 0) return;
+
+  const legacy = await redis.get(base);
+  if (!Array.isArray(legacy) || legacy.length === 0) {
+    if (legacy) await redis.del(base);
+    return;
+  }
+
+  const seen = new Set();
+  const bodies = {};
+  const entries = [];
+  legacy.forEach((item, i) => {
+    if (!item?.url || seen.has(item.url)) return;
+    seen.add(item.url);
+    bodies[item.url] = item;
+    entries.push({ score: legacy.length - i, member: item.url });
+  });
+  if (entries.length === 0) {
+    await redis.del(base);
+    return;
+  }
+
+  await redis.hset(itemsKey(base), bodies);
+  await redis.zadd(orderKey(base), entries[0], ...entries.slice(1));
+  await redis.del(base);
+  console.log(`  ↻ migrated ${entries.length} legacy item(s) off ${base}`);
+}
+
+/** How many photos this event already has, in either shape. */
+async function existingCount(base) {
+  const indexed = await redis.zcard(orderKey(base));
+  if (indexed > 0) return indexed;
+  const legacy = await redis.get(base);
+  return Array.isArray(legacy) ? legacy.length : 0;
 }
 
 /** Upload files in batches of CONCURRENCY. */
@@ -176,17 +265,17 @@ async function uploadBatch(tasks) {
 
 async function seedFolder(entry) {
   const { folder, typeSlug, alt } = entry;
-  const redisKey = `cms:media:event:${typeSlug}`;
+  const base = eventBase(typeSlug);
 
-  // Skip already-seeded unless --force
-  if (!FORCE) {
-    const existing = await redis.get(redisKey);
-    if (Array.isArray(existing) && existing.length > 0) {
-      console.log(
-        `⏭  ${folder} → already seeded (${existing.length} photos). Use --force to overwrite.`,
-      );
-      return 0;
-    }
+  // Skip already-seeded unless --force. Checks the INDEXED keys first: once an
+  // admin upload has migrated this event, the legacy array is gone and reading
+  // only that key reported "never seeded" for a full gallery.
+  const already = await existingCount(base);
+  if (!FORCE && already > 0) {
+    console.log(
+      `⏭  ${folder} → already seeded (${already} photos). Use --force to overwrite.`,
+    );
+    return 0;
   }
 
   const files = listWebpFiles(folder);
@@ -236,14 +325,23 @@ async function seedFolder(entry) {
   const items = await uploadBatch(tasks);
   if (items.length === 0) return 0;
 
-  // Write metadata to Redis
-  await redis.set(redisKey, items, { ex: TTL });
-  console.log(`  ✅ Redis: ${redisKey} → ${items.length} items`);
+  // --force replaces this event's gallery, which is what the old whole-array
+  // SET did. Clearing both new keys AND the legacy one means a re-seed can't
+  // leave half of a previous seeding behind in the other shape.
+  if (FORCE) {
+    await redis.del(itemsKey(base), orderKey(base), base);
+  } else {
+    await migrateLegacy(base);
+  }
+  await migrateLegacy(RECENT_BASE);
 
-  // Prepend to recent feed (cap at 50)
-  const recent = (await redis.get("cms:media:recent")) ?? [];
-  const updated = [...items, ...(Array.isArray(recent) ? recent : [])].slice(0, 50);
-  await redis.set("cms:media:recent", updated, { ex: TTL });
+  const baseScore = Date.parse(uploadedAt);
+  await writeList(base, items, baseScore);
+  console.log(`  ✅ Redis: ${itemsKey(base)} + ${orderKey(base)} → ${items.length} items`);
+
+  // Add to the global recent feed, then trim it to the same cap media-store uses.
+  await writeList(RECENT_BASE, items, baseScore);
+  await trimList(RECENT_BASE, RECENT_CAP);
 
   return items.length;
 }

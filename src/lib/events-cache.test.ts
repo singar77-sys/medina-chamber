@@ -7,6 +7,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
  */
 
 const redisGet = vi.fn<(key: string) => Promise<unknown>>();
+// The photo list is a sorted-set index + hash of bodies now; an empty index
+// makes media-store fall back to the legacy single-array key these tests drive.
+// Concurrency behaviour of the indexed path lives in media-store.test.ts.
+const redisZrange = vi.fn(async () => [] as string[]);
+const redisHgetall = vi.fn(async () => null);
 
 // unstable_cache is a passthrough here — the caching is Next's, the fallback
 // and outage behaviour underneath it are ours.
@@ -15,7 +20,7 @@ vi.mock("next/cache", () => ({
 }));
 
 vi.mock("@/lib/upstash", () => ({
-  getRedis: () => ({ get: redisGet }),
+  getRedis: () => ({ get: redisGet, zrange: redisZrange, hgetall: redisHgetall }),
 }));
 
 // A fixed events file: one unique event, one dated instance, and a pair that

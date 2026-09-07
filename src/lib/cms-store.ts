@@ -9,7 +9,9 @@
  *   cms:event-info:{slug}       EventInfo override for graphic templates
  *   cms:content:{page}:{field}  Per-page editable text fields
  *   cms:blog:post:{slug}        CMS-authored blog posts (full object)
- *   cms:blog:index              JSON string[] of CMS blog slugs (newest first)
+ *   cms:blog:index:z            ZSET of CMS blog slugs, score = publish order
+ *   cms:blog:index              LEGACY JSON string[] — read-only fallback,
+ *                               migrated onto the ZSET on the next write
  *
  * NO TTL. These keys hold published content whose only lifecycle is the admin
  * UI (save / reset / delete). An expiry here is a silent time bomb: a post
@@ -103,16 +105,112 @@ export const getCmsBlogPost = cache(async (slug: string): Promise<CmsBlogPost | 
   return readSafe("blog-post", () => redis.get<CmsBlogPost>(`cms:blog:post:${slug}`), null);
 });
 
+// The slug index used to be one JSON array read-modify-written on every save
+// (GET → prepend → SET). Two posts published in the same window both read the
+// same "before" array and the second SET dropped the first slug: both bodies
+// persisted at cms:blog:post:{slug}, but only one of them was reachable from
+// /blog. A sorted set makes each publish a single-member ZADD that cannot
+// clobber another author's post. Bodies were already keyed separately.
+const BLOG_INDEX_Z = "cms:blog:index:z";
+const BLOG_INDEX_LEGACY = "cms:blog:index";
+const BLOG_INDEX_MIGRATING = "cms:blog:index:migrating";
+
+/** See media-store.ts: same lock, same reason, same numbers. */
+const MIGRATION_LOCK_SECONDS = 30;
+const MIGRATION_WAIT_MS = 50;
+const MIGRATION_WAIT_TRIES = 40;
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** Stable publish-order token. createdAt (not updatedAt) so re-editing a post
+ *  never reshuffles the index, matching the old "only prepend on first save". */
+function blogScore(post: CmsBlogPost): number {
+  const t = Date.parse(post.createdAt || post.dateISO);
+  return Number.isFinite(t) ? t : Date.now();
+}
+
+/**
+ * Move the legacy array onto the sorted set once, before any write touches it.
+ * Scores come from the array position so the stored order survives exactly;
+ * every later publish scores in epoch ms and therefore sorts above the whole
+ * migrated block.
+ */
+async function migrateBlogIndex(redis: NonNullable<ReturnType<typeof getRedis>>) {
+  const legacy = (await redis.get<string[]>(BLOG_INDEX_LEGACY)) ?? [];
+  if (!Array.isArray(legacy) || legacy.length === 0) {
+    if (legacy && !Array.isArray(legacy)) await redis.del(BLOG_INDEX_LEGACY);
+    return;
+  }
+
+  // Someone migrated (and possibly deleted from) the index while we read it.
+  // Replaying our snapshot would put a deleted slug back on /blog.
+  if ((await redis.zcard(BLOG_INDEX_Z)) > 0) return;
+
+  const seen = new Set<string>();
+  const entries: { score: number; member: string }[] = [];
+  legacy.forEach((slug, i) => {
+    if (!slug || seen.has(slug)) return;
+    seen.add(slug);
+    entries.push({ score: legacy.length - i, member: slug });
+  });
+  if (entries.length === 0) {
+    await redis.del(BLOG_INDEX_LEGACY);
+    return;
+  }
+
+  await redis.zadd(BLOG_INDEX_Z, entries[0], ...entries.slice(1));
+  await redis.del(BLOG_INDEX_LEGACY);
+}
+
+/** Exactly one caller migrates; everyone else RETRIES until the index is
+ *  populated or the lock frees up. Without that, a save racing the one-time
+ *  migration replays a stale snapshot over a concurrent delete and the deleted
+ *  post reappears on /blog. Throws rather than proceeding unmigrated, for the
+ *  reason spelled out in media-store.ts ensureMigrated. */
+async function ensureBlogIndexMigrated(redis: NonNullable<ReturnType<typeof getRedis>>) {
+  for (let attempt = 0; attempt < MIGRATION_WAIT_TRIES; attempt++) {
+    if ((await redis.zcard(BLOG_INDEX_Z)) > 0) return;
+
+    const acquired = await redis.set(BLOG_INDEX_MIGRATING, "1", {
+      nx: true,
+      ex: MIGRATION_LOCK_SECONDS,
+    });
+    if (acquired) {
+      try {
+        await migrateBlogIndex(redis);
+      } finally {
+        await redis.del(BLOG_INDEX_MIGRATING);
+      }
+      return;
+    }
+
+    await sleep(MIGRATION_WAIT_MS);
+  }
+
+  throw new Error(
+    "Another writer is still migrating the blog index to the sorted set. Nothing was changed — try again in a moment.",
+  );
+}
+
 export async function saveCmsBlogPost(post: CmsBlogPost): Promise<void> {
   const redis = getRedis();
   if (!redis) throw new Error("Redis not configured");
 
   await redis.set(`cms:blog:post:${post.slug}`, post);
 
-  const slugs = (await redis.get<string[]>("cms:blog:index")) ?? [];
-  if (!slugs.includes(post.slug)) {
-    await redis.set("cms:blog:index", [post.slug, ...slugs]);
-  }
+  await ensureBlogIndexMigrated(redis);
+  // NX: score the slug once, on first publish, and never again. An EDIT must not
+  // move a post on /blog, and re-scoring is how it did: migrated legacy slugs
+  // carry small ordinals (1..n) while blogScore returns epoch ms (~1.7e12), so
+  // the first edit of ANY pre-existing post vaulted it above every other legacy
+  // post regardless of its date — the exact reshuffle the comment on blogScore
+  // promises cannot happen. Comparing createdAt to createdAt was never the fix,
+  // because the two sides were never both createdAt.
+  await redis.zadd(
+    BLOG_INDEX_Z,
+    { nx: true },
+    { score: blogScore(post), member: post.slug },
+  );
 }
 
 export async function deleteCmsBlogPost(slug: string): Promise<void> {
@@ -120,11 +218,8 @@ export async function deleteCmsBlogPost(slug: string): Promise<void> {
   if (!redis) return;
 
   await redis.del(`cms:blog:post:${slug}`);
-  const slugs = (await redis.get<string[]>("cms:blog:index")) ?? [];
-  await redis.set(
-    "cms:blog:index",
-    slugs.filter((s) => s !== slug),
-  );
+  await ensureBlogIndexMigrated(redis);
+  await redis.zrem(BLOG_INDEX_Z, slug);
 }
 
 export async function listCmsBlogPosts(): Promise<CmsBlogPost[]> {
@@ -134,7 +229,13 @@ export async function listCmsBlogPosts(): Promise<CmsBlogPost[]> {
   return readSafe(
     "blog-index",
     async () => {
-      const slugs = (await redis.get<string[]>("cms:blog:index")) ?? [];
+      // Read-only: the legacy fallback must not write, because this runs on
+      // public request paths.
+      const indexed = await redis.zrange<string[]>(BLOG_INDEX_Z, 0, -1, { rev: true });
+      const slugs =
+        indexed && indexed.length > 0
+          ? indexed
+          : (await redis.get<string[]>(BLOG_INDEX_LEGACY)) ?? [];
       const posts = await Promise.all(slugs.map((s) => getCmsBlogPost(s)));
       return posts.filter((p): p is CmsBlogPost => p !== null);
     },

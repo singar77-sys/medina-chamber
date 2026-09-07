@@ -5,6 +5,15 @@ import Image from "next/image";
 import Link from "next/link";
 import type { MediaItem } from "@/lib/media-store";
 import { NamingModal } from "@/components/admin/NamingModal";
+import { prepareImageForUpload } from "@/components/admin/prepare-upload";
+import {
+  MAX_SOURCE_BYTES,
+  checkSourceFile,
+  // Aliased: this file already has a local formatBytes for per-file sizes, and
+  // an unaliased import would silently resolve to that one.
+  formatBytes as formatLimit,
+  uploadErrorFromResponse,
+} from "@/lib/upload-limits";
 
 interface Props {
   items: MediaItem[];
@@ -30,44 +39,69 @@ export function MediaLibraryClient({ items: initialItems }: Props) {
       ? items.filter((i) => !i.eventSlug)
       : items.filter((i) => i.eventSlug === filter);
 
+  // Reject what can never work BEFORE the naming modal, and SAY SO. The old
+  // filter dropped anything that was not an image without a word, so a staff
+  // member who dragged in a PDF or a HEIC watched the drop zone apparently
+  // ignore them. Same pre-flight as EventPhotoUploader.
   const queueFiles = useCallback((files: FileList | File[]) => {
-    const arr = Array.from(files).filter((f) => f.type.startsWith("image/"));
-    if (arr.length) setPendingFiles(arr);
+    const accepted: File[] = [];
+    const rejected: string[] = [];
+
+    for (const file of Array.from(files)) {
+      const problem = checkSourceFile(file);
+      if (problem) rejected.push(`${file.name}: ${problem}`);
+      else accepted.push(file);
+    }
+
+    setUploadErrors(rejected);
+    if (accepted.length) setPendingFiles(accepted);
   }, []);
 
   async function uploadAll(files: File[], description: string) {
     setPendingFiles(null);
     setUploading(true);
-    setUploadErrors([]);
+    // Errors are NOT cleared here: queueFiles already reset them for this
+    // selection, and anything it rejected up front (a PDF, a 60 MB export) must
+    // stay on screen next to whatever the upload itself fails on.
 
-    // SEQUENTIAL on purpose — see EventPhotoUploader: the recent-media feed is
-    // one JSON array in Redis (GET -> prepend -> SET), so parallel uploads
-    // clobber each other's entries even though every request returns 200.
+    // Sequential, but no longer load-bearing: media-store.ts indexes photos with
+    // per-item hash/sorted-set writes, so overlapping uploads no longer clobber
+    // each other. One at a time is kept because it bounds the memory the
+    // in-browser resize needs.
     const uploaded: MediaItem[] = [];
     const errors: string[] = [];
 
     for (const file of files) {
-      const fd = new FormData();
-      fd.append("file", file);
-      fd.append("description", description);
-      fd.append("type", "photo");
-
       try {
+        // Downscale first. Vercel caps a function request body at 4.5 MB, so an
+        // ordinary phone photo POSTed raw is rejected by the platform before the
+        // route runs — which is what "up to 15 MB" on this screen used to promise.
+        const prepared = await prepareImageForUpload(file);
+
+        const fd = new FormData();
+        fd.append("file", prepared);
+        fd.append("description", description);
+        fd.append("type", "photo");
+
         const res = await fetch("/api/admin/media/upload", {
           method: "POST",
           credentials: "same-origin",
           body: fd,
         });
+        // Read the status BEFORE the body: a platform 413 or an auth redirect is
+        // HTML, and res.json() on it used to surface as "Unexpected token '<'".
+        if (!res.ok) throw new Error(await uploadErrorFromResponse(res));
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error ?? "Upload failed");
         uploaded.push(data.item as MediaItem);
       } catch (err) {
-        errors.push(err instanceof Error ? err.message : "Upload failed");
+        errors.push(
+          `${file.name}: ${err instanceof Error ? err.message : "Upload failed"}`,
+        );
       }
     }
 
     setItems((prev) => [...uploaded, ...prev]);
-    if (errors.length) setUploadErrors(errors);
+    if (errors.length) setUploadErrors((prev) => [...prev, ...errors]);
     setUploading(false);
   }
 
@@ -201,7 +235,10 @@ export function MediaLibraryClient({ items: initialItems }: Props) {
                 browse
               </button>
             </p>
-            <p className="text-xs text-gray-400 mt-1">JPEG, PNG, WebP up to 15 MB · Converted to WebP automatically</p>
+            <p className="text-xs text-gray-400 mt-1">
+              JPEG, PNG, WebP, GIF, AVIF up to {formatLimit(MAX_SOURCE_BYTES)} · Resized in
+              your browser, then converted to WebP
+            </p>
           </div>
         ) : (
           <p className="text-xs text-center text-gray-400">
@@ -221,7 +258,7 @@ export function MediaLibraryClient({ items: initialItems }: Props) {
         ref={inputRef}
         type="file"
         multiple
-        accept="image/jpeg,image/png,image/webp,image/avif"
+        accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
         className="hidden"
         onChange={(e) => e.target.files && queueFiles(e.target.files)}
       />

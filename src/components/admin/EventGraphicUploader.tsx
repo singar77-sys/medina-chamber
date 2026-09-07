@@ -1,6 +1,13 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { prepareImageForUpload } from "@/components/admin/prepare-upload";
+import {
+  MAX_SOURCE_BYTES,
+  checkSourceFile,
+  formatBytes,
+  uploadErrorFromResponse,
+} from "@/lib/upload-limits";
 
 interface Props {
   eventSlug: string;
@@ -19,22 +26,35 @@ export function EventGraphicUploader({
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function upload(file: File) {
+    // Catch the unsupported/hopeless cases before anything is sent.
+    const problem = checkSourceFile(file);
+    if (problem) {
+      setError(problem);
+      return;
+    }
+
     setUploading(true);
     setError(null);
 
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("eventSlug", eventSlug);
-    fd.append("type", "graphic");
-
     try {
+      // Canva exports clear the platform's 4.5 MB request cap routinely, so
+      // shrink first rather than letting the POST die outside our code.
+      const prepared = await prepareImageForUpload(file);
+      const fd = new FormData();
+      fd.append("file", prepared);
+      fd.append("eventSlug", eventSlug);
+      fd.append("type", "graphic");
+
       const res = await fetch("/api/admin/media/upload", {
         method: "POST",
         credentials: "same-origin",
         body: fd,
       });
+      // Read the body only after checking the status AND the content type — the
+      // platform's own 413 is not JSON, and res.json() on it threw a parse error
+      // in place of the real message.
+      if (!res.ok) throw new Error(await uploadErrorFromResponse(res));
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Upload failed");
 
       setImageUrl(data.item.url);
       onImageChange(data.item.url);
@@ -100,7 +120,8 @@ export function EventGraphicUploader({
                 Upload a Canva export or custom image
               </p>
               <p className="text-xs text-gray-400 mt-1">
-                Replaces AI template · JPEG, PNG, WebP up to 15 MB
+                Replaces AI template · JPEG, PNG, WebP, GIF, AVIF up to{" "}
+                {formatBytes(MAX_SOURCE_BYTES)} · Resized in your browser
               </p>
             </>
           )}
@@ -116,7 +137,7 @@ export function EventGraphicUploader({
       <input
         ref={inputRef}
         type="file"
-        accept="image/jpeg,image/png,image/webp,image/avif"
+        accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
         className="hidden"
         onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])}
       />

@@ -30,11 +30,23 @@ import {
   EVENT_PHOTOS_TAG,
   type MediaItem,
 } from "@/lib/media-store";
+import {
+  ACCEPTED_IMAGE_TYPES,
+  PLATFORM_REQUEST_LIMIT_BYTES,
+  REQUEST_BUDGET_BYTES,
+  formatBytes,
+} from "@/lib/upload-limits";
 
 export const dynamic = "force-dynamic";
 
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"];
-const MAX_SIZE = 15 * 1024 * 1024; // 15 MB
+const ALLOWED_TYPES: readonly string[] = ACCEPTED_IMAGE_TYPES;
+// Was 15 MB, which this route could never actually receive: Vercel caps a
+// function's request body at 4.5 MB, so a 5–15 MB upload was rejected by the
+// platform before this handler ran and the "15 MB limit" message below was
+// unreachable for exactly the files it was written for. The uploaders now
+// downscale to REQUEST_BUDGET_BYTES in the browser; this enforces the same
+// number server-side so the promise and the check are one value.
+const MAX_SIZE = REQUEST_BUDGET_BYTES;
 const PHOTO_MAX_WIDTH = 2400;
 const WEBP_QUALITY = 85;
 
@@ -82,7 +94,12 @@ export async function POST(req: Request): Promise<Response> {
   }
 
   if (file.size > MAX_SIZE) {
-    return NextResponse.json({ error: "File exceeds the 15 MB limit." }, { status: 400 });
+    return NextResponse.json(
+      {
+        error: `File exceeds the ${formatBytes(MAX_SIZE)} upload limit (the platform caps request bodies at ${formatBytes(PLATFORM_REQUEST_LIMIT_BYTES)}). Export it smaller and try again.`,
+      },
+      { status: 400 },
+    );
   }
 
   const description = (formData.get("description") as string | null)?.trim() ?? "";

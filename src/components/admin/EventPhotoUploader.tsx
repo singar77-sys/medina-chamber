@@ -3,6 +3,13 @@
 import { useState, useRef, useCallback } from "react";
 import type { MediaItem } from "@/lib/media-store";
 import { NamingModal } from "@/components/admin/NamingModal";
+import { prepareImageForUpload } from "@/components/admin/prepare-upload";
+import {
+  MAX_SOURCE_BYTES,
+  checkSourceFile,
+  formatBytes,
+  uploadErrorFromResponse,
+} from "@/lib/upload-limits";
 
 interface Props {
   eventSlug: string;
@@ -37,9 +44,30 @@ export function EventPhotoUploader({ eventSlug, eventTitle, initialPhotos }: Pro
 
   const defaultDesc = eventTitle ? defaultDescFromTitle(eventTitle) : "";
 
+  // Reject what can never work BEFORE the naming modal, so an unsupported or
+  // unprocessably large file gets a sentence rather than a failed request
+  // several clicks later. Silently dropping non-images (the old behaviour) left
+  // staff staring at a drop zone that had apparently ignored them.
   const queueFiles = useCallback((files: FileList | File[]) => {
-    const arr = Array.from(files).filter((f) => f.type.startsWith("image/"));
-    if (arr.length) setPendingFiles(arr);
+    const accepted: File[] = [];
+    const rejected: UploadingFile[] = [];
+
+    for (const file of Array.from(files)) {
+      const problem = checkSourceFile(file);
+      if (problem) {
+        rejected.push({
+          id: Math.random().toString(36).slice(2),
+          name: file.name,
+          progress: "error",
+          error: problem,
+        });
+      } else {
+        accepted.push(file);
+      }
+    }
+
+    if (rejected.length) setUploading((prev) => [...prev, ...rejected]);
+    if (accepted.length) setPendingFiles(accepted);
   }, []);
 
   const uploadFiles = useCallback(
@@ -52,30 +80,34 @@ export function EventPhotoUploader({ eventSlug, eventTitle, initialPhotos }: Pro
         ...files.map((f, i) => ({ id: ids[i], name: f.name, progress: "uploading" as const })),
       ]);
 
-      // SEQUENTIAL on purpose. The server keeps each event's photo list as a
-      // single JSON array in Redis (GET -> prepend -> SET), so parallel
-      // uploads read the same "before" list and the last write wins: every
-      // upload returns 200 while most of the photos silently vanish from the
-      // gallery, orphaning their blobs. One at a time is correct and fast
-      // enough for the handful of files staff drop at once.
+      // Sequential, but no longer load-bearing. The store used to keep each
+      // event's photo list as one JSON array in Redis (GET -> prepend -> SET),
+      // so parallel uploads clobbered each other and this loop was the only
+      // thing preventing it — a client-side convention standing in for a server
+      // guarantee, which two admin tabs defeated. media-store.ts now indexes
+      // photos with per-item sorted-set/hash writes, so overlap is safe. One at
+      // a time is kept because it bounds the memory the in-browser resize needs
+      // and keeps the progress list honest.
       for (let i = 0; i < files.length; i++) {
         {
           const file = files[i];
           const id = ids[i];
-          const fd = new FormData();
-          fd.append("file", file);
-          fd.append("eventSlug", eventSlug);
-          fd.append("description", description);
-          fd.append("type", "photo");
 
           try {
+            const prepared = await prepareImageForUpload(file);
+            const fd = new FormData();
+            fd.append("file", prepared);
+            fd.append("eventSlug", eventSlug);
+            fd.append("description", description);
+            fd.append("type", "photo");
+
             const res = await fetch("/api/admin/media/upload", {
               method: "POST",
               credentials: "same-origin",
               body: fd,
             });
+            if (!res.ok) throw new Error(await uploadErrorFromResponse(res));
             const data = await res.json();
-            if (!res.ok) throw new Error(data.error ?? "Upload failed");
 
             setPhotos((prev) => [data.item, ...prev]);
             setUploading((prev) =>
@@ -93,8 +125,11 @@ export function EventPhotoUploader({ eventSlug, eventTitle, initialPhotos }: Pro
         }
       }
 
+      // Clear the ticks, keep the failures on screen. Errors used to disappear
+      // with everything else after three seconds, which is how an opaque upload
+      // failure became "nothing happened".
       setTimeout(() => {
-        setUploading((prev) => prev.filter((u) => u.progress === "uploading"));
+        setUploading((prev) => prev.filter((u) => u.progress !== "done"));
       }, 3000);
     },
     [eventSlug],
@@ -155,7 +190,10 @@ export function EventPhotoUploader({ eventSlug, eventTitle, initialPhotos }: Pro
           Drop photos here or{" "}
           <span style={{ color: "var(--color-cambridge)" }} className="font-medium">browse</span>
         </p>
-        <p className="text-xs text-gray-400 mt-1">JPEG, PNG, WebP up to 15 MB · Auto-converted to WebP</p>
+        <p className="text-xs text-gray-400 mt-1">
+          JPEG, PNG, WebP, GIF, AVIF up to {formatBytes(MAX_SOURCE_BYTES)} · Resized in your
+          browser, then converted to WebP
+        </p>
         <input
           ref={inputRef}
           type="file"

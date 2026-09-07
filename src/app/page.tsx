@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ButtonLink, ButtonA } from "@/components/ui/Button";
-import { getUpcomingEvents, shortenEventTitle } from "@/data/events";
+import { shortenEventTitle } from "@/data/events";
+import { getEffectiveUpcomingEvents } from "@/lib/events-effective";
+import { eventVenueLabel, eventVenueName } from "@/lib/event-location";
 import { FadeIn } from "@/components/FadeIn";
 import { CountUp } from "@/components/CountUp";
 import { MouseGradient } from "@/components/MouseGradient";
@@ -103,7 +105,16 @@ export default async function HomePage() {
     getPageContent("home", "hero-headline"),
     getPageContent("home", "hero-subheadline"),
   ]);
-  const upcomingEvents = getUpcomingEvents().slice(0, 3);
+  // Effective events: CMS overrides merged BEFORE the upcoming filter and the
+  // chronological sort, so these three cards can never disagree with the
+  // detail pages they link to.
+  const upcomingEvents = (await getEffectiveUpcomingEvents()).slice(0, 3);
+  // Resolved once, by index: the JSON-LD block and the card below each read
+  // both strings for the same event.
+  const eventVenues = upcomingEvents.map((e) => ({
+    name: eventVenueName(e),
+    label: eventVenueLabel(e),
+  }));
 
   return (
     <div>
@@ -212,7 +223,7 @@ export default async function HomePage() {
           </FadeIn>
 
           {/* JSON-LD Event schema — Google rich results per event */}
-          {upcomingEvents.map((event) => (
+          {upcomingEvents.map((event, i) => (
             <script
               key={`ld-${event.slug}`}
               type="application/ld+json"
@@ -227,7 +238,10 @@ export default async function HomePage() {
                     "https://schema.org/OfflineEventAttendanceMode",
                   location: {
                     "@type": "Place",
-                    name: event.location || "Greater Medina Chamber of Commerce",
+                    // Only a real venue NAME — never the street address, and
+                    // never the chamber office for an off-site event. Matches
+                    // the detail page's Place exactly.
+                    ...(eventVenues[i].name ? { name: eventVenues[i].name } : {}),
                     address: {
                       "@type": "PostalAddress",
                       streetAddress:
@@ -347,9 +361,9 @@ export default async function HomePage() {
                     <h3 className="text-h4 leading-snug line-clamp-2 group-hover:text-accent transition-colors">
                       {shortenEventTitle(event.title)}
                     </h3>
-                    {event.location && (
+                    {eventVenues[i].label && (
                       <p className="text-caption text-text-tertiary mt-f8 truncate">
-                        {event.location}
+                        {eventVenues[i].label}
                       </p>
                     )}
                     {/* Pricing line — always renders so the three cards

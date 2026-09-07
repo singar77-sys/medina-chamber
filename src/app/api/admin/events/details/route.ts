@@ -87,9 +87,11 @@ export async function PUT(req: Request): Promise<Response> {
   }
 
   await setCmsEventData(slug, data);
-  // Bust the cached public read so the edit shows on /events/<slug> right away
-  // (Next 16.2 revalidateTag requires the profile argument). The read-back
-  // below deliberately stays on the uncached helper.
+  // Bust the cached public reads so the edit shows right away (Next 16.2
+  // revalidateTag requires the profile argument). One tag covers BOTH the
+  // per-slug detail-page read and the bulk effective-event read model that the
+  // calendar, homepage cards and sitemap use. The read-back below deliberately
+  // stays on the uncached helper.
   revalidateTag(CMS_EVENTS_TAG, "max");
   const saved = await getCmsEventData(slug);
   return NextResponse.json({ data: saved });

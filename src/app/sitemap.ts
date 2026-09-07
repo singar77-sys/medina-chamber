@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { members } from "@/data/members";
 import { communities } from "@/data/communities";
 import { jobs } from "@/data/jobs";
-import { events } from "@/data/events";
+import { getEffectiveEvents } from "@/lib/events-effective";
 import { getAllBlogPosts } from "@/lib/cms-blog";
 import { memberNewsArticles } from "@/data/member-news";
 
@@ -108,7 +108,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  const eventPages: MetadataRoute.Sitemap = events.map((e) => ({
+  // Effective events: an admin date correction has to move <lastmod> too,
+  // otherwise crawlers are told the page is older than the fact it now states.
+  const eventPages: MetadataRoute.Sitemap = (await getEffectiveEvents()).map((e) => ({
     url: `${BASE_URL}/events/${e.slug}`,
     lastModified: parseRecordDate(e.dateISO),
     changeFrequency: "weekly",

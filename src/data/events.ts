@@ -68,15 +68,22 @@ function todayEastern(now = new Date()): string {
   return now.toLocaleDateString("en-CA", { timeZone: "America/New_York" });
 }
 
-export function getUpcomingEvents(now = new Date()): ChamberEvent[] {
+/** Upcoming filter over an arbitrary list — shared with the effective-event
+ *  read model in @/lib/events-effective, which must filter on the MERGED
+ *  (override-applied) date rather than the raw scraped one. */
+export function upcomingFrom(list: ChamberEvent[], now = new Date()): ChamberEvent[] {
   const today = todayEastern(now);
+  return list.filter((e) => e.dateISO >= today);
+}
+
+export function getUpcomingEvents(now = new Date()): ChamberEvent[] {
   // Dated events only. A blank dateISO means the scraper couldn't parse ANY
   // date — rare now that scrape-events falls back to date-only subtitles
   // ("Wednesday, September 30, 2026" enrollment deadlines used to land here
   // with month:"" day:0 and either vanished or rendered broken "0" date
   // chips at the head of every listing). The scraper logs "no date" per
   // event, so a parse miss is visible in the workflow logs, not on the site.
-  return events.filter((e) => e.dateISO >= today);
+  return upcomingFrom(events, now);
 }
 
 export function getPastEvents(now = new Date()): ChamberEvent[] {

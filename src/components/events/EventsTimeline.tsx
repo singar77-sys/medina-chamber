@@ -33,7 +33,11 @@ export interface TimelineEvent {
   dayOfWeek: string;
   day: number;
   startTime: string;
-  location?: string;
+  /** Pre-formatted server-side via eventVenueLabel — an explicit venue, the
+   *  chamber office, or the real street address. Never guessed here: this
+   *  component used to call anything starting with a digit "Chamber Office",
+   *  which sent people to the wrong building for 16 of 28 upcoming events. */
+  venueLabel?: string | null;
   /** Pre-trimmed server-side: "Free", "$24", "$230", … */
   priceLine?: string;
 }
@@ -51,15 +55,6 @@ function monthLabel(ym: string): { short: string; long: string; year: string } {
   const [y, m] = ym.split("-").map(Number);
   const name = MONTH_NAMES[m - 1] ?? "";
   return { short: name.slice(0, 3).toUpperCase(), long: name, year: String(y) };
-}
-
-/** Trim a venue string to its name — drop the street address tail. */
-function venueName(location?: string): string | null {
-  if (!location) return null;
-  const name = location.split(",")[0].trim();
-  // A bare street address ("139 N. Court Street…") isn't a venue name worth
-  // a chip — the chamber office is the default and reads as noise.
-  return /^\d/.test(name) ? "Chamber Office" : name;
 }
 
 function groupByMonth(events: TimelineEvent[]) {
@@ -170,7 +165,7 @@ export function EventsTimeline({ events }: { events: TimelineEvent[] }) {
                 <div className="space-y-f13">
                   {items.map((e) => {
                     const isNext = e.slug === nextSlug;
-                    const venue = venueName(e.location);
+                    const venue = e.venueLabel;
                     return (
                       <div key={e.slug} className="relative pl-f34 sm:pl-f55">
                         {/* Node on the spine */}

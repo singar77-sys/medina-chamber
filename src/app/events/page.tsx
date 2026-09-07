@@ -1,17 +1,21 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { getUpcomingEvents, shortenEventTitle } from "@/data/events";
+import { shortenEventTitle } from "@/data/events";
+import { getEffectiveUpcomingEvents } from "@/lib/events-effective";
+import { eventVenueLabel } from "@/lib/event-location";
 import { getPageContent } from "@/lib/cms-content";
 import { EventsTimeline } from "@/components/events/EventsTimeline";
 import { FadeIn } from "@/components/FadeIn";
 import { VesicaPiscisWatermark } from "@/components/effects/VesicaPiscisWatermark";
 import { OG_IMAGE } from "@/lib/og";
 
-// ISR: the upcoming/past split is derived from `new Date()` against static
-// event data, so re-render daily to drop events as they pass rather than
-// freezing the list at build time. Events are day-granular (dateISO), so a
-// 24h cadence is sufficient; no per-request rendering needed.
+// ISR: the upcoming/past split is derived from `new Date()` against the
+// effective (override-merged) event data, so re-render daily to drop events as
+// they pass rather than freezing the list at build time. Events are
+// day-granular (dateISO), so a 24h cadence is sufficient; no per-request
+// rendering needed. The override read is wrapped in unstable_cache, so it does
+// NOT opt this route out of static generation.
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
@@ -30,7 +34,10 @@ export const metadata: Metadata = {
 export default async function EventsPage() {
   // Admin-editable section heading (Content editor); cached + tag-busted.
   const upcomingHeading = await getPageContent("events", "intro-headline");
-  const allUpcoming = getUpcomingEvents();
+  // Effective events: CMS overrides merged BEFORE the upcoming filter and the
+  // sort, so an admin date correction moves the event to its real month here
+  // instead of only on the detail page.
+  const allUpcoming = await getEffectiveUpcomingEvents();
   const hasEvents = allUpcoming.length > 0;
 
   // Slim props for the signal-rail timeline — titles shortened and pricing
@@ -51,7 +58,7 @@ export default async function EventsPage() {
       dayOfWeek: e.dayOfWeek,
       day: e.day,
       startTime: e.startTime,
-      location: e.location,
+      venueLabel: eventVenueLabel(e),
       priceLine: priceLineOf(e.pricing),
     }))
     .sort((a, b) => a.dateISO.localeCompare(b.dateISO));

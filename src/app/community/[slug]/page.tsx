@@ -8,12 +8,15 @@ import {
   getCommunityBySlug,
   getMembersByCity,
 } from "@/data/communities";
-import { getUpcomingEvents } from "@/data/events";
+import { getEffectiveUpcomingEvents } from "@/lib/events-effective";
 import { isVisibilityPlus } from "@/data/members";
 import { OG_IMAGE } from "@/lib/og";
 
 // ISR: shows up to 4 upcoming events (filtered by `new Date()`); re-render
 // daily so passed events drop off rather than freezing at build time.
+// The effective-event read below carries its own 300s unstable_cache, which
+// Next takes as the floor for this route — the same 5m every CMS-backed route
+// in this app already reports. Fresher than 86400, never staler.
 export const revalidate = 86400;
 
 // ── Static generation ─────────────────────────────────────────────
@@ -66,7 +69,9 @@ export default async function CommunityPage(
     return a.name.localeCompare(b.name);
   });
 
-  const allUpcoming = getUpcomingEvents();
+  // Effective, not raw: this is a public discovery surface, so a CMS date or
+  // title correction has to land here too rather than only on /events/[slug].
+  const allUpcoming = await getEffectiveUpcomingEvents();
   const upcoming = allUpcoming.slice(0, 4);
 
   // Top categories in this city

@@ -10,6 +10,7 @@ import { FluidGraphicFrame } from "@/components/events/graphics/FluidGraphicFram
 import { getPublicEventPhotos } from "@/lib/media-store";
 import { EventGallery } from "@/components/events/EventGallery";
 
+import { eventVenueName } from "@/lib/event-location";
 import { safeJsonLd } from "@/lib/json-ld";
 import { OG_IMAGE } from "@/lib/og";
 
@@ -83,9 +84,8 @@ export default async function EventPage(
   // Only name the venue when we actually know it: an explicit `venue` field,
   // or the street matching the chamber office at 139 N Court St. Off-site
   // events get an address-only location rather than a wrong venue name.
-  const isChamberOffice = /139\s+N(?:orth|\.)?\s*\.?\s*Court\s+St/i.test(event.street);
-  const venueName =
-    event.venue ?? (isChamberOffice ? "Greater Medina Chamber of Commerce" : undefined);
+  // Shared with the calendar and homepage cards so the three never disagree.
+  const venueName = eventVenueName(event);
 
   // JSON-LD Event schema for Google rich results.
   // startDate/endDate/eventStatus are only emitted when the event has a real

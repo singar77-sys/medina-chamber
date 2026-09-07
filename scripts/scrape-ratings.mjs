@@ -54,6 +54,23 @@ function getApiKey() {
   return null;
 }
 
+// ── Staleness of the data we are about to NOT overwrite ─────────────
+// This script correctly refuses to replace good ratings with nothing when the
+// Places API is unavailable. That is the right call, and it is also how
+// member-ratings.json sat at 2026-06-14 for three months: the run went red once,
+// and the log never said what failing had cost. Every bail-out now states the age
+// of the data it is leaving in place; scripts/check-data-freshness.mjs turns that
+// age into a gate that fails EVERY weekly run until the data moves again.
+function preservedDataAge() {
+  try {
+    const { generatedAt } = JSON.parse(readFileSync(OUT_FILE, 'utf-8'));
+    const days = Math.floor((Date.now() - Date.parse(generatedAt)) / 86400000);
+    return `Existing member-ratings.json is kept: generated ${generatedAt} (${days} days old).`;
+  } catch {
+    return 'There is no existing member-ratings.json to fall back on.';
+  }
+}
+
 // ── Places API: Text Search ───────────────────────────────────────
 // Returns the best-matching place or null
 async function findPlace(name, address, apiKey) {
@@ -79,6 +96,8 @@ async function findPlace(name, address, apiKey) {
 
     if (data.status === 'REQUEST_DENIED') {
       console.error('\n❌ API key error:', data.error_message);
+      console.error('   Check the key restrictions AND that billing is enabled on the Google Cloud project.');
+      console.error(`   ${preservedDataAge()}`);
       process.exit(1);
     }
 
@@ -124,6 +143,7 @@ async function main() {
      GOOGLE_PLACES_API_KEY=AIza...
   5. Re-run this script
 `);
+    console.error(`  ${preservedDataAge()}`);
     process.exit(1);
   }
 

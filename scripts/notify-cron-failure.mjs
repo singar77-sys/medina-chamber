@@ -27,7 +27,18 @@ const apiKey = process.env.RESEND_API_KEY;
 const recipients = process.env.CRON_ALERT_EMAIL;
 
 if (!apiKey || !recipients) {
-  console.log("Skip: RESEND_API_KEY or CRON_ALERT_EMAIL not set.");
+  // Name the MISSING secret, not both. "RESEND_API_KEY or CRON_ALERT_EMAIL not
+  // set" reads like a configuration note; it was in fact the reason a failed
+  // ratings scrape went unreported for three months, and it never said which of
+  // the two to go and set.
+  const missing = [
+    !apiKey && "RESEND_API_KEY",
+    !recipients && "CRON_ALERT_EMAIL",
+  ].filter(Boolean);
+  console.log(
+    `NO ALERT SENT: ${missing.join(" and ")} ${missing.length > 1 ? "are" : "is"} not set in this repo’s GitHub Actions secrets. ` +
+      "This workflow failed and nobody was emailed about it.",
+  );
   process.exit(0);
 }
 

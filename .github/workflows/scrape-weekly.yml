@@ -267,8 +267,20 @@ jobs:
         if: always() && steps.ratings.outcome == 'failure'
         run: |
           echo "❌ Google ratings scrape failed (see the 'Scrape Google ratings' step). Push step outcome: ${{ steps.push.outcome }}."
-          echo "Usual cause: the GOOGLE_PLACES_API_KEY repo secret is missing, expired, or the Places API is disabled on the key."
+          echo "Usual causes: the GOOGLE_PLACES_API_KEY repo secret is missing or expired, the Places API is disabled on the key, or BILLING IS NOT ENABLED on the Google Cloud project (the 2026-09-06 cause)."
           exit 1
+
+      # Staleness is a STATE, not an event. The ratings scrape failed loudly ONCE
+      # (2026-09-06, Google Cloud billing not enabled on the Places project) and
+      # correctly refused to overwrite good data with nothing — after which
+      # member-ratings.json sat frozen at 2026-06-14 while every other dataset kept
+      # refreshing, and nothing said so. This checks the age of the data on disk, so
+      # a file that has stopped moving fails EVERY weekly run until it is fixed
+      # rather than getting one chance to be noticed. Policy + thresholds live in
+      # the script header.
+      - name: Data freshness gate
+        if: always()
+        run: node scripts/check-data-freshness.mjs
 
       # Email Mark if anything in the workflow above failed. Skips
       # silently if the notify secrets aren't configured.

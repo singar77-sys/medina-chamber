@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-09T09:24:28.692Z",
+  "generatedAt": "2026-09-10T09:23:52.856Z",
   "totalJobs": 4,
   "jobs": [
     {
@@ -16,7 +16,7 @@
       "dateRaw": "8/26/2026",
       "dateISO": "2026-08-26",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/human-resources-generalist-352311",
-      "scrapedAt": "2026-09-09T09:24:27.008Z"
+      "scrapedAt": "2026-09-10T09:23:51.154Z"
     },
     {
       "slug": "client-support-specialist-insurance",
@@ -32,7 +32,7 @@
       "dateRaw": "8/26/2026",
       "dateISO": "2026-08-26",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/client-support-specialist-insurance-352314",
-      "scrapedAt": "2026-09-09T09:24:27.573Z"
+      "scrapedAt": "2026-09-10T09:23:51.694Z"
     },
     {
       "slug": "commercial-account-manager-seibertkeck",
@@ -48,7 +48,7 @@
       "dateRaw": "8/21/2026",
       "dateISO": "2026-08-21",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/commercial-account-manager-seibertkeck-351524",
-      "scrapedAt": "2026-09-09T09:24:28.108Z"
+      "scrapedAt": "2026-09-10T09:23:52.273Z"
     },
     {
       "slug": "orthodontic-assistant",
@@ -64,7 +64,7 @@
       "dateRaw": "7/31/2026",
       "dateISO": "2026-07-31",
       "detailUrl": "https://business.medinachamber.com/jobs/Details/orthodontic-assistant-347436",
-      "scrapedAt": "2026-09-09T09:24:28.681Z"
+      "scrapedAt": "2026-09-10T09:23:52.844Z"
     }
   ]
 }
